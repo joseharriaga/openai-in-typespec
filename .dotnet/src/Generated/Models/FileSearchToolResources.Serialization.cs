@@ -31,6 +31,16 @@ namespace OpenAI.Assistants
                 }
                 writer.WriteEndArray();
             }
+            if (SerializedAdditionalRawData?.ContainsKey("vector_stores") != true && Optional.IsCollectionDefined(VectorStores))
+            {
+                writer.WritePropertyName("vector_stores"u8);
+                writer.WriteStartArray();
+                foreach (var item in VectorStores)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
+            }
             if (SerializedAdditionalRawData?.ContainsKey("vector_stores") != true && Optional.IsCollectionDefined(NewVectorStores))
             {
                 writer.WritePropertyName("vector_stores"u8);
@@ -80,6 +90,7 @@ namespace OpenAI.Assistants
             }
             IList<string> vectorStoreIds = default;
             IList<VectorStoreCreationHelper> vectorStores = default;
+            IList<VectorStoreCreationHelper> vectorStores0 = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -112,6 +123,20 @@ namespace OpenAI.Assistants
                     vectorStores = array;
                     continue;
                 }
+                if (property.NameEquals("vector_stores"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<VectorStoreCreationHelper> array = new List<VectorStoreCreationHelper>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(VectorStoreCreationHelper.DeserializeVectorStoreCreationHelper(item, options));
+                    }
+                    vectorStores0 = array;
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     rawDataDictionary ??= new Dictionary<string, BinaryData>();
@@ -119,7 +144,7 @@ namespace OpenAI.Assistants
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new FileSearchToolResources(vectorStoreIds ?? new ChangeTrackingList<string>(), vectorStores ?? new ChangeTrackingList<VectorStoreCreationHelper>(), serializedAdditionalRawData);
+            return new FileSearchToolResources(vectorStoreIds ?? new ChangeTrackingList<string>(), vectorStores ?? new ChangeTrackingList<VectorStoreCreationHelper>(), vectorStores0 ?? new ChangeTrackingList<VectorStoreCreationHelper>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<FileSearchToolResources>.Write(ModelReaderWriterOptions options)

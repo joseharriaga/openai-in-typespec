@@ -11,5 +11,5 @@ using OpenAI;
 @@access(AssistantResponseFormat, Access.public);
 @@usage(AssistantResponseFormat, Usage.input);
 
-@@access(CreateAssistantRequestToolResourcesFileSearchBase, Access.public);
-@@usage(CreateAssistantRequestToolResourcesFileSearchBase, Usage.input);
+@@access(ToolResourcesFileSearchVectorStoreCreationHelper, Access.public);
+@@usage(ToolResourcesFileSearchVectorStoreCreationHelper, Usage.input);

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace OpenAI.Assistants;
-[CodeGenModel("CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore")]
+
+[CodeGenModel("ToolResourcesFileSearchVectorStore")]
 public partial class VectorStoreCreationHelper
 {
     [CodeGenMember("ChunkingStrategy")]

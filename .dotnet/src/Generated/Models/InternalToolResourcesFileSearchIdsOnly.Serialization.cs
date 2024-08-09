@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Assistants
 {
-    internal partial class InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences : IJsonModel<InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences>
+    internal partial class InternalToolResourcesFileSearchIdsOnly : IJsonModel<InternalToolResourcesFileSearchIdsOnly>
     {
-        void IJsonModel<InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalToolResourcesFileSearchIdsOnly>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalToolResourcesFileSearchIdsOnly>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalToolResourcesFileSearchIdsOnly)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -53,19 +53,19 @@ namespace OpenAI.Assistants
             writer.WriteEndObject();
         }
 
-        InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences IJsonModel<InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalToolResourcesFileSearchIdsOnly IJsonModel<InternalToolResourcesFileSearchIdsOnly>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalToolResourcesFileSearchIdsOnly>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalToolResourcesFileSearchIdsOnly)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences(document.RootElement, options);
+            return DeserializeInternalToolResourcesFileSearchIdsOnly(document.RootElement, options);
         }
 
-        internal static InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences DeserializeInternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalToolResourcesFileSearchIdsOnly DeserializeInternalToolResourcesFileSearchIdsOnly(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -99,44 +99,44 @@ namespace OpenAI.Assistants
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences(vectorStoreIds ?? new ChangeTrackingList<string>(), serializedAdditionalRawData);
+            return new InternalToolResourcesFileSearchIdsOnly(vectorStoreIds ?? new ChangeTrackingList<string>(), serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalToolResourcesFileSearchIdsOnly>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalToolResourcesFileSearchIdsOnly>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalToolResourcesFileSearchIdsOnly)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences IPersistableModel<InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalToolResourcesFileSearchIdsOnly IPersistableModel<InternalToolResourcesFileSearchIdsOnly>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalToolResourcesFileSearchIdsOnly>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences(document.RootElement, options);
+                        return DeserializeInternalToolResourcesFileSearchIdsOnly(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalToolResourcesFileSearchIdsOnly)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalToolResourcesFileSearchIdsOnly>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences FromResponse(PipelineResponse response)
+        internal static InternalToolResourcesFileSearchIdsOnly FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences(document.RootElement);
+            return DeserializeInternalToolResourcesFileSearchIdsOnly(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

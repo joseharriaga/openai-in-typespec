@@ -116,7 +116,7 @@ model CreateTranscriptionResponseVerboseJson {
   /** The language of the input audio. */
   language: string;
 
-  // Tool customization: timespans are encoded durations
+  // Tool customization: correct erroneous spec representation of duration as string
   /** The duration of the input audio. */
   @encode("seconds", float32)
   duration: duration;
@@ -145,7 +145,7 @@ model CreateTranslationResponseVerboseJson {
     """)
   language: string;
 
-  // Tool customization: timespans are encoded durations
+  // Tool customization: correct erroneous spec representation of duration as string
   /** The duration of the input audio. */
   @encode("seconds", float32)
   duration: duration;

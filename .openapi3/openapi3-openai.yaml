@@ -2114,14 +2114,7 @@ components:
                   description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`` tool. There can be a maximum of 20 files associated with the tool.
                   default: []
             file_search:
-              type: object
-              properties:
-                vector_store_ids:
-                  type: array
-                  items:
-                    type: string
-                  maxItems: 1
-                  description: The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant.
+              $ref: '#/components/schemas/ToolResourcesFileSearchIdsOnly'
           nullable: true
           description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -3120,9 +3113,7 @@ components:
                   description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
                   default: []
             file_search:
-              anyOf:
-                - $ref: '#/components/schemas/CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences'
-                - $ref: '#/components/schemas/CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers'
+              $ref: '#/components/schemas/ToolResourcesFileSearch'
           nullable: true
           description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -3155,55 +3146,6 @@ components:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
-    CreateAssistantRequestToolResourcesFileSearchBase:
-      type: object
-    CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers:
-      type: object
-      properties:
-        vector_stores:
-          type: array
-          items:
-            type: object
-            properties:
-              file_ids:
-                type: array
-                items:
-                  type: string
-                maxItems: 10000
-                description: |-
-                  A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
-                  a maximum of 10000 files in a vector store.
-              chunking_strategy:
-                anyOf:
-                  - $ref: '#/components/schemas/AutoChunkingStrategyRequestParam'
-                  - $ref: '#/components/schemas/StaticChunkingStrategyRequestParam'
-                description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. Only applicable if `file_ids` is non-empty.
-                x-oaiExpandable: true
-              metadata:
-                type: object
-                additionalProperties:
-                  type: string
-                description: |-
-                  Set of 16 key-value pairs that can be attached to a vector store. This can be useful for
-                  storing additional information about the vector store in a structured format. Keys can
-                  be a maximum of 64 characters long and values can be a maxium of 512 characters long.
-                x-oaiTypeLabel: map
-          maxItems: 1
-          description: |-
-            A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
-            file_ids and attach it to this assistant. There can be a maximum of 1 vector store
-            attached to the assistant.
-    CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences:
-      type: object
-      properties:
-        vector_store_ids:
-          type: array
-          items:
-            type: string
-          maxItems: 1
-          description: |-
-            The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
-            There can be a maximum of 1 vector store attached to the assistant.
     CreateChatCompletionFunctionResponse:
       type: object
       required:
@@ -4843,14 +4785,7 @@ components:
                   description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
                   default: []
             file_search:
-              type: object
-              properties:
-                vector_store_ids:
-                  type: array
-                  items:
-                    type: string
-                  maxItems: 1
-                  description: The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant.
+              $ref: '#/components/schemas/ToolResourcesFileSearchIdsOnly'
           nullable: true
           description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -4938,9 +4873,7 @@ components:
                   description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
                   default: []
             file_search:
-              anyOf:
-                - $ref: '#/components/schemas/CreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences'
-                - $ref: '#/components/schemas/CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers'
+              $ref: '#/components/schemas/ToolResourcesFileSearch'
           nullable: true
           description: A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -4950,49 +4883,6 @@ components:
           nullable: true
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
-    CreateThreadRequestToolResourcesFileSearchBase:
-      type: object
-    CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers:
-      type: object
-      properties:
-        vector_stores:
-          type: array
-          items:
-            type: object
-            properties:
-              file_ids:
-                type: array
-                items:
-                  type: string
-                maxItems: 10000
-                description: |-
-                  A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
-                  a maximum of 10000 files in a vector store.
-              metadata:
-                type: object
-                additionalProperties:
-                  type: string
-                description: |-
-                  Set of 16 key-value pairs that can be attached to a vector store. This can be useful for
-                  storing additional information about the vector store in a structured format. Keys can
-                  be a maximum of 64 characters long and values can be a maxium of 512 characters long.
-                x-oaiTypeLabel: map
-          maxItems: 1
-          description: |-
-            A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
-            file_ids and attach it to this thread. There can be a maximum of 1 vector store attached
-            to the thread.
-    CreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences:
-      type: object
-      properties:
-        vector_store_ids:
-          type: array
-          items:
-            type: string
-          maxItems: 1
-          description: |-
-            The [vector store](/docs/api-reference/vector-stores/object) attached to this thread.
-            There can be a maximum of 1 vector store attached to the thread.
     CreateTranscriptionRequestMultiPart:
       type: object
       required:
@@ -6731,14 +6621,7 @@ components:
                   description: Overrides the list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
                   default: []
             file_search:
-              type: object
-              properties:
-                vector_store_ids:
-                  type: array
-                  items:
-                    type: string
-                  maxItems: 1
-                  description: Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant.
+              $ref: '#/components/schemas/ToolResourcesFileSearchIdsOnly'
           nullable: true
           description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -6808,14 +6691,7 @@ components:
                   description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
                   default: []
             file_search:
-              type: object
-              properties:
-                vector_store_ids:
-                  type: array
-                  items:
-                    type: string
-                  maxItems: 1
-                  description: The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread.
+              $ref: '#/components/schemas/ToolResourcesFileSearchIdsOnly'
           nullable: true
           description: A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -7929,6 +7805,97 @@ components:
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
       description: Represents a thread that contains [messages](/docs/api-reference/messages).
+    ToolResourcesFileSearch:
+      type: object
+      properties:
+        vector_store_ids:
+          type: array
+          items:
+            type: string
+          maxItems: 1
+          description: |-
+            The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
+            There can be a maximum of 1 vector store attached to the assistant.
+        vector_stores:
+          type: array
+          items:
+            type: object
+            properties:
+              file_ids:
+                type: array
+                items:
+                  type: string
+                maxItems: 10000
+                description: |-
+                  A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
+                  a maximum of 10000 files in a vector store.
+              chunking_strategy:
+                anyOf:
+                  - $ref: '#/components/schemas/AutoChunkingStrategyRequestParam'
+                  - $ref: '#/components/schemas/StaticChunkingStrategyRequestParam'
+                description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. Only applicable if `file_ids` is non-empty.
+                x-oaiExpandable: true
+              metadata:
+                type: object
+                additionalProperties:
+                  type: string
+                description: |-
+                  Set of 16 key-value pairs that can be attached to a vector store. This can be useful for
+                  storing additional information about the vector store in a structured format. Keys can
+                  be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+                x-oaiTypeLabel: map
+          maxItems: 1
+          description: |-
+            A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
+            file_ids and attach it to this assistant. There can be a maximum of 1 vector store
+            attached to the assistant.
+    ToolResourcesFileSearchIdsOnly:
+      type: object
+      properties:
+        vector_store_ids:
+          type: array
+          items:
+            type: string
+          maxItems: 1
+          description: |-
+            The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
+            There can be a maximum of 1 vector store attached to the assistant.
+    ToolResourcesFileSearchVectorStoreCreationHelpers:
+      type: object
+      properties:
+        vector_stores:
+          type: array
+          items:
+            type: object
+            properties:
+              file_ids:
+                type: array
+                items:
+                  type: string
+                maxItems: 10000
+                description: |-
+                  A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
+                  a maximum of 10000 files in a vector store.
+              chunking_strategy:
+                anyOf:
+                  - $ref: '#/components/schemas/AutoChunkingStrategyRequestParam'
+                  - $ref: '#/components/schemas/StaticChunkingStrategyRequestParam'
+                description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. Only applicable if `file_ids` is non-empty.
+                x-oaiExpandable: true
+              metadata:
+                type: object
+                additionalProperties:
+                  type: string
+                description: |-
+                  Set of 16 key-value pairs that can be attached to a vector store. This can be useful for
+                  storing additional information about the vector store in a structured format. Keys can
+                  be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+                x-oaiTypeLabel: map
+          maxItems: 1
+          description: |-
+            A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
+            file_ids and attach it to this assistant. There can be a maximum of 1 vector store
+            attached to the assistant.
     TranscriptionSegment:
       type: object
       required:

@@ -7,6 +7,3 @@ using OpenAI;
 
 @@access(ListThreadsResponse, Access.public);
 @@usage(ListThreadsResponse, Usage.output);
-
-@@access(CreateThreadRequestToolResourcesFileSearchBase, Access.public);
-@@usage(CreateThreadRequestToolResourcesFileSearchBase, Usage.input);

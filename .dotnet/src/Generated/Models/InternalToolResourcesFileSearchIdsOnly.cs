@@ -7,15 +7,15 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    internal partial class InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences
+    internal partial class InternalToolResourcesFileSearchIdsOnly
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        public InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences()
+        public InternalToolResourcesFileSearchIdsOnly()
         {
             VectorStoreIds = new ChangeTrackingList<string>();
         }
 
-        internal InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences(IList<string> vectorStoreIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalToolResourcesFileSearchIdsOnly(IList<string> vectorStoreIds, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             VectorStoreIds = vectorStoreIds;
             SerializedAdditionalRawData = serializedAdditionalRawData;

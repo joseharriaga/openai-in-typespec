@@ -11,11 +11,12 @@ namespace OpenAI;
 // This customization allows us to concretely specify that the file_search object must provide
 // either ID references --or-- in-line creation helpers, but not both.
 
-alias CreateAssistantRequestToolResourcesFileSearch = CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences | CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers;
+model ToolResourcesFileSearch {
+  ...ToolResourcesFileSearchIdsOnly;
+  ...ToolResourcesFileSearchVectorStoreCreationHelpers;
+}
 
-model CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences {
-  ...CreateAssistantRequestToolResourcesFileSearchBase;
-
+model ToolResourcesFileSearchIdsOnly {
   /**
    * The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
    * There can be a maximum of 1 vector store attached to the assistant.
@@ -24,23 +25,17 @@ model CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences {
   vector_store_ids?: string[];
 }
 
-model CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers {
-  ...CreateAssistantRequestToolResourcesFileSearchBase;
-
+model ToolResourcesFileSearchVectorStoreCreationHelpers {
   /**
    * A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
    * file_ids and attach it to this assistant. There can be a maximum of 1 vector store
    * attached to the assistant.
    */
   @maxItems(1)
-  vector_stores?: CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelper[];
+  vector_stores?: ToolResourcesFileSearchVectorStoreCreationHelper[];
 }
 
-model CreateAssistantRequestToolResourcesFileSearchBase {
-  // Common fields (currently none)
-}
-
-alias CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelper = {
+alias ToolResourcesFileSearchVectorStoreCreationHelper = {
   /**
    * A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
    * a maximum of 10000 files in a vector store.

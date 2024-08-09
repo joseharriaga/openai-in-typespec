@@ -94,6 +94,9 @@ internal partial class InternalDeleteMessageResponse { }
 [CodeGenModel("DeleteMessageResponseObject")]
 internal readonly partial struct InternalDeleteMessageResponseObject { }
 
+[CodeGenModel("ToolResourcesFileSearchIdsOnly")]
+internal partial class InternalToolResourcesFileSearchIdsOnly { }
+
 [CodeGenModel("CreateThreadAndRunRequest")]
 internal partial class InternalCreateThreadAndRunRequest
 {
@@ -319,15 +322,6 @@ internal partial class InternalCreateAssistantRequestToolResources { }
 [CodeGenModel("CreateAssistantRequestToolResourcesCodeInterpreter")]
 internal partial class InternalCreateAssistantRequestToolResourcesCodeInterpreter { }
 
-[CodeGenModel("CreateAssistantRequestToolResourcesFileSearchBase")]
-internal partial class InternalCreateAssistantRequestToolResourcesFileSearchBase { }
-
-[CodeGenModel("CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers")]
-internal partial class InternalCreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers { }
-
-[CodeGenModel("CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences")]
-internal partial class InternalCreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences { }
-
 [CodeGenModel("CreateThreadAndRunRequestModel")]
 internal readonly partial struct InternalCreateThreadAndRunRequestModel { }
 
@@ -343,26 +337,11 @@ internal partial class InternalCreateThreadAndRunRequestToolResources { }
 [CodeGenModel("CreateThreadAndRunRequestToolResourcesCodeInterpreter")]
 internal partial class InternalCreateThreadAndRunRequestToolResourcesCodeInterpreter { }
 
-[CodeGenModel("CreateThreadAndRunRequestToolResourcesFileSearch")]
-internal partial class InternalCreateThreadAndRunRequestToolResourcesFileSearch { }
-
 [CodeGenModel("CreateThreadRequestToolResources")]
 internal partial class InternalCreateThreadRequestToolResources { }
 
 [CodeGenModel("CreateThreadRequestToolResourcesCodeInterpreter")]
 internal partial class InternalCreateThreadRequestToolResourcesCodeInterpreter { }
-
-[CodeGenModel("CreateThreadRequestToolResourcesFileSearchBase")]
-internal partial class InternalCreateThreadRequestToolResourcesFileSearchBase { }
-
-[CodeGenModel("CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers")]
-internal partial class InternalCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers { }
-
-[CodeGenModel("CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore")]
-internal partial class InternalCreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpersVectorStore { }
-
-[CodeGenModel("CreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences")]
-internal partial class InternalCreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences { }
 
 [CodeGenModel("ModifyAssistantRequestToolResources")]
 internal partial class InternalModifyAssistantRequestToolResources { }
@@ -370,17 +349,11 @@ internal partial class InternalModifyAssistantRequestToolResources { }
 [CodeGenModel("ModifyAssistantRequestToolResourcesCodeInterpreter")]
 internal partial class InternalModifyAssistantRequestToolResourcesCodeInterpreter { }
 
-[CodeGenModel("ModifyAssistantRequestToolResourcesFileSearch")]
-internal partial class InternalModifyAssistantRequestToolResourcesFileSearch { }
-
 [CodeGenModel("ModifyThreadRequestToolResources")]
 internal partial class InternalModifyThreadRequestToolResources { }
 
 [CodeGenModel("ModifyThreadRequestToolResourcesCodeInterpreter")]
 internal partial class InternalModifyThreadRequestToolResourcesCodeInterpreter { }
-
-[CodeGenModel("ModifyThreadRequestToolResourcesFileSearch")]
-internal partial class InternalModifyThreadRequestToolResourcesFileSearch { }
 
 [CodeGenModel("ThreadObjectToolResources")]
 internal partial class InternalThreadObjectToolResources { }

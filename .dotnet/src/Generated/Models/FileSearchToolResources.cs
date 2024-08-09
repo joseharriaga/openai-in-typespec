@@ -11,11 +11,13 @@ namespace OpenAI.Assistants
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
 
-        internal FileSearchToolResources(IList<string> vectorStoreIds, IList<VectorStoreCreationHelper> newVectorStores, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal FileSearchToolResources(IList<string> vectorStoreIds, IList<VectorStoreCreationHelper> vectorStores, IList<VectorStoreCreationHelper> newVectorStores, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             VectorStoreIds = vectorStoreIds;
+            VectorStores = vectorStores;
             NewVectorStores = newVectorStores;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
+        public IList<VectorStoreCreationHelper> VectorStores { get; }
     }
 }

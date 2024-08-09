@@ -89,7 +89,7 @@ model CreateAssistantRequest {
     };
 
     // Tool customization: use custom type for sophisticated union
-    file_search?: CreateAssistantRequestToolResourcesFileSearch;
+    file_search?: ToolResourcesFileSearch;
   } | null;
 
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
@@ -148,11 +148,9 @@ model ModifyAssistantRequest {
       @maxItems(20)
       file_ids?: string[] = #[];
     };
-    file_search?: {
-      /** Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. */
-      @maxItems(1)
-      vector_store_ids?: string[];
-    };
+
+    // Tool customization: use custom type for sophisticated union
+    file_search?: ToolResourcesFileSearchIdsOnly;
   } | null;
 
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
@@ -288,11 +286,9 @@ model AssistantObject {
       @maxItems(20)
       file_ids?: string[] = #[];
     };
-    file_search?: {
-      /** The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. */
-      @maxItems(1)
-      vector_store_ids?: string[];
-    };
+
+    // Tool customization: use custom type for sophisticated union
+    file_search?: ToolResourcesFileSearchIdsOnly;
   } | null;
 
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */

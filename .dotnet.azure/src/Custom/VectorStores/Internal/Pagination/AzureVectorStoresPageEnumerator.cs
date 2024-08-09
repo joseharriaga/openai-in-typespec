@@ -1,8 +1,6 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
-#nullable enable
-
 namespace Azure.AI.OpenAI.VectorStores;
 
 internal partial class AzureVectorStoresPageEnumerator : VectorStoresPageEnumerator

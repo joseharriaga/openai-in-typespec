@@ -34,7 +34,14 @@ namespace OpenAI.Internal
             if (SerializedAdditionalRawData?.ContainsKey("schema") != true && Optional.IsDefined(Schema))
             {
                 writer.WritePropertyName("schema"u8);
-                writer.WriteObjectValue(Schema, options);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(Schema);
+#else
+                using (JsonDocument document = JsonDocument.Parse(Schema))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
             }
             if (SerializedAdditionalRawData?.ContainsKey("strict") != true && Optional.IsDefined(Strict))
             {
@@ -92,7 +99,7 @@ namespace OpenAI.Internal
             }
             string description = default;
             string name = default;
-            InternalResponseFormatJsonSchemaSchema? schema = default;
+            BinaryData schema = default;
             bool? strict = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -114,7 +121,7 @@ namespace OpenAI.Internal
                     {
                         continue;
                     }
-                    schema = InternalResponseFormatJsonSchemaSchema.DeserializeInternalResponseFormatJsonSchemaSchema(property.Value, options);
+                    schema = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
                 if (property.NameEquals("strict"u8))

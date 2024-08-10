@@ -51,7 +51,7 @@ namespace OpenAI.Assistants {
         public string Model { get; }
         public string Name { get; }
         public float? NucleusSamplingFactor { get; }
-        public AssistantResponseFormat? ResponseFormat { get; }
+        public AssistantResponseFormat ResponseFormat { get; }
         public float? Temperature { get; }
         public ToolResources ToolResources { get; }
         public IReadOnlyList<ToolDefinition> Tools { get; }
@@ -270,7 +270,7 @@ namespace OpenAI.Assistants {
         public IDictionary<string, string> Metadata { get; set; }
         public string Name { get; set; }
         public float? NucleusSamplingFactor { get; set; }
-        public AssistantResponseFormat? ResponseFormat { get; set; }
+        public AssistantResponseFormat ResponseFormat { get; set; }
         public float? Temperature { get; set; }
         public ToolResources ToolResources { get; set; }
         public IList<ToolDefinition> Tools { get; }
@@ -288,7 +288,7 @@ namespace OpenAI.Assistants {
         public string Model { get; set; }
         public string Name { get; set; }
         public float? NucleusSamplingFactor { get; set; }
-        public AssistantResponseFormat? ResponseFormat { get; set; }
+        public AssistantResponseFormat ResponseFormat { get; set; }
         public float? Temperature { get; set; }
         public ToolResources ToolResources { get; set; }
         AssistantModificationOptions IJsonModel<AssistantModificationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -297,23 +297,40 @@ namespace OpenAI.Assistants {
         string IPersistableModel<AssistantModificationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<AssistantModificationOptions>.Write(ModelReaderWriterOptions options);
     }
-    public readonly partial struct AssistantResponseFormat : IEquatable<AssistantResponseFormat> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public AssistantResponseFormat(string value);
+    public class AssistantResponseFormat : IEquatable<AssistantResponseFormat>, IJsonModel<AssistantResponseFormat>, IPersistableModel<AssistantResponseFormat> {
         public static AssistantResponseFormat Auto { get; }
         public static AssistantResponseFormat JsonObject { get; }
         public static AssistantResponseFormat Text { get; }
-        public readonly bool Equals(AssistantResponseFormat other);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        public static AssistantResponseFormat FromJsonSchema(BinaryData jsonSchema);
+        public override bool Equals(object obj);
+        public static AssistantResponseFormat FromDefinition(AssistantResponseFormatDefinition formatDefinition);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(AssistantResponseFormat left, AssistantResponseFormat right);
-        public static implicit operator AssistantResponseFormat(string value);
-        public static bool operator !=(AssistantResponseFormat left, AssistantResponseFormat right);
-        public override readonly string ToString();
+        public override int GetHashCode();
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator ==(AssistantResponseFormat first, AssistantResponseFormat second);
+        public static implicit operator AssistantResponseFormat(BinaryData binaryData);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator !=(AssistantResponseFormat first, AssistantResponseFormat second);
+        AssistantResponseFormat IJsonModel<AssistantResponseFormat>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<AssistantResponseFormat>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        AssistantResponseFormat IPersistableModel<AssistantResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<AssistantResponseFormat>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<AssistantResponseFormat>.Write(ModelReaderWriterOptions options);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        bool IEquatable<AssistantResponseFormat>.Equals(AssistantResponseFormat other);
+    }
+    public class AssistantResponseFormatDefinition : IJsonModel<AssistantResponseFormatDefinition>, IPersistableModel<AssistantResponseFormatDefinition> {
+        public AssistantResponseFormatDefinition();
+        public AssistantResponseFormatDefinition(string name);
+        public string Description { get; set; }
+        public BinaryData JsonSchema { get; set; }
+        public required string Name { get; set; }
+        public bool? UseStrictSchema { get; set; }
+        AssistantResponseFormatDefinition IJsonModel<AssistantResponseFormatDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<AssistantResponseFormatDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        AssistantResponseFormatDefinition IPersistableModel<AssistantResponseFormatDefinition>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<AssistantResponseFormatDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<AssistantResponseFormatDefinition>.Write(ModelReaderWriterOptions options);
     }
     public class AssistantThread : IJsonModel<AssistantThread>, IPersistableModel<AssistantThread> {
         public DateTimeOffset CreatedAt { get; }
@@ -516,7 +533,7 @@ namespace OpenAI.Assistants {
         public string ModelOverride { get; set; }
         public float? NucleusSamplingFactor { get; set; }
         public bool? ParallelToolCallsEnabled { get; set; }
-        public AssistantResponseFormat? ResponseFormat { get; set; }
+        public AssistantResponseFormat ResponseFormat { get; set; }
         public float? Temperature { get; set; }
         public ToolConstraint ToolConstraint { get; set; }
         public IList<ToolDefinition> ToolsOverride { get; }
@@ -901,7 +918,7 @@ namespace OpenAI.Assistants {
         public float? NucleusSamplingFactor { get; }
         public bool? ParallelToolCallsEnabled { get; }
         public IReadOnlyList<RequiredAction> RequiredActions { get; }
-        public AssistantResponseFormat? ResponseFormat { get; }
+        public AssistantResponseFormat ResponseFormat { get; }
         public DateTimeOffset? StartedAt { get; }
         public RunStatus Status { get; }
         public float? Temperature { get; }
@@ -1227,7 +1244,7 @@ namespace OpenAI.Chat {
         public int? MaxTokens { get; set; }
         public bool? ParallelToolCallsEnabled { get; set; }
         public float? PresencePenalty { get; set; }
-        public ChatResponseFormat? ResponseFormat { get; set; }
+        public ChatResponseFormat ResponseFormat { get; set; }
         public long? Seed { get; set; }
         public IList<string> StopSequences { get; }
         public float? Temperature { get; set; }
@@ -1342,22 +1359,39 @@ namespace OpenAI.Chat {
         Tool = 3,
         Function = 4
     }
-    public readonly partial struct ChatResponseFormat : IEquatable<ChatResponseFormat> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public ChatResponseFormat(string value);
+    public class ChatResponseFormat : IEquatable<ChatResponseFormat>, IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
         public static ChatResponseFormat JsonObject { get; }
         public static ChatResponseFormat Text { get; }
-        public readonly bool Equals(ChatResponseFormat other);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        public static ChatResponseFormat FromJsonSchema(BinaryData jsonSchema);
+        public override bool Equals(object obj);
+        public static ChatResponseFormat FromDefinition(ChatResponseFormatDefinition formatDefinition);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(ChatResponseFormat left, ChatResponseFormat right);
-        public static implicit operator ChatResponseFormat(string value);
-        public static bool operator !=(ChatResponseFormat left, ChatResponseFormat right);
-        public override readonly string ToString();
+        public override int GetHashCode();
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator ==(ChatResponseFormat first, ChatResponseFormat second);
+        public static implicit operator ChatResponseFormat(BinaryData binaryData);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator !=(ChatResponseFormat first, ChatResponseFormat second);
+        ChatResponseFormat IJsonModel<ChatResponseFormat>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ChatResponseFormat>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ChatResponseFormat IPersistableModel<ChatResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ChatResponseFormat>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ChatResponseFormat>.Write(ModelReaderWriterOptions options);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        bool IEquatable<ChatResponseFormat>.Equals(ChatResponseFormat other);
+    }
+    public class ChatResponseFormatDefinition : IJsonModel<ChatResponseFormatDefinition>, IPersistableModel<ChatResponseFormatDefinition> {
+        public ChatResponseFormatDefinition();
+        public ChatResponseFormatDefinition(string name);
+        public string Description { get; set; }
+        public BinaryData JsonSchema { get; set; }
+        public required string Name { get; set; }
+        public bool? UseStrictSchema { get; set; }
+        ChatResponseFormatDefinition IJsonModel<ChatResponseFormatDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ChatResponseFormatDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ChatResponseFormatDefinition IPersistableModel<ChatResponseFormatDefinition>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ChatResponseFormatDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ChatResponseFormatDefinition>.Write(ModelReaderWriterOptions options);
     }
     public class ChatTokenLogProbabilityInfo : IJsonModel<ChatTokenLogProbabilityInfo>, IPersistableModel<ChatTokenLogProbabilityInfo> {
         public float LogProbability { get; }

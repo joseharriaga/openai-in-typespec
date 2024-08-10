@@ -68,6 +68,23 @@ public partial class AssistantSmokeTests
         Assert.That(deserializedRunStep.Details.ToolCalls[0].CodeInterpreterOutputs, Has.Count.EqualTo(1));
         Assert.That(deserializedRunStep.Details.ToolCalls[0].CodeInterpreterOutputs[0].Logs, Is.Not.Null.And.Not.Empty);
     }
+
+    [Test]
+    public void ResponseFormatSerialization()
+    {
+        AssistantResponseFormat customFormat = AssistantResponseFormat.FromDefinition(new("custom_definition"));
+
+        Assert.That(AssistantResponseFormat.Auto, Is.EqualTo(AssistantResponseFormat.Auto));
+        Assert.That(AssistantResponseFormat.Text, Is.EqualTo(AssistantResponseFormat.Text));
+        Assert.That(AssistantResponseFormat.JsonObject, Is.EqualTo(AssistantResponseFormat.JsonObject));
+        Assert.That(customFormat, Is.EqualTo(customFormat));
+
+        Assert.That(AssistantResponseFormat.Auto, Is.Not.EqualTo(AssistantResponseFormat.Text));
+        Assert.That(AssistantResponseFormat.Auto, Is.Not.EqualTo(customFormat));
+
+        Assert.That(ModelReaderWriter.Write(AssistantResponseFormat.Auto).ToString(), Is.EqualTo(@"""auto"""));
+        Assert.That(ModelReaderWriter.Write(customFormat).ToString(), Does.Contain("custom_definition"));
+    }
 }
 
 #pragma warning restore OPENAI001

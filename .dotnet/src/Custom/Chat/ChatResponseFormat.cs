@@ -1,4 +1,6 @@
 using System;
+using System.ClientModel.Primitives;
+using System.ComponentModel;
 using OpenAI.Internal;
 using OpenAI.Models;
 
@@ -21,12 +23,40 @@ namespace OpenAI.Chat;
 /// </para>
 /// </remarks>
 [CodeGenModel("ChatResponseFormat")]
-public readonly partial struct ChatResponseFormat
+public partial class ChatResponseFormat : IEquatable<ChatResponseFormat>
 {
-    internal static ChatResponseFormat Auto { get; }
+    private readonly BinaryData _binaryValue;
 
-    public static ChatResponseFormat Text { get; } = new($@"{{""type"":""text""}}");
-    public static ChatResponseFormat JsonObject { get; } = new($@"{{""type"":""json_object""}}");
-    public static ChatResponseFormat FromJsonSchema(BinaryData jsonSchema)
-        => new($@"{{""type"":""json_schema"",""json_schema"":""{jsonSchema.ToString()}""}}");
+    public static ChatResponseFormat Text { get; }
+        = new(ModelReaderWriter.Write(new InternalResponseFormatText()));
+    public static ChatResponseFormat JsonObject { get; }
+        = new(ModelReaderWriter.Write(new InternalResponseFormatJsonObject()));
+    public static ChatResponseFormat FromDefinition(ChatResponseFormatDefinition formatDefinition)
+        => new(ModelReaderWriter.Write(formatDefinition));
+
+    internal ChatResponseFormat(BinaryData binaryValue)
+    {
+        _binaryValue = binaryValue;
+    }
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    bool IEquatable<ChatResponseFormat>.Equals(ChatResponseFormat other)
+        => (this._binaryValue is not null && other?._binaryValue is not null && this._binaryValue.ToString() == other._binaryValue.ToString());
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override bool Equals(object obj)
+        => obj is ChatResponseFormat format && this.Equals(format);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override int GetHashCode() => _binaryValue.GetHashCode();
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static bool operator ==(ChatResponseFormat first, ChatResponseFormat second)
+        => first?.Equals(second) == true;
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static bool operator !=(ChatResponseFormat first, ChatResponseFormat second)
+        => first?.Equals(second) != true;
+
+    public static implicit operator ChatResponseFormat(BinaryData binaryData) => new(binaryData);
 }

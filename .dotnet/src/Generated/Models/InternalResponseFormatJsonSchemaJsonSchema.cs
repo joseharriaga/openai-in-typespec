@@ -17,7 +17,7 @@ namespace OpenAI.Internal
             Name = name;
         }
 
-        internal InternalResponseFormatJsonSchemaJsonSchema(string description, string name, InternalResponseFormatJsonSchemaSchema? schema, bool? strict, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalResponseFormatJsonSchemaJsonSchema(string description, string name, BinaryData schema, bool? strict, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Description = description;
             Name = name;
@@ -32,7 +32,6 @@ namespace OpenAI.Internal
 
         public string Description { get; set; }
         public string Name { get; set; }
-        public InternalResponseFormatJsonSchemaSchema? Schema { get; set; }
         public bool? Strict { get; set; }
     }
 }

@@ -60,8 +60,8 @@ internal readonly partial struct InternalCreateChatCompletionFunctionResponseObj
 [CodeGenModel("CreateChatCompletionRequestModel")]
 internal readonly partial struct InternalCreateChatCompletionRequestModel { }
 
-[CodeGenModel("CreateChatCompletionRequestResponseFormatType")]
-internal readonly partial struct InternalCreateChatCompletionRequestResponseFormatType { }
+[CodeGenModel("ChatResponseFormatJsonSchemaType")]
+internal readonly partial struct InternalChatResponseFormatJsonSchemaType { }
 
 [CodeGenModel("CreateChatCompletionRequestToolChoice")]
 internal readonly partial struct InternalCreateChatCompletionRequestToolChoice { }

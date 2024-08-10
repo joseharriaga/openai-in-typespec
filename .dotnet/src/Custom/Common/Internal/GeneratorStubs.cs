@@ -1,3 +1,5 @@
+using System;
+
 namespace OpenAI.Internal;
 
 [CodeGenModel("OmniTypedResponseFormat")]
@@ -11,7 +13,11 @@ internal readonly partial struct InternalResponseFormatJsonObjectType { }
 [CodeGenModel("ResponseFormatJsonSchema")]
 internal partial class InternalResponseFormatJsonSchema { }
 [CodeGenModel("ResponseFormatJsonSchemaJsonSchema")]
-internal partial class InternalResponseFormatJsonSchemaJsonSchema { }
+internal partial class InternalResponseFormatJsonSchemaJsonSchema
+{
+    [CodeGenMember("Schema")]
+    internal BinaryData Schema { get; set; }
+}
 [CodeGenModel("ResponseFormatJsonSchemaSchema")]
 internal readonly partial struct InternalResponseFormatJsonSchemaSchema { }
 [CodeGenModel("ResponseFormatJsonSchemaType")]

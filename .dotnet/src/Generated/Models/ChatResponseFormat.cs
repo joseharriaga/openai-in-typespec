@@ -3,30 +3,20 @@
 #nullable disable
 
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace OpenAI.Chat
 {
-    public readonly partial struct ChatResponseFormat : IEquatable<ChatResponseFormat>
+    public partial class ChatResponseFormat
     {
-        private readonly string _value;
-
-        public ChatResponseFormat(string value)
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        public ChatResponseFormat()
         {
-            _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        private const string AutoValue = "auto";
-        public static bool operator ==(ChatResponseFormat left, ChatResponseFormat right) => left.Equals(right);
-        public static bool operator !=(ChatResponseFormat left, ChatResponseFormat right) => !left.Equals(right);
-        public static implicit operator ChatResponseFormat(string value) => new ChatResponseFormat(value);
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj) => obj is ChatResponseFormat other && Equals(other);
-        public bool Equals(ChatResponseFormat other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override int GetHashCode() => _value != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(_value) : 0;
-        public override string ToString() => _value;
+        internal ChatResponseFormat(IDictionary<string, BinaryData> serializedAdditionalRawData)
+        {
+            SerializedAdditionalRawData = serializedAdditionalRawData;
+        }
     }
 }

@@ -131,7 +131,7 @@ namespace OpenAI.Assistants
                 if (ResponseFormat != null)
                 {
                     writer.WritePropertyName("response_format"u8);
-                    writer.WriteStringValue(ResponseFormat.Value.ToString());
+                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
                 }
                 else
                 {
@@ -189,7 +189,7 @@ namespace OpenAI.Assistants
             IDictionary<string, string> metadata = default;
             float? temperature = default;
             float? topP = default;
-            AssistantResponseFormat? responseFormat = default;
+            AssistantResponseFormat responseFormat = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -294,7 +294,7 @@ namespace OpenAI.Assistants
                         responseFormat = null;
                         continue;
                     }
-                    responseFormat = new AssistantResponseFormat(property.Value.GetString());
+                    responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")

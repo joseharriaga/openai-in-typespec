@@ -22,7 +22,7 @@ public partial class RunCreationOptions
 
     /// <inheritdoc cref="AssistantResponseFormat"/>
     [CodeGenMember("ResponseFormat")]
-    public AssistantResponseFormat? ResponseFormat { get; set; }
+    public AssistantResponseFormat ResponseFormat { get; set; }
 
     /// <summary>
     /// A run-specific model name that will override the assistant's defined model. If not provided, the assistant's

@@ -8,8 +8,8 @@ public partial class Assistant
     [CodeGenMember("Object")]
     internal InternalAssistantObjectObject Object { get; } = InternalAssistantObjectObject.Assistant;
 
-    /// <inheritdoc cref="AssistantResponseFormat"/>
-    public AssistantResponseFormat? ResponseFormat { get; }
+    [CodeGenMember("ResponseFormat")]
+    public AssistantResponseFormat ResponseFormat { get; }
 
     /// <summary>
     /// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.

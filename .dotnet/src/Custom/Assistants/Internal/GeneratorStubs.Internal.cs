@@ -102,7 +102,7 @@ internal partial class InternalCreateThreadAndRunRequest
 {
     public string Model { get; set; }
     public ToolResources ToolResources { get; set; }
-    public AssistantResponseFormat? ResponseFormat { get; set; }
+    public AssistantResponseFormat ResponseFormat { get; set; }
     public ToolConstraint ToolChoice { get; set; }
 }
 
@@ -237,6 +237,9 @@ internal partial class InternalRunStepDeltaStepDetailsToolCallsFunctionObjectFun
 
 [CodeGenModel("AssistantsApiResponseFormat")]
 internal partial class InternalAssistantsApiResponseFormat { }
+
+[CodeGenModel("AssistantResponseFormatJsonSchemaType")]
+internal readonly partial struct InternalAssistantResponseFormatJsonSchemaType { }
 
 [CodeGenModel("AssistantsApiResponseFormatType")]
 internal readonly partial struct InternalAssistantsApiResponseFormatType { }

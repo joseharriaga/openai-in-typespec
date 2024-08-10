@@ -349,17 +349,50 @@ public partial class AssistantTests
     public void SettingResponseFormatWorks()
     {
         AssistantClient client = GetTestClient();
-        Assistant assistant = client.CreateAssistant("gpt-4o-mini", new()
+        Assistant assistant = client.CreateAssistant("gpt-4o-mini");
+        Validate(assistant);
+        Assert.That(assistant.ResponseFormat, Is.EqualTo(AssistantResponseFormat.Auto));
+        assistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
         {
             ResponseFormat = AssistantResponseFormat.JsonObject,
         });
-        Validate(assistant);
         Assert.That(assistant.ResponseFormat, Is.EqualTo(AssistantResponseFormat.JsonObject));
+        AssistantResponseFormat customFormat = AssistantResponseFormat.FromDefinition(new()
+        {
+            Name = "test_format",
+            JsonSchema = BinaryData.FromString("""
+                {
+                    "type": "object",
+                    "properties": {
+                    "answer": {
+                        "type": "string"
+                    },
+                    "steps": {
+                        "type": "array",
+                        "items": {
+                        "type": "string"
+                        }
+                    }
+                    },
+                    "required": [
+                    "answer",
+                    "steps"
+                    ],
+                    "additionalProperties": false
+                }
+                """),
+        });
         assistant = client.ModifyAssistant(assistant, new()
         {
             ResponseFormat = AssistantResponseFormat.Text,
         });
         Assert.That(assistant.ResponseFormat, Is.EqualTo(AssistantResponseFormat.Text));
+        assistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
+        {
+            ResponseFormat = customFormat
+        });
+        Assert.That(assistant.ResponseFormat, Is.EqualTo(customFormat));
+        Assert.That(assistant.ResponseFormat, Is.Not.EqualTo(AssistantResponseFormat.Text));
         AssistantThread thread = client.CreateThread();
         Validate(thread);
         ThreadMessage message = client.CreateMessage(thread, MessageRole.User, ["Write some JSON for me!"]);

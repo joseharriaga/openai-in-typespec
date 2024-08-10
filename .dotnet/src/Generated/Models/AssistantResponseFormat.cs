@@ -3,32 +3,20 @@
 #nullable disable
 
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    public readonly partial struct AssistantResponseFormat : IEquatable<AssistantResponseFormat>
+    public partial class AssistantResponseFormat
     {
-        private readonly string _value;
-
-        public AssistantResponseFormat(string value)
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        public AssistantResponseFormat()
         {
-            _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        private const string AutoValue = "auto";
-
-        public static AssistantResponseFormat Auto { get; } = new AssistantResponseFormat(AutoValue);
-        public static bool operator ==(AssistantResponseFormat left, AssistantResponseFormat right) => left.Equals(right);
-        public static bool operator !=(AssistantResponseFormat left, AssistantResponseFormat right) => !left.Equals(right);
-        public static implicit operator AssistantResponseFormat(string value) => new AssistantResponseFormat(value);
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj) => obj is AssistantResponseFormat other && Equals(other);
-        public bool Equals(AssistantResponseFormat other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override int GetHashCode() => _value != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(_value) : 0;
-        public override string ToString() => _value;
+        internal AssistantResponseFormat(IDictionary<string, BinaryData> serializedAdditionalRawData)
+        {
+            SerializedAdditionalRawData = serializedAdditionalRawData;
+        }
     }
 }

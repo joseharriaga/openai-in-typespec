@@ -337,6 +337,52 @@ public partial class ChatTests : SyncAsyncTestBase
         Assert.That(blueProperty.GetString().ToLowerInvariant(), Contains.Substring("0000ff"));
     }
 
+    [Test]
+    public async Task StructuredOutputsWork()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
+        IEnumerable<ChatMessage> messages = [
+            new UserChatMessage("What's heavier, a pound of feathers or sixteen ounces of steel?")
+        ];
+        ChatCompletionOptions options = new ChatCompletionOptions()
+        {
+            ResponseFormat = ChatResponseFormat.FromDefinition(new ChatResponseFormatDefinition()
+            {
+                Name = "answer_with_reasons",
+                Description = "a simple JSON document with a string answer and list of strings for reasoning steps",
+                JsonSchema = BinaryData.FromString("""
+                    {
+                      "type": "object",
+                      "properties": {
+                        "answer": {
+                          "type": "string"
+                        },
+                        "steps": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "answer",
+                        "steps"
+                      ],
+                      "additionalProperties": false
+                    }
+                    """),
+                UseStrictSchema = true,
+            }),
+        };
+        ChatCompletion completion = IsAsync
+            ? await client.CompleteChatAsync(messages, options)
+            : client.CompleteChat(messages, options);
+        Assert.That(completion, Is.Not.Null);
+        Assert.That(completion.Content?.Count, Is.EqualTo(1));
+        JsonDocument contentDocument = null;
+        Assert.DoesNotThrow(() => contentDocument = JsonDocument.Parse(completion.Content[0].Text));
+        Console.WriteLine(completion.Content[0].Text);
+    }
 
     [Test]
     [NonParallelizable]

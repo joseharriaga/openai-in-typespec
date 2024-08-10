@@ -71,7 +71,7 @@ public partial class ThreadRun
 
     /// <inheritdoc cref="AssistantResponseFormat"/>
     [CodeGenMember("ResponseFormat")]
-    public AssistantResponseFormat? ResponseFormat { get; }
+    public AssistantResponseFormat ResponseFormat { get; }
 
     [CodeGenMember("ToolChoice")]
     public ToolConstraint ToolConstraint { get; }

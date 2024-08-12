@@ -39,7 +39,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
 
         CreateVectorStoreOperation operation = await client.CreateVectorStoreAsync(false);
         Validate(operation.Value);
-        VectorStoreDeletionResult deletionResult = await client.DeleteVectorStoreAsync(operation.Value);
+        VectorStoreDeletionResult deletionResult = await client.DeleteVectorStoreAsync(operation.Value.Id);
         Assert.That(deletionResult.VectorStoreId, Is.EqualTo(operation.VectorStoreId));
         Assert.That(deletionResult.Deleted, Is.True);
 
@@ -156,7 +156,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
 
         foreach (OpenAIFile file in files)
         {
-            AddFileToVectorStoreOperation addFileOperation = await client.AddFileToVectorStoreAsync(vectorStore, file, false);
+            AddFileToVectorStoreOperation addFileOperation = await client.AddFileToVectorStoreAsync(vectorStore.Id, file.Id, false);
             VectorStoreFileAssociation association = addFileOperation.Value;
             Validate(association);
             Assert.Multiple(() =>
@@ -169,7 +169,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             });
         }
 
-        FileFromStoreRemovalResult removalResult = await client.RemoveFileFromStoreAsync(vectorStore, files[0]);
+        FileFromStoreRemovalResult removalResult = await client.RemoveFileFromStoreAsync(vectorStore.Id, files[0].Id);
         Assert.That(removalResult.FileId, Is.EqualTo(files[0].Id));
         Assert.True(removalResult.Removed);
 
@@ -177,7 +177,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         Thread.Sleep(1000);
 
         int count = 0;
-        AsyncCollectionResult<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(vectorStore);
+        AsyncCollectionResult<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(vectorStore.Id);
         await foreach (VectorStoreFileAssociation association in response)
         {
             count++;
@@ -198,7 +198,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
 
         IReadOnlyList<OpenAIFile> testFiles = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 3);
 
-        CreateBatchFileJobOperation batchOperation = await client.CreateBatchFileJobAsync(vectorStore, testFiles, false);
+        CreateBatchFileJobOperation batchOperation = await client.CreateBatchFileJobAsync(vectorStore.Id, testFiles?.Select(file => file.Id), false);
         VectorStoreBatchFileJob batchJob = batchOperation.Value;
         Assert.Multiple(() =>
         {
@@ -211,7 +211,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
 
         Assert.That(batchJob.Status, Is.EqualTo(VectorStoreBatchFileJobStatus.Completed));
 
-        AsyncCollectionResult<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(batchJob);
+        AsyncCollectionResult<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(batchJob.VectorStoreId);
         await foreach (VectorStoreFileAssociation association in response)
         {
             Assert.Multiple(() =>

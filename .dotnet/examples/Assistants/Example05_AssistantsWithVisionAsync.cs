@@ -45,8 +45,8 @@ public partial class AssistantExamples
         });
 
         AsyncCollectionResult<StreamingUpdate> streamingUpdates = assistantClient.CreateRunStreamingAsync(
-            thread,
-            assistant,
+            thread.Id,
+            assistant.Id,
             new RunCreationOptions()
             {
                 AdditionalInstructions = "When possible, try to sneak in puns if you're asked to compare things.",
@@ -65,7 +65,7 @@ public partial class AssistantExamples
         }
 
         _ = await fileClient.DeleteFileAsync(pictureOfAppleFile.Id);
-        _ = await assistantClient.DeleteThreadAsync(thread);
-        _ = await assistantClient.DeleteAssistantAsync(assistant);
+        _ = await assistantClient.DeleteThreadAsync(thread.Id);
+        _ = await assistantClient.DeleteAssistantAsync(assistant.Id);
     }
 }

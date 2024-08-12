@@ -26,29 +26,68 @@ public partial class BatchTests : SyncAsyncTestBase
     public void ListBatchesProtocol()
     {
         BatchClient client = GetTestClient();
-        var enumerator = client.GetBatches(after: null, limit: null, options: null).GetEnumerator();
+        IEnumerable<ClientResult> pageResults = client.GetBatches(after: null, limit: null, options: null);
 
-        Assert.IsTrue(enumerator.MoveNext());
-
-        BinaryData response = enumerator.Current.GetRawResponse().Content;
-        JsonDocument jsonDocument = JsonDocument.Parse(response);
-        JsonElement dataElement = jsonDocument.RootElement.GetProperty("data");
-
-        Assert.That(dataElement.GetArrayLength(), Is.GreaterThan(0));
-
-        long unixTime2024 = (new DateTimeOffset(2024, 01, 01, 0, 0, 0, TimeSpan.Zero)).ToUnixTimeSeconds();
-
-        foreach (JsonElement batchElement in dataElement.EnumerateArray())
+        int count = 0;
+        foreach (ClientResult pageResult in pageResults)
         {
-            JsonElement createdAtElement = batchElement.GetProperty("created_at");
-            long createdAt = createdAtElement.GetInt64();
+            BinaryData response = pageResult.GetRawResponse().Content;
+            JsonDocument jsonDocument = JsonDocument.Parse(response);
+            JsonElement dataElement = jsonDocument.RootElement.GetProperty("data");
 
-            Assert.That(createdAt, Is.GreaterThan(unixTime2024));
+            Assert.That(dataElement.GetArrayLength(), Is.GreaterThan(0));
+
+            long unixTime2024 = (new DateTimeOffset(2024, 01, 01, 0, 0, 0, TimeSpan.Zero)).ToUnixTimeSeconds();
+
+            foreach (JsonElement batchElement in dataElement.EnumerateArray())
+            {
+                JsonElement createdAtElement = batchElement.GetProperty("created_at");
+                long createdAt = createdAtElement.GetInt64();
+
+                Assert.That(createdAt, Is.GreaterThan(unixTime2024));
+            }
+            count++;
+
+            //var dynamicResult = result.GetRawResponse().Content.ToDynamicFromJson();
+            //Assert.That(dynamicResult.data.Count, Is.GreaterThan(0));
+            //Assert.That(dynamicResult.data[0].createdAt, Is.GreaterThan(new DateTimeOffset(2024, 01, 01, 0, 0, 0, TimeSpan.Zero)));
         }
 
-        //var dynamicResult = result.GetRawResponse().Content.ToDynamicFromJson();
-        //Assert.That(dynamicResult.data.Count, Is.GreaterThan(0));
-        //Assert.That(dynamicResult.data[0].createdAt, Is.GreaterThan(new DateTimeOffset(2024, 01, 01, 0, 0, 0, TimeSpan.Zero)));
+        Assert.GreaterOrEqual(count, 1);
+    }
+
+    [Test]
+    public async Task ListBatchesProtocolAsync()
+    {
+        BatchClient client = GetTestClient();
+        IAsyncEnumerable<ClientResult> pageResults = client.GetBatchesAsync(after: null, limit: null, options: null);
+
+        int count = 0;
+        await foreach (ClientResult pageResult in pageResults)
+        {
+            BinaryData response = pageResult.GetRawResponse().Content;
+            JsonDocument jsonDocument = JsonDocument.Parse(response);
+            JsonElement dataElement = jsonDocument.RootElement.GetProperty("data");
+
+            Assert.That(dataElement.GetArrayLength(), Is.GreaterThan(0));
+
+            long unixTime2024 = (new DateTimeOffset(2024, 01, 01, 0, 0, 0, TimeSpan.Zero)).ToUnixTimeSeconds();
+
+            foreach (JsonElement batchElement in dataElement.EnumerateArray())
+            {
+                JsonElement createdAtElement = batchElement.GetProperty("created_at");
+                long createdAt = createdAtElement.GetInt64();
+
+                Assert.That(createdAt, Is.GreaterThan(unixTime2024));
+            }
+            count++;
+
+            //var dynamicResult = result.GetRawResponse().Content.ToDynamicFromJson();
+            //Assert.That(dynamicResult.data.Count, Is.GreaterThan(0));
+            //Assert.That(dynamicResult.data[0].createdAt, Is.GreaterThan(new DateTimeOffset(2024, 01, 01, 0, 0, 0, TimeSpan.Zero)));
+        }
+
+        Assert.GreaterOrEqual(count, 1);
     }
 
     [Test]

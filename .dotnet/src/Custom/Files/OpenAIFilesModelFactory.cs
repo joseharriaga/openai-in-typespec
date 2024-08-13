@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenAI.Files;
 
@@ -28,6 +29,9 @@ public static partial class OpenAIFilesModelFactory
     {
         items ??= new List<OpenAIFileInfo>();
 
-        return new OpenAIFileInfoCollection(items);
+        return new OpenAIFileInfoCollection(
+            items.ToList(),
+            InternalListFilesResponseObject.List,
+            serializedAdditionalRawData: null);
     }
 }

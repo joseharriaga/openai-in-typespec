@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenAI.Models;
 
@@ -24,6 +25,9 @@ public static partial class OpenAIModelsModelFactory
     {
         items ??= new List<OpenAIModelInfo>();
 
-        return new OpenAIModelInfoCollection(items);
+        return new OpenAIModelInfoCollection(
+            InternalListModelsResponseObject.List,
+            items.ToList(),
+            serializedAdditionalRawData: null);
     }
 }

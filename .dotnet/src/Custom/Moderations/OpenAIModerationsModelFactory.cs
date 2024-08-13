@@ -21,7 +21,8 @@ public static partial class OpenAIModerationsModelFactory
             sexual,
             sexualMinors,
             violence,
-            violenceGraphic);
+            violenceGraphic,
+            serializedAdditionalRawData: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationCategoryScores"/>. </summary>
@@ -39,7 +40,8 @@ public static partial class OpenAIModerationsModelFactory
             sexual,
             sexualMinors,
             violence,
-            violenceGraphic);
+            violenceGraphic,
+            serializedAdditionalRawData: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationCollection"/>. </summary>

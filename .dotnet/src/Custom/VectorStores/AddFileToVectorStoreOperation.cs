@@ -12,7 +12,7 @@ namespace OpenAI.VectorStores;
 [Experimental("OPENAI001")]
 public partial class AddFileToVectorStoreOperation : OperationResult
 {
-    public AddFileToVectorStoreOperation(
+    internal AddFileToVectorStoreOperation(
         ClientPipeline pipeline,
         Uri endpoint,
         ClientResult<VectorStoreFileAssociation> result)
@@ -27,7 +27,7 @@ public partial class AddFileToVectorStoreOperation : OperationResult
         _vectorStoreId = Value.VectorStoreId;
         _fileId = Value.FileId;
 
-        IsCompleted = GetIsCompleted(Value.Status);
+        HasCompleted = GetHasCompleted(Value.Status);
         RehydrationToken = new AddFileToVectorStoreOperationToken(VectorStoreId, FileId);
     }
 
@@ -102,36 +102,29 @@ public partial class AddFileToVectorStoreOperation : OperationResult
     }
 
     /// <inheritdoc/>
-    public override async Task WaitForCompletionAsync(CancellationToken cancellationToken = default)
+    public override async ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null)
     {
-        _pollingInterval ??= new();
+        ClientResult result = await GetFileAssociationAsync(options).ConfigureAwait(false);
 
-        while (!IsCompleted)
-        {
-            PipelineResponse response = GetRawResponse();
+        PipelineResponse response = result.GetRawResponse();
+        VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
 
-            await _pollingInterval.WaitAsync(response, cancellationToken);
+        ApplyUpdate(response, value);
 
-            ClientResult<VectorStoreFileAssociation> result = await GetFileAssociationAsync(cancellationToken).ConfigureAwait(false);
-
-            ApplyUpdate(result);
-        }
+        return result;
     }
 
-    public override void WaitForCompletion(CancellationToken cancellationToken = default)
+    /// <inheritdoc/>
+    public override ClientResult UpdateStatus(RequestOptions? options = null)
     {
-        _pollingInterval ??= new();
+        ClientResult result = GetFileAssociation(options);
 
-        while (!IsCompleted)
-        {
-            PipelineResponse response = GetRawResponse();
+        PipelineResponse response = result.GetRawResponse();
+        VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
 
-            _pollingInterval.Wait(response, cancellationToken);
+        ApplyUpdate(response, value);
 
-            ClientResult<VectorStoreFileAssociation> result = GetFileAssociation(cancellationToken);
-
-            ApplyUpdate(result);
-        }
+        return result;
     }
 
     internal async Task<AddFileToVectorStoreOperation> WaitUntilAsync(bool waitUntilCompleted, RequestOptions? options)
@@ -148,16 +141,16 @@ public partial class AddFileToVectorStoreOperation : OperationResult
         return this;
     }
 
-    private void ApplyUpdate(ClientResult<VectorStoreFileAssociation> update)
+    private void ApplyUpdate(PipelineResponse response, VectorStoreFileAssociation value)
     {
-        Value = update;
-        Status = Value.Status;
+        Value = value;
+        Status = value.Status;
 
-        IsCompleted = GetIsCompleted(Value.Status);
-        SetRawResponse(update.GetRawResponse());
+        HasCompleted = GetHasCompleted(value.Status);
+        SetRawResponse(response);
     }
 
-    private static bool GetIsCompleted(VectorStoreFileAssociationStatus status)
+    private static bool GetHasCompleted(VectorStoreFileAssociationStatus status)
     {
         return status == VectorStoreFileAssociationStatus.Completed ||
             status == VectorStoreFileAssociationStatus.Cancelled ||

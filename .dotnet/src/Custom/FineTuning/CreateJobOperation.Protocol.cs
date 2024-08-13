@@ -19,8 +19,6 @@ public partial class CreateJobOperation : OperationResult
 
     private readonly string _jobId;
 
-    private PollingInterval? _pollingInterval;
-
     internal CreateJobOperation(
         ClientPipeline pipeline,
         Uri endpoint,
@@ -32,7 +30,7 @@ public partial class CreateJobOperation : OperationResult
         _endpoint = endpoint;
         _jobId = jobId;
 
-        IsCompleted = GetIsCompleted(status);
+        HasCompleted = GetHasCompleted(status);
         RehydrationToken = new CreateJobOperationToken(jobId);
     }
 
@@ -40,9 +38,6 @@ public partial class CreateJobOperation : OperationResult
 
     /// <inheritdoc/>
     public override ContinuationToken? RehydrationToken { get; protected set; }
-
-    /// <inheritdoc/>
-    public override bool IsCompleted { get; protected set; }
 
     /// <summary>
     /// Recreates a <see cref="CreateJobOperation"/> from a rehydration token.
@@ -99,37 +94,23 @@ public partial class CreateJobOperation : OperationResult
     }
 
     /// <inheritdoc/>
-    public override async Task WaitForCompletionAsync(CancellationToken cancellationToken = default)
+    public override async ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null)
     {
-        _pollingInterval ??= new();
+        ClientResult result = await GetJobAsync(options).ConfigureAwait(false);
 
-        while (!IsCompleted)
-        {
-            PipelineResponse response = GetRawResponse();
+        ApplyUpdate(result);
 
-            await _pollingInterval.WaitAsync(response, cancellationToken);
-
-            ClientResult result = await GetJobAsync(cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-
-            ApplyUpdate(result);
-        }
+        return result;
     }
 
     /// <inheritdoc/>
-    public override void WaitForCompletion(CancellationToken cancellationToken = default)
+    public override ClientResult UpdateStatus(RequestOptions? options = null)
     {
-        _pollingInterval ??= new();
+        ClientResult result = GetJob(options);
 
-        while (!IsCompleted)
-        {
-            PipelineResponse response = GetRawResponse();
+        ApplyUpdate(result);
 
-            _pollingInterval.Wait(response, cancellationToken);
-
-            ClientResult result = GetJob(cancellationToken.ToRequestOptions());
-
-            ApplyUpdate(result);
-        }
+        return result;
     }
 
     internal async Task<CreateJobOperation> WaitUntilAsync(bool waitUntilCompleted, RequestOptions? options)
@@ -153,11 +134,11 @@ public partial class CreateJobOperation : OperationResult
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string? status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        IsCompleted = GetIsCompleted(status);
+        HasCompleted = GetHasCompleted(status);
         SetRawResponse(response);
     }
 
-    private static bool GetIsCompleted(string? status)
+    private static bool GetHasCompleted(string? status)
     {
         return status == InternalFineTuningJobStatus.Succeeded ||
             status == InternalFineTuningJobStatus.Failed ||

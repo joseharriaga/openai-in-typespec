@@ -194,11 +194,11 @@ public partial class BatchTests : SyncAsyncTestBase
         Assert.IsTrue(Validate(rehydratedOperation));
 
         Task.WaitAll(
-            IsAsync ? batchOperation.WaitForCompletionAsync() : Task.Run(() => batchOperation.WaitForCompletion()),
-            IsAsync ? rehydratedOperation.WaitForCompletionAsync() : Task.Run(() => rehydratedOperation.WaitForCompletion()));
+            IsAsync ? batchOperation.WaitForCompletionAsync().AsTask() : Task.Run(() => batchOperation.WaitForCompletion()),
+            IsAsync ? rehydratedOperation.WaitForCompletionAsync().AsTask() : Task.Run(() => rehydratedOperation.WaitForCompletion()));
 
-        Assert.IsTrue(batchOperation.IsCompleted);
-        Assert.IsTrue(rehydratedOperation.IsCompleted);
+        Assert.IsTrue(batchOperation.HasCompleted);
+        Assert.IsTrue(rehydratedOperation.HasCompleted);
     }
 
     private static BatchClient GetTestClient() => GetTestClient<BatchClient>(TestScenario.Batch);

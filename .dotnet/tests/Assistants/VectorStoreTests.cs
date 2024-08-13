@@ -345,8 +345,8 @@ public partial class VectorStoreTests
             Task.Run(() => batchOperation.WaitForCompletion()),
             Task.Run(() => rehydratedOperation.WaitForCompletion()));
 
-        Assert.IsTrue(batchOperation.IsCompleted);
-        Assert.IsTrue(rehydratedOperation.IsCompleted);
+        Assert.IsTrue(batchOperation.HasCompleted);
+        Assert.IsTrue(rehydratedOperation.HasCompleted);
         Assert.AreEqual(batchOperation.Status, rehydratedOperation.Status);
     }
 

@@ -12,7 +12,7 @@ namespace OpenAI.VectorStores;
 [Experimental("OPENAI001")]
 public partial class CreateVectorStoreOperation : OperationResult
 {
-    public CreateVectorStoreOperation(
+    internal CreateVectorStoreOperation(
         ClientPipeline pipeline,
         Uri endpoint,
         ClientResult<VectorStore> result)
@@ -26,7 +26,7 @@ public partial class CreateVectorStoreOperation : OperationResult
 
         _vectorStoreId = Value.Id;
 
-        IsCompleted = GetIsCompleted(Value.Status);
+        HasCompleted = GetHasCompleted(Value.Status);
         RehydrationToken = new CreateVectorStoreOperationToken(VectorStoreId);
     }
 
@@ -97,36 +97,29 @@ public partial class CreateVectorStoreOperation : OperationResult
     }
 
     /// <inheritdoc/>
-    public override async Task WaitForCompletionAsync(CancellationToken cancellationToken = default)
+    public override async ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null)
     {
-        _pollingInterval ??= new();
+        ClientResult result = await GetVectorStoreAsync(options).ConfigureAwait(false);
 
-        while (!IsCompleted)
-        {
-            PipelineResponse response = GetRawResponse();
+        PipelineResponse response = result.GetRawResponse();
+        VectorStore value = VectorStore.FromResponse(response);
 
-            await _pollingInterval.WaitAsync(response, cancellationToken);
+        ApplyUpdate(response, value);
 
-            ClientResult<VectorStore> result = await GetVectorStoreAsync(cancellationToken).ConfigureAwait(false);
-
-            ApplyUpdate(result);
-        }
+        return result;
     }
 
-    public override void WaitForCompletion(CancellationToken cancellationToken = default)
+    /// <inheritdoc/>
+    public override ClientResult UpdateStatus(RequestOptions? options = null)
     {
-        _pollingInterval ??= new();
+        ClientResult result = GetVectorStore(options);
 
-        while (!IsCompleted)
-        {
-            PipelineResponse response = GetRawResponse();
+        PipelineResponse response = result.GetRawResponse();
+        VectorStore value = VectorStore.FromResponse(response);
 
-            _pollingInterval.Wait(response, cancellationToken);
+        ApplyUpdate(response, value);
 
-            ClientResult<VectorStore> result = GetVectorStore(cancellationToken);
-
-            ApplyUpdate(result);
-        }
+        return result;
     }
 
     internal async Task<CreateVectorStoreOperation> WaitUntilAsync(bool waitUntilCompleted, RequestOptions? options)
@@ -143,16 +136,16 @@ public partial class CreateVectorStoreOperation : OperationResult
         return this;
     }
 
-    private void ApplyUpdate(ClientResult<VectorStore> update)
+    private void ApplyUpdate(PipelineResponse response, VectorStore value)
     {
-        Value = update;
-        Status = Value.Status;
+        Value = value;
+        Status = value.Status;
 
-        IsCompleted = GetIsCompleted(Value.Status);
-        SetRawResponse(update.GetRawResponse());
+        HasCompleted = GetHasCompleted(value.Status);
+        SetRawResponse(response);
     }
 
-    private static bool GetIsCompleted(VectorStoreStatus status)
+    private static bool GetHasCompleted(VectorStoreStatus status)
     {
         return status == VectorStoreStatus.Completed ||
             status == VectorStoreStatus.Expired;

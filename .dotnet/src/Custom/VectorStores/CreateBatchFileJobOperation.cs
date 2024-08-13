@@ -30,7 +30,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
         _vectorStoreId = Value.VectorStoreId;
         _batchId = Value.BatchId;
 
-        IsCompleted = GetIsCompleted(Value.Status);
+        HasCompleted = GetHasCompleted(Value.Status);
         RehydrationToken = new CreateBatchFileJobOperationToken(VectorStoreId, BatchId);
     }
 
@@ -105,37 +105,29 @@ public partial class CreateBatchFileJobOperation : OperationResult
     }
 
     /// <inheritdoc/>
-    public override async Task WaitForCompletionAsync(CancellationToken cancellationToken = default)
+    public override async ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null)
     {
-        _pollingInterval ??= new();
+        ClientResult result = await GetFileBatchAsync(options).ConfigureAwait(false);
 
-        while (!IsCompleted)
-        {
-            PipelineResponse response = GetRawResponse();
+        PipelineResponse response = result.GetRawResponse();
+        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
 
-            await _pollingInterval.WaitAsync(response, cancellationToken);
+        ApplyUpdate(response, value);
 
-            ClientResult<VectorStoreBatchFileJob> result = await GetFileBatchAsync(cancellationToken).ConfigureAwait(false);
-
-            ApplyUpdate(result);
-        }
+        return result;
     }
 
     /// <inheritdoc/>
-    public override void WaitForCompletion(CancellationToken cancellationToken = default)
+    public override ClientResult UpdateStatus(RequestOptions? options = null)
     {
-        _pollingInterval ??= new();
+        ClientResult result = GetFileBatch(options);
 
-        while (!IsCompleted)
-        {
-            PipelineResponse response = GetRawResponse();
+        PipelineResponse response = result.GetRawResponse();
+        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
 
-            _pollingInterval.Wait(response, cancellationToken);
+        ApplyUpdate(response, value);
 
-            ClientResult<VectorStoreBatchFileJob> result = GetFileBatch(cancellationToken);
-
-            ApplyUpdate(result);
-        }
+        return result;
     }
 
     internal async Task<CreateBatchFileJobOperation> WaitUntilAsync(bool waitUntilCompleted, RequestOptions? options)
@@ -152,16 +144,16 @@ public partial class CreateBatchFileJobOperation : OperationResult
         return this;
     }
 
-    private void ApplyUpdate(ClientResult<VectorStoreBatchFileJob> update)
+    private void ApplyUpdate(PipelineResponse response, VectorStoreBatchFileJob value)
     {
-        Value = update;
-        Status = Value.Status;
+        Value = value;
+        Status = value.Status;
 
-        IsCompleted = GetIsCompleted(Value.Status);
-        SetRawResponse(update.GetRawResponse());
+        HasCompleted = GetHasCompleted(value.Status);
+        SetRawResponse(response);
     }
 
-    private static bool GetIsCompleted(VectorStoreBatchFileJobStatus status)
+    private static bool GetHasCompleted(VectorStoreBatchFileJobStatus status)
     {
         return status == VectorStoreBatchFileJobStatus.Completed ||
             status == VectorStoreBatchFileJobStatus.Cancelled ||

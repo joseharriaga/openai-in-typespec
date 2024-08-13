@@ -1720,7 +1720,7 @@ namespace OpenAI.Files {
         public string Filename { get; }
         public string Id { get; }
         public OpenAIFilePurpose Purpose { get; }
-        public long? SizeInBytes { get; }
+        public int? SizeInBytes { get; }
         public OpenAIFileStatus Status { get; }
         public string StatusDetails { get; }
         OpenAIFileInfo IJsonModel<OpenAIFileInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -1758,7 +1758,7 @@ namespace OpenAI.Files {
         public override readonly string ToString();
     }
     public static class OpenAIFilesModelFactory {
-        public static OpenAIFileInfo OpenAIFileInfo(string id = null, long? sizeInBytes = null, DateTimeOffset createdAt = default, string filename = null, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null);
+        public static OpenAIFileInfo OpenAIFileInfo(string id = null, int? sizeInBytes = null, DateTimeOffset createdAt = default, string filename = null, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null);
         public static OpenAIFileInfoCollection OpenAIFileInfoCollection(IEnumerable<OpenAIFileInfo> items = null);
     }
     public readonly partial struct OpenAIFileStatus : IEquatable<OpenAIFileStatus> {

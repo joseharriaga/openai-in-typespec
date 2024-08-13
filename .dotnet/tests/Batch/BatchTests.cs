@@ -28,11 +28,11 @@ public partial class BatchTests : SyncAsyncTestBase
         BatchClient client = GetTestClient();
         IEnumerable<ClientResult> pageResults = client.GetBatches(after: null, limit: null, options: null);
 
-        int count = 0;
+        int pageCount = 0;
         foreach (ClientResult pageResult in pageResults)
         {
             BinaryData response = pageResult.GetRawResponse().Content;
-            JsonDocument jsonDocument = JsonDocument.Parse(response);
+            using JsonDocument jsonDocument = JsonDocument.Parse(response);
             JsonElement dataElement = jsonDocument.RootElement.GetProperty("data");
 
             Assert.That(dataElement.GetArrayLength(), Is.GreaterThan(0));
@@ -46,14 +46,14 @@ public partial class BatchTests : SyncAsyncTestBase
 
                 Assert.That(createdAt, Is.GreaterThan(unixTime2024));
             }
-            count++;
+            pageCount++;
 
             //var dynamicResult = result.GetRawResponse().Content.ToDynamicFromJson();
             //Assert.That(dynamicResult.data.Count, Is.GreaterThan(0));
             //Assert.That(dynamicResult.data[0].createdAt, Is.GreaterThan(new DateTimeOffset(2024, 01, 01, 0, 0, 0, TimeSpan.Zero)));
         }
 
-        Assert.GreaterOrEqual(count, 1);
+        Assert.GreaterOrEqual(pageCount, 1);
     }
 
     [Test]
@@ -62,11 +62,11 @@ public partial class BatchTests : SyncAsyncTestBase
         BatchClient client = GetTestClient();
         IAsyncEnumerable<ClientResult> pageResults = client.GetBatchesAsync(after: null, limit: null, options: null);
 
-        int count = 0;
+        int pageCount = 0;
         await foreach (ClientResult pageResult in pageResults)
         {
             BinaryData response = pageResult.GetRawResponse().Content;
-            JsonDocument jsonDocument = JsonDocument.Parse(response);
+            using JsonDocument jsonDocument = JsonDocument.Parse(response);
             JsonElement dataElement = jsonDocument.RootElement.GetProperty("data");
 
             Assert.That(dataElement.GetArrayLength(), Is.GreaterThan(0));
@@ -80,14 +80,14 @@ public partial class BatchTests : SyncAsyncTestBase
 
                 Assert.That(createdAt, Is.GreaterThan(unixTime2024));
             }
-            count++;
+            pageCount++;
 
             //var dynamicResult = result.GetRawResponse().Content.ToDynamicFromJson();
             //Assert.That(dynamicResult.data.Count, Is.GreaterThan(0));
             //Assert.That(dynamicResult.data[0].createdAt, Is.GreaterThan(new DateTimeOffset(2024, 01, 01, 0, 0, 0, TimeSpan.Zero)));
         }
 
-        Assert.GreaterOrEqual(count, 1);
+        Assert.GreaterOrEqual(pageCount, 1);
     }
 
     [Test]

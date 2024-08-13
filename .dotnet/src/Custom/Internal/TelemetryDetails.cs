@@ -22,33 +22,23 @@ internal class TelemetryDetails
     public Assembly Assembly { get; }
 
     /// <summary>
-    /// The value of the applicationId used to initialize this <see cref="TelemetryDetails"/> instance.
-    /// </summary>
-    public string? ApplicationId { get; }
-
-    /// <summary>
     /// Initialize an instance of <see cref="TelemetryDetails"/> by extracting the name and version information from the <see cref="System.Reflection.Assembly"/> associated with the <paramref name="assembly"/>.
     /// </summary>
     /// <param name="assembly">The <see cref="System.Reflection.Assembly"/> used to generate the package name and version information for the <see cref="TelemetryDetails"/> value.</param>
     /// <param name="applicationId">An optional value to be prepended to the <see cref="TelemetryDetails"/>.
-    internal TelemetryDetails(Assembly assembly, string? applicationId = null)
-        : this(assembly, applicationId, new RuntimeInformationWrapper())
+    internal TelemetryDetails(Assembly assembly)
+        : this(assembly, new RuntimeInformationWrapper())
     { }
 
-    internal TelemetryDetails(Assembly assembly, string? applicationId = null, RuntimeInformationWrapper? runtimeInformation = default)
+    internal TelemetryDetails(Assembly assembly, RuntimeInformationWrapper? runtimeInformation = default)
     {
         Argument.AssertNotNull(assembly, nameof(assembly));
-        if (applicationId?.Length > MaxApplicationIdLength)
-        {
-            throw new ArgumentOutOfRangeException(nameof(applicationId), $"{nameof(applicationId)} must be shorter than {MaxApplicationIdLength + 1} characters");
-        }
 
         Assembly = assembly;
-        ApplicationId = applicationId;
-        _userAgent = GenerateUserAgentString(assembly, applicationId, runtimeInformation);
+        _userAgent = GenerateUserAgentString(assembly, runtimeInformation);
     }
 
-    internal static string GenerateUserAgentString(Assembly clientAssembly, string? applicationId = null, RuntimeInformationWrapper? runtimeInformation = default)
+    internal static string GenerateUserAgentString(Assembly clientAssembly, RuntimeInformationWrapper? runtimeInformation = default)
     {
         AssemblyInformationalVersionAttribute? versionAttribute
             = clientAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
@@ -67,9 +57,7 @@ internal class TelemetryDetails
         runtimeInformation ??= new RuntimeInformationWrapper();
         var platformInformation = EscapeProductInformation($"({runtimeInformation.FrameworkDescription}; {runtimeInformation.OSDescription})");
 
-        return applicationId != null
-            ? $"{applicationId} {assemblyName}/{version} {platformInformation}"
-            : $"{assemblyName}/{version} {platformInformation}";
+        return $"{assemblyName}/{version} {platformInformation}";
     }
 
     /// <summary>

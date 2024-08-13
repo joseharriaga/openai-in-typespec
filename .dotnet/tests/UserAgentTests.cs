@@ -9,12 +9,7 @@ namespace OpenAI.Tests.Miscellaneous;
 public partial class UserAgentTests
 {
     [Test]
-    public void DefaultUserAgentStringWorks() => UserAgentStringWorks(useApplicationId: false);
-
-    [Test]
-    public void UserAgentWithApplicationIdWorks() => UserAgentStringWorks(useApplicationId: true);
-
-    private void UserAgentStringWorks(bool useApplicationId)
+    public void UserAgentStringWorks()
     {
         ApiKeyCredential mockKeyCredential = new("no-real-key-needed");
         string userAgent = null;
@@ -23,10 +18,7 @@ public partial class UserAgentTests
             _ = m?.Request?.Headers?.TryGetValue("User-Agent", out userAgent);
         });
 
-        OpenAIClientOptions options = useApplicationId ? new()
-        {
-            ApplicationId = "test-application-id",
-        } : new();
+        OpenAIClientOptions options = new();
         options.AddPolicy(policy, PipelinePosition.BeforeTransport);
 
         ChatClient client = new("no-real-model-needed", options);
@@ -36,10 +28,6 @@ public partial class UserAgentTests
 
         Assert.That(userAgent, Is.Not.Null.Or.Empty);
 
-        if (useApplicationId)
-        {
-            Assert.That(userAgent, Does.Contain("test-application-id"));
-        }
         Assert.That(userAgent, Does.Contain("OpenAI/"));
     }
 }

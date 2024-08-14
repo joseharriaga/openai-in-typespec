@@ -20,22 +20,35 @@ $net80ref = Get-ChildItem -Recurse `
     -Path "$($env:ProgramFiles)\dotnet\packs\Microsoft.NETCore.App.Ref" `
     -Include "net8.0" | Select-Object -Last 1
 $systemMemoryDataRef = "$($env:UserProfile)\.nuget\packages\system.memory.data\1.0.2\lib\netstandard2.0"
-$systemClientmodelRef = "$($env:UserProfile)\.nuget\packages\system.clientmodel\1.1.0-beta.6\lib\netstandard2.0"
+$systemClientmodelRef = "$($env:UserProfile)\.nuget\packages\system.clientmodel\1.1.0-beta.7\lib\netstandard2.0"
 $microsoftBclAsyncinterfacesRef = "$($env:UserProfile)\.nuget\packages\microsoft.bcl.asyncinterfaces\1.1.0\lib\netstandard2.0"
+$systemDiagnosticsDiagnosticSourceRef = "$($env:UserProfile)\.nuget\packages\system.diagnostics.diagnosticsource\8.0.1\lib\netstandard2.0"
 
 Write-Output "Assembly reference paths:"
-Write-Output "* NETCore:                       $($net80ref)"
-Write-Output "* System.Memory.Data:            $($systemMemoryDataRef)"
-Write-Output "* System.ClientModel:            $($systemClientmodelRef)"
-Write-Output "* Microsoft.Bcl.AsyncInterfaces: $($microsoftBclAsyncinterfacesRef)"
+Write-Output "* NETCore:"
+Write-Output "  $($net80ref)"
+Write-Output ""
+Write-Output "* System.ClientModel:"
+Write-Output "  $($systemClientModelRef)"
+Write-Output ""
+Write-Output "* System.Memory.Data:"
+Write-Output "  $($systemMemoryDataRef)"
+Write-Output ""
+Write-Output "* System.Diagnostics.DiagnosticSource:"
+Write-Output "  $($systemDiagnosticsDiagnosticSourceRef)"
+Write-Output ""
+Write-Output "* Microsoft.Bcl.AsyncInterfaces:"
+Write-Output "  $($microsoftBclAsyncInterfacesRef)"
+Write-Output ""
 Write-Output "NOTE: if any of the above are empty, tool output may be inaccurate."
 Write-Output ""
 
 genapi --assembly $assemblyPath --output-path $outputPath `
     --assembly-reference $net80ref `
+    --assembly-reference $systemClientModelRef `
     --assembly-reference $systemMemoryDataRef `
-    --assembly-reference $systemClientmodelRef `
-    --assembly-reference $microsoftBclAsyncinterfacesRef
+    --assembly-reference $systemDiagnosticsDiagnosticSourceRef `
+    --assembly-reference $microsoftBclAsyncInterfacesRef
 
 Write-Output "Cleaning up OpenAI.netstandard2.0.cs..."
 Write-Output ""

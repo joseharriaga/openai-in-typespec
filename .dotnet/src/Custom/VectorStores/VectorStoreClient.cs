@@ -96,7 +96,7 @@ public partial class VectorStoreClient
     public virtual async Task<CreateVectorStoreOperation> CreateVectorStoreAsync(bool waitUntilCompleted, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
     {
         using BinaryContent content = vectorStore?.ToBinaryContent();
-        return await CreateVectorStoreAsync(waitUntilCompleted, content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        return await CreateVectorStoreAsync(content, waitUntilCompleted, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
     }
 
     /// <summary> Creates a vector store. </summary>
@@ -112,7 +112,7 @@ public partial class VectorStoreClient
     public virtual CreateVectorStoreOperation CreateVectorStore(bool waitUntilCompleted, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
     {
         using BinaryContent content = vectorStore?.ToBinaryContent();
-        return CreateVectorStore(waitUntilCompleted, content, cancellationToken.ToRequestOptions());
+        return CreateVectorStore(content, waitUntilCompleted, cancellationToken.ToRequestOptions());
     }
 
     /// <summary>
@@ -304,7 +304,7 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
-        return await AddFileToVectorStoreAsync(waitUntilCompleted, vectorStoreId, internalRequest.ToBinaryContent(), cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        return await AddFileToVectorStoreAsync(vectorStoreId, internalRequest.ToBinaryContent(), waitUntilCompleted, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -326,7 +326,7 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
-        return AddFileToVectorStore(waitUntilCompleted, vectorStoreId, internalRequest.ToBinaryContent(), cancellationToken.ToRequestOptions());
+        return AddFileToVectorStore(vectorStoreId, internalRequest.ToBinaryContent(), waitUntilCompleted, cancellationToken.ToRequestOptions());
     }
 
     /// <summary>
@@ -512,9 +512,9 @@ public partial class VectorStoreClient
     /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
     public virtual async Task<CreateBatchFileJobOperation> CreateBatchFileJobAsync(
-        bool waitUntilCompleted,
-        string vectorStoreId, 
+        string vectorStoreId,
         IEnumerable<string> fileIds,
+        bool waitUntilCompleted,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
@@ -523,7 +523,7 @@ public partial class VectorStoreClient
         BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds).ToBinaryContent();
         RequestOptions options = cancellationToken.ToRequestOptions();
 
-        return await CreateBatchFileJobAsync(waitUntilCompleted, vectorStoreId, content, options).ConfigureAwait(false);
+        return await CreateBatchFileJobAsync(vectorStoreId, content, waitUntilCompleted, options).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -539,9 +539,9 @@ public partial class VectorStoreClient
     /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
     public virtual CreateBatchFileJobOperation CreateBatchFileJob(
-        bool waitUntilCompleted,
         string vectorStoreId,
-        IEnumerable<string> fileIds, 
+        IEnumerable<string> fileIds,
+        bool waitUntilCompleted,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
@@ -550,6 +550,6 @@ public partial class VectorStoreClient
         BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds).ToBinaryContent();
         RequestOptions options = cancellationToken.ToRequestOptions();
 
-        return CreateBatchFileJob(waitUntilCompleted, vectorStoreId, content, options);
+        return CreateBatchFileJob(vectorStoreId, content, waitUntilCompleted, options);
     }
 }

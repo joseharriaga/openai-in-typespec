@@ -42,8 +42,8 @@ public partial class FineTuningClient
     /// the operation to complete, get information about the fine tuning job, or 
     /// cancel the operation. </returns>
     public virtual async Task<CreateJobOperation> CreateJobAsync(
-        bool waitUntilCompleted,
         BinaryContent content,
+        bool waitUntilCompleted,
         RequestOptions options = null)
     {
         Argument.AssertNotNull(content, nameof(content));
@@ -81,8 +81,8 @@ public partial class FineTuningClient
     /// the operation to complete, get information about the fine tuning job, or 
     /// cancel the operation. </returns>
     public virtual CreateJobOperation CreateJob(
-        bool waitUntilCompleted,
         BinaryContent content,
+        bool waitUntilCompleted,
         RequestOptions options = null)
     {
         Argument.AssertNotNull(content, nameof(content));

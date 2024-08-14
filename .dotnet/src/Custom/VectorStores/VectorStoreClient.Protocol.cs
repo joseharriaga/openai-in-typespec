@@ -101,7 +101,7 @@ public partial class VectorStoreClient
     /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for 
     /// the vector store creation to complete. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<CreateVectorStoreOperation> CreateVectorStoreAsync(bool waitUntilCompleted, BinaryContent content, RequestOptions options = null)
+    public virtual async Task<CreateVectorStoreOperation> CreateVectorStoreAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null)
     {
         using PipelineMessage message = CreateCreateVectorStoreRequest(content, options);
         PipelineResponse response = await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
@@ -125,7 +125,7 @@ public partial class VectorStoreClient
     /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for 
     /// the vector store creation to complete. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual CreateVectorStoreOperation CreateVectorStore(bool waitUntilCompleted, BinaryContent content, RequestOptions options = null)
+    public virtual CreateVectorStoreOperation CreateVectorStore(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null)
     {
         using PipelineMessage message = CreateCreateVectorStoreRequest(content, options);
         PipelineResponse response = _pipeline.ProcessMessage(message, options);
@@ -337,7 +337,7 @@ public partial class VectorStoreClient
     /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
     /// the vector store file addition to complete. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(bool waitUntilCompleted, string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    public virtual async Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, bool waitUntilCompleted, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
@@ -366,7 +366,7 @@ public partial class VectorStoreClient
     /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
     /// the vector store file addition to complete. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual AddFileToVectorStoreOperation AddFileToVectorStore(bool waitUntilCompleted, string vectorStoreId, BinaryContent content, RequestOptions options = null)
+    public virtual AddFileToVectorStoreOperation AddFileToVectorStore(string vectorStoreId, BinaryContent content, bool waitUntilCompleted, RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(content, nameof(content));
@@ -476,9 +476,9 @@ public partial class VectorStoreClient
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual async Task<CreateBatchFileJobOperation> CreateBatchFileJobAsync(
-        bool waitUntilCompleted,
         string vectorStoreId,
         BinaryContent content,
+        bool waitUntilCompleted,
         RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
@@ -509,9 +509,9 @@ public partial class VectorStoreClient
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual CreateBatchFileJobOperation CreateBatchFileJob(
-        bool waitUntilCompleted,
         string vectorStoreId,
         BinaryContent content,
+        bool waitUntilCompleted,
         RequestOptions options = null)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));

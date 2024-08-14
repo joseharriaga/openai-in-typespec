@@ -33,7 +33,7 @@ public partial class FineTuningTests
         BinaryData input = BinaryData.FromString(json);
         using BinaryContent content = BinaryContent.Create(input);
 
-        CreateJobOperation operation = client.CreateJob(waitUntilCompleted: false, content);
+        CreateJobOperation operation = client.CreateJob(content, waitUntilCompleted: false);
     }
 
     [OneTimeTearDown]

@@ -179,7 +179,7 @@ public partial class VectorStoreTests
 
         foreach (OpenAIFileInfo file in files)
         {
-            AddFileToVectorStoreOperation addOperation = client.AddFileToVectorStore(waitUntilCompleted: false, vectorStore, file);
+            AddFileToVectorStoreOperation addOperation = client.AddFileToVectorStore(vectorStore, file, waitUntilCompleted: false);
             VectorStoreFileAssociation association = addOperation.Value;
             Validate(association);
             Assert.Multiple(() =>
@@ -221,7 +221,7 @@ public partial class VectorStoreTests
 
         foreach (OpenAIFileInfo file in files)
         {
-            AddFileToVectorStoreOperation addOperation = client.AddFileToVectorStore(waitUntilCompleted: false, vectorStore, file);
+            AddFileToVectorStoreOperation addOperation = client.AddFileToVectorStore(vectorStore, file, waitUntilCompleted: false);
             VectorStoreFileAssociation association = addOperation.Value;
             Validate(association);
             Assert.Multiple(() =>
@@ -284,7 +284,7 @@ public partial class VectorStoreTests
 
         IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
 
-        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(waitUntilCompleted: false, vectorStore, testFiles);
+        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(vectorStore, testFiles, waitUntilCompleted: false);
         Validate(batchOperation);
 
         Assert.Multiple(() =>
@@ -320,7 +320,7 @@ public partial class VectorStoreTests
 
         IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
 
-        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(waitUntilCompleted: false, vectorStore, testFiles);
+        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(vectorStore, testFiles, waitUntilCompleted: false);
         Validate(batchOperation);
 
         // Simulate rehydration of the operation

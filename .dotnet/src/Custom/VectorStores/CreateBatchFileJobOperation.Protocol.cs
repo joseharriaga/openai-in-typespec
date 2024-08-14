@@ -16,10 +16,10 @@ public partial class CreateBatchFileJobOperation : OperationResult
 {
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;
-    
+
     private readonly string _vectorStoreId;
     private readonly string _batchId;
-    
+
     /// <inheritdoc/>
     public override ContinuationToken? RehydrationToken { get; protected set; }
 

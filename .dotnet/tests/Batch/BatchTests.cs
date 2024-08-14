@@ -76,8 +76,8 @@ public partial class BatchTests : SyncAsyncTestBase
             },
         }));
         CreateBatchOperation batchOperation = IsAsync
-            ? await client.CreateBatchAsync(waitUntilCompleted: false, content)
-            : client.CreateBatch(waitUntilCompleted: false, content);
+            ? await client.CreateBatchAsync(content, waitUntilCompleted: false)
+            : client.CreateBatch(content, waitUntilCompleted: false);
 
         BinaryData response = batchOperation.GetRawResponse().Content;
         JsonDocument jsonDocument = JsonDocument.Parse(response);
@@ -153,8 +153,8 @@ public partial class BatchTests : SyncAsyncTestBase
             },
         }));
         CreateBatchOperation batchOperation = IsAsync
-            ? await client.CreateBatchAsync(waitUntilCompleted: false, content)
-            : client.CreateBatch(waitUntilCompleted: false, content);
+            ? await client.CreateBatchAsync(content, waitUntilCompleted: false)
+            : client.CreateBatch(content, waitUntilCompleted: false);
 
         // Simulate rehydration of the operation
         BinaryData rehydrationBytes = batchOperation.RehydrationToken.ToBytes();

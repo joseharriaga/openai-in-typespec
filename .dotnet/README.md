@@ -2,7 +2,7 @@
 
 [![NuGet version](https://img.shields.io/nuget/vpre/openai.svg)](https://www.nuget.org/packages/OpenAI/absoluteLatest)
 
-The OpenAI .NET library provides convenient access to the OpenAI REST API from .NET applications. 
+The OpenAI .NET library provides convenient access to the OpenAI REST API from .NET applications.
 
 It is generated from our [OpenAPI specification](https://github.com/openai/openai-openapi) in collaboration with Microsoft.
 
@@ -26,6 +26,7 @@ It is generated from our [OpenAPI specification](https://github.com/openai/opena
 - [Advanced scenarios](#advanced-scenarios)
   - [Using protocol methods](#using-protocol-methods)
   - [Automatically retrying errors](#automatically-retrying-errors)
+  - [Observability](#observability)
 
 ## Getting started
 
@@ -678,7 +679,29 @@ The first image shows a red apple with a smooth skin and a single leaf, while th
 
 ## How to work with Azure OpenAI
 
-Details for using the OpenAI .NET library with [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/overview) are coming soon. Please watch here and the [Azure.AI.OpenAI project](https://github.com/Azure/azure-sdk-for-net/tree/main/sdk/openai/Azure.AI.OpenAI) for updates.
+For Azure OpenAI scenarios use the [Azure SDK](https://github.com/Azure/azure-sdk-for-net) and more specifically the [Azure OpenAI client library for .NET](https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/openai/Azure.AI.OpenAI/README.md). 
+
+The Azure OpenAI client library for .NET is a companion to this library and all common capabilities between OpenAI and Azure OpenAI share the same scenario clients, methods, and request/response types. It is designed to make Azure specific scenarios straightforward, with extensions for Azure-specific concepts like Responsible AI content filter results and On Your Data integration.
+
+```c#
+AzureOpenAIClient azureClient = new(
+    new Uri("https://your-azure-openai-resource.com"),
+    new DefaultAzureCredential());
+ChatClient chatClient = azureClient.GetChatClient("my-gpt-35-turbo-deployment");
+
+ChatCompletion completion = chatClient.CompleteChat(
+    [
+        // System messages represent instructions or other guidance about how the assistant should behave
+        new SystemChatMessage("You are a helpful assistant that talks like a pirate."),
+        // User messages represent user input, whether historical or the most recen tinput
+        new UserChatMessage("Hi, can you help me?"),
+        // Assistant messages in a request represent conversation history for responses
+        new AssistantChatMessage("Arrr! Of course, me hearty! What can I do for ye?"),
+        new UserChatMessage("What's the best way to train a parrot?"),
+    ]);
+
+Console.WriteLine($"{completion.Role}: {completion.Content[0].Text}");
+```
 
 ## Advanced scenarios
 
@@ -692,7 +715,7 @@ For example, to use the protocol method variant of the `ChatClient`'s `CompleteC
 ChatClient client = new("gpt-4o", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
 BinaryData input = BinaryData.FromBytes("""
-{  
+{
     "model": "gpt-4o",
     "messages": [
        {
@@ -727,3 +750,7 @@ By default, the client classes will automatically retry the following errors up 
 - 502 Bad Gateway
 - 503 Service Unavailable
 - 504 Gateway Timeout
+
+### Observability
+
+OpenAI .NET library supports experimental distributed tracing and metrics with OpenTelemetry. Check out [Observability with OpenTelemetry](./docs/observability.md) for more details.

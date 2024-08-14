@@ -38,6 +38,11 @@ jobs:
           SECRET_VALUE: ${{ secrets.OPENAI_TOKEN }}
         working-directory: .dotnet
 
+      - name: Run additional code checks
+        shell: pwsh
+        run: Run-Checks.ps1
+        working-directory: .scripts
+
       - name: Pack
         run: dotnet pack
           --no-build

@@ -18,7 +18,8 @@ function Run-ModelsSubnamespaceCheck {
         "OpenAIModelInfo.cs",
         "OpenAIModelInfo.Serialization.cs",
         "OpenAIModelInfoCollection.cs",
-        "OpenAIModelInfoCollection.Serialization.cs"
+        "OpenAIModelInfoCollection.Serialization.cs",
+        "OpenAIModelsModelFactory.cs"
     )
 
     $failures = @()

@@ -190,7 +190,7 @@ public partial class CreateJobOperation : OperationResult
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> CancelJobAsync(RequestOptions? options)
+    public virtual async Task<ClientResult> CancelAsync(RequestOptions? options)
     {
         using PipelineMessage message = CreateCancelFineTuningJobRequest(_jobId, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
@@ -205,7 +205,7 @@ public partial class CreateJobOperation : OperationResult
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult CancelJob(RequestOptions? options)
+    public virtual ClientResult Cancel(RequestOptions? options)
     {
         using PipelineMessage message = CreateCancelFineTuningJobRequest(_jobId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));

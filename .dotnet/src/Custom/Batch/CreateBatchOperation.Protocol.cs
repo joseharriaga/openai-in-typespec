@@ -180,7 +180,7 @@ public partial class CreateBatchOperation : OperationResult
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> CancelBatchAsync( RequestOptions? options)
+    public virtual async Task<ClientResult> CancelAsync( RequestOptions? options)
     {
         using PipelineMessage message = CreateCancelBatchRequest(_batchId, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
@@ -192,7 +192,7 @@ public partial class CreateBatchOperation : OperationResult
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult CancelBatch(RequestOptions? options)
+    public virtual ClientResult Cancel(RequestOptions? options)
     {
         using PipelineMessage message = CreateCancelBatchRequest(_batchId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));

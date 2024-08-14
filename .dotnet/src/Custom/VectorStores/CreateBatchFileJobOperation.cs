@@ -193,9 +193,9 @@ public partial class CreateBatchFileJobOperation : OperationResult
     /// </summary>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
-    public virtual async Task<ClientResult<VectorStoreBatchFileJob>> CancelFileBatchAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<ClientResult<VectorStoreBatchFileJob>> CancelAsync(CancellationToken cancellationToken = default)
     {
-        ClientResult result = await CancelFileBatchAsync(cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        ClientResult result = await CancelAsync(cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
         return ClientResult.FromValue(value, response);
@@ -206,9 +206,9 @@ public partial class CreateBatchFileJobOperation : OperationResult
     /// </summary>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
-    public virtual ClientResult<VectorStoreBatchFileJob> CancelFileBatch(CancellationToken cancellationToken = default)
+    public virtual ClientResult<VectorStoreBatchFileJob> Cancel(CancellationToken cancellationToken = default)
     {
-        ClientResult result = CancelFileBatch(cancellationToken.ToRequestOptions());
+        ClientResult result = Cancel(cancellationToken.ToRequestOptions());
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
         return ClientResult.FromValue(value, response);

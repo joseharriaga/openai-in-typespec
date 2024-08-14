@@ -58,7 +58,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> CancelFileBatchAsync(RequestOptions? options)
+    public virtual async Task<ClientResult> CancelAsync(RequestOptions? options)
     {
         using PipelineMessage message = CreateCancelVectorStoreFileBatchRequest(_vectorStoreId, _batchId, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
@@ -71,7 +71,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult CancelFileBatch(RequestOptions? options)
+    public virtual ClientResult Cancel(RequestOptions? options)
     {
         using PipelineMessage message = CreateCancelVectorStoreFileBatchRequest(_vectorStoreId, _batchId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));

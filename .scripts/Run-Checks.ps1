@@ -101,8 +101,7 @@ function Run-TopLevelNamespaceCheck {
         "MultipartFormDataBinaryContent.cs",
         "PageCollectionHelpers.cs",
         "PageEnumerator.cs",
-        "PageResultEnumerator.cs",
-        "PollingInterval.cs"
+        "PageResultEnumerator.cs"
     )
 
     $failures = @()

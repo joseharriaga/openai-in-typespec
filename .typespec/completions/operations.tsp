@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("/completions")
+@route("/v1/completions")
 interface Completions {
   @post
   @operationId("createCompletion")

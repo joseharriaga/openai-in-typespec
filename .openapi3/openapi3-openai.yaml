@@ -18,7 +18,7 @@ tags:
   - name: Vector Stores
   - name: Uploads
 paths:
-  /assistants:
+  /v1/assistants:
     post:
       tags:
         - Assistants
@@ -92,7 +92,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListAssistantsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /assistants/{assistant_id}:
+  /v1/assistants/{assistant_id}:
     get:
       tags:
         - Assistants
@@ -162,7 +162,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteAssistantResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /audio/speech:
+  /v1/audio/speech:
     post:
       tags:
         - Audio
@@ -189,7 +189,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateSpeechRequest'
-  /audio/transcriptions:
+  /v1/audio/transcriptions:
     post:
       tags:
         - Audio
@@ -215,7 +215,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateTranscriptionRequestMultiPart'
-  /audio/translations:
+  /v1/audio/translations:
     post:
       tags:
         - Audio
@@ -241,7 +241,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateTranslationRequestMultiPart'
-  /batches:
+  /v1/batches:
     post:
       tags:
         - Batch
@@ -322,7 +322,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListBatchesResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /batches/{batch_id}:
+  /v1/batches/{batch_id}:
     get:
       tags:
         - Batch
@@ -344,7 +344,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/Batch'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /batches/{batch_id}/cancel:
+  /v1/batches/{batch_id}/cancel:
     post:
       tags:
         - Batch
@@ -366,7 +366,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/Batch'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /chat/completions:
+  /v1/chat/completions:
     post:
       tags:
         - Chat
@@ -388,7 +388,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateChatCompletionRequest'
-  /completions:
+  /v1/completions:
     post:
       tags:
         - Completions
@@ -410,7 +410,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateCompletionRequest'
-  /embeddings:
+  /v1/embeddings:
     post:
       tags:
         - Embeddings
@@ -432,7 +432,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateEmbeddingRequest'
-  /files:
+  /v1/files:
     post:
       tags:
         - Files
@@ -483,7 +483,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListFilesResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /files/{file_id}:
+  /v1/files/{file_id}:
     get:
       tags:
         - Files
@@ -526,7 +526,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteFileResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /files/{file_id}/content:
+  /v1/files/{file_id}/content:
     get:
       tags:
         - Files
@@ -549,7 +549,7 @@ paths:
                   - type: string
                     format: byte
                   - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs:
+  /v1/fine_tuning/jobs:
     post:
       tags:
         - Fine-tuning
@@ -605,7 +605,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListPaginatedFineTuningJobsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs/{fine_tuning_job_id}:
+  /v1/fine_tuning/jobs/{fine_tuning_job_id}:
     get:
       tags:
         - Fine-tuning
@@ -630,7 +630,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/FineTuningJob'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs/{fine_tuning_job_id}/cancel:
+  /v1/fine_tuning/jobs/{fine_tuning_job_id}/cancel:
     post:
       tags:
         - Fine-tuning
@@ -652,7 +652,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/FineTuningJob'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs/{fine_tuning_job_id}/checkpoints:
+  /v1/fine_tuning/jobs/{fine_tuning_job_id}/checkpoints:
     get:
       tags:
         - Fine-tuning
@@ -688,7 +688,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListFineTuningJobCheckpointsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs/{fine_tuning_job_id}/events:
+  /v1/fine_tuning/jobs/{fine_tuning_job_id}/events:
     get:
       tags:
         - Fine-tuning
@@ -724,7 +724,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListFineTuningJobEventsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /images/edits:
+  /v1/images/edits:
     post:
       tags:
         - Images
@@ -746,7 +746,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateImageEditRequestMultiPart'
-  /images/generations:
+  /v1/images/generations:
     post:
       tags:
         - Images
@@ -768,7 +768,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateImageRequest'
-  /images/variations:
+  /v1/images/variations:
     post:
       tags:
         - Images
@@ -790,7 +790,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateImageVariationRequestMultiPart'
-  /models:
+  /v1/models:
     get:
       tags:
         - Models
@@ -808,7 +808,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListModelsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /models/{model}:
+  /v1/models/{model}:
     get:
       tags:
         - Models
@@ -853,7 +853,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteModelResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /moderations:
+  /v1/moderations:
     post:
       tags:
         - Moderations
@@ -875,7 +875,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateModerationRequest'
-  /threads:
+  /v1/threads:
     post:
       tags:
         - Assistants
@@ -897,7 +897,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateThreadRequest'
-  /threads/runs:
+  /v1/threads/runs:
     post:
       tags:
         - Assistants
@@ -919,7 +919,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateThreadAndRunRequest'
-  /threads/{thread_id}:
+  /v1/threads/{thread_id}:
     get:
       tags:
         - Assistants
@@ -989,7 +989,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteThreadResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/messages:
+  /v1/threads/{thread_id}/messages:
     post:
       tags:
         - Assistants
@@ -1075,7 +1075,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListMessagesResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/messages/{message_id}:
+  /v1/threads/{thread_id}/messages/{message_id}:
     get:
       tags:
         - Assistants
@@ -1163,7 +1163,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteMessageResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs:
+  /v1/threads/{thread_id}/runs:
     post:
       tags:
         - Assistants
@@ -1249,7 +1249,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListRunsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs/{run_id}:
+  /v1/threads/{thread_id}/runs/{run_id}:
     get:
       tags:
         - Assistants
@@ -1310,7 +1310,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ModifyRunRequest'
-  /threads/{thread_id}/runs/{run_id}/cancel:
+  /v1/threads/{thread_id}/runs/{run_id}/cancel:
     post:
       tags:
         - Assistants
@@ -1338,7 +1338,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/RunObject'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs/{run_id}/steps:
+  /v1/threads/{thread_id}/runs/{run_id}/steps:
     get:
       tags:
         - Assistants
@@ -1403,7 +1403,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListRunStepsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs/{run_id}/steps/{step_id}:
+  /v1/threads/{thread_id}/runs/{run_id}/steps/{step_id}:
     get:
       tags:
         - Assistants
@@ -1437,7 +1437,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/RunStepObject'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs/{run_id}/submit_tool_outputs:
+  /v1/threads/{thread_id}/runs/{run_id}/submit_tool_outputs:
     post:
       tags:
         - Assistants
@@ -1474,7 +1474,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SubmitToolOutputsRunRequest'
-  /uploads:
+  /v1/uploads:
     post:
       tags:
         - Uploads
@@ -1504,7 +1504,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateUploadRequest'
-  /uploads/{upload_id}/cancel:
+  /v1/uploads/{upload_id}/cancel:
     post:
       tags:
         - Uploads
@@ -1525,7 +1525,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/Upload'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /uploads/{upload_id}/complete:
+  /v1/uploads/{upload_id}/complete:
     post:
       tags:
         - Uploads
@@ -1559,7 +1559,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CompleteUploadRequest'
-  /uploads/{upload_id}/parts:
+  /v1/uploads/{upload_id}/parts:
     post:
       tags:
         - Uploads
@@ -1591,7 +1591,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/AddUploadPartRequestMultiPart'
-  /vector_stores:
+  /v1/vector_stores:
     get:
       tags:
         - Vector Stores
@@ -1665,7 +1665,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateVectorStoreRequest'
-  /vector_stores/{vector_store_id}:
+  /v1/vector_stores/{vector_store_id}:
     get:
       tags:
         - Vector Stores
@@ -1735,7 +1735,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteVectorStoreResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /vector_stores/{vector_store_id}/file_batches:
+  /v1/vector_stores/{vector_store_id}/file_batches:
     post:
       tags:
         - Vector Stores
@@ -1763,7 +1763,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateVectorStoreFileBatchRequest'
-  /vector_stores/{vector_store_id}/file_batches/{batch_id}:
+  /v1/vector_stores/{vector_store_id}/file_batches/{batch_id}:
     get:
       tags:
         - Vector Stores
@@ -1791,7 +1791,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/VectorStoreFileBatchObject'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel:
+  /v1/vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel:
     post:
       tags:
         - Vector Stores
@@ -1819,7 +1819,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/VectorStoreFileBatchObject'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /vector_stores/{vector_store_id}/file_batches/{batch_id}/files:
+  /v1/vector_stores/{vector_store_id}/file_batches/{batch_id}/files:
     get:
       tags:
         - Vector Stores
@@ -1890,7 +1890,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListVectorStoreFilesResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /vector_stores/{vector_store_id}/files:
+  /v1/vector_stores/{vector_store_id}/files:
     get:
       tags:
         - Vector Stores
@@ -1982,7 +1982,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateVectorStoreFileRequest'
-  /vector_stores/{vector_store_id}/files/{file_id}:
+  /v1/vector_stores/{vector_store_id}/files/{file_id}:
     get:
       tags:
         - Vector Stores
@@ -9411,6 +9411,6 @@ components:
       type: http
       scheme: bearer
 servers:
-  - url: https://api.openai.com/v1
+  - url: https://api.openai.com
     description: OpenAI Endpoint
     variables: {}

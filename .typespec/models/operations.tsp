@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("/models")
+@route("/v1/models")
 interface Models {
   @get
   @operationId("listModels")

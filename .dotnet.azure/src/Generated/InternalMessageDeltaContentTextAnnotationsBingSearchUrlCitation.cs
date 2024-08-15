@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Azure.AI.OpenAI.Assistants
 {
     /// <summary> The MessageDeltaContentTextAnnotationsBingSearchUrlCitation. </summary>
-    internal partial class InternalMessageDeltaContentTextAnnotationsBingSearchUrlCitation : MessageDeltaTextContentAnnotation
+    internal partial class InternalMessageDeltaContentTextAnnotationsBingSearchUrlCitation : InternalMessageDeltaTextContentAnnotation
     {
         /// <summary> Initializes a new instance of <see cref="InternalMessageDeltaContentTextAnnotationsBingSearchUrlCitation"/>. </summary>
         /// <param name="index"> The index of the annotation in the text content part. </param>

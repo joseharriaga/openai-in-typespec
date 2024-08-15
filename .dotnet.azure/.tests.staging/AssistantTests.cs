@@ -74,7 +74,7 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
              },
         });
         Assert.That(modifiedAssistant.Id, Is.EqualTo(assistant.Id));
-        AsyncPageableCollection<Assistant> recentAssistants = client.GetAssistantsAsync();
+        AsyncPageCollection<Assistant> recentAssistants = client.GetAssistantsAsync();
         //SyncOrAsync(
         //    client, c => c.GetAssistants(), c => c.GetAssistantsAsync());
         Assistant recentAssistant = null;
@@ -169,7 +169,7 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
     //     {
     //         InitialMessages = { new(MessageRole.User, ["What should I wear outside right now?"]), },
     //     };
-    //     AsyncResultCollection<StreamingUpdate> asyncResults = SyncOrAsync(client,
+    //     AsyncCollectionResult<StreamingUpdate> asyncResults = SyncOrAsync(client,
     //         c => c.CreateThreadAndRunStreaming(assistant, thrdOpt),
     //         c => c.CreateThreadAndRunStreamingAsync(assistant, thrdOpt));
 
@@ -597,7 +597,7 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
     //         r => r.Status.IsTerminal);
     //     Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-    //     AsyncPageableCollection<ThreadMessage> messages = SyncOrAsync(client,
+    //     AsyncPageCollection<ThreadMessage> messages = SyncOrAsync(client,
     //         c => c.GetMessages(thread, resultOrder: ListOrder.NewestFirst),
     //         c => c.GetMessagesAsync(thread, resultOrder: ListOrder.NewestFirst));
     //     bool hasAtLeastOne = false;
@@ -633,7 +633,7 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
     //     });
     //     Validate(thread);
 
-    //     AsyncResultCollection<StreamingUpdate> streamingResult = SyncOrAsync(client,
+    //     AsyncCollectionResult<StreamingUpdate> streamingResult = SyncOrAsync(client,
     //         c => c.CreateRunStreaming(thread.Id, assistant.Id),
     //         c => c.CreateRunStreamingAsync(thread.Id, assistant.Id));
 

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Azure.AI.OpenAI.Assistants
 {
     /// <summary> The MessageContentTextAnnotationsBingSearchUrlCitation. </summary>
-    internal partial class InternalMessageContentTextAnnotationsBingSearchUrlCitation : MessageContentTextObjectAnnotation
+    internal partial class InternalMessageContentTextAnnotationsBingSearchUrlCitation : InternalMessageContentTextObjectAnnotation
     {
         /// <summary> Initializes a new instance of <see cref="InternalMessageContentTextAnnotationsBingSearchUrlCitation"/>. </summary>
         /// <param name="text"> The text in the message content that needs to be replaced. </param>

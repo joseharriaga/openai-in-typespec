@@ -95,7 +95,7 @@ public partial class ChatExamples
                                 ChatToolCall toolCall = ChatToolCall.CreateFunctionToolCall(
                                     toolCallId,
                                     indexToFunctionName[index],
-                                    indexToFunctionArguments[index].ToString());
+                                    BinaryData.FromString(indexToFunctionArguments[index].ToString()));
 
                                 toolCalls.Add(toolCall);
                             }

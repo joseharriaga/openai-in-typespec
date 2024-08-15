@@ -165,7 +165,7 @@ public partial class ChatToolTests : SyncAsyncTestBase
         Assert.That(result.Value.FinishReason, Is.EqualTo(ChatFinishReason.ToolCalls));
         Assert.That(result.Value.ToolCalls.Count, Is.EqualTo(1));
         var toolCall = result.Value.ToolCalls[0];
-        var toolCallArguments = BinaryData.FromString(toolCall.FunctionArguments).ToObjectFromJson<Dictionary<string, object>>();
+        var toolCallArguments = toolCall.FunctionArguments.ToObjectFromJson<Dictionary<string, object>>();
         Assert.That(toolCall.FunctionName, Is.EqualTo(GetFavoriteColorToolFunctionName));
         Assert.That(toolCall.Id, Is.Not.Null.And.Not.Empty);
         Assert.That(toolCallArguments.Count, Is.EqualTo(0));
@@ -262,8 +262,8 @@ public partial class ChatToolTests : SyncAsyncTestBase
         Assert.That(result.Value.FinishReason, Is.EqualTo(ChatFinishReason.ToolCalls));
         Assert.That(result.Value.ToolCalls.Count, Is.EqualTo(2));
 
-        var santiagoToolCall = result.Value.ToolCalls.Single(call => call.FunctionArguments.ToLowerInvariant().Contains("santiago"));
-        var karachiToolCall = result.Value.ToolCalls.Single(call => call.FunctionArguments.ToLowerInvariant().Contains("karachi"));
+        var santiagoToolCall = result.Value.ToolCalls.Single(call => call.FunctionArguments.ToString().ToLowerInvariant().Contains("santiago"));
+        var karachiToolCall = result.Value.ToolCalls.Single(call => call.FunctionArguments.ToString().ToLowerInvariant().Contains("karachi"));
 
         JsonObject argumentsJson = JsonSerializer.Deserialize<JsonObject>(santiagoToolCall.FunctionArguments);
         Assert.That(argumentsJson.Count, Is.EqualTo(1));

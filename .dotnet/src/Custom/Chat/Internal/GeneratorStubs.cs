@@ -3,9 +3,6 @@ namespace OpenAI.Chat;
 [CodeGenModel("ChatCompletionFunctionCallOption")]
 internal partial class InternalChatCompletionFunctionCallOption { }
 
-[CodeGenModel("ChatCompletionMessageToolCallFunction")]
-internal partial class InternalChatCompletionMessageToolCallFunction { }
-
 [CodeGenModel("ChatCompletionMessageToolCallChunkFunction")]
 internal partial class InternalChatCompletionMessageToolCallChunkFunction { }
 
@@ -74,9 +71,6 @@ internal partial class InternalCreateChatCompletionResponseChoiceLogprobs { }
 
 [CodeGenModel("CreateChatCompletionResponseObject")]
 internal readonly partial struct InternalCreateChatCompletionResponseObject { }
-
-[CodeGenModel("CreateChatCompletionStreamResponseChoice")]
-internal partial class InternalCreateChatCompletionStreamResponseChoice { }
 
 [CodeGenModel("CreateChatCompletionStreamResponseChoiceFinishReason")]
 internal readonly partial struct InternalCreateChatCompletionStreamResponseChoiceFinishReason { }

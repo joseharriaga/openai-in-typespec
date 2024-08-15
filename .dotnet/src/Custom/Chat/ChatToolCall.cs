@@ -45,7 +45,7 @@ public partial class ChatToolCall
     /// <summary>
     /// Gets the <c>arguments</c> to the function.
     /// </summary>
-    public string FunctionArguments => Function?.Arguments;
+    public BinaryData FunctionArguments => Function?.Arguments;
 
     /// <summary>
     /// Creates a new instance of <see cref="ChatToolCall"/>.
@@ -56,7 +56,7 @@ public partial class ChatToolCall
     /// </param>
     /// <param name="functionName"> The <c>name</c> of the function. </param>
     /// <param name="functionArguments"> The <c>arguments</c> to the function. </param>
-    public static ChatToolCall CreateFunctionToolCall(string toolCallId, string functionName, string functionArguments)
+    public static ChatToolCall CreateFunctionToolCall(string toolCallId, string functionName, BinaryData functionArguments)
     {
         Argument.AssertNotNull(toolCallId, nameof(toolCallId));
         Argument.AssertNotNull(functionName, nameof(functionName));

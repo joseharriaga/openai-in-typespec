@@ -27,16 +27,16 @@ internal partial class AzureAssistantClient : AssistantClient
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    public override async Task<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
+    public override IAsyncEnumerable<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
     {
-        using PipelineMessage message = CreateGetAssistantsRequest(limit, order, after, before, options);
-        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        using AssistantsPageEnumerator enumerator = new (Pipeline, _endpoint, limit, order, after, before, options);
+        return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
-    public override ClientResult GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
+    public override IEnumerable<ClientResult> GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
     {
-        using PipelineMessage message = CreateGetAssistantsRequest(limit, order, after, before, options);
-        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        using AssistantsPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, options);
+        return PageCollectionHelpers.Create(enumerator);
     }
 
     public override async Task<ClientResult> GetAssistantAsync(string assistantId, RequestOptions options)
@@ -108,21 +108,20 @@ internal partial class AzureAssistantClient : AssistantClient
     }
 
     /// <inheritdoc cref="InternalAssistantMessageClient.GetMessagesAsync"/>
-    public override async Task<ClientResult> GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+    public override IAsyncEnumerable<ClientResult> GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-
-        using PipelineMessage message = CreateGetMessagesRequest(threadId, limit, order, after, before, options);
-        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        using MessagesPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, options);
+        return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     /// <inheritdoc cref="InternalAssistantMessageClient.GetMessages"/>
-    public override ClientResult GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+    public override IEnumerable<ClientResult> GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        using PipelineMessage message = CreateGetMessagesRequest(threadId, limit, order, after, before, options);
-        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        using MessagesPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, options);
+        return PageCollectionHelpers.Create(enumerator);
     }
 
     /// <inheritdoc cref="InternalAssistantMessageClient.GetMessageAsync"/>
@@ -260,21 +259,20 @@ internal partial class AzureAssistantClient : AssistantClient
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRunsAsync"/>
-    public override async Task<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+    public override IAsyncEnumerable<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-
-        using PipelineMessage message = CreateGetRunsRequest(threadId, limit, order, after, before, options);
-        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        using RunsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, options);
+        return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRuns"/>
-    public override ClientResult GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+    public override IEnumerable<ClientResult> GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        using PipelineMessage message = CreateGetRunsRequest(threadId, limit, order, after, before, options);
-        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        using RunsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, options);
+        return PageCollectionHelpers.Create(enumerator);
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRunAsync"/>
@@ -380,23 +378,23 @@ internal partial class AzureAssistantClient : AssistantClient
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRunStepsAsync"/>
-    public override async Task<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
+    public override IAsyncEnumerable<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        using PipelineMessage message = CreateGetRunStepsRequest(threadId, runId, limit, order, after, before, options);
-        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        using RunStepsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, runId, limit, order, after, before, options);
+        return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRunSteps"/>
-    public override ClientResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
+    public override IEnumerable<ClientResult> GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        using PipelineMessage message = CreateGetRunStepsRequest(threadId, runId, limit, order, after, before, options);
-        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        using RunStepsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, runId, limit, order, after, before, options);
+        return PageCollectionHelpers.Create(enumerator);
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRunStepAsync"/>

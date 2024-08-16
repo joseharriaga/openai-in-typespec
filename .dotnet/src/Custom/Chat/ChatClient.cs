@@ -17,6 +17,8 @@ public partial class ChatClient
     private readonly string _model;
     private readonly OpenTelemetrySource _telemetry;
 
+    private static readonly ClientResultExceptionFactory _exceptionFactory = new OpenAIExceptionFactory();
+
     /// <summary>
     /// Initializes a new instance of <see cref="ChatClient"/> that will use an API key when authenticating.
     /// </summary>

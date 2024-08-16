@@ -25,7 +25,7 @@ public partial class ChatClient
         Argument.AssertNotNull(content, nameof(content));
 
         using PipelineMessage message = CreateCreateChatCompletionRequest(content, options);
-        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        return await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -42,6 +42,6 @@ public partial class ChatClient
         Argument.AssertNotNull(content, nameof(content));
 
         using PipelineMessage message = CreateCreateChatCompletionRequest(content, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        return _pipeline.ProcessMessage(message, options);
     }
 }

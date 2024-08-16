@@ -35,7 +35,6 @@ namespace OpenAI.Chat
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
-            //message.ExceptionFactory = _exceptionFactory;
             var request = message.Request;
             request.Method = "POST";
             var uri = new ClientUriBuilder();

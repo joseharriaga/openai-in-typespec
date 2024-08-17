@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using OpenAI.Internal;
 
 namespace OpenAI.Assistants;
 
@@ -18,90 +19,52 @@ namespace OpenAI.Assistants;
 [CodeGenModel("AssistantResponseFormat")]
 public partial class AssistantResponseFormat
 {
-    private readonly string _plainTextValue;
-    private readonly string _objectType;
-    private readonly IDictionary<string, BinaryData> SerializedAdditionalRawData;
-
-    private const string AutoValue = "auto";
-    private const string TextValue = "text";
-    private const string JsonObjectValue = "json_object";
-
-    /// <summary>
-    /// Default option. Specifies that the model should automatically determine whether it should respond with
-    /// plain text or another format.
-    /// </summary>
-    public static AssistantResponseFormat Auto { get; }
-        = new(plainTextValue: AutoValue, objectType: null, serializedAdditionalRawData: null);
-
-    /// <summary>
-    /// Specifies that the model should respond with plain text.
-    /// </summary>
-    public static AssistantResponseFormat Text { get; }
-        = new(plainTextValue: null, objectType: TextValue, serializedAdditionalRawData: null);
-
-    /// <summary>
-    /// Specifies that the model should reply with a structured JSON object, enabling JSON mode.
-    /// </summary>
-    /// <remarks>
-    /// **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a
-    /// system or user message. Without this, the model may generate an unending stream of whitespace until the
-    /// generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that
-    /// the message content may be partially cut off if `finish_reason="length"`, which indicates the generation
-    /// exceeded `max_tokens` or the conversation exceeded the max context length.
-    /// </remarks>
-    public static AssistantResponseFormat JsonObject { get; }
-        = new(plainTextValue: null, objectType: JsonObjectValue, serializedAdditionalRawData: null);
-
-    /// <summary>
-    /// Creates a new instance of <see cref="AssistantResponseFormat"/> for mocking.
-    /// </summary>
-    protected AssistantResponseFormat()
-    { }
-
-    internal AssistantResponseFormat(string plainTextValue, string objectType, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    public static AssistantResponseFormat Auto { get; } = new InternalAssistantResponseFormatPlainTextNoObject("auto");
+    public static AssistantResponseFormat Text { get; } = new InternalAssistantResponseFormatText();
+    public static AssistantResponseFormat JsonObject { get; } = new InternalAssistantResponseFormatJsonObject();
+    public static AssistantResponseFormat FromJsonSchema(
+        string name,
+        string description = null,
+        BinaryData jsonSchema = null,
+        bool? useStrictSchema = null)
     {
-        _plainTextValue = plainTextValue;
-        _objectType = objectType;
-        SerializedAdditionalRawData = serializedAdditionalRawData ?? new ChangeTrackingDictionary<string, BinaryData>();
+        InternalResponseFormatJsonSchemaJsonSchema internalSchema = new(
+            description,
+            name,
+            jsonSchema,
+            useStrictSchema,
+            null);
+        return new InternalAssistantResponseFormatJsonSchema(internalSchema);
     }
 
-    /// <inheritdoc />
-    public static bool operator ==(AssistantResponseFormat left, AssistantResponseFormat right) => left.Equals(right);
-    /// <inheritdoc />
-    public static bool operator !=(AssistantResponseFormat left, AssistantResponseFormat right) => !left.Equals(right);
-
-    /// <inheritdoc />
-    public static implicit operator AssistantResponseFormat(string value)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override bool Equals(object obj)
     {
-        if (string.Equals(value, AutoValue, StringComparison.OrdinalIgnoreCase))
-        {
-            return Auto;
-        }
-        if (string.Equals(value, TextValue, StringComparison.OrdinalIgnoreCase))
-        {
-            return Text;
-        }
-        if (string.Equals(value, JsonObjectValue, StringComparison.OrdinalIgnoreCase))
-        {
-            return JsonObject;
-        }
-        else
-        {
-            return new(plainTextValue: null, objectType: value, serializedAdditionalRawData: null);
-        }
+        return
+            (this is InternalAssistantResponseFormatText && obj is InternalAssistantResponseFormatText)
+            || (this is InternalAssistantResponseFormatJsonObject && obj is InternalAssistantResponseFormatJsonObject)
+            || (this is InternalAssistantResponseFormatJsonSchema thisSchema && obj is InternalAssistantResponseFormatJsonSchema otherSchema && thisSchema.JsonSchema.Name == otherSchema.JsonSchema.Name)
+            || (this is InternalAssistantResponseFormatPlainTextNoObject plainThis
+                    && obj is InternalAssistantResponseFormatPlainTextNoObject otherFormat
+                    && plainThis.Value == otherFormat.Value)
+            || (this is InternalAssistantResponseFormatPlainTextNoObject plainThis2 && obj is string otherPlainText
+                    && plainThis2.Value == otherPlainText);
     }
 
-    /// <inheritdoc />
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override bool Equals(object obj) => obj is AssistantResponseFormat other && Equals(other);
-    /// <inheritdoc />
-    public bool Equals(AssistantResponseFormat other)
-        => string.Equals(_plainTextValue, other?._plainTextValue, StringComparison.InvariantCultureIgnoreCase)
-            && string.Equals(_objectType, other?._objectType, StringComparison.InvariantCultureIgnoreCase);
+    public static bool operator==(AssistantResponseFormat first, AssistantResponseFormat second)
+        => first.Equals(second);
 
-    /// <inheritdoc />
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override int GetHashCode() => $"{_plainTextValue}/{_objectType}".GetHashCode();
-    /// <inheritdoc />
-    public override string ToString() => _plainTextValue ?? _objectType;
+    public static bool operator!=(AssistantResponseFormat first, AssistantResponseFormat second)
+        => !first.Equals(second);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
+
+    public static implicit operator AssistantResponseFormat(string plainTextValue)
+        => new InternalAssistantResponseFormatPlainTextNoObject(plainTextValue);
 }

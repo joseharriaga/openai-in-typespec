@@ -337,6 +337,53 @@ public partial class ChatTests : SyncAsyncTestBase
         Assert.That(blueProperty.GetString().ToLowerInvariant(), Contains.Substring("0000ff"));
     }
 
+    [Test]
+    public async Task StructuredOutputsWork()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
+        IEnumerable<ChatMessage> messages = [
+            new UserChatMessage("What's heavier, a pound of feathers or sixteen ounces of steel?")
+        ];
+        ChatCompletionOptions options = new ChatCompletionOptions()
+        {
+            ResponseFormat = ChatResponseFormat.FromJsonSchema(
+                "answer_with_reasons",
+                "a simple JSON document with a string answer and list of strings for reasoning steps",
+                BinaryData.FromString("""
+                    {
+                      "type": "object",
+                      "properties": {
+                        "answer": {
+                          "type": "string"
+                        },
+                        "steps": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "answer",
+                        "steps"
+                      ],
+                      "additionalProperties": false
+                    }
+                    """),
+                useStrictSchema: true)
+        };
+        ChatCompletion completion = IsAsync
+            ? await client.CompleteChatAsync(messages, options)
+            : client.CompleteChat(messages, options);
+        Assert.That(completion, Is.Not.Null);
+        Assert.That(completion.Content?.Count, Is.EqualTo(1));
+        JsonDocument contentDocument = null;
+        Assert.DoesNotThrow(() => contentDocument = JsonDocument.Parse(completion.Content[0].Text));
+        Assert.IsTrue(contentDocument.RootElement.TryGetProperty("answer", out JsonElement answerProperty));
+        Assert.IsTrue(answerProperty.ValueKind == JsonValueKind.String);
+        Assert.IsTrue(contentDocument.RootElement.TryGetProperty("steps", out JsonElement stepsProperty));
+        Assert.IsTrue(stepsProperty.ValueKind == JsonValueKind.Array);
+    }
 
     [Test]
     [NonParallelizable]

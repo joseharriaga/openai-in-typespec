@@ -96,6 +96,7 @@ public partial class AssistantChatMessage : ChatMessage
 
         Role = "assistant";
         Content = (IList<ChatMessageContentPart>)chatCompletion.Content;
+        RefusalMessage = chatCompletion.RefusalMessage;
         ToolCalls = (IList<ChatToolCall>)chatCompletion.ToolCalls;
         FunctionCall = chatCompletion.FunctionCall;
     }
@@ -107,4 +108,8 @@ public partial class AssistantChatMessage : ChatMessage
     /// </summary>
     [CodeGenMember("Name")]
     public string ParticipantName { get; set; }
+
+    // CUSTOM: Renamed.
+    [CodeGenMember("Refusal")]
+    public string RefusalMessage { get; set; }
 }

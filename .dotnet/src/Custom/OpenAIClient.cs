@@ -37,6 +37,7 @@ namespace OpenAI;
 [CodeGenSuppress("_cachedInternalAssistantMessageClient")]
 [CodeGenSuppress("_cachedInternalAssistantRunClient")]
 [CodeGenSuppress("_cachedInternalAssistantThreadClient")]
+[CodeGenSuppress("_cachedInternalUploadsClient")]
 [CodeGenSuppress("_cachedLegacyCompletionClient")]
 [CodeGenSuppress("_cachedModelClient")]
 [CodeGenSuppress("_cachedModerationClient")]
@@ -52,9 +53,11 @@ namespace OpenAI;
 [CodeGenSuppress("GetInternalAssistantMessageClientClient")]
 [CodeGenSuppress("GetInternalAssistantRunClientClient")]
 [CodeGenSuppress("GetInternalAssistantThreadClientClient")]
+[CodeGenSuppress("GetInternalUploadsClientClient")]
 [CodeGenSuppress("GetLegacyCompletionClientClient")]
 [CodeGenSuppress("GetModelClientClient")]
 [CodeGenSuppress("GetModerationClientClient")]
+[CodeGenSuppress("GetVectorStoreClientClient")]
 [CodeGenSuppress("GetVectorStoreClientClient")]
 public partial class OpenAIClient
 {

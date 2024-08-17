@@ -22,6 +22,18 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
+            if (SerializedAdditionalRawData?.ContainsKey("refusal") != true && Optional.IsDefined(RefusalMessage))
+            {
+                if (RefusalMessage != null)
+                {
+                    writer.WritePropertyName("refusal"u8);
+                    writer.WriteStringValue(RefusalMessage);
+                }
+                else
+                {
+                    writer.WriteNull("refusal");
+                }
+            }
             if (SerializedAdditionalRawData?.ContainsKey("name") != true && Optional.IsDefined(ParticipantName))
             {
                 writer.WritePropertyName("name"u8);
@@ -101,6 +113,7 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
+            string refusal = default;
             string name = default;
             IList<ChatToolCall> toolCalls = default;
             ChatFunctionCall functionCall = default;
@@ -110,6 +123,16 @@ namespace OpenAI.FineTuning
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("refusal"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        refusal = null;
+                        continue;
+                    }
+                    refusal = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("name"u8))
                 {
                     name = property.Value.GetString();
@@ -160,6 +183,7 @@ namespace OpenAI.FineTuning
                 role,
                 content ?? new ChangeTrackingList<ChatMessageContentPart>(),
                 serializedAdditionalRawData,
+                refusal,
                 name,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
                 functionCall);

@@ -120,6 +120,9 @@ internal partial class InternalMessageContentItemFileObjectImageFile
 [CodeGenModel("MessageContentTextObjectText")]
 internal partial class InternalMessageContentTextObjectText { }
 
+[CodeGenModel("MessageContentRefusalObjectType")]
+internal readonly partial struct InternalMessageContentRefusalObjectType { }
+
 [CodeGenModel("RunStepDetailsMessageCreationObjectMessageCreation")]
 internal partial class InternalRunStepDetailsMessageCreationObjectMessageCreation { }
 
@@ -396,3 +399,11 @@ internal partial class InternalAssistantToolsFileSearchTypeOnly { }
 
 [CodeGenModel("AssistantToolsFileSearchTypeOnlyType")]
 internal readonly partial struct InternalAssistantToolsFileSearchTypeOnlyType { }
+
+[CodeGenModel("AssistantResponseFormatText")] internal partial class InternalAssistantResponseFormatText { }
+[CodeGenModel("AssistantResponseFormatJsonObject")] internal partial class InternalAssistantResponseFormatJsonObject { }
+[CodeGenModel("AssistantResponseFormatJsonSchema")] internal partial class InternalAssistantResponseFormatJsonSchema { }
+[CodeGenModel("UnknownAssistantResponseFormat")] internal partial class InternalUnknownAssistantResponseFormat { }
+[CodeGenModel("ChatCompletionRequestMessageContentPartRefusal")] internal partial class InternalChatCompletionRequestMessageContentPartRefusal { }
+[CodeGenModel("MessageDeltaContentRefusalObject")] internal partial class InternalMessageDeltaContentRefusalObject { }
+[CodeGenModel("ToolResourcesFileSearchIdsOnly")] internal partial class InternalToolResourcesFileSearchIdsOnly { }

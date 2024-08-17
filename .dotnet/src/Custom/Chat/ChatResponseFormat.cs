@@ -1,4 +1,6 @@
-using OpenAI.Models;
+using System;
+using System.ComponentModel;
+using OpenAI.Internal;
 
 namespace OpenAI.Chat;
 
@@ -18,28 +20,49 @@ namespace OpenAI.Chat;
 /// the model.
 /// </para>
 /// </remarks>
-[CodeGenModel("CreateChatCompletionRequestResponseFormat")]
-public partial class ChatResponseFormat
+[CodeGenModel("ChatResponseFormat")]
+public abstract partial class ChatResponseFormat
 {
-    // CUSTOM: Made internal.
-
-    /// <summary> Must be one of `text` or `json_object`. </summary>
-    [CodeGenMember("Type")]
-    internal InternalCreateChatCompletionRequestResponseFormatType? Type { get; set; }
-
-    // CUSTOM: Made internal.
-    /// <summary> Initializes a new instance of <see cref="ChatResponseFormat"/>. </summary>
-    internal ChatResponseFormat()
-    {
-    }
-
-    internal ChatResponseFormat(InternalCreateChatCompletionRequestResponseFormatType? type)
-    {
-        Type = type;
-    }
-
     /// <summary> text. </summary>
-    public static ChatResponseFormat Text { get; } = new ChatResponseFormat(InternalCreateChatCompletionRequestResponseFormatType.Text);
+    public static ChatResponseFormat Text { get; } = new InternalChatResponseFormatText();
     /// <summary> json_object. </summary>
-    public static ChatResponseFormat JsonObject { get; } = new ChatResponseFormat(InternalCreateChatCompletionRequestResponseFormatType.JsonObject);
+    public static ChatResponseFormat JsonObject { get; } = new InternalChatResponseFormatJsonObject();
+
+    public static ChatResponseFormat FromJsonSchema(
+        string name,
+        string description = null,
+        BinaryData jsonSchema = null,
+        bool? useStrictSchema = null)
+    {
+        InternalResponseFormatJsonSchemaJsonSchema internalSchema = new(
+            description,
+            name,
+            jsonSchema,
+            useStrictSchema,
+            null);
+        return new InternalChatResponseFormatJsonSchema(internalSchema);
+    }
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override bool Equals(object obj)
+    {
+        return
+            (this is InternalChatResponseFormatText && obj is InternalChatResponseFormatText)
+            || (this is InternalChatResponseFormatJsonObject && obj is InternalChatResponseFormatJsonObject)
+            || (this is InternalChatResponseFormatJsonSchema thisSchema && obj is InternalChatResponseFormatJsonSchema otherSchema && thisSchema.JsonSchema.Name == otherSchema.JsonSchema.Name);
+    }
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static bool operator==(ChatResponseFormat first, ChatResponseFormat second)
+        => first.Equals(second);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static bool operator!=(ChatResponseFormat first, ChatResponseFormat second)
+        => !first.Equals(second);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }

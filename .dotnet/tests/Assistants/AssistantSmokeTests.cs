@@ -68,6 +68,17 @@ public partial class AssistantSmokeTests
         Assert.That(deserializedRunStep.Details.ToolCalls[0].CodeInterpreterOutputs, Has.Count.EqualTo(1));
         Assert.That(deserializedRunStep.Details.ToolCalls[0].CodeInterpreterOutputs[0].Logs, Is.Not.Null.And.Not.Empty);
     }
+
+    [Test]
+    public void ResponseFormatEquality()
+    {
+        Assert.That(AssistantResponseFormat.Text, Is.EqualTo(AssistantResponseFormat.Text));
+        Assert.That(AssistantResponseFormat.Text, Is.Not.EqualTo(AssistantResponseFormat.JsonObject));
+        Assert.That(AssistantResponseFormat.JsonObject, Is.EqualTo(AssistantResponseFormat.JsonObject));
+        Assert.That(AssistantResponseFormat.Auto, Is.EqualTo(AssistantResponseFormat.Auto));
+        Assert.That(AssistantResponseFormat.Auto == "auto");
+        Assert.That(AssistantResponseFormat.Auto, Is.Not.EqualTo(AssistantResponseFormat.JsonObject));
+    }
 }
 
 #pragma warning restore OPENAI001

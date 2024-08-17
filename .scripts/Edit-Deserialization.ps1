@@ -17,4 +17,5 @@ foreach ($file in $files) {
     $editedFilesCount++
 }
 
-Write-Progress -Activity "Complete" -PercentComplete 100
+Write-Progress -Activity "Editing" -Status "Complete" -PercentComplete 100
+Write-Output "Complete: deserialization edited."

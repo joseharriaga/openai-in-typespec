@@ -32,6 +32,7 @@ namespace OpenAI.Chat
             {
                 return null;
             }
+            string refusal = default;
             string name = default;
             IList<ChatToolCall> toolCalls = default;
             ChatFunctionCall functionCall = default;
@@ -41,6 +42,16 @@ namespace OpenAI.Chat
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("refusal"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        refusal = null;
+                        continue;
+                    }
+                    refusal = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("name"u8))
                 {
                     name = property.Value.GetString();
@@ -91,6 +102,7 @@ namespace OpenAI.Chat
                 role,
                 content ?? new ChangeTrackingList<ChatMessageContentPart>(),
                 serializedAdditionalRawData,
+                refusal,
                 name,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
                 functionCall);

@@ -499,7 +499,11 @@ public partial class AssistantTests
     public async Task StreamingToolCall()
     {
         AssistantClient client = GetTestClient();
-        FunctionToolDefinition getWeatherTool = new("get_current_weather", "Gets the user's current weather");
+        FunctionToolDefinition getWeatherTool = new()
+        {
+            FunctionName = "get_current_weather",
+            Description = "Gets the user's current weather",
+        };
         Assistant assistant = await client.CreateAssistantAsync("gpt-4o-mini", new()
         {
             Tools = { getWeatherTool }

@@ -18,6 +18,7 @@
 - Removed the endpoint parameter from all client constructors, making it clearer that an alternative endpoint must be specified via the `OpenAIClientOptions` parameter. (commit_hash)
 - Removed `OpenAIClient`'s `Endpoint` `protected` property. (commit_hash)
 - Made `OpenAIClient`'s constructor that takes a `ClientPipeline` parameter `protected internal` instead of just `protected`. (commit_hash)
+- Renamed the `User` property in applicable Options classes to `EndUserId`, making its purpose clearer. (commit_hash)
 
 ### Bugs Fixed
 

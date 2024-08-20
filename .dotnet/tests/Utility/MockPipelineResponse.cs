@@ -160,6 +160,7 @@ public class MockPipelineResponse : PipelineResponse
 
         // Less efficient FromStream method called here because it is a mock.
         // For intended production implementation, see HttpClientTransportResponse.
+        _contentStream.Position = 0;
         _bufferedContent = BinaryData.FromStream(bufferStream);
         return _bufferedContent;
     }

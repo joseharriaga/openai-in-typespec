@@ -132,6 +132,44 @@ public partial class EmbeddingTests : SyncAsyncTestBase
     }
 
     [Test]
+    [TestCase(EmbeddingsInputKind.UsingStrings)]
+    [TestCase(EmbeddingsInputKind.UsingIntegers)]
+    public async Task GenerateMultipleEmbeddingsWithBadOptions(EmbeddingsInputKind embeddingsInputKind)
+    {
+        EmbeddingClient client = GetTestClient();
+
+        EmbeddingGenerationOptions options = new()
+        {
+            Dimensions = -42,
+        };
+
+        Exception caughtException = null;
+
+        try
+        {
+            if (embeddingsInputKind == EmbeddingsInputKind.UsingStrings)
+            {
+                _ = IsAsync
+                    ? await client.GenerateEmbeddingsAsync(["prompt"], options)
+                    : client.GenerateEmbeddings(["prompt"], options);
+            }
+            else if (embeddingsInputKind == EmbeddingsInputKind.UsingIntegers)
+            {
+                _ = IsAsync
+                    ? await client.GenerateEmbeddingsAsync([[1]], options)
+                    : client.GenerateEmbeddings([[1]], options);
+            }
+        }
+        catch (Exception ex)
+        {
+            caughtException = ex;
+        }
+
+        Assert.That(caughtException, Is.InstanceOf<ClientResultException>());
+        Assert.That(caughtException.Message, Contains.Substring("dimensions"));
+    }
+
+    [Test]
     public void SerializeEmbeddingCollection()
     {
         // TODO: Add this test.

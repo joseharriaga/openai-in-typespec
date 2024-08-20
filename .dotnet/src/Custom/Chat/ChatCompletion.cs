@@ -68,7 +68,7 @@ public partial class ChatCompletion
     public ChatFunctionCall FunctionCall => Choices[0].Message.FunctionCall;
 
     // CUSTOM: Flattened choice message property.
-    public string RefusalMessage => Choices[0].Message.Refusal;
+    public string Refusal => Choices[0].Message.Refusal;
 
     /// <summary>
     /// Returns text representation of the first part of the first choice.

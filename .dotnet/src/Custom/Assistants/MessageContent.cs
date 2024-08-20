@@ -45,7 +45,7 @@ public abstract partial class MessageContent
     public string Text => AsInternalRequestText?.InternalText ?? AsInternalResponseText?.InternalText;
     /// <inheritdoc cref="InternalResponseMessageTextContent.InternalAnnotations"/>
     public IReadOnlyList<TextAnnotation> TextAnnotations => AsInternalResponseText?.InternalAnnotations ?? [];
-    public string RefusalMessage => AsRefusal?.Refusal;
+    public string Refusal => AsRefusal?.InternalRefusal;
 
     private InternalMessageImageFileContent AsInternalImageFile => this as InternalMessageImageFileContent;
     private InternalMessageImageUrlContent AsInternalImageUrl => this as InternalMessageImageUrlContent;

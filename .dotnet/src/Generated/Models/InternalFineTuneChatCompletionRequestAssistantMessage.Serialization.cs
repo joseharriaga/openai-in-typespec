@@ -22,12 +22,12 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("refusal") != true && Optional.IsDefined(RefusalMessage))
+            if (SerializedAdditionalRawData?.ContainsKey("refusal") != true && Optional.IsDefined(Refusal))
             {
-                if (RefusalMessage != null)
+                if (Refusal != null)
                 {
                     writer.WritePropertyName("refusal"u8);
-                    writer.WriteStringValue(RefusalMessage);
+                    writer.WriteStringValue(Refusal);
                 }
                 else
                 {

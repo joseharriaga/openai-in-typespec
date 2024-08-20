@@ -25,7 +25,7 @@ public partial class FileSearchToolResources
     }
 
     [CodeGenMember("VectorStores")]
-    public IList<VectorStoreCreationHelper> NewVectorStores { get; init; } = new ChangeTrackingList<VectorStoreCreationHelper>();
+    public IList<VectorStoreCreationHelper> NewVectorStores { get; } = new ChangeTrackingList<VectorStoreCreationHelper>();
 
     public FileSearchToolResources()
     { }

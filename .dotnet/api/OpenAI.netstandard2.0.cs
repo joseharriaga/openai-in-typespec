@@ -353,7 +353,7 @@ namespace OpenAI.Assistants {
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class FileSearchToolResources : IJsonModel<FileSearchToolResources>, IPersistableModel<FileSearchToolResources> {
-        public IList<VectorStoreCreationHelper> NewVectorStores { get; init; }
+        public IList<VectorStoreCreationHelper> NewVectorStores { get; }
         public IList<string> VectorStoreIds { get; set; }
         FileSearchToolResources IJsonModel<FileSearchToolResources>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<FileSearchToolResources>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -385,7 +385,7 @@ namespace OpenAI.Assistants {
         public MessageImageDetail? ImageDetail { get; }
         public string ImageFileId { get; }
         public Uri ImageUrl { get; }
-        public string RefusalMessage { get; }
+        public string Refusal { get; }
         public string Text { get; }
         public IReadOnlyList<TextAnnotation> TextAnnotations { get; }
         public static MessageContent FromImageFileId(string imageFileId, MessageImageDetail? detail = null);
@@ -404,7 +404,7 @@ namespace OpenAI.Assistants {
         public string ImageFileId { get; }
         public string MessageId { get; }
         public int MessageIndex { get; }
-        public string RefusalMessage { get; }
+        public string Refusal { get; }
         public MessageRole? Role { get; }
         public string Text { get; }
         public TextAnnotationUpdate TextAnnotation { get; }
@@ -1173,7 +1173,7 @@ namespace OpenAI.Chat {
         public AssistantChatMessage(string content);
         public ChatFunctionCall FunctionCall { get; set; }
         public string ParticipantName { get; set; }
-        public string RefusalMessage { get; set; }
+        public string Refusal { get; set; }
         public IList<ChatToolCall> ToolCalls { get; }
         AssistantChatMessage IJsonModel<AssistantChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<AssistantChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -1209,7 +1209,7 @@ namespace OpenAI.Chat {
         public ChatFunctionCall FunctionCall { get; }
         public string Id { get; }
         public string Model { get; }
-        public string RefusalMessage { get; }
+        public string Refusal { get; }
         public IReadOnlyList<ChatTokenLogProbabilityInfo> RefusalTokenLogProbabilities { get; }
         public ChatMessageRole Role { get; }
         public string SystemFingerprint { get; }

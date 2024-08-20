@@ -14,4 +14,7 @@ internal partial class InternalMessageRefusalContent
 {
     [CodeGenMember("Type")]
     private string _type = "refusal";
+
+    [CodeGenMember("Refusal")]
+    public string InternalRefusal { get; set; }
 }

@@ -5,9 +5,9 @@ VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI", "src\Azure.AI.OpenAI.csproj", "{A80B9566-84A5-4AE4-AA0A-72B18646F1EC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAI", "..\.dotnet\src\OpenAI.csproj", "{8BEE571B-DB25-4BE5-B9EB-2CA81D12EBC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAI", "..\..\..\.dotnet\src\OpenAI.csproj", "{8BEE571B-DB25-4BE5-B9EB-2CA81D12EBC6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI.Tests", ".tests.staging\Azure.AI.OpenAI.Tests.csproj", "{23DAB09E-3986-4248-AC80-2273C20FCD90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI.Tests", ".tests\Azure.AI.OpenAI.Tests.csproj", "{23DAB09E-3986-4248-AC80-2273C20FCD90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

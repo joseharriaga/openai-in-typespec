@@ -73,7 +73,10 @@ public abstract partial class ChatMessage
     public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts) => new UserChatMessage(contentParts);
 
     /// <inheritdoc cref="AssistantChatMessage(string)"/>
-    public static AssistantChatMessage CreateAssistantMessage(string content) => new AssistantChatMessage(content);
+    public static AssistantChatMessage CreateAssistantMessage(string content, string refusal = null) => new(content)
+    {
+        Refusal = refusal
+    };
 
     /// <inheritdoc cref="AssistantChatMessage(IEnumerable{ChatToolCall}, string)"/>
     public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null) => new AssistantChatMessage(toolCalls, content);

@@ -1290,7 +1290,7 @@ namespace OpenAI.Chat {
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
         public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
-        public static AssistantChatMessage CreateAssistantMessage(string content);
+        public static AssistantChatMessage CreateAssistantMessage(string content, string refusal = null);
         public static FunctionChatMessage CreateFunctionMessage(string functionName, string content);
         public static SystemChatMessage CreateSystemMessage(string content);
         public static ToolChatMessage CreateToolChatMessage(string toolCallId, string content);

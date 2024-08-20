@@ -1497,7 +1497,7 @@ namespace OpenAI.Chat {
         public StreamingChatFunctionCallUpdate FunctionCallUpdate { get; }
         public string Id { get; }
         public string Model { get; }
-        public string RefusalMessage { get; }
+        public string Refusal { get; }
         public IReadOnlyList<ChatTokenLogProbabilityInfo> RefusalTokenLogProbabilities { get; }
         public ChatMessageRole? Role { get; }
         public string SystemFingerprint { get; }

@@ -3,7 +3,7 @@
 
 #nullable disable
 
-using Azure.AI.OpenAI.Images;
+using Azure.AI.OpenAI;
 using Azure.Core;
 using OpenAI.Images;
 using System.ClientModel;
@@ -47,7 +47,7 @@ public class ImageTests : TestBase<ImageClient>
         {
             Quality = GeneratedImageQuality.Standard,
             Size = GeneratedImageSize.W1024xH1024,
-            User = "test_user",
+            EndUserId = "test_user",
             ResponseFormat = GeneratedImageFormat.Bytes,
         });
         Assert.That(image, Is.Not.Null);
@@ -62,7 +62,7 @@ public class ImageTests : TestBase<ImageClient>
         {
             Quality = GeneratedImageQuality.Standard,
             Size = GeneratedImageSize.W1024xH1024,
-            User = "test_user",
+            EndUserId = "test_user",
             ResponseFormat = GeneratedImageFormat.Uri,
         });
         GeneratedImage image = imageResult.Value;

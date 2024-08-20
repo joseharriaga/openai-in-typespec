@@ -1,0 +1,14 @@
+﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\Directory.Build.props" />
+  
+  <!-- Now configure the Azure OpenAI projects to reference the local OpenAI source code -->
+  <PropertyGroup>
+    <ExternalOpenAISource>$(CloneRoot)../../.dotnet/src/OpenAI.csproj</ExternalOpenAISource>
+    <SystemClientModelVersion>1.1.0-beta.5</SystemClientModelVersion>
+    <!--
+    <ExternalOpenAILibrary>path/to/OpenAI.dll</ExternalOpenAILibrary>
+    <ExternalAzureCoreSource>$(RepoRoot)/sdk/core/Azure.Core/src/Azure.Core.csproj</ExternalAzureCoreSource>
+    <ExternalAzureCoreLibrary>../../external/Azure.Core.Slim/netstandard2.0/Azure.Core.Slim.dll</ExternalAzureCoreLibrary>
+    -->
+  </PropertyGroup>
+</Project>

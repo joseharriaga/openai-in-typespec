@@ -23,7 +23,7 @@ public class FileTests : TestBase<FileClient>
             "test_file_delete_me.txt",
             FileUploadPurpose.Assistants);
         Validate(file);
-        bool deleted = client.DeleteFile(file);
+        bool deleted = client.DeleteFile(file.Id);
         Assert.IsTrue(deleted);
     }
 }

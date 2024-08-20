@@ -7,19 +7,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI", "src\Azur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAI", "..\..\..\.dotnet\src\OpenAI.csproj", "{8BEE571B-DB25-4BE5-B9EB-2CA81D12EBC6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI.Tests", ".tests\Azure.AI.OpenAI.Tests.csproj", "{23DAB09E-3986-4248-AC80-2273C20FCD90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AI.OpenAI.Tests", "tests\Azure.AI.OpenAI.Tests.csproj", "{23DAB09E-3986-4248-AC80-2273C20FCD90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Unsigned|Any CPU = Unsigned|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A80B9566-84A5-4AE4-AA0A-72B18646F1EC}.Unsigned|Any CPU.ActiveCfg = Unsigned|Any CPU
-		{A80B9566-84A5-4AE4-AA0A-72B18646F1EC}.Unsigned|Any CPU.Build.0 = Unsigned|Any CPU
+		{A80B9566-84A5-4AE4-AA0A-72B18646F1EC}.Unsigned|Any CPU.ActiveCfg = Debug|Any CPU
+		{A80B9566-84A5-4AE4-AA0A-72B18646F1EC}.Unsigned|Any CPU.Build.0 = Debug|Any CPU
 		{8BEE571B-DB25-4BE5-B9EB-2CA81D12EBC6}.Unsigned|Any CPU.ActiveCfg = Unsigned|Any CPU
 		{8BEE571B-DB25-4BE5-B9EB-2CA81D12EBC6}.Unsigned|Any CPU.Build.0 = Unsigned|Any CPU
-		{23DAB09E-3986-4248-AC80-2273C20FCD90}.Unsigned|Any CPU.ActiveCfg = Unsigned|Any CPU
-		{23DAB09E-3986-4248-AC80-2273C20FCD90}.Unsigned|Any CPU.Build.0 = Unsigned|Any CPU
+		{23DAB09E-3986-4248-AC80-2273C20FCD90}.Unsigned|Any CPU.ActiveCfg = Debug|Any CPU
+		{23DAB09E-3986-4248-AC80-2273C20FCD90}.Unsigned|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

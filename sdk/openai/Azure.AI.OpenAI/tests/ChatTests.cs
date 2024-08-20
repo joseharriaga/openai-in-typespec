@@ -238,7 +238,7 @@ public class ChatTests : TestBase<ChatClient>
 
         ChatClient client = GetTestClient("gpt-4");
 
-        ResultCollection<StreamingChatCompletionUpdate> chatUpdates = client.CompleteChatStreaming(
+        CollectionResult<StreamingChatCompletionUpdate> chatUpdates = client.CompleteChatStreaming(
             [new UserChatMessage("What does the term 'PR complete' mean?")],
             options);
 

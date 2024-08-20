@@ -37,7 +37,6 @@ namespace OpenAI.Chat
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
-            message.Apply(options);
             return message;
         }
 

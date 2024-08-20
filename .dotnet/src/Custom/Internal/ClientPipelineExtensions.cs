@@ -14,9 +14,7 @@ internal static partial class ClientPipelineExtensions
         PipelineMessage message,
         RequestOptions options)
     {
-        await pipeline.SendAsync(message).ConfigureAwait(false);
-
-        if (message.Response.IsError && (options?.ErrorOptions & ClientErrorBehaviors.NoThrow) != ClientErrorBehaviors.NoThrow)
+        if (!await pipeline.TryProcessAsync(message, options).ConfigureAwait(false))
         {
             throw await TryBufferResponseAndCreateErrorAsync(message).ConfigureAwait(false) switch
             {
@@ -36,9 +34,7 @@ internal static partial class ClientPipelineExtensions
         PipelineMessage message,
         RequestOptions options)
     {
-        pipeline.Send(message);
-
-        if (message.Response.IsError && (options?.ErrorOptions & ClientErrorBehaviors.NoThrow) != ClientErrorBehaviors.NoThrow)
+        if (!pipeline.TryProcess(message, options))
         {
             throw TryBufferResponseAndCreateError(message) switch
             {

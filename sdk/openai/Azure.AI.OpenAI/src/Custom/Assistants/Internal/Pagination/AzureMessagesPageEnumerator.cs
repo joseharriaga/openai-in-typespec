@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
@@ -11,7 +14,7 @@ internal partial class AzureMessagesPageEnumerator : MessagesPageEnumerator
     public AzureMessagesPageEnumerator(
         ClientPipeline pipeline,
         Uri endpoint,
-        string threadId, 
+        string threadId,
         int? limit, string order, string after, string before,
         string apiVersion,
         RequestOptions options)

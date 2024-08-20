@@ -30,12 +30,12 @@ internal partial class AzureChatClient : ChatClient
         options ??= new();
 
         _deploymentName = deploymentName;
+        _endpoint = endpoint;
         _apiVersion = options.Version;
     }
 
     protected AzureChatClient()
-    {
-    }
+    { }
 
     /// <inheritdoc/>
     public override AsyncCollectionResult<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default)

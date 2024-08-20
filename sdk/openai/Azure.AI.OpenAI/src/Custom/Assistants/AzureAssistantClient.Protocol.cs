@@ -107,7 +107,7 @@ internal partial class AzureAssistantClient : AssistantClient
         return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
-    /// <inheritdoc cref="InternalAssistantMessageClient.GetMessagesAsync"/>
+    /// <inheritdoc />
     public override IAsyncEnumerable<ClientResult> GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
@@ -116,7 +116,6 @@ internal partial class AzureAssistantClient : AssistantClient
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
-    /// <inheritdoc cref="InternalAssistantMessageClient.GetMessages"/>
     public override IEnumerable<ClientResult> GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
@@ -259,7 +258,6 @@ internal partial class AzureAssistantClient : AssistantClient
         }
     }
 
-    /// <inheritdoc cref="InternalAssistantRunClient.GetRunsAsync"/>
     public override IAsyncEnumerable<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
@@ -268,7 +266,6 @@ internal partial class AzureAssistantClient : AssistantClient
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
-    /// <inheritdoc cref="InternalAssistantRunClient.GetRuns"/>
     public override IEnumerable<ClientResult> GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
@@ -379,7 +376,6 @@ internal partial class AzureAssistantClient : AssistantClient
         }
     }
 
-    /// <inheritdoc cref="InternalAssistantRunClient.GetRunStepsAsync"/>
     public override IAsyncEnumerable<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
@@ -389,7 +385,6 @@ internal partial class AzureAssistantClient : AssistantClient
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
-    /// <inheritdoc cref="InternalAssistantRunClient.GetRunSteps"/>
     public override IEnumerable<ClientResult> GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));

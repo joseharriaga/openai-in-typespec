@@ -1,25 +1,28 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Azure.AI.OpenAI;
-using Azure.AI.OpenAI.Embeddings;
-using OpenAI.Chat;
-using OpenAI.Embeddings;
 using System.ClientModel;
+using System.Threading.Tasks;
+using NUnit.Framework;
+using OpenAI.Embeddings;
+using OpenAI.TestFramework;
 
 namespace Azure.AI.OpenAI.Tests;
 
-public class EmbeddingTests : TestBase<EmbeddingClient>
+public class EmbeddingTests : AoaiTestBase<EmbeddingClient>
 {
+    public EmbeddingTests(bool isAsync) : base(isAsync)
+    { }
+
     [Test]
     [Category("Smoke")]
     public void CanCreateClient() => Assert.That(GetTestClient(), Is.InstanceOf<EmbeddingClient>());
 
-    [Test]
-    public void SimpleEmbeddingWithTopLevelClient()
+    [RecordedTest]
+    public async Task SimpleEmbeddingWithTopLevelClient()
     {
         EmbeddingClient embeddingClient = GetTestClient();
-        ClientResult<Embedding> embeddingResult = embeddingClient.GenerateEmbedding("sample text to embed");
+        ClientResult<Embedding> embeddingResult = await embeddingClient.GenerateEmbeddingAsync("sample text to embed");
         Assert.That(embeddingResult?.Value?.Vector.Length, Is.GreaterThan(0));
     }
 }

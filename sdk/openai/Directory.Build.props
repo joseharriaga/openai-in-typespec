@@ -35,19 +35,25 @@
     <CloneRoot>$(MSBuildThisFileDirectory)</CloneRoot>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(IsClientLibrary)' == 'true'">
-    <RequiredTargetFrameworks>netstandard2.0</RequiredTargetFrameworks>
-    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
-    <CodeAnalysisRuleSet>$(CloneRoot)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+  <Choose>
+    <When Condition="'$(IsClientLibrary)' == 'true'">
+      <PropertyGroup>
+        <RequiredTargetFrameworks>netstandard2.0</RequiredTargetFrameworks>
+        <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
+        <CodeAnalysisRuleSet>$(CloneRoot)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+      </PropertyGroup>
+    </When>
 
-  <PropertyGroup Condition="'$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true'">
-    <RequiredTargetFrameworks>net8.0;net6.0</RequiredTargetFrameworks>
-    <RequiredTargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(RequiredTargetFrameworks);net462</RequiredTargetFrameworks>
-    <ImplicitUsings>true</ImplicitUsings>
-  </PropertyGroup>
-  
-  <ItemGroup Condition="'$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true'">
-    <Using Include="NUnit.Framework" />
-  </ItemGroup>
+    <When Condition="'$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true'">
+      <PropertyGroup >
+        <RequiredTargetFrameworks>net8.0;net6.0</RequiredTargetFrameworks>
+        <RequiredTargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(RequiredTargetFrameworks);net462</RequiredTargetFrameworks>
+      </PropertyGroup>
+      <!--<ItemGroup>
+        <Using Include="NUnit.Framework" />
+        <Using Include="System.Collections.Generic" />
+      </ItemGroup>-->
+    </When>
+  </Choose>
+
 </Project>

@@ -1,49 +1,49 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-#nullable disable
-
-using Azure.AI.OpenAI;
-using Azure.Core;
-using OpenAI.Images;
+using System;
 using System.ClientModel;
+using System.Threading.Tasks;
+using NUnit.Framework;
+using OpenAI.Images;
+using OpenAI.TestFramework;
 
 namespace Azure.AI.OpenAI.Tests;
 
-public class ImageTests : TestBase<ImageClient>
+public class ImageTests(bool isAsync) : AoaiTestBase<ImageClient>(isAsync)
 {
-    [Test]
+    [RecordedTest]
     [Category("Smoke")]
-    public void CanCreateClient() => Assert.That(GetTestClient<TokenCredential>(), Is.InstanceOf<ImageClient>());
-
-    [Test]
-    public void BadKeyGivesHelpfulError()
+    public void CanCreateClient()
     {
-        string endpointFromEnvironment = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
-        Uri endpoint = new(endpointFromEnvironment);
-        string mockKey = "not-a-valid-key-and-should-still-be-sanitized";
-        ApiKeyCredential credential = new(mockKey);
-        AzureOpenAIClient topLevelClient = new(endpoint, credential);
-        ImageClient client = topLevelClient.GetImageClient("dall-e-3");
-        Exception thrownException = null;
-        try
-        {
-            _ = client.GenerateImage("a delightful exception message, in contemporary watercolor");
-        }
-        catch (Exception ex)
-        {
-            thrownException = ex;
-        }
-        Assert.That(thrownException, Is.InstanceOf<ClientResultException>());
-        Assert.That(thrownException.Message, Does.Contain("invalid subscription key"));
-        Assert.That(thrownException.Message, Does.Not.Contain(mockKey));
+        ImageClient client = GetTestClient(tokenCredential: TestEnvironment.Credential);
+        Assert.That(client, Is.InstanceOf<ImageClient>());
     }
 
-    [Test]
-    public void CanCreateSimpleImage()
+    [RecordedTest]
+    public async Task BadKeyGivesHelpfulError()
+    {
+        string mockKey = "not-a-valid-key-and-should-still-be-sanitized";
+
+        try
+        {
+            ImageClient client = GetTestClient(keyCredential: new ApiKeyCredential(mockKey));
+            _ = await client.GenerateImageAsync("a delightful exception message, in contemporary watercolor");
+            Assert.Fail("No exception was thrown");
+        }
+        catch (Exception thrownException)
+        {
+            Assert.That(thrownException, Is.InstanceOf<ClientResultException>());
+            Assert.That(thrownException.Message, Does.Contain("invalid subscription key"));
+            Assert.That(thrownException.Message, Does.Not.Contain(mockKey));
+        }
+    }
+
+    [RecordedTest]
+    public async Task CanCreateSimpleImage()
     {
         ImageClient client = GetTestClient();
-        GeneratedImage image = client.GenerateImage("a small watermelon", new()
+        GeneratedImage image = await client.GenerateImageAsync("a tabby cat", new()
         {
             Quality = GeneratedImageQuality.Standard,
             Size = GeneratedImageSize.W1024xH1024,
@@ -54,11 +54,11 @@ public class ImageTests : TestBase<ImageClient>
         Assert.That(image.ImageBytes, Is.Not.Null);
     }
 
-    [Test]
-    public void CanGetContentFilterResults()
+    [RecordedTest]
+    public async Task CanGetContentFilterResults()
     {
         ImageClient client = GetTestClient();
-        ClientResult<GeneratedImage> imageResult = client.GenerateImage("a small watermelon", new()
+        ClientResult<GeneratedImage> imageResult = await client.GenerateImageAsync("a tabby cat", new()
         {
             Quality = GeneratedImageQuality.Standard,
             Size = GeneratedImageSize.W1024xH1024,
@@ -69,7 +69,6 @@ public class ImageTests : TestBase<ImageClient>
         Assert.That(image, Is.Not.Null);
         Assert.That(image.ImageUri, Is.Not.Null);
         Console.WriteLine($"RESPONSE--\n{imageResult.GetRawResponse().Content}");
-#pragma warning disable OPENAI002
         ImageContentFilterResultForPrompt promptResults = image.GetContentFilterResultForPrompt();
         ImageContentFilterResultForResponse responseResults = image.GetContentFilterResultForResponse();
         Assert.That(promptResults?.Sexual?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));

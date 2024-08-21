@@ -11,13 +11,13 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
 {
     public override IAsyncEnumerable<ClientResult> GetVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options)
     {
-        using VectorStoresPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, options);
+        using AzureVectorStoresPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     public override IEnumerable<ClientResult> GetVectorStores(int? limit, string order, string after, string before, RequestOptions options)
     {
-        using VectorStoresPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, options);
+        using AzureVectorStoresPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, _apiVersion,options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
@@ -87,7 +87,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
-        using VectorStoreFilesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, limit, order, after, before, filter, options);
+        using AzureVectorStoreFilesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, limit, order, after, before, filter, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
@@ -95,7 +95,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
-        using VectorStoreFilesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, limit, order, after, before, filter, options);
+        using AzureVectorStoreFilesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, limit, order, after, before, filter, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
@@ -212,7 +212,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
 
-        using VectorStoreFileBatchesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, batchId, limit, order, after, before, filter, options);
+        using AzureVectorStoreFileBatchesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, batchId, limit, order, after, before, filter, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
@@ -221,21 +221,9 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
 
-        using VectorStoreFileBatchesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, batchId, limit, order, after, before, filter, options);
+        using AzureVectorStoreFileBatchesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, batchId, limit, order, after, before, filter, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
-
-    private new PipelineMessage CreateGetVectorStoresRequest(int? limit, string order, string after, string before, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
-            .WithMethod("GET")
-            .WithPath("vector_stores")
-            .WithOptionalQueryParameter("limit", limit)
-            .WithOptionalQueryParameter("order", order)
-            .WithOptionalQueryParameter("after", after)
-            .WithOptionalQueryParameter("before", before)
-            .WithAccept("application/json")
-            .WithOptions(options)
-            .Build();
 
     private new PipelineMessage CreateCreateVectorStoreRequest(BinaryContent content, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
@@ -267,19 +255,6 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithMethod("DELETE")
             .WithPath("vector_stores", vectorStoreId)
-            .WithAccept("application/json")
-            .WithOptions(options)
-            .Build();
-
-    private new PipelineMessage CreateGetVectorStoreFilesRequest(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
-            .WithMethod("GET")
-            .WithPath("vector_stores", vectorStoreId, "files")
-            .WithOptionalQueryParameter("limit", limit)
-            .WithOptionalQueryParameter("order", order)
-            .WithOptionalQueryParameter("after", after)
-            .WithOptionalQueryParameter("before", before)
-            .WithOptionalQueryParameter("filter", filter)
             .WithAccept("application/json")
             .WithOptions(options)
             .Build();
@@ -330,19 +305,6 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithMethod("POST")
             .WithPath("vector_stores", vectorStoreId, "file_batches", batchId, "cancel")
-            .WithAccept("application/json")
-            .WithOptions(options)
-            .Build();
-
-    private new PipelineMessage CreateGetFilesInVectorStoreBatchesRequest(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
-            .WithMethod("GET")
-            .WithPath("vector_stores", vectorStoreId, "file_batches", batchId, "files")
-            .WithOptionalQueryParameter("limit", limit)
-            .WithOptionalQueryParameter("order", order)
-            .WithOptionalQueryParameter("after", after)
-            .WithOptionalQueryParameter("before", before)
-            .WithOptionalQueryParameter("filter", filter)
             .WithAccept("application/json")
             .WithOptions(options)
             .Build();

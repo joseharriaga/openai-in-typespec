@@ -29,13 +29,13 @@ internal partial class AzureAssistantClient : AssistantClient
 
     public override IAsyncEnumerable<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
     {
-        using AssistantsPageEnumerator enumerator = new (Pipeline, _endpoint, limit, order, after, before, options);
+        using AzureAssistantsPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     public override IEnumerable<ClientResult> GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
     {
-        using AssistantsPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, options);
+        using AzureAssistantsPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
@@ -111,7 +111,8 @@ internal partial class AzureAssistantClient : AssistantClient
     public override IAsyncEnumerable<ClientResult> GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-        using MessagesPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, options);
+
+        using AzureMessagesPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
@@ -120,7 +121,7 @@ internal partial class AzureAssistantClient : AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        using MessagesPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, options);
+        using AzureMessagesPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
@@ -262,7 +263,8 @@ internal partial class AzureAssistantClient : AssistantClient
     public override IAsyncEnumerable<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-        using RunsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, options);
+
+        using AzureRunsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
@@ -271,7 +273,7 @@ internal partial class AzureAssistantClient : AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        using RunsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, options);
+        using AzureRunsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
@@ -383,7 +385,7 @@ internal partial class AzureAssistantClient : AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        using RunStepsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, runId, limit, order, after, before, options);
+        using  AzureRunStepsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, runId, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
@@ -393,7 +395,7 @@ internal partial class AzureAssistantClient : AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        using RunStepsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, runId, limit, order, after, before, options);
+        using AzureRunStepsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, runId, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
@@ -490,9 +492,6 @@ internal partial class AzureAssistantClient : AssistantClient
     private new PipelineMessage CreateCreateAssistantRequest(BinaryContent content, RequestOptions options = null)
         => NewJsonPostBuilder(content, options).WithPath("assistants").Build();
 
-    private new PipelineMessage CreateGetAssistantsRequest(int? limit, string order, string after, string before, RequestOptions options)
-        => NewGetListBuilder(limit, order, after, before, options).WithPath("assistants").Build();
-
     private new PipelineMessage CreateGetAssistantRequest(string assistantId, RequestOptions options)
         => NewJsonGetBuilder(options).WithPath("assistants", assistantId).Build();
 
@@ -520,9 +519,6 @@ internal partial class AzureAssistantClient : AssistantClient
     private PipelineMessage CreateCreateMessageRequest(string threadId, BinaryContent content, RequestOptions options)
         => NewJsonPostBuilder(content, options).WithPath("threads", threadId, "messages").Build();
 
-    private PipelineMessage CreateGetMessagesRequest(string threadId, int? limit, string order, string after, string before, RequestOptions options)
-        => NewGetListBuilder(limit, order, after, before, options).WithPath("threads", threadId, "messages").Build();
-
     private PipelineMessage CreateGetMessageRequest(string threadId, string messageId, RequestOptions options)
         => NewJsonGetBuilder(options).WithPath("threads", threadId, "messages", messageId).Build();
 
@@ -538,9 +534,6 @@ internal partial class AzureAssistantClient : AssistantClient
     private PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, RequestOptions options)
         => NewJsonPostBuilder(content, options).WithPath("threads", threadId, "runs").Build();
 
-    private PipelineMessage CreateGetRunsRequest(string threadId, int? limit, string order, string after, string before, RequestOptions options)
-        => NewGetListBuilder(limit, order, after, before, options).WithPath("threads", threadId, "runs").Build();
-
     private PipelineMessage CreateGetRunRequest(string threadId, string runId, RequestOptions options)
         => NewJsonGetBuilder(options).WithPath("threads", threadId, "runs", runId).Build();
 
@@ -553,16 +546,14 @@ internal partial class AzureAssistantClient : AssistantClient
     private PipelineMessage CreateSubmitToolOutputsToRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
         => NewJsonPostBuilder(content, options).WithPath("threads", threadId, "runs", runId, "submit_tool_outputs").Build();
 
-    private PipelineMessage CreateGetRunStepsRequest(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
-        => NewGetListBuilder(limit, order, after, before, options).WithPath("threads", threadId, "runs", runId, "steps").Build();
-
     private PipelineMessage CreateGetRunStepRequest(string threadId, string runId, string stepId, RequestOptions options)
         => NewJsonGetBuilder(options).WithPath("threads", threadId, "runs", runId, "steps", stepId).Build();
 
     private AzureOpenAIPipelineMessageBuilder NewBuilder(RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
-            .WithHeader(s_OpenAIBetaFeatureHeader, s_OpenAIBetaAssistantsV2HeaderValue)
+            .WithAssistantsHeader()
             .WithOptions(options);
+
     private AzureOpenAIPipelineMessageBuilder NewJsonPostBuilder(BinaryContent content, RequestOptions options)
         => NewBuilder(options)
         .WithMethod("POST")
@@ -581,11 +572,5 @@ internal partial class AzureAssistantClient : AssistantClient
 
     private AzureOpenAIPipelineMessageBuilder NewGetListBuilder(int? limit, string order, string after, string before, RequestOptions options)
         => NewJsonGetBuilder(options)
-        .WithOptionalQueryParameter("limit", limit)
-        .WithOptionalQueryParameter("order", order)
-        .WithOptionalQueryParameter("after", after)
-        .WithOptionalQueryParameter("before", before);
-
-    private static readonly string s_OpenAIBetaFeatureHeader = "OpenAI-Beta";
-    private static readonly string s_OpenAIBetaAssistantsV2HeaderValue = "assistants=v2";
+        .WithCommonListParameters(limit, order, after, before);
 }

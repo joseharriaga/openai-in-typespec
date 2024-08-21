@@ -44,7 +44,7 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
     public async Task BasicAssistantOperationsWork()
     {
         AssistantClient client = GetTestClient();
-        string modelName = "gpt-4o"; // client.DeploymentOrThrow();
+        string modelName = "gpt-4"; // client.DeploymentOrThrow();
         Assistant assistant = await client.CreateAssistantAsync(modelName);
         Validate(assistant);
         Assert.That(assistant.Name, Is.Null.Or.Empty);
@@ -74,7 +74,7 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
              },
         });
         Assert.That(modifiedAssistant.Id, Is.EqualTo(assistant.Id));
-        AsyncPageCollection<Assistant> recentAssistants = client.GetAssistantsAsync();
+        IAsyncEnumerable<Assistant> recentAssistants = client.GetAssistantsAsync().GetAllValuesAsync();
         //SyncOrAsync(
         //    client, c => c.GetAssistants(), c => c.GetAssistantsAsync());
         Assistant recentAssistant = null;
@@ -169,7 +169,7 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
     //     {
     //         InitialMessages = { new(MessageRole.User, ["What should I wear outside right now?"]), },
     //     };
-    //     AsyncCollectionResult<StreamingUpdate> asyncResults = SyncOrAsync(client,
+    //     AsyncResultCollection<StreamingUpdate> asyncResults = SyncOrAsync(client,
     //         c => c.CreateThreadAndRunStreaming(assistant, thrdOpt),
     //         c => c.CreateThreadAndRunStreamingAsync(assistant, thrdOpt));
 
@@ -597,7 +597,7 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
     //         r => r.Status.IsTerminal);
     //     Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-    //     AsyncPageCollection<ThreadMessage> messages = SyncOrAsync(client,
+    //     AsyncPageableCollection<ThreadMessage> messages = SyncOrAsync(client,
     //         c => c.GetMessages(thread, resultOrder: ListOrder.NewestFirst),
     //         c => c.GetMessagesAsync(thread, resultOrder: ListOrder.NewestFirst));
     //     bool hasAtLeastOne = false;
@@ -633,7 +633,7 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
     //     });
     //     Validate(thread);
 
-    //     AsyncCollectionResult<StreamingUpdate> streamingResult = SyncOrAsync(client,
+    //     AsyncResultCollection<StreamingUpdate> streamingResult = SyncOrAsync(client,
     //         c => c.CreateRunStreaming(thread.Id, assistant.Id),
     //         c => c.CreateRunStreamingAsync(thread.Id, assistant.Id));
 
@@ -669,69 +669,6 @@ public class AssistantTests : AoaiTestBase<AssistantClient>
     //     Assert.That(lastUpdate, Is.Not.Null.And.GreaterThan(s_2024));
     //     Assert.That(content, Has.Length.GreaterThan(0));
     // }
-
-    [Test]
-    public async Task BrowserToolWorks()
-    {
-        Uri endpoint = new("https://openai-sdk-testing-tip.openai.azure.com");
-        TokenCredential credential = new DefaultAzureCredential();
-        AzureOpenAIClientOptions options = new();
-        options.AddPolicy(new GenericActionPipelinePolicy(
-            requestAction: request =>
-            {
-                request.Headers.Set("X-Ms-Enable-Preview", "true");
-            }),
-            PipelinePosition.PerCall);
-        AzureOpenAIClient azureClient = new(endpoint, credential, options);
-        AssistantClient client = azureClient.GetAssistantClient();
-
-        Assistant assistant = await client.CreateAssistantAsync(
-            "gpt-4-0125-preview",
-            new AssistantCreationOptions()
-            {
-                Instructions = "When asked to retrieve up-to-date information, use the browser tool.",
-                Tools =
-                {
-                    new BingSearchToolDefinition()
-                    {
-                        BingResourceId = "/subscriptions/6a6fff00-4464-4eab-a6b1-0b533c7202e0/resourceGroups/rg-agent-test-westus2/providers/Microsoft.Bing/accounts/chattest-westus2-bing",
-                    },
-                },
-            });
-        Validate(assistant);
-
-        ThreadCreationOptions threadOptions = new()
-        {
-            InitialMessages =
-            {
-                "What's the date and what's headline news today?"
-            },
-        };
-
-        List<TextAnnotationUpdate> annotationUpdates = [];
-        await foreach (StreamingUpdate update in client.CreateThreadAndRunStreamingAsync(assistant.Id, threadOptions))
-        {
-            if (update is MessageContentUpdate contentUpdate)
-            {
-                Console.Write(contentUpdate.Text);
-                if (contentUpdate.TextAnnotation is not null)
-                {
-                    annotationUpdates.Add(contentUpdate.TextAnnotation);
-                }
-            }
-        }
-        Console.WriteLine();
-
-        if (annotationUpdates.Count > 0)
-        {
-            Console.WriteLine("Citations:");
-            for (int i = 0; i <  annotationUpdates.Count; i++)
-            {
-                Console.WriteLine($"{(i + 1)}: {annotationUpdates[i].GetBingSearchTitle()}");
-                Console.WriteLine($"   {annotationUpdates[i].GetBingSearchUrl().AbsoluteUri}");
-            }
-        }
-    }
 
     private static readonly DateTimeOffset s_2024 = new(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);
 }

@@ -8,6 +8,9 @@
 
 ### Breaking Changes
 
+- Updated fine-tuning pagination methods `GetJobs`, `GetEvents`, and `GetJobCheckpoints` to return `IEnumerable<ClientResult>` instead of `ClientResult`.
+- Updated the batching pagination method `GetBatches` to return `IEnumerable<ClientResult>` instead of `ClientResult`.
+
 ### Bugs Fixed
 
 ### Other Changes

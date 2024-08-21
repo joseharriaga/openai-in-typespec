@@ -3,7 +3,7 @@
   
   <!-- Now configure the Azure OpenAI projects to reference the local OpenAI source code -->
   <PropertyGroup>
-    <ExternalOpenAISource>$(CloneRoot)../../.dotnet/src/OpenAI.csproj</ExternalOpenAISource>
+    <ExternalOpenAISource>$(RepoRoot)/../.dotnet/src/OpenAI.csproj</ExternalOpenAISource>
     <SystemClientModelVersion>1.1.0-beta.5</SystemClientModelVersion>
     <!--
     <ExternalOpenAILibrary>path/to/OpenAI.dll</ExternalOpenAILibrary>

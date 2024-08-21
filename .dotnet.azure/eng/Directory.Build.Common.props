@@ -5,6 +5,7 @@
     <IsTestSupportProject Condition="'$(IsTestSupportProject)' == '' and '$(IsTestProject)' != 'true' and ($(MSBuildProjectDirectory.Contains('/tests/')) or $(MSBuildProjectDirectory.Contains('\tests\')))">true</IsTestSupportProject>
     <IsClientLibrary Condition="'$(IsClientLibrary)' == '' and '$(IsTestProject)' != 'true' and '$(IsTestSupportProject)' != 'true'">true</IsClientLibrary>
     <LangVersion>11.0</LangVersion>
+    <ImportRepoCommonSettings>true</ImportRepoCommonSettings>
     <NoWarn>
       $(NoWarn);
       NU5105;
@@ -32,7 +33,6 @@
       AZPROVISION001; <!-- Provisioning -->
     </NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CloneRoot>$(MSBuildThisFileDirectory)</CloneRoot>
   </PropertyGroup>
 
   <Choose>
@@ -40,20 +40,17 @@
       <PropertyGroup>
         <RequiredTargetFrameworks>netstandard2.0</RequiredTargetFrameworks>
         <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
-        <CodeAnalysisRuleSet>$(CloneRoot)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisRuleSet>$(RepoEngPath)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
       </PropertyGroup>
     </When>
-
+    
     <When Condition="'$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true'">
-      <PropertyGroup >
+      <PropertyGroup>
         <RequiredTargetFrameworks>net8.0;net6.0</RequiredTargetFrameworks>
         <RequiredTargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(RequiredTargetFrameworks);net462</RequiredTargetFrameworks>
       </PropertyGroup>
-      <!--<ItemGroup>
-        <Using Include="NUnit.Framework" />
-        <Using Include="System.Collections.Generic" />
-      </ItemGroup>-->
     </When>
   </Choose>
+
 
 </Project>

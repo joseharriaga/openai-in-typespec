@@ -315,6 +315,31 @@ public partial class ChatTests : SyncAsyncTestBase
     }
 
     [Test]
+    public async Task OlderModelPermissiveJsonSchemaFormat()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "gpt-4o-mini");
+        ChatCompletionOptions options = new()
+        {
+            ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
+                "some_color_schema",
+                "an object that describes color components by name",
+                BinaryData.FromString("""
+                    {
+                        "type": "object",
+                        "properties": {},
+                        "additionalProperties": false
+                    }
+                    """),
+                requireStrictJsonSchemaMatch: false)
+        };
+        ChatCompletion completion = IsAsync
+            ? await client.CompleteChatAsync(["What are the hex values for red, green, and blue?"], options)
+            : client.CompleteChat(["What are the hex values for red, green, and blue?"], options);
+        Console.WriteLine(completion);
+
+    }
+
+    [Test]
     public async Task JsonResult()
     {
         ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
@@ -322,7 +347,7 @@ public partial class ChatTests : SyncAsyncTestBase
             new UserChatMessage("Give me a JSON object with the following properties: red, green, and blue. The value "
                 + "of each property should be a string containing their RGB representation in hexadecimal.")
         ];
-        ChatCompletionOptions options = new() { ResponseFormat = ChatResponseFormat.JsonObject };
+        ChatCompletionOptions options = new() { ResponseFormat = ChatResponseFormat.CreateJsonObjectFormat() };
         ClientResult<ChatCompletion> result = IsAsync
             ? await client.CompleteChatAsync(messages, options)
             : client.CompleteChat(messages, options);
@@ -346,31 +371,32 @@ public partial class ChatTests : SyncAsyncTestBase
         ];
         ChatCompletionOptions options = new ChatCompletionOptions()
         {
-            ResponseFormat = ChatResponseFormat.FromJsonSchema(
+            ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
                 "answer_with_reasons",
-                "a simple JSON document with a string answer and list of strings for reasoning steps",
-                BinaryData.FromString("""
-                    {
-                      "type": "object",
-                      "properties": {
-                        "answer": {
-                          "type": "string"
-                        },
-                        "steps": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        }
-                      },
-                      "required": [
-                        "answer",
-                        "steps"
-                      ],
-                      "additionalProperties": false
-                    }
-                    """),
-                useStrictSchema: true)
+                jsonSchema: null)
+            //"a simple JSON document with a string answer and list of strings for reasoning steps",
+            //BinaryData.FromString("""
+            //    {
+            //      "type": "object",
+            //      "properties": {
+            //        "answer": {
+            //          "type": "string"
+            //        },
+            //        "steps": {
+            //          "type": "array",
+            //          "items": {
+            //            "type": "string"
+            //          }
+            //        }
+            //      },
+            //      "required": [
+            //        "answer",
+            //        "steps"
+            //      ],
+            //      "additionalProperties": false
+            //    }
+            //    """),
+            //requireJsonSchemaMatch: true)
         };
         ChatCompletion completion = IsAsync
             ? await client.CompleteChatAsync(messages, options)
@@ -395,7 +421,7 @@ public partial class ChatTests : SyncAsyncTestBase
         ];
         ChatCompletionOptions options = new ChatCompletionOptions()
         {
-            ResponseFormat = ChatResponseFormat.FromJsonSchema(
+            ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
                 "food_recipe",
                 "a description of a recipe to create a meal or dish",
                 BinaryData.FromString("""
@@ -422,7 +448,7 @@ public partial class ChatTests : SyncAsyncTestBase
                       "additionalProperties": false
                     }
                     """),
-                useStrictSchema: true)
+                requireStrictJsonSchemaMatch: true)
         };
         ChatCompletion completion = IsAsync
             ? await client.CompleteChatAsync(messages, options)
@@ -442,7 +468,7 @@ public partial class ChatTests : SyncAsyncTestBase
         ];
         ChatCompletionOptions options = new ChatCompletionOptions()
         {
-            ResponseFormat = ChatResponseFormat.FromJsonSchema(
+            ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
                 "food_recipe",
                 "a description of a recipe to create a meal or dish",
                 BinaryData.FromString("""
@@ -469,7 +495,7 @@ public partial class ChatTests : SyncAsyncTestBase
                       "additionalProperties": false
                     }
                     """),
-                useStrictSchema: true)
+                requireStrictJsonSchemaMatch: true)
         };
 
         ChatFinishReason? finishReason = null;

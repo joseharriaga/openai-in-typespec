@@ -34,7 +34,7 @@ public partial class FunctionToolDefinition : ToolDefinition
         set => _internalFunction.Parameters = value;
     }
 
-    public bool? UseStrictSchema
+    public bool? StrictParameterSchemaEnabled
     {
         get => _internalFunction.Strict;
         set => _internalFunction.Strict = value;

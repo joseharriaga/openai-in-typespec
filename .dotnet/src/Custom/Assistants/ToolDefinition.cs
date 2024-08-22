@@ -14,12 +14,12 @@ public abstract partial class ToolDefinition
             MaxResults = maxResults
         };
     }
-    public static FunctionToolDefinition CreateFunction(string name, string description = null, BinaryData parameters = null, bool? useStrictSchema = null)
+    public static FunctionToolDefinition CreateFunction(string name, string description = null, BinaryData parameters = null, bool? strictParameterSchemaEnabled = null)
         => new FunctionToolDefinition(name)
         {
             Description = description,
             Parameters = parameters,
-            UseStrictSchema = useStrictSchema,
+            StrictParameterSchemaEnabled = strictParameterSchemaEnabled,
         };
 
     protected ToolDefinition(string type)

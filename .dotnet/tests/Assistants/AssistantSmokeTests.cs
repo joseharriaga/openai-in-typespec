@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using OpenAI.Assistants;
+using OpenAI.Chat;
 using OpenAI.Files;
 using OpenAI.VectorStores;
 using System;
@@ -72,12 +73,27 @@ public partial class AssistantSmokeTests
     [Test]
     public void ResponseFormatEquality()
     {
-        Assert.That(AssistantResponseFormat.Text, Is.EqualTo(AssistantResponseFormat.Text));
-        Assert.That(AssistantResponseFormat.Text, Is.Not.EqualTo(AssistantResponseFormat.JsonObject));
-        Assert.That(AssistantResponseFormat.JsonObject, Is.EqualTo(AssistantResponseFormat.JsonObject));
-        Assert.That(AssistantResponseFormat.Auto, Is.EqualTo(AssistantResponseFormat.Auto));
-        Assert.That(AssistantResponseFormat.Auto == "auto");
-        Assert.That(AssistantResponseFormat.Auto, Is.Not.EqualTo(AssistantResponseFormat.JsonObject));
+        Assert.That(AssistantResponseFormat.CreateAutoFormat() == "auto");
+        Assert.That(AssistantResponseFormat.CreateAutoFormat() == AssistantResponseFormat.CreateAutoFormat());
+        Assert.That(AssistantResponseFormat.CreateTextFormat() == AssistantResponseFormat.CreateTextFormat());
+        Assert.That(AssistantResponseFormat.CreateAutoFormat() != AssistantResponseFormat.CreateTextFormat());
+
+        AssistantResponseFormat jsonSchemaFormat = AssistantResponseFormat.CreateJsonSchemaFormat(
+            name: "test_schema",
+            description: "A description of the schema",
+            jsonSchema: BinaryData.FromString("""
+                {
+                  "type": "object",
+                  "properties": {
+                    "foo": { "type": "string" }
+                  },
+                  "additionalProperties": false
+                }
+                """),
+            requireStrictJsonSchemaMatch: true);
+
+        Assert.That(jsonSchemaFormat == AssistantResponseFormat.CreateJsonSchemaFormat("test_schema"));
+        Assert.That(jsonSchemaFormat != AssistantResponseFormat.CreateJsonSchemaFormat("not_test_schema"));
     }
 }
 

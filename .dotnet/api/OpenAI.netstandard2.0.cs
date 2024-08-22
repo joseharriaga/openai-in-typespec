@@ -300,14 +300,18 @@ namespace OpenAI.Assistants {
         public static AssistantResponseFormat Auto { get; }
         public static AssistantResponseFormat JsonObject { get; }
         public static AssistantResponseFormat Text { get; }
+        public static AssistantResponseFormat CreateAutoFormat();
+        public static AssistantResponseFormat CreateJsonObjectFormat();
+        public static AssistantResponseFormat CreateJsonSchemaFormat(string name, string description = null, BinaryData jsonSchema = null, bool? requireStrictJsonSchemaMatch = null);
+        public static AssistantResponseFormat CreateTextFormat();
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj);
-        public static AssistantResponseFormat FromJsonSchema(string name, string description = null, BinaryData jsonSchema = null, bool? useStrictSchema = null);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode();
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static bool operator ==(AssistantResponseFormat first, AssistantResponseFormat second);
-        public static implicit operator AssistantResponseFormat(string plainTextValue);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static implicit operator AssistantResponseFormat(string plainTextFormat);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static bool operator !=(AssistantResponseFormat first, AssistantResponseFormat second);
         AssistantResponseFormat IJsonModel<AssistantResponseFormat>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -315,6 +319,7 @@ namespace OpenAI.Assistants {
         AssistantResponseFormat IPersistableModel<AssistantResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<AssistantResponseFormat>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<AssistantResponseFormat>.Write(ModelReaderWriterOptions options);
+        public override string ToString();
     }
     public class AssistantThread : IJsonModel<AssistantThread>, IPersistableModel<AssistantThread> {
         public DateTimeOffset CreatedAt { get; }
@@ -367,7 +372,7 @@ namespace OpenAI.Assistants {
         public string Description { get; set; }
         public required string FunctionName { get; set; }
         public BinaryData Parameters { get; set; }
-        public bool? UseStrictSchema { get; set; }
+        public bool? StrictParameterSchemaEnabled { get; set; }
         FunctionToolDefinition IJsonModel<FunctionToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<FunctionToolDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         FunctionToolDefinition IPersistableModel<FunctionToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -940,7 +945,7 @@ namespace OpenAI.Assistants {
         protected ToolDefinition(string type);
         public static CodeInterpreterToolDefinition CreateCodeInterpreter();
         public static FileSearchToolDefinition CreateFileSearch(int? maxResults = null);
-        public static FunctionToolDefinition CreateFunction(string name, string description = null, BinaryData parameters = null, bool? useStrictSchema = null);
+        public static FunctionToolDefinition CreateFunction(string name, string description = null, BinaryData parameters = null, bool? strictParameterSchemaEnabled = null);
         ToolDefinition IJsonModel<ToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ToolDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ToolDefinition IPersistableModel<ToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1349,9 +1354,11 @@ namespace OpenAI.Chat {
     public abstract class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
         public static ChatResponseFormat JsonObject { get; }
         public static ChatResponseFormat Text { get; }
+        public static ChatResponseFormat CreateJsonObjectFormat();
+        public static ChatResponseFormat CreateJsonSchemaFormat(string name, string description = null, BinaryData jsonSchema = null, bool? requireStrictJsonSchemaMatch = null);
+        public static ChatResponseFormat CreateTextFormat();
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj);
-        public static ChatResponseFormat FromJsonSchema(string name, string description = null, BinaryData jsonSchema = null, bool? useStrictSchema = null);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode();
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -1363,6 +1370,7 @@ namespace OpenAI.Chat {
         ChatResponseFormat IPersistableModel<ChatResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatResponseFormat>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatResponseFormat>.Write(ModelReaderWriterOptions options);
+        public override string ToString();
     }
     public class ChatTokenLogProbabilityInfo : IJsonModel<ChatTokenLogProbabilityInfo>, IPersistableModel<ChatTokenLogProbabilityInfo> {
         public float LogProbability { get; }
@@ -1400,8 +1408,8 @@ namespace OpenAI.Chat {
         public string FunctionName { get; }
         public BinaryData FunctionParameters { get; }
         public ChatToolKind Kind { get; }
-        public bool? UseStrictSchema { get; }
-        public static ChatTool CreateFunctionTool(string functionName, string functionDescription = null, BinaryData functionParameters = null, bool? useStrictSchema = null);
+        public bool? StrictParameterSchemaEnabled { get; }
+        public static ChatTool CreateFunctionTool(string functionName, string functionDescription = null, BinaryData functionParameters = null, bool? strictParameterSchemaEnabled = null);
         ChatTool IJsonModel<ChatTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatTool>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatTool IPersistableModel<ChatTool>.Create(BinaryData data, ModelReaderWriterOptions options);

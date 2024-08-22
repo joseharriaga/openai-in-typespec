@@ -4,6 +4,9 @@
 
 ### Features Added
 
+- Added support for the new [structured outputs](https://platform.openai.com/docs/guides/structured-outputs/introduction) response format feature, which enables chat completions, assistants, and tools on each of those clients to provide a specific JSON Schema that generated content should adhere to.
+  - To enable top-level structured outputs for response content, use `ChatResponseFormat.CreateJsonSchemaFormat()` and `AssistantResponseFormat.CreateJsonSchemaFormat()` as the `ResponseFormat` in method options like `ChatCompletionOptions`
+  - To enable structured outputs for function tools, set `StrictParameterSchemaEnabled` to `true` on the tool definition
 - Added the following model factories (static classes that can be used to instantiate OpenAI models for mocking in non-live test scenarios):
   - `OpenAIAudioModelFactory` in the `OpenAI.Audio` namespace (commit_hash)
   - `OpenAIEmbeddingsModelFactory` in the `OpenAI.Embeddings` namespace (commit_hash)

@@ -43,8 +43,9 @@ public partial class StreamingChatCompletionUpdate
     [CodeGenMember("Usage")]
     public ChatTokenUsage Usage { get; }
 
+    // CUSTOM: Made internal.
     [CodeGenMember("ServiceTier")]
-    internal InternalCreateChatCompletionStreamResponseServiceTier? _serviceTier;
+    internal InternalCreateChatCompletionStreamResponseServiceTier? ServiceTier { get; }
     
     // CUSTOM: Flattened choice property.
     /// <summary>

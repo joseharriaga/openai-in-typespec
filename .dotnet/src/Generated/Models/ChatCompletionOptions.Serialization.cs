@@ -123,7 +123,7 @@ namespace OpenAI.Chat
             if (SerializedAdditionalRawData?.ContainsKey("response_format") != true && Optional.IsDefined(ResponseFormat))
             {
                 writer.WritePropertyName("response_format"u8);
-                writer.WriteObjectValue<ChatResponseFormat>(ResponseFormat, options);
+                writer.WriteObjectValue(ResponseFormat, options);
             }
             if (SerializedAdditionalRawData?.ContainsKey("seed") != true && Optional.IsDefined(Seed))
             {

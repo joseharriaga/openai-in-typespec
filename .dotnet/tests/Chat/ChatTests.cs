@@ -331,7 +331,7 @@ public partial class ChatTests : SyncAsyncTestBase
                     }
                     """),
                 "an object that describes color components by name",
-                requireStrictJsonSchemaMatch: false)
+                strictSchemaEnabled: false)
         };
         ChatCompletion completion = IsAsync
             ? await client.CompleteChatAsync(["What are the hex values for red, green, and blue?"], options)
@@ -395,7 +395,7 @@ public partial class ChatTests : SyncAsyncTestBase
                     }
                     """),
                 "a single final answer with a supporting collection of steps",
-                requireStrictJsonSchemaMatch: true)
+                strictSchemaEnabled: true)
         };
         ChatCompletion completion = IsAsync
             ? await client.CompleteChatAsync(messages, options)
@@ -447,7 +447,7 @@ public partial class ChatTests : SyncAsyncTestBase
                     }
                     """),
                 "a description of a recipe to create a meal or dish",
-                requireStrictJsonSchemaMatch: true)
+                strictSchemaEnabled: true)
         };
         ChatCompletion completion = IsAsync
             ? await client.CompleteChatAsync(messages, options)
@@ -493,7 +493,7 @@ public partial class ChatTests : SyncAsyncTestBase
                       "additionalProperties": false
                     }
                     """), "a description of a recipe to create a meal or dish",
-                requireStrictJsonSchemaMatch: true)
+                strictSchemaEnabled: true)
         };
 
         ChatFinishReason? finishReason = null;

@@ -332,7 +332,7 @@ ChatCompletionOptions options = new()
                 "additionalProperties": false
             }
             """),
-    requireJsonSchemaMatch: true)
+    strictSchemaEnabled: true)
 };
 
 ChatCompletion chatCompletion = await client.CompleteChatAsync(

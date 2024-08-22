@@ -59,7 +59,6 @@ namespace OpenAI;
 [CodeGenSuppress("GetModelClientClient")]
 [CodeGenSuppress("GetModerationClientClient")]
 [CodeGenSuppress("GetVectorStoreClientClient")]
-[CodeGenSuppress("GetVectorStoreClientClient")]
 public partial class OpenAIClient
 {
     private const string OpenAIV1Endpoint = "https://api.openai.com/v1";

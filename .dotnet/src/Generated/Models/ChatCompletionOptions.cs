@@ -42,6 +42,7 @@ namespace OpenAI.Chat
         public float? FrequencyPenalty { get; set; }
         public int? MaxTokens { get; set; }
         public float? PresencePenalty { get; set; }
+        public ChatResponseFormat ResponseFormat { get; set; }
         public long? Seed { get; set; }
         public float? Temperature { get; set; }
         public float? TopP { get; set; }

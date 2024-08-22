@@ -2,14 +2,13 @@
 using OpenAI.Chat;
 using System;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace OpenAI.Examples;
 
 public partial class ChatExamples
 {
     [Test]
-    public async Task Example07_StructuredOutputsAsync()
+    public void Example07_StructuredOutputs()
     {
         ChatClient client = new("gpt-4o-mini", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
@@ -42,7 +41,7 @@ public partial class ChatExamples
             strictSchemaEnabled: true)
         };
 
-        ChatCompletion chatCompletion = await client.CompleteChatAsync(
+        ChatCompletion chatCompletion = client.CompleteChat(
             ["How can I solve 8x + 7 = -23?"],
             options);
 

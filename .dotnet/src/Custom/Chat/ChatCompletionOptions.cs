@@ -123,8 +123,8 @@ public partial class ChatCompletionOptions
     /// Learn more in the Structured Outputs guide.
     /// </p>
     /// </remarks>
-    [CodeGenMember("ResponseFormat")]
-    public ChatResponseFormat ResponseFormat { get; set; }
+    //[CodeGenMember("ResponseFormat")]
+    //public ChatResponseFormat ResponseFormat { get; set; }
 
     [CodeGenMember("ServiceTier")]
     internal InternalCreateChatCompletionRequestServiceTier? _serviceTier;

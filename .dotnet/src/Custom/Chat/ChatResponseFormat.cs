@@ -6,7 +6,7 @@ using System.ComponentModel;
 namespace OpenAI.Chat;
 
 [CodeGenModel("ChatResponseFormat")]
-public abstract partial class ChatResponseFormat
+public abstract partial class ChatResponseFormat : IEquatable<ChatResponseFormat>
 {
     public static ChatResponseFormat Text { get; } = new InternalChatResponseFormatText();
     public static ChatResponseFormat JsonObject { get; } = new InternalChatResponseFormatJsonObject();
@@ -17,7 +17,7 @@ public abstract partial class ChatResponseFormat
         string name,
         BinaryData jsonSchema,
         string description = null,
-        bool? requireStrictJsonSchemaMatch = null)
+        bool? strictSchemaEnabled = null)
     {
         Argument.AssertNotNullOrEmpty(name, nameof(name));
         Argument.AssertNotNull(jsonSchema, nameof(jsonSchema));
@@ -26,7 +26,7 @@ public abstract partial class ChatResponseFormat
             description,
             name,
             jsonSchema,
-            requireStrictJsonSchemaMatch,
+            strictSchemaEnabled,
             null);
         return new InternalChatResponseFormatJsonSchema(internalSchema);
     }
@@ -42,27 +42,22 @@ public abstract partial class ChatResponseFormat
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override bool Equals(object obj)
     {
-        if (this is InternalChatResponseFormatText)
-        {
-            return obj is InternalChatResponseFormatText;
-        }
-        else if (this is InternalChatResponseFormatJsonObject)
-        {
-            return obj is InternalChatResponseFormatJsonObject;
-        }
-        else if (this is InternalChatResponseFormatJsonSchema thisJsonSchema
-            && obj is InternalChatResponseFormatJsonSchema otherJsonSchema)
-        {
-            return thisJsonSchema.JsonSchema.Name.Equals(otherJsonSchema.JsonSchema.Name);
-        }
-        else
-        {
-            return ToString().Equals(obj?.ToString());
-        }
+        return (this as IEquatable<ChatResponseFormat>).Equals(obj as ChatResponseFormat)
+            || ToString().Equals(obj.ToString());
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override int GetHashCode() => ToString().GetHashCode();
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    bool IEquatable<ChatResponseFormat>.Equals(ChatResponseFormat other)
+    {
+        return (this is InternalChatResponseFormatText && other is InternalChatResponseFormatText)
+            || (this is InternalChatResponseFormatJsonObject && other is InternalChatResponseFormatJsonObject)
+            || (this is InternalChatResponseFormatJsonSchema thisJsonSchema
+                    && other is InternalChatResponseFormatJsonSchema otherJsonSchema
+                    && thisJsonSchema.JsonSchema.Name.Equals(otherJsonSchema.JsonSchema.Name));
+    }
 
     public override string ToString()
     {

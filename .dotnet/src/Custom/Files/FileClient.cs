@@ -68,7 +68,7 @@ public partial class FileClient
 
         _pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
-        _internalUploadsClient = new(pipeline, _endpoint, options);
+        _internalUploadsClient = new(pipeline, options);
     }
 
     /// <summary> Uploads a file that can be used across various operations. </summary>

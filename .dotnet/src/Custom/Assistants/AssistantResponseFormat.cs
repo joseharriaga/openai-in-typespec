@@ -6,7 +6,7 @@ using System.ComponentModel;
 namespace OpenAI.Assistants;
 
 [CodeGenModel("AssistantResponseFormat")]
-public partial class AssistantResponseFormat
+public partial class AssistantResponseFormat : IEquatable<AssistantResponseFormat>, IEquatable<string>
 {
     public static AssistantResponseFormat Auto { get; } = CreateAutoFormat();
     public static AssistantResponseFormat Text { get; } = CreateTextFormat();
@@ -22,7 +22,7 @@ public partial class AssistantResponseFormat
         string name,
         BinaryData jsonSchema,
         string description = null,
-        bool? requireStrictJsonSchemaMatch = null)
+        bool? strictSchemaEnabled = null)
     {
         Argument.AssertNotNullOrEmpty(name, nameof(name));
         Argument.AssertNotNull(jsonSchema, nameof(jsonSchema));
@@ -31,7 +31,7 @@ public partial class AssistantResponseFormat
             description,
             name,
             jsonSchema,
-            requireStrictJsonSchemaMatch,
+            strictSchemaEnabled,
             null);
         return new InternalAssistantResponseFormatJsonSchema(internalSchema);
     }
@@ -47,28 +47,8 @@ public partial class AssistantResponseFormat
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override bool Equals(object obj)
     {
-        if (this is InternalAssistantResponseFormatPlainTextNoObject thisPlainText
-            && obj is InternalAssistantResponseFormatPlainTextNoObject otherPlainText)
-        {
-            return thisPlainText.Value.Equals(otherPlainText.Value);
-        }
-        else if (this is InternalAssistantResponseFormatText)
-        {
-            return obj is InternalAssistantResponseFormatText;
-        }
-        else if (this is InternalAssistantResponseFormatJsonObject)
-        {
-            return obj is InternalAssistantResponseFormatJsonObject;
-        }
-        else if (this is InternalAssistantResponseFormatJsonSchema thisJsonSchema
-            && obj is InternalAssistantResponseFormatJsonSchema otherJsonSchema)
-        {
-            return thisJsonSchema.JsonSchema.Name.Equals(otherJsonSchema.JsonSchema.Name);
-        }
-        else
-        {
-            return ToString().Equals(obj?.ToString());
-        }
+        return (this as IEquatable<AssistantResponseFormat>).Equals(obj as AssistantResponseFormat)
+            || ToString().Equals(obj?.ToString());
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -77,6 +57,27 @@ public partial class AssistantResponseFormat
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static implicit operator AssistantResponseFormat(string plainTextFormat)
         => new InternalAssistantResponseFormatPlainTextNoObject(plainTextFormat);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    bool IEquatable<AssistantResponseFormat>.Equals(AssistantResponseFormat other)
+    {
+        return
+            (this is InternalAssistantResponseFormatPlainTextNoObject thisPlainText
+                && other is InternalAssistantResponseFormatPlainTextNoObject otherPlainText
+                && thisPlainText.Value.Equals(otherPlainText.Value))
+            || (this is InternalAssistantResponseFormatText && other is InternalAssistantResponseFormatText)
+            || (this is InternalAssistantResponseFormatJsonObject && other is InternalAssistantResponseFormatJsonObject)
+            || (this is InternalAssistantResponseFormatJsonSchema thisJsonSchema
+                && other is InternalAssistantResponseFormatJsonSchema otherJsonSchema
+                && thisJsonSchema.JsonSchema.Name.Equals(otherJsonSchema.JsonSchema.Name));
+    }
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    bool IEquatable<string>.Equals(string other)
+    {
+        return this is InternalAssistantResponseFormatPlainTextNoObject thisPlainText
+            && thisPlainText.Value.Equals(other);
+    }
 
     public override string ToString()
     {

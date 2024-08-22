@@ -24,13 +24,6 @@ namespace OpenAI.Files
         {
         }
 
-        internal InternalUploadsClient(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
-        {
-            _pipeline = pipeline;
-            _keyCredential = keyCredential;
-            _endpoint = endpoint;
-        }
-
         public virtual async Task<ClientResult<InternalUpload>> CreateUploadAsync(InternalCreateUploadRequest requestBody)
         {
             Argument.AssertNotNull(requestBody, nameof(requestBody));

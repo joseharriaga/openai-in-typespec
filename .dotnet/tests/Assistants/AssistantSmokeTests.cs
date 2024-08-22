@@ -74,9 +74,17 @@ public partial class AssistantSmokeTests
     public void ResponseFormatEquality()
     {
         Assert.That(AssistantResponseFormat.CreateAutoFormat() == "auto");
+        Assert.That(AssistantResponseFormat.CreateAutoFormat(), Is.EqualTo("auto"));
+        Assert.That(AssistantResponseFormat.CreateAutoFormat(), Is.Not.EqualTo("automatic"));
         Assert.That(AssistantResponseFormat.CreateAutoFormat() == AssistantResponseFormat.CreateAutoFormat());
         Assert.That(AssistantResponseFormat.CreateTextFormat() == AssistantResponseFormat.CreateTextFormat());
+        Assert.That(AssistantResponseFormat.CreateTextFormat(), Is.EqualTo(AssistantResponseFormat.CreateTextFormat()));
         Assert.That(AssistantResponseFormat.CreateAutoFormat() != AssistantResponseFormat.CreateTextFormat());
+        Assert.That(AssistantResponseFormat.CreateAutoFormat(), Is.Not.EqualTo(AssistantResponseFormat.CreateTextFormat()));
+        Assert.That((AssistantResponseFormat)null != (AssistantResponseFormat)null);
+        Assert.That((AssistantResponseFormat)null != AssistantResponseFormat.CreateTextFormat());
+        Assert.That(AssistantResponseFormat.CreateTextFormat() != null);
+        Assert.That(AssistantResponseFormat.CreateTextFormat(), Is.Not.EqualTo(null));
 
         AssistantResponseFormat jsonSchemaFormat = AssistantResponseFormat.CreateJsonSchemaFormat(
             name: "test_schema",
@@ -90,7 +98,7 @@ public partial class AssistantSmokeTests
                   "additionalProperties": false
                 }
                 """),
-            requireStrictJsonSchemaMatch: true);
+            strictSchemaEnabled: true);
 
         Assert.That(jsonSchemaFormat == AssistantResponseFormat.CreateJsonSchemaFormat("test_schema", BinaryData.FromObjectAsJson(new { })));
         Assert.That(jsonSchemaFormat != AssistantResponseFormat.CreateJsonSchemaFormat("not_test_schema", BinaryData.FromObjectAsJson(new { })));

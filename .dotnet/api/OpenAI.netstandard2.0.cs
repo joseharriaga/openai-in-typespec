@@ -296,13 +296,13 @@ namespace OpenAI.Assistants {
         string IPersistableModel<AssistantModificationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<AssistantModificationOptions>.Write(ModelReaderWriterOptions options);
     }
-    public abstract class AssistantResponseFormat : IJsonModel<AssistantResponseFormat>, IPersistableModel<AssistantResponseFormat> {
+    public abstract class AssistantResponseFormat : IEquatable<AssistantResponseFormat>, IEquatable<string>, IJsonModel<AssistantResponseFormat>, IPersistableModel<AssistantResponseFormat> {
         public static AssistantResponseFormat Auto { get; }
         public static AssistantResponseFormat JsonObject { get; }
         public static AssistantResponseFormat Text { get; }
         public static AssistantResponseFormat CreateAutoFormat();
         public static AssistantResponseFormat CreateJsonObjectFormat();
-        public static AssistantResponseFormat CreateJsonSchemaFormat(string name, BinaryData jsonSchema, string description = null, bool? requireStrictJsonSchemaMatch = null);
+        public static AssistantResponseFormat CreateJsonSchemaFormat(string name, BinaryData jsonSchema, string description = null, bool? strictSchemaEnabled = null);
         public static AssistantResponseFormat CreateTextFormat();
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj);
@@ -319,6 +319,10 @@ namespace OpenAI.Assistants {
         AssistantResponseFormat IPersistableModel<AssistantResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<AssistantResponseFormat>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<AssistantResponseFormat>.Write(ModelReaderWriterOptions options);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        bool IEquatable<AssistantResponseFormat>.Equals(AssistantResponseFormat other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        bool IEquatable<string>.Equals(string other);
         public override string ToString();
     }
     public class AssistantThread : IJsonModel<AssistantThread>, IPersistableModel<AssistantThread> {
@@ -1351,11 +1355,11 @@ namespace OpenAI.Chat {
         Tool = 3,
         Function = 4
     }
-    public abstract class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
+    public abstract class ChatResponseFormat : IEquatable<ChatResponseFormat>, IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
         public static ChatResponseFormat JsonObject { get; }
         public static ChatResponseFormat Text { get; }
         public static ChatResponseFormat CreateJsonObjectFormat();
-        public static ChatResponseFormat CreateJsonSchemaFormat(string name, BinaryData jsonSchema, string description = null, bool? requireStrictJsonSchemaMatch = null);
+        public static ChatResponseFormat CreateJsonSchemaFormat(string name, BinaryData jsonSchema, string description = null, bool? strictSchemaEnabled = null);
         public static ChatResponseFormat CreateTextFormat();
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj);
@@ -1370,6 +1374,8 @@ namespace OpenAI.Chat {
         ChatResponseFormat IPersistableModel<ChatResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatResponseFormat>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatResponseFormat>.Write(ModelReaderWriterOptions options);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        bool IEquatable<ChatResponseFormat>.Equals(ChatResponseFormat other);
         public override string ToString();
     }
     public class ChatTokenLogProbabilityInfo : IJsonModel<ChatTokenLogProbabilityInfo>, IPersistableModel<ChatTokenLogProbabilityInfo> {

@@ -74,7 +74,7 @@ public partial class ChatCompletion
     /// Returns text representation of the first part of the first choice.
     /// </summary>
     /// <returns></returns>
-    public override string ToString() => Content[0].Text;
+    public override string ToString() => Content.Count > 0 ? Content[0].Text : null;
 
     // CUSTOM: Made internal.
     [CodeGenMember("ServiceTier")]

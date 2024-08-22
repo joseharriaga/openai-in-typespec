@@ -20,10 +20,13 @@ public partial class AssistantResponseFormat
         => new InternalAssistantResponseFormatJsonObject();
     public static AssistantResponseFormat CreateJsonSchemaFormat(
         string name,
+        BinaryData jsonSchema,
         string description = null,
-        BinaryData jsonSchema = null,
         bool? requireStrictJsonSchemaMatch = null)
     {
+        Argument.AssertNotNullOrEmpty(name, nameof(name));
+        Argument.AssertNotNull(jsonSchema, nameof(jsonSchema));
+
         InternalResponseFormatJsonSchemaJsonSchema internalSchema = new(
             description,
             name,

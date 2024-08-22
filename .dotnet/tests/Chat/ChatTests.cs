@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using static OpenAI.Tests.Telemetry.TestMeterListener;
@@ -315,14 +316,13 @@ public partial class ChatTests : SyncAsyncTestBase
     }
 
     [Test]
-    public async Task OlderModelPermissiveJsonSchemaFormat()
+    public async Task NonStrictJsonSchemaWorks()
     {
         ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "gpt-4o-mini");
         ChatCompletionOptions options = new()
         {
             ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
                 "some_color_schema",
-                "an object that describes color components by name",
                 BinaryData.FromString("""
                     {
                         "type": "object",
@@ -330,13 +330,13 @@ public partial class ChatTests : SyncAsyncTestBase
                         "additionalProperties": false
                     }
                     """),
+                "an object that describes color components by name",
                 requireStrictJsonSchemaMatch: false)
         };
         ChatCompletion completion = IsAsync
             ? await client.CompleteChatAsync(["What are the hex values for red, green, and blue?"], options)
             : client.CompleteChat(["What are the hex values for red, green, and blue?"], options);
         Console.WriteLine(completion);
-
     }
 
     [Test]
@@ -372,31 +372,30 @@ public partial class ChatTests : SyncAsyncTestBase
         ChatCompletionOptions options = new ChatCompletionOptions()
         {
             ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
-                "answer_with_reasons",
-                jsonSchema: null)
-            //"a simple JSON document with a string answer and list of strings for reasoning steps",
-            //BinaryData.FromString("""
-            //    {
-            //      "type": "object",
-            //      "properties": {
-            //        "answer": {
-            //          "type": "string"
-            //        },
-            //        "steps": {
-            //          "type": "array",
-            //          "items": {
-            //            "type": "string"
-            //          }
-            //        }
-            //      },
-            //      "required": [
-            //        "answer",
-            //        "steps"
-            //      ],
-            //      "additionalProperties": false
-            //    }
-            //    """),
-            //requireJsonSchemaMatch: true)
+                "test_schema",
+                BinaryData.FromString("""
+                    {
+                      "type": "object",
+                      "properties": {
+                        "answer": {
+                          "type": "string"
+                        },
+                        "steps": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "answer",
+                        "steps"
+                      ],
+                      "additionalProperties": false
+                    }
+                    """),
+                "a single final answer with a supporting collection of steps",
+                requireStrictJsonSchemaMatch: true)
         };
         ChatCompletion completion = IsAsync
             ? await client.CompleteChatAsync(messages, options)
@@ -423,7 +422,6 @@ public partial class ChatTests : SyncAsyncTestBase
         {
             ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
                 "food_recipe",
-                "a description of a recipe to create a meal or dish",
                 BinaryData.FromString("""
                     {
                       "type": "object",
@@ -448,6 +446,7 @@ public partial class ChatTests : SyncAsyncTestBase
                       "additionalProperties": false
                     }
                     """),
+                "a description of a recipe to create a meal or dish",
                 requireStrictJsonSchemaMatch: true)
         };
         ChatCompletion completion = IsAsync
@@ -470,7 +469,6 @@ public partial class ChatTests : SyncAsyncTestBase
         {
             ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
                 "food_recipe",
-                "a description of a recipe to create a meal or dish",
                 BinaryData.FromString("""
                     {
                       "type": "object",
@@ -494,20 +492,16 @@ public partial class ChatTests : SyncAsyncTestBase
                       "required": ["name", "ingredients", "steps"],
                       "additionalProperties": false
                     }
-                    """),
+                    """), "a description of a recipe to create a meal or dish",
                 requireStrictJsonSchemaMatch: true)
         };
 
         ChatFinishReason? finishReason = null;
-        string refusal = null;
+        StringBuilder refusalBuilder = new();
 
         void HandleUpdate(StreamingChatCompletionUpdate update)
         {
-            if (!string.IsNullOrEmpty(update.Refusal))
-            {
-                Assert.That(refusal, Is.Null);
-                refusal = update.Refusal;
-            }
+            refusalBuilder.Append(update.RefusalUpdate);
             if (update.FinishReason.HasValue)
             {
                 Assert.That(finishReason, Is.Null);
@@ -530,7 +524,7 @@ public partial class ChatTests : SyncAsyncTestBase
             }
         }
 
-        Assert.That(refusal, Is.Not.Null.Or.Empty);
+        Assert.That(refusalBuilder.ToString(), Is.Not.Null.Or.Empty);
         Assert.That(finishReason, Is.EqualTo(ChatFinishReason.Stop));
     }
 

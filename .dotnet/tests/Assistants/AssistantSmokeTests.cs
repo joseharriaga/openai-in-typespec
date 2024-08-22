@@ -92,8 +92,8 @@ public partial class AssistantSmokeTests
                 """),
             requireStrictJsonSchemaMatch: true);
 
-        Assert.That(jsonSchemaFormat == AssistantResponseFormat.CreateJsonSchemaFormat("test_schema"));
-        Assert.That(jsonSchemaFormat != AssistantResponseFormat.CreateJsonSchemaFormat("not_test_schema"));
+        Assert.That(jsonSchemaFormat == AssistantResponseFormat.CreateJsonSchemaFormat("test_schema", BinaryData.FromObjectAsJson(new { })));
+        Assert.That(jsonSchemaFormat != AssistantResponseFormat.CreateJsonSchemaFormat("not_test_schema", BinaryData.FromObjectAsJson(new { })));
     }
 }
 

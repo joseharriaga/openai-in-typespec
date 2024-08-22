@@ -110,7 +110,7 @@ public partial class StreamingChatCompletionUpdate
         : null;
     
     // CUSTOM: Flattened choice delta property.
-    public string Refusal => (Choices.Count > 0)
+    public string RefusalUpdate => (Choices.Count > 0)
         ? Choices[0].Delta?.Refusal
         : null;
 

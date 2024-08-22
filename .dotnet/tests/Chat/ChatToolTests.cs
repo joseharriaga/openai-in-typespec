@@ -335,4 +335,55 @@ public partial class ChatToolTests : SyncAsyncTestBase
 
         Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("bored"));
     }
+
+    [Test]
+    public async Task StructuredOutputs()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "gpt-4o-2024-08-06");
+
+        ChatTool tool = ChatTool.CreateFunctionTool(
+            "get_favorite_color",
+            "gets the user's favorite color",
+            strictParameterSchemaEnabled: false);
+        ChatCompletionOptions options = new()
+        {
+            Tools = { tool },
+        };
+        List<ChatMessage> messages = [
+            new UserChatMessage("What's my favorite color on Tuesday?"),
+        ];
+        ChatCompletion completion = IsAsync
+            ? await client.CompleteChatAsync(messages, options)
+            : client.CompleteChat(messages, options);
+        Assert.That(completion.FinishReason, Is.EqualTo(ChatFinishReason.ToolCalls));
+        Assert.That(completion.ToolCalls, Has.Count.EqualTo(1));
+
+        tool = ChatTool.CreateFunctionTool(
+                "get_favorite_color_for_day_of_week",
+                functionDescription: "Provided a weekday name like Tuesday, gets the current favorite color of the user.",
+                functionParameters: BinaryData.FromString("""
+                    {
+                        "type": "object",
+                        "properties": {
+                        "the_day_of_the_week": {
+                            "type": "string"
+                        }
+                        },
+                        "required": ["the_day_of_the_week"],
+                        "additionalProperties": false
+                    }
+                    """),
+                strictParameterSchemaEnabled: true);
+        options = new()
+        {
+            Tools = { tool },
+        };
+
+        ClientResult<ChatCompletion> completionResult = IsAsync
+            ? await client.CompleteChatAsync(messages, options)
+            : client.CompleteChat(messages, options);
+        completion = completionResult;
+        Assert.That(completion.FinishReason, Is.EqualTo(ChatFinishReason.ToolCalls));
+        Assert.That(completion.ToolCalls, Has.Count.EqualTo(1));
+    }
 }

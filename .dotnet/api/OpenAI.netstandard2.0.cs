@@ -302,7 +302,7 @@ namespace OpenAI.Assistants {
         public static AssistantResponseFormat Text { get; }
         public static AssistantResponseFormat CreateAutoFormat();
         public static AssistantResponseFormat CreateJsonObjectFormat();
-        public static AssistantResponseFormat CreateJsonSchemaFormat(string name, string description = null, BinaryData jsonSchema = null, bool? requireStrictJsonSchemaMatch = null);
+        public static AssistantResponseFormat CreateJsonSchemaFormat(string name, BinaryData jsonSchema, string description = null, bool? requireStrictJsonSchemaMatch = null);
         public static AssistantResponseFormat CreateTextFormat();
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj);
@@ -409,7 +409,7 @@ namespace OpenAI.Assistants {
         public string ImageFileId { get; }
         public string MessageId { get; }
         public int MessageIndex { get; }
-        public string Refusal { get; }
+        public string RefusalUpdate { get; }
         public MessageRole? Role { get; }
         public string Text { get; }
         public TextAnnotationUpdate TextAnnotation { get; }
@@ -1355,7 +1355,7 @@ namespace OpenAI.Chat {
         public static ChatResponseFormat JsonObject { get; }
         public static ChatResponseFormat Text { get; }
         public static ChatResponseFormat CreateJsonObjectFormat();
-        public static ChatResponseFormat CreateJsonSchemaFormat(string name, string description = null, BinaryData jsonSchema = null, bool? requireStrictJsonSchemaMatch = null);
+        public static ChatResponseFormat CreateJsonSchemaFormat(string name, BinaryData jsonSchema, string description = null, bool? requireStrictJsonSchemaMatch = null);
         public static ChatResponseFormat CreateTextFormat();
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj);
@@ -1505,8 +1505,8 @@ namespace OpenAI.Chat {
         public StreamingChatFunctionCallUpdate FunctionCallUpdate { get; }
         public string Id { get; }
         public string Model { get; }
-        public string Refusal { get; }
         public IReadOnlyList<ChatTokenLogProbabilityInfo> RefusalTokenLogProbabilities { get; }
+        public string RefusalUpdate { get; }
         public ChatMessageRole? Role { get; }
         public string SystemFingerprint { get; }
         public IReadOnlyList<StreamingChatToolCallUpdate> ToolCallUpdates { get; }

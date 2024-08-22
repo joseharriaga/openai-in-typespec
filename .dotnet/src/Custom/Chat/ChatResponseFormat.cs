@@ -15,10 +15,13 @@ public abstract partial class ChatResponseFormat
     public static ChatResponseFormat CreateJsonObjectFormat() => new InternalChatResponseFormatJsonObject();
     public static ChatResponseFormat CreateJsonSchemaFormat(
         string name,
+        BinaryData jsonSchema,
         string description = null,
-        BinaryData jsonSchema = null,
         bool? requireStrictJsonSchemaMatch = null)
     {
+        Argument.AssertNotNullOrEmpty(name, nameof(name));
+        Argument.AssertNotNull(jsonSchema, nameof(jsonSchema));
+
         InternalResponseFormatJsonSchemaJsonSchema internalSchema = new(
             description,
             name,

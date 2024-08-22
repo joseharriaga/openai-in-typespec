@@ -43,7 +43,7 @@ public partial class MessageContentUpdate : StreamingUpdate
     /// </summary>
     public TextAnnotationUpdate TextAnnotation { get; }
 
-    public string Refusal => _refusalContent?.Refusal;
+    public string RefusalUpdate => _refusalContent?.Refusal;
 
     private readonly InternalMessageDeltaContentImageFileObject _imageFileContent;
     private readonly InternalMessageDeltaContentTextObject _textContent;

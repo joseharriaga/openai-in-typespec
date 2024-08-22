@@ -1,4 +1,5 @@
 using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 
 namespace OpenAI.Chat;
@@ -74,7 +75,9 @@ public partial class ChatCompletion
     /// Returns text representation of the first part of the first choice.
     /// </summary>
     /// <returns></returns>
-    public override string ToString() => Content.Count > 0 ? Content[0].Text : null;
+    public override string ToString() => Content.Count > 0 ? Content[0].Text
+        : ToolCalls.Count > 0 ? ModelReaderWriter.Write(ToolCalls[0]).ToString()
+        : null;
 
     // CUSTOM: Made internal.
     [CodeGenMember("ServiceTier")]

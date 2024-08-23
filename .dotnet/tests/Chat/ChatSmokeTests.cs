@@ -530,4 +530,58 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         Assert.That(serialized, Does.Not.Contain("tool"));
         Assert.That(serialized, Does.Not.Contain("content"));
     }
+
+    [Test]
+    public void SerializeMessagesWithNullProperties()
+    {
+        AssistantChatMessage assistantMessage = ModelReaderWriter.Read<AssistantChatMessage>(BinaryData.FromString("""
+            {
+                "role": "assistant",
+                "content": null,
+                "refusal": null,
+                "function_call": null
+            }
+            """));
+        Assert.That(assistantMessage.Content, Has.Count.EqualTo(0));
+        Assert.That(assistantMessage.Refusal, Is.Null);
+        Assert.That(assistantMessage.FunctionCall, Is.Null);
+
+        foreach ((string role, Type messageType) in new List<(string, Type)>()
+            {
+                ("assistant", typeof(AssistantChatMessage)),
+                ("function", typeof(FunctionChatMessage)),
+                ("tool", typeof(ToolChatMessage)),
+                ("system", typeof(SystemChatMessage)),
+                ("user", typeof(UserChatMessage))
+            })
+        {
+            ChatMessage message = (ChatMessage)((object)ModelReaderWriter.Read(
+                BinaryData.FromString($$"""
+                    {
+                      "role": "{{role}}",
+                      "content": [null]
+                    }
+                    """),
+                messageType));
+            Assert.That(message, Is.Not.Null);
+            Assert.That(message.Content, Has.Count.EqualTo(1));
+            Assert.That(message.Content[0], Is.Null);
+        }
+
+        assistantMessage = ModelReaderWriter.Read<AssistantChatMessage>(BinaryData.FromString("""
+            {
+                "role": "assistant",
+                "content": [null]
+            }
+            """));
+        Assert.That(assistantMessage.Content, Has.Count.EqualTo(1));
+        Assert.That(assistantMessage.Content[0], Is.Null);
+
+        FunctionChatMessage functionMessage = new("my_function");
+        functionMessage.Content.Add(null);
+        BinaryData serializedMessage = ModelReaderWriter.Write(functionMessage);
+        Console.WriteLine(serializedMessage.ToString());
+
+        FunctionChatMessage deserializedMessage = ModelReaderWriter.Read<FunctionChatMessage>(serializedMessage);
+    }
 }

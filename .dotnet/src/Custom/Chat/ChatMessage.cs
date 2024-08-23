@@ -56,7 +56,7 @@ namespace OpenAI.Chat;
 [CodeGenSerialization(nameof(Content), SerializationValueHook = nameof(SerializeContentValue), DeserializationValueHook = nameof(DeserializeContentValue))]
 public abstract partial class ChatMessage
 {
-    protected ChatMessage(ChatMessageRole role, IEnumerable<ChatMessageContentPart> contentParts)
+    protected internal ChatMessage(ChatMessageRole role, IEnumerable<ChatMessageContentPart> contentParts)
     {
         Role = role;
         foreach (ChatMessageContentPart contentPart in contentParts ?? [])
@@ -65,7 +65,7 @@ public abstract partial class ChatMessage
         }
     }
 
-    protected ChatMessage(ChatMessageRole role, string content)
+    protected internal ChatMessage(ChatMessageRole role, string content)
         : this(role, content is null ? null : [ChatMessageContentPart.CreateTextMessageContentPart(content)])
     { }
 

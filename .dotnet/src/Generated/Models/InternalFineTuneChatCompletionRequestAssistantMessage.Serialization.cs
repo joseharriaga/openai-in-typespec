@@ -45,7 +45,7 @@ namespace OpenAI.FineTuning
                 writer.WriteStartArray();
                 foreach (var item in ToolCalls)
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WriteObjectValue<ChatToolCall>(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -64,7 +64,7 @@ namespace OpenAI.FineTuning
             if (SerializedAdditionalRawData?.ContainsKey("role") != true)
             {
                 writer.WritePropertyName("role"u8);
-                writer.WriteStringValue(Role);
+                writer.WriteStringValue(Role.ToSerialString());
             }
             if (SerializedAdditionalRawData?.ContainsKey("content") != true && Optional.IsCollectionDefined(Content))
             {
@@ -117,7 +117,7 @@ namespace OpenAI.FineTuning
             string name = default;
             IList<ChatToolCall> toolCalls = default;
             ChatFunctionCall functionCall = default;
-            string role = default;
+            ChatMessageRole role = default;
             IList<ChatMessageContentPart> content = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -164,7 +164,7 @@ namespace OpenAI.FineTuning
                 }
                 if (property.NameEquals("role"u8))
                 {
-                    role = property.Value.GetString();
+                    role = property.Value.GetString().ToChatMessageRole();
                     continue;
                 }
                 if (property.NameEquals("content"u8))

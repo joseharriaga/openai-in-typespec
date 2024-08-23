@@ -17,17 +17,10 @@ public partial class UserChatMessage : IJsonModel<UserChatMessage>
     protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
-        if (Optional.IsDefined(ParticipantName))
-        {
-            writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(ParticipantName);
-        }
         writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(Role);
-        if (Optional.IsCollectionDefined(Content))
-        {
-            ChatMessageContentPart.WriteCoreContentPartList(Content, writer, options);
-        }
+        writer.WriteStringValue(Role.ToSerialString());
+        ChatMessageContentPart.WriteCoreContentPartList(Content, writer, options);
+        writer.WriteOptionalProperty("name"u8, ParticipantName, options);
         writer.WriteSerializedAdditionalRawData(SerializedAdditionalRawData, options);
         writer.WriteEndObject();
     }

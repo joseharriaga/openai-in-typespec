@@ -359,6 +359,5 @@ internal readonly partial struct InternalAssistantToolsFileSearchTypeOnlyType { 
 [CodeGenModel("AssistantResponseFormatJsonObject")] internal partial class InternalAssistantResponseFormatJsonObject { }
 [CodeGenModel("AssistantResponseFormatJsonSchema")] internal partial class InternalAssistantResponseFormatJsonSchema { }
 [CodeGenModel("UnknownAssistantResponseFormat")] internal partial class InternalUnknownAssistantResponseFormat { }
-[CodeGenModel("ChatCompletionRequestMessageContentPartRefusal")] internal partial class InternalChatCompletionRequestMessageContentPartRefusal { }
 [CodeGenModel("MessageDeltaContentRefusalObject")] internal partial class InternalMessageDeltaContentRefusalObject { }
 [CodeGenModel("ToolResourcesFileSearchIdsOnly")] internal partial class InternalToolResourcesFileSearchIdsOnly { }

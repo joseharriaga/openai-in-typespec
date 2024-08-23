@@ -19,7 +19,7 @@ public partial class SystemChatMessage : ChatMessage
     ///     The collection of content items associated with the message.
     /// </param>
     public SystemChatMessage(IEnumerable<ChatMessageContentPart> contentParts)
-        : base("system", contentParts)
+        : base(ChatMessageRole.System, contentParts)
     { }
 
     /// <summary>
@@ -30,7 +30,7 @@ public partial class SystemChatMessage : ChatMessage
     ///     The collection of content items associated with the message.
     /// </param>
     public SystemChatMessage(params ChatMessageContentPart[] contentParts)
-        : base("system", contentParts)
+        : base(ChatMessageRole.System, contentParts)
     {
         Argument.AssertNotNullOrEmpty(contentParts, nameof(contentParts));
     }
@@ -40,7 +40,7 @@ public partial class SystemChatMessage : ChatMessage
     /// </summary>
     /// <param name="content"> The text content of the message. </param>
     public SystemChatMessage(string content)
-        : base("system", [ChatMessageContentPart.CreateTextMessageContentPart(content)])
+        : base(ChatMessageRole.System, content)
     {
         Argument.AssertNotNull(content, nameof(content));
     }

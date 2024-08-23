@@ -470,7 +470,8 @@ public partial class ChatTests : SyncAsyncTestBase
                     }
                     """),
                 "a description of a recipe to create a meal or dish",
-                strictSchemaEnabled: true)
+                strictSchemaEnabled: true),
+            Temperature = 0
         };
         ClientResult<ChatCompletion> completionResult = IsAsync
             ? await client.CompleteChatAsync(messages, options)

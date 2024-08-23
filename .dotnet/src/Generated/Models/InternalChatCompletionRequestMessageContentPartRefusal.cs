@@ -4,9 +4,8 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Chat;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionRequestMessageContentPartRefusal
     {

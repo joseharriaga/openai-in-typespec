@@ -21,7 +21,7 @@ public partial class UserChatMessage : ChatMessage
     ///     The collection of text and image content items associated with the message.
     /// </param>
     public UserChatMessage(IEnumerable<ChatMessageContentPart> content)
-        : base("user", content)
+        : base(ChatMessageRole.User, content)
     {
         Argument.AssertNotNullOrEmpty(content, nameof(content));
     }
@@ -35,7 +35,7 @@ public partial class UserChatMessage : ChatMessage
     ///     The collection of text and image content items associated with the message.
     /// </param>
     public UserChatMessage(params ChatMessageContentPart[] content)
-        : base("user", content)
+        : base(ChatMessageRole.User, content)
     { }
 
     /// <summary>
@@ -43,7 +43,7 @@ public partial class UserChatMessage : ChatMessage
     /// </summary>
     /// <param name="content"> The textual content associated with the message. </param>
     public UserChatMessage(string content)
-        : base("user", [ChatMessageContentPart.CreateTextMessageContentPart(content)])
+        : base(ChatMessageRole.User, content)
     {
         Argument.AssertNotNull(content, nameof(content));
     }

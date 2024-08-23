@@ -38,6 +38,11 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
 
     internal static void WriteCoreContentPartList(IList<ChatMessageContentPart> instances, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
+        if (!Optional.IsCollectionDefined(instances))
+        {
+            return;
+        }
+
         writer.WritePropertyName("content"u8);
         if (instances.Count == 1 && !string.IsNullOrEmpty(instances[0].Text))
         {

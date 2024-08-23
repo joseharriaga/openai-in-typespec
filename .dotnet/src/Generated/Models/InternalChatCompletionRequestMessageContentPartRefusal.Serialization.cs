@@ -7,9 +7,8 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI.Chat;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionRequestMessageContentPartRefusal : IJsonModel<InternalChatCompletionRequestMessageContentPartRefusal>
     {

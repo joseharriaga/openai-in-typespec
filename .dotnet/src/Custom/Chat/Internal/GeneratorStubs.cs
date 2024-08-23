@@ -94,6 +94,7 @@ internal partial class InternalFunctionParameters { }
 [CodeGenModel("ChatResponseFormatJsonObject")] internal partial class InternalChatResponseFormatJsonObject { }
 [CodeGenModel("ChatResponseFormatJsonSchema")] internal partial class InternalChatResponseFormatJsonSchema { }
 [CodeGenModel("UnknownChatResponseFormat")] internal partial class InternalUnknownChatResponseFormat { }
+[CodeGenModel("ChatCompletionRequestMessageContentPartRefusal")] internal partial class InternalChatCompletionRequestMessageContentPartRefusal { }
 [CodeGenModel("ChatCompletionRequestMessageContentPartRefusalType")] internal readonly partial struct InternalChatCompletionRequestMessageContentPartRefusalType { }
 [CodeGenModel("CreateChatCompletionRequestServiceTier")] internal readonly partial struct InternalCreateChatCompletionRequestServiceTier { }
 [CodeGenModel("CreateChatCompletionResponseServiceTier")] internal readonly partial struct InternalCreateChatCompletionResponseServiceTier { }

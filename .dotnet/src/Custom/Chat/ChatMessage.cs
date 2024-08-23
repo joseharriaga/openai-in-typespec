@@ -56,20 +56,27 @@ namespace OpenAI.Chat;
 [CodeGenSerialization(nameof(Content), SerializationValueHook = nameof(SerializeContentValue), DeserializationValueHook = nameof(DeserializeContentValue))]
 public abstract partial class ChatMessage
 {
-    protected ChatMessage(string role, IEnumerable<ChatMessageContentPart> contentParts)
+    protected ChatMessage(ChatMessageRole role, IEnumerable<ChatMessageContentPart> contentParts)
     {
         Role = role;
-        Content = new ChangeTrackingList<ChatMessageContentPart>();
         foreach (ChatMessageContentPart contentPart in contentParts ?? [])
         {
             Content.Add(contentPart); 
         }
     }
 
+    protected ChatMessage(ChatMessageRole role, string content)
+        : this(role, content is null ? null : [ChatMessageContentPart.CreateTextMessageContentPart(content)])
+    { }
+
     /// <summary>
     /// The content associated with the message. The interpretation of this content will vary depending on the message type.
     /// </summary>
-    public IList<ChatMessageContentPart> Content { get; protected set; }
+    public IList<ChatMessageContentPart> Content { get; } = new ChangeTrackingList<ChatMessageContentPart>();
+
+    // CUSTOM: use strongly-typed role.
+    [CodeGenMember("Role")]
+    internal ChatMessageRole Role { get; set; } 
 
     /// <inheritdoc cref="SystemChatMessage(string)"/>
     public static SystemChatMessage CreateSystemMessage(string content) => new(content);

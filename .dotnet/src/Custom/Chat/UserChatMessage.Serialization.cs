@@ -26,20 +26,7 @@ public partial class UserChatMessage : IJsonModel<UserChatMessage>
         writer.WriteStringValue(Role);
         if (Optional.IsCollectionDefined(Content))
         {
-            writer.WritePropertyName("content"u8);
-            if (Content.Count == 1 && !string.IsNullOrEmpty(Content[0].Text))
-            {
-                writer.WriteStringValue(Content[0].Text);
-            }
-            else
-            {
-                writer.WriteStartArray();
-                foreach (var item in Content)
-                {
-                    writer.WriteObjectValue(item, options);
-                }
-                writer.WriteEndArray();
-            }
+            ChatMessageContentPart.WriteCoreContentPartList(Content, writer, options);
         }
         writer.WriteSerializedAdditionalRawData(SerializedAdditionalRawData, options);
         writer.WriteEndObject();

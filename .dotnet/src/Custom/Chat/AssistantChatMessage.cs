@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenAI.Chat;
 
@@ -11,16 +12,33 @@ namespace OpenAI.Chat;
 [CodeGenModel("ChatCompletionRequestAssistantMessage")]
 public partial class AssistantChatMessage : ChatMessage
 {
-    // CUSTOM: Made internal.
-    /// <summary> Initializes a new instance of <see cref="AssistantChatMessage"/>. </summary>
-    internal AssistantChatMessage()
+    /// <summary>
+    /// Creates a new instance of <see cref="AssistantChatMessage"/> using a collection of content items.
+    /// For <c>assistant</c> messages, this can be one or more of type <c>text</c> or exactly one of type <c>refusal</c>.
+    /// </summary>
+    /// <param name="contentParts">
+    ///     The collection of content items associated with the message.
+    /// </param>
+    public AssistantChatMessage(IEnumerable<ChatMessageContentPart> contentParts)
+        : base("assistant", contentParts)
     {
+        Argument.AssertNotNullOrEmpty(contentParts, nameof(contentParts));
+        ToolCalls = new ChangeTrackingList<ChatToolCall>();
     }
 
-    // Assistant messages may present ONE OF:
-    //	- Ordinary text content without tools or a function, in which case the content is required.
-    //	- A list of tool calls, together with optional text content
-    //	- A function call, together with optional text content
+    /// <summary>
+    /// Creates a new instance of <see cref="AssistantChatMessage"/> using a collection of content items.
+    /// For <c>assistant</c> messages, this can be one or more of type <c>text</c> or exactly one of type <c>refusal</c>.
+    /// </summary>
+    /// <param name="contentParts">
+    ///     The collection of text and image content items associated with the message.
+    /// </param>
+    public AssistantChatMessage(params ChatMessageContentPart[] contentParts)
+        : base("assistant", contentParts)
+    {
+        Argument.AssertNotNullOrEmpty(contentParts, nameof(contentParts));
+        ToolCalls = new ChangeTrackingList<ChatToolCall>();
+    }
 
     /// <summary>
     /// Creates a new instance of <see cref="AssistantChatMessage"/> that represents ordinary text content and
@@ -28,11 +46,9 @@ public partial class AssistantChatMessage : ChatMessage
     /// </summary>
     /// <param name="content"> The text content of the message. </param>
     public AssistantChatMessage(string content)
+        : base("assistant", [ChatMessageContentPart.CreateTextMessageContentPart(content)])
     {
         Argument.AssertNotNull(content, nameof(content));
-
-        Role = "assistant";
-        Content = [ChatMessageContentPart.CreateTextMessageContentPart(content)];
         ToolCalls = new ChangeTrackingList<ChatToolCall>();
     }
 
@@ -43,14 +59,15 @@ public partial class AssistantChatMessage : ChatMessage
     /// <param name="toolCalls"> The <c>tool_calls</c> made by the model. </param>
     /// <param name="content"> Optional text content associated with the message. </param>
     public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls, string content = null)
+        : base("assistant", content == null ? null : [ChatMessageContentPart.CreateTextMessageContentPart(content)])
     {
         Argument.AssertNotNull(toolCalls, nameof(toolCalls));
 
-        Role = "assistant";
-        Content = (content == null)
-            ? new ChangeTrackingList<ChatMessageContentPart>()
-            : [ChatMessageContentPart.CreateTextMessageContentPart(content)];
-        ToolCalls = new List<ChatToolCall>(toolCalls);
+        ToolCalls = new ChangeTrackingList<ChatToolCall>();
+        foreach (ChatToolCall toolCall in toolCalls)
+        {
+            ToolCalls.Add(toolCall);
+        }
     }
 
     /// <summary>
@@ -60,15 +77,12 @@ public partial class AssistantChatMessage : ChatMessage
     /// <param name="functionCall"> The <c>function_call</c> made by the model. </param>
     /// <param name="content"> Optional text content associated with the message. </param>
     public AssistantChatMessage(ChatFunctionCall functionCall, string content = null)
+        : base("assistant", content == null ? null : [ChatMessageContentPart.CreateTextMessageContentPart(content)])
     {
         Argument.AssertNotNull(functionCall, nameof(functionCall));
 
-        Role = "assistant";
-        Content = (content == null)
-            ? new ChangeTrackingList<ChatMessageContentPart>()
-            : [ChatMessageContentPart.CreateTextMessageContentPart(content)];
-        ToolCalls = new ChangeTrackingList<ChatToolCall>();
         FunctionCall = functionCall;
+        ToolCalls = new ChangeTrackingList<ChatToolCall>();
     }
 
     /// <summary>
@@ -86,6 +100,7 @@ public partial class AssistantChatMessage : ChatMessage
     ///     The <c>role</c> of the provided chat completion response was not <see cref="ChatMessageRole.Assistant"/>.
     /// </exception>
     public AssistantChatMessage(ChatCompletion chatCompletion)
+        : base("assistant", chatCompletion.Content)
     {
         Argument.AssertNotNull(chatCompletion, nameof(chatCompletion));
 
@@ -94,11 +109,13 @@ public partial class AssistantChatMessage : ChatMessage
             throw new NotSupportedException($"Cannot instantiate an {nameof(AssistantChatMessage)} from a {nameof(ChatCompletion)} with role: {chatCompletion.Role}.");
         }
 
-        Role = "assistant";
-        Content = (IList<ChatMessageContentPart>)chatCompletion.Content;
+        ToolCalls = new ChangeTrackingList<ChatToolCall>();
         Refusal = chatCompletion.Refusal;
-        ToolCalls = (IList<ChatToolCall>)chatCompletion.ToolCalls;
         FunctionCall = chatCompletion.FunctionCall;
+        foreach (ChatToolCall toolCall in chatCompletion.ToolCalls ?? [])
+        {
+            ToolCalls.Add(toolCall);
+        }
     }
 
     // CUSTOM: Renamed.
@@ -108,4 +125,7 @@ public partial class AssistantChatMessage : ChatMessage
     /// </summary>
     [CodeGenMember("Name")]
     public string ParticipantName { get; set; }
+
+    // CUSTOM: Made internal.
+    internal AssistantChatMessage() { }
 }

@@ -33,7 +33,13 @@ public abstract partial class ChatResponseFormat : IEquatable<ChatResponseFormat
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool operator ==(ChatResponseFormat first, ChatResponseFormat second)
-        => first?.Equals(second) ?? false;
+    {
+        if (first is null)
+        {
+            return second is null;
+        }
+        return first.Equals(second);
+    }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool operator !=(ChatResponseFormat first, ChatResponseFormat second)
@@ -43,7 +49,7 @@ public abstract partial class ChatResponseFormat : IEquatable<ChatResponseFormat
     public override bool Equals(object obj)
     {
         return (this as IEquatable<ChatResponseFormat>).Equals(obj as ChatResponseFormat)
-            || ToString().Equals(obj.ToString());
+            || ToString().Equals(obj?.ToString());
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -52,6 +58,16 @@ public abstract partial class ChatResponseFormat : IEquatable<ChatResponseFormat
     [EditorBrowsable(EditorBrowsableState.Never)]
     bool IEquatable<ChatResponseFormat>.Equals(ChatResponseFormat other)
     {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (Object.ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
         return (this is InternalChatResponseFormatText && other is InternalChatResponseFormatText)
             || (this is InternalChatResponseFormatJsonObject && other is InternalChatResponseFormatJsonObject)
             || (this is InternalChatResponseFormatJsonSchema thisJsonSchema

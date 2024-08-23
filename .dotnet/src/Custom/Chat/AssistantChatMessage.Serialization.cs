@@ -48,15 +48,12 @@ public partial class AssistantChatMessage : IJsonModel<AssistantChatMessage>
         writer.WriteStringValue(Role);
         if (Optional.IsCollectionDefined(Content))
         {
-            if (Content[0] != null)
-            {
-                writer.WritePropertyName("content"u8);
-                writer.WriteStringValue(Content[0].Text);
-            }
-            else
-            {
-                writer.WriteNull("content");
-            }
+            ChatMessageContentPart.WriteCoreContentPartList(Content, writer, options);
+        }
+        if (Optional.IsDefined(Refusal))
+        {
+            writer.WritePropertyName("refusal"u8);
+            writer.WriteStringValue(Refusal);
         }
         writer.WriteSerializedAdditionalRawData(SerializedAdditionalRawData, options);
         writer.WriteEndObject();

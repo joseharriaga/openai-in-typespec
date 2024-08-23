@@ -38,7 +38,13 @@ public partial class AssistantResponseFormat : IEquatable<AssistantResponseForma
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool operator ==(AssistantResponseFormat first, AssistantResponseFormat second)
-        => first?.Equals(second) ?? false;
+    {
+        if (first is null)
+        {
+            return second is null;
+        }
+        return first.Equals(second);
+    }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool operator !=(AssistantResponseFormat first, AssistantResponseFormat second)
@@ -61,6 +67,16 @@ public partial class AssistantResponseFormat : IEquatable<AssistantResponseForma
     [EditorBrowsable(EditorBrowsableState.Never)]
     bool IEquatable<AssistantResponseFormat>.Equals(AssistantResponseFormat other)
     {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (Object.ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
         return
             (this is InternalAssistantResponseFormatPlainTextNoObject thisPlainText
                 && other is InternalAssistantResponseFormatPlainTextNoObject otherPlainText

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenAI.Chat;
 
@@ -55,43 +56,68 @@ namespace OpenAI.Chat;
 [CodeGenSerialization(nameof(Content), SerializationValueHook = nameof(SerializeContentValue), DeserializationValueHook = nameof(DeserializeContentValue))]
 public abstract partial class ChatMessage
 {
+    protected ChatMessage(string role, IEnumerable<ChatMessageContentPart> contentParts)
+    {
+        Role = role;
+        Content = new ChangeTrackingList<ChatMessageContentPart>();
+        foreach (ChatMessageContentPart contentPart in contentParts ?? [])
+        {
+            Content.Add(contentPart); 
+        }
+    }
+
     /// <summary>
     /// The content associated with the message. The interpretation of this content will vary depending on the message type.
     /// </summary>
     public IList<ChatMessageContentPart> Content { get; protected set; }
 
     /// <inheritdoc cref="SystemChatMessage(string)"/>
-    public static SystemChatMessage CreateSystemMessage(string content) => new SystemChatMessage(content);
+    public static SystemChatMessage CreateSystemMessage(string content) => new(content);
+
+    /// <inheritdoc cref="SystemChatMessage(IEnumerable{ChatMessageContentPart})"/>
+    public static SystemChatMessage CreateSystemMessage(IEnumerable<ChatMessageContentPart> contentParts) => new(contentParts);
+
+    /// <inheritdoc cref="SystemChatMessage(ChatMessageContentPart[])"/>
+    public static SystemChatMessage CreateSystemMessage(params ChatMessageContentPart[] contentParts) => new(contentParts);
 
     /// <inheritdoc cref="UserChatMessage(string)"/>
-    public static UserChatMessage CreateUserMessage(string content) => new UserChatMessage(content);
+    public static UserChatMessage CreateUserMessage(string content) => new(content);
 
     /// <inheritdoc cref="UserChatMessage(IEnumerable{ChatMessageContentPart})"/>
-    public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts) => new UserChatMessage(contentParts);
+    public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts) => new(contentParts);
 
     /// <inheritdoc cref="UserChatMessage(ChatMessageContentPart[])"/>
-    public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts) => new UserChatMessage(contentParts);
+    public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts) => new(contentParts);
 
     /// <inheritdoc cref="AssistantChatMessage(string)"/>
-    public static AssistantChatMessage CreateAssistantMessage(string content, string refusal = null) => new(content)
-    {
-        Refusal = refusal
-    };
+    public static AssistantChatMessage CreateAssistantMessage(string content) => new(content);
+
+    /// <inheritdoc cref="AssistantChatMessage(IEnumerable{ChatMessageContentPart})"/>
+    public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatMessageContentPart> contentParts) => new(contentParts);
+
+    /// <inheritdoc cref="AssistantChatMessage(ChatMessageContentPart[])"/>
+    public static AssistantChatMessage CreateAssistantMessage(params ChatMessageContentPart[] contentParts) => new(contentParts);
 
     /// <inheritdoc cref="AssistantChatMessage(IEnumerable{ChatToolCall}, string)"/>
-    public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null) => new AssistantChatMessage(toolCalls, content);
+    public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null) => new(toolCalls, content);
 
     /// <inheritdoc cref="AssistantChatMessage(ChatFunctionCall, string)"/>
-    public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null) => new AssistantChatMessage(functionCall, content);
+    public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null) => new(functionCall, content);
 
     /// <inheritdoc cref="AssistantChatMessage(ChatCompletion)"/>
-    public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion) => new AssistantChatMessage(chatCompletion);
+    public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion) => new(chatCompletion);
 
     /// <inheritdoc cref="ToolChatMessage(string, string)"/>
-    public static ToolChatMessage CreateToolChatMessage(string toolCallId, string content) => new ToolChatMessage(toolCallId, content);
+    public static ToolChatMessage CreateToolChatMessage(string toolCallId, string content) => new(toolCallId, content);
+
+    /// <inheritdoc cref="ToolChatMessage(string, IEnumerable{ChatMessageContentPart})"/>
+    public static ToolChatMessage CreateToolChatMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts) => new(toolCallId, contentParts);
+
+    /// <inheritdoc cref="ToolChatMessage(string, ChatMessageContentPart[])"/>
+    public static ToolChatMessage CreateToolChatMessage(string toolCallId, params ChatMessageContentPart[] contentParts) => new(toolCallId, contentParts);
 
     /// <inheritdoc cref="FunctionChatMessage(string, string)"/>
-    public static FunctionChatMessage CreateFunctionMessage(string functionName, string content) => new FunctionChatMessage(functionName, content);
+    public static FunctionChatMessage CreateFunctionMessage(string functionName, string content) => new(functionName, content);
 
     /// <summary>
     /// Creates UserChatMessage.

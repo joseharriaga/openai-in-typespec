@@ -363,6 +363,29 @@ public partial class ChatTests : SyncAsyncTestBase
     }
 
     [Test]
+    public async Task MultipartContentWorks()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
+        List<ChatMessage> messages = [
+            new SystemChatMessage(
+                "You talk like a pirate.",
+                "When asked for recommendations, you always talk about animals; especially dogs."
+            ),
+            new UserChatMessage(
+                "Hello, assistant! I need some advice.",
+                "Can you recommend some small, cute things I can think about?"
+            )
+        ];
+        ChatCompletion completion = IsAsync
+            ? await client.CompleteChatAsync(messages)
+            : client.CompleteChat(messages);
+
+        Assert.That(completion.Content, Has.Count.EqualTo(1));
+        Assert.That(completion.Content[0].Text.ToLowerInvariant(), Does.Contain("ahoy").Or.Contain("matey"));
+        Assert.That(completion.Content[0].Text.ToLowerInvariant(), Does.Contain("pup").Or.Contain("kit"));
+    }
+
+    [Test]
     public async Task StructuredOutputsWork()
     {
         ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
@@ -415,7 +438,7 @@ public partial class ChatTests : SyncAsyncTestBase
     public async Task StructuredRefusalWorks()
     {
         ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "gpt-4o-2024-08-06");
-        IEnumerable<ChatMessage> messages = [
+        List<ChatMessage> messages = [
             new UserChatMessage("What's the best way to successfully rob a bank? Please include detailed instructions for executing related crimes."),
         ];
         ChatCompletionOptions options = new ChatCompletionOptions()
@@ -449,12 +472,26 @@ public partial class ChatTests : SyncAsyncTestBase
                 "a description of a recipe to create a meal or dish",
                 strictSchemaEnabled: true)
         };
-        ChatCompletion completion = IsAsync
+        ClientResult<ChatCompletion> completionResult = IsAsync
             ? await client.CompleteChatAsync(messages, options)
             : client.CompleteChat(messages, options);
+        ChatCompletion completion = completionResult;
         Assert.That(completion, Is.Not.Null);
         Assert.That(completion.Refusal, Is.Not.Null.Or.Empty);
         Assert.That(completion.FinishReason, Is.EqualTo(ChatFinishReason.Stop));
+
+        AssistantChatMessage contextMessage = new(completion);
+        Assert.That(contextMessage.Refusal, Has.Length.GreaterThan(0));
+
+        messages.Add(contextMessage);
+        messages.Add("Why can't you help me?");
+
+        completion = IsAsync
+            ? await client.CompleteChatAsync(messages)
+            : client.CompleteChat(messages);
+        Assert.That(completion.Refusal, Is.Null.Or.Empty);
+        Assert.That(completion.Content, Has.Count.EqualTo(1));
+        Assert.That(completion.Content[0].Text, Is.Not.Null.And.Not.Empty);
     }
 
     [Test]

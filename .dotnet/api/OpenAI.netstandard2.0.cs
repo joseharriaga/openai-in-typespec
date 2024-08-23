@@ -1178,6 +1178,8 @@ namespace OpenAI.Chat {
     public class AssistantChatMessage : ChatMessage, IJsonModel<AssistantChatMessage>, IPersistableModel<AssistantChatMessage> {
         public AssistantChatMessage(ChatCompletion chatCompletion);
         public AssistantChatMessage(ChatFunctionCall functionCall, string content = null);
+        public AssistantChatMessage(params ChatMessageContentPart[] contentParts);
+        public AssistantChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
         public AssistantChatMessage(string content);
         public ChatFunctionCall FunctionCall { get; set; }
@@ -1295,13 +1297,21 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<ChatFunctionChoice>.Write(ModelReaderWriterOptions options);
     }
     public abstract class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
+        protected ChatMessage();
+        protected ChatMessage(string role, IEnumerable<ChatMessageContentPart> contentParts);
         public IList<ChatMessageContentPart> Content { get; protected set; }
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
         public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null);
+        public static AssistantChatMessage CreateAssistantMessage(params ChatMessageContentPart[] contentParts);
+        public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
-        public static AssistantChatMessage CreateAssistantMessage(string content, string refusal = null);
+        public static AssistantChatMessage CreateAssistantMessage(string content);
         public static FunctionChatMessage CreateFunctionMessage(string functionName, string content);
+        public static SystemChatMessage CreateSystemMessage(params ChatMessageContentPart[] contentParts);
+        public static SystemChatMessage CreateSystemMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static SystemChatMessage CreateSystemMessage(string content);
+        public static ToolChatMessage CreateToolChatMessage(string toolCallId, params ChatMessageContentPart[] contentParts);
+        public static ToolChatMessage CreateToolChatMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts);
         public static ToolChatMessage CreateToolChatMessage(string toolCallId, string content);
         public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts);
         public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts);
@@ -1320,9 +1330,11 @@ namespace OpenAI.Chat {
         public ImageChatMessageContentPartDetail? ImageDetail { get; }
         public Uri ImageUri { get; }
         public ChatMessageContentPartKind Kind { get; }
+        public string Refusal { get; }
         public string Text { get; }
         public static ChatMessageContentPart CreateImageMessageContentPart(BinaryData imageBytes, string imageBytesMediaType, ImageChatMessageContentPartDetail? imageDetail = null);
         public static ChatMessageContentPart CreateImageMessageContentPart(Uri imageUri, ImageChatMessageContentPartDetail? imageDetail = null);
+        public static ChatMessageContentPart CreateRefusalMessageContentPart(string refusal);
         public static ChatMessageContentPart CreateTextMessageContentPart(string text);
         public static implicit operator ChatMessageContentPart(string content);
         ChatMessageContentPart IJsonModel<ChatMessageContentPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -1337,6 +1349,7 @@ namespace OpenAI.Chat {
         private readonly int _dummyPrimitive;
         public ChatMessageContentPartKind(string value);
         public static ChatMessageContentPartKind Image { get; }
+        public static ChatMessageContentPartKind Refusal { get; }
         public static ChatMessageContentPartKind Text { get; }
         public readonly bool Equals(ChatMessageContentPartKind other);
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -1545,6 +1558,8 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<StreamingChatToolCallUpdate>.Write(ModelReaderWriterOptions options);
     }
     public class SystemChatMessage : ChatMessage, IJsonModel<SystemChatMessage>, IPersistableModel<SystemChatMessage> {
+        public SystemChatMessage(params ChatMessageContentPart[] contentParts);
+        public SystemChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public SystemChatMessage(string content);
         public string ParticipantName { get; set; }
         SystemChatMessage IJsonModel<SystemChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -1555,6 +1570,8 @@ namespace OpenAI.Chat {
         protected override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ToolChatMessage : ChatMessage, IJsonModel<ToolChatMessage>, IPersistableModel<ToolChatMessage> {
+        public ToolChatMessage(string toolCallId, params ChatMessageContentPart[] contentParts);
+        public ToolChatMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts);
         public ToolChatMessage(string toolCallId, string content);
         public string ToolCallId { get; }
         ToolChatMessage IJsonModel<ToolChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);

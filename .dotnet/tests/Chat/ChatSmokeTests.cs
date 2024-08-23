@@ -488,4 +488,46 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
             Assert.That(additionalPropertyProperty.ValueKind, Is.EqualTo(JsonValueKind.True));
         }
     }
+
+    [Test]
+    public void SerializeCompoundContent()
+    {
+        UserChatMessage message = new(
+            ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me:"),
+            ChatMessageContentPart.CreateImageMessageContentPart(new Uri("https://api.openai.com/test")));
+        string serializedMessage = ModelReaderWriter.Write(message).ToString();
+        Assert.That(serializedMessage, Does.Contain("this image"));
+        Assert.That(serializedMessage, Does.Contain("openai.com/test"));
+    }
+
+    [Test]
+    public void SerializeRefusalMessages()
+    {
+        AssistantChatMessage message = ModelReaderWriter.Read<AssistantChatMessage>(BinaryData.FromString("""
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "refusal",
+                  "refusal": "I'm telling you 'no' from a content part."
+                }
+              ],
+              "refusal": "I'm telling you 'no' from the message refusal."
+            }
+            """));
+        Assert.That(message.Content, Has.Count.EqualTo(1));
+        Assert.That(message.Content[0].Refusal, Is.EqualTo("I'm telling you 'no' from a content part."));
+        Assert.That(message.Refusal, Is.EqualTo("I'm telling you 'no' from the message refusal."));
+        string reserialized = ModelReaderWriter.Write(message).ToString();
+        Assert.That(reserialized, Does.Contain("from a content part"));
+        Assert.That(reserialized, Does.Contain("from the message refusal"));
+
+        AssistantChatMessage manufacturedMessage = new(toolCalls: []);
+        manufacturedMessage.Refusal = "No!";
+        string serialized = ModelReaderWriter.Write(manufacturedMessage).ToString();
+        Assert.That(serialized, Does.Contain("refusal"));
+        Assert.That(serialized, Does.Contain("No!"));
+        Assert.That(serialized, Does.Not.Contain("tool"));
+        Assert.That(serialized, Does.Not.Contain("content"));
+    }
 }

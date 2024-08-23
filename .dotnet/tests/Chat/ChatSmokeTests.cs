@@ -534,6 +534,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
     [Test]
     public void SerializeMessagesWithNullProperties()
     {
+#pragma warning disable CS0618 // FunctionChatMessage is deprecated
         AssistantChatMessage assistantMessage = ModelReaderWriter.Read<AssistantChatMessage>(BinaryData.FromString("""
             {
                 "role": "assistant",
@@ -576,12 +577,12 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
             """));
         Assert.That(assistantMessage.Content, Has.Count.EqualTo(1));
         Assert.That(assistantMessage.Content[0], Is.Null);
-
         FunctionChatMessage functionMessage = new("my_function");
         functionMessage.Content.Add(null);
         BinaryData serializedMessage = ModelReaderWriter.Write(functionMessage);
         Console.WriteLine(serializedMessage.ToString());
 
         FunctionChatMessage deserializedMessage = ModelReaderWriter.Read<FunctionChatMessage>(serializedMessage);
+#pragma warning restore
     }
 }

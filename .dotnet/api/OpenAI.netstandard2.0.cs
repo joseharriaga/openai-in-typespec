@@ -1298,8 +1298,9 @@ namespace OpenAI.Chat {
     }
     public abstract class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
         protected ChatMessage();
-        protected ChatMessage(string role, IEnumerable<ChatMessageContentPart> contentParts);
-        public IList<ChatMessageContentPart> Content { get; protected set; }
+        protected ChatMessage(ChatMessageRole role, IEnumerable<ChatMessageContentPart> contentParts);
+        protected ChatMessage(ChatMessageRole role, string content);
+        public IList<ChatMessageContentPart> Content { get; }
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
         public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null);
         public static AssistantChatMessage CreateAssistantMessage(params ChatMessageContentPart[] contentParts);

@@ -15,5 +15,6 @@
   <!-- Work around strong name signing shenanigans -->
   <ItemGroup>
     <InternalsVisibleTo Include="Azure.AI.OpenAI.Tests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 </Project>

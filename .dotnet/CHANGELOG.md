@@ -8,6 +8,7 @@
   - To enable top-level structured outputs for response content, use `ChatResponseFormat.CreateJsonSchemaFormat()` and `AssistantResponseFormat.CreateJsonSchemaFormat()` as the `ResponseFormat` in method options like `ChatCompletionOptions`
   - To enable structured outputs for function tools, set `StrictParameterSchemaEnabled` to `true` on the tool definition
   - For more information, please see [the new section in readme.md](readme.md#how-to-use-structured-outputs)
+- Chat completions: the request message types of `AssistantChatMessage`, `SystemChatMessage`, and `ToolChatMessage` now support array-based content part collections in addition to simple string input.
 - Added the following model factories (static classes that can be used to instantiate OpenAI models for mocking in non-live test scenarios):
   - `OpenAIAudioModelFactory` in the `OpenAI.Audio` namespace (commit_hash)
   - `OpenAIEmbeddingsModelFactory` in the `OpenAI.Embeddings` namespace (commit_hash)

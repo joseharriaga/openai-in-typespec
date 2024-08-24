@@ -26,7 +26,7 @@ internal partial class GenericActionPipelinePolicy : PipelinePolicy
     public override async ValueTask ProcessAsync(PipelineMessage message, IReadOnlyList<PipelinePolicy> pipeline, int currentIndex)
     {
         _requestAction?.Invoke(message.Request);
-        await ProcessNextAsync(message, pipeline, currentIndex);
+        await ProcessNextAsync(message, pipeline, currentIndex).ConfigureAwait(false);
         _responseAction?.Invoke(message.Response);
     }
 }

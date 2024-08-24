@@ -4,6 +4,14 @@
 
 This change updates the library for compatibility with the latest `2.0.0-beta.9` of the `OpenAI` package and the `2024-07-01-preview` Azure OpenAI service API version label, as published on 8/5.
 
+### Features Added
+
+- The library now directly supports alternative authentication audiences, including Azure Government. This can be specified by providing an appropriate `AzureOpenAIAudience` value to the `AzureOpenAIClientOptions.Audience` property when creating a client. See the client configuration section of the README for more details.
+
+Additional new features from the `OpenAI` package can be found in [the OpenAI changelog](https://github.com/openai/openai-dotnet/blob/main/CHANGELOG.md).
+
+**Please note**: Structured Outputs support is not yet available with the `2024-07-01-preview` service API version. This means that attempting to use the feature with this library version will fail with an unrecognized property for either `response_format` or `strict` in request payloads; all existing functionality is unaffected. Azure OpenAI support for Structured Outputs is coming soon.
+
 ### Breaking Changes
 
 No Azure-specific breaking changes are present in this update.
@@ -23,6 +31,12 @@ The update from `OpenAI` `2.0.0-beta.7` to `2.0.0-beta.9` does bring a number of
 ### Bugs Fixed
 
 - Removed an inappropriate null check in `FileClient.GetFiles()` (azure-sdk-for-net 44912)
+- Addressed issues with automatic retry behavior, including for HTTP 429 rate limit errors:
+  - Authorization headers are now appropriately reapplied to retried requests
+  - Automatic retry behavior will now honor header-based intervals from `Retry-After` and related response headers
+- The client will now originate an `x-ms-client-request-id` header to match prior library behavior and facilitate troubleshooting
+
+Additional, non-Azure-specific bug fixes can be found in [the OpenAI changelog](https://github.com/openai/openai-dotnet/blob/main/CHANGELOG.md).
 
 ## 2.0.0-beta.2 (2024-06-14)
 

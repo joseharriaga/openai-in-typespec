@@ -1,5 +1,17 @@
 # Release History
 
+## 2.0.0-beta.10 (Unreleased)
+
+### Features Added
+
+### Breaking Changes
+
+- Renamed `AudioClient`'s `GenerateSpeechFromText` methods to simply `GenerateSpeech`. (commit_hash)
+
+### Bugs Fixed
+
+### Other Changes
+
 ## 2.0.0-beta.9 (2024-08-23)
 
 ### Features Added

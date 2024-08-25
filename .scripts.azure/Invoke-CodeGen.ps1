@@ -1,10 +1,24 @@
+[CmdletBinding()] param()
+
 $repoRoot = Join-Path $PSScriptRoot .. -Resolve
 $dotnetAzureFolder = Join-Path $repoRoot .dotnet.azure
+$Verbose = $PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent
 
 function Invoke([scriptblock]$script) {
   $scriptString = $script | Out-String
-  Write-Host "--------------------------------------------------------------------------------`n> $scriptString"
-  & $script
+  if ($Verbose) {
+    Write-Host "--------------------------------------------------------------------------------`n"
+  }
+  Write-Host "> $scriptString"
+  if ($Verbose) {
+    & $script
+  } else {
+    & $script > $null
+  }
+  if ($LastExitCode -ne 0) {
+    Write-Error "Command returned non-zero exit code. Run with -Verbose for full output."
+    exit 1
+  }
 }
 
 function Make-Internals-Settable {
@@ -18,7 +32,9 @@ function Make-Internals-Settable {
 function Partialize-ClientPipelineExtensions {
     $file = Get-ChildItem -Path "$dotnetAzureFolder\src\Generated\Internal\ClientPipelineExtensions.cs"
     $content = Get-Content -Path $file -Raw
-    Write-Output "Editing $($file.FullName)"
+    if ($Verbose) {
+      Write-Output "Editing $($file.FullName)"
+    }
     $content = $content -creplace "internal static class ClientPipelineExtensions", "internal static partial class ClientPipelineExtensions"
     $content | Set-Content -Path $file.FullName -NoNewline
 }
@@ -26,7 +42,9 @@ function Partialize-ClientPipelineExtensions {
 function Partialize-ClientUriBuilder {
     $file = Get-ChildItem -Path "$dotnetAzureFolder\src\Generated\Internal\ClientUriBuilder.cs"
     $content = Get-Content -Path $file -Raw
-    Write-Output "Editing $($file.FullName)"
+    if ($Verbose) {
+      Write-Output "Editing $($file.FullName)"
+    }
     $content = $content -creplace "internal class ClientUriBuilder", "internal partial class ClientUriBuilder"
     $content | Set-Content -Path $file.FullName -NoNewline
 }
@@ -39,7 +57,8 @@ function Prune-Generated-Files {
       "*OpenAI*Error*",
       "*Context*",
       "*RetrievedDoc*",
-      "*Citation*"
+      "*Citation*",
+      "*Version*"
   )
   $patternsToDelete = @(
       "BingSearchToolDefinition.cs",
@@ -65,7 +84,9 @@ function Prune-Generated-Files {
           }
       }
       if (-not $keepFile) {
-          Write-Output "Removing: $generatedFilename"
+          if ($Verbose) {
+            Write-Output "Removing: $generatedFilename"
+          }
           Remove-Item $generatedFile
       }
   }
@@ -73,14 +94,19 @@ function Prune-Generated-Files {
 
 Push-Location $repoRoot/.typespec.azure
 try {
+  if ($Verbose) {
+    Write-Output "Running with verbose output."
+  } else {
+    Write-Output "Running with minimal output. Use -Verbose for full output."
+  }
+
   Invoke { npm ci }
   Invoke { npm exec --no -- tsp format **/*tsp }
   Invoke { npm exec --no -- tsp compile . }
-#   Invoke { npm exec --no -- tsp compile main.tsp --emit @azure-tools/typespec-csharp --option @azure-tools/typespec-csharp.emitter-output-dir="$dotnetAzureFolder/src" }
-  Prune-Generated-Files
-  Make-Internals-Settable
-  Partialize-ClientPipelineExtensions
-  Partialize-ClientUriBuilder
+  Invoke { Prune-Generated-Files }
+  Invoke { Make-Internals-Settable }
+  Invoke { Partialize-ClientPipelineExtensions }
+  Invoke { Partialize-ClientUriBuilder }
 }
 finally {
   Pop-Location

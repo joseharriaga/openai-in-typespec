@@ -13,6 +13,9 @@ namespace AzureOpenAI;
 
 @route("threads/{thread_id}/messages")
 interface AzureMessages {
+  /**
+   * Create a message.
+   */
   @post
   @operationId("createMessage")
   @tag("Assistants")

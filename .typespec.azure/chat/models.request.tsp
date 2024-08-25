@@ -248,7 +248,7 @@ alias AzureChatDataSourceCommonParameters = {
    * By default, citations and intent will be requested.
    */
   @maxItems(3)
-  include_contexts?: ("citations" | "intent" | "all_retrieved_documents")[] = [
+  include_contexts?: ("citations" | "intent" | "all_retrieved_documents")[] = #[
     "citations",
     "intent"
   ];

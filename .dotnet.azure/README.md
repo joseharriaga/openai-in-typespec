@@ -494,6 +494,55 @@ _ = await assistantClient.DeleteAssistantAsync(assistant);
 _ = await assistantClient.DeleteThreadAsync(thread);
 ```
 
+## Advanced Topics
+
+### Using non-default service API versions
+
+Service API versions, as provided over REST via the `api-version` query string parameter, control what features are
+available and how those features behave. `AzureOpenAIClient` will automatically use the latest service API version
+that the current version of the library was built and validated against; it is strongly recommend to retain this
+default if using a different version is not otherwise necessary.
+
+> [!WARNING]
+> Using a non-default service API version may result in errors, incomplete or incorrect responses, or other unexpected
+> behavior in cases where capabilities or operation payloads changed between versions. Exercise caution if providing
+> a non-default value and consider using protocol method variants (see below) for maximum compatibility.
+
+In situations where using a non-default service API version is expressly desired, the default value may be changed by
+setting the `Version` property on `AzureOpenAIClientOptions` before a client is instantiated on the instance. As an
+example, the below will force the `2024-07-01-preview` service API label to be used:
+
+```csharp Snippet:ConfigureClient:NonDefaultVersion
+AzureOpenAIClientOptions optionsWithVersion = new()
+{
+    Version = "2024-07-01-preview",
+};
+AzureOpenAIClient azureOpenAIClient = new(
+    new Uri("AZURE_OPENAI_ENDPOINT"),
+    new AzureKeyCredential(Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY")),
+    optionsWithVersion);
+ChatClient chatClient = azureOpenAIClient.GetChatClient("my-gpt-4o-mini-deployment");
+
+// Calls will now use the specified version instead of the default
+using BinaryContent requestContent = BinaryContent.Create(BinaryData.FromBytes("""
+{
+    "model": "my-gpt-4o-mini-deployment",
+    "messages": [
+       {
+           "role": "user",
+           "content": "How does AI work? Explain it in simple terms."
+       }
+    ]
+}
+"""u8.ToArray()));
+ClientResult chatResult = await chatClient.CompleteChatAsync(requestContent, default);
+```
+
+As also demonstrated in the above, it's recommended to consider
+[using protocol methods](https://github.com/openai/openai-dotnet/blob/main/README.md#using-protocol-methods) when
+a non-default service API version is needed. Protocol methods make minimal assumptions about changes in request and
+response payloads and thus provide more flexibility if behavioral differences exist between versions.
+
 ## Next steps
 
 ## Troubleshooting

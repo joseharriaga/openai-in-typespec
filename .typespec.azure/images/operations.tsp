@@ -12,9 +12,12 @@ namespace AzureOpenAI;
 
 @route("/deployments/{deploymentId}/images")
 interface AzureImages {
+  /**
+   * Creates an image given a prompt.
+   */
   @route("/generations")
   @post
-  @operationId("ImageGenerations_Create")
+  @operationId("createImage")
   @tag("Images")
   createImage(
     @path deploymentId: string,

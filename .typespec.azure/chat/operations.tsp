@@ -13,6 +13,9 @@ namespace AzureOpenAI;
 
 @route("/chat")
 interface AzureChat {
+  /**
+   * Creates a model response for the given chat conversation.
+   */
   @route("completions")
   @post
   @operationId("createChatCompletion")

@@ -10,7 +10,25 @@ namespace Azure.AI.OpenAI;
 /// </summary>
 public partial class AzureOpenAIClientOptions : ClientPipelineOptions
 {
-    internal string Version { get; }
+    /// <summary>
+    /// The service API version label to use with Azure OpenAI.
+    /// </summary>
+    /// <remarks>
+    /// Using non-default service API versions may not function as intended, as capabilities and payload structures
+    /// may differ. Exercise caution when changing the service API version and consider using protocol method
+    /// variants (e.g. <see cref="ChatClient.CompleteChat(BinaryContent,RequestOptions)"/>) to maximize cross-version
+    /// compatibility.
+    /// </remarks>
+    public ServiceVersion Version
+    {
+        get => _serviceVersion ??= ServiceVersion.Default;
+        set
+        {
+            AssertNotFrozen();
+            _serviceVersion = value;
+        }
+    }
+    private ServiceVersion? _serviceVersion;
 
     /// <summary>
     /// The authorization audience to use when authenticating with Azure authentication tokens
@@ -47,28 +65,11 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
     /// </summary>
     /// <param name="version"> The service API version to use with the client. </param>
     /// <exception cref="NotSupportedException"> The provided service API version is not supported. </exception>
-    public AzureOpenAIClientOptions(ServiceVersion version = LatestVersion)
+    public AzureOpenAIClientOptions()
         : base()
     {
-        Version = version switch
-        {
-            ServiceVersion.V2024_04_01_Preview => "2024-04-01-preview",
-            ServiceVersion.V2024_05_01_Preview => "2024-05-01-preview",
-            ServiceVersion.V2024_06_01 => "2024-06-01",
-            ServiceVersion.V2024_07_01_Preview => "2024-07-01-preview",
-            _ => throw new NotSupportedException()
-        };
-        RetryPolicy = new RetryWithDelaysPolicy();
-    }
 
-    /// <summary> The version of the service to use. </summary>
-    public enum ServiceVersion
-    {
-        /// <summary> Service version "2024-04-01-preview". </summary>
-        V2024_04_01_Preview = 7,
-        V2024_05_01_Preview = 8,
-        V2024_06_01 = 9,
-        V2024_07_01_Preview = 10,
+        RetryPolicy = new RetryWithDelaysPolicy();
     }
 
     internal class RetryWithDelaysPolicy : ClientRetryPolicy
@@ -98,6 +99,4 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
             return delayFromHeader ?? base.GetNextDelay(message, tryCount);
         }
     }
-
-    private const ServiceVersion LatestVersion = ServiceVersion.V2024_07_01_Preview;
 }

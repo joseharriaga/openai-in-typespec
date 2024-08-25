@@ -1,5 +1,18 @@
 # Release History
 
+## 2.0.0-beta.4 (Unreleased)
+
+### Breaking Changes
+
+- The nested enum `AzureOpenAIClientOptions.ServiceVersion` is replaced by the new, top-level `ServiceVersion`.
+- The `AzureOpenAIClientOptions` constructor parameter for `ServiceVersion` is removed in favor of the new `Version`
+  property on the same type.
+
+### Other Changes
+
+- `AzureOpenAIClientOptions` now includes a `Version` property, replacing the previous constructor parameter, that can
+  be used for the advanced scenario of configuring a non-default service API version. See the readme for more details.
+
 ## 2.0.0-beta.3 (2024-08-23)
 
 This change updates the library for compatibility with the latest `2.0.0-beta.9` of the `OpenAI` package and the `2024-07-01-preview` Azure OpenAI service API version label, as published on 8/5.

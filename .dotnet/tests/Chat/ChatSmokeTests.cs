@@ -379,7 +379,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         else
         {
             // We construct a new instance. Later, we serialize it and confirm it was constructed correctly.
-            part = ChatMessageContentPart.CreateImageMessageContentPart(new Uri(uri), ImageChatMessageContentPartDetail.High);
+            part = ChatMessageContentPart.CreateImageMessageContentPart(new Uri(uri), ChatImageDetailLevel.High);
         }
 
         BinaryData serializedPart = ModelReaderWriter.Write(part);
@@ -454,7 +454,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         else
         {
             // We construct a new instance. Later, we serialize it and confirm it was constructed correctly.
-            part = ChatMessageContentPart.CreateImageMessageContentPart(imageData, imageMediaType, ImageChatMessageContentPartDetail.Auto);
+            part = ChatMessageContentPart.CreateImageMessageContentPart(imageData, imageMediaType, ChatImageDetailLevel.Auto);
         }
 
         BinaryData serializedPart = ModelReaderWriter.Write(part);

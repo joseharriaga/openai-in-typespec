@@ -1320,6 +1320,23 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatFunctionChoice>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatFunctionChoice>.Write(ModelReaderWriterOptions options);
     }
+    public readonly partial struct ChatImageDetailLevel : IEquatable<ChatImageDetailLevel> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public ChatImageDetailLevel(string value);
+        public static ChatImageDetailLevel Auto { get; }
+        public static ChatImageDetailLevel High { get; }
+        public static ChatImageDetailLevel Low { get; }
+        public readonly bool Equals(ChatImageDetailLevel other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ChatImageDetailLevel left, ChatImageDetailLevel right);
+        public static implicit operator ChatImageDetailLevel(string value);
+        public static bool operator !=(ChatImageDetailLevel left, ChatImageDetailLevel right);
+        public override readonly string ToString();
+    }
     public abstract class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
         protected ChatMessage();
         protected internal ChatMessage(ChatMessageRole role, IEnumerable<ChatMessageContentPart> contentParts);
@@ -1352,13 +1369,13 @@ namespace OpenAI.Chat {
     public class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>, IPersistableModel<ChatMessageContentPart> {
         public BinaryData ImageBytes { get; }
         public string ImageBytesMediaType { get; }
-        public ImageChatMessageContentPartDetail? ImageDetail { get; }
+        public ChatImageDetailLevel? ImageDetailLevel { get; }
         public Uri ImageUri { get; }
         public ChatMessageContentPartKind Kind { get; }
         public string Refusal { get; }
         public string Text { get; }
-        public static ChatMessageContentPart CreateImageMessageContentPart(BinaryData imageBytes, string imageBytesMediaType, ImageChatMessageContentPartDetail? imageDetail = null);
-        public static ChatMessageContentPart CreateImageMessageContentPart(Uri imageUri, ImageChatMessageContentPartDetail? imageDetail = null);
+        public static ChatMessageContentPart CreateImageMessageContentPart(BinaryData imageBytes, string imageBytesMediaType, ChatImageDetailLevel? imageDetailLevel = null);
+        public static ChatMessageContentPart CreateImageMessageContentPart(Uri imageUri, ChatImageDetailLevel? imageDetailLevel = null);
         public static ChatMessageContentPart CreateRefusalMessageContentPart(string refusal);
         public static ChatMessageContentPart CreateTextMessageContentPart(string text);
         public static implicit operator ChatMessageContentPart(string content);
@@ -1524,23 +1541,6 @@ namespace OpenAI.Chat {
         string IPersistableModel<FunctionChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<FunctionChatMessage>.Write(ModelReaderWriterOptions options);
         protected internal override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-    }
-    public readonly partial struct ImageChatMessageContentPartDetail : IEquatable<ImageChatMessageContentPartDetail> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public ImageChatMessageContentPartDetail(string value);
-        public static ImageChatMessageContentPartDetail Auto { get; }
-        public static ImageChatMessageContentPartDetail High { get; }
-        public static ImageChatMessageContentPartDetail Low { get; }
-        public readonly bool Equals(ImageChatMessageContentPartDetail other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(ImageChatMessageContentPartDetail left, ImageChatMessageContentPartDetail right);
-        public static implicit operator ImageChatMessageContentPartDetail(string value);
-        public static bool operator !=(ImageChatMessageContentPartDetail left, ImageChatMessageContentPartDetail right);
-        public override readonly string ToString();
     }
     public static class OpenAIChatModelFactory {
         public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, IEnumerable<ChatMessageContentPart> content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);

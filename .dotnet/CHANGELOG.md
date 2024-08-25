@@ -12,6 +12,8 @@
 
 ### Other Changes
 
+- Removed the version path parameter "v1" from the default endpoint URL. (commit_hash)
+
 ## 2.0.0-beta.9 (2024-08-23)
 
 ### Features Added

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using OpenAI.Chat;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ComponentModel;
@@ -30,7 +29,7 @@ internal partial class AzureChatClient : ChatClient
         BinaryContent content,
         RequestOptions options = null,
         bool? bufferResponse = true)
-            => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+            => _messageBuilder.Reset()
                 .WithPath("chat", "completions")
                 .WithMethod("POST")
                 .WithContent(content, "application/json")

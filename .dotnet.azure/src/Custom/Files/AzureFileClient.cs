@@ -15,18 +15,15 @@ namespace Azure.AI.OpenAI.Files;
 /// </remarks>
 internal partial class AzureFileClient : FileClient
 {
-    private readonly Uri _endpoint;
-    private readonly string _apiVersion;
+    private readonly AzureOpenAIPipelineMessageBuilder _messageBuilder;
 
     internal AzureFileClient(ClientPipeline pipeline, Uri endpoint, AzureOpenAIClientOptions options)
         : base(pipeline, new OpenAIClientOptions() { Endpoint = endpoint })
     {
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         Argument.AssertNotNull(endpoint, nameof(endpoint));
-        options ??= new();
 
-        _endpoint = endpoint;
-        _apiVersion = options.Version;
+        _messageBuilder = new(pipeline, endpoint, options?.Version ?? ServiceVersion.Default);
     }
 
     protected AzureFileClient()

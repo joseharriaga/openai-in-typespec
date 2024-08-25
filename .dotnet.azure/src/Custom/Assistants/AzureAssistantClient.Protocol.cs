@@ -4,7 +4,6 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
-using OpenAI.Assistants;
 
 namespace Azure.AI.OpenAI.Assistants;
 
@@ -545,7 +544,7 @@ internal partial class AzureAssistantClient : AssistantClient
         => NewJsonGetBuilder(options).WithPath("threads", threadId, "runs", runId, "steps", stepId).Build();
 
     private AzureOpenAIPipelineMessageBuilder NewBuilder(RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => _messageBuilder.Reset()
             .WithAssistantsHeader()
             .WithOptions(options);
 

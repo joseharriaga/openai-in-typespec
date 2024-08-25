@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using OpenAI.Chat;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
@@ -17,9 +16,8 @@ namespace Azure.AI.OpenAI.Chat;
 /// </remarks>
 internal partial class AzureChatClient : ChatClient
 {
-    private readonly string _deploymentName;
-    private readonly Uri _endpoint;
-    private readonly string _apiVersion;
+    private readonly AzureOpenAIPipelineMessageBuilder _messageBuilder;
+    private readonly ServiceVersion _apiVersion;
 
     internal AzureChatClient(ClientPipeline pipeline, string deploymentName, Uri endpoint, AzureOpenAIClientOptions options)
         : base(pipeline, model: deploymentName, new OpenAIClientOptions() { Endpoint = endpoint })
@@ -27,11 +25,9 @@ internal partial class AzureChatClient : ChatClient
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         Argument.AssertNotNullOrEmpty(deploymentName, nameof(deploymentName));
         Argument.AssertNotNull(endpoint, nameof(endpoint));
-        options ??= new();
 
-        _deploymentName = deploymentName;
-        _apiVersion = options.Version;
-        _endpoint = endpoint;
+        _apiVersion = options?.Version ?? ServiceVersion.Default;
+        _messageBuilder = new(pipeline, endpoint, _apiVersion);
     }
 
     protected AzureChatClient()
@@ -41,7 +37,10 @@ internal partial class AzureChatClient : ChatClient
     public override AsyncCollectionResult<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default)
     {
         options ??= new();
-        options.StreamOptions = null;
+        if (_apiVersion <= ServiceVersion.V20240701Preview)
+        {
+            options.StreamOptions = null;
+        }
         return base.CompleteChatStreamingAsync(messages, options, cancellationToken);
     }
 
@@ -49,7 +48,10 @@ internal partial class AzureChatClient : ChatClient
     public override CollectionResult<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default)
     {
         options ??= new();
-        options.StreamOptions = null;
+        if (_apiVersion <= ServiceVersion.V20240701Preview)
+        {
+            options.StreamOptions = null;
+        }
         return base.CompleteChatStreaming(messages, options, cancellationToken);
     }
 }

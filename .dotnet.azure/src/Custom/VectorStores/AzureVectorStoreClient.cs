@@ -16,18 +16,19 @@ namespace Azure.AI.OpenAI.VectorStores;
 [Experimental("OPENAI001")]
 internal partial class AzureVectorStoreClient : VectorStoreClient
 {
+    private readonly ServiceVersion _apiVersion;
     private readonly Uri _endpoint;
-    private readonly string _apiVersion;
+    private readonly AzureOpenAIPipelineMessageBuilder _messageBuilder;
 
     internal AzureVectorStoreClient(ClientPipeline pipeline, Uri endpoint, AzureOpenAIClientOptions options)
         : base(pipeline, new OpenAIClientOptions() { Endpoint = endpoint })
     {
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         Argument.AssertNotNull(endpoint, nameof(endpoint));
-        options ??= new();
 
         _endpoint = endpoint;
-        _apiVersion = options.Version;
+        _apiVersion = options?.Version ?? ServiceVersion.Default;
+        _messageBuilder = new(pipeline, _endpoint, _apiVersion);
     }
 
     protected AzureVectorStoreClient()

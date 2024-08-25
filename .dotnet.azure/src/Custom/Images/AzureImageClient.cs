@@ -14,9 +14,7 @@ namespace Azure.AI.OpenAI.Images;
 /// </remarks>
 internal partial class AzureImageClient : ImageClient
 {
-    private readonly string _deploymentName;
-    private readonly Uri _endpoint;
-    private readonly string _apiVersion;
+    private readonly AzureOpenAIPipelineMessageBuilder _messageBuilder;
 
     internal AzureImageClient(ClientPipeline pipeline, string deploymentName, Uri endpoint, AzureOpenAIClientOptions options)
         : base(pipeline, model: deploymentName, new OpenAIClientOptions() { Endpoint = endpoint })
@@ -24,11 +22,8 @@ internal partial class AzureImageClient : ImageClient
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         Argument.AssertNotNullOrEmpty(deploymentName, nameof(deploymentName));
         Argument.AssertNotNull(endpoint, nameof(endpoint));
-        options ??= new();
 
-        _deploymentName = deploymentName;
-        _endpoint = endpoint;
-        _apiVersion = options.Version;
+        _messageBuilder = new(pipeline, endpoint, options?.Version ?? ServiceVersion.Default, deploymentName);
     }
 
     protected AzureImageClient()

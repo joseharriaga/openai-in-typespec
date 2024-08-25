@@ -98,7 +98,7 @@ internal partial class AzureFileClient : FileClient
     }
 
     private PipelineMessage CreateDeleteRequestMessage(string fileId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => _messageBuilder.Reset()
             .WithMethod("DELETE")
             .WithPath("files", fileId)
             .WithAccept("application/json")
@@ -106,7 +106,7 @@ internal partial class AzureFileClient : FileClient
             .Build();
 
     private PipelineMessage CreateDownloadContentRequestMessage(string fileId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => _messageBuilder.Reset()
             .WithMethod("GET")
             .WithPath("files", fileId, "content")
             .WithAccept("application/json")
@@ -114,7 +114,7 @@ internal partial class AzureFileClient : FileClient
             .Build();
 
     private PipelineMessage CreateGetFileRequestMessage(string fileId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => _messageBuilder.Reset()
             .WithMethod("GET")
             .WithPath("files", fileId)
             .WithAccept("application/json")
@@ -122,7 +122,7 @@ internal partial class AzureFileClient : FileClient
             .Build();
 
     private PipelineMessage CreateGetFilesRequestMessage(string purpose, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => _messageBuilder.Reset()
             .WithMethod("GET")
             .WithPath("files")
             .WithAccept("application/json")
@@ -131,7 +131,7 @@ internal partial class AzureFileClient : FileClient
             .Build();
 
     private PipelineMessage CreateUploadRequestMessage(BinaryContent content, string contentType, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => _messageBuilder.Reset()
             .WithMethod("POST")
             .WithPath("files")
             .WithContent(content, contentType)

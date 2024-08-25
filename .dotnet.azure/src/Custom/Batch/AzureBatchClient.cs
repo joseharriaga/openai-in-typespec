@@ -14,9 +14,7 @@ namespace Azure.AI.OpenAI.Batch;
 /// </remarks>
 internal partial class AzureBatchClient : BatchClient
 {
-    private readonly Uri _endpoint;
-    private readonly string _deploymentName;
-    private readonly string _apiVersion;
+    private AzureOpenAIPipelineMessageBuilder _messageBuilder;
 
     internal AzureBatchClient(ClientPipeline pipeline, string deploymentName, Uri endpoint, AzureOpenAIClientOptions options)
         : base(pipeline, new OpenAIClientOptions() { Endpoint = endpoint })
@@ -24,11 +22,8 @@ internal partial class AzureBatchClient : BatchClient
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         Argument.AssertNotNullOrEmpty(deploymentName, nameof(deploymentName));
         Argument.AssertNotNull(endpoint, nameof(endpoint));
-        options ??= new();
 
-        _deploymentName = deploymentName;
-        _endpoint = endpoint;
-        _apiVersion = options.Version;
+        _messageBuilder = new(pipeline, endpoint, options?.Version ?? ServiceVersion.Default, deploymentName);
     }
 
     protected AzureBatchClient()

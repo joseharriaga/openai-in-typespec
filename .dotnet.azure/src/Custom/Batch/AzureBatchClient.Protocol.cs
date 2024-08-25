@@ -3,7 +3,6 @@
 
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using OpenAI.Batch;
 
 namespace Azure.AI.OpenAI.Batch;
 
@@ -70,7 +69,7 @@ internal partial class AzureBatchClient : BatchClient
     }
 
     private new PipelineMessage CreateCreateBatchRequest(BinaryContent content, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+        => _messageBuilder.Reset()
             .WithMethod("POST")
             .WithPath("batches")
             .WithContent(content, "application/json")
@@ -79,7 +78,7 @@ internal partial class AzureBatchClient : BatchClient
             .Build();
 
     private new PipelineMessage CreateGetBatchesRequest(string after, int? limit, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+        => _messageBuilder.Reset()
             .WithMethod("GET")
             .WithPath("batches")
             .WithOptionalQueryParameter("after", after)
@@ -89,7 +88,7 @@ internal partial class AzureBatchClient : BatchClient
             .Build();
 
     private new PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+        => _messageBuilder.Reset()
             .WithMethod("GET")
             .WithPath("batches", batchId)
             .WithAccept("application/json")
@@ -97,7 +96,7 @@ internal partial class AzureBatchClient : BatchClient
             .Build();
 
     private new PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+        => _messageBuilder.Reset()
             .WithMethod("POST")
             .WithPath("batches", batchId, "cancel")
             .WithAccept("application/json")

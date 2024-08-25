@@ -14,6 +14,7 @@ internal class AzureOpenAIPipelineMessageBuilder
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;
     private readonly string _deploymentName;
+    private readonly ServiceVersion _apiVersion;
     private string[] _pathComponents;
     private readonly List<KeyValuePair<string, string>> _queryStringParameters = [];
     private string _method;
@@ -30,13 +31,15 @@ internal class AzureOpenAIPipelineMessageBuilder
     /// <param name="endpoint"></param>
     /// <param name="apiVersion"></param>
     /// <param name="deploymentName"></param>
-    public AzureOpenAIPipelineMessageBuilder(ClientPipeline pipeline, Uri endpoint, string apiVersion, string deploymentName = null)
+    public AzureOpenAIPipelineMessageBuilder(ClientPipeline pipeline, Uri endpoint, ServiceVersion apiVersion, string deploymentName = null)
     {
         _pipeline = pipeline;
         _endpoint = endpoint;
         _deploymentName = deploymentName;
-        _queryStringParameters.Add(new KeyValuePair<string, string>("api-version", apiVersion));
+        _apiVersion = apiVersion;
     }
+
+    public AzureOpenAIPipelineMessageBuilder Reset() => new(_pipeline, _endpoint, _apiVersion, _deploymentName);
 
     public AzureOpenAIPipelineMessageBuilder WithPath(params string[] pathComponents)
     {
@@ -112,6 +115,12 @@ internal class AzureOpenAIPipelineMessageBuilder
     public PipelineMessage Build()
     {
         Argument.AssertNotNullOrWhiteSpace(_method, nameof(_method));
+
+        string apiVersionText = _apiVersion.ToString();
+        if (!string.IsNullOrEmpty(apiVersionText))
+        {
+            _queryStringParameters.Add(new("api-version", apiVersionText));
+        }
 
         PipelineMessage message = _pipeline.CreateMessage();
         message.ResponseClassifier = _classifier ?? AzureOpenAIClient.PipelineMessageClassifier;

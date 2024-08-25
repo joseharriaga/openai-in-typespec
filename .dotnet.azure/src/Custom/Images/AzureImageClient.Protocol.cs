@@ -56,7 +56,7 @@ internal partial class AzureImageClient : ImageClient
     }
 
     private PipelineMessage CreateGenerateImagesRequestMessage(BinaryContent content, RequestOptions options = null)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+        => _messageBuilder.Reset()
             .WithMethod("POST")
             .WithPath("images", "generations")
             .WithContent(content, "application/json")
@@ -65,7 +65,7 @@ internal partial class AzureImageClient : ImageClient
             .Build();
 
     private PipelineMessage CreateGenerateImageEditsRequestMessage(BinaryContent content, string contentType, RequestOptions options = null)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+        => _messageBuilder.Reset()
             .WithMethod("POST")
             .WithPath("images", "edits")
             .WithContent(content, contentType)
@@ -74,7 +74,7 @@ internal partial class AzureImageClient : ImageClient
             .Build();
 
     private PipelineMessage CreateGenerateImageVariationsRequestMessage(BinaryContent content, string contentType, RequestOptions options = null)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+        => _messageBuilder.Reset()
             .WithMethod("POST")
             .WithPath("images", "variations")
             .WithContent(content, contentType)

@@ -7,6 +7,7 @@
 ### Breaking Changes
 
 - Renamed `AudioClient`'s `GenerateSpeechFromText` methods to simply `GenerateSpeech`. (commit_hash)
+- Changed the type of `OpenAIFileInfo`'s `SizeInBytes` property from `long?` to `int?`. (commit_hash) 
 
 ### Bugs Fixed
 

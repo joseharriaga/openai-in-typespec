@@ -11,6 +11,8 @@
 
 ### Bugs Fixed
 
+- Fixed a newly introduced bug ([#185](https://github.com/openai/openai-dotnet/pull/185)) where providing `OpenAIClientOptions` to a top-level `OpenAIClient` did not carry over to scenario clients (e.g. `ChatClient`) created via that top-level client
+
 ### Other Changes
 
 - Removed the version path parameter "v1" from the default endpoint URL. (commit_hash)

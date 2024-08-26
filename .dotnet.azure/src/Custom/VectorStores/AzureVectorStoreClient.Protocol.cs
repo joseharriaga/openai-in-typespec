@@ -3,7 +3,6 @@
 
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using OpenAI.VectorStores;
 
 namespace Azure.AI.OpenAI.VectorStores;
 
@@ -11,13 +10,13 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
 {
     public override IAsyncEnumerable<ClientResult> GetVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options)
     {
-        using AzureVectorStoresPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, _apiVersion, options);
+        AzureVectorStoresPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     public override IEnumerable<ClientResult> GetVectorStores(int? limit, string order, string after, string before, RequestOptions options)
     {
-        using AzureVectorStoresPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, _apiVersion,options);
+        AzureVectorStoresPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, _apiVersion,options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
@@ -87,7 +86,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
-        using AzureVectorStoreFilesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, limit, order, after, before, filter, _apiVersion, options);
+        AzureVectorStoreFilesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, limit, order, after, before, filter, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
@@ -95,7 +94,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
-        using AzureVectorStoreFilesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, limit, order, after, before, filter, _apiVersion, options);
+        AzureVectorStoreFilesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, limit, order, after, before, filter, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
@@ -212,7 +211,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
 
-        using AzureVectorStoreFileBatchesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, batchId, limit, order, after, before, filter, _apiVersion, options);
+        AzureVectorStoreFileBatchesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, batchId, limit, order, after, before, filter, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
@@ -221,7 +220,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
 
-        using AzureVectorStoreFileBatchesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, batchId, limit, order, after, before, filter, _apiVersion, options);
+        AzureVectorStoreFileBatchesPageEnumerator enumerator = new(Pipeline, _endpoint, vectorStoreId, batchId, limit, order, after, before, filter, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 

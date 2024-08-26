@@ -4,7 +4,6 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
-using OpenAI.FineTuning;
 
 namespace Azure.AI.OpenAI.FineTuning;
 
@@ -40,37 +39,37 @@ internal partial class AzureFineTuningClient : FineTuningClient
 
     public override IEnumerable<ClientResult> GetJobs(string after, int? limit, RequestOptions options)
     {
-        using FineTuningJobsPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, options);
+        FineTuningJobsPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
     public override IAsyncEnumerable<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options)
     {
-        using FineTuningJobsPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, options);
+        FineTuningJobsPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     public override IEnumerable<ClientResult> GetJobEvents(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
-        using FineTuningJobEventsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
+        FineTuningJobEventsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
     public override IAsyncEnumerable<ClientResult> GetJobEventsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
-        using FineTuningJobEventsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
+        FineTuningJobEventsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     public override IEnumerable<ClientResult> GetJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
-        using FineTuningJobCheckpointsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
+        FineTuningJobCheckpointsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
     public override IAsyncEnumerable<ClientResult> GetJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
-        using FineTuningJobCheckpointsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
+        FineTuningJobCheckpointsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 

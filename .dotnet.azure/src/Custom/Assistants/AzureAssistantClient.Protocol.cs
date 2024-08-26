@@ -4,7 +4,6 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
-using OpenAI.Assistants;
 
 namespace Azure.AI.OpenAI.Assistants;
 
@@ -29,13 +28,13 @@ internal partial class AzureAssistantClient : AssistantClient
 
     public override IAsyncEnumerable<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
     {
-        using AzureAssistantsPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, _apiVersion, options);
+        AzureAssistantsPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     public override IEnumerable<ClientResult> GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
     {
-        using AzureAssistantsPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, _apiVersion, options);
+        AzureAssistantsPageEnumerator enumerator = new(Pipeline, _endpoint, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
@@ -112,7 +111,7 @@ internal partial class AzureAssistantClient : AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        using AzureMessagesPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, _apiVersion, options);
+        AzureMessagesPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
@@ -120,7 +119,7 @@ internal partial class AzureAssistantClient : AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        using AzureMessagesPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, _apiVersion, options);
+        AzureMessagesPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
@@ -262,7 +261,7 @@ internal partial class AzureAssistantClient : AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        using AzureRunsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, _apiVersion, options);
+        AzureRunsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
@@ -270,7 +269,7 @@ internal partial class AzureAssistantClient : AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        using AzureRunsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, _apiVersion, options);
+        AzureRunsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
@@ -381,7 +380,7 @@ internal partial class AzureAssistantClient : AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        using  AzureRunStepsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, runId, limit, order, after, before, _apiVersion, options);
+        AzureRunStepsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, runId, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
@@ -390,7 +389,7 @@ internal partial class AzureAssistantClient : AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        using AzureRunStepsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, runId, limit, order, after, before, _apiVersion, options);
+        AzureRunStepsPageEnumerator enumerator = new(Pipeline, _endpoint, threadId, runId, limit, order, after, before, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 

@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
-using OpenAI.Batch;
 
 namespace Azure.AI.OpenAI.Batch;
 
@@ -29,13 +26,13 @@ internal partial class AzureBatchClient : BatchClient
 
     public override IAsyncEnumerable<ClientResult> GetBatchesAsync(string after, int? limit, RequestOptions options)
     {
-        using BatchesPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, options);
+        BatchesPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     public override IEnumerable<ClientResult> GetBatches(string after, int? limit, RequestOptions options)
     {
-        using BatchesPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, options);
+        BatchesPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 

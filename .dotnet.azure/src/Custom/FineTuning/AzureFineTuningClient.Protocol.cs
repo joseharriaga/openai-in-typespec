@@ -4,7 +4,6 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
-using OpenAI.FineTuning;
 
 namespace Azure.AI.OpenAI.FineTuning;
 
@@ -38,43 +37,40 @@ internal partial class AzureFineTuningClient : FineTuningClient
         return ClientResult.FromResponse(response);
     }
 
-    public override ClientResult GetJobs(string after, int? limit, RequestOptions options)
+    public override IEnumerable<ClientResult> GetJobs(string after, int? limit, RequestOptions options)
     {
-        using PipelineMessage message = CreateGetJobsRequestMessage(after, limit, options);
-        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        FineTuningJobsPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, options);
+        return PageCollectionHelpers.Create(enumerator);
     }
 
-    public override async Task<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options)
+    public override IAsyncEnumerable<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options)
     {
-        using PipelineMessage message = CreateGetJobsRequestMessage(after, limit, options);
-        PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
-        return ClientResult.FromResponse(response);
+        FineTuningJobsPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, options);
+        return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
-    public override ClientResult GetJobEvents(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    public override IEnumerable<ClientResult> GetJobEvents(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
-        using PipelineMessage message = CreateGetJobEventsRequestMessage(fineTuningJobId, after, limit, options);
-        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        FineTuningJobEventsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
+        return PageCollectionHelpers.Create(enumerator);
     }
 
-    public override async Task<ClientResult> GetJobEventsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    public override IAsyncEnumerable<ClientResult> GetJobEventsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
-        using PipelineMessage message = CreateGetJobEventsRequestMessage(fineTuningJobId, after, limit, options);
-        PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
-        return ClientResult.FromResponse(response);
+        FineTuningJobEventsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
+        return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
-    public override ClientResult GetJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    public override IEnumerable<ClientResult> GetJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
-        using PipelineMessage message = CreateGetJobCheckpointsRequestMessage(fineTuningJobId, after, limit, options);
-        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        FineTuningJobCheckpointsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
+        return PageCollectionHelpers.Create(enumerator);
     }
 
-    public override async Task<ClientResult> GetJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    public override IAsyncEnumerable<ClientResult> GetJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
-        using PipelineMessage message = CreateGetJobCheckpointsRequestMessage(fineTuningJobId, after, limit, options);
-        PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
-        return ClientResult.FromResponse(response);
+        FineTuningJobCheckpointsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
+        return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     public override ClientResult CancelJob(string fineTuningJobId, RequestOptions options)

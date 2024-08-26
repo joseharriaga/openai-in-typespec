@@ -627,7 +627,7 @@ public class AoaiTestBase<TClient> // : RecordedTestBase<AoaiTestEnvironment>
     //    return model!;
     //}
 
-    //    protected AsyncResultCollection<T> SyncOrAsync<T>(TClient client, Func<TClient, ResultCollection<T>> sync, Func<TClient, AsyncResultCollection<T>> async)
+    //    protected AsyncCollectionResult<T> SyncOrAsync<T>(TClient client, Func<TClient, CollectionResult<T>> sync, Func<TClient, AsyncCollectionResult<T>> async)
     //    {
     //        // TODO FIXME HACK Since the test framework doesn't currently support async result collection, this methods provides
     //        //                 a simplified way to make explicit calls to the right methods in tests
@@ -639,12 +639,12 @@ public class AoaiTestBase<TClient> // : RecordedTestBase<AoaiTestEnvironment>
     //        }
     //        else
     //        {
-    //            ResultCollection<T> syncCollection = sync(rawClient);
-    //            return new SyncToAsyncResultCollection<T>(syncCollection);
+    //            CollectionResult<T> syncCollection = sync(rawClient);
+    //            return new SyncToAsyncCollectionResult<T>(syncCollection);
     //        }
     //    }
 
-    //    protected AsyncPageableCollection<T> SyncOrAsync<T>(TClient client, Func<TClient, PageableCollection<T>> sync, Func<TClient, AsyncPageableCollection<T>> async)
+    //    protected AsyncPageCollection<T> SyncOrAsync<T>(TClient client, Func<TClient, PageCollection<T>> sync, Func<TClient, AsyncPageCollection<T>> async)
     //    {
     //        // TODO FIXME HACK Since the test framework doesn't currently support async result collection, this methods provides
     //        //                 a simplified way to make explicit calls to the right methods in tests
@@ -656,12 +656,12 @@ public class AoaiTestBase<TClient> // : RecordedTestBase<AoaiTestEnvironment>
     //        }
     //        else
     //        {
-    //            PageableCollection<T> syncCollection = sync(rawClient);
-    //            return new SyncToAsyncPageableCollection<T>(syncCollection);
+    //            PageCollection<T> syncCollection = sync(rawClient);
+    //            return new SyncToAsyncPageCollection<T>(syncCollection);
     //        }
     //    }
 
-    //    protected Task<List<T>> SyncOrAsyncList<T>(TClient client, Func<TClient, PageableCollection<T>> sync, Func<TClient, AsyncPageableCollection<T>> async)
+    //    protected Task<List<T>> SyncOrAsyncList<T>(TClient client, Func<TClient, PageCollection<T>> sync, Func<TClient, AsyncPageCollection<T>> async)
     //    {
     //        // TODO FIXME HACK Since the test framework doesn't currently support async result collection, this methods provides
     //        //                 a simplified way to make explicit calls to the right methods in tests

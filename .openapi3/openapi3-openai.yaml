@@ -16,8 +16,9 @@ tags:
   - name: Models
   - name: Moderations
   - name: Vector Stores
+  - name: Uploads
 paths:
-  /assistants:
+  /v1/assistants:
     post:
       tags:
         - Assistants
@@ -91,7 +92,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListAssistantsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /assistants/{assistant_id}:
+  /v1/assistants/{assistant_id}:
     get:
       tags:
         - Assistants
@@ -161,7 +162,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteAssistantResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /audio/speech:
+  /v1/audio/speech:
     post:
       tags:
         - Audio
@@ -188,7 +189,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateSpeechRequest'
-  /audio/transcriptions:
+  /v1/audio/transcriptions:
     post:
       tags:
         - Audio
@@ -214,7 +215,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateTranscriptionRequestMultiPart'
-  /audio/translations:
+  /v1/audio/translations:
     post:
       tags:
         - Audio
@@ -240,7 +241,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateTranslationRequestMultiPart'
-  /batches:
+  /v1/batches:
     post:
       tags:
         - Batch
@@ -321,7 +322,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListBatchesResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /batches/{batch_id}:
+  /v1/batches/{batch_id}:
     get:
       tags:
         - Batch
@@ -343,7 +344,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/Batch'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /batches/{batch_id}/cancel:
+  /v1/batches/{batch_id}/cancel:
     post:
       tags:
         - Batch
@@ -365,7 +366,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/Batch'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /chat/completions:
+  /v1/chat/completions:
     post:
       tags:
         - Chat
@@ -387,7 +388,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateChatCompletionRequest'
-  /completions:
+  /v1/completions:
     post:
       tags:
         - Completions
@@ -409,7 +410,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateCompletionRequest'
-  /embeddings:
+  /v1/embeddings:
     post:
       tags:
         - Embeddings
@@ -431,7 +432,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateEmbeddingRequest'
-  /files:
+  /v1/files:
     post:
       tags:
         - Files
@@ -482,7 +483,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListFilesResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /files/{file_id}:
+  /v1/files/{file_id}:
     get:
       tags:
         - Files
@@ -525,7 +526,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteFileResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /files/{file_id}/content:
+  /v1/files/{file_id}/content:
     get:
       tags:
         - Files
@@ -548,7 +549,7 @@ paths:
                   - type: string
                     format: byte
                   - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs:
+  /v1/fine_tuning/jobs:
     post:
       tags:
         - Fine-tuning
@@ -604,7 +605,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListPaginatedFineTuningJobsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs/{fine_tuning_job_id}:
+  /v1/fine_tuning/jobs/{fine_tuning_job_id}:
     get:
       tags:
         - Fine-tuning
@@ -629,7 +630,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/FineTuningJob'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs/{fine_tuning_job_id}/cancel:
+  /v1/fine_tuning/jobs/{fine_tuning_job_id}/cancel:
     post:
       tags:
         - Fine-tuning
@@ -651,7 +652,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/FineTuningJob'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs/{fine_tuning_job_id}/checkpoints:
+  /v1/fine_tuning/jobs/{fine_tuning_job_id}/checkpoints:
     get:
       tags:
         - Fine-tuning
@@ -687,7 +688,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListFineTuningJobCheckpointsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs/{fine_tuning_job_id}/events:
+  /v1/fine_tuning/jobs/{fine_tuning_job_id}/events:
     get:
       tags:
         - Fine-tuning
@@ -723,7 +724,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListFineTuningJobEventsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /images/edits:
+  /v1/images/edits:
     post:
       tags:
         - Images
@@ -745,7 +746,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateImageEditRequestMultiPart'
-  /images/generations:
+  /v1/images/generations:
     post:
       tags:
         - Images
@@ -767,7 +768,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateImageRequest'
-  /images/variations:
+  /v1/images/variations:
     post:
       tags:
         - Images
@@ -789,7 +790,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateImageVariationRequestMultiPart'
-  /models:
+  /v1/models:
     get:
       tags:
         - Models
@@ -807,7 +808,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListModelsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /models/{model}:
+  /v1/models/{model}:
     get:
       tags:
         - Models
@@ -852,7 +853,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteModelResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /moderations:
+  /v1/moderations:
     post:
       tags:
         - Moderations
@@ -874,7 +875,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateModerationRequest'
-  /threads:
+  /v1/threads:
     post:
       tags:
         - Assistants
@@ -896,7 +897,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateThreadRequest'
-  /threads/runs:
+  /v1/threads/runs:
     post:
       tags:
         - Assistants
@@ -918,7 +919,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateThreadAndRunRequest'
-  /threads/{thread_id}:
+  /v1/threads/{thread_id}:
     get:
       tags:
         - Assistants
@@ -988,7 +989,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteThreadResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/messages:
+  /v1/threads/{thread_id}/messages:
     post:
       tags:
         - Assistants
@@ -1074,7 +1075,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListMessagesResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/messages/{message_id}:
+  /v1/threads/{thread_id}/messages/{message_id}:
     get:
       tags:
         - Assistants
@@ -1162,7 +1163,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteMessageResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs:
+  /v1/threads/{thread_id}/runs:
     post:
       tags:
         - Assistants
@@ -1248,7 +1249,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListRunsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs/{run_id}:
+  /v1/threads/{thread_id}/runs/{run_id}:
     get:
       tags:
         - Assistants
@@ -1309,7 +1310,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ModifyRunRequest'
-  /threads/{thread_id}/runs/{run_id}/cancel:
+  /v1/threads/{thread_id}/runs/{run_id}/cancel:
     post:
       tags:
         - Assistants
@@ -1337,7 +1338,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/RunObject'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs/{run_id}/steps:
+  /v1/threads/{thread_id}/runs/{run_id}/steps:
     get:
       tags:
         - Assistants
@@ -1402,7 +1403,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListRunStepsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs/{run_id}/steps/{step_id}:
+  /v1/threads/{thread_id}/runs/{run_id}/steps/{step_id}:
     get:
       tags:
         - Assistants
@@ -1436,7 +1437,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/RunStepObject'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs/{run_id}/submit_tool_outputs:
+  /v1/threads/{thread_id}/runs/{run_id}/submit_tool_outputs:
     post:
       tags:
         - Assistants
@@ -1473,7 +1474,124 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SubmitToolOutputsRunRequest'
-  /vector_stores:
+  /v1/uploads:
+    post:
+      tags:
+        - Uploads
+      operationId: createUpload
+      summary: |-
+        Creates an intermediate [Upload](/docs/api-reference/uploads/object) object that you can add [Parts](/docs/api-reference/uploads/part-object) to. Currently, an Upload can accept at most 8 GB in total and expires after an hour after you create it.
+
+        Once you complete the Upload, we will create a [File](/docs/api-reference/files/object) object that contains all the parts you uploaded. This File is usable in the rest of our platform as a regular File object.
+
+        For certain `purpose`s, the correct `mime_type` must be specified. Please refer to documentation for the supported MIME types for your use case:
+        - [Assistants](/docs/assistants/tools/file-search/supported-files)
+
+        For guidance on the proper filename extensions for each purpose, please follow the documentation on [creating a File](/docs/api-reference/files/create).
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Upload'
+                  - $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUploadRequest'
+  /v1/uploads/{upload_id}/cancel:
+    post:
+      tags:
+        - Uploads
+      operationId: cancelUpload
+      summary: Cancels the Upload. No Parts may be added after an Upload is cancelled.
+      parameters:
+        - name: upload_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Upload'
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /v1/uploads/{upload_id}/complete:
+    post:
+      tags:
+        - Uploads
+      operationId: completeUpload
+      summary: |-
+        Completes the [Upload](/docs/api-reference/uploads/object). 
+
+        Within the returned Upload object, there is a nested [File](/docs/api-reference/files/object) object that is ready to use in the rest of the platform.
+
+        You can specify the order of the Parts by passing in an ordered list of the Part IDs.
+
+        The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.
+      parameters:
+        - name: upload_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Upload'
+                  - $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteUploadRequest'
+  /v1/uploads/{upload_id}/parts:
+    post:
+      tags:
+        - Uploads
+      operationId: addUploadPart
+      summary: |-
+        Adds a [Part](/docs/api-reference/uploads/part-object) to an [Upload](/docs/api-reference/uploads/object) object. A Part represents a chunk of bytes from the file you are trying to upload. 
+
+        Each Part can be at most 64 MB, and you can add Parts until you hit the Upload maximum of 8 GB.
+
+        It is possible to add multiple Parts in parallel. You can decide the intended order of the Parts when you [complete the Upload](/docs/api-reference/uploads/complete).
+      parameters:
+        - name: upload_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/UploadPart'
+                  - $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddUploadPartRequestMultiPart'
+  /v1/vector_stores:
     get:
       tags:
         - Vector Stores
@@ -1547,7 +1665,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateVectorStoreRequest'
-  /vector_stores/{vector_store_id}:
+  /v1/vector_stores/{vector_store_id}:
     get:
       tags:
         - Vector Stores
@@ -1617,7 +1735,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteVectorStoreResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /vector_stores/{vector_store_id}/file_batches:
+  /v1/vector_stores/{vector_store_id}/file_batches:
     post:
       tags:
         - Vector Stores
@@ -1645,7 +1763,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateVectorStoreFileBatchRequest'
-  /vector_stores/{vector_store_id}/file_batches/{batch_id}:
+  /v1/vector_stores/{vector_store_id}/file_batches/{batch_id}:
     get:
       tags:
         - Vector Stores
@@ -1673,7 +1791,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/VectorStoreFileBatchObject'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel:
+  /v1/vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel:
     post:
       tags:
         - Vector Stores
@@ -1701,7 +1819,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/VectorStoreFileBatchObject'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /vector_stores/{vector_store_id}/file_batches/{batch_id}/files:
+  /v1/vector_stores/{vector_store_id}/file_batches/{batch_id}/files:
     get:
       tags:
         - Vector Stores
@@ -1772,7 +1890,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListVectorStoreFilesResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /vector_stores/{vector_store_id}/files:
+  /v1/vector_stores/{vector_store_id}/files:
     get:
       tags:
         - Vector Stores
@@ -1864,7 +1982,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateVectorStoreFileRequest'
-  /vector_stores/{vector_store_id}/files/{file_id}:
+  /v1/vector_stores/{vector_store_id}/files/{file_id}:
     get:
       tags:
         - Vector Stores
@@ -1923,6 +2041,14 @@ security:
   - BearerAuth: []
 components:
   schemas:
+    AddUploadPartRequestMultiPart:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: string
+          format: binary
     AssistantObject:
       type: object
       required:
@@ -1988,14 +2114,7 @@ components:
                   description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter`` tool. There can be a maximum of 20 files associated with the tool.
                   default: []
             file_search:
-              type: object
-              properties:
-                vector_store_ids:
-                  type: array
-                  items:
-                    type: string
-                  maxItems: 1
-                  description: The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant.
+              $ref: '#/components/schemas/ToolResourcesFileSearchIdsOnly'
           nullable: true
           description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -2031,6 +2150,72 @@ components:
       description: Represents an `assistant` that can call the model and use tools.
     AssistantResponseFormat:
       type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          text: '#/components/schemas/AssistantResponseFormatText'
+          json_object: '#/components/schemas/AssistantResponseFormatJsonObject'
+          json_schema: '#/components/schemas/AssistantResponseFormatJsonSchema'
+    AssistantResponseFormatJsonObject:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - json_object
+          description: 'The type of response format being defined: `json_object`'
+      allOf:
+        - $ref: '#/components/schemas/AssistantResponseFormat'
+    AssistantResponseFormatJsonSchema:
+      type: object
+      required:
+        - type
+        - json_schema
+      properties:
+        type:
+          type: string
+          enum:
+            - json_schema
+          description: 'The type of response format being defined: `json_schema`'
+        json_schema:
+          type: object
+          properties:
+            description:
+              type: string
+              description: A description of what the response format is for, used by the model to determine how to respond in the format.
+            name:
+              type: string
+              description: The name of the response format. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+            schema:
+              $ref: '#/components/schemas/ResponseFormatJsonSchemaSchema'
+            strict:
+              type: boolean
+              nullable: true
+              description: Whether to enable strict schema adherence when generating the output. If set to true, the model will always follow the exact schema defined in the `schema` field. Only a subset of JSON Schema is supported when `strict` is `true`. To learn more, read the [Structured Outputs guide](/docs/guides/structured-outputs).
+              default: false
+          required:
+            - name
+      allOf:
+        - $ref: '#/components/schemas/AssistantResponseFormat'
+    AssistantResponseFormatText:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+          description: 'The type of response format being defined: `text`'
+      allOf:
+        - $ref: '#/components/schemas/AssistantResponseFormat'
     AssistantToolDefinition:
       type: object
       required:
@@ -2075,7 +2260,7 @@ components:
               minimum: 1
               maximum: 50
               description: |-
-                The maximum number of results the file search tool should output. The default is 20 for gpt-4* models and 5 for gpt-3.5-turbo. This number should be between 1 and 50 inclusive.
+                The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
 
                 Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/number-of-chunks-returned) for more information.
           description: Overrides for the file search tool.
@@ -2106,26 +2291,18 @@ components:
           $ref: '#/components/schemas/FunctionObject'
       allOf:
         - $ref: '#/components/schemas/AssistantToolDefinition'
-    AssistantsApiResponseFormat:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-            - text
-            - json_object
-          description: Must be one of `text` or `json_object`.
-          default: text
-      description: An object describing the expected output of the model. If `json_object` only `function` type `tools` are allowed to be passed to the Run. If `text` the model can return text or any value needed.
     AssistantsApiResponseFormatOption:
       anyOf:
         - type: string
           enum:
-            - none
             - auto
-        - $ref: '#/components/schemas/AssistantsApiResponseFormat'
+        - $ref: '#/components/schemas/ResponseFormatText'
+        - $ref: '#/components/schemas/ResponseFormatJsonObject'
+        - $ref: '#/components/schemas/ResponseFormatJsonSchema'
       description: |-
         Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4 Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+        Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which guarantees the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
 
         Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
 
@@ -2167,6 +2344,345 @@ components:
           required:
             - name
       description: Specifies a tool the model should use. Use to force the model to call a specific tool.
+    AuditLog:
+      type: object
+      required:
+        - id
+        - type
+        - effective_at
+        - actor
+      properties:
+        id:
+          type: string
+          description: The ID of this log.
+        type:
+          $ref: '#/components/schemas/AuditLogEventType'
+        effective_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) of the event.
+        project:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The project ID.
+            name:
+              type: string
+              description: The project title.
+          description: The project that the action was scoped to. Absent for actions not scoped to projects.
+        actor:
+          $ref: '#/components/schemas/AuditLogActor'
+        api_key.created:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The tracking ID of the API key.
+            data:
+              type: object
+              properties:
+                scopes:
+                  type: array
+                  items:
+                    type: string
+                  description: A list of scopes allowed for the API key, e.g. `["api.model.request"]`
+              description: The payload used to create the API key.
+          description: The details for events with this `type`.
+        api_key.updated:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The tracking ID of the API key.
+            changes_requested:
+              type: object
+              properties:
+                scopes:
+                  type: array
+                  items:
+                    type: string
+                  description: A list of scopes allowed for the API key, e.g. `["api.model.request"]`
+              description: The payload used to update the API key.
+          description: The details for events with this `type`.
+        api_key.deleted:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The tracking ID of the API key.
+          description: The details for events with this `type`.
+        invite.sent:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the invite.
+            data:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email invited to the organization.
+                role:
+                  type: string
+                  description: The role the email was invited to be. Is either `owner` or `member`.
+              description: The payload used to create the invite.
+          description: The details for events with this `type`.
+        invite.accepted:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the invite.
+          description: The details for events with this `type`.
+        invite.deleted:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the invite.
+          description: The details for events with this `type`.
+        login.failed:
+          type: object
+          properties:
+            error_code:
+              type: string
+              description: The error code of the failure.
+            error_message:
+              type: string
+              description: The error message of the failure.
+          description: The details for events with this `type`.
+        logout.failed:
+          type: object
+          properties:
+            error_code:
+              type: string
+              description: The error code of the failure.
+            error_message:
+              type: string
+              description: The error message of the failure.
+          description: The details for events with this `type`.
+        organization.updated:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The organization ID.
+            changes_requested:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The organization title.
+                description:
+                  type: string
+                  description: The organization description.
+                name:
+                  type: string
+                  description: The organization name.
+                settings:
+                  type: object
+                  properties:
+                    threads_ui_visibility:
+                      type: string
+                      description: Visibility of the threads page which shows messages created with the Assistants API and Playground. One of `ANY_ROLE`, `OWNERS`, or `NONE`.
+                    usage_dashboard_visibility:
+                      type: string
+                      description: Visibility of the usage dashboard which shows activity and costs for your organization. One of `ANY_ROLE` or `OWNERS`.
+              description: The payload used to update the organization settings.
+          description: The details for events with this `type`.
+        project.created:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The project ID.
+            data:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The project name.
+                title:
+                  type: string
+                  description: The title of the project as seen on the dashboard.
+              description: The payload used to create the project.
+          description: The details for events with this `type`.
+        project.updated:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The project ID.
+            changes_requested:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of the project as seen on the dashboard.
+              description: The payload used to update the project.
+          description: The details for events with this `type`.
+        project.archived:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The project ID.
+          description: The details for events with this `type`.
+        service_account.created:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The service account ID.
+            data:
+              type: object
+              properties:
+                role:
+                  type: string
+                  description: The role of the service account. Is either `owner` or `member`.
+              description: The payload used to create the service account.
+          description: The details for events with this `type`.
+        service_account.updated:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The service account ID.
+            changes_requested:
+              type: object
+              properties:
+                role:
+                  type: string
+                  description: The role of the service account. Is either `owner` or `member`.
+              description: The payload used to updated the service account.
+          description: The details for events with this `type`.
+        service_account.deleted:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The service account ID.
+          description: The details for events with this `type`.
+        user.added:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The user ID.
+            data:
+              type: object
+              properties:
+                role:
+                  type: string
+                  description: The role of the user. Is either `owner` or `member`.
+              description: The payload used to add the user to the project.
+          description: The details for events with this `type`.
+        user.updated:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The project ID.
+            changes_requested:
+              type: object
+              properties:
+                role:
+                  type: string
+                  description: The role of the user. Is either `owner` or `member`.
+              description: The payload used to update the user.
+          description: The details for events with this `type`.
+        user.deleted:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The user ID.
+          description: The details for events with this `type`.
+      description: A log of a user action or configuration change within this organization.
+    AuditLogActor:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - session
+            - api_key
+          description: The type of actor. Is either `session` or `api_key`.
+        session:
+          $ref: '#/components/schemas/AuditLogActorSession'
+        api_key:
+          $ref: '#/components/schemas/AuditLogActorApiKey'
+      description: The actor who performed the audit logged action.
+    AuditLogActorApiKey:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The tracking id of the API key.
+        type:
+          type: string
+          enum:
+            - user
+            - service_account
+          description: The type of API key. Can be either `user` or `service_account`.
+        user:
+          $ref: '#/components/schemas/AuditLogActorUser'
+        service_account:
+          $ref: '#/components/schemas/AuditLogActorServiceAccount'
+      description: The API Key used to perform the audit logged action.
+    AuditLogActorServiceAccount:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The service account id.
+      description: The service account that performed the audit logged action.
+    AuditLogActorSession:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/AuditLogActorUser'
+        ip_address:
+          type: string
+          description: The IP address from which the action was performed.
+      description: The session in which the audit logged action was performed.
+    AuditLogActorUser:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The user id.
+        email:
+          type: string
+          description: The user email.
+      description: The user who performed the audit logged action.
+    AuditLogEventType:
+      type: string
+      enum:
+        - api_key.created
+        - api_key.updated
+        - api_key.deleted
+        - invite.sent
+        - invite.accepted
+        - invite.deleted
+        - login.succeeded
+        - login.failed
+        - logout.succeeded
+        - logout.failed
+        - organization.updated
+        - project.created
+        - project.updated
+        - project.archived
+        - service_account.created
+        - service_account.updated
+        - service_account.deleted
+        - user.added
+        - user.updated
+        - user.deleted
+      description: The event type.
+      x-oaiExpandable: true
     AutoChunkingStrategyRequestParam:
       type: object
       required:
@@ -2489,9 +3005,17 @@ components:
         - role
       properties:
         content:
-          type: string
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                $ref: '#/components/schemas/ChatCompletionRequestAssistantMessageContentPart'
           nullable: true
           description: The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
+        refusal:
+          type: string
+          nullable: true
+          description: The refusal message by the assistant.
         role:
           type: string
           enum:
@@ -2519,6 +3043,11 @@ components:
           deprecated: true
       allOf:
         - $ref: '#/components/schemas/ChatCompletionRequestMessage'
+    ChatCompletionRequestAssistantMessageContentPart:
+      anyOf:
+        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
+        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartRefusal'
+      x-oaiExpandable: true
     ChatCompletionRequestFunctionMessage:
       type: object
       required:
@@ -2558,11 +3087,6 @@ components:
           tool: '#/components/schemas/ChatCompletionRequestToolMessage'
           function: '#/components/schemas/ChatCompletionRequestFunctionMessage'
       x-oaiExpandable: true
-    ChatCompletionRequestMessageContentPart:
-      anyOf:
-        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
-        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartImage'
-      x-oaiExpandable: true
     ChatCompletionRequestMessageContentPartImage:
       type: object
       required:
@@ -2591,6 +3115,20 @@ components:
               default: auto
           required:
             - url
+    ChatCompletionRequestMessageContentPartRefusal:
+      type: object
+      required:
+        - type
+        - refusal
+      properties:
+        type:
+          type: string
+          enum:
+            - refusal
+          description: The type of the content part.
+        refusal:
+          type: string
+          description: The refusal message generated by the model.
     ChatCompletionRequestMessageContentPartText:
       type: object
       required:
@@ -2612,7 +3150,11 @@ components:
         - role
       properties:
         content:
-          type: string
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                $ref: '#/components/schemas/ChatCompletionRequestSystemMessageContentPart'
           description: The contents of the system message.
         role:
           type: string
@@ -2624,6 +3166,11 @@ components:
           description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
       allOf:
         - $ref: '#/components/schemas/ChatCompletionRequestMessage'
+    ChatCompletionRequestSystemMessageContentPart:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
+      x-oaiExpandable: true
     ChatCompletionRequestToolMessage:
       type: object
       required:
@@ -2637,13 +3184,22 @@ components:
             - tool
           description: The role of the messages author, in this case `tool`.
         content:
-          type: string
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                $ref: '#/components/schemas/ChatCompletionRequestToolMessageContentPart'
           description: The contents of the tool message.
         tool_call_id:
           type: string
           description: Tool call that this message is responding to.
       allOf:
         - $ref: '#/components/schemas/ChatCompletionRequestMessage'
+    ChatCompletionRequestToolMessageContentPart:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
+      x-oaiExpandable: true
     ChatCompletionRequestUserMessage:
       type: object
       required:
@@ -2655,7 +3211,7 @@ components:
             - type: string
             - type: array
               items:
-                $ref: '#/components/schemas/ChatCompletionRequestMessageContentPart'
+                $ref: '#/components/schemas/ChatCompletionRequestUserMessageContentPart'
           description: The contents of the user message.
           x-oaiExpandable: true
         role:
@@ -2668,16 +3224,26 @@ components:
           description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
       allOf:
         - $ref: '#/components/schemas/ChatCompletionRequestMessage'
+    ChatCompletionRequestUserMessageContentPart:
+      anyOf:
+        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
+        - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartImage'
+      x-oaiExpandable: true
     ChatCompletionResponseMessage:
       type: object
       required:
         - content
+        - refusal
         - role
       properties:
         content:
           type: string
           nullable: true
           description: The contents of the message.
+        refusal:
+          type: string
+          nullable: true
+          description: The refusal message generated by the model.
         tool_calls:
           $ref: '#/components/schemas/ChatCompletionMessageToolCallsItem'
         role:
@@ -2746,6 +3312,10 @@ components:
             - assistant
             - tool
           description: The role of the author of this message.
+        refusal:
+          type: string
+          nullable: true
+          description: The refusal message generated by the model.
       description: A chat completion delta generated by streamed model responses.
     ChatCompletionTokenLogprob:
       type: object
@@ -2831,12 +3401,93 @@ components:
       x-oaiExpandable: true
     ChatMessageContentPart:
       type: object
+    ChatResponseFormat:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          text: '#/components/schemas/ChatResponseFormatText'
+          json_object: '#/components/schemas/ChatResponseFormatJsonObject'
+          json_schema: '#/components/schemas/ChatResponseFormatJsonSchema'
+    ChatResponseFormatJsonObject:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - json_object
+          description: 'The type of response format being defined: `json_object`'
+      allOf:
+        - $ref: '#/components/schemas/ChatResponseFormat'
+    ChatResponseFormatJsonSchema:
+      type: object
+      required:
+        - type
+        - json_schema
+      properties:
+        type:
+          type: string
+          enum:
+            - json_schema
+          description: 'The type of response format being defined: `json_schema`'
+        json_schema:
+          type: object
+          properties:
+            description:
+              type: string
+              description: A description of what the response format is for, used by the model to determine how to respond in the format.
+            name:
+              type: string
+              description: The name of the response format. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+            schema:
+              $ref: '#/components/schemas/ResponseFormatJsonSchemaSchema'
+            strict:
+              type: boolean
+              nullable: true
+              description: Whether to enable strict schema adherence when generating the output. If set to true, the model will always follow the exact schema defined in the `schema` field. Only a subset of JSON Schema is supported when `strict` is `true`. To learn more, read the [Structured Outputs guide](/docs/guides/structured-outputs).
+              default: false
+          required:
+            - name
+      allOf:
+        - $ref: '#/components/schemas/ChatResponseFormat'
+    ChatResponseFormatText:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+          description: 'The type of response format being defined: `text`'
+      allOf:
+        - $ref: '#/components/schemas/ChatResponseFormat'
     ChunkingStrategyRequestParam:
       anyOf:
         - $ref: '#/components/schemas/AutoChunkingStrategyRequestParam'
         - $ref: '#/components/schemas/StaticChunkingStrategyRequestParam'
       description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
       x-oaiExpandable: true
+    CompleteUploadRequest:
+      type: object
+      required:
+        - part_ids
+      properties:
+        part_ids:
+          type: array
+          items:
+            type: string
+          description: The ordered list of Part IDs.
+        md5:
+          type: string
+          description: The optional md5 checksum for the file contents to verify if the bytes uploaded matches what you expect.
     CompletionUsage:
       type: object
       required:
@@ -2868,7 +3519,10 @@ components:
             - type: string
               enum:
                 - gpt-4o
+                - gpt-4o-2024-08-06
                 - gpt-4o-2024-05-13
+                - gpt-4o-mini
+                - gpt-4o-mini-2024-07-18
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -2926,9 +3580,7 @@ components:
                   description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
                   default: []
             file_search:
-              anyOf:
-                - $ref: '#/components/schemas/CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences'
-                - $ref: '#/components/schemas/CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers'
+              $ref: '#/components/schemas/ToolResourcesFileSearch'
           nullable: true
           description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -2961,49 +3613,6 @@ components:
           oneOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
-    CreateAssistantRequestToolResourcesFileSearchBase:
-      type: object
-    CreateAssistantRequestToolResourcesFileSearchVectorStoreCreationHelpers:
-      type: object
-      properties:
-        vector_stores:
-          type: array
-          items:
-            type: object
-            properties:
-              file_ids:
-                type: array
-                items:
-                  type: string
-                maxItems: 10000
-                description: |-
-                  A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
-                  a maximum of 10000 files in a vector store.
-              metadata:
-                type: object
-                additionalProperties:
-                  type: string
-                description: |-
-                  Set of 16 key-value pairs that can be attached to a vector store. This can be useful for
-                  storing additional information about the vector store in a structured format. Keys can
-                  be a maximum of 64 characters long and values can be a maxium of 512 characters long.
-                x-oaiTypeLabel: map
-          maxItems: 1
-          description: |-
-            A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
-            file_ids and attach it to this assistant. There can be a maximum of 1 vector store
-            attached to the assistant.
-    CreateAssistantRequestToolResourcesFileSearchVectorStoreIdReferences:
-      type: object
-      properties:
-        vector_store_ids:
-          type: array
-          items:
-            type: string
-          maxItems: 1
-          description: |-
-            The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
-            There can be a maximum of 1 vector store attached to the assistant.
     CreateChatCompletionFunctionResponse:
       type: object
       required:
@@ -3080,6 +3689,10 @@ components:
               enum:
                 - gpt-4o
                 - gpt-4o-2024-05-13
+                - gpt-4o-2024-08-06
+                - chatgpt-4o-latest
+                - gpt-4o-mini
+                - gpt-4o-mini-2024-07-18
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -3164,21 +3777,17 @@ components:
             [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
           default: 0
         response_format:
-          type: object
-          properties:
-            type:
-              type: string
-              enum:
-                - text
-                - json_object
-              description: Must be one of `text` or `json_object`.
-              default: text
+          allOf:
+            - $ref: '#/components/schemas/ChatResponseFormat'
           description: |-
-            An object specifying the format that the model must output. Compatible with [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
+            An object specifying the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4o mini](/docs/models/gpt-4o-mini), [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
+
+            Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which guarantees the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
 
             Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
 
             **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+          x-oaiExpandable: true
         seed:
           type: integer
           format: int64
@@ -3187,6 +3796,20 @@ components:
             This feature is in Beta.
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
             Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
+        service_tier:
+          type: string
+          enum:
+            - auto
+            - default
+          nullable: true
+          description: |-
+            Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
+              - If set to 'auto', the system will utilize scale tier credits until they are exhausted.
+              - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
+              - When not set, the default behavior is 'auto'.
+
+              When this parameter is set, the response body will include the `service_tier` utilized.
+          default: null
         stop:
           anyOf:
             - type: string
@@ -3316,8 +3939,15 @@ components:
                       $ref: '#/components/schemas/ChatCompletionTokenLogprob'
                     nullable: true
                     description: A list of message content tokens with log probability information.
+                  refusal:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChatCompletionTokenLogprob'
+                    nullable: true
+                    description: A list of message refusal tokens with log probability information.
                 required:
                   - content
+                  - refusal
                 nullable: true
                 description: Log probability information for the choice.
             required:
@@ -3333,6 +3963,13 @@ components:
         model:
           type: string
           description: The model used for the chat completion.
+        service_tier:
+          type: string
+          enum:
+            - scale
+            - default
+          nullable: true
+          description: The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
         system_fingerprint:
           type: string
           description: |-
@@ -3375,8 +4012,15 @@ components:
                       $ref: '#/components/schemas/ChatCompletionTokenLogprob'
                     nullable: true
                     description: A list of message content tokens with log probability information.
+                  refusal:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChatCompletionTokenLogprob'
+                    nullable: true
+                    description: A list of message refusal tokens with log probability information.
                 required:
                   - content
+                  - refusal
                 nullable: true
                 description: Log probability information for the choice.
               finish_reason:
@@ -3411,6 +4055,13 @@ components:
         model:
           type: string
           description: The model to generate the completion.
+        service_tier:
+          type: string
+          enum:
+            - scale
+            - default
+          nullable: true
+          description: The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
         system_fingerprint:
           type: string
           description: |-
@@ -3833,9 +4484,10 @@ components:
                 - babbage-002
                 - davinci-002
                 - gpt-3.5-turbo
+                - gpt-4o-mini
           description: |-
             The name of the model to fine-tune. You can select one of the
-            [supported models](/docs/guides/fine-tuning/what-models-can-be-fine-tuned).
+            [supported models](/docs/guides/fine-tuning/which-models-can-be-fine-tuned).
           x-oaiTypeLabel: string
         training_file:
           type: string
@@ -3850,41 +4502,8 @@ components:
 
             See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         hyperparameters:
-          type: object
-          properties:
-            batch_size:
-              anyOf:
-                - type: string
-                  enum:
-                    - auto
-                - type: integer
-                  format: int32
-              description: |-
-                Number of examples in each batch. A larger batch size means that model parameters
-                are updated less frequently, but with lower variance.
-              default: auto
-            learning_rate_multiplier:
-              anyOf:
-                - type: string
-                  enum:
-                    - auto
-                - type: number
-                  format: float
-              description: |-
-                Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
-                overfitting.
-              default: auto
-            n_epochs:
-              anyOf:
-                - type: string
-                  enum:
-                    - auto
-                - type: integer
-                  format: int32
-              description: |-
-                The number of epochs to train the model for. An epoch refers to one full cycle
-                through the training dataset.
-              default: auto
+          allOf:
+            - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparameters'
           description: The hyperparameters used for the fine-tuning job.
         suffix:
           type: string
@@ -3894,7 +4513,7 @@ components:
           description: |-
             A string of up to 18 characters that will be added to your fine-tuned model name.
 
-            For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-3.5-turbo:openai:custom-model-name:7p4lURel`.
+            For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-4o-mini:openai:custom-model-name:7p4lURel`.
           default: null
         validation_file:
           type: string
@@ -3925,6 +4544,53 @@ components:
           description: |-
             The seed controls the reproducibility of the job. Passing in the same seed and job parameters should produce the same results, but may differ in rare cases.
             If a seed is not specified, one will be generated for you.
+    CreateFineTuningJobRequestHyperparameters:
+      type: object
+      properties:
+        batch_size:
+          anyOf:
+            - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum'
+            - type: integer
+              format: int32
+          minimum: 1
+          maximum: 256
+          description: |-
+            Number of examples in each batch. A larger batch size means that model parameters
+            are updated less frequently, but with lower variance.
+          default: auto
+        learning_rate_multiplier:
+          anyOf:
+            - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum'
+            - type: number
+              format: float
+          minimum: 0
+          description: |-
+            Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
+            overfitting.
+          default: auto
+        n_epochs:
+          anyOf:
+            - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum'
+            - type: integer
+              format: int32
+          minimum: 1
+          maximum: 50
+          description: |-
+            The number of epochs to train the model for. An epoch refers to one full cycle
+            through the training dataset.
+          default: auto
+    CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum:
+      type: string
+      enum:
+        - auto
+    CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum:
+      type: string
+      enum:
+        - auto
+    CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum:
+      type: string
+      enum:
+        - auto
     CreateFineTuningJobRequestIntegrations:
       type: array
       items:
@@ -4359,7 +5025,10 @@ components:
             - type: string
               enum:
                 - gpt-4o
+                - gpt-4o-2024-08-06
                 - gpt-4o-2024-05-13
+                - gpt-4o-mini
+                - gpt-4o-mini-2024-07-18
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -4535,7 +5204,10 @@ components:
             - type: string
               enum:
                 - gpt-4o
+                - gpt-4o-2024-08-06
                 - gpt-4o-2024-05-13
+                - gpt-4o-mini
+                - gpt-4o-mini-2024-07-18
                 - gpt-4-turbo
                 - gpt-4-turbo-2024-04-09
                 - gpt-4-0125-preview
@@ -4581,14 +5253,7 @@ components:
                   description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
                   default: []
             file_search:
-              type: object
-              properties:
-                vector_store_ids:
-                  type: array
-                  items:
-                    type: string
-                  maxItems: 1
-                  description: The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant.
+              $ref: '#/components/schemas/ToolResourcesFileSearchIdsOnly'
           nullable: true
           description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -4676,9 +5341,7 @@ components:
                   description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
                   default: []
             file_search:
-              anyOf:
-                - $ref: '#/components/schemas/CreateThreadRequestToolResourcesFileSearchVectorStoreIdReferences'
-                - $ref: '#/components/schemas/CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers'
+              $ref: '#/components/schemas/ToolResourcesFileSearch'
           nullable: true
           description: A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -4900,6 +5563,38 @@ components:
           items:
             $ref: '#/components/schemas/TranscriptionSegment'
           description: Segments of the translated text and their corresponding details.
+    CreateUploadRequest:
+      type: object
+      required:
+        - filename
+        - purpose
+        - bytes
+        - mime_type
+      properties:
+        filename:
+          type: string
+          description: The name of the file to upload.
+        purpose:
+          type: string
+          enum:
+            - assistants
+            - batch
+            - fine-tune
+            - vision
+          description: |-
+            The intended purpose of the uploaded file.
+
+            See the [documentation on File purposes](/docs/api-reference/files/create#files-create-purpose).
+        bytes:
+          type: integer
+          format: int32
+          description: The number of bytes in the file you are uploading.
+        mime_type:
+          type: string
+          description: |-
+            The MIME type of the file.
+
+            This must fall within the supported MIME types for your file purpose. See the supported MIME types for assistants and vision.
     CreateVectorStoreFileBatchRequest:
       type: object
       required:
@@ -4951,6 +5646,17 @@ components:
           nullable: true
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+    DefaultProjectErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
     DeleteAssistantResponse:
       type: object
       required:
@@ -5126,8 +5832,8 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          auto: '#/components/schemas/AutoChunkingStrategyResponseParam'
           other: '#/components/schemas/OtherChunkingStrategyResponseParam'
+          auto: '#/components/schemas/AutoChunkingStrategyResponseParam'
     FineTuneChatCompletionRequestAssistantMessage:
       type: object
       allOf:
@@ -5227,21 +5933,8 @@ components:
           nullable: true
           description: The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be null if the fine-tuning job is still running.
         hyperparameters:
-          type: object
-          properties:
-            n_epochs:
-              anyOf:
-                - type: string
-                  enum:
-                    - auto
-                - type: integer
-                  format: int32
-              description: |-
-                The number of epochs to train the model for. An epoch refers to one full cycle through the training dataset.
-                "auto" decides the optimal number of epochs based on the size of the dataset. If setting the number manually, we support any number between 1 and 50 epochs.
-              default: auto
-          required:
-            - n_epochs
+          allOf:
+            - $ref: '#/components/schemas/FineTuningJobHyperparameters'
           description: The hyperparameters used for the fine-tuning job. See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         model:
           type: string
@@ -5383,6 +6076,32 @@ components:
           enum:
             - fine_tuning.job.event
       description: Fine-tuning job event object
+    FineTuningJobHyperparameters:
+      type: object
+      required:
+        - n_epochs
+      properties:
+        n_epochs:
+          anyOf:
+            - $ref: '#/components/schemas/FineTuningJobHyperparametersNEpochsChoiceEnum'
+            - type: integer
+              format: int32
+          description: |-
+            The number of epochs to train the model for. An epoch refers to one full cycle
+            through the training dataset.
+          default: auto
+    FineTuningJobHyperparametersBatchSizeChoiceEnum:
+      type: string
+      enum:
+        - auto
+    FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum:
+      type: string
+      enum:
+        - auto
+    FineTuningJobHyperparametersNEpochsChoiceEnum:
+      type: string
+      enum:
+        - auto
     FineTuningJobIntegrationsItem:
       type: array
       items:
@@ -5443,6 +6162,11 @@ components:
           description: The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
         parameters:
           $ref: '#/components/schemas/FunctionParameters'
+        strict:
+          type: boolean
+          nullable: true
+          description: Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](docs/guides/function-calling).
+          default: false
     FunctionParameters:
       type: object
       additionalProperties: {}
@@ -5478,6 +6202,109 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Image'
+    Invite:
+      type: object
+      required:
+        - object
+        - id
+        - email
+        - role
+        - status
+        - invited_at
+        - expires_at
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.invite
+          description: The object type, which is always `organization.invite`
+        id:
+          type: string
+          description: The identifier, which can be referenced in API endpoints
+        email:
+          type: string
+          description: The email address of the individual to whom the invite was sent
+        role:
+          type: string
+          enum:
+            - owner
+            - reader
+          description: '`owner` or `reader`'
+        status:
+          type: string
+          enum:
+            - accepted
+            - expired
+            - pending
+          description: '`accepted`,`expired`, or `pending`'
+        invited_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) of when the invite was sent.
+        expires_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) of when the invite expires.
+        accepted_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) of when the invite was accepted.
+      description: Represents an individual `invite` to the organization.
+    InviteDeleteResponse:
+      type: object
+      required:
+        - object
+        - id
+        - deleted
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.invite.deleted
+          description: The object type, which is always `organization.invite.deleted`
+        id:
+          type: string
+        deleted:
+          type: boolean
+    InviteListResponse:
+      type: object
+      required:
+        - object
+        - data
+      properties:
+        object:
+          type: string
+          enum:
+            - list
+          description: The object type, which is always `list`
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Invite'
+        first_id:
+          type: string
+          description: The first `invite_id` in the retrieved `list`
+        last_id:
+          type: string
+          description: The last `invite_id` in the retrieved `list`
+        has_more:
+          type: boolean
+          description: The `has_more` property is used for pagination to indicate there are additional results.
+    InviteRequest:
+      type: object
+      required:
+        - email
+        - role
+      properties:
+        email:
+          type: string
+          description: Send an email to this address
+        role:
+          type: string
+          enum:
+            - reader
+            - owner
+          description: '`owner` or `reader`'
     ListAssistantsResponse:
       type: object
       required:
@@ -5495,6 +6322,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AssistantObject'
+        first_id:
+          type: string
+        last_id:
+          type: string
+        has_more:
+          type: boolean
+    ListAuditLogsResponse:
+      type: object
+      required:
+        - object
+        - data
+        - first_id
+        - last_id
+        - has_more
+      properties:
+        object:
+          type: string
+          enum:
+            - list
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLog'
         first_id:
           type: string
         last_id:
@@ -5822,6 +6672,22 @@ components:
       allOf:
         - $ref: '#/components/schemas/MessageContent'
       description: References an image URL in the content of a message.
+    MessageContentRefusalObject:
+      type: object
+      required:
+        - type
+        - refusal
+      properties:
+        type:
+          type: string
+          enum:
+            - refusal
+          description: Always `refusal`.
+        refusal:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/MessageContent'
+      description: The refusal content generated by the assistant.
     MessageContentTextAnnotationsFileCitationObject:
       type: object
       required:
@@ -5949,6 +6815,7 @@ components:
           image_file: '#/components/schemas/MessageDeltaContentImageFileObject'
           image_url: '#/components/schemas/MessageDeltaContentImageUrlObject'
           text: '#/components/schemas/MessageDeltaContentTextObject'
+          refusal: '#/components/schemas/MessageDeltaContentRefusalObject'
       description: Represents a single piece of incremental content in an Assistants API streaming response.
     MessageDeltaContentImageFileObject:
       type: object
@@ -6015,6 +6882,26 @@ components:
       allOf:
         - $ref: '#/components/schemas/MessageDeltaContent'
       description: References an image URL in the content of a message.
+    MessageDeltaContentRefusalObject:
+      type: object
+      required:
+        - index
+        - type
+      properties:
+        index:
+          type: integer
+          format: int32
+          description: The index of the refusal part in the message.
+        type:
+          type: string
+          enum:
+            - refusal
+          description: Always `refusal`.
+        refusal:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/MessageDeltaContent'
+      description: The refusal content that is part of a message.
     MessageDeltaContentTextAnnotationsFileCitationObject:
       type: object
       required:
@@ -6362,14 +7249,7 @@ components:
                   description: Overrides the list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
                   default: []
             file_search:
-              type: object
-              properties:
-                vector_store_ids:
-                  type: array
-                  items:
-                    type: string
-                  maxItems: 1
-                  description: Overrides the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant.
+              $ref: '#/components/schemas/ToolResourcesFileSearchIdsOnly'
           nullable: true
           description: A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -6439,14 +7319,7 @@ components:
                   description: A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
                   default: []
             file_search:
-              type: object
-              properties:
-                vector_store_ids:
-                  type: array
-                  items:
-                    type: string
-                  maxItems: 1
-                  description: The [vector store](/docs/api-reference/vector-stores/object) attached to this thread. There can be a maximum of 1 vector store attached to the thread.
+              $ref: '#/components/schemas/ToolResourcesFileSearchIdsOnly'
           nullable: true
           description: A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
         metadata:
@@ -6456,6 +7329,18 @@ components:
           nullable: true
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+    OmniTypedResponseFormat:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          json_object: '#/components/schemas/ResponseFormatJsonObject'
+          json_schema: '#/components/schemas/ResponseFormatJsonSchema'
     OpenAIFile:
       type: object
       required:
@@ -6524,6 +7409,445 @@ components:
       allOf:
         - $ref: '#/components/schemas/FileChunkingStrategyResponseParam'
       description: This is returned when the chunking strategy is unknown. Typically, this is because the file was indexed before the `chunking_strategy` concept was introduced in the API.
+    Project:
+      type: object
+      required:
+        - id
+        - object
+        - name
+        - created_at
+        - status
+      properties:
+        id:
+          type: string
+          description: The identifier, which can be referenced in API endpoints
+        object:
+          type: string
+          enum:
+            - organization.project
+          description: The object type, which is always `organization.project`
+        name:
+          type: string
+          description: The name of the project. This appears in reporting.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) of when the project was created.
+        archived_at:
+          type: integer
+          format: unixtime
+          nullable: true
+          description: The Unix timestamp (in seconds) of when the project was archived or `null`.
+        status:
+          type: string
+          enum:
+            - active
+            - archived
+          description: '`active` or `archived`'
+      description: Represents an individual project.
+    ProjectApiKey:
+      type: object
+      required:
+        - object
+        - redacted_value
+        - name
+        - created_at
+        - id
+        - owner
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.project.api_key
+          description: The object type, which is always `organization.project.api_key`
+        redacted_value:
+          type: string
+          description: The redacted value of the API key
+        name:
+          type: string
+          description: The name of the API key
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) of when the API key was created
+        id:
+          type: string
+          description: The identifier, which can be referenced in API endpoints
+        owner:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - user
+                - service_account
+              description: '`user` or `service_account`'
+            user:
+              $ref: '#/components/schemas/ProjectUser'
+            service_account:
+              $ref: '#/components/schemas/ProjectServiceAccount'
+      description: Represents an individual API key in a project.
+    ProjectApiKeyDeleteResponse:
+      type: object
+      required:
+        - object
+        - id
+        - deleted
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.project.api_key.deleted
+        id:
+          type: string
+        deleted:
+          type: boolean
+    ProjectApiKeyListResponse:
+      type: object
+      required:
+        - object
+        - data
+        - first_id
+        - last_id
+        - has_more
+      properties:
+        object:
+          type: string
+          enum:
+            - list
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectApiKey'
+        first_id:
+          type: string
+        last_id:
+          type: string
+        has_more:
+          type: boolean
+    ProjectCreateRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: The friendly name of the project, this name appears in reports.
+    ProjectListResponse:
+      type: object
+      required:
+        - object
+        - data
+        - first_id
+        - last_id
+        - has_more
+      properties:
+        object:
+          type: string
+          enum:
+            - list
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+        first_id:
+          type: string
+        last_id:
+          type: string
+        has_more:
+          type: boolean
+    ProjectServiceAccount:
+      type: object
+      required:
+        - object
+        - id
+        - name
+        - role
+        - created_at
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.project.service_account
+          description: The object type, which is always `organization.project.service_account`
+        id:
+          type: string
+          description: The identifier, which can be referenced in API endpoints
+        name:
+          type: string
+          description: The name of the service account
+        role:
+          type: string
+          enum:
+            - owner
+            - member
+          description: '`owner` or `member`'
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) of when the service account was created
+      description: Represents an individual service account in a project.
+    ProjectServiceAccountApiKey:
+      type: object
+      required:
+        - object
+        - value
+        - name
+        - created_at
+        - id
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.project.service_account.api_key
+          description: The object type, which is always `organization.project.service_account.api_key`
+        value:
+          type: string
+        name:
+          type: string
+        created_at:
+          type: integer
+          format: unixtime
+        id:
+          type: string
+    ProjectServiceAccountCreateRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: The name of the service account being created.
+    ProjectServiceAccountCreateResponse:
+      type: object
+      required:
+        - object
+        - id
+        - name
+        - role
+        - created_at
+        - api_key
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.project.service_account
+        id:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum:
+            - member
+          description: Service accounts can only have one role of type `member`
+        created_at:
+          type: integer
+          format: unixtime
+        api_key:
+          $ref: '#/components/schemas/ProjectServiceAccountApiKey'
+    ProjectServiceAccountDeleteResponse:
+      type: object
+      required:
+        - object
+        - id
+        - deleted
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.project.service_account.deleted
+        id:
+          type: string
+        deleted:
+          type: boolean
+    ProjectServiceAccountListResponse:
+      type: object
+      required:
+        - object
+        - data
+        - first_id
+        - last_id
+        - has_more
+      properties:
+        object:
+          type: string
+          enum:
+            - list
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectServiceAccount'
+        first_id:
+          type: string
+        last_id:
+          type: string
+        has_more:
+          type: boolean
+    ProjectUpdateRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: The updated name of the project, this name appears in reports.
+    ProjectUser:
+      type: object
+      required:
+        - object
+        - id
+        - name
+        - email
+        - role
+        - added_at
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.project.user
+          description: The object type, which is always `organization.project.user`
+        id:
+          type: string
+          description: The identifier, which can be referenced in API endpoints
+        name:
+          type: string
+          description: The name of the user
+        email:
+          type: string
+          description: The email address of the user
+        role:
+          type: string
+          enum:
+            - owner
+            - member
+          description: '`owner` or `member`'
+        added_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) of when the project was added.
+      description: Represents an individual user in a project.
+    ProjectUserCreateRequest:
+      type: object
+      required:
+        - user_id
+        - role
+      properties:
+        user_id:
+          type: string
+          description: The ID of the user.
+        role:
+          type: string
+          enum:
+            - owner
+            - member
+          description: '`owner` or `member`'
+    ProjectUserDeleteResponse:
+      type: object
+      required:
+        - object
+        - id
+        - deleted
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.project.user.deleted
+        id:
+          type: string
+        deleted:
+          type: boolean
+    ProjectUserListResponse:
+      type: object
+      required:
+        - object
+        - data
+        - first_id
+        - last_id
+        - has_more
+      properties:
+        object:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectUser'
+        first_id:
+          type: string
+        last_id:
+          type: string
+        has_more:
+          type: boolean
+    ProjectUserUpdateRequest:
+      type: object
+      required:
+        - role
+      properties:
+        role:
+          type: string
+          enum:
+            - owner
+            - member
+          description: '`owner` or `member`'
+    ResponseFormatJsonObject:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - json_object
+          description: 'The type of response format being defined: `json_object`'
+      allOf:
+        - $ref: '#/components/schemas/OmniTypedResponseFormat'
+    ResponseFormatJsonSchema:
+      type: object
+      required:
+        - type
+        - json_schema
+      properties:
+        type:
+          type: string
+          enum:
+            - json_schema
+          description: 'The type of response format being defined: `json_schema`'
+        json_schema:
+          type: object
+          properties:
+            description:
+              type: string
+              description: A description of what the response format is for, used by the model to determine how to respond in the format.
+            name:
+              type: string
+              description: The name of the response format. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+            schema:
+              $ref: '#/components/schemas/ResponseFormatJsonSchemaSchema'
+            strict:
+              type: boolean
+              nullable: true
+              description: Whether to enable strict schema adherence when generating the output. If set to true, the model will always follow the exact schema defined in the `schema` field. Only a subset of JSON Schema is supported when `strict` is `true`. To learn more, read the [Structured Outputs guide](/docs/guides/structured-outputs).
+              default: false
+          required:
+            - name
+      allOf:
+        - $ref: '#/components/schemas/OmniTypedResponseFormat'
+    ResponseFormatJsonSchemaSchema:
+      type: object
+      additionalProperties: {}
+      description: The schema for the response format, described as a JSON Schema object.
+    ResponseFormatText:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+          description: 'The type of response format being defined: `text`'
+      allOf:
+        - $ref: '#/components/schemas/OmniTypedResponseFormat'
     RunCompletionUsage:
       type: object
       required:
@@ -7489,6 +8813,97 @@ components:
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
       description: Represents a thread that contains [messages](/docs/api-reference/messages).
+    ToolResourcesFileSearch:
+      type: object
+      properties:
+        vector_store_ids:
+          type: array
+          items:
+            type: string
+          maxItems: 1
+          description: |-
+            The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
+            There can be a maximum of 1 vector store attached to the assistant.
+        vector_stores:
+          type: array
+          items:
+            type: object
+            properties:
+              file_ids:
+                type: array
+                items:
+                  type: string
+                maxItems: 10000
+                description: |-
+                  A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
+                  a maximum of 10000 files in a vector store.
+              chunking_strategy:
+                anyOf:
+                  - $ref: '#/components/schemas/AutoChunkingStrategyRequestParam'
+                  - $ref: '#/components/schemas/StaticChunkingStrategyRequestParam'
+                description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. Only applicable if `file_ids` is non-empty.
+                x-oaiExpandable: true
+              metadata:
+                type: object
+                additionalProperties:
+                  type: string
+                description: |-
+                  Set of 16 key-value pairs that can be attached to a vector store. This can be useful for
+                  storing additional information about the vector store in a structured format. Keys can
+                  be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+                x-oaiTypeLabel: map
+          maxItems: 1
+          description: |-
+            A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
+            file_ids and attach it to this assistant. There can be a maximum of 1 vector store
+            attached to the assistant.
+    ToolResourcesFileSearchIdsOnly:
+      type: object
+      properties:
+        vector_store_ids:
+          type: array
+          items:
+            type: string
+          maxItems: 1
+          description: |-
+            The [vector store](/docs/api-reference/vector-stores/object) attached to this assistant.
+            There can be a maximum of 1 vector store attached to the assistant.
+    ToolResourcesFileSearchVectorStoreCreationHelpers:
+      type: object
+      properties:
+        vector_stores:
+          type: array
+          items:
+            type: object
+            properties:
+              file_ids:
+                type: array
+                items:
+                  type: string
+                maxItems: 10000
+                description: |-
+                  A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be
+                  a maximum of 10000 files in a vector store.
+              chunking_strategy:
+                anyOf:
+                  - $ref: '#/components/schemas/AutoChunkingStrategyRequestParam'
+                  - $ref: '#/components/schemas/StaticChunkingStrategyRequestParam'
+                description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. Only applicable if `file_ids` is non-empty.
+                x-oaiExpandable: true
+              metadata:
+                type: object
+                additionalProperties:
+                  type: string
+                description: |-
+                  Set of 16 key-value pairs that can be attached to a vector store. This can be useful for
+                  storing additional information about the vector store in a structured format. Keys can
+                  be a maximum of 64 characters long and values can be a maxium of 512 characters long.
+                x-oaiTypeLabel: map
+          maxItems: 1
+          description: |-
+            A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
+            file_ids and attach it to this assistant. There can be a maximum of 1 vector store
+            attached to the assistant.
     TranscriptionSegment:
       type: object
       required:
@@ -7599,6 +9014,166 @@ components:
           nullable: true
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long.
           x-oaiTypeLabel: map
+    Upload:
+      type: object
+      required:
+        - id
+        - created_at
+        - filename
+        - bytes
+        - purpose
+        - status
+        - expires_at
+      properties:
+        id:
+          type: string
+          description: The Upload unique identifier, which can be referenced in API endpoints.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the Upload was created.
+        filename:
+          type: string
+          description: The name of the file to be uploaded.
+        bytes:
+          type: integer
+          format: int32
+          description: The intended number of bytes to be uploaded.
+        purpose:
+          type: string
+          description: The intended purpose of the file. [Please refer here](/docs/api-reference/files/object#files/object-purpose) for acceptable values.
+        status:
+          type: string
+          enum:
+            - pending
+            - completed
+            - cancelled
+            - expired
+          description: The status of the Upload.
+        expires_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the Upload was created.
+        object:
+          type: string
+          enum:
+            - upload
+          description: The object type, which is always "upload".
+        file:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/OpenAIFile'
+          nullable: true
+          description: The ready File object after the Upload is completed.
+      description: The Upload object can accept byte chunks in the form of Parts.
+    UploadPart:
+      type: object
+      required:
+        - id
+        - created_at
+        - upload_id
+        - object
+      properties:
+        id:
+          type: string
+          description: The upload Part unique identifier, which can be referenced in API endpoints.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the Part was created.
+        upload_id:
+          type: string
+          description: The ID of the Upload object that this Part was added to.
+        object:
+          type: string
+          enum:
+            - upload.part
+          description: The object type, which is always `upload.part`.
+      description: The upload Part represents a chunk of bytes we can add to an Upload object.
+    User:
+      type: object
+      required:
+        - object
+        - id
+        - name
+        - email
+        - role
+        - added_at
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.user
+          description: The object type, which is always `organization.user`
+        id:
+          type: string
+          description: The identifier, which can be referenced in API endpoints
+        name:
+          type: string
+          description: The name of the user
+        email:
+          type: string
+          description: The email address of the user
+        role:
+          type: string
+          enum:
+            - owner
+            - reader
+          description: '`owner` or `reader`'
+        added_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) of when the user was added.
+      description: Represents an individual `user` within an organization.
+    UserDeleteResponse:
+      type: object
+      required:
+        - object
+        - id
+        - deleted
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.user.deleted
+        id:
+          type: string
+        deleted:
+          type: boolean
+    UserListResponse:
+      type: object
+      required:
+        - object
+        - data
+        - first_id
+        - last_id
+        - has_more
+      properties:
+        object:
+          type: string
+          enum:
+            - list
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        first_id:
+          type: string
+        last_id:
+          type: string
+        has_more:
+          type: boolean
+    UserRoleUpdateRequest:
+      type: object
+      required:
+        - role
+      properties:
+        role:
+          type: string
+          enum:
+            - owner
+            - reader
+          description: '`owner` or `reader`'
     VectorStoreExpirationAfter:
       type: object
       required:
@@ -7724,10 +9299,9 @@ components:
             code:
               type: string
               enum:
-                - internal_error
-                - file_not_found
-                - parsing_error
-                - unhandled_mime_type
+                - server_error
+                - unsupported_file
+                - invalid_file
               description: One of `server_error` or `rate_limit_exceeded`.
             message:
               type: string
@@ -7837,6 +9411,6 @@ components:
       type: http
       scheme: bearer
 servers:
-  - url: https://api.openai.com/v1
+  - url: https://api.openai.com
     description: OpenAI Endpoint
     variables: {}

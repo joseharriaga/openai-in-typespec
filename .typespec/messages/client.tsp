@@ -18,10 +18,12 @@ using OpenAI;
 @@access(MessageContentImageUrlObject, Access.public);
 @@usage(MessageContentImageUrlObject, Usage.input | Usage.output);
 
+@@access(MessageContentRefusalObject, Access.public);
+@@usage(MessageContentRefusalObject, Usage.input | Usage.output);
+
 @@access(MessageRequestContentTextObject, Access.public);
 @@usage(MessageRequestContentTextObject, Usage.input | Usage.output);
 
-//
 @@access(MessageContentTextObjectAnnotation, Access.public);
 @@usage(MessageContentTextObjectAnnotation, Usage.input | Usage.output);
 

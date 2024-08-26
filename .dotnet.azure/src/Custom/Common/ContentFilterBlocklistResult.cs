@@ -3,8 +3,6 @@
 
 #nullable disable
 
-using System.Collections.Generic;
-
 namespace Azure.AI.OpenAI;
 
 [CodeGenModel("AzureContentFilterBlocklistResult")]

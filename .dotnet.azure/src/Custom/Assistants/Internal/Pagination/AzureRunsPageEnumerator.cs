@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
@@ -19,7 +22,6 @@ internal partial class AzureRunsPageEnumerator : RunsPageEnumerator
         _endpoint = endpoint;
         _apiVersion = apiVersion;
     }
-
 
     internal override async Task<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {

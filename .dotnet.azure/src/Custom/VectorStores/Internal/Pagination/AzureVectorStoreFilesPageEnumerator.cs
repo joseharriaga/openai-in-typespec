@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
@@ -11,7 +14,7 @@ internal partial class AzureVectorStoreFilesPageEnumerator : VectorStoreFilesPag
     public AzureVectorStoreFilesPageEnumerator(
         ClientPipeline pipeline,
         Uri endpoint,
-        string vectorStoreId, 
+        string vectorStoreId,
         int? limit, string order, string after, string before, string filter,
         string apiVersion,
         RequestOptions options)

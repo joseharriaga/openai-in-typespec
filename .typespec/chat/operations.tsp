@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("/chat")
+@route("/v1/chat")
 interface Chat {
   @route("completions")
   @post

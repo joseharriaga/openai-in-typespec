@@ -2,6 +2,7 @@ import "@typespec/http";
 import "@typespec/openapi3";
 import "@typespec/openapi";
 
+import "./administration";
 import "./audio";
 import "./assistants";
 import "./batch";
@@ -17,6 +18,7 @@ import "./moderations";
 import "./runs";
 import "./threads";
 import "./vector-stores";
+import "./uploads";
 
 using TypeSpec.Http;
 
@@ -33,6 +35,6 @@ using TypeSpec.Http;
     url: "https://github.com/openai/openai-openapi/blob/master/LICENSE",
   },
 })
-@server("https://api.openai.com/v1", "OpenAI Endpoint")
+@server("https://api.openai.com", "OpenAI Endpoint")
 @useAuth(BearerAuth)
 namespace OpenAI;

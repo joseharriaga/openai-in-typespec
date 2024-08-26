@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("/batches")
+@route("/v1/batches")
 interface Batches {
   @post
   @operationId("createBatch")

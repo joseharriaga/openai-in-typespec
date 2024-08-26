@@ -69,7 +69,7 @@ model CreateTranscriptionRequest {
   @doc("""
     The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.
     """)
-  timestamp_granularities?: ("word" | "segment")[] = ["segment"];
+  timestamp_granularities?: ("word" | "segment")[] = #["segment"];
 }
 
 model CreateTranslationRequest {
@@ -116,7 +116,7 @@ model CreateTranscriptionResponseVerboseJson {
   /** The language of the input audio. */
   language: string;
 
-  // Tool customization: timespans are encoded durations
+  // Tool customization: correct erroneous spec representation of duration as string
   /** The duration of the input audio. */
   @encode("seconds", float32)
   duration: duration;
@@ -145,7 +145,7 @@ model CreateTranslationResponseVerboseJson {
     """)
   language: string;
 
-  // Tool customization: timespans are encoded durations
+  // Tool customization: correct erroneous spec representation of duration as string
   /** The duration of the input audio. */
   @encode("seconds", float32)
   duration: duration;

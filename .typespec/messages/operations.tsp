@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("threads/{thread_id}/messages")
+@route("/v1/threads/{thread_id}/messages")
 interface Messages {
   @post
   @operationId("createMessage")

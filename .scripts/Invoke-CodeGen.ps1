@@ -7,6 +7,8 @@ function Invoke([scriptblock]$script) {
   & $script
 }
 
+$scriptStartTime = Get-Date
+
 Push-Location $repoRoot/.typespec
 try {
   Invoke { npm ci }
@@ -19,3 +21,9 @@ try {
 finally {
   Pop-Location
 }
+
+$scriptElapsed = $(Get-Date) - $scriptStartTime
+$scriptElapsedSeconds = [math]::Round($scriptElapsed.TotalSeconds, 1)
+$scriptName = $MyInvocation.MyCommand.Name
+
+Write-Host "${scriptName} complete. Time: ${scriptElapsedSeconds}s"

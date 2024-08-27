@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("/audio")
+@route("/v1/audio")
 interface Audio {
   @route("speech")
   @post

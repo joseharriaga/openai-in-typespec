@@ -21,13 +21,13 @@ internal partial class InternalDeleteVectorStoreResponse { }
 internal readonly partial struct InternalDeleteVectorStoreResponseObject { }
 
 [CodeGenModel("ListVectorStoreFilesResponse")]
-internal partial class InternalListVectorStoreFilesResponse : IInternalListResponse<VectorStoreFileAssociation> { }
+internal partial class InternalListVectorStoreFilesResponse { }
 
 [CodeGenModel("ListVectorStoreFilesResponseObject")]
 internal readonly partial struct InternalListVectorStoreFilesResponseObject { }
 
 [CodeGenModel("ListVectorStoresResponse")]
-internal partial class InternalListVectorStoresResponse : IInternalListResponse<VectorStore> { }
+internal partial class InternalListVectorStoresResponse { }
 
 [CodeGenModel("ListVectorStoresResponseObject")]
 internal readonly partial struct InternalListVectorStoresResponseObject { }

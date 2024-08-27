@@ -605,7 +605,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
 
         OpenAIClient topLevelClient = new(new("mock-credential"), options);
         ChatClient firstClient = topLevelClient.GetChatClient("mock-model");
-        ClientResult first = firstClient.CompleteChat("Hello, world");
+        ClientResult first = firstClient.CompleteChat(new UserChatMessage("Hello, world"));
 
         Assert.That(observedEndpoint, Is.Not.Null);
         Assert.That(observedEndpoint.AbsoluteUri, Does.Contain("my.custom.com/expected/test/endpoint"));

@@ -303,18 +303,18 @@ public static class CollectionExtensions
     }
 
     /// <summary>
-    /// Converts an <see cref="AsyncPageCollection{T}"/> to a <see cref="List{T}"/> asynchronously.
+    /// Converts an async enumerable of pages to a <see cref="List{T}"/> asynchronously.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the enumerable.</typeparam>
-    /// <param name="pageEnumerable">The <see cref="AsyncPageCollection{T}"> to convert.</param>
+    /// <param name="pageAsyncEnumerable">The <see cref="IAsyncEnumerable{T}"/> to convert.</param>
     /// <param name="token">The cancellation token.</param>
     /// <returns>Asynchronous task to do the conversion.</returns>
-    public static async Task<List<T>> ToValueListAsync<T>(this AsyncPageCollection<T> pageEnumerable, CancellationToken token = default)
+    public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<PageResult<T>> pageAsyncEnumerable, CancellationToken token = default)
     {
         List<T> list = new List<T>();
-        await foreach (T item in pageEnumerable.GetAllValuesAsync().WithCancellation(token))
+        await foreach(PageResult<T> page in pageAsyncEnumerable.WithCancellation(token))
         {
-            list.Add(item);
+            list.AddRange(page.Values);
         }
         return list;
     }

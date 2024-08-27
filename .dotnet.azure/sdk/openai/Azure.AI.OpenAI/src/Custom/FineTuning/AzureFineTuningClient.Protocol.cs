@@ -39,37 +39,37 @@ internal partial class AzureFineTuningClient : FineTuningClient
 
     public override IEnumerable<ClientResult> GetJobs(string after, int? limit, RequestOptions options)
     {
-        FineTuningJobsPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, options);
+        AzureFineTuningJobsPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
     public override IAsyncEnumerable<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options)
     {
-        FineTuningJobsPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, options);
+        AzureFineTuningJobsPageEnumerator enumerator = new(Pipeline, _endpoint, after, limit, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     public override IEnumerable<ClientResult> GetJobEvents(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
-        FineTuningJobEventsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
+        AzureFineTuningJobEventsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
     public override IAsyncEnumerable<ClientResult> GetJobEventsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
-        FineTuningJobEventsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
+        AzureFineTuningJobEventsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     public override IEnumerable<ClientResult> GetJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
-        FineTuningJobCheckpointsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
+        AzureFineTuningJobCheckpointsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, _apiVersion, options);
         return PageCollectionHelpers.Create(enumerator);
     }
 
     public override IAsyncEnumerable<ClientResult> GetJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
-        FineTuningJobCheckpointsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, options);
+        AzureFineTuningJobCheckpointsPageEnumerator enumerator = new(Pipeline, _endpoint, fineTuningJobId, after, limit, _apiVersion, options);
         return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
@@ -110,40 +110,10 @@ internal partial class AzureFineTuningClient : FineTuningClient
             .WithOptions(options)
             .Build();
 
-    private PipelineMessage CreateGetJobsRequestMessage(string after, int? limit, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
-            .WithMethod("GET")
-            .WithPath("fine_tuning", "jobs")
-            .WithOptionalQueryParameter("after", after)
-            .WithOptionalQueryParameter("limit", limit)
-            .WithAccept("application/json")
-            .WithOptions(options)
-            .Build();
-
     private PipelineMessage CreateGetJobRequestMessage(string jobId, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithMethod("GET")
             .WithPath("fine_tuning", "jobs", jobId)
-            .WithAccept("application/json")
-            .WithOptions(options)
-            .Build();
-
-    private PipelineMessage CreateGetJobEventsRequestMessage(string jobId, string after, int? limit, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
-            .WithMethod("GET")
-            .WithPath("fine_tuning", "jobs", jobId, "events")
-            .WithOptionalQueryParameter("after", after)
-            .WithOptionalQueryParameter("limit", limit)
-            .WithAccept("application/json")
-            .WithOptions(options)
-            .Build();
-
-    private PipelineMessage CreateGetJobCheckpointsRequestMessage(string jobId, string after, int? limit, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
-            .WithMethod("GET")
-            .WithPath("fine_tuning", "jobs", jobId, "checkpoints")
-            .WithOptionalQueryParameter("after", after)
-            .WithOptionalQueryParameter("limit", limit)
             .WithAccept("application/json")
             .WithOptions(options)
             .Build();

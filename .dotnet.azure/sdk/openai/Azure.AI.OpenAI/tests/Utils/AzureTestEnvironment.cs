@@ -8,7 +8,6 @@ using System.Linq;
 using System.Reflection;
 using Azure.Core;
 using Azure.Identity;
-using NUnit.Framework;
 using OpenAI.TestFramework;
 using OpenAI.TestFramework.Mocks;
 using OpenAI.TestFramework.Recording;
@@ -86,7 +85,7 @@ public class AzureTestEnvironment
                 Path.Combine(sourceRoot, "sdk"),
                 sourceDir.FullName);
             serviceName = relativePath
-                .Split([Path.DirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries)
+                .Split(new char[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
                 .FirstOrDefault()!;
         }
 

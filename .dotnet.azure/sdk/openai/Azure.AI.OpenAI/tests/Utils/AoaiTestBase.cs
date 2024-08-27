@@ -7,12 +7,12 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI.Tests.Models;
 using Azure.AI.OpenAI.Tests.Utils;
 using Azure.AI.OpenAI.Tests.Utils.Config;
-using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using OpenAI.Assistants;
 using OpenAI.Audio;
@@ -23,14 +23,13 @@ using OpenAI.Files;
 using OpenAI.FineTuning;
 using OpenAI.Images;
 using OpenAI.TestFramework;
-using OpenAI.TestFramework.Recording;
-using OpenAI.TestFramework.Recording.RecordingProxy;
-using OpenAI.TestFramework.Utils;
-using OpenAI.VectorStores;
-using OpenAI.TestFramework.Recording.Sanitizers;
-using TokenCredential = Azure.Core.TokenCredential;
 using OpenAI.TestFramework.Recording.Proxy;
 using OpenAI.TestFramework.Recording.Proxy.Service;
+using OpenAI.TestFramework.Recording.RecordingProxy;
+using OpenAI.TestFramework.Recording.Sanitizers;
+using OpenAI.TestFramework.Utils;
+using OpenAI.VectorStores;
+using TokenCredential = Azure.Core.TokenCredential;
 
 namespace Azure.AI.OpenAI.Tests;
 
@@ -439,24 +438,117 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
     private static void DumpRequest(PipelineRequest request)
     {
         Console.WriteLine($"--- New request ---");
-        string headers = request.Headers
-            .Select(header => $"{header.Key}={(header.Key.ToLower().Contains("auth") ? "***" : header.Value)}")
-            .Aggregate(string.Empty, (current, next) => string.Format("{0},{1}", current, next));
-        Console.WriteLine($"Headers: {headers}");
-        Console.WriteLine($"{request.Method} URI: {request?.Uri}");
-        if (request!.Content is not null)
+        Console.WriteLine($"{request.Method} {request?.Uri}");
+        string headers = string.Join("\n  ",
+            request!.Headers
+                .Select(kvp => $"{kvp.Key}: {(kvp.Key.ToLowerInvariant().Contains("auth") ? "***" : kvp.Value)}"));
+        Console.Write("  ");
+        Console.WriteLine(headers);
+
+        if (request?.Content is not null)
         {
             using MemoryStream stream = new();
             request.Content.WriteTo(stream, default);
             stream.Position = 0;
-            using StreamReader reader = new(stream);
-            Console.WriteLine(reader.ReadToEnd());
+
+            string? contentType = request.Headers.GetFirstOrDefault("Content-Type");
+            if (IsProbableTextContent(contentType))
+            {
+                DumpText(contentType, stream);
+            }
+            else
+            {
+                DumpHex(stream);
+            }
         }
     }
 
     private static void DumpResponse(PipelineResponse response)
     {
-        Console.WriteLine($"--- Response --- <dump not yet implemented>");
+        Console.WriteLine($"--- Response ---");
+        Console.WriteLine($"{response.Status} - {response.ReasonPhrase}");
+        string headers = string.Join(
+            "\n  ",
+            response.Headers
+                .Where(kvp => !kvp.Key.ToLowerInvariant().Contains("client-"))
+                .Select(kvp => $"{kvp.Key}: {kvp.Value}"));
+        Console.Write("  ");
+        Console.WriteLine(headers);
+
+        response.BufferContent();
+
+        if (response!.Content is not null)
+        {
+            using Stream stream = response.Content.ToStream();
+            string? contentType = response.Headers.GetFirstOrDefault("Content-Type");
+            if (IsProbableTextContent(contentType))
+            {
+                DumpText(contentType, stream);
+            }
+            else
+            {
+                DumpHex(stream);
+            }
+        }
+
+        Console.WriteLine();
+    }
+
+    private static bool IsProbableTextContent(string? contentType)
+    {
+        contentType = contentType?.ToLowerInvariant() ?? string.Empty;
+        return contentType.StartsWith("application/json")
+            || contentType.StartsWith("text/");
+    }
+
+    private static void DumpText(string? contentType, Stream stream)
+    {
+        if (contentType?.ToLowerInvariant().StartsWith("application/json") == true)
+        {
+            var json = JsonDocument.Parse(stream);
+
+            stream = new MemoryStream();
+            using (Utf8JsonWriter writer = new(stream, new() { Indented = true }))
+            {
+                json.WriteTo(writer);
+            }
+
+            stream.Seek(0, SeekOrigin.Begin);
+        }
+
+        using StreamReader reader = new(stream);
+        Console.WriteLine(reader.ReadToEnd());
+    }
+
+    private static void DumpHex(Stream stream, int maxLines = 256)
+    {
+        byte[] buffer = new byte[32];
+        StringBuilder hex = new(3 * buffer.Length);
+        StringBuilder chars = new(buffer.Length);
+
+        int read = 0;
+        for (int lines = 0; (read = stream.FillBuffer(buffer)) > 0 && lines < maxLines; lines++)
+        {
+            for (int i = 0; i < read; i++)
+            {
+                hex.AppendFormat("{0:X2} ", buffer[i]);
+
+                char c = Convert.ToChar(buffer[i]);
+                chars.Append(char.IsControl(c) ? ' ' : c);
+            }
+
+            Console.Write(hex.PadRight(buffer.Length * 3));
+            Console.Write("| ");
+            Console.WriteLine(chars);
+
+            hex.Clear();
+            chars.Clear();
+        }
+
+        if (read != 0)
+        {
+            Console.WriteLine(" ... truncated");
+        }
     }
 
     protected void ValidateById<T>(string id)
@@ -464,12 +556,22 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
         Assert.That(id, Is.Not.Null.Or.Empty);
         switch (typeof(T).Name)
         {
-            case nameof(Assistant): _assistantIdsToDelete.Add(id); break;
-            case nameof(AssistantThread): _threadIdsToDelete.Add(id); break;
-            case nameof(OpenAIFileInfo): _fileIdsToDelete.Add(id); break;
-            case nameof(ThreadRun): break;
-            case nameof(VectorStore): _vectorStoreIdsToDelete.Add(id); break;
-            default: throw new NotImplementedException();
+            case nameof(Assistant):
+                _assistantIdsToDelete.Add(id);
+                break;
+            case nameof(AssistantThread):
+                _threadIdsToDelete.Add(id);
+                break;
+            case nameof(OpenAIFileInfo):
+                _fileIdsToDelete.Add(id);
+                break;
+            case nameof(ThreadRun):
+                break;
+            case nameof(VectorStore):
+                _vectorStoreIdsToDelete.Add(id);
+                break;
+            default:
+                throw new NotImplementedException();
         }
     }
 
@@ -571,7 +673,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
             TestConfig.SavePlaybackConfig();
         }
     }
-    
+
     protected static void ValidateClientResult(ClientResult result)
     {
         Assert.That(result, Is.Not.Null);

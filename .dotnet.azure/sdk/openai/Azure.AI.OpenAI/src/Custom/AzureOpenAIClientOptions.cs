@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System.ClientModel.Primitives;
+
 namespace Azure.AI.OpenAI;
 
 /// <summary>

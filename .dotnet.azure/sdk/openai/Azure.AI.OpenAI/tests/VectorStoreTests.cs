@@ -110,28 +110,25 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             Assert.That(vectorStore.Name, Is.EqualTo($"Test Vector Store {i}"));
         }
 
-        AsyncPageCollection<VectorStore> response = client.GetVectorStoresAsync(new VectorStoreCollectionOptions() { Order =  ListOrder.NewestFirst });
+        AsyncPageCollection<VectorStore> response = client.GetVectorStoresAsync(new VectorStoreCollectionOptions() { Order = ListOrder.NewestFirst });
         Assert.That(response, Is.Not.Null);
 
         int lastIdSeen = int.MaxValue;
         int count = 0;
-        await foreach (PageResult<VectorStore> page in response)
+        await foreach (VectorStore vectorStore in response.GetAllValuesAsync())
         {
-            foreach (VectorStore vectorStore in page.Values)
+            Assert.That(vectorStore.Id, Is.Not.Null);
+            if (vectorStore.Name?.StartsWith("Test Vector Store ") == true)
             {
-                Assert.That(vectorStore.Id, Is.Not.Null);
-                if (vectorStore.Name?.StartsWith("Test Vector Store ") == true)
-                {
-                    string idString = vectorStore.Name.Substring("Test Vector Store ".Length);
+                string idString = vectorStore.Name.Substring("Test Vector Store ".Length);
 
-                    Assert.That(int.TryParse(idString, out int seenId), Is.True);
-                    Assert.That(seenId, Is.LessThan(lastIdSeen));
-                    lastIdSeen = seenId;
-                }
-                if (lastIdSeen == 0 || ++count >= 100)
-                {
-                    break;
-                }
+                Assert.That(int.TryParse(idString, out int seenId), Is.True);
+                Assert.That(seenId, Is.LessThan(lastIdSeen));
+                lastIdSeen = seenId;
+            }
+            if (lastIdSeen == 0 || ++count >= 100)
+            {
+                break;
             }
         }
 

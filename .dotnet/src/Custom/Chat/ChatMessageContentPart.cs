@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace OpenAI.Chat;
 
 /// <summary>
-///     A part of the <see cref="ChatMessageContent"/>.
+///     A part of the chat message content.
 ///     <list>
 ///         <item>
 ///             Call <see cref="CreateTextPart(string)"/> to create a <see cref="ChatMessageContentPart"/> that

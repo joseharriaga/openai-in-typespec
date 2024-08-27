@@ -1358,7 +1358,6 @@ namespace OpenAI.Chat {
         public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts);
         public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static UserChatMessage CreateUserMessage(string content);
-        public static implicit operator ChatMessage(string userMessage);
         ChatMessage IJsonModel<ChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatMessage IPersistableModel<ChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1374,17 +1373,16 @@ namespace OpenAI.Chat {
         public ChatMessageContentPartKind Kind { get; }
         public string Refusal { get; }
         public string Text { get; }
-        public static ChatMessageContentPart CreateImageMessageContentPart(BinaryData imageBytes, string imageBytesMediaType, ChatImageDetailLevel? imageDetailLevel = null);
-        public static ChatMessageContentPart CreateImageMessageContentPart(Uri imageUri, ChatImageDetailLevel? imageDetailLevel = null);
-        public static ChatMessageContentPart CreateRefusalMessageContentPart(string refusal);
-        public static ChatMessageContentPart CreateTextMessageContentPart(string text);
-        public static implicit operator ChatMessageContentPart(string content);
+        public static ChatMessageContentPart CreateImagePart(BinaryData imageBytes, string imageBytesMediaType, ChatImageDetailLevel? imageDetailLevel = null);
+        public static ChatMessageContentPart CreateImagePart(Uri imageUri, ChatImageDetailLevel? imageDetailLevel = null);
+        public static ChatMessageContentPart CreateRefusalPart(string refusal);
+        public static ChatMessageContentPart CreateTextPart(string text);
+        public static implicit operator ChatMessageContentPart(string text);
         ChatMessageContentPart IJsonModel<ChatMessageContentPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatMessageContentPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatMessageContentPart IPersistableModel<ChatMessageContentPart>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatMessageContentPart>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatMessageContentPart>.Write(ModelReaderWriterOptions options);
-        public override string ToString();
     }
     public readonly partial struct ChatMessageContentPartKind : IEquatable<ChatMessageContentPartKind> {
         private readonly object _dummy;

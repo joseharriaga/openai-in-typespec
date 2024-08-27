@@ -325,7 +325,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         else
         {
             // We construct a new instance. Later, we serialize it and confirm it was constructed correctly.
-            part = ChatMessageContentPart.CreateTextMessageContentPart(text);
+            part = ChatMessageContentPart.CreateTextPart(text);
         }
 
         BinaryData serializedPart = ModelReaderWriter.Write(part);
@@ -379,7 +379,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         else
         {
             // We construct a new instance. Later, we serialize it and confirm it was constructed correctly.
-            part = ChatMessageContentPart.CreateImageMessageContentPart(new Uri(uri), ChatImageDetailLevel.High);
+            part = ChatMessageContentPart.CreateImagePart(new Uri(uri), ChatImageDetailLevel.High);
         }
 
         BinaryData serializedPart = ModelReaderWriter.Write(part);
@@ -454,7 +454,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         else
         {
             // We construct a new instance. Later, we serialize it and confirm it was constructed correctly.
-            part = ChatMessageContentPart.CreateImageMessageContentPart(imageData, imageMediaType, ChatImageDetailLevel.Auto);
+            part = ChatMessageContentPart.CreateImagePart(imageData, imageMediaType, ChatImageDetailLevel.Auto);
         }
 
         BinaryData serializedPart = ModelReaderWriter.Write(part);
@@ -494,8 +494,8 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
     public void SerializeCompoundContent()
     {
         UserChatMessage message = new(
-            ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me:"),
-            ChatMessageContentPart.CreateImageMessageContentPart(new Uri("https://api.openai.com/test")));
+            ChatMessageContentPart.CreateTextPart("Describe this image for me:"),
+            ChatMessageContentPart.CreateImagePart(new Uri("https://api.openai.com/test")));
         string serializedMessage = ModelReaderWriter.Write(message).ToString();
         Assert.That(serializedMessage, Does.Contain("this image"));
         Assert.That(serializedMessage, Does.Contain("openai.com/test"));

@@ -26,7 +26,7 @@ public abstract partial class ChatMessage : IJsonModel<ChatMessage>
         }
         else if (property.Value.ValueKind == JsonValueKind.String)
         {
-            content.Add(ChatMessageContentPart.CreateTextMessageContentPart(property.Value.GetString()));
+            content.Add(ChatMessageContentPart.CreateTextPart(property.Value.GetString()));
         }
         else if (property.Value.ValueKind == JsonValueKind.Array)
         {

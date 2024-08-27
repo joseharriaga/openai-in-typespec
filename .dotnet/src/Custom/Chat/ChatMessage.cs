@@ -66,8 +66,9 @@ public abstract partial class ChatMessage
     }
 
     protected internal ChatMessage(ChatMessageRole role, string content)
-        : this(role, content is null ? null : [ChatMessageContentPart.CreateTextMessageContentPart(content)])
-    { }
+        : this(role, content is null ? null : [ChatMessageContentPart.CreateTextPart(content)])
+    {
+    }
 
     /// <summary>
     /// The content associated with the message. The interpretation of this content will vary depending on the message type.
@@ -125,10 +126,4 @@ public abstract partial class ChatMessage
 
     /// <inheritdoc cref="FunctionChatMessage(string, string)"/>
     public static FunctionChatMessage CreateFunctionMessage(string functionName, string content) => new(functionName, content);
-
-    /// <summary>
-    /// Creates UserChatMessage.
-    /// </summary>
-    /// <param name="userMessage"></param>
-    public static implicit operator ChatMessage(string userMessage) => new UserChatMessage(userMessage);
 }

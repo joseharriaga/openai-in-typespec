@@ -102,6 +102,6 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
             }
         }
         serializedAdditionalRawData = rawDataDictionary;
-        return new ChatMessageContentPart(kind, text, refusal, imageUrl, serializedAdditionalRawData);
+        return new ChatMessageContentPart(kind, text, imageUrl, refusal, serializedAdditionalRawData);
     }
 }

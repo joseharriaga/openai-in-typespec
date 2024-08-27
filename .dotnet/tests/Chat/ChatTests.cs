@@ -170,8 +170,8 @@ public partial class ChatTests : SyncAsyncTestBase
         ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
-                ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me."),
-                ChatMessageContentPart.CreateImageMessageContentPart(imageData, mediaType)),
+                ChatMessageContentPart.CreateTextPart("Describe this image for me."),
+                ChatMessageContentPart.CreateImagePart(imageData, mediaType)),
         ];
         ChatCompletionOptions options = new() { MaxTokens = 2048 };
 

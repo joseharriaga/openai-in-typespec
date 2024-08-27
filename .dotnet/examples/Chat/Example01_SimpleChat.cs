@@ -11,7 +11,7 @@ public partial class ChatExamples
     {
         ChatClient client = new(model: "gpt-4o", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-        ChatCompletion completion = client.CompleteChat("Say 'this is a test.'");
+        ChatCompletion completion = client.CompleteChat(new UserChatMessage("Say 'this is a test.'"));
 
         Console.WriteLine($"[ASSISTANT]: {completion}");
     }

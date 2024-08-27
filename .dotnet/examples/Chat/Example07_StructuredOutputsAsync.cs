@@ -43,7 +43,7 @@ public partial class ChatExamples
         };
 
         ChatCompletion chatCompletion = await client.CompleteChatAsync(
-            ["How can I solve 8x + 7 = -23?"],
+            [ new UserChatMessage("How can I solve 8x + 7 = -23?") ],
             options);
 
         using JsonDocument structuredJson = JsonDocument.Parse(chatCompletion.ToString());

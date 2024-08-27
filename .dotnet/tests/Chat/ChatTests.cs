@@ -334,8 +334,8 @@ public partial class ChatTests : SyncAsyncTestBase
                 strictSchemaEnabled: false)
         };
         ChatCompletion completion = IsAsync
-            ? await client.CompleteChatAsync(["What are the hex values for red, green, and blue?"], options)
-            : client.CompleteChat(["What are the hex values for red, green, and blue?"], options);
+            ? await client.CompleteChatAsync([ new UserChatMessage("What are the hex values for red, green, and blue?") ], options)
+            : client.CompleteChat([ new UserChatMessage("What are the hex values for red, green, and blue?") ], options);
         Console.WriteLine(completion);
     }
 
@@ -485,7 +485,7 @@ public partial class ChatTests : SyncAsyncTestBase
         Assert.That(contextMessage.Refusal, Has.Length.GreaterThan(0));
 
         messages.Add(contextMessage);
-        messages.Add("Why can't you help me?");
+        messages.Add(new UserChatMessage("Why can't you help me?"));
 
         completion = IsAsync
             ? await client.CompleteChatAsync(messages)

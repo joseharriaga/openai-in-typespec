@@ -66,8 +66,8 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         ChatClient client = new("model_name_replaced", new ApiKeyCredential("sk-not-a-real-key"), options);
 
         ClientResult<ChatCompletion> completionResult = IsAsync
-            ? await client.CompleteChatAsync(["Mock me!"])
-            : client.CompleteChat(["Mock me!"]);
+            ? await client.CompleteChatAsync([ new UserChatMessage("Mock me!") ])
+            : client.CompleteChat([ new UserChatMessage("Mock me!") ]);
         Assert.That(completionResult?.GetRawResponse(), Is.Not.Null);
         Assert.That(completionResult.GetRawResponse().Content?.ToString(), Does.Contain("additional world"));
 

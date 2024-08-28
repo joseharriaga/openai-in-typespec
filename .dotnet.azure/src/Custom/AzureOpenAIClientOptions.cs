@@ -63,12 +63,9 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
     /// <summary>
     /// Initializes a new instance of <see cref="AzureOpenAIClientOptions"/>
     /// </summary>
-    /// <param name="version"> The service API version to use with the client. </param>
-    /// <exception cref="NotSupportedException"> The provided service API version is not supported. </exception>
     public AzureOpenAIClientOptions()
         : base()
     {
-
         RetryPolicy = new RetryWithDelaysPolicy();
     }
 

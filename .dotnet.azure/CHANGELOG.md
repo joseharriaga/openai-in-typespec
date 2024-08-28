@@ -11,7 +11,7 @@
 ### Other Changes
 
 - `AzureOpenAIClientOptions` now includes a `Version` property, replacing the previous constructor parameter, that can
-  be used for the advanced scenario of configuring a non-default service API version. See the readme for more details.
+  be used for the advanced scenario of configuring a non-default service API version. See the README for more details.
 
 ## 2.0.0-beta.3 (2024-08-23)
 

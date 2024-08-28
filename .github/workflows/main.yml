@@ -84,6 +84,12 @@ jobs:
         with:
           dotnet-version: 8.x
 
+      - name: Dump .Net information
+        run: dotnet --info
+
+      - name: Dump .Net nuget information
+        run: dotnet nuget
+
       - name: Checkout code
         uses: actions/checkout@v2
 

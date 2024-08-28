@@ -146,7 +146,7 @@ jobs:
           path: .dotnet.azure/artifacts/bin
           merge-multiple: true
       - name: Display structure of downloaded files
-        run: ls -R $GITHUB_WORKSPACE/.dotnet.azure/sdk/artifacts/
+        run: ls -R $GITHUB_WORKSPACE/.dotnet.azure/artifacts/
       - name: Test (${{ matrix.os_net.net }})
         run: >-
           dotnet test

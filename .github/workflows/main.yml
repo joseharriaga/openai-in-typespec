@@ -146,7 +146,7 @@ jobs:
           path: .dotnet.azure/artifacts/bin
           merge-multiple: true
       - name: Display structure of downloaded files
-        run: ls -R $GITHUB_WORKSPACE/.dotnet.azure/artifacts/
+        run: ls -R $GITHUB_WORKSPACE/.dotnet.azure/artifacts
       - name: Test (${{ matrix.os_net.net }})
         run: >-
           dotnet test
@@ -160,6 +160,7 @@ jobs:
           --blame-hang-timeout 15minutes
           --results-directory "TestResults"
           Azure.AI.OpenAI/tests/Azure.AI.OpenAI.Tests.csproj
+        working-directory: .dotnet.azure/sdk/openai
       - name: Publish test results
         uses: actions/upload-artifact@v4
         with:

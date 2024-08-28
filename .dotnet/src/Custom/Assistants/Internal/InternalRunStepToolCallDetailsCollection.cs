@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Assistants;
 
+[Experimental("OPENAI001")]
 [CodeGenModel("RunStepDetailsToolCallsObject")]
 internal partial class InternalRunStepDetailsToolCallsObject : IReadOnlyList<RunStepToolCall>
 {

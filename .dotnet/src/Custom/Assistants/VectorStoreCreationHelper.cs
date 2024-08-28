@@ -1,10 +1,12 @@
 using OpenAI.Files;
 using OpenAI.VectorStores;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace OpenAI.Assistants;
 
+[Experimental("OPENAI001")]
 [CodeGenModel("ToolResourcesFileSearchVectorStore")]
 public partial class VectorStoreCreationHelper
 {

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Assistants;
 
 /// <summary>
 /// Represents additional options available when creating a new <see cref="ThreadMessage"/>.
 /// </summary>
+[Experimental("OPENAI001")]
 [CodeGenModel("CreateMessageRequest")]
 [CodeGenSuppress("MessageCreationOptions", typeof(MessageRole), typeof(IEnumerable<MessageContent>))]
 [CodeGenSerialization(nameof(Content), SerializationValueHook=nameof(SerializeContent))]

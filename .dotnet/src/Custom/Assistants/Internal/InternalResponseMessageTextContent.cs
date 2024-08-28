@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Assistants;
 
 /// <summary>
 /// Represents an item of annotated text content within an Assistants API response message.
 /// </summary>
+[Experimental("OPENAI001")]
 [CodeGenModel("MessageContentTextObject")]
 internal partial class InternalResponseMessageTextContent
 {

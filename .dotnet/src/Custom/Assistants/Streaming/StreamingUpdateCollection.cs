@@ -4,6 +4,7 @@ using System.ClientModel.Primitives;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.ServerSentEvents;
 
 #nullable enable
@@ -13,6 +14,7 @@ namespace OpenAI.Assistants;
 /// <summary>
 /// Implementation of collection abstraction over streaming assistant updates.
 /// </summary>
+[Experimental("OPENAI001")]
 internal class StreamingUpdateCollection : CollectionResult<StreamingUpdate>
 {
     private readonly Func<ClientResult> _getResult;

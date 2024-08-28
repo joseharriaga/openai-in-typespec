@@ -1,6 +1,9 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Assistants;
+
+[Experimental("OPENAI001")]
 internal static partial class MessageImageDetailExtensions
 {
     public static string ToSerialString(this MessageImageDetail value) => value switch

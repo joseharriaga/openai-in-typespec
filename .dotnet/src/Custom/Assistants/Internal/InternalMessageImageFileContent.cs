@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Assistants;
 
@@ -9,6 +10,7 @@ namespace OpenAI.Assistants;
 /// Use the <see cref="MessageContent.FromImageFileId(string,MessageImageDetail?)"/> method to
 /// create an instance of this type.
 /// </remarks>
+[Experimental("OPENAI001")]
 [CodeGenModel("MessageContentImageFileObject")]
 [CodeGenSuppress("InternalMessageImageFileContent", typeof(InternalMessageContentItemFileObjectImageFile))]
 internal partial class InternalMessageImageFileContent

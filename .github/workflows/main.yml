@@ -99,7 +99,7 @@ jobs:
           name: azure_openai_build
           retention-days: 7
           path: |
-            build/**/*
+            .dotnet.azure/artifacts/bin/**/*
 
       #- name: Test (.net 8.0)
       #  run: dotnet test 
@@ -120,10 +120,13 @@ jobs:
       matrix:
         os_net:
           - runs-on: ubuntu-latest
+            net_install: 8.x
             net: net8.0
           - runs-on: macos-latest
+            net_install: 6.x
             net: net6.0
           - runs-on: windows-latest
+            # Windows 10 versions 1607 and newer come with .Net Framework 4.6.2 pre-installed
             net: net462
     runs-on: ${{ matrix.os_net.runs-on }}
     steps:
@@ -132,14 +135,14 @@ jobs:
         with:
           dotnet-version: |
             6.x
-            ${{ matrix.os_net.net }}
+            ${{ matrix.os_net.net_install }}
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: azure_openai_build
-          path: .dotnet.azure/sdk/artifacts/bin
+          path: .dotnet.azure/artifacts/bin
           merge-multiple: true
       - name: Display structure of downloaded files
         run: ls -R .dotnet.azure/sdk/artifacts/

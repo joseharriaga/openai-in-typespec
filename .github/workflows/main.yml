@@ -76,12 +76,13 @@ jobs:
           --skip-duplicate
         working-directory: .dotnet
 
-  azure_build: # Development mirror only; validate AOAI compilation
-    runs-on: ubuntu-latest
+  azure_build: # Build Azure OpenAI for .Net 8.0, .Net 6.0, and .Net Framework 4.6.2
+    runs-on: windows-latest
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
+          # .Net Framework 4.6.2 is pre-installed on Windows 10 versions 1607 and newer
           dotnet-version: |
             8.x
             6.x
@@ -126,7 +127,7 @@ jobs:
             net_install: 6.x
             net: net6.0
           - runs-on: windows-latest
-            # Windows 10 versions 1607 and newer come with .Net Framework 4.6.2 pre-installed
+            # .Net Framework 4.6.2 is pre-installed on Windows 10 versions 1607 and newer
             net: net462
     runs-on: ${{ matrix.os_net.runs-on }}
     steps:
@@ -145,7 +146,7 @@ jobs:
           path: .dotnet.azure/artifacts/bin
           merge-multiple: true
       - name: Display structure of downloaded files
-        run: ls -R .dotnet.azure/sdk/artifacts/
+        run: ls -R $GITHUB_WORKSPACE/.dotnet.azure/sdk/artifacts/
       - name: Test (${{ matrix.os_net.net }})
         run: >-
           dotnet test

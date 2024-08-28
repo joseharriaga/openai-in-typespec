@@ -1,22 +1,68 @@
 # Release History
 
-## 2.0.0-beta.9 (Unreleased)
+## 2.0.0-beta.11 (Unreleased)
 
 ### Features Added
 
-- Added the following model factories (static classes that can be used to instantiate OpenAI models for mocking in non-live test scenarios):
-  - `OpenAIAudioModelFactory` in the `OpenAI.Audio` namespace
-  - `OpenAIEmbeddingsModelFactory` in the `OpenAI.Embeddings` namespace
-  - `OpenAIFilesModelFactory` in the `OpenAI.Files` namespace
-  - `OpenAIImagesModelFactory` in the `OpenAI.Images` namespace
-  - `OpenAIModelsModelFactory` in the `OpenAI.Models` namespace
-  - `OpenAIModerationsModelFactory` in the `OpenAI.Moderations` namespace
-
 ### Breaking Changes
+
+- Updated fine-tuning pagination methods `GetJobs`, `GetEvents`, and `GetJobCheckpoints` to return `IEnumerable<ClientResult>` instead of `ClientResult`. (commit_hash)
+- Updated the batching pagination method `GetBatches` to return `IEnumerable<ClientResult>` instead of `ClientResult`. (commit_hash)
+- Changed `GeneratedSpeechVoice` from an enum to an "extensible enum". (commit_hash)
 
 ### Bugs Fixed
 
 ### Other Changes
+
+- Reverted the removal of the version path parameter "v1" from the default endpoint URL. (commit_hash)
+
+## 2.0.0-beta.10 (2024-08-26)
+
+### Breaking Changes
+
+- Renamed `AudioClient`'s `GenerateSpeechFromText` methods to simply `GenerateSpeech`. ([d84bf54](https://github.com/openai/openai-dotnet/commit/d84bf54df14ddac4c49f6efd61467b600d34ecd7))
+- Changed the type of `OpenAIFileInfo`'s `SizeInBytes` property from `long?` to `int?`. ([d84bf54](https://github.com/openai/openai-dotnet/commit/d84bf54df14ddac4c49f6efd61467b600d34ecd7)) 
+
+### Bugs Fixed
+
+- Fixed a newly introduced bug ([#185](https://github.com/openai/openai-dotnet/pull/185)) where providing `OpenAIClientOptions` to a top-level `OpenAIClient` did not carry over to scenario clients (e.g. `ChatClient`) created via that top-level client ([d84bf54](https://github.com/openai/openai-dotnet/commit/d84bf54df14ddac4c49f6efd61467b600d34ecd7))
+
+### Other Changes
+
+- Removed the version path parameter "v1" from the default endpoint URL. ([d84bf54](https://github.com/openai/openai-dotnet/commit/d84bf54df14ddac4c49f6efd61467b600d34ecd7))
+
+## 2.0.0-beta.9 (2024-08-23)
+
+### Features Added
+
+- Added support for the new [structured outputs](https://platform.openai.com/docs/guides/structured-outputs/introduction) response format feature, which enables chat completions, assistants, and tools on each of those clients to provide a specific JSON Schema that generated content should adhere to. ([3467b53](https://github.com/openai/openai-dotnet/commit/3467b535c918e72237a4c0dc36d4bda5548edb7a))
+  - To enable top-level structured outputs for response content, use `ChatResponseFormat.CreateJsonSchemaFormat()` and `AssistantResponseFormat.CreateJsonSchemaFormat()` as the `ResponseFormat` in method options like `ChatCompletionOptions`
+  - To enable structured outputs for function tools, set `StrictParameterSchemaEnabled` to `true` on the tool definition
+  - For more information, please see [the new section in readme.md](readme.md#how-to-use-structured-outputs)
+- Chat completions: the request message types of `AssistantChatMessage`, `SystemChatMessage`, and `ToolChatMessage` now support array-based content part collections in addition to simple string input. ([3467b53](https://github.com/openai/openai-dotnet/commit/3467b535c918e72237a4c0dc36d4bda5548edb7a))
+- Added the following model factories (static classes that can be used to instantiate OpenAI models for mocking in non-live test scenarios):
+  - `OpenAIAudioModelFactory` in the `OpenAI.Audio` namespace ([3284295](https://github.com/openai/openai-dotnet/commit/3284295e7fd9922a3395d921513473bcb483655e))
+  - `OpenAIEmbeddingsModelFactory` in the `OpenAI.Embeddings` namespace ([3284295](https://github.com/openai/openai-dotnet/commit/3284295e7fd9922a3395d921513473bcb483655e))
+  - `OpenAIFilesModelFactory` in the `OpenAI.Files` namespace ([b1ce397](https://github.com/openai/openai-dotnet/commit/b1ce397ff4f9a55db797167be9e86e138ed5d403))
+  - `OpenAIImagesModelFactory` in the `OpenAI.Images` namespace ([3284295](https://github.com/openai/openai-dotnet/commit/3284295e7fd9922a3395d921513473bcb483655e))
+  - `OpenAIModelsModelFactory` in the `OpenAI.Models` namespace ([b1ce397](https://github.com/openai/openai-dotnet/commit/b1ce397ff4f9a55db797167be9e86e138ed5d403))
+  - `OpenAIModerationsModelFactory` in the `OpenAI.Moderations` namespace ([b1ce397](https://github.com/openai/openai-dotnet/commit/b1ce397ff4f9a55db797167be9e86e138ed5d403))
+
+### Breaking Changes
+
+- Removed client constructors that do not explicitly take an API key parameter or an endpoint via an `OpenAIClientOptions` parameter, making it clearer how to appropriately instantiate a client. ([13a9c68](https://github.com/openai/openai-dotnet/commit/13a9c68647c8d54475f1529a63b13ad711bd4ba6))
+- Removed the endpoint parameter from all client constructors, making it clearer that an alternative endpoint must be specified via the `OpenAIClientOptions` parameter. ([13a9c68](https://github.com/openai/openai-dotnet/commit/13a9c68647c8d54475f1529a63b13ad711bd4ba6))
+- Removed `OpenAIClient`'s `Endpoint` `protected` property. ([13a9c68](https://github.com/openai/openai-dotnet/commit/13a9c68647c8d54475f1529a63b13ad711bd4ba6))
+- Made `OpenAIClient`'s constructor that takes a `ClientPipeline` parameter `protected internal` instead of just `protected`. ([13a9c68](https://github.com/openai/openai-dotnet/commit/13a9c68647c8d54475f1529a63b13ad711bd4ba6))
+- Renamed the `User` property in applicable Options classes to `EndUserId`, making its purpose clearer. ([13a9c68](https://github.com/openai/openai-dotnet/commit/13a9c68647c8d54475f1529a63b13ad711bd4ba6))
+
+### Bugs Fixed
+
+- The `Assistants` namespace `VectorStoreCreationHelper` type now properly includes a `ChunkingStrategy` property. ([3467b53](https://github.com/openai/openai-dotnet/commit/3467b535c918e72237a4c0dc36d4bda5548edb7a))
+
+### Other Changes
+
+- `ChatCompletion.ToString()` will no longer throw an exception when no content is present, as is the case for tool calls. Additionally, if a tool call is present with no content, `ToString()` will return the serialized form of the first available tool call. ([3467b53](https://github.com/openai/openai-dotnet/commit/3467b535c918e72237a4c0dc36d4bda5548edb7a))
 
 ## 2.0.0-beta.8 (2024-07-31)
 

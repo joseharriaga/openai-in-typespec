@@ -187,7 +187,7 @@ public partial class VectorStoreTests
         _associationsToRemove.RemoveAt(0);
 
         // Errata: removals aren't immediately reflected when requesting the list
-        Thread.Sleep(1000);
+        Thread.Sleep(2000);
 
         int count = 0;
         foreach (VectorStoreFileAssociation association in client.GetFileAssociations(vectorStore).GetAllValues())
@@ -227,7 +227,7 @@ public partial class VectorStoreTests
         _associationsToRemove.RemoveAt(0);
 
         // Errata: removals aren't immediately reflected when requesting the list
-        Thread.Sleep(1000);
+        Thread.Sleep(2000);
 
         PageCollection<VectorStoreFileAssociation> pages = client.GetFileAssociations(vectorStore);
         IEnumerator<PageResult<VectorStoreFileAssociation>> pageEnumerator = ((IEnumerable<PageResult<VectorStoreFileAssociation>>)pages).GetEnumerator();
@@ -359,7 +359,7 @@ public partial class VectorStoreTests
     {
         List<OpenAIFileInfo> files = [];
 
-        FileClient client = new();
+        FileClient client = GetTestClient<FileClient>(TestScenario.Files);
         for (int i = 0; i < count; i++)
         {
             OpenAIFileInfo file = client.UploadFile(
@@ -376,8 +376,8 @@ public partial class VectorStoreTests
     [TearDown]
     protected void Cleanup()
     {
-        FileClient fileClient = new();
-        VectorStoreClient vectorStoreClient = new();
+        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
+        VectorStoreClient vectorStoreClient = GetTestClient<VectorStoreClient>(TestScenario.VectorStores);
         RequestOptions requestOptions = new()
         {
             ErrorOptions = ClientErrorBehaviors.NoThrow,

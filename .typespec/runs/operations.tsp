@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("threads")
+@route("/threads")
 interface Runs {
   @route("runs")
   @post

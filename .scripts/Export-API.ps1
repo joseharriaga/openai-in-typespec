@@ -26,7 +26,7 @@ $systemMemoryDataRef = Get-ChildItem -Recurse `
     -Path "$($env:UserProfile)\.nuget\packages\system.memory.data\1.0.2" `
     -Include "netstandard2.0" | Select-Object -Last 1
 $systemDiagnosticsDiagnosticSourceRef = Get-ChildItem -Recurse `
-    -Path "$($env:UserProfile)\.nuget\packages\system.diagnostics.diagnosticsource\8.0.1" `
+    -Path "$($env:UserProfile)\.nuget\packages\system.diagnostics.diagnosticsource\6.0.1" `
     -Include "netstandard2.0" | Select-Object -Last 1
 $microsoftBclAsyncInterfacesRef = Get-ChildItem -Recurse `
     -Path "$($env:UserProfile)\.nuget\packages\microsoft.bcl.asyncinterfaces\1.1.0" `

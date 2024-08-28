@@ -22,3 +22,6 @@ using OpenAI;
 
 @@access(CreateChatCompletionStreamResponse, Access.public);
 @@usage(CreateChatCompletionStreamResponse, Usage.output);
+
+@@access(ChatResponseFormatJsonSchema, Access.public);
+@@usage(ChatResponseFormatJsonSchema, Usage.input);

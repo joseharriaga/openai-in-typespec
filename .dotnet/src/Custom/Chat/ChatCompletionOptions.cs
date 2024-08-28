@@ -102,6 +102,7 @@ public partial class ChatCompletionOptions
     [CodeGenMember("FunctionCall")]
     public ChatFunctionChoice FunctionChoice { get; set; }
 
+    // CUSTOM: Renamed.
     /// <summary>
     /// Whether to enable parallel function calling during tool use. 
     /// </summary>
@@ -110,4 +111,29 @@ public partial class ChatCompletionOptions
     /// </remarks>
     [CodeGenMember("ParallelToolCalls")]
     public bool? ParallelToolCallsEnabled { get; set; }
+
+    /// <summary>
+    /// An object specifying the format that the model must output.
+    /// </summary>
+    /// <remarks>
+    /// <p>
+    /// Compatible with GPT-4o, GPT-4o mini, GPT-4 Turbo and all GPT-3.5 Turbo models newer than gpt-3.5-turbo-1106.
+    /// </p>
+    /// <p>
+    /// Learn more in the Structured Outputs guide.
+    /// </p>
+    /// </remarks>
+    //[CodeGenMember("ResponseFormat")]
+    //public ChatResponseFormat ResponseFormat { get; set; }
+
+    [CodeGenMember("ServiceTier")]
+    internal InternalCreateChatCompletionRequestServiceTier? _serviceTier;
+
+    // CUSTOM: Renamed.
+    /// <summary>
+    ///     A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.
+    ///     <see href="https://platform.openai.com/docs/guides/safety-best-practices/end-user-ids">Learn more</see>.
+    /// </summary>
+    [CodeGenMember("User")]
+    public string EndUserId { get; set; }
 }

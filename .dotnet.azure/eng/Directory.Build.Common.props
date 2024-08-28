@@ -47,7 +47,7 @@
     <When Condition="'$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true'">
       <PropertyGroup>
         <RequiredTargetFrameworks>net8.0;net6.0</RequiredTargetFrameworks>
-        <RequiredTargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(RequiredTargetFrameworks);net462</RequiredTargetFrameworks>
+        <!--<RequiredTargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(RequiredTargetFrameworks);net462</RequiredTargetFrameworks>-->
       </PropertyGroup>
     </When>
   </Choose>

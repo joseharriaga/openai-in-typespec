@@ -145,7 +145,7 @@ jobs:
           --blame-crash-dump-type full
           --blame-hang-dump-type full
           --blame-hang-timeout 15minutes
-          --results-directory "TestResults"
+          --results-directory "$GITHUB_WORKSPACE/TestResults"
           Azure.AI.OpenAI/tests/Azure.AI.OpenAI.Tests.csproj
         working-directory: .dotnet.azure/sdk/openai
       - name: Publish test results

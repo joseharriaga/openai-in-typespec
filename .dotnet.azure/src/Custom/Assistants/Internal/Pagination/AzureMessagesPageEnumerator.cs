@@ -6,6 +6,7 @@ using System.ClientModel.Primitives;
 
 namespace Azure.AI.OpenAI.Assistants;
 
+[Experimental("OPENAI001")]
 internal partial class AzureMessagesPageEnumerator : MessagesPageEnumerator
 {
     private readonly Uri _endpoint;

@@ -99,21 +99,20 @@ jobs:
           name: azure_openai_build
           retention-days: 7
           path: |
-            .dotnet.azure/sdk/artifacts/bin/**/*
+            build/**/*
 
-      - name: Test (.net 8.0)
-        run: dotnet test 
-          --framework net8.0
-          --no-build
-          --filter "(TestCategory!=Live)"
-          --logger "trx;LogFileName=AzureOpenAITests_net8.0.trx"
-          --logger:"console;verbosity=normal"
-          --blame-crash-dump-type full
-          --blame-hang-dump-type full
-          --blame-hang-timeout 15minutes
-          --results-directory
-          Azure.AI.OpenAI/tests
-        working-directory: .dotnet.azure/sdk/openai
+      #- name: Test (.net 8.0)
+      #  run: dotnet test 
+      #    --framework net8.0
+      #    --no-build
+      #    --filter "(TestCategory!=Live)"
+      #    --logger "trx;LogFileName=AzureOpenAITests_net8.0.trx"
+      #    --logger:"console;verbosity=normal"
+      #    --blame-crash-dump-type full
+      #    --blame-hang-dump-type full
+      #    --blame-hang-timeout 15minutes
+      #    Azure.AI.OpenAI/tests/Azure.AI.OpenAI.Tests.csproj
+      #  working-directory: .dotnet.azure/sdk/openai
 
   azure_test: # Run recorded tests on Azure OpenAI
     needs: azure_build
@@ -150,15 +149,15 @@ jobs:
           --framework ${{ matrix.os_net.net }}
           --no-build
           --filter "(TestCategory!=Live)"
-          --logger "trx;LogFileName=Azure.AI.OpenAI.Tests.trx"
-          --logger:"console;verbosity=normal"
+          --logger "trx;LogFileName=Azure.AI.OpenAI.Tests_${{ matrix.os_net.net }}.trx"
+          --logger:"console;verbosity=quiet"
           --blame-crash-dump-type full
           --blame-hang-dump-type full
           --blame-hang-timeout 15minutes
-          --results-directory "TestResults-${{ matrix.os_net.net }}"
-          Azure.AI.OpenAI/tests
+          --results-directory "TestResults"
+          Azure.AI.OpenAI/tests/Azure.AI.OpenAI.Tests.csproj
       - name: Publish test results
         uses: actions/upload-artifact@v4
         with:
-          name: TestResults-${{ matrix.os_net.net }}
-          paht: TestResults-${{ matrix.os_net.net }}
+          name: TestResults
+          path: TestResults

@@ -2,6 +2,7 @@
 using OpenAI.Audio;
 using OpenAI.Tests.Utility;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using static OpenAI.Tests.TestHelpers;
 
@@ -11,9 +12,9 @@ namespace OpenAI.Tests.Audio;
 [TestFixture(false)]
 [Parallelizable(ParallelScope.All)]
 [Category("Audio")]
-public partial class TextToSpeechTests : SyncAsyncTestBase
+public partial class GenerateSpeechTests : SyncAsyncTestBase
 {
-    public TextToSpeechTests(bool isAsync) : base(isAsync)
+    public GenerateSpeechTests(bool isAsync) : base(isAsync)
     {
     }
 
@@ -51,6 +52,22 @@ public partial class TextToSpeechTests : SyncAsyncTestBase
             : client.GenerateSpeech("Hello, world!", GeneratedSpeechVoice.Alloy, options);
 
         Assert.That(audio, Is.Not.Null);
+
+        byte[] audioBytes = audio.ToArray();
+        byte[] expectedFileHeader = responseFormat switch
+        {
+            GeneratedSpeechFormat.Opus => Encoding.ASCII.GetBytes("OggS"),
+            GeneratedSpeechFormat.Flac => Encoding.ASCII.GetBytes("fLaC"),
+            GeneratedSpeechFormat.Wav => Encoding.ASCII.GetBytes("RIFF"),
+            _ => []
+        };
+
+        Assert.That(audioBytes.Length, Is.GreaterThanOrEqualTo(expectedFileHeader.Length));
+
+        for (int i = 0; i < expectedFileHeader.Length; i++)
+        {
+            Assert.That(audioBytes[i], Is.EqualTo(expectedFileHeader[i]), $"File header differs on byte {i}. Expected: {expectedFileHeader[i]}. Actual: {audioBytes[i]}.");
+        }
     }
 
     private void ValidateGeneratedAudio(BinaryData audio, string expectedSubstring)

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Moq;
 
 #nullable enable
 
@@ -17,6 +18,9 @@ public class MockPipelineResponse : PipelineResponse
     private BinaryData? _bufferedContent;
 
     private bool _disposed;
+
+    // Non-functional.
+    private PipelineResponseHeaders _headers = Mock.Of<PipelineResponseHeaders>();
 
     public MockPipelineResponse(int status = 0, string reasonPhrase = "")
     {
@@ -84,7 +88,7 @@ public class MockPipelineResponse : PipelineResponse
     }
 
     protected override PipelineResponseHeaders HeadersCore
-        => throw new NotImplementedException();
+        => _headers;
 
     public sealed override void Dispose()
     {

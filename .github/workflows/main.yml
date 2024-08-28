@@ -89,4 +89,4 @@ jobs:
 
       - name: Build
         run: dotnet build
-        working-directory: .dotnet.azure
+        working-directory: .dotnet.azure\sdk\openai

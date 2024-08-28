@@ -8,10 +8,13 @@
 
 - Updated fine-tuning pagination methods `GetJobs`, `GetEvents`, and `GetJobCheckpoints` to return `IEnumerable<ClientResult>` instead of `ClientResult`. (commit_hash)
 - Updated the batching pagination method `GetBatches` to return `IEnumerable<ClientResult>` instead of `ClientResult`. (commit_hash)
+- Changed `GeneratedSpeechVoice` from an enum to an "extensible enum". (commit_hash)
 
 ### Bugs Fixed
 
 ### Other Changes
+
+- Reverted the removal of the version path parameter "v1" from the default endpoint URL. (commit_hash)
 
 ## 2.0.0-beta.10 (2024-08-26)
 

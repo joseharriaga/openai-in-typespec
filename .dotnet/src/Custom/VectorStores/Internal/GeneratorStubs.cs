@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace OpenAI.VectorStores;
 
 // CUSTOM: Made internal.
@@ -20,12 +22,14 @@ internal partial class InternalDeleteVectorStoreResponse { }
 [CodeGenModel("DeleteVectorStoreResponseObject")]
 internal readonly partial struct InternalDeleteVectorStoreResponseObject { }
 
+[Experimental("OPENAI001")]
 [CodeGenModel("ListVectorStoreFilesResponse")]
 internal partial class InternalListVectorStoreFilesResponse : IInternalListResponse<VectorStoreFileAssociation> { }
 
 [CodeGenModel("ListVectorStoreFilesResponseObject")]
 internal readonly partial struct InternalListVectorStoreFilesResponseObject { }
 
+[Experimental("OPENAI001")]
 [CodeGenModel("ListVectorStoresResponse")]
 internal partial class InternalListVectorStoresResponse : IInternalListResponse<VectorStore> { }
 

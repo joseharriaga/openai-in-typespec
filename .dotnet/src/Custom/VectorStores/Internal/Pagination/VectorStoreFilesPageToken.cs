@@ -1,6 +1,7 @@
 using System;
 using System.ClientModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
 
@@ -8,6 +9,7 @@ using System.Text.Json;
 
 namespace OpenAI.VectorStores;
 
+[Experimental("OPENAI001")]
 internal class VectorStoreFilesPageToken : ContinuationToken
 {
     protected VectorStoreFilesPageToken(string vectorStoreId, int? limit, string? order, string? after, string? before, string? filter)

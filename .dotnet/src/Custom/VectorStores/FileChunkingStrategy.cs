@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace OpenAI.VectorStores;
 
+[Experimental("OPENAI001")]
 [CodeGenModel("FileChunkingStrategyResponseParam")]
 public abstract partial class FileChunkingStrategy
 {

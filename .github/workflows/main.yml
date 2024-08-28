@@ -102,19 +102,6 @@ jobs:
           path: |
             .dotnet.azure/artifacts/bin/**/*
 
-      #- name: Test (.net 8.0)
-      #  run: dotnet test 
-      #    --framework net8.0
-      #    --no-build
-      #    --filter "(TestCategory!=Live)"
-      #    --logger "trx;LogFileName=AzureOpenAITests_net8.0.trx"
-      #    --logger:"console;verbosity=normal"
-      #    --blame-crash-dump-type full
-      #    --blame-hang-dump-type full
-      #    --blame-hang-timeout 15minutes
-      #    Azure.AI.OpenAI/tests/Azure.AI.OpenAI.Tests.csproj
-      #  working-directory: .dotnet.azure/sdk/openai
-
   azure_test: # Run recorded tests on Azure OpenAI
     needs: azure_build
     strategy:
@@ -166,3 +153,4 @@ jobs:
         with:
           name: TestResults
           path: TestResults
+        if: ${{ always() }}

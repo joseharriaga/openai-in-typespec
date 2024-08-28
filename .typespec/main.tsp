@@ -35,6 +35,6 @@ using TypeSpec.Http;
     url: "https://github.com/openai/openai-openapi/blob/master/LICENSE",
   },
 })
-@server("https://api.openai.com", "OpenAI Endpoint")
+@server("https://api.openai.com/v1", "OpenAI Endpoint")
 @useAuth(BearerAuth)
 namespace OpenAI;

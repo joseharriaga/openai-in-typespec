@@ -10,7 +10,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("/v1/vector_stores")
+@route("/vector_stores")
 interface VectorStores {
   @get
   @operationId("listVectorStores")

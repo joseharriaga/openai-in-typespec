@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <!--Ignore XML doc comments on test types and members-->
+    <!-- CS1591 - Ignore XML doc comments on test types and members-->
+    <!-- OPENAI001 - Ignore experimental warnings-->
     <NoWarn>$(NoWarn);CS1591;OPENAI001;</NoWarn>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>

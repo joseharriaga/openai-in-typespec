@@ -79,16 +79,12 @@ jobs:
   azure_build: # Development mirror only; validate AOAI compilation
     runs-on: ubuntu-latest
     steps:
-      - name: Setup .NET
+      - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 8.x
-
-      - name: Dump .Net information
-        run: dotnet --info
-
-      - name: Dump .Net nuget information
-        run: dotnet nuget
+          dotnet-version: |
+            8.x
+            6.x
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -98,5 +94,14 @@ jobs:
         working-directory: .dotnet.azure/sdk/openai
 
       - name: Test (.net 8.0)
-        run: dotnet test -p:Configuration=unsigned --framework net8.0 --filter "(TestCategory!=Live)" --logger "trx;LogFileName=AzureOpenAITests_net8.0.trx" --logger:"console;verbosity=normal" --blame-crash-dump-type full --blame-hang-dump-type full --blame-hang-timeout 15minutes
-        working-directory: .dotnet.azure/sdk/openai/Azure.AI.OpenAI/tests
+        run: dotnet test 
+          --framework net8.0
+          --no-build
+          --filter "(TestCategory!=Live)"
+          --logger "trx;LogFileName=AzureOpenAITests_net8.0.trx"
+          --logger:"console;verbosity=normal"
+          --blame-crash-dump-type full
+          --blame-hang-dump-type full
+          --blame-hang-timeout 15minutes
+          Azure.AI.OpenAI/tests
+        working-directory: .dotnet.azure/sdk/openai

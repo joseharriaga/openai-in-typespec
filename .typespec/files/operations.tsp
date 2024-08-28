@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("/v1/files")
+@route("/files")
 interface Files {
   @post
   @operationId("createFile")

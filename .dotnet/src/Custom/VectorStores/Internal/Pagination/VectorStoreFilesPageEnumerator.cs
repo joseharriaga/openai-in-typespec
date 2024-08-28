@@ -28,7 +28,7 @@ internal partial class VectorStoreFilesPageEnumerator : PageEnumerator<VectorSto
     public VectorStoreFilesPageEnumerator(
         ClientPipeline pipeline,
         Uri endpoint,
-        string vectorStoreId, 
+        string vectorStoreId,
         int? limit, string? order, string? after, string? before, string? filter,
         RequestOptions options)
     {
@@ -116,7 +116,7 @@ internal partial class VectorStoreFilesPageEnumerator : PageEnumerator<VectorSto
         request.Method = "GET";
         var uri = new ClientUriBuilder();
         uri.Reset(_endpoint);
-        uri.AppendPath("/v1/vector_stores/", false);
+        uri.AppendPath("/vector_stores/", false);
         uri.AppendPath(vectorStoreId, true);
         uri.AppendPath("/files", false);
         if (limit != null)

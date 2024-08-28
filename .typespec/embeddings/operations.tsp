@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("/v1/embeddings")
+@route("/embeddings")
 interface Embeddings {
   @post
   @operationId("createEmbedding")

@@ -24,7 +24,7 @@ internal partial class AssistantsPageEnumerator : PageEnumerator<Assistant>
     private readonly RequestOptions _options;
 
     public virtual ClientPipeline Pipeline => _pipeline;
- 
+
     public AssistantsPageEnumerator(
         ClientPipeline pipeline,
         Uri endpoint,
@@ -109,7 +109,7 @@ internal partial class AssistantsPageEnumerator : PageEnumerator<Assistant>
         request.Method = "GET";
         var uri = new ClientUriBuilder();
         uri.Reset(_endpoint);
-        uri.AppendPath("/v1/assistants", false);
+        uri.AppendPath("/assistants", false);
         if (limit != null)
         {
             uri.AppendQuery("limit", limit.Value, true);

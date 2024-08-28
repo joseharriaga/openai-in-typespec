@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("/v1/assistants")
+@route("/assistants")
 interface Assistants {
   @post
   @operationId("createAssistant")

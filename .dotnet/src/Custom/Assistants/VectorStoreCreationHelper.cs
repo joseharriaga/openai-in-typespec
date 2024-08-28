@@ -21,5 +21,5 @@ public partial class VectorStoreCreationHelper
 
     public VectorStoreCreationHelper(IEnumerable<OpenAIFileInfo> files, IDictionary<string, string> metadata = null)
         : this(files?.Select(file => file.Id) ?? [], metadata)
-    {}
+    { }
 }

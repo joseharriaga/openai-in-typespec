@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("/v1/fine_tuning")
+@route("/fine_tuning")
 interface FineTuning {
   @route("jobs")
   @post

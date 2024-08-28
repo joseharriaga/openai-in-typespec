@@ -10,7 +10,7 @@ namespace OpenAI.Assistants;
 [Experimental("OPENAI001")]
 [CodeGenModel("CreateMessageRequest")]
 [CodeGenSuppress("MessageCreationOptions", typeof(MessageRole), typeof(IEnumerable<MessageContent>))]
-[CodeGenSerialization(nameof(Content), SerializationValueHook=nameof(SerializeContent))]
+[CodeGenSerialization(nameof(Content), SerializationValueHook = nameof(SerializeContent))]
 public partial class MessageCreationOptions
 {
     // CUSTOM: role is hidden, as this required property is promoted to a method parameter
@@ -34,7 +34,7 @@ public partial class MessageCreationOptions
         new ChangeTrackingList<MessageCreationAttachment>(),
         new ChangeTrackingDictionary<string, string>(),
         new ChangeTrackingDictionary<string, BinaryData>())
-    {}
+    { }
 
     internal MessageCreationOptions(IEnumerable<MessageContent> content) : this()
     {

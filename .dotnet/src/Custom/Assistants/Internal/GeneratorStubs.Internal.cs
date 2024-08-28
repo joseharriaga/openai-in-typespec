@@ -159,35 +159,35 @@ internal partial class InternalRunToolCallObjectFunction { }
 internal partial class InternalListAssistantsResponse : IInternalListResponse<Assistant> { }
 
 [CodeGenModel("ListAssistantsResponseObject")]
-internal readonly partial struct InternalListAssistantsResponseObject {}
+internal readonly partial struct InternalListAssistantsResponseObject { }
 
 [CodeGenModel("ListThreadsResponse")]
 [Experimental("OPENAI001")]
 internal partial class InternalListThreadsResponse : IInternalListResponse<AssistantThread> { }
 
 [CodeGenModel("ListThreadsResponseObject")]
-internal readonly partial struct InternalListThreadsResponseObject {}
+internal readonly partial struct InternalListThreadsResponseObject { }
 
 [CodeGenModel("ListMessagesResponse")]
 [Experimental("OPENAI001")]
 internal partial class InternalListMessagesResponse : IInternalListResponse<ThreadMessage> { }
 
 [CodeGenModel("ListMessagesResponseObject")]
-internal readonly partial struct InternalListMessagesResponseObject {}
+internal readonly partial struct InternalListMessagesResponseObject { }
 
 [CodeGenModel("ListRunsResponse")]
 [Experimental("OPENAI001")]
 internal partial class InternalListRunsResponse : IInternalListResponse<ThreadRun> { }
 
 [CodeGenModel("ListRunsResponseObject")]
-internal readonly partial struct InternalListRunsResponseObject {}
+internal readonly partial struct InternalListRunsResponseObject { }
 
 [CodeGenModel("ListRunStepsResponse")]
 [Experimental("OPENAI001")]
 internal partial class InternalListRunStepsResponse : IInternalListResponse<RunStep> { }
 
 [CodeGenModel("ListRunStepsResponseObject")]
-internal readonly partial struct InternalListRunStepsResponseObject {}
+internal readonly partial struct InternalListRunStepsResponseObject { }
 
 [CodeGenModel("RunStepDetailsToolCallsFileSearchObject")]
 internal partial class InternalRunStepFileSearchToolCallDetails { }

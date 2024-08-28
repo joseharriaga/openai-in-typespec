@@ -29,7 +29,7 @@ internal partial class MessagesPageEnumerator : PageEnumerator<ThreadMessage>
     public MessagesPageEnumerator(
         ClientPipeline pipeline,
         Uri endpoint,
-        string threadId, 
+        string threadId,
         int? limit, string order, string after, string before,
         RequestOptions options)
     {
@@ -117,7 +117,7 @@ internal partial class MessagesPageEnumerator : PageEnumerator<ThreadMessage>
         request.Method = "GET";
         var uri = new ClientUriBuilder();
         uri.Reset(_endpoint);
-        uri.AppendPath("/v1/threads/", false);
+        uri.AppendPath("/threads/", false);
         uri.AppendPath(threadId, true);
         uri.AppendPath("/messages", false);
         if (limit != null)

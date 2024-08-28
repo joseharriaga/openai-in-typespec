@@ -4,6 +4,9 @@
 
 ### Features Added
 
+- Added the following model factory (a static class that can be used to instantiate OpenAI models for mocking in non-live test scenarios):
+  - `OpenAIChatModelFactory` in the `OpenAI.Chat` namespace
+
 ### Breaking Changes
 
 - Updated fine-tuning pagination methods `GetJobs`, `GetEvents`, and `GetJobCheckpoints` to return `IEnumerable<ClientResult>` instead of `ClientResult`. (commit_hash)

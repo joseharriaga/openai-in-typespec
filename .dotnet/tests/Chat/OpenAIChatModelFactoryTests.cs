@@ -18,10 +18,12 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(chatCompletion.Id, Is.Null);
         Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
         Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.Null);
         Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
         Assert.That(chatCompletion.FunctionCall, Is.Null);
         Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(chatCompletion.Model, Is.Null);
         Assert.That(chatCompletion.SystemFingerprint, Is.Null);
@@ -37,10 +39,12 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(chatCompletion.Id, Is.EqualTo(id));
         Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
         Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.Null);
         Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
         Assert.That(chatCompletion.FunctionCall, Is.Null);
         Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(chatCompletion.Model, Is.Null);
         Assert.That(chatCompletion.SystemFingerprint, Is.Null);
@@ -56,10 +60,12 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(chatCompletion.Id, Is.Null);
         Assert.That(chatCompletion.FinishReason, Is.EqualTo(finishReason));
         Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.Null);
         Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
         Assert.That(chatCompletion.FunctionCall, Is.Null);
         Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(chatCompletion.Model, Is.Null);
         Assert.That(chatCompletion.SystemFingerprint, Is.Null);
@@ -78,10 +84,33 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(chatCompletion.Id, Is.Null);
         Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
         Assert.That(chatCompletion.Content.SequenceEqual(content), Is.True);
+        Assert.That(chatCompletion.Refusal, Is.Null);
         Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
         Assert.That(chatCompletion.FunctionCall, Is.Null);
         Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
+        Assert.That(chatCompletion.Model, Is.Null);
+        Assert.That(chatCompletion.SystemFingerprint, Is.Null);
+        Assert.That(chatCompletion.Usage, Is.Null);
+    }
+
+    [Test]
+    public void ChatCompletionWithRefusalWorks()
+    {
+        string refusal = "This is a refusal.";
+        ChatCompletion chatCompletion = OpenAIChatModelFactory.ChatCompletion(refusal: refusal);
+
+        Assert.That(chatCompletion.Id, Is.Null);
+        Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
+        Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.EqualTo(refusal));
+        Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
+        Assert.That(chatCompletion.FunctionCall, Is.Null);
+        Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(chatCompletion.Model, Is.Null);
         Assert.That(chatCompletion.SystemFingerprint, Is.Null);
@@ -100,10 +129,12 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(chatCompletion.Id, Is.Null);
         Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
         Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.Null);
         Assert.That(chatCompletion.ToolCalls.SequenceEqual(toolCalls), Is.True);
         Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
         Assert.That(chatCompletion.FunctionCall, Is.Null);
         Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(chatCompletion.Model, Is.Null);
         Assert.That(chatCompletion.SystemFingerprint, Is.Null);
@@ -119,10 +150,12 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(chatCompletion.Id, Is.Null);
         Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
         Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.Null);
         Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.Role, Is.EqualTo(role));
         Assert.That(chatCompletion.FunctionCall, Is.Null);
         Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(chatCompletion.Model, Is.Null);
         Assert.That(chatCompletion.SystemFingerprint, Is.Null);
@@ -138,10 +171,12 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(chatCompletion.Id, Is.Null);
         Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
         Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.Null);
         Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
         Assert.That(chatCompletion.FunctionCall, Is.EqualTo(functionCall));
         Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(chatCompletion.Model, Is.Null);
         Assert.That(chatCompletion.SystemFingerprint, Is.Null);
@@ -160,10 +195,36 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(chatCompletion.Id, Is.Null);
         Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
         Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.Null);
         Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
         Assert.That(chatCompletion.FunctionCall, Is.Null);
         Assert.That(chatCompletion.ContentTokenLogProbabilities.SequenceEqual(contentTokenLogProbabilities), Is.True);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
+        Assert.That(chatCompletion.Model, Is.Null);
+        Assert.That(chatCompletion.SystemFingerprint, Is.Null);
+        Assert.That(chatCompletion.Usage, Is.Null);
+    }
+
+    [Test]
+    public void ChatCompletionWithRefusalTokenLogProbabilitiesWorks()
+    {
+        IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = [
+            OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: 1f),
+            OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: 2f)
+        ];
+        ChatCompletion chatCompletion = OpenAIChatModelFactory.ChatCompletion(refusalTokenLogProbabilities: refusalTokenLogProbabilities);
+
+        Assert.That(chatCompletion.Id, Is.Null);
+        Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
+        Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.Null);
+        Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
+        Assert.That(chatCompletion.FunctionCall, Is.Null);
+        Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities.SequenceEqual(refusalTokenLogProbabilities), Is.True);
         Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(chatCompletion.Model, Is.Null);
         Assert.That(chatCompletion.SystemFingerprint, Is.Null);
@@ -179,10 +240,12 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(chatCompletion.Id, Is.Null);
         Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
         Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.Null);
         Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
         Assert.That(chatCompletion.FunctionCall, Is.Null);
         Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.CreatedAt, Is.EqualTo(createdAt));
         Assert.That(chatCompletion.Model, Is.Null);
         Assert.That(chatCompletion.SystemFingerprint, Is.Null);
@@ -198,10 +261,12 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(chatCompletion.Id, Is.Null);
         Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
         Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.Null);
         Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
         Assert.That(chatCompletion.FunctionCall, Is.Null);
         Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(chatCompletion.Model, Is.EqualTo(model));
         Assert.That(chatCompletion.SystemFingerprint, Is.Null);
@@ -217,10 +282,12 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(chatCompletion.Id, Is.Null);
         Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
         Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.Null);
         Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
         Assert.That(chatCompletion.FunctionCall, Is.Null);
         Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(chatCompletion.Model, Is.Null);
         Assert.That(chatCompletion.SystemFingerprint, Is.EqualTo(systemFingerprint));
@@ -236,10 +303,12 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(chatCompletion.Id, Is.Null);
         Assert.That(chatCompletion.FinishReason, Is.EqualTo(default(ChatFinishReason)));
         Assert.That(chatCompletion.Content, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.Refusal, Is.Null);
         Assert.That(chatCompletion.ToolCalls, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.Role, Is.EqualTo(default(ChatMessageRole)));
         Assert.That(chatCompletion.FunctionCall, Is.Null);
         Assert.That(chatCompletion.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatCompletion.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(chatCompletion.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(chatCompletion.Model, Is.Null);
         Assert.That(chatCompletion.SystemFingerprint, Is.Null);
@@ -404,7 +473,9 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
         Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(streamingChatCompletionUpdate.Model, Is.Null);
@@ -423,7 +494,9 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
         Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(streamingChatCompletionUpdate.Model, Is.Null);
@@ -445,7 +518,9 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
         Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(streamingChatCompletionUpdate.Model, Is.Null);
@@ -464,7 +539,9 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.EqualTo(functionCallUpdate));
         Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
         Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(streamingChatCompletionUpdate.Model, Is.Null);
@@ -486,7 +563,9 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ToolCallUpdates.SequenceEqual(toolCallUpdates), Is.True);
         Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
         Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(streamingChatCompletionUpdate.Model, Is.Null);
@@ -505,7 +584,30 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.Role, Is.EqualTo(role));
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
+        Assert.That(streamingChatCompletionUpdate.Model, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.SystemFingerprint, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.Usage, Is.Null);
+    }
+
+    [Test]
+    public void StreamingChatCompletionUpdateWithRefusalUpdateWorks()
+    {
+        string refusalUpdate = "This is a refusal update.";
+        StreamingChatCompletionUpdate streamingChatCompletionUpdate = OpenAIChatModelFactory.StreamingChatCompletionUpdate(refusalUpdate: refusalUpdate);
+
+        Assert.That(streamingChatCompletionUpdate.Id, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.ContentUpdate, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.EqualTo(refusalUpdate));
+        Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
         Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(streamingChatCompletionUpdate.Model, Is.Null);
@@ -527,7 +629,33 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities.SequenceEqual(contentTokenLogProbabilities), Is.True);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
+        Assert.That(streamingChatCompletionUpdate.Model, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.SystemFingerprint, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.Usage, Is.Null);
+    }
+
+    [Test]
+    public void StreamingChatCompletionUpdateWithRefusalTokenLogProbabilitiesWorks()
+    {
+        IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = [
+            OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: 1f),
+            OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: 2f)
+        ];
+        StreamingChatCompletionUpdate streamingChatCompletionUpdate = OpenAIChatModelFactory.StreamingChatCompletionUpdate(refusalTokenLogProbabilities: refusalTokenLogProbabilities);
+
+        Assert.That(streamingChatCompletionUpdate.Id, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.ContentUpdate, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities.SequenceEqual(refusalTokenLogProbabilities), Is.True);
         Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
         Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(streamingChatCompletionUpdate.Model, Is.Null);
@@ -546,7 +674,9 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.FinishReason, Is.EqualTo(finishReason));
         Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(streamingChatCompletionUpdate.Model, Is.Null);
@@ -565,7 +695,9 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
         Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(createdAt));
         Assert.That(streamingChatCompletionUpdate.Model, Is.Null);
@@ -584,7 +716,9 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
         Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(streamingChatCompletionUpdate.Model, Is.EqualTo(model));
@@ -603,7 +737,9 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
         Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(streamingChatCompletionUpdate.Model, Is.Null);
@@ -622,7 +758,9 @@ public partial class OpenAIChatModelFactoryTests
         Assert.That(streamingChatCompletionUpdate.FunctionCallUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ToolCallUpdates, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.Role, Is.Null);
+        Assert.That(streamingChatCompletionUpdate.RefusalUpdate, Is.Null);
         Assert.That(streamingChatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(streamingChatCompletionUpdate.RefusalTokenLogProbabilities, Is.Not.Null.And.Empty);
         Assert.That(streamingChatCompletionUpdate.FinishReason, Is.Null);
         Assert.That(streamingChatCompletionUpdate.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
         Assert.That(streamingChatCompletionUpdate.Model, Is.Null);

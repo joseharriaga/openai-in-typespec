@@ -13,10 +13,12 @@ public static partial class OpenAIChatModelFactory
         string id = null,
         ChatFinishReason finishReason = default,
         IEnumerable<ChatMessageContentPart> content = null,
+        string refusal = null,
         IEnumerable<ChatToolCall> toolCalls = null,
         ChatMessageRole role = default,
         ChatFunctionCall functionCall = null,
         IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = null,
+        IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = null,
         DateTimeOffset createdAt = default,
         string model = null,
         string systemFingerprint = null,
@@ -25,9 +27,11 @@ public static partial class OpenAIChatModelFactory
         content ??= new List<ChatMessageContentPart>();
         toolCalls ??= new List<ChatToolCall>();
         contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityInfo>();
+        refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityInfo>();
 
         InternalChatCompletionResponseMessage message = new InternalChatCompletionResponseMessage(
             content.ToList(),
+            refusal,
             toolCalls.ToList(),
             role,
             functionCall,
@@ -35,6 +39,7 @@ public static partial class OpenAIChatModelFactory
 
         InternalCreateChatCompletionResponseChoiceLogprobs logprobs = new InternalCreateChatCompletionResponseChoiceLogprobs(
             contentTokenLogProbabilities.ToList(),
+            refusalTokenLogProbabilities.ToList(),
             serializedAdditionalRawData: null);
 
         IReadOnlyList<InternalCreateChatCompletionResponseChoice> choices = [
@@ -51,6 +56,7 @@ public static partial class OpenAIChatModelFactory
             choices,
             createdAt,
             model,
+            serviceTier: null,
             systemFingerprint,
             InternalCreateChatCompletionResponseObject.ChatCompletion,
             usage,
@@ -104,7 +110,9 @@ public static partial class OpenAIChatModelFactory
         StreamingChatFunctionCallUpdate functionCallUpdate = null,
         IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null,
         ChatMessageRole? role = null,
+        string refusalUpdate = null,
         IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = null,
+        IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = null,
         ChatFinishReason? finishReason = null,
         DateTimeOffset createdAt = default,
         string model = null,
@@ -114,16 +122,19 @@ public static partial class OpenAIChatModelFactory
         contentUpdate ??= new List<ChatMessageContentPart>();
         toolCallUpdates ??= new List<StreamingChatToolCallUpdate>();
         contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityInfo>();
+        refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityInfo>();
 
         InternalChatCompletionStreamResponseDelta delta = new InternalChatCompletionStreamResponseDelta(
             contentUpdate.ToList(),
             functionCallUpdate,
             toolCallUpdates.ToList(),
             role,
+            refusalUpdate,
             serializedAdditionalRawData: null);
 
         InternalCreateChatCompletionStreamResponseChoiceLogprobs logprobs = new InternalCreateChatCompletionStreamResponseChoiceLogprobs(
             contentTokenLogProbabilities.ToList(),
+            refusalTokenLogProbabilities.ToList(),
             serializedAdditionalRawData: null);
 
         IReadOnlyList<InternalCreateChatCompletionStreamResponseChoice> choices = [
@@ -140,6 +151,7 @@ public static partial class OpenAIChatModelFactory
             choices,
             createdAt,
             model,
+            serviceTier: null,
             systemFingerprint,
             InternalCreateChatCompletionStreamResponseObject.ChatCompletionChunk,
             usage,

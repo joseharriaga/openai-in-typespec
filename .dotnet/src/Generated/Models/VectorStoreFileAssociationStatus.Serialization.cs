@@ -3,7 +3,6 @@
 #nullable disable
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.VectorStores
 {

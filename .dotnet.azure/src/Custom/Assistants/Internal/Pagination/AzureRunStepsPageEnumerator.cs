@@ -3,11 +3,9 @@
 
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Assistants;
 
-[Experimental("OPENAI001")]
 internal partial class AzureRunStepsPageEnumerator : RunStepsPageEnumerator
 {
     private readonly Uri _endpoint;

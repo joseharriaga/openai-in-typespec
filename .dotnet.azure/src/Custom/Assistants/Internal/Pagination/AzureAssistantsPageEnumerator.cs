@@ -3,13 +3,11 @@
 
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
 namespace Azure.AI.OpenAI.Assistants;
 
-[Experimental("OPENAI001")]
 internal partial class AzureAssistantsPageEnumerator : AssistantsPageEnumerator
 {
     private readonly Uri _endpoint;

@@ -1,7 +1,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -9,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace OpenAI.VectorStores;
 
-[Experimental("OPENAI001")]
 internal partial class VectorStoreFilesPageEnumerator : PageEnumerator<VectorStoreFileAssociation>
 {
     private readonly ClientPipeline _pipeline;

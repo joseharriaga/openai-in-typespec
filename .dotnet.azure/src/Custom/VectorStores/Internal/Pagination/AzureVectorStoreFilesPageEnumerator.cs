@@ -3,11 +3,9 @@
 
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.VectorStores;
 
-[Experimental("OPENAI001")]
 internal partial class AzureVectorStoreFilesPageEnumerator : VectorStoreFilesPageEnumerator
 {
     private readonly Uri _endpoint;

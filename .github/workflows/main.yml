@@ -52,7 +52,7 @@ jobs:
         working-directory: .dotnet
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
           path: ${{github.workspace}}/artifacts
@@ -79,7 +79,8 @@ jobs:
   azure_build: # Development mirror only; validate AOAI compilation
     strategy:
       matrix:
-        # Builds on all supported OS platforms, and runs a specific 
+        # Builds on all supported .Net versions on all supported OS platforms. It also 
+        # distributes the tests across these OSes.
         os_net:
           - runs-on: ubuntu-latest
             test_framework: net8.0
@@ -115,7 +116,7 @@ jobs:
           --blame-crash-dump-type full
           --blame-hang-dump-type full
           --blame-hang-timeout 15minutes
-          --results-directory "$GITHUB_WORKSPACE/TestResults"
+          --results-directory "${{github.workspace}}/TestResults"
           Azure.AI.OpenAI/tests/Azure.AI.OpenAI.Tests.csproj
         working-directory: .dotnet.azure/sdk/openai
 
@@ -123,5 +124,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TestResults-${{ matrix.os_net.runs-on }}-${{ matrix.os_net.test_framework }}
-          path: $GITHUB_WORKSPACE/TestResults
+          path: TestResults
         if: ${{ always() }}

@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace OpenAI.Assistants;
 
 /*
@@ -42,7 +40,6 @@ internal partial class InternalMessageDeltaContentImageFileObject { }
 internal partial class InternalMessageDeltaContentImageUrlObject { }
 
 [CodeGenModel("MessageDeltaObjectDelta")]
-[Experimental("OPENAI001")]
 internal partial class InternalMessageDeltaObjectDelta
 {
     [CodeGenMember("Role")]
@@ -98,7 +95,6 @@ internal partial class InternalDeleteMessageResponse { }
 internal readonly partial struct InternalDeleteMessageResponseObject { }
 
 [CodeGenModel("CreateThreadAndRunRequest")]
-[Experimental("OPENAI001")]
 internal partial class InternalCreateThreadAndRunRequest
 {
     public string Model { get; set; }
@@ -155,35 +151,30 @@ internal partial class InternalRunObjectRequiredActionSubmitToolOutputs { privat
 internal partial class InternalRunToolCallObjectFunction { }
 
 [CodeGenModel("ListAssistantsResponse")]
-[Experimental("OPENAI001")]
 internal partial class InternalListAssistantsResponse : IInternalListResponse<Assistant> { }
 
 [CodeGenModel("ListAssistantsResponseObject")]
 internal readonly partial struct InternalListAssistantsResponseObject { }
 
 [CodeGenModel("ListThreadsResponse")]
-[Experimental("OPENAI001")]
 internal partial class InternalListThreadsResponse : IInternalListResponse<AssistantThread> { }
 
 [CodeGenModel("ListThreadsResponseObject")]
 internal readonly partial struct InternalListThreadsResponseObject { }
 
 [CodeGenModel("ListMessagesResponse")]
-[Experimental("OPENAI001")]
 internal partial class InternalListMessagesResponse : IInternalListResponse<ThreadMessage> { }
 
 [CodeGenModel("ListMessagesResponseObject")]
 internal readonly partial struct InternalListMessagesResponseObject { }
 
 [CodeGenModel("ListRunsResponse")]
-[Experimental("OPENAI001")]
 internal partial class InternalListRunsResponse : IInternalListResponse<ThreadRun> { }
 
 [CodeGenModel("ListRunsResponseObject")]
 internal readonly partial struct InternalListRunsResponseObject { }
 
 [CodeGenModel("ListRunStepsResponse")]
-[Experimental("OPENAI001")]
 internal partial class InternalListRunStepsResponse : IInternalListResponse<RunStep> { }
 
 [CodeGenModel("ListRunStepsResponseObject")]

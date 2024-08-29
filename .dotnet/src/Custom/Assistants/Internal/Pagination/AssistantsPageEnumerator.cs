@@ -1,7 +1,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -9,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
 
-[Experimental("OPENAI001")]
 internal partial class AssistantsPageEnumerator : PageEnumerator<Assistant>
 {
     private readonly ClientPipeline _pipeline;

@@ -1,8 +1,5 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace OpenAI.Assistants;
 
-[Experimental("OPENAI001")]
 internal static class StreamingUpdateReasonExtensions
 {
     internal static string ToSseEventLabel(this StreamingUpdateReason value) => value switch

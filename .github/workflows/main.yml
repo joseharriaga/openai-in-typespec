@@ -15,7 +15,7 @@ jobs:
       version_suffix_args: ${{ format('--version-suffix="alpha.{0}"', github.run_number) }}
     steps:
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.x
 
@@ -52,7 +52,7 @@ jobs:
         working-directory: .dotnet
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: ${{github.workspace}}/artifacts
@@ -79,17 +79,18 @@ jobs:
   azure_build: # Development mirror only; validate AOAI compilation
     strategy:
       matrix:
+        # Builds on all supported OS platforms, and runs a specific 
         os_net:
           - runs-on: ubuntu-latest
-            net: net8.0
+            test_framework: net8.0
           - runs-on: macos-latest
-            net: net6.0
+            test_framework: net6.0
           - runs-on: windows-latest
-            net: net462
+            test_framework: net462
     runs-on: ${{ matrix.os_net.runs-on }}
     steps:
       - name: Setup .NET 6 and .Net 8
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           # .Net Framework 4.6.2 is pre-installed on Windows 10 versions 1607 and newer
           dotnet-version: |
@@ -103,13 +104,13 @@ jobs:
         run: dotnet build -p:Configuration=unsigned
         working-directory: .dotnet.azure/sdk/openai
 
-      - name: Test (${{ matrix.os_net.net }})
+      - name: Test (${{ matrix.os_net.test_framework }})
         run: >-
           dotnet test
-          --framework ${{ matrix.os_net.net }}
+          --framework ${{ matrix.os_net.test_framework }}
           --no-build
           --filter "(TestCategory!=Live)"
-          --logger "trx;LogFileName=Azure.AI.OpenAI.Tests_${{ matrix.os_net.net }}.trx"
+          --logger "trx;LogFileName=Azure.AI.OpenAI.Tests.trx"
           --logger:"console;verbosity=quiet"
           --blame-crash-dump-type full
           --blame-hang-dump-type full
@@ -121,6 +122,6 @@ jobs:
       - name: Publish test results
         uses: actions/upload-artifact@v4
         with:
-          name: TestResults-${{ matrix.os_net.runs-on }}-${{ matrix.os_net.net }}
-          path: TestResults
+          name: TestResults-${{ matrix.os_net.runs-on }}-${{ matrix.os_net.test_framework }}
+          path: $GITHUB_WORKSPACE/TestResults
         if: ${{ always() }}

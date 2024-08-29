@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Assistants;
 
 /// <summary>
 /// Represents additional options available when creating a new <see cref="Assistant"/>.
 /// </summary>
+[Experimental("OPENAI001")]
 [CodeGenModel("CreateAssistantRequest")]
 [CodeGenSuppress(nameof(AssistantCreationOptions), typeof(string))]
 public partial class AssistantCreationOptions

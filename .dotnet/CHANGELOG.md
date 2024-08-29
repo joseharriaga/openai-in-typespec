@@ -15,6 +15,7 @@
 ### Other Changes
 
 - Reverted the removal of the version path parameter "v1" from the default endpoint URL. (commit_hash)
+- Added `Experimental` attribute to all public APIs in the `OpenAI.Assistants` namespace. (commit_hash)
 
 ## 2.0.0-beta.10 (2024-08-26)
 

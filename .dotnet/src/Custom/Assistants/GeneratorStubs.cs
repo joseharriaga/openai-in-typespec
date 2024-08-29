@@ -6,6 +6,7 @@ namespace OpenAI.Assistants;
  * This file stubs and performs minimal customization to generated public types for the OpenAI.Assistants namespace
  * that are not otherwise attributed elsewhere.
  */
+[Experimental("OPENAI001")]
 [CodeGenModel("AssistantToolsCode")]
 public partial class CodeInterpreterToolDefinition : ToolDefinition { }
 

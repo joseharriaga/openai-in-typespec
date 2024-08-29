@@ -1,10 +1,8 @@
 using System.ClientModel.Primitives;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace OpenAI.Assistants;
 
-[Experimental("OPENAI001")]
 [CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Assistants.CodeInterpreterToolDefinition>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
 public partial class CodeInterpreterToolDefinition : IJsonModel<CodeInterpreterToolDefinition>
 {

@@ -76,34 +76,7 @@ jobs:
           --skip-duplicate
         working-directory: .dotnet
 
-  azure_build: # Build Azure OpenAI for .Net 8.0, .Net 6.0, and .Net Framework 4.6.2
-    runs-on: windows-latest
-    steps:
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          # .Net Framework 4.6.2 is pre-installed on Windows 10 versions 1607 and newer
-          dotnet-version: |
-            8.x
-            6.x
-
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Build
-        run: dotnet build -p:Configuration=unsigned
-        working-directory: .dotnet.azure/sdk/openai
-
-      - name: Publish build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: azure_openai_build
-          retention-days: 7
-          path: |
-            .dotnet.azure/artifacts/bin/**/*
-
-  azure_test: # Run recorded tests on Azure OpenAI
-    needs: azure_build
+  azure_build: # Development mirror only; validate AOAI compilation
     strategy:
       matrix:
         os_net:
@@ -124,16 +97,14 @@ jobs:
           dotnet-version: |
             6.x
             ${{ matrix.os_net.net_install }}
+
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: azure_openai_build
-          path: .dotnet.azure/artifacts/bin
-          merge-multiple: true
-      - name: Display structure of downloaded files
-        run: ls -R $GITHUB_WORKSPACE/.dotnet.azure/artifacts
+
+      - name: Build
+        run: dotnet build -p:Configuration=unsigned
+        working-directory: .dotnet.azure/sdk/openai
+
       - name: Test (${{ matrix.os_net.net }})
         run: >-
           dotnet test
@@ -148,6 +119,7 @@ jobs:
           --results-directory "$GITHUB_WORKSPACE/TestResults"
           Azure.AI.OpenAI/tests/Azure.AI.OpenAI.Tests.csproj
         working-directory: .dotnet.azure/sdk/openai
+
       - name: Publish test results
         uses: actions/upload-artifact@v4
         with:

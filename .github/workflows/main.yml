@@ -20,7 +20,7 @@ jobs:
           dotnet-version: 8.x
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build
         run: dotnet build
@@ -52,7 +52,7 @@ jobs:
         working-directory: .dotnet
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: ${{github.workspace}}/artifacts
@@ -99,7 +99,7 @@ jobs:
             8.x
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build
         run: dotnet build -p:Configuration=unsigned

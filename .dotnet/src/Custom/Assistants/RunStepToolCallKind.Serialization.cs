@@ -1,9 +1,7 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Assistants;
 
-[Experimental("OPENAI001")]
 internal static partial class RunStepToolCallKindExtensions
 {
     public static string ToSerialString(this RunStepToolCallKind value) => value switch

@@ -4,11 +4,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.VectorStores
 {
-    [Experimental("OPENAI001")]
     internal partial class InternalUnknownChunkingStrategy : FileChunkingStrategy
     {
         internal InternalUnknownChunkingStrategy()

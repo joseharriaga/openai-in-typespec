@@ -3,11 +3,9 @@
 #nullable disable
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.VectorStores
 {
-    [Experimental("OPENAI001")]
     internal static partial class VectorStoreExpirationAnchorExtensions
     {
         public static string ToSerialString(this VectorStoreExpirationAnchor value) => value switch

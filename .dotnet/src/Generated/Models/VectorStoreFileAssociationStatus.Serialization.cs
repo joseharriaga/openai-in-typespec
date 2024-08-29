@@ -7,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.VectorStores
 {
-    [Experimental("OPENAI001")]
     internal static partial class VectorStoreFileAssociationStatusExtensions
     {
         public static string ToSerialString(this VectorStoreFileAssociationStatus value) => value switch

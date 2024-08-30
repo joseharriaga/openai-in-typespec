@@ -19,7 +19,7 @@
     <!-- <TargetFrameworks>$(RequiredTargetFrameworks)</TargetFrameworks> -->
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateAPIListing>true</GenerateAPIListing>
-    <NoWarn>$(NoWarn);CS1591;AZC0012;AZC0102;CS8002;CS0436;AZC0112</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;AZC0012;AZC0102;CS8002;CS0436;AZC0112;OPENAI001;</NoWarn>
     <IncludeOperationsSharedSource>true</IncludeOperationsSharedSource>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>preview</LangVersion>

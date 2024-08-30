@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("/v1/moderations")
+@route("/moderations")
 interface Moderations {
   @post
   @operationId("createModeration")

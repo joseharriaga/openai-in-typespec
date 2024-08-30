@@ -355,9 +355,20 @@ internal partial class InternalAssistantToolsFileSearchTypeOnly { }
 [CodeGenModel("AssistantToolsFileSearchTypeOnlyType")]
 internal readonly partial struct InternalAssistantToolsFileSearchTypeOnlyType { }
 
-[CodeGenModel("AssistantResponseFormatText")] internal partial class InternalAssistantResponseFormatText { }
-[CodeGenModel("AssistantResponseFormatJsonObject")] internal partial class InternalAssistantResponseFormatJsonObject { }
-[CodeGenModel("AssistantResponseFormatJsonSchema")] internal partial class InternalAssistantResponseFormatJsonSchema { }
-[CodeGenModel("UnknownAssistantResponseFormat")] internal partial class InternalUnknownAssistantResponseFormat { }
-[CodeGenModel("MessageDeltaContentRefusalObject")] internal partial class InternalMessageDeltaContentRefusalObject { }
-[CodeGenModel("ToolResourcesFileSearchIdsOnly")] internal partial class InternalToolResourcesFileSearchIdsOnly { }
+[CodeGenModel("AssistantResponseFormatText")]
+internal partial class InternalAssistantResponseFormatText { }
+
+[CodeGenModel("AssistantResponseFormatJsonObject")]
+internal partial class InternalAssistantResponseFormatJsonObject { }
+
+[CodeGenModel("AssistantResponseFormatJsonSchema")]
+internal partial class InternalAssistantResponseFormatJsonSchema { }
+
+[CodeGenModel("UnknownAssistantResponseFormat")]
+internal partial class InternalUnknownAssistantResponseFormat { }
+
+[CodeGenModel("MessageDeltaContentRefusalObject")]
+internal partial class InternalMessageDeltaContentRefusalObject { }
+
+[CodeGenModel("ToolResourcesFileSearchIdsOnly")]
+internal partial class InternalToolResourcesFileSearchIdsOnly { }

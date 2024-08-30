@@ -1,20 +1,4 @@
 namespace OpenAI {
-    public readonly partial struct ListOrder : IEquatable<ListOrder> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public ListOrder(string value);
-        public static ListOrder NewestFirst { get; }
-        public static ListOrder OldestFirst { get; }
-        public readonly bool Equals(ListOrder other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(ListOrder left, ListOrder right);
-        public static implicit operator ListOrder(string value);
-        public static bool operator !=(ListOrder left, ListOrder right);
-        public override readonly string ToString();
-    }
     public class OpenAIClient {
         protected OpenAIClient();
         public OpenAIClient(ApiKeyCredential credential, OpenAIClientOptions options);
@@ -260,8 +244,24 @@ namespace OpenAI.Assistants {
     public class AssistantCollectionOptions {
         public string AfterId { get; set; }
         public string BeforeId { get; set; }
-        public ListOrder? Order { get; set; }
-        public int? PageSize { get; set; }
+        public AssistantCollectionOrder? Order { get; set; }
+        public int? PageSizeLimit { get; set; }
+    }
+    public readonly partial struct AssistantCollectionOrder : IEquatable<AssistantCollectionOrder> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public AssistantCollectionOrder(string value);
+        public static AssistantCollectionOrder Ascending { get; }
+        public static AssistantCollectionOrder Descending { get; }
+        public readonly bool Equals(AssistantCollectionOrder other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(AssistantCollectionOrder left, AssistantCollectionOrder right);
+        public static implicit operator AssistantCollectionOrder(string value);
+        public static bool operator !=(AssistantCollectionOrder left, AssistantCollectionOrder right);
+        public override readonly string ToString();
     }
     public class AssistantCreationOptions : IJsonModel<AssistantCreationOptions>, IPersistableModel<AssistantCreationOptions> {
         public string Description { get; set; }
@@ -384,8 +384,24 @@ namespace OpenAI.Assistants {
     public class MessageCollectionOptions {
         public string AfterId { get; set; }
         public string BeforeId { get; set; }
-        public ListOrder? Order { get; set; }
-        public int? PageSize { get; set; }
+        public MessageCollectionOrder? Order { get; set; }
+        public int? PageSizeLimit { get; set; }
+    }
+    public readonly partial struct MessageCollectionOrder : IEquatable<MessageCollectionOrder> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public MessageCollectionOrder(string value);
+        public static MessageCollectionOrder Ascending { get; }
+        public static MessageCollectionOrder Descending { get; }
+        public readonly bool Equals(MessageCollectionOrder other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(MessageCollectionOrder left, MessageCollectionOrder right);
+        public static implicit operator MessageCollectionOrder(string value);
+        public static bool operator !=(MessageCollectionOrder left, MessageCollectionOrder right);
+        public override readonly string ToString();
     }
     public abstract class MessageContent : IJsonModel<MessageContent>, IPersistableModel<MessageContent> {
         public MessageImageDetail? ImageDetail { get; }
@@ -510,8 +526,24 @@ namespace OpenAI.Assistants {
     public class RunCollectionOptions {
         public string AfterId { get; set; }
         public string BeforeId { get; set; }
-        public ListOrder? Order { get; set; }
-        public int? PageSize { get; set; }
+        public RunCollectionOrder? Order { get; set; }
+        public int? PageSizeLimit { get; set; }
+    }
+    public readonly partial struct RunCollectionOrder : IEquatable<RunCollectionOrder> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public RunCollectionOrder(string value);
+        public static RunCollectionOrder Ascending { get; }
+        public static RunCollectionOrder Descending { get; }
+        public readonly bool Equals(RunCollectionOrder other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(RunCollectionOrder left, RunCollectionOrder right);
+        public static implicit operator RunCollectionOrder(string value);
+        public static bool operator !=(RunCollectionOrder left, RunCollectionOrder right);
+        public override readonly string ToString();
     }
     public class RunCreationOptions : IJsonModel<RunCreationOptions>, IPersistableModel<RunCreationOptions> {
         public string AdditionalInstructions { get; set; }
@@ -650,8 +682,24 @@ namespace OpenAI.Assistants {
     public class RunStepCollectionOptions {
         public string AfterId { get; set; }
         public string BeforeId { get; set; }
-        public ListOrder? Order { get; set; }
-        public int? PageSize { get; set; }
+        public RunStepCollectionOrder? Order { get; set; }
+        public int? PageSizeLimit { get; set; }
+    }
+    public readonly partial struct RunStepCollectionOrder : IEquatable<RunStepCollectionOrder> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public RunStepCollectionOrder(string value);
+        public static RunStepCollectionOrder Ascending { get; }
+        public static RunStepCollectionOrder Descending { get; }
+        public readonly bool Equals(RunStepCollectionOrder other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(RunStepCollectionOrder left, RunStepCollectionOrder right);
+        public static implicit operator RunStepCollectionOrder(string value);
+        public static bool operator !=(RunStepCollectionOrder left, RunStepCollectionOrder right);
+        public override readonly string ToString();
     }
     public abstract class RunStepDetails : IJsonModel<RunStepDetails>, IPersistableModel<RunStepDetails> {
         public string CreatedMessageId { get; }
@@ -2249,8 +2297,24 @@ namespace OpenAI.VectorStores {
     public class VectorStoreCollectionOptions {
         public string AfterId { get; set; }
         public string BeforeId { get; set; }
-        public ListOrder? Order { get; set; }
-        public int? PageSize { get; set; }
+        public VectorStoreCollectionOrder? Order { get; set; }
+        public int? PageSizeLimit { get; set; }
+    }
+    public readonly partial struct VectorStoreCollectionOrder : IEquatable<VectorStoreCollectionOrder> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public VectorStoreCollectionOrder(string value);
+        public static VectorStoreCollectionOrder Ascending { get; }
+        public static VectorStoreCollectionOrder Descending { get; }
+        public readonly bool Equals(VectorStoreCollectionOrder other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(VectorStoreCollectionOrder left, VectorStoreCollectionOrder right);
+        public static implicit operator VectorStoreCollectionOrder(string value);
+        public static bool operator !=(VectorStoreCollectionOrder left, VectorStoreCollectionOrder right);
+        public override readonly string ToString();
     }
     public class VectorStoreCreationOptions : IJsonModel<VectorStoreCreationOptions>, IPersistableModel<VectorStoreCreationOptions> {
         public FileChunkingStrategy ChunkingStrategy { get; set; }
@@ -2297,8 +2361,24 @@ namespace OpenAI.VectorStores {
         public string AfterId { get; set; }
         public string BeforeId { get; set; }
         public VectorStoreFileStatusFilter? Filter { get; set; }
-        public ListOrder? Order { get; set; }
-        public int? PageSize { get; set; }
+        public VectorStoreFileAssociationCollectionOrder? Order { get; set; }
+        public int? PageSizeLimit { get; set; }
+    }
+    public readonly partial struct VectorStoreFileAssociationCollectionOrder : IEquatable<VectorStoreFileAssociationCollectionOrder> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public VectorStoreFileAssociationCollectionOrder(string value);
+        public static VectorStoreFileAssociationCollectionOrder Ascending { get; }
+        public static VectorStoreFileAssociationCollectionOrder Descending { get; }
+        public readonly bool Equals(VectorStoreFileAssociationCollectionOrder other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(VectorStoreFileAssociationCollectionOrder left, VectorStoreFileAssociationCollectionOrder right);
+        public static implicit operator VectorStoreFileAssociationCollectionOrder(string value);
+        public static bool operator !=(VectorStoreFileAssociationCollectionOrder left, VectorStoreFileAssociationCollectionOrder right);
+        public override readonly string ToString();
     }
     public class VectorStoreFileAssociationError : IJsonModel<VectorStoreFileAssociationError>, IPersistableModel<VectorStoreFileAssociationError> {
         public VectorStoreFileAssociationErrorCode Code { get; }

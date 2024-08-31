@@ -71,6 +71,7 @@ model CreateRunRequest {
   /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
   tools?: CreateRunRequestTools | null;
 
+  // Tool customization: specialize known metadata string maps
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
@@ -113,6 +114,7 @@ model CreateRunRequest {
 }
 
 model ModifyRunRequest {
+  // Tool customization: specialize known metadata string maps
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
@@ -177,6 +179,7 @@ model CreateThreadAndRunRequest {
     file_search?: ToolResourcesFileSearchIdsOnly;
   } | null;
 
+  // Tool customization: specialize known metadata string maps
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
@@ -352,7 +355,7 @@ model RunStepDetailsToolCallsFileSearchObject
 
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
-  file_search: Record<string>;
+  file_search: Record<unknown>;
 }
 
 // Tool customization: apply custom, common base type to union items
@@ -518,6 +521,7 @@ model RunObject {
   @extension("x-oaiExpandable", true)
   tools: AssistantToolDefinition[] = #[];
 
+  // Tool customization: specialize known metadata string maps
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
@@ -616,6 +620,7 @@ model RunStepObject {
   @encode("unixTimestamp", int32)
   completed_at: utcDateTime | null;
 
+  // Tool customization: specialize known metadata string maps
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
@@ -771,7 +776,7 @@ model RunStepDeltaStepDetailsToolCallsFileSearchObject
 
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
-  file_search: Record<string>;
+  file_search: Record<unknown>;
 }
 
 // Tool customization: apply custom, common base type to union items

@@ -15,6 +15,8 @@
 
 ### Bugs Fixed
 
+- Corrected an internal deserialization issue that caused recent updates to Assistants `file_search` to fail when streaming a run. Strongly typed support for `ranking_options` is not included but will arrive soon. (commit_hash)
+
 ### Other Changes
 
 - Reverted the removal of the version path parameter "v1" from the default endpoint URL. (commit_hash)

@@ -53,7 +53,8 @@ public partial class TextToSpeechTests : SyncAsyncTestBase
                 "aac" => GeneratedSpeechFormat.Aac,
                 "flac" => GeneratedSpeechFormat.Flac,
                 "wav" => GeneratedSpeechFormat.Wav,
-                "pcm" => GeneratedSpeechFormat.Pcm
+                "pcm" => GeneratedSpeechFormat.Pcm,
+                _ => throw new ArgumentException("Invalid response format")
             };
         }
 

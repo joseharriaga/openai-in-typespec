@@ -42,19 +42,20 @@ public partial class TextToSpeechTests : SyncAsyncTestBase
     {
         AudioClient client = GetTestClient<AudioClient>(TestScenario.Audio_TTS);
 
-        SpeechGenerationOptions options = new()
+        SpeechGenerationOptions options = new();
+
+        if (!string.IsNullOrEmpty(responseFormat))
         {
-            ResponseFormat = responseFormat switch
+            options.ResponseFormat = responseFormat switch
             {
                 "mp3" => GeneratedSpeechFormat.Mp3,
                 "opus" => GeneratedSpeechFormat.Opus,
                 "aac" => GeneratedSpeechFormat.Aac,
                 "flac" => GeneratedSpeechFormat.Flac,
                 "wav" => GeneratedSpeechFormat.Wav,
-                "pcm" => GeneratedSpeechFormat.Pcm,
-                _ => null
-            }
-        };
+                "pcm" => GeneratedSpeechFormat.Pcm
+            };
+        }
 
         BinaryData audio = IsAsync
             ? await client.GenerateSpeechAsync("Hello, world!", GeneratedSpeechVoice.Alloy, options)

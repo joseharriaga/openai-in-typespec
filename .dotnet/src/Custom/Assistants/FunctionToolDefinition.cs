@@ -15,7 +15,7 @@ public partial class FunctionToolDefinition : ToolDefinition
     private readonly InternalFunctionDefinition _internalFunction;
 
     /// <inheritdoc cref="InternalFunctionDefinition.Name"/>
-    public required string FunctionName
+    public string FunctionName
     {
         get => _internalFunction.Name;
         set => _internalFunction.Name = value;

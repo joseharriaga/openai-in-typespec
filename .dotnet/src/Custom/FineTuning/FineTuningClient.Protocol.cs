@@ -281,15 +281,14 @@ public partial class FineTuningClient
         string after = null;
         using JsonDocument doc = JsonDocument.Parse(response.Content);
 
-        // For consistency with the existing code, we'll try tp use the "last_id" field. However, the OpenAI specification
-        // doesn't actually mention this property exists at all, and I don't see it in the response so I would assume this
-        // would never work.
+        // Check if the "last_id" field is present in the response. If it is, we can use it as the starting
+        // point for the next page.
         if (doc.RootElement.TryGetProperty("last_id"u8, out JsonElement lastId))
         {
             after = lastId.GetString();
         }
 
-        // This should work: We get the data property, check if it is an array, get the last element, and then read the
+        // Otherwise get the data property, check if it is an array, get the last element, and then read the
         // id of that element
         if (after == null
             && doc.RootElement.TryGetProperty("data"u8, out JsonElement dataArray)

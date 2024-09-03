@@ -12,15 +12,23 @@
 - Updated fine-tuning pagination methods `GetJobs`, `GetEvents`, and `GetJobCheckpoints` to return `IEnumerable<ClientResult>` instead of `ClientResult`. (commit_hash)
 - Updated the batching pagination method `GetBatches` to return `IEnumerable<ClientResult>` instead of `ClientResult`. (commit_hash)
 - Changed `GeneratedSpeechVoice` from an enum to an "extensible enum". (commit_hash)
+- Changed `GeneratedSpeechFormat` from an enum to an "extensible enum". (commit_hash)
+- Renamed `SpeechGenerationOptions`'s `Speed` property to `SpeedRatio`. (commit_hash)
 
 ### Bugs Fixed
+
+- Corrected an internal deserialization issue that caused recent updates to Assistants `file_search` to fail when streaming a run. Strongly typed support for `ranking_options` is not included but will arrive soon. (commit_hash)
+- Mitigated a .NET runtime issue that prevented `ChatResponseFormat` from serializing correct on targets including Unity. (commit_hash)
 
 ### Other Changes
 
 - Reverted the removal of the version path parameter "v1" from the default endpoint URL. (commit_hash)
-- Added the `Experimental` attribute to all public APIs in the `OpenAI.Assistants` namespace. (commit_hash)
-- Added the `Experimental` attribute to all public APIs in the `OpenAI.VectorStores` namespace. (commit_hash)
-
+- Added the `Experimental` attribute to the following APIs:
+  - All public APIs in the `OpenAI.Assistants` namespace. (commit_hash)
+  - All public APIs in the `OpenAI.VectorStores` namespace. (commit_hash)
+  - All public APIs in the `OpenAI.Batch` namespace. (commit_hash)
+  - All public APIs in the `OpenAI.FineTuning` namespace. (commit_hash)
+  - The `ChatCompletionOptions.Seed` property. (commit_hash) 
 
 ## 2.0.0-beta.10 (2024-08-26)
 

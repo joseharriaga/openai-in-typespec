@@ -73,10 +73,13 @@ public partial class VectorStoreTests
         Assert.That(deleted, Is.True);
         _vectorStoresToDelete.RemoveAt(_vectorStoresToDelete.Count - 1);
 
-        vectorStore = client.CreateVectorStore(new VectorStoreCreationOptions()
+        var options = new VectorStoreCreationOptions();
+        foreach (var file in testFiles)
         {
-            FileIds = testFiles.Select(file => file.Id).ToList()
-        });
+            options.FileIds.Add(file.Id);
+        }
+        vectorStore = client.CreateVectorStore(options);
+
         Validate(vectorStore);
         Assert.Multiple(() =>
         {
@@ -324,11 +327,16 @@ public partial class VectorStoreTests
             Assert.That(inputStaticStrategy.OverlappingTokenCount, Is.EqualTo(250));
         }
 
-        VectorStore vectorStore = await client.CreateVectorStoreAsync(new VectorStoreCreationOptions()
+        var options = new VectorStoreCreationOptions()
         {
-            FileIds = testFiles.Select(file => file.Id).ToList(),
             ChunkingStrategy = chunkingStrategy,
-        });
+        };
+        foreach (var file in testFiles)
+        {
+            options.FileIds.Add(file.Id);
+        }
+        VectorStore vectorStore = client.CreateVectorStore(options);
+
         Validate(vectorStore);
         Assert.That(vectorStore.FileCounts.Total, Is.EqualTo(5));
 

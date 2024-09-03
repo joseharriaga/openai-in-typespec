@@ -280,7 +280,7 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<AssistantCreationOptions>.Write(ModelReaderWriterOptions options);
     }
     public class AssistantModificationOptions : IJsonModel<AssistantModificationOptions>, IPersistableModel<AssistantModificationOptions> {
-        public IList<ToolDefinition> DefaultTools { get; set; }
+        public IList<ToolDefinition> DefaultTools { get; }
         public string Description { get; set; }
         public string Instructions { get; set; }
         public IDictionary<string, string> Metadata { get; set; }
@@ -345,7 +345,7 @@ namespace OpenAI.Assistants {
         protected internal override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class CodeInterpreterToolResources : IJsonModel<CodeInterpreterToolResources>, IPersistableModel<CodeInterpreterToolResources> {
-        public IList<string> FileIds { get; set; }
+        public IList<string> FileIds { get; }
         CodeInterpreterToolResources IJsonModel<CodeInterpreterToolResources>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<CodeInterpreterToolResources>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         CodeInterpreterToolResources IPersistableModel<CodeInterpreterToolResources>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -363,7 +363,7 @@ namespace OpenAI.Assistants {
     }
     public class FileSearchToolResources : IJsonModel<FileSearchToolResources>, IPersistableModel<FileSearchToolResources> {
         public IList<VectorStoreCreationHelper> NewVectorStores { get; }
-        public IList<string> VectorStoreIds { get; set; }
+        public IList<string> VectorStoreIds { get; }
         FileSearchToolResources IJsonModel<FileSearchToolResources>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<FileSearchToolResources>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         FileSearchToolResources IPersistableModel<FileSearchToolResources>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2283,7 +2283,7 @@ namespace OpenAI.VectorStores {
     public class VectorStoreCreationOptions : IJsonModel<VectorStoreCreationOptions>, IPersistableModel<VectorStoreCreationOptions> {
         public FileChunkingStrategy ChunkingStrategy { get; set; }
         public VectorStoreExpirationPolicy ExpirationPolicy { get; set; }
-        public IList<string> FileIds { get; set; }
+        public IList<string> FileIds { get; }
         public IDictionary<string, string> Metadata { get; set; }
         public string Name { get; set; }
         VectorStoreCreationOptions IJsonModel<VectorStoreCreationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);

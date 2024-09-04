@@ -1358,6 +1358,7 @@ namespace OpenAI.Chat {
         public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts);
         public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static UserChatMessage CreateUserMessage(string content);
+        public static implicit operator ChatMessage(string userMessage);
         ChatMessage IJsonModel<ChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatMessage IPersistableModel<ChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OpenAI.FineTuning;
 
-internal partial class FineTuningJobEventsPageEnumerator : PageEnumerator<FineTuningJobEvent>
+internal partial class FineTuningJobEventsPageEnumerator : PageResultEnumerator
 {
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;
@@ -17,7 +18,7 @@ internal partial class FineTuningJobEventsPageEnumerator : PageEnumerator<FineTu
     private readonly int? _limit;
     private readonly RequestOptions _options;
 
-    private string _after;
+    private string? _after;
 
     public FineTuningJobEventsPageEnumerator(
         ClientPipeline pipeline,
@@ -35,49 +36,39 @@ internal partial class FineTuningJobEventsPageEnumerator : PageEnumerator<FineTu
     }
 
     public override async Task<ClientResult> GetFirstAsync()
-        => await GetJobEventsAsync(_jobId, _after, _limit, _options).ConfigureAwait(false);
+        => await GetJobEventsAsync(_jobId, _after!, _limit, _options).ConfigureAwait(false);
 
     public override ClientResult GetFirst()
-        => GetJobEvents(_jobId, _after, _limit, _options);
+        => GetJobEvents(_jobId, _after!, _limit, _options);
 
     public override async Task<ClientResult> GetNextAsync(ClientResult result)
     {
         PipelineResponse response = result.GetRawResponse();
 
-        using JsonDocument doc = JsonDocument.Parse(response.Content);
-        var data = doc.RootElement.GetProperty("data"u8);
+        using JsonDocument doc = JsonDocument.Parse(response?.Content);
 
-        if (data.ValueKind == JsonValueKind.Array)
+        if (doc?.RootElement.TryGetProperty("data", out JsonElement dataElement) == true
+            && dataElement.EnumerateArray().LastOrDefault().TryGetProperty("id", out JsonElement idElement) == true)
         {
-            var last = data[data.GetArrayLength() - 1];
-            _after = last.GetProperty("id"u8).GetString()!;
+            _after = idElement.GetString();
         }
-        else
-        {
-            // throw that data should be an array
-            throw new Exception($"property `data` should be an array and was {data}");
-        }
-        return await GetJobEventsAsync(_jobId, _after, _limit, _options).ConfigureAwait(false);
+
+        return await GetJobEventsAsync(_jobId, _after!, _limit, _options).ConfigureAwait(false);
     }
 
     public override ClientResult GetNext(ClientResult result)
     {
         PipelineResponse response = result.GetRawResponse();
 
-        using JsonDocument doc = JsonDocument.Parse(response.Content);
-        var data = doc.RootElement.GetProperty("data"u8);
+        using JsonDocument doc = JsonDocument.Parse(response?.Content);
 
-        if (data.ValueKind == JsonValueKind.Array)
+        if (doc?.RootElement.TryGetProperty("data", out JsonElement dataElement) == true
+            && dataElement.EnumerateArray().LastOrDefault().TryGetProperty("id", out JsonElement idElement) == true)
         {
-            var last = data[data.GetArrayLength() - 1];
-            _after = last.GetProperty("id"u8).GetString()!;
+            _after = idElement.GetString();
         }
-        else
-        {
-            // throw that data should be an array
-            throw new Exception($"property `data` should be an array and was {data}");
-        }
-        return GetJobEvents(_jobId, _after, _limit, _options);
+
+        return GetJobEvents(_jobId, _after!, _limit, _options);
     }
 
     public override bool HasNext(ClientResult result)
@@ -89,22 +80,6 @@ internal partial class FineTuningJobEventsPageEnumerator : PageEnumerator<FineTu
 
         return hasMore;
     }
-
-    // override GetPageFromResult
-    public override PageResult<FineTuningJobEvent> GetPageFromResult(ClientResult result)
-    {
-        PipelineResponse response = result.GetRawResponse();
-
-        InternalListFineTuningJobEventsResponse events = ModelReaderWriter.Read<InternalListFineTuningJobEventsResponse>(response.Content)!;
-
-        FineTuningJobEventsPageToken pageToken = FineTuningJobEventsPageToken.FromOptions(_jobId, _after, _limit);
-        FineTuningJobEventsPageToken? nextPageToken = pageToken.GetNextPageToken(events.HasMore);
-
-        return PageResult<FineTuningJobEvent>.Create(events.Data, pageToken, nextPageToken, response);
-    }
-
-
-
 
     internal virtual async Task<ClientResult> GetJobEventsAsync(string jobId, string after, int? limit, RequestOptions options)
     {

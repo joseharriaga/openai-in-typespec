@@ -14,11 +14,11 @@ namespace OpenAI.Chat;
 /// <summary>
 /// Implementation of collection abstraction over streaming chat updates.
 /// </summary>
-internal class StreamingChatCompletionUpdateCollection : CollectionResult<StreamingChatCompletionUpdate>
+internal class InternalStreamingChatCompletionUpdateCollection : CollectionResult<StreamingChatCompletionUpdate>
 {
     private readonly Func<ClientResult> _getResult;
 
-    public StreamingChatCompletionUpdateCollection(Func<ClientResult> getResult) : base()
+    public InternalStreamingChatCompletionUpdateCollection(Func<ClientResult> getResult) : base()
     {
         Argument.AssertNotNull(getResult, nameof(getResult));
 
@@ -35,7 +35,7 @@ internal class StreamingChatCompletionUpdateCollection : CollectionResult<Stream
         private static ReadOnlySpan<byte> TerminalData => "[DONE]"u8;
 
         private readonly Func<ClientResult> _getResult;
-        private readonly StreamingChatCompletionUpdateCollection _enumerable;
+        private readonly InternalStreamingChatCompletionUpdateCollection _enumerable;
 
         // These enumerators represent what is effectively a doubly-nested
         // loop over the outer event collection and the inner update collection,
@@ -51,7 +51,7 @@ internal class StreamingChatCompletionUpdateCollection : CollectionResult<Stream
         private bool _started;
 
         public StreamingChatUpdateEnumerator(Func<ClientResult> getResult,
-            StreamingChatCompletionUpdateCollection enumerable)
+            InternalStreamingChatCompletionUpdateCollection enumerable)
         {
             Debug.Assert(getResult is not null);
             Debug.Assert(enumerable is not null);

@@ -45,12 +45,6 @@ public partial class VectorStoreExpirationPolicy
     }
 
     /// <summary> Initializes a new instance of <see cref="VectorStoreExpirationPolicy"/>. </summary>
-    public VectorStoreExpirationPolicy()
-    {
-        SerializedAdditionalRawData = new ChangeTrackingDictionary<string, BinaryData>();
-    }
-
-    /// <summary> Initializes a new instance of <see cref="VectorStoreExpirationPolicy"/>. </summary>
     /// <param name="anchor"> Anchor timestamp after which the expiration policy applies. Supported anchors: `last_active_at`. </param>
     /// <param name="days"> The number of days after the anchor time that the vector store will expire. </param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>

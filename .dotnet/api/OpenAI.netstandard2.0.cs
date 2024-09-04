@@ -371,7 +371,6 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<FileSearchToolResources>.Write(ModelReaderWriterOptions options);
     }
     public class FunctionToolDefinition : ToolDefinition, IJsonModel<FunctionToolDefinition>, IPersistableModel<FunctionToolDefinition> {
-        public FunctionToolDefinition();
         public FunctionToolDefinition(string name);
         public string Description { get; set; }
         public string FunctionName { get; set; }
@@ -2297,7 +2296,6 @@ namespace OpenAI.VectorStores {
         LastActiveAt = 1
     }
     public class VectorStoreExpirationPolicy : IJsonModel<VectorStoreExpirationPolicy>, IPersistableModel<VectorStoreExpirationPolicy> {
-        public VectorStoreExpirationPolicy();
         public VectorStoreExpirationPolicy(VectorStoreExpirationAnchor anchor, int days);
         public VectorStoreExpirationAnchor Anchor { get; set; }
         public int Days { get; set; }

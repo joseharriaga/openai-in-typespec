@@ -379,9 +379,8 @@ public partial class AssistantTests
         {
             Tools =
             {
-                new FunctionToolDefinition()
+                new FunctionToolDefinition("get_favorite_food_for_day_of_week")
                 {
-                    FunctionName = "get_favorite_food_for_day_of_week",
                     Description = "gets the user's favorite food for a given day of the week, like Tuesday",
                     Parameters = BinaryData.FromObjectAsJson(new
                     {
@@ -498,9 +497,8 @@ public partial class AssistantTests
     public async Task StreamingToolCall()
     {
         AssistantClient client = GetTestClient();
-        FunctionToolDefinition getWeatherTool = new()
+        FunctionToolDefinition getWeatherTool = new("get_current_weather")
         {
-            FunctionName = "get_current_weather",
             Description = "Gets the user's current weather",
         };
         Assistant assistant = await client.CreateAssistantAsync("gpt-4o-mini", new()

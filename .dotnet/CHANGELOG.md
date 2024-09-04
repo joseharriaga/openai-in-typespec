@@ -14,6 +14,7 @@
 - Changed `GeneratedSpeechVoice` from an enum to an "extensible enum". (commit_hash)
 - Changed `GeneratedSpeechFormat` from an enum to an "extensible enum". (commit_hash)
 - Renamed `SpeechGenerationOptions`'s `Speed` property to `SpeedRatio`. (commit_hash)
+- Removed the public default constructors from `VectorStoreExpirationPolicy` and `FunctionToolDefinition`. (commit_hash)
 
 ### Bugs Fixed
 

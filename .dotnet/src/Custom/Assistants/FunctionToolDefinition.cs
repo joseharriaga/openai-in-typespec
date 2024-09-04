@@ -52,15 +52,6 @@ public partial class FunctionToolDefinition : ToolDefinition
         _internalFunction = new(null, name, null, null, null);
     }
 
-    /// <summary>
-    /// Creates a new instance of <see cref="FunctionToolDefinition"/>. 
-    /// </summary>
-    public FunctionToolDefinition()
-        : base("function")
-    {
-        _internalFunction = new InternalFunctionDefinition();
-    }
-
     [SetsRequiredMembers]
     internal FunctionToolDefinition(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalFunctionDefinition function)
         : base(type, serializedAdditionalRawData)

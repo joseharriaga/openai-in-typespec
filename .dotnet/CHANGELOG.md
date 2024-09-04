@@ -1,5 +1,11 @@
 # Release History
 
+## 2.0.0-beta.12 (Unreleased)
+
+### Bugs Fixed
+
+- Addressed an issue that caused multi-page queries of fine-tuning jobs, checkpoints, and events to fail. (commit_hash)
+
 ## 2.0.0-beta.11 (2024-09-03)
 
 ### Features Added

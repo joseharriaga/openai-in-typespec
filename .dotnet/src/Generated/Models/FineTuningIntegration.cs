@@ -7,14 +7,14 @@ using System.Collections.Generic;
 
 namespace OpenAI.FineTuning
 {
-    internal abstract partial class InternalFineTuningIntegration
+    internal abstract partial class FineTuningIntegration
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        protected InternalFineTuningIntegration()
+        protected FineTuningIntegration()
         {
         }
 
-        internal InternalFineTuningIntegration(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal FineTuningIntegration(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Type = type;
             SerializedAdditionalRawData = serializedAdditionalRawData;

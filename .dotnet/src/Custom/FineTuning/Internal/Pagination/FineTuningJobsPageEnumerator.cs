@@ -1,7 +1,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -17,7 +16,7 @@ internal partial class FineTuningJobsPageEnumerator : PageResultEnumerator
     private readonly int? _limit;
     private readonly RequestOptions _options;
 
-    private string? _after;
+    private string _after;
 
     public FineTuningJobsPageEnumerator(
         ClientPipeline pipeline,
@@ -34,39 +33,29 @@ internal partial class FineTuningJobsPageEnumerator : PageResultEnumerator
     }
 
     public override async Task<ClientResult> GetFirstAsync()
-        => await GetJobsAsync(_after!, _limit, _options).ConfigureAwait(false);
+        => await GetJobsAsync(_after, _limit, _options).ConfigureAwait(false);
 
     public override ClientResult GetFirst()
-        => GetJobs(_after!, _limit, _options);
+        => GetJobs(_after, _limit, _options);
 
     public override async Task<ClientResult> GetNextAsync(ClientResult result)
     {
         PipelineResponse response = result.GetRawResponse();
 
-        using JsonDocument doc = JsonDocument.Parse(response?.Content);
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        _after = doc.RootElement.GetProperty("last_id"u8).GetString()!;
 
-        if (doc?.RootElement.TryGetProperty("data", out JsonElement dataElement) == true
-            && dataElement.EnumerateArray().LastOrDefault().TryGetProperty("id", out JsonElement idElement) == true)
-        {
-            _after = idElement.GetString();
-        }
-
-        return await GetJobsAsync(_after!, _limit, _options).ConfigureAwait(false);
+        return await GetJobsAsync(_after, _limit, _options).ConfigureAwait(false);
     }
 
     public override ClientResult GetNext(ClientResult result)
     {
         PipelineResponse response = result.GetRawResponse();
 
-        using JsonDocument doc = JsonDocument.Parse(response?.Content);
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        _after = doc.RootElement.GetProperty("last_id"u8).GetString()!;
 
-        if (doc?.RootElement.TryGetProperty("data", out JsonElement dataElement) == true
-            && dataElement.EnumerateArray().LastOrDefault().TryGetProperty("id", out JsonElement idElement) == true)
-        {
-            _after = idElement.GetString();
-        }
-
-        return GetJobs(_after!, _limit, _options);
+        return GetJobs(_after, _limit, _options);
     }
 
     public override bool HasNext(ClientResult result)

@@ -5,12 +5,12 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace OpenAI.FineTuning
 {
-    [PersistableModelProxy(typeof(UnknownFineTuningIntegration))]
-    internal partial class InternalFineTuningIntegration : IJsonModel<InternalFineTuningIntegration>
+    internal partial class UnknownFineTuningIntegration : IJsonModel<InternalFineTuningIntegration>
     {
         void IJsonModel<InternalFineTuningIntegration>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -60,7 +60,7 @@ namespace OpenAI.FineTuning
             return DeserializeInternalFineTuningIntegration(document.RootElement, options);
         }
 
-        internal static InternalFineTuningIntegration DeserializeInternalFineTuningIntegration(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static UnknownFineTuningIntegration DeserializeUnknownFineTuningIntegration(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -68,14 +68,24 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            if (element.TryGetProperty("type", out JsonElement discriminator))
+            string type = "Unknown";
+            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
+            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
+            foreach (var property in element.EnumerateObject())
             {
-                switch (discriminator.GetString())
+                if (property.NameEquals("type"u8))
                 {
-                    case "wandb": return InternalFineTuningIntegrationWandb.DeserializeInternalFineTuningIntegrationWandb(element, options);
+                    type = property.Value.GetString();
+                    continue;
+                }
+                if (true)
+                {
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
+                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }
-            return UnknownFineTuningIntegration.DeserializeUnknownFineTuningIntegration(element, options);
+            serializedAdditionalRawData = rawDataDictionary;
+            return new UnknownFineTuningIntegration(type, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<InternalFineTuningIntegration>.Write(ModelReaderWriterOptions options)
@@ -109,15 +119,15 @@ namespace OpenAI.FineTuning
 
         string IPersistableModel<InternalFineTuningIntegration>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalFineTuningIntegration FromResponse(PipelineResponse response)
+        internal static new UnknownFineTuningIntegration FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalFineTuningIntegration(document.RootElement);
+            return DeserializeUnknownFineTuningIntegration(document.RootElement);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        internal override BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create<InternalFineTuningIntegration>(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

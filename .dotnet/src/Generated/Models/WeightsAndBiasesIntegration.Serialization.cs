@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class InternalFineTuningIntegrationWandb : IJsonModel<InternalFineTuningIntegrationWandb>
+    internal partial class WeightsAndBiasesIntegration : IJsonModel<WeightsAndBiasesIntegration>
     {
-        void IJsonModel<InternalFineTuningIntegrationWandb>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<WeightsAndBiasesIntegration>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningIntegrationWandb>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<WeightsAndBiasesIntegration>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalFineTuningIntegrationWandb)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(WeightsAndBiasesIntegration)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -53,19 +53,19 @@ namespace OpenAI.FineTuning
             writer.WriteEndObject();
         }
 
-        InternalFineTuningIntegrationWandb IJsonModel<InternalFineTuningIntegrationWandb>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        WeightsAndBiasesIntegration IJsonModel<WeightsAndBiasesIntegration>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningIntegrationWandb>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<WeightsAndBiasesIntegration>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalFineTuningIntegrationWandb)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(WeightsAndBiasesIntegration)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalFineTuningIntegrationWandb(document.RootElement, options);
+            return DeserializeWeightsAndBiasesIntegration(document.RootElement, options);
         }
 
-        internal static InternalFineTuningIntegrationWandb DeserializeInternalFineTuningIntegrationWandb(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static WeightsAndBiasesIntegration DeserializeWeightsAndBiasesIntegration(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -73,7 +73,7 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            FineTuningIntegrationWandbWandb wandb = default;
+            InternalCreateFineTuningJobRequestWandbIntegrationWandb wandb = default;
             string type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -81,7 +81,7 @@ namespace OpenAI.FineTuning
             {
                 if (property.NameEquals("wandb"u8))
                 {
-                    wandb = FineTuningIntegrationWandbWandb.DeserializeFineTuningIntegrationWandbWandb(property.Value, options);
+                    wandb = InternalCreateFineTuningJobRequestWandbIntegrationWandb.DeserializeInternalCreateFineTuningJobRequestWandbIntegrationWandb(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("type"u8))
@@ -96,44 +96,44 @@ namespace OpenAI.FineTuning
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalFineTuningIntegrationWandb(type, serializedAdditionalRawData, wandb);
+            return new WeightsAndBiasesIntegration(type, serializedAdditionalRawData, wandb);
         }
 
-        BinaryData IPersistableModel<InternalFineTuningIntegrationWandb>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<WeightsAndBiasesIntegration>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningIntegrationWandb>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<WeightsAndBiasesIntegration>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalFineTuningIntegrationWandb)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(WeightsAndBiasesIntegration)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalFineTuningIntegrationWandb IPersistableModel<InternalFineTuningIntegrationWandb>.Create(BinaryData data, ModelReaderWriterOptions options)
+        WeightsAndBiasesIntegration IPersistableModel<WeightsAndBiasesIntegration>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningIntegrationWandb>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<WeightsAndBiasesIntegration>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalFineTuningIntegrationWandb(document.RootElement, options);
+                        return DeserializeWeightsAndBiasesIntegration(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalFineTuningIntegrationWandb)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(WeightsAndBiasesIntegration)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalFineTuningIntegrationWandb>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<WeightsAndBiasesIntegration>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new InternalFineTuningIntegrationWandb FromResponse(PipelineResponse response)
+        internal static new WeightsAndBiasesIntegration FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalFineTuningIntegrationWandb(document.RootElement);
+            return DeserializeWeightsAndBiasesIntegration(document.RootElement);
         }
 
         internal override BinaryContent ToBinaryContent()

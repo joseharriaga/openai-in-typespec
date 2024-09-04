@@ -3,13 +3,22 @@
 
 #nullable enable
 
+using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Text.Json;
 
 namespace Azure.AI.OpenAI.FineTuning;
 
 internal class AzureFineTuningJobCheckpointsPageEnumerator : FineTuningJobCheckpointsPageEnumerator
 {
+    private readonly ClientPipeline _pipeline;
+    private readonly Uri _endpoint;
     private readonly string _apiVersion;
+
+    private readonly int? _limit;
+    private readonly string _jobId;
+    private readonly RequestOptions _options;
+    private string? _after;
 
     public AzureFineTuningJobCheckpointsPageEnumerator(
         ClientPipeline pipeline,
@@ -17,12 +26,65 @@ internal class AzureFineTuningJobCheckpointsPageEnumerator : FineTuningJobCheckp
         string jobId, string after, int? limit,
         string apiVersion,
         RequestOptions options)
-        : base(pipeline, endpoint, jobId, after, limit, options)
+        : base(pipeline, endpoint, jobId, after!, limit, options)
     {
+        _pipeline = pipeline;
+        _endpoint = endpoint;
         _apiVersion = apiVersion;
+
+        _jobId = jobId;
+        _after = after;
+        _limit = limit;
+        _options = options;
     }
 
-    internal override PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    public override async Task<ClientResult> GetNextAsync(ClientResult result)
+    {
+        PipelineResponse response = result.GetRawResponse();
+
+        using JsonDocument doc = JsonDocument.Parse(response?.Content);
+
+        if (doc?.RootElement.TryGetProperty("data", out JsonElement dataElement) == true
+            && dataElement.EnumerateArray().LastOrDefault().TryGetProperty("id", out JsonElement idElement) == true)
+        {
+            _after = idElement.GetString();
+        }
+
+        return await GetJobCheckpointsAsync(_jobId, _after!, _limit, _options).ConfigureAwait(false);
+    }
+
+    public override ClientResult GetNext(ClientResult result)
+    {
+        PipelineResponse response = result.GetRawResponse();
+
+        using JsonDocument doc = JsonDocument.Parse(response?.Content);
+
+        if (doc?.RootElement.TryGetProperty("data", out JsonElement dataElement) == true
+            && dataElement.EnumerateArray().LastOrDefault().TryGetProperty("id", out JsonElement idElement) == true)
+        {
+            _after = idElement.GetString();
+        }
+
+        return GetJobCheckpoints(_jobId, _after!, _limit, _options);
+    }
+
+    internal override async Task<ClientResult> GetJobCheckpointsAsync(string jobId, string after, int? limit, RequestOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
+
+        using PipelineMessage message = CreateGetFineTuningJobCheckpointsRequest(jobId, after, limit, options);
+        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+    }
+
+    internal override ClientResult GetJobCheckpoints(string jobId, string after, int? limit, RequestOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
+
+        using PipelineMessage message = CreateGetFineTuningJobCheckpointsRequest(jobId, after, limit, options);
+        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+    }
+
+    internal new PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, _apiVersion)
             .WithMethod("GET")
             .WithPath("fine_tuning", "jobs", fineTuningJobId, "checkpoints")

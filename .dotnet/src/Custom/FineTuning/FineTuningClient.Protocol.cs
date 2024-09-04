@@ -2,8 +2,6 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OpenAI.FineTuning;
@@ -266,40 +264,5 @@ public partial class FineTuningClient
 
         FineTuningJobCheckpointsPageEnumerator enumerator = new FineTuningJobCheckpointsPageEnumerator(_pipeline, _endpoint, jobId, after, limit, options);
         return PageCollectionHelpers.Create(enumerator);
-    }
-
-    /// <summary>
-    /// Helper method to determine the starting point of the next page based on the previous page.
-    /// </summary>
-    /// <param name="previousPage">The previous page.</param>
-    /// <returns>The starting point of the next page.</returns>
-    /// <exception cref="InvalidOperationException">If the starting point could not be determined.</exception>
-    internal static string GetStartOfNextPage(ClientResult previousPage)
-    {
-        PipelineResponse response = previousPage.GetRawResponse();
-
-        string after = null;
-        using JsonDocument doc = JsonDocument.Parse(response.Content);
-
-        // For consistency with the existing code, we'll try tp use the "last_id" field. However, the OpenAI specification
-        // doesn't actually mention this property exists at all, and I don't see it in the response so I would assume this
-        // would never work.
-        if (doc.RootElement.TryGetProperty("last_id"u8, out JsonElement lastId))
-        {
-            after = lastId.GetString();
-        }
-
-        // This should work: We get the data property, check if it is an array, get the last element, and then read the
-        // id of that element
-        if (after == null
-            && doc.RootElement.TryGetProperty("data"u8, out JsonElement dataArray)
-            && dataArray.ValueKind == JsonValueKind.Array
-            && dataArray.EnumerateArray().LastOrDefault().TryGetProperty("id"u8, out lastId))
-        {
-            after = lastId.GetString();
-        }
-
-        return after
-            ?? throw new InvalidOperationException("Don't know how to determine the starting point for the next page");
     }
 }

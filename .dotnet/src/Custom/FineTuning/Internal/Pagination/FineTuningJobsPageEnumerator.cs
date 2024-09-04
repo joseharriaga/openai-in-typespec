@@ -10,18 +10,18 @@ namespace OpenAI.FineTuning;
 
 internal partial class FineTuningJobsPageEnumerator : PageResultEnumerator
 {
-    protected readonly ClientPipeline _pipeline;
-    protected readonly Uri _endpoint;
+    private readonly ClientPipeline _pipeline;
+    private readonly Uri _endpoint;
 
     private readonly int? _limit;
     private readonly RequestOptions _options;
 
-    private string? _after;
+    private string _after;
 
     public FineTuningJobsPageEnumerator(
         ClientPipeline pipeline,
         Uri endpoint,
-        string? after, int? limit,
+        string after, int? limit,
         RequestOptions options)
     {
         _pipeline = pipeline;
@@ -40,13 +40,21 @@ internal partial class FineTuningJobsPageEnumerator : PageResultEnumerator
 
     public override async Task<ClientResult> GetNextAsync(ClientResult result)
     {
-        _after = FineTuningClient.GetStartOfNextPage(result);
+        PipelineResponse response = result.GetRawResponse();
+
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        _after = doc.RootElement.GetProperty("last_id"u8).GetString()!;
+
         return await GetJobsAsync(_after, _limit, _options).ConfigureAwait(false);
     }
 
     public override ClientResult GetNext(ClientResult result)
     {
-        _after = FineTuningClient.GetStartOfNextPage(result);
+        PipelineResponse response = result.GetRawResponse();
+
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        _after = doc.RootElement.GetProperty("last_id"u8).GetString()!;
+
         return GetJobs(_after, _limit, _options);
     }
 
@@ -60,19 +68,19 @@ internal partial class FineTuningJobsPageEnumerator : PageResultEnumerator
         return hasMore;
     }
 
-    internal virtual async Task<ClientResult> GetJobsAsync(string? after, int? limit, RequestOptions options)
+    internal virtual async Task<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options)
     {
         using PipelineMessage message = CreateGetFineTuningJobsRequest(after, limit, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
-    internal virtual ClientResult GetJobs(string? after, int? limit, RequestOptions options)
+    internal virtual ClientResult GetJobs(string after, int? limit, RequestOptions options)
     {
         using PipelineMessage message = CreateGetFineTuningJobsRequest(after, limit, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
-    internal virtual PipelineMessage CreateGetFineTuningJobsRequest(string? after, int? limit, RequestOptions options)
+    internal PipelineMessage CreateGetFineTuningJobsRequest(string after, int? limit, RequestOptions options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;

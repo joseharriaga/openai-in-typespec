@@ -10,8 +10,8 @@ namespace OpenAI.FineTuning;
 
 internal partial class FineTuningJobCheckpointsPageEnumerator : PageResultEnumerator
 {
-    protected readonly ClientPipeline _pipeline;
-    protected readonly Uri _endpoint;
+    private readonly ClientPipeline _pipeline;
+    private readonly Uri _endpoint;
 
     private readonly string _jobId;
     private readonly int? _limit;
@@ -42,13 +42,21 @@ internal partial class FineTuningJobCheckpointsPageEnumerator : PageResultEnumer
 
     public override async Task<ClientResult> GetNextAsync(ClientResult result)
     {
-        _after = FineTuningClient.GetStartOfNextPage(result);
+        PipelineResponse response = result.GetRawResponse();
+
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        _after = doc.RootElement.GetProperty("last_id"u8).GetString()!;
+
         return await GetJobCheckpointsAsync(_jobId, _after, _limit, _options).ConfigureAwait(false);
     }
 
     public override ClientResult GetNext(ClientResult result)
     {
-        _after = FineTuningClient.GetStartOfNextPage(result);
+        PipelineResponse response = result.GetRawResponse();
+
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        _after = doc.RootElement.GetProperty("last_id"u8).GetString()!;
+
         return GetJobCheckpoints(_jobId, _after, _limit, _options);
     }
 
@@ -78,7 +86,7 @@ internal partial class FineTuningJobCheckpointsPageEnumerator : PageResultEnumer
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
-    internal virtual PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions options)
+    internal PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;

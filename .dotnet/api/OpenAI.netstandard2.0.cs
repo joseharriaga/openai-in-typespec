@@ -1444,6 +1444,11 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<ChatTokenUsage>.Write(ModelReaderWriterOptions options);
     }
     public class ChatTool : IJsonModel<ChatTool>, IPersistableModel<ChatTool> {
+        public string FunctionDescription { get; }
+        public string FunctionName { get; }
+        public BinaryData FunctionParameters { get; }
+        public ChatToolKind Kind { get; }
+        public bool? StrictParameterSchemaEnabled { get; }
         public static ChatTool CreateFunctionTool(string functionName, string functionDescription = null, BinaryData functionParameters = null, bool? strictParameterSchemaEnabled = null);
         ChatTool IJsonModel<ChatTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatTool>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -1491,6 +1496,21 @@ namespace OpenAI.Chat {
         ChatToolChoice IPersistableModel<ChatToolChoice>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatToolChoice>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatToolChoice>.Write(ModelReaderWriterOptions options);
+    }
+    public readonly partial struct ChatToolKind : IEquatable<ChatToolKind> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public ChatToolKind(string value);
+        public static ChatToolKind Function { get; }
+        public readonly bool Equals(ChatToolKind other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ChatToolKind left, ChatToolKind right);
+        public static implicit operator ChatToolKind(string value);
+        public static bool operator !=(ChatToolKind left, ChatToolKind right);
+        public override readonly string ToString();
     }
     [Obsolete("This field is marked as deprecated.")]
     public class FunctionChatMessage : ChatMessage, IJsonModel<FunctionChatMessage>, IPersistableModel<FunctionChatMessage> {

@@ -15,10 +15,6 @@ namespace OpenAI.Chat;
 public partial class ChatTool
 {
     // CUSTOM: Made internal.
-    [CodeGenMember("Type")]
-    internal InternalChatCompletionToolType Type { get; } = InternalChatCompletionToolType.Function;
-
-    // CUSTOM: Made internal.
     [CodeGenMember("Function")]
     internal InternalFunctionDefinition Function { get; }
 
@@ -30,6 +26,50 @@ public partial class ChatTool
         Function = function;
     }
 
+    // CUSTOM: Renamed.
+    /// <summary> The kind of tool. </summary>
+    [CodeGenMember("Type")]
+    public ChatToolKind Kind { get; } = ChatToolKind.Function;
+
+    // CUSTOM: Spread.
+    /// <summary> The name of the function. </summary>
+    /// <remarks> Present when <see cref="Kind"/> is <see cref="ChatToolKind.Function"/>. </remarks>
+    public string FunctionName => Function?.Name;
+
+    // CUSTOM: Spread.
+    /// <summary>
+    ///     The description of what the function does, which is used by the model to choose when and how to call the
+    ///     function.
+    /// </summary>
+    /// <remarks> Present when <see cref="Kind"/> is <see cref="ChatToolKind.Function"/>. </remarks>
+    public string FunctionDescription => Function?.Description;
+
+    // CUSTOM: Spread.
+    /// <summary>
+    ///     The parameters that the function accepts, which are described as a JSON schema. If omitted, this
+    ///     defines a function with an empty parameter list. Learn more in the
+    ///     <see href="https://platform.openai.com/docs/api-reference/chat/docs/guides/function-calling">function calling guide</see>
+    ///     and the
+    ///     <see href="https://json-schema.org/understanding-json-schema">JSON schema reference documentation</see>.
+    /// </summary>
+    /// <remarks> Present when <see cref="Kind"/> is <see cref="ChatToolKind.Function"/>. </remarks>
+    public BinaryData FunctionParameters => Function?.Parameters;
+
+    // CUSTOM: Spread.
+    /// <summary>
+    ///     <para>
+    ///         Whether to enable strict schema adherence when generating the function call. If set to <c>true</c>, the
+    ///         model will follow the exact schema defined in <see cref="FunctionParameters">
+    ///     </para>
+    ///     <para>
+    ///         Only a subset of the JSON schema specification is supported when this is set to <c>true</c>. Learn more
+    ///         about structured outputs in the
+    ///         <see href="https://platform.openai.com/docs/api-reference/chat/docs/guides/function-calling">function calling guide</see>.
+    ///     </para>
+    /// </summary>
+    /// <remarks> Present when <see cref="Kind"/> is <see cref="ChatToolKind.Function"/>. </remarks>
+    public bool? StrictParameterSchemaEnabled => Function?.Strict;
+
     /// <summary> Creates a new <see cref="ChatTool"/> representing a function that the model may call. </summary>
     /// <param name="functionName"> The name of the function. </param>
     /// <param name="functionDescription">
@@ -37,19 +77,43 @@ public partial class ChatTool
     ///     function.
     /// </param>
     /// <param name="functionParameters">
-    ///     The parameters that the function accepts, which are described as a JSON schema. If omitted, this defines
-    ///     a function with an empty parameter list. Learn more in the
-    ///     <see href="https://platform.openai.com/docs/api-reference/chat/docs/guides/function-calling">function calling guide</see>
-    ///     and the <see href="https://json-schema.org/understanding-json-schema">JSON schema reference documentation</see>.
+    ///     <para>
+    ///         The parameters that the function accepts, which are described as a JSON schema. If omitted, this
+    ///         defines a function with an empty parameter list. Learn more in the
+    ///         <see href="https://platform.openai.com/docs/api-reference/chat/docs/guides/function-calling">function calling guide</see>
+    ///         and the
+    ///         <see href="https://json-schema.org/understanding-json-schema">JSON schema reference documentation</see>.
+    ///     </para>
+    ///     <para>
+    ///         The <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/> method
+    ///         provides an easy definition interface using the <c>dynamic</c> type:
+    ///         <code>
+    ///             BinaryData functionParameters = BinaryData.FromObjectAsJson(new
+    ///             {
+    ///                 type = "object",
+    ///                 properties = new
+    ///                 {
+    ///                     your_function_parameter = new
+    ///                     {
+    ///                         type = "string",
+    ///                         description = "The description of your function paramater."
+    ///                     }
+    ///                 },
+    ///                 required = new[] { "your_function_parameter" }
+    ///             });
+    ///         </code>
+    ///     </para>
     /// </param>
     /// <param name="strictParameterSchemaEnabled">
-    ///     Whether to enable strict schema adherence when generating the function call. If set to <c>true</c>, the
-    ///     model will follow the exact schema defined in <paramref name="functionParameters"/>.
-    ///     <remarks>
+    ///     <para>
+    ///         Whether to enable strict schema adherence when generating the function call. If set to <c>true</c>, the
+    ///         model will follow the exact schema defined in <paramref name="functionParameters"/>.
+    ///     </para>
+    ///     <para>
     ///         Only a subset of the JSON schema specification is supported when this is set to <c>true</c>. Learn more
     ///         about structured outputs in the
     ///         <see href="https://platform.openai.com/docs/api-reference/chat/docs/guides/function-calling">function calling guide</see>.
-    ///     </remarks>
+    ///     </para>
     /// </param> 
     public static ChatTool CreateFunctionTool(string functionName, string functionDescription = null, BinaryData functionParameters = null, bool? strictParameterSchemaEnabled = null)
     {
@@ -63,7 +127,7 @@ public partial class ChatTool
         };
 
         return new(
-            type: InternalChatCompletionToolType.Function,
+            kind: ChatToolKind.Function,
             function: function,
             serializedAdditionalRawData: null);
     }

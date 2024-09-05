@@ -196,7 +196,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         else
         {
             // We construct a new instance. Later, we serialize it and confirm it was constructed correctly.
-            choice = new ChatToolChoice(ChatTool.CreateFunctionTool(functionName));
+            choice = ChatToolChoice.CreateFunctionChoice(functionName);
         }
 
         BinaryData serializedChoice = ModelReaderWriter.Write(choice);

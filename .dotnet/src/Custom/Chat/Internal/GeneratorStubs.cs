@@ -45,6 +45,9 @@ internal partial class InternalChatCompletionStreamOptions { }
 [CodeGenModel("ChatCompletionStreamResponseDeltaRole")]
 internal readonly partial struct InternalChatCompletionStreamResponseDeltaRole { }
 
+[CodeGenModel("ChatCompletionToolType")]
+internal readonly partial struct InternalChatCompletionToolType { }
+
 [CodeGenModel("CreateChatCompletionFunctionResponse")]
 internal partial class InternalCreateChatCompletionFunctionResponse { }
 

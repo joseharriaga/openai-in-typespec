@@ -1332,9 +1332,6 @@ namespace OpenAI.Chat {
         public override readonly string ToString();
     }
     public abstract class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
-        protected ChatMessage();
-        protected internal ChatMessage(ChatMessageRole role, IEnumerable<ChatMessageContentPart> contentParts);
-        protected internal ChatMessage(ChatMessageRole role, string content);
         public IList<ChatMessageContentPart> Content { get; }
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
         public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null);
@@ -1342,6 +1339,7 @@ namespace OpenAI.Chat {
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
         public static AssistantChatMessage CreateAssistantMessage(string content);
+        [Obsolete("This field is marked as deprecated.")]
         public static FunctionChatMessage CreateFunctionMessage(string functionName, string content);
         public static SystemChatMessage CreateSystemMessage(params ChatMessageContentPart[] contentParts);
         public static SystemChatMessage CreateSystemMessage(IEnumerable<ChatMessageContentPart> contentParts);
@@ -1402,28 +1400,17 @@ namespace OpenAI.Chat {
         Tool = 3,
         Function = 4
     }
-    public abstract class ChatResponseFormat : IEquatable<ChatResponseFormat>, IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
+    public abstract class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
         public static ChatResponseFormat JsonObject { get; }
         public static ChatResponseFormat Text { get; }
         public static ChatResponseFormat CreateJsonObjectFormat();
         public static ChatResponseFormat CreateJsonSchemaFormat(string name, BinaryData jsonSchema, string description = null, bool? strictSchemaEnabled = null);
         public static ChatResponseFormat CreateTextFormat();
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override int GetHashCode();
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static bool operator ==(ChatResponseFormat first, ChatResponseFormat second);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static bool operator !=(ChatResponseFormat first, ChatResponseFormat second);
         ChatResponseFormat IJsonModel<ChatResponseFormat>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatResponseFormat>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatResponseFormat IPersistableModel<ChatResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatResponseFormat>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatResponseFormat>.Write(ModelReaderWriterOptions options);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        bool IEquatable<ChatResponseFormat>.Equals(ChatResponseFormat other);
-        public override string ToString();
     }
     public class ChatTokenLogProbabilityInfo : IJsonModel<ChatTokenLogProbabilityInfo>, IPersistableModel<ChatTokenLogProbabilityInfo> {
         public float LogProbability { get; }
@@ -1457,11 +1444,6 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<ChatTokenUsage>.Write(ModelReaderWriterOptions options);
     }
     public class ChatTool : IJsonModel<ChatTool>, IPersistableModel<ChatTool> {
-        public string FunctionDescription { get; }
-        public string FunctionName { get; }
-        public BinaryData FunctionParameters { get; }
-        public ChatToolKind Kind { get; }
-        public bool? StrictParameterSchemaEnabled { get; }
         public static ChatTool CreateFunctionTool(string functionName, string functionDescription = null, BinaryData functionParameters = null, bool? strictParameterSchemaEnabled = null);
         ChatTool IJsonModel<ChatTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatTool>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -1497,30 +1479,18 @@ namespace OpenAI.Chat {
         public override readonly string ToString();
     }
     public class ChatToolChoice : IJsonModel<ChatToolChoice>, IPersistableModel<ChatToolChoice> {
-        public ChatToolChoice(ChatTool tool);
         public static ChatToolChoice Auto { get; }
         public static ChatToolChoice None { get; }
         public static ChatToolChoice Required { get; }
+        public static ChatToolChoice CreateAutoChoice();
+        public static ChatToolChoice CreateFunctionChoice(string functionName);
+        public static ChatToolChoice CreateNoneChoice();
+        public static ChatToolChoice CreateRequiredChoice();
         ChatToolChoice IJsonModel<ChatToolChoice>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatToolChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatToolChoice IPersistableModel<ChatToolChoice>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatToolChoice>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatToolChoice>.Write(ModelReaderWriterOptions options);
-    }
-    public readonly partial struct ChatToolKind : IEquatable<ChatToolKind> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public ChatToolKind(string value);
-        public static ChatToolKind Function { get; }
-        public readonly bool Equals(ChatToolKind other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(ChatToolKind left, ChatToolKind right);
-        public static implicit operator ChatToolKind(string value);
-        public static bool operator !=(ChatToolKind left, ChatToolKind right);
-        public override readonly string ToString();
     }
     [Obsolete("This field is marked as deprecated.")]
     public class FunctionChatMessage : ChatMessage, IJsonModel<FunctionChatMessage>, IPersistableModel<FunctionChatMessage> {

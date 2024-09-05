@@ -1,7 +1,5 @@
 using OpenAI.Internal;
 using System;
-using System.ClientModel.Primitives;
-using System.ComponentModel;
 
 namespace OpenAI.Chat;
 
@@ -24,13 +22,13 @@ namespace OpenAI.Chat;
 ///     </list>
 /// </summary>
 [CodeGenModel("ChatResponseFormat")]
-public abstract partial class ChatResponseFormat : IEquatable<ChatResponseFormat>
+public abstract partial class ChatResponseFormat
 {
-    /// <summary> Creates a new <see cref="ChatResponseFormat"/> requesting plain text. </summary>
-    public static ChatResponseFormat Text { get; } = new InternalChatResponseFormatText();
+    /// <inheritdoc cref="CreateTextFormat()"/>
+    public static ChatResponseFormat Text { get; } = CreateTextFormat();
 
-    /// <summary> Creates a new <see cref="ChatResponseFormat"/> requesting valid JSON, a.k.a. JSON mode. </summary>
-    public static ChatResponseFormat JsonObject { get; } = new InternalChatResponseFormatJsonObject();
+    /// <inheritdoc cref="CreateJsonObjectFormat()"/>
+    public static ChatResponseFormat JsonObject { get; } = CreateJsonObjectFormat();
 
     /// <summary> Creates a new <see cref="ChatResponseFormat"/> requesting plain text. </summary>
     public static ChatResponseFormat CreateTextFormat() => new InternalChatResponseFormatText();
@@ -42,6 +40,8 @@ public abstract partial class ChatResponseFormat : IEquatable<ChatResponseFormat
     ///     Creates a new <see cref="ChatResponseFormat"/> requesting adherence to the specified JSON schema,
     ///     a.k.a. structured outputs.
     /// </summary>
+    /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="jsonSchema"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="name"/> is an empty string, and was expected to be non-empty. </exception>
     public static ChatResponseFormat CreateJsonSchemaFormat(string name, BinaryData jsonSchema, string description = null, bool? strictSchemaEnabled = null)
     {
         Argument.AssertNotNullOrEmpty(name, nameof(name));
@@ -55,55 +55,5 @@ public abstract partial class ChatResponseFormat : IEquatable<ChatResponseFormat
             serializedAdditionalRawData: null);
 
         return new InternalChatResponseFormatJsonSchema(internalSchema);
-    }
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static bool operator ==(ChatResponseFormat first, ChatResponseFormat second)
-    {
-        if (first is null)
-        {
-            return second is null;
-        }
-
-        return first.Equals(second);
-    }
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static bool operator !=(ChatResponseFormat first, ChatResponseFormat second)
-        => !(first == second);
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public override bool Equals(object obj)
-    {
-        return (this as IEquatable<ChatResponseFormat>).Equals(obj as ChatResponseFormat)
-            || ToString().Equals(obj?.ToString());
-    }
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public override int GetHashCode() => ToString().GetHashCode();
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    bool IEquatable<ChatResponseFormat>.Equals(ChatResponseFormat other)
-    {
-        if (other is null)
-        {
-            return false;
-        }
-
-        if (Object.ReferenceEquals(this, other))
-        {
-            return true;
-        }
-
-        return (this is InternalChatResponseFormatText && other is InternalChatResponseFormatText)
-            || (this is InternalChatResponseFormatJsonObject && other is InternalChatResponseFormatJsonObject)
-            || (this is InternalChatResponseFormatJsonSchema thisJsonSchema
-                    && other is InternalChatResponseFormatJsonSchema otherJsonSchema
-                    && thisJsonSchema.JsonSchema.Name.Equals(otherJsonSchema.JsonSchema.Name));
-    }
-
-    public override string ToString()
-    {
-        return ModelReaderWriter.Write(this).ToString();
     }
 }

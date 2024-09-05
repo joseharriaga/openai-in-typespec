@@ -11,9 +11,9 @@ namespace OpenAI.Chat
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
 
-        internal ChatTool(ChatToolKind kind, InternalFunctionDefinition function, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatTool(InternalChatCompletionToolType type, InternalFunctionDefinition function, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Kind = kind;
+            Type = type;
             Function = function;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }

@@ -24,8 +24,9 @@ public partial class ChatToolTests : SyncAsyncTestBase
     {
     }
 
+    private const string GetNumberForWordToolName = "get_number_for_word";
     private static ChatTool s_numberForWordTool = ChatTool.CreateFunctionTool(
-        "get_number_for_word",
+        GetNumberForWordToolName,
         "gets an arbitrary number assigned to a given word",
         BinaryData.FromString("""
             {
@@ -39,17 +40,15 @@ public partial class ChatToolTests : SyncAsyncTestBase
             """)
         );
 
-    private const string GetFavoriteColorToolFunctionName = "get_favorite_color";
-
+    private const string GetFavoriteColorToolName = "get_favorite_color";
     private static ChatTool s_getFavoriteColorTool = ChatTool.CreateFunctionTool(
-        GetFavoriteColorToolFunctionName,
+        GetFavoriteColorToolName,
         "gets the favorite color of the caller"
     );
 
-    private const string GetFavoriteColorForMonthToolFunctionName = "get_favorite_color_for_month";
-
+    private const string GetFavoriteColorForMonthToolName = "get_favorite_color_for_month";
     private static ChatTool s_getFavoriteColorForMonthTool = ChatTool.CreateFunctionTool(
-        GetFavoriteColorForMonthToolFunctionName,
+        GetFavoriteColorForMonthToolName,
         "gets the caller's favorite color for a given month",
         BinaryData.FromString("""
             {
@@ -65,11 +64,10 @@ public partial class ChatToolTests : SyncAsyncTestBase
             """)
     );
 
-    private const string GetFavoriteColorForMonthFunctionName = "get_favorite_color_for_month";
-
 #pragma warning disable CS0618
+    private const string GetFavoriteColorForMonthFunctionName = "get_favorite_color_for_month";
     private static ChatFunction s_getFavoriteColorForMonthFunction = new ChatFunction(
-        GetFavoriteColorForMonthToolFunctionName,
+        GetFavoriteColorForMonthFunctionName,
         "gets the caller's favorite color for a given month",
         BinaryData.FromString("""
             {
@@ -87,7 +85,6 @@ public partial class ChatToolTests : SyncAsyncTestBase
 #pragma warning restore CS0618
 
     private const string GetWeatherForCityToolName = "get_weather_for_city";
-
     private static ChatTool s_getWeatherForCityTool = ChatTool.CreateFunctionTool(
         GetWeatherForCityToolName,
         "gets the current weather for a given city",
@@ -106,7 +103,6 @@ public partial class ChatToolTests : SyncAsyncTestBase
     );
 
     private const string GetMoodForWeatherToolName = "get_mood_for_weather";
-
     private static ChatTool s_getMoodForWeatherTool = ChatTool.CreateFunctionTool(
         GetMoodForWeatherToolName,
         "gets the caller's mood for a given weather",
@@ -134,7 +130,7 @@ public partial class ChatToolTests : SyncAsyncTestBase
         {
             (null, ChatFinishReason.ToolCalls),
             (ChatToolChoice.None, ChatFinishReason.Stop),
-            (new ChatToolChoice(s_numberForWordTool), ChatFinishReason.Stop),
+            (ChatToolChoice.CreateFunctionChoice(GetNumberForWordToolName), ChatFinishReason.Stop),
             (ChatToolChoice.Auto, ChatFinishReason.ToolCalls),
             // TODO: Add test for ChatToolChoice.Required
         })
@@ -168,7 +164,7 @@ public partial class ChatToolTests : SyncAsyncTestBase
         Assert.That(result.Value.ToolCalls.Count, Is.EqualTo(1));
         var toolCall = result.Value.ToolCalls[0];
         var toolCallArguments = BinaryData.FromString(toolCall.FunctionArguments).ToObjectFromJson<Dictionary<string, object>>();
-        Assert.That(toolCall.FunctionName, Is.EqualTo(GetFavoriteColorToolFunctionName));
+        Assert.That(toolCall.FunctionName, Is.EqualTo(GetFavoriteColorToolName));
         Assert.That(toolCall.Id, Is.Not.Null.And.Not.Empty);
         Assert.That(toolCallArguments.Count, Is.EqualTo(0));
 
@@ -200,7 +196,7 @@ public partial class ChatToolTests : SyncAsyncTestBase
         Assert.That(result.Value.FinishReason, Is.EqualTo(ChatFinishReason.ToolCalls));
         Assert.That(result.Value.ToolCalls?.Count, Is.EqualTo(1));
         var toolCall = result.Value.ToolCalls[0];
-        Assert.That(toolCall.FunctionName, Is.EqualTo(GetFavoriteColorForMonthToolFunctionName));
+        Assert.That(toolCall.FunctionName, Is.EqualTo(GetFavoriteColorForMonthToolName));
         JsonObject argumentsJson = JsonSerializer.Deserialize<JsonObject>(toolCall.FunctionArguments);
         Assert.That(argumentsJson.Count, Is.EqualTo(1));
         Assert.That(argumentsJson.ContainsKey("month_name"));

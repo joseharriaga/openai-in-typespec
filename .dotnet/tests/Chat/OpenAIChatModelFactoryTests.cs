@@ -121,8 +121,8 @@ public partial class OpenAIChatModelFactoryTests
     public void ChatCompletionWithToolCallsWorks()
     {
         IEnumerable<ChatToolCall> toolCalls = [
-            ChatToolCall.CreateFunctionToolCall("id1", "get_recipe", string.Empty),
-            ChatToolCall.CreateFunctionToolCall("id2", "get_location", string.Empty)
+            ChatToolCall.CreateFunctionToolCall("id1", "get_recipe", "{}"),
+            ChatToolCall.CreateFunctionToolCall("id2", "get_location", "{}")
         ];
         ChatCompletion chatCompletion = OpenAIChatModelFactory.ChatCompletion(toolCalls: toolCalls);
 

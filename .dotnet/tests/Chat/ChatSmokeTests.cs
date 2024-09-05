@@ -160,7 +160,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         else
         {
             // We construct a new instance. Later, we serialize it and confirm it was constructed correctly.
-            choice = ChatToolChoice.Auto;
+            choice = ChatToolChoice.CreateAutoChoice();
         }
 
         BinaryData serializedChoice = ModelReaderWriter.Write(choice);

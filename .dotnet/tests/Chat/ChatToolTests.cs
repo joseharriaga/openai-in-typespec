@@ -129,9 +129,9 @@ public partial class ChatToolTests : SyncAsyncTestBase
         foreach (var (choice, reason) in new (ChatToolChoice, ChatFinishReason)[]
         {
             (null, ChatFinishReason.ToolCalls),
-            (ChatToolChoice.None, ChatFinishReason.Stop),
+            (ChatToolChoice.CreateNoneChoice(), ChatFinishReason.Stop),
             (ChatToolChoice.CreateFunctionChoice(GetNumberForWordToolName), ChatFinishReason.Stop),
-            (ChatToolChoice.Auto, ChatFinishReason.ToolCalls),
+            (ChatToolChoice.CreateAutoChoice(), ChatFinishReason.ToolCalls),
             // TODO: Add test for ChatToolChoice.Required
         })
         {

@@ -52,15 +52,6 @@ public partial class ChatToolChoice
         SerializedAdditionalRawData = serializedAdditionalRawData;
     }
 
-    /// <inheritdoc cref="CreateAutoChoice()"/>
-    public static ChatToolChoice Auto { get; } = CreateAutoChoice();
-
-    /// <inheritdoc cref="CreateNoneChoice()"/>
-    public static ChatToolChoice None { get; } = CreateNoneChoice();
-
-    /// <inheritdoc cref="CreateRequiredChoice()"/>
-    public static ChatToolChoice Required { get; } = CreateRequiredChoice();
-
     /// <summary>
     ///     Creates a new <see cref="ChatToolChoice"/> indicating that the model can freely pick between generating a
     ///     message or calling one or more tools.

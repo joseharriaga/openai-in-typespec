@@ -129,7 +129,7 @@ public partial class AzureOpenAISamples
         // Purely for convenience and clarity, this standalone local method handles tool call responses.
         string GetToolCallContent(ChatToolCall toolCall)
         {
-            if (toolCall.FunctionName == nameof(GetCurrentWeather))
+            if (toolCall.FunctionName == getCurrentWeatherTool.FunctionName)
             {
                 // Validate arguments before using them; it's not always guaranteed to be valid JSON!
                 try

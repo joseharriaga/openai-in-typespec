@@ -1401,8 +1401,6 @@ namespace OpenAI.Chat {
         Function = 4
     }
     public abstract class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
-        public static ChatResponseFormat JsonObject { get; }
-        public static ChatResponseFormat Text { get; }
         public static ChatResponseFormat CreateJsonObjectFormat();
         public static ChatResponseFormat CreateJsonSchemaFormat(string name, BinaryData jsonSchema, string description = null, bool? strictSchemaEnabled = null);
         public static ChatResponseFormat CreateTextFormat();
@@ -1484,9 +1482,6 @@ namespace OpenAI.Chat {
         public override readonly string ToString();
     }
     public class ChatToolChoice : IJsonModel<ChatToolChoice>, IPersistableModel<ChatToolChoice> {
-        public static ChatToolChoice Auto { get; }
-        public static ChatToolChoice None { get; }
-        public static ChatToolChoice Required { get; }
         public static ChatToolChoice CreateAutoChoice();
         public static ChatToolChoice CreateFunctionChoice(string functionName);
         public static ChatToolChoice CreateNoneChoice();

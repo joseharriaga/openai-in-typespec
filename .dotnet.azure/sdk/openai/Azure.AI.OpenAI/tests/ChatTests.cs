@@ -316,7 +316,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         ChatClient client = GetTestClient();
         ChatCompletionOptions options = new()
         {
-            ResponseFormat = ChatResponseFormat.Text
+            ResponseFormat = ChatResponseFormat.CreateTextFormat()
         };
 
         ChatCompletion response = await client.CompleteChatAsync([new UserChatMessage("Give me a random number")], options);

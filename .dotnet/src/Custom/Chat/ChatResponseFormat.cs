@@ -24,12 +24,6 @@ namespace OpenAI.Chat;
 [CodeGenModel("ChatResponseFormat")]
 public abstract partial class ChatResponseFormat
 {
-    /// <inheritdoc cref="CreateTextFormat()"/>
-    public static ChatResponseFormat Text { get; } = CreateTextFormat();
-
-    /// <inheritdoc cref="CreateJsonObjectFormat()"/>
-    public static ChatResponseFormat JsonObject { get; } = CreateJsonObjectFormat();
-
     /// <summary> Creates a new <see cref="ChatResponseFormat"/> requesting plain text. </summary>
     public static ChatResponseFormat CreateTextFormat() => new InternalChatResponseFormatText();
 

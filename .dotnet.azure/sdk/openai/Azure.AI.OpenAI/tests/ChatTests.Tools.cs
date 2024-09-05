@@ -73,10 +73,10 @@ namespace Azure.AI.OpenAI.Tests
             {
                 ToolChoice = toolChoice switch
                 {
-                    ToolChoiceTestType.None => ChatToolChoice.None,
-                    ToolChoiceTestType.Auto => ChatToolChoice.Auto,
+                    ToolChoiceTestType.None => ChatToolChoice.CreateNoneChoice(),
+                    ToolChoiceTestType.Auto => ChatToolChoice.CreateAutoChoice(),
                     ToolChoiceTestType.Tool => ChatToolChoice.CreateFunctionChoice(TOOL_TEMPERATURE_NAME),
-                    ToolChoiceTestType.Required => ChatToolChoice.Required,
+                    ToolChoiceTestType.Required => ChatToolChoice.CreateRequiredChoice(),
                     _ => throw new NotImplementedException(),
                 },
                 Tools = { TOOL_TEMPERATURE },
@@ -198,10 +198,10 @@ namespace Azure.AI.OpenAI.Tests
             {
                 ToolChoice = toolChoice switch
                 {
-                    ToolChoiceTestType.None => ChatToolChoice.None,
-                    ToolChoiceTestType.Auto => ChatToolChoice.Auto,
+                    ToolChoiceTestType.None => ChatToolChoice.CreateNoneChoice(),
+                    ToolChoiceTestType.Auto => ChatToolChoice.CreateAutoChoice(),
                     ToolChoiceTestType.Tool => ChatToolChoice.CreateFunctionChoice(TOOL_TEMPERATURE_NAME),
-                    ToolChoiceTestType.Required => ChatToolChoice.Required,
+                    ToolChoiceTestType.Required => ChatToolChoice.CreateRequiredChoice(),
                     _ => throw new NotImplementedException(),
                 },
                 Tools = { TOOL_TEMPERATURE },

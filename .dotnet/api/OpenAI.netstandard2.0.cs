@@ -1939,7 +1939,6 @@ namespace OpenAI.Images {
         BinaryData IPersistableModel<GeneratedImage>.Write(ModelReaderWriterOptions options);
     }
     public class GeneratedImageCollection : ObjectModel.ReadOnlyCollection<GeneratedImage>, IJsonModel<GeneratedImageCollection>, IPersistableModel<GeneratedImageCollection> {
-        public DateTimeOffset Created { get; }
         public DateTimeOffset CreatedAt { get; }
         GeneratedImageCollection IJsonModel<GeneratedImageCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<GeneratedImageCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);

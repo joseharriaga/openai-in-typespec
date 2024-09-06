@@ -5,13 +5,19 @@
     <!--Ignore XML doc comments on test types and members-->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
 
-   <!-- OPENAI001 - Ignore experimental warnings-->
+    <!-- OPENAI001 - Ignore experimental warnings-->
     <NoWarn>$(NoWarn);OPENAI001;</NoWarn>
 
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\src\OpenAI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="OpenAI.TestFramework">
+      <HintPath>$(ExternalLibFolder)OpenAI.TestFramework/$(Configuration)/$(TargetFramework)/OpenAI.TestFramework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
@@ -19,10 +25,26 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Moq" Version="[4.18.2]" />
+    <PackageDownload Include="Azure.Sdk.Tools.Testproxy" Version="[$(TestProxyVersion)]" />
   </ItemGroup>
-
+  <ItemGroup>
+    <None Update="Assets\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\src\Utility\Telemetry\*.cs" LinkBase="Telemetry\Shared" />
     <Compile Include="..\src\Utility\AppContextSwitchHelper.cs" LinkBase="Telemetry\Shared" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>SourcePath</_Parameter1>
+      <_Parameter2>$(MSBuildProjectDirectory)</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>TestProxyPath</_Parameter1>
+      <_Parameter2>$(NuGetPackageRoot)\azure.sdk.tools.testproxy\$(TestProxyVersion)\tools\net6.0\any\Azure.Sdk.Tools.TestProxy.dll</_Parameter2>
+    </AssemblyAttribute>
   </ItemGroup>
 </Project>

@@ -1,37 +1,33 @@
-﻿using NUnit.Framework;
-using OpenAI.Assistants;
-using OpenAI.Files;
-using OpenAI.VectorStores;
-using System;
+﻿using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using static OpenAI.Tests.TestHelpers;
+using NUnit.Framework;
+using OpenAI.Assistants;
+using OpenAI.Files;
+using OpenAI.TestFramework;
+using OpenAI.TestFramework.Utils;
+using OpenAI.Tests.Utility;
+using OpenAI.VectorStores;
 
 namespace OpenAI.Tests.Assistants;
 
 #pragma warning disable OPENAI001
 
-[Parallelizable(ParallelScope.Fixtures)]
 [Category("Assistants")]
-public partial class AssistantTests
+public class AssistantTests(bool isAsync) : OpenAiTestBase(isAsync)
 {
-    [OneTimeTearDown]
+    [TearDown]
     protected void Cleanup()
     {
-        // Skip cleanup if there is no API key (e.g., if we are not running live tests).
-        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OPENAI_API_KEY")))
-        {
-            return;
-        }
+        var clientOptions = ConfigureClientOptions(new OpenAIClientOptions());
 
-        AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);
-        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
-        VectorStoreClient vectorStoreClient = GetTestClient<VectorStoreClient>(TestScenario.VectorStores);
+        AssistantClient client = new(TestCredential, clientOptions);
+        FileClient fileClient = new(TestCredential, clientOptions);
+        VectorStoreClient vectorStoreClient = new(TestCredential, clientOptions);
         RequestOptions requestOptions = new()
         {
             ErrorOptions = ClientErrorBehaviors.NoThrow,
@@ -63,22 +59,22 @@ public partial class AssistantTests
         _vectorStoreIdsToDelete.Clear();
     }
 
-    [Test]
-    public void BasicAssistantOperationsWork()
+    [RecordedTest]
+    public async Task BasicAssistantOperationsWork()
     {
         AssistantClient client = GetTestClient();
-        Assistant assistant = client.CreateAssistant("gpt-4o-mini");
+        Assistant assistant = await client.CreateAssistantAsync("gpt-4o-mini");
         Validate(assistant);
         Assert.That(assistant.Name, Is.Null.Or.Empty);
-        assistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
+        assistant = await client.ModifyAssistantAsync(assistant.Id, new AssistantModificationOptions()
         {
             Name = "test assistant name",
         });
         Assert.That(assistant.Name, Is.EqualTo("test assistant name"));
-        bool deleted = client.DeleteAssistant(assistant.Id);
+        bool deleted = await client.DeleteAssistantAsync(assistant.Id);
         Assert.That(deleted, Is.True);
         _assistantsToDelete.Remove(assistant);
-        assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+        assistant = await client.CreateAssistantAsync("gpt-4o-mini", new AssistantCreationOptions()
         {
             Metadata =
             {
@@ -86,10 +82,10 @@ public partial class AssistantTests
             },
         });
         Validate(assistant);
-        Assistant retrievedAssistant = client.GetAssistant(assistant.Id);
+        Assistant retrievedAssistant = await client.GetAssistantAsync(assistant.Id);
         Assert.That(retrievedAssistant.Id, Is.EqualTo(assistant.Id));
         Assert.That(retrievedAssistant.Metadata.TryGetValue(s_cleanupMetadataKey, out string metadataValue) && metadataValue == "hello!");
-        Assistant modifiedAssistant = client.ModifyAssistant(assistant.Id, new AssistantModificationOptions()
+        Assistant modifiedAssistant = await client.ModifyAssistantAsync(assistant.Id, new AssistantModificationOptions()
         {
             Metadata =
             {
@@ -97,14 +93,15 @@ public partial class AssistantTests
             },
         });
         Assert.That(modifiedAssistant.Id, Is.EqualTo(assistant.Id));
-        PageCollection<Assistant> pages = client.GetAssistants();
-        IEnumerable<Assistant> recentAssistants = pages.GetAllValues();
-        Assistant listedAssistant = recentAssistants.FirstOrDefault(pageItem => pageItem.Id == assistant.Id);
+        AsyncPageCollection<Assistant> pages = client.GetAssistantsAsync();
+        IAsyncEnumerable<Assistant> recentAssistants = pages.GetAllValuesAsync();
+        Assistant listedAssistant = await recentAssistants.FirstOrDefaultAsync(pageItem => pageItem.Id == assistant.Id);
         Assert.That(listedAssistant, Is.Not.Null);
         Assert.That(listedAssistant.Metadata.TryGetValue(s_cleanupMetadataKey, out string newMetadataValue) && newMetadataValue == "goodbye!");
     }
 
-    [Test]
+    [RecordedTest]
+    [SyncOnly]
     public void BasicThreadOperationsWork()
     {
         AssistantClient client = GetTestClient();
@@ -137,7 +134,8 @@ public partial class AssistantTests
         Assert.That(thread.Metadata.TryGetValue("threadMetadata", out threadMetadataValue) && threadMetadataValue == "newThreadMetadataValue");
     }
 
-    [Test]
+    [RecordedTest]
+    [SyncOnly]
     public void BasicMessageOperationsWork()
     {
         AssistantClient client = GetTestClient();
@@ -181,7 +179,8 @@ public partial class AssistantTests
         Assert.That(messagePage.Values[0].Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
     }
 
-    [Test]
+    [RecordedTest]
+    [SyncOnly]
     public void ThreadWithInitialMessagesWorks()
     {
         AssistantClient client = GetTestClient();
@@ -215,10 +214,11 @@ public partial class AssistantTests
         Assert.That(messagesPage.Values[1].Content[0], Is.Not.Null);
         Assert.That(messagesPage.Values[1].Content[0].Text, Is.EqualTo("Can you describe this image for me?"));
         Assert.That(messagesPage.Values[1].Content[1], Is.Not.Null);
-        Assert.That(messagesPage.Values[1].Content[1].ImageUrl.AbsoluteUri, Is.EqualTo("https://test.openai.com/image.png"));
+        Assert.That(messagesPage.Values[1].Content[1].ImageUrl.AbsoluteUri, Does.StartWith("https://").And.EndsWith("/image.png"));
     }
 
-    [Test]
+    [RecordedTest]
+    [SyncOnly]
     public void BasicRunOperationsWork()
     {
         AssistantClient client = GetTestClient();
@@ -244,7 +244,7 @@ public partial class AssistantTests
         Assert.That(messagesPage.Values.Count, Is.GreaterThanOrEqualTo(1));
         for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(GetTimeout(1000));
             run = client.GetRun(run);
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
@@ -262,7 +262,8 @@ public partial class AssistantTests
         Assert.That(messagesPage.Values[1].Id, Is.EqualTo(message.Id));
     }
 
-    [Test]
+    [RecordedTest]
+    [SyncOnly]
     public void BasicRunStepFunctionalityWorks()
     {
         AssistantClient client = GetTestClient();
@@ -273,7 +274,7 @@ public partial class AssistantTests
         });
         Validate(assistant);
 
-        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
+        FileClient fileClient = GetTestClient<FileClient>();
         OpenAIFileInfo equationFile = fileClient.UploadFile(
             BinaryData.FromString("""
             x,y
@@ -308,7 +309,7 @@ public partial class AssistantTests
 
         while (!run.Status.IsTerminal)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(GetTimeout(1000));
             run = client.GetRun(run);
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
@@ -345,7 +346,8 @@ public partial class AssistantTests
         });
     }
 
-    [Test]
+    [RecordedTest]
+    [SyncOnly]
     public void SettingResponseFormatWorks()
     {
         AssistantClient client = GetTestClient();
@@ -371,7 +373,8 @@ public partial class AssistantTests
         Assert.That(run.ResponseFormat == AssistantResponseFormat.CreateJsonObjectFormat());
     }
 
-    [Test]
+    [RecordedTest]
+    [SyncOnly]
     public void FunctionToolsWork()
     {
         AssistantClient client = GetTestClient();
@@ -419,7 +422,7 @@ public partial class AssistantTests
 
         for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(GetTimeout(1000));
             run = client.GetRun(run);
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.RequiresAction));
@@ -433,7 +436,7 @@ public partial class AssistantTests
 
         for (int i = 0; i < 10 && !run.Status.IsTerminal; i++)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(GetTimeout(1000));
             run = client.GetRun(run);
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
@@ -446,7 +449,7 @@ public partial class AssistantTests
         Assert.That(firstPage.Values[0].Content[0].Text.ToLowerInvariant(), Does.Contain("tacos"));
     }
 
-    [Test]
+    [RecordedTest]
     public async Task StreamingRunWorks()
     {
         AssistantClient client = GetTestClient();
@@ -494,7 +497,7 @@ public partial class AssistantTests
         Print(">>> Done <<<");
     }
 
-    [TestCase]
+    [RecordedTest]
     public async Task StreamingToolCall()
     {
         AssistantClient client = GetTestClient();
@@ -556,11 +559,12 @@ public partial class AssistantTests
         } while (run?.Status.IsTerminal == false);
     }
 
-    [Test]
+    [RecordedTest]
+    [SyncOnly]
     public void BasicFileSearchWorks()
     {
         // First, we need to upload a simple test file.
-        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
+        FileClient fileClient = GetTestClient<FileClient>();
         OpenAIFileInfo testFile = fileClient.UploadFile(
             BinaryData.FromString("""
             This file describes the favorite foods of several people.
@@ -647,7 +651,7 @@ public partial class AssistantTests
         Validate(run);
         do
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(GetTimeout(1000));
             run = client.GetRun(run);
         } while (run?.Status.IsTerminal == false);
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
@@ -677,7 +681,7 @@ public partial class AssistantTests
         Assert.That(hasCake, Is.True);
     }
 
-    [Test]
+    [RecordedTest]
     public async Task BasicFileSearchStreamingWorks()
     {
         const string fileContent = """
@@ -689,11 +693,11 @@ public partial class AssistantTests
 
         const string fileName = "favorite_foods.txt";
 
-        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
-        AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);
+        FileClient fileClient = GetTestClient<FileClient>();
+        AssistantClient client = GetTestClient<AssistantClient>();
 
         // First, upload a simple test file.
-        OpenAIFileInfo testFile = fileClient.UploadFile(BinaryData.FromString(fileContent), fileName, FileUploadPurpose.Assistants);
+        OpenAIFileInfo testFile = await fileClient.UploadFileAsync(BinaryData.FromString(fileContent), fileName, FileUploadPurpose.Assistants);
         Validate(testFile);
 
         // Create an assistant, using the creation helper to make a new vector store.
@@ -708,7 +712,7 @@ public partial class AssistantTests
                 }
             }
         };
-        Assistant assistant = client.CreateAssistant("gpt-4o-mini", assistantCreationOptions);
+        Assistant assistant = await client.CreateAssistantAsync("gpt-4o-mini", assistantCreationOptions);
         Validate(assistant);
 
         Assert.That(assistant.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
@@ -720,7 +724,7 @@ public partial class AssistantTests
         {
             InitialMessages = { "Using the files you have available, what's Filip's favorite food?" }
         };
-        AssistantThread thread = client.CreateThread(threadCreationOptions);
+        AssistantThread thread = await client.CreateThreadAsync(threadCreationOptions);
         Validate(thread);
 
         // Create run and stream the results.
@@ -738,7 +742,7 @@ public partial class AssistantTests
         Assert.That(message, Does.Contain("cake"));
     }
 
-    [Test]
+    [RecordedTest]
     public async Task Pagination_CanEnumerateAssistants()
     {
         AssistantClient client = GetTestClient();
@@ -746,7 +750,7 @@ public partial class AssistantTests
         // Create assistant collection
         for (int i = 0; i < 10; i++)
         {
-            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            Assistant assistant = await client.CreateAssistantAsync("gpt-4o-mini", new AssistantCreationOptions()
             {
                 Name = $"Test Assistant {i}",
             });
@@ -779,7 +783,7 @@ public partial class AssistantTests
         Assert.That(count, Is.GreaterThanOrEqualTo(10));
     }
 
-    [Test]
+    [RecordedTest]
     public async Task Pagination_CanPageThroughAssistantCollection()
     {
         AssistantClient client = GetTestClient();
@@ -787,7 +791,7 @@ public partial class AssistantTests
         // Create assistant collection
         for (int i = 0; i < 10; i++)
         {
-            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            Assistant assistant = await client.CreateAssistantAsync("gpt-4o-mini", new AssistantCreationOptions()
             {
                 Name = $"Test Assistant {i}"
             });
@@ -832,7 +836,7 @@ public partial class AssistantTests
         Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
     }
 
-    [Test]
+    [RecordedTest]
     public async Task Pagination_CanRehydrateAssistantPageCollectionFromBytes()
     {
         AssistantClient client = GetTestClient();
@@ -840,7 +844,7 @@ public partial class AssistantTests
         // Create assistant collection
         for (int i = 0; i < 10; i++)
         {
-            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            Assistant assistant = await client.CreateAssistantAsync("gpt-4o-mini", new AssistantCreationOptions()
             {
                 Name = $"Test Assistant {i}"
             });
@@ -890,7 +894,7 @@ public partial class AssistantTests
         Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
     }
 
-    [Test]
+    [RecordedTest]
     public async Task Pagination_CanRehydrateAssistantPageCollectionFromPageToken()
     {
         AssistantClient client = GetTestClient();
@@ -898,7 +902,7 @@ public partial class AssistantTests
         // Create assistant collection
         for (int i = 0; i < 10; i++)
         {
-            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            Assistant assistant = await client.CreateAssistantAsync("gpt-4o-mini", new AssistantCreationOptions()
             {
                 Name = $"Test Assistant {i}"
             });
@@ -946,7 +950,8 @@ public partial class AssistantTests
         Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
     }
 
-    [Test]
+    [RecordedTest]
+    [AsyncOnly] // The casts this test does can't work with the automatic sync to async adapters
     public async Task Pagination_CanCastAssistantPageCollectionToConvenienceFromProtocol()
     {
         AssistantClient client = GetTestClient();
@@ -954,7 +959,7 @@ public partial class AssistantTests
         // Create assistant collection
         for (int i = 0; i < 10; i++)
         {
-            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            Assistant assistant = await client.CreateAssistantAsync("gpt-4o-mini", new AssistantCreationOptions()
             {
                 Name = $"Test Assistant {i}"
             });
@@ -997,7 +1002,8 @@ public partial class AssistantTests
         Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
     }
 
-    [Test]
+    [RecordedTest]
+    [SyncOnly]
     public void Pagination_CanRehydrateRunStepPageCollectionFromBytes()
     {
         AssistantClient client = GetTestClient();
@@ -1008,7 +1014,7 @@ public partial class AssistantTests
         });
         Validate(assistant);
 
-        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
+        FileClient fileClient = GetTestClient<FileClient>();
         OpenAIFileInfo equationFile = fileClient.UploadFile(
             BinaryData.FromString("""
             x,y
@@ -1043,7 +1049,7 @@ public partial class AssistantTests
 
         while (!run.Status.IsTerminal)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(GetTimeout(1000));
             run = client.GetRun(run);
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
@@ -1079,7 +1085,7 @@ public partial class AssistantTests
         Assert.That(pageCount, Is.GreaterThanOrEqualTo(1));
     }
 
-    [Test]
+    [RecordedTest]
     public async Task MessagesWithRoles()
     {
         AssistantClient client = GetTestClient();
@@ -1180,7 +1186,7 @@ public partial class AssistantTests
     private readonly List<OpenAIFileInfo> _filesToDelete = [];
     private readonly List<string> _vectorStoreIdsToDelete = [];
 
-    private static AssistantClient GetTestClient() => GetTestClient<AssistantClient>(TestScenario.Assistants);
+    private AssistantClient GetTestClient() => GetTestClient<AssistantClient>();
 
     private static readonly DateTimeOffset s_2024 = new(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);
     private static readonly string s_testAssistantName = $".NET SDK Test Assistant - Please Delete Me";

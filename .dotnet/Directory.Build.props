@@ -1,0 +1,6 @@
+﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ExternalLibFolder>$(MSBuildThisFileDirectory)../.dotnet.azure/artifacts/bin/</ExternalLibFolder>
+    <TestProxyVersion>1.0.0-dev.20240806.1</TestProxyVersion>
+  </PropertyGroup>
+</Project>

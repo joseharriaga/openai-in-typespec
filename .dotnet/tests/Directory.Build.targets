@@ -1,7 +1,0 @@
-<Project>
-  <ItemGroup>
-    <None Update="$(MSBuildProjectDirectory)\Assets\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-</Project>

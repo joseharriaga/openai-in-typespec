@@ -12,8 +12,8 @@ public partial class StreamingChatCompletionUpdate
 {
     private IReadOnlyList<ChatMessageContentPart> _contentUpdate;
     private IReadOnlyList<StreamingChatToolCallUpdate> _toolCallUpdates;
-    private IReadOnlyList<ChatTokenLogProbabilityInfo> _contentTokenLogProbabilities;
-    private IReadOnlyList<ChatTokenLogProbabilityInfo> _refusalTokenLogProbabilities;
+    private IReadOnlyList<ChatTokenLogProbabilityDetails> _contentTokenLogProbabilities;
+    private IReadOnlyList<ChatTokenLogProbabilityDetails> _refusalTokenLogProbabilities;
 
     // CUSTOM:
     // - Made private. This property does not add value in the context of a strongly-typed class.
@@ -61,16 +61,16 @@ public partial class StreamingChatCompletionUpdate
     /// <summary>
     /// Log probability information.
     /// </summary>
-    public IReadOnlyList<ChatTokenLogProbabilityInfo> ContentTokenLogProbabilities
+    public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities
         => _contentTokenLogProbabilities
             ??= InternalChoice?.Logprobs?.Content
-                ?? new ChangeTrackingList<ChatTokenLogProbabilityInfo>();
+                ?? new ChangeTrackingList<ChatTokenLogProbabilityDetails>();
 
     // CUSTOM: Flattened refusal logprobs property.
-    public IReadOnlyList<ChatTokenLogProbabilityInfo> RefusalTokenLogProbabilities
+    public IReadOnlyList<ChatTokenLogProbabilityDetails> RefusalTokenLogProbabilities
         => _refusalTokenLogProbabilities
             ??= InternalChoice?.Logprobs?.Refusal
-                ?? new ChangeTrackingList<ChatTokenLogProbabilityInfo>();
+                ?? new ChangeTrackingList<ChatTokenLogProbabilityDetails>();
 
     // CUSTOM: Flattened choice delta property.
     /// <summary>

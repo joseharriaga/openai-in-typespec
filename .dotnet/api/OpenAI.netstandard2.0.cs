@@ -1280,14 +1280,14 @@ namespace OpenAI.Chat {
     }
     public class ChatCompletion : IJsonModel<ChatCompletion>, IPersistableModel<ChatCompletion> {
         public IReadOnlyList<ChatMessageContentPart> Content { get; }
-        public IReadOnlyList<ChatTokenLogProbabilityInfo> ContentTokenLogProbabilities { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities { get; }
         public DateTimeOffset CreatedAt { get; }
         public ChatFinishReason FinishReason { get; }
         public ChatFunctionCall FunctionCall { get; }
         public string Id { get; }
         public string Model { get; }
         public string Refusal { get; }
-        public IReadOnlyList<ChatTokenLogProbabilityInfo> RefusalTokenLogProbabilities { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityDetails> RefusalTokenLogProbabilities { get; }
         public ChatMessageRole Role { get; }
         public string SystemFingerprint { get; }
         public IReadOnlyList<ChatToolCall> ToolCalls { get; }
@@ -1458,26 +1458,26 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatResponseFormat>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatResponseFormat>.Write(ModelReaderWriterOptions options);
     }
-    public class ChatTokenLogProbabilityInfo : IJsonModel<ChatTokenLogProbabilityInfo>, IPersistableModel<ChatTokenLogProbabilityInfo> {
+    public class ChatTokenLogProbabilityDetails : IJsonModel<ChatTokenLogProbabilityDetails>, IPersistableModel<ChatTokenLogProbabilityDetails> {
         public float LogProbability { get; }
         public string Token { get; }
-        public IReadOnlyList<ChatTokenTopLogProbabilityInfo> TopLogProbabilities { get; }
-        public IReadOnlyList<int> Utf8ByteValues { get; }
-        ChatTokenLogProbabilityInfo IJsonModel<ChatTokenLogProbabilityInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ChatTokenLogProbabilityInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ChatTokenLogProbabilityInfo IPersistableModel<ChatTokenLogProbabilityInfo>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ChatTokenLogProbabilityInfo>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ChatTokenLogProbabilityInfo>.Write(ModelReaderWriterOptions options);
+        public IReadOnlyList<ChatTokenTopLogProbabilityDetails> TopLogProbabilities { get; }
+        public ReadOnlyMemory<byte>? Utf8Bytes { get; }
+        ChatTokenLogProbabilityDetails IJsonModel<ChatTokenLogProbabilityDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ChatTokenLogProbabilityDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ChatTokenLogProbabilityDetails IPersistableModel<ChatTokenLogProbabilityDetails>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ChatTokenLogProbabilityDetails>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ChatTokenLogProbabilityDetails>.Write(ModelReaderWriterOptions options);
     }
-    public class ChatTokenTopLogProbabilityInfo : IJsonModel<ChatTokenTopLogProbabilityInfo>, IPersistableModel<ChatTokenTopLogProbabilityInfo> {
+    public class ChatTokenTopLogProbabilityDetails : IJsonModel<ChatTokenTopLogProbabilityDetails>, IPersistableModel<ChatTokenTopLogProbabilityDetails> {
         public float LogProbability { get; }
         public string Token { get; }
-        public IReadOnlyList<int> Utf8ByteValues { get; }
-        ChatTokenTopLogProbabilityInfo IJsonModel<ChatTokenTopLogProbabilityInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ChatTokenTopLogProbabilityInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ChatTokenTopLogProbabilityInfo IPersistableModel<ChatTokenTopLogProbabilityInfo>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ChatTokenTopLogProbabilityInfo>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ChatTokenTopLogProbabilityInfo>.Write(ModelReaderWriterOptions options);
+        public ReadOnlyMemory<byte>? Utf8Bytes { get; }
+        ChatTokenTopLogProbabilityDetails IJsonModel<ChatTokenTopLogProbabilityDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ChatTokenTopLogProbabilityDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ChatTokenTopLogProbabilityDetails IPersistableModel<ChatTokenTopLogProbabilityDetails>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ChatTokenTopLogProbabilityDetails>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ChatTokenTopLogProbabilityDetails>.Write(ModelReaderWriterOptions options);
     }
     public class ChatTokenUsage : IJsonModel<ChatTokenUsage>, IPersistableModel<ChatTokenUsage> {
         public int InputTokens { get; }
@@ -1566,23 +1566,23 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<FunctionChatMessage>.Write(ModelReaderWriterOptions options);
     }
     public static class OpenAIChatModelFactory {
-        public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, IEnumerable<ChatMessageContentPart> content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
-        public static ChatTokenLogProbabilityInfo ChatTokenLogProbabilityInfo(string token = null, float logProbability = 0, IEnumerable<int> utf8ByteValues = null, IEnumerable<ChatTokenTopLogProbabilityInfo> topLogProbabilities = null);
-        public static ChatTokenTopLogProbabilityInfo ChatTokenTopLogProbabilityInfo(string token = null, float logProbability = 0, IEnumerable<int> utf8ByteValues = null);
+        public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, IEnumerable<ChatMessageContentPart> content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
+        public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
         public static ChatTokenUsage ChatTokenUsage(int outputTokens = 0, int inputTokens = 0, int totalTokens = 0);
-        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string id = null, IEnumerable<ChatMessageContentPart> contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string id = null, IEnumerable<ChatMessageContentPart> contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null);
         public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = 0, string id = null, ChatToolCallKind kind = default, string functionName = null, string functionArgumentsUpdate = null);
     }
     public class StreamingChatCompletionUpdate : IJsonModel<StreamingChatCompletionUpdate>, IPersistableModel<StreamingChatCompletionUpdate> {
-        public IReadOnlyList<ChatTokenLogProbabilityInfo> ContentTokenLogProbabilities { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities { get; }
         public IReadOnlyList<ChatMessageContentPart> ContentUpdate { get; }
         public DateTimeOffset CreatedAt { get; }
         public ChatFinishReason? FinishReason { get; }
         public StreamingChatFunctionCallUpdate FunctionCallUpdate { get; }
         public string Id { get; }
         public string Model { get; }
-        public IReadOnlyList<ChatTokenLogProbabilityInfo> RefusalTokenLogProbabilities { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityDetails> RefusalTokenLogProbabilities { get; }
         public string RefusalUpdate { get; }
         public ChatMessageRole? Role { get; }
         public string SystemFingerprint { get; }

@@ -186,9 +186,9 @@ public partial class OpenAIChatModelFactoryTests
     [Test]
     public void ChatCompletionWithContentTokenLogProbabilitiesWorks()
     {
-        IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = [
-            OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: 1f),
-            OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: 2f)
+        IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = [
+            OpenAIChatModelFactory.ChatTokenLogProbabilityDetails(logProbability: 1f),
+            OpenAIChatModelFactory.ChatTokenLogProbabilityDetails(logProbability: 2f)
         ];
         ChatCompletion chatCompletion = OpenAIChatModelFactory.ChatCompletion(contentTokenLogProbabilities: contentTokenLogProbabilities);
 
@@ -210,9 +210,9 @@ public partial class OpenAIChatModelFactoryTests
     [Test]
     public void ChatCompletionWithRefusalTokenLogProbabilitiesWorks()
     {
-        IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = [
-            OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: 1f),
-            OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: 2f)
+        IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = [
+            OpenAIChatModelFactory.ChatTokenLogProbabilityDetails(logProbability: 1f),
+            OpenAIChatModelFactory.ChatTokenLogProbabilityDetails(logProbability: 2f)
         ];
         ChatCompletion chatCompletion = OpenAIChatModelFactory.ChatCompletion(refusalTokenLogProbabilities: refusalTokenLogProbabilities);
 
@@ -316,108 +316,108 @@ public partial class OpenAIChatModelFactoryTests
     }
 
     [Test]
-    public void ChatTokenLogProbabilityInfoWithNoPropertiesWorks()
+    public void ChatTokenLogProbabilityDetailsWithNoPropertiesWorks()
     {
-        ChatTokenLogProbabilityInfo chatTokenLogProbabilityInfo = OpenAIChatModelFactory.ChatTokenLogProbabilityInfo();
+        ChatTokenLogProbabilityDetails chatTokenLogProbabilityDetails  = OpenAIChatModelFactory.ChatTokenLogProbabilityDetails();
 
-        Assert.That(chatTokenLogProbabilityInfo.Token, Is.Null);
-        Assert.That(chatTokenLogProbabilityInfo.LogProbability, Is.EqualTo(0f));
-        Assert.That(chatTokenLogProbabilityInfo.Utf8ByteValues, Is.Not.Null.And.Empty);
-        Assert.That(chatTokenLogProbabilityInfo.TopLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenLogProbabilityDetails.Token, Is.Null);
+        Assert.That(chatTokenLogProbabilityDetails.LogProbability, Is.EqualTo(0f));
+        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenLogProbabilityDetails.TopLogProbabilities, Is.Not.Null.And.Empty);
     }
 
     [Test]
-    public void ChatTokenLogProbabilityInfoWithTokenWorks()
+    public void ChatTokenLogProbabilityDetailsWithTokenWorks()
     {
         string token = "a_token_of_appreciation";
-        ChatTokenLogProbabilityInfo chatTokenLogProbabilityInfo = OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(token: token);
+        ChatTokenLogProbabilityDetails chatTokenLogProbabilityDetails = OpenAIChatModelFactory.ChatTokenLogProbabilityDetails(token: token);
 
-        Assert.That(chatTokenLogProbabilityInfo.Token, Is.EqualTo(token));
-        Assert.That(chatTokenLogProbabilityInfo.LogProbability, Is.EqualTo(0f));
-        Assert.That(chatTokenLogProbabilityInfo.Utf8ByteValues, Is.Not.Null.And.Empty);
-        Assert.That(chatTokenLogProbabilityInfo.TopLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenLogProbabilityDetails.Token, Is.EqualTo(token));
+        Assert.That(chatTokenLogProbabilityDetails.LogProbability, Is.EqualTo(0f));
+        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenLogProbabilityDetails.TopLogProbabilities, Is.Not.Null.And.Empty);
     }
 
     [Test]
-    public void ChatTokenLogProbabilityInfoWithLogProbabilityWorks()
+    public void ChatTokenLogProbabilityDetailsWithLogProbabilityWorks()
     {
         float logProbability = 3.14f;
-        ChatTokenLogProbabilityInfo chatTokenLogProbabilityInfo = OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: logProbability);
+        ChatTokenLogProbabilityDetails chatTokenLogProbabilityDetails = OpenAIChatModelFactory.ChatTokenLogProbabilityDetails(logProbability: logProbability);
 
-        Assert.That(chatTokenLogProbabilityInfo.Token, Is.Null);
-        Assert.That(chatTokenLogProbabilityInfo.LogProbability, Is.EqualTo(logProbability));
-        Assert.That(chatTokenLogProbabilityInfo.Utf8ByteValues, Is.Not.Null.And.Empty);
-        Assert.That(chatTokenLogProbabilityInfo.TopLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenLogProbabilityDetails.Token, Is.Null);
+        Assert.That(chatTokenLogProbabilityDetails.LogProbability, Is.EqualTo(logProbability));
+        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenLogProbabilityDetails.TopLogProbabilities, Is.Not.Null.And.Empty);
     }
 
     [Test]
-    public void ChatTokenLogProbabilityInfoWithUtf8ByteValuesWorks()
+    public void ChatTokenLogProbabilityDetailsWithUtf8ByteValuesWorks()
     {
-        IEnumerable<int> utf8ByteValues = [104, 101, 108, 108, 111];
-        ChatTokenLogProbabilityInfo chatTokenLogProbabilityInfo = OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(utf8ByteValues: utf8ByteValues);
+        ReadOnlyMemory<byte> utf8Bytes = "hello"u8.ToArray();
+        ChatTokenLogProbabilityDetails chatTokenLogProbabilityDetails = OpenAIChatModelFactory.ChatTokenLogProbabilityDetails(utf8Bytes: utf8Bytes);
 
-        Assert.That(chatTokenLogProbabilityInfo.Token, Is.Null);
-        Assert.That(chatTokenLogProbabilityInfo.LogProbability, Is.EqualTo(0f));
-        Assert.That(chatTokenLogProbabilityInfo.Utf8ByteValues.SequenceEqual(utf8ByteValues), Is.True);
-        Assert.That(chatTokenLogProbabilityInfo.TopLogProbabilities, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenLogProbabilityDetails.Token, Is.Null);
+        Assert.That(chatTokenLogProbabilityDetails.LogProbability, Is.EqualTo(0f));
+        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes.Value.ToArray().SequenceEqual(utf8Bytes.ToArray()), Is.True);
+        Assert.That(chatTokenLogProbabilityDetails.TopLogProbabilities, Is.Not.Null.And.Empty);
     }
 
     [Test]
-    public void ChatTokenLogProbabilityInfoWithTopLogProbabilitiesWorks()
+    public void ChatTokenLogProbabilityDetailsWithTopLogProbabilitiesWorks()
     {
-        IEnumerable<ChatTokenTopLogProbabilityInfo> topLogProbabilities = [
-            OpenAIChatModelFactory.ChatTokenTopLogProbabilityInfo(token: "firstToken"),
-            OpenAIChatModelFactory.ChatTokenTopLogProbabilityInfo(token: "secondToken")
+        IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = [
+            OpenAIChatModelFactory.ChatTokenTopLogProbabilityDetails(token: "firstToken"),
+            OpenAIChatModelFactory.ChatTokenTopLogProbabilityDetails(token: "secondToken")
         ];
-        ChatTokenLogProbabilityInfo chatTokenLogProbabilityInfo = OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(topLogProbabilities: topLogProbabilities);
+        ChatTokenLogProbabilityDetails chatTokenLogProbabilityDetails = OpenAIChatModelFactory.ChatTokenLogProbabilityDetails(topLogProbabilities: topLogProbabilities);
 
-        Assert.That(chatTokenLogProbabilityInfo.Token, Is.Null);
-        Assert.That(chatTokenLogProbabilityInfo.LogProbability, Is.EqualTo(0f));
-        Assert.That(chatTokenLogProbabilityInfo.Utf8ByteValues, Is.Not.Null.And.Empty);
-        Assert.That(chatTokenLogProbabilityInfo.TopLogProbabilities.SequenceEqual(topLogProbabilities), Is.True);
+        Assert.That(chatTokenLogProbabilityDetails.Token, Is.Null);
+        Assert.That(chatTokenLogProbabilityDetails.LogProbability, Is.EqualTo(0f));
+        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenLogProbabilityDetails.TopLogProbabilities.SequenceEqual(topLogProbabilities), Is.True);
     }
 
     [Test]
-    public void ChatTokenTopLogProbabilityInfoWithNoPropertiesWorks()
+    public void ChatTokenTopLogProbabilityDetailsWithNoPropertiesWorks()
     {
-        ChatTokenTopLogProbabilityInfo chatTokenTopLogProbabilityInfo = OpenAIChatModelFactory.ChatTokenTopLogProbabilityInfo();
+        ChatTokenTopLogProbabilityDetails chatTokenTopLogProbabilityDetails = OpenAIChatModelFactory.ChatTokenTopLogProbabilityDetails();
 
-        Assert.That(chatTokenTopLogProbabilityInfo.Token, Is.Null);
-        Assert.That(chatTokenTopLogProbabilityInfo.LogProbability, Is.EqualTo(0f));
-        Assert.That(chatTokenTopLogProbabilityInfo.Utf8ByteValues, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenTopLogProbabilityDetails.Token, Is.Null);
+        Assert.That(chatTokenTopLogProbabilityDetails.LogProbability, Is.EqualTo(0f));
+        Assert.That(chatTokenTopLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
     }
 
     [Test]
-    public void ChatTokenTopLogProbabilityInfoWithTokenWorks()
+    public void ChatTokenTopLogProbabilityDetailsWithTokenWorks()
     {
         string token = "a_token_of_appreciation";
-        ChatTokenTopLogProbabilityInfo chatTokenTopLogProbabilityInfo = OpenAIChatModelFactory.ChatTokenTopLogProbabilityInfo(token: token);
+        ChatTokenTopLogProbabilityDetails chatTokenTopLogProbabilityDetails = OpenAIChatModelFactory.ChatTokenTopLogProbabilityDetails(token: token);
 
-        Assert.That(chatTokenTopLogProbabilityInfo.Token, Is.EqualTo(token));
-        Assert.That(chatTokenTopLogProbabilityInfo.LogProbability, Is.EqualTo(0f));
-        Assert.That(chatTokenTopLogProbabilityInfo.Utf8ByteValues, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenTopLogProbabilityDetails.Token, Is.EqualTo(token));
+        Assert.That(chatTokenTopLogProbabilityDetails.LogProbability, Is.EqualTo(0f));
+        Assert.That(chatTokenTopLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
     }
 
     [Test]
-    public void ChatTokenTopLogProbabilityInfoWithLogProbabilityWorks()
+    public void ChatTokenTopLogProbabilityDetailsWithLogProbabilityWorks()
     {
         float logProbability = 3.14f;
-        ChatTokenTopLogProbabilityInfo chatTokenTopLogProbabilityInfo = OpenAIChatModelFactory.ChatTokenTopLogProbabilityInfo(logProbability: logProbability);
+        ChatTokenTopLogProbabilityDetails chatTokenTopLogProbabilityDetails = OpenAIChatModelFactory.ChatTokenTopLogProbabilityDetails(logProbability: logProbability);
 
-        Assert.That(chatTokenTopLogProbabilityInfo.Token, Is.Null);
-        Assert.That(chatTokenTopLogProbabilityInfo.LogProbability, Is.EqualTo(logProbability));
-        Assert.That(chatTokenTopLogProbabilityInfo.Utf8ByteValues, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenTopLogProbabilityDetails.Token, Is.Null);
+        Assert.That(chatTokenTopLogProbabilityDetails.LogProbability, Is.EqualTo(logProbability));
+        Assert.That(chatTokenTopLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
     }
 
     [Test]
-    public void ChatTokenTopLogProbabilityInfoWithUtf8ByteValuesWorks()
+    public void ChatTokenTopLogProbabilityDetailsWithUtf8ByteValuesWorks()
     {
-        IEnumerable<int> utf8ByteValues = [104, 101, 108, 108, 111];
-        ChatTokenTopLogProbabilityInfo chatTokenTopLogProbabilityInfo = OpenAIChatModelFactory.ChatTokenTopLogProbabilityInfo(utf8ByteValues: utf8ByteValues);
+        ReadOnlyMemory<byte> utf8Bytes = "hello"u8.ToArray();
+        ChatTokenTopLogProbabilityDetails chatTokenTopLogProbabilityDetails = OpenAIChatModelFactory.ChatTokenTopLogProbabilityDetails(utf8Bytes: utf8Bytes);
 
-        Assert.That(chatTokenTopLogProbabilityInfo.Token, Is.Null);
-        Assert.That(chatTokenTopLogProbabilityInfo.LogProbability, Is.EqualTo(0f));
-        Assert.That(chatTokenTopLogProbabilityInfo.Utf8ByteValues.SequenceEqual(utf8ByteValues), Is.True);
+        Assert.That(chatTokenTopLogProbabilityDetails.Token, Is.Null);
+        Assert.That(chatTokenTopLogProbabilityDetails.LogProbability, Is.EqualTo(0f));
+        Assert.That(chatTokenTopLogProbabilityDetails.Utf8Bytes.Value.ToArray().SequenceEqual(utf8Bytes.ToArray()), Is.True);
     }
 
     [Test]
@@ -618,9 +618,9 @@ public partial class OpenAIChatModelFactoryTests
     [Test]
     public void StreamingChatCompletionUpdateWithContentTokenLogProbabilitiesWorks()
     {
-        IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = [
-            OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: 1f),
-            OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: 2f)
+        IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = [
+            OpenAIChatModelFactory.ChatTokenLogProbabilityDetails(logProbability: 1f),
+            OpenAIChatModelFactory.ChatTokenLogProbabilityDetails(logProbability: 2f)
         ];
         StreamingChatCompletionUpdate streamingChatCompletionUpdate = OpenAIChatModelFactory.StreamingChatCompletionUpdate(contentTokenLogProbabilities: contentTokenLogProbabilities);
 
@@ -642,9 +642,9 @@ public partial class OpenAIChatModelFactoryTests
     [Test]
     public void StreamingChatCompletionUpdateWithRefusalTokenLogProbabilitiesWorks()
     {
-        IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = [
-            OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: 1f),
-            OpenAIChatModelFactory.ChatTokenLogProbabilityInfo(logProbability: 2f)
+        IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = [
+            OpenAIChatModelFactory.ChatTokenLogProbabilityDetails(logProbability: 1f),
+            OpenAIChatModelFactory.ChatTokenLogProbabilityDetails(logProbability: 2f)
         ];
         StreamingChatCompletionUpdate streamingChatCompletionUpdate = OpenAIChatModelFactory.StreamingChatCompletionUpdate(refusalTokenLogProbabilities: refusalTokenLogProbabilities);
 

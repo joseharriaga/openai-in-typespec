@@ -17,8 +17,8 @@ public static partial class OpenAIChatModelFactory
         IEnumerable<ChatToolCall> toolCalls = null,
         ChatMessageRole role = default,
         ChatFunctionCall functionCall = null,
-        IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = null,
-        IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = null,
+        IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null,
+        IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null,
         DateTimeOffset createdAt = default,
         string model = null,
         string systemFingerprint = null,
@@ -26,8 +26,8 @@ public static partial class OpenAIChatModelFactory
     {
         content ??= new List<ChatMessageContentPart>();
         toolCalls ??= new List<ChatToolCall>();
-        contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityInfo>();
-        refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityInfo>();
+        contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
+        refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
         InternalChatCompletionResponseMessage message = new InternalChatCompletionResponseMessage(
             content.ToList(),
@@ -63,31 +63,28 @@ public static partial class OpenAIChatModelFactory
             serializedAdditionalRawData: null);
     }
 
-    /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatTokenLogProbabilityInfo"/>. </summary>
-    /// <returns> A new <see cref="OpenAI.Chat.ChatTokenLogProbabilityInfo"/> instance for mocking. </returns>
-    public static ChatTokenLogProbabilityInfo ChatTokenLogProbabilityInfo(string token = null, float logProbability = default, IEnumerable<int> utf8ByteValues = null, IEnumerable<ChatTokenTopLogProbabilityInfo> topLogProbabilities = null)
+    /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatTokenLogProbabilityDetails"/>. </summary>
+    /// <returns> A new <see cref="OpenAI.Chat.ChatTokenLogProbabilityDetails"/> instance for mocking. </returns>
+    public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = default, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null)
     {
-        utf8ByteValues ??= new List<int>();
-        topLogProbabilities ??= new List<ChatTokenTopLogProbabilityInfo>();
+        topLogProbabilities ??= new List<ChatTokenTopLogProbabilityDetails>();
 
-        return new ChatTokenLogProbabilityInfo(
+        return new ChatTokenLogProbabilityDetails(
             token,
             logProbability,
-            utf8ByteValues.ToList(),
+            utf8Bytes,
             topLogProbabilities.ToList(),
             serializedAdditionalRawData: null);
     }
 
-    /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatTokenTopLogProbabilityInfo"/>. </summary>
-    /// <returns> A new <see cref="OpenAI.Chat.ChatTokenTopLogProbabilityInfo"/> instance for mocking. </returns>
-    public static ChatTokenTopLogProbabilityInfo ChatTokenTopLogProbabilityInfo(string token = null, float logProbability = default, IEnumerable<int> utf8ByteValues = null)
+    /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatTokenTopLogProbabilityDetails"/>. </summary>
+    /// <returns> A new <see cref="OpenAI.Chat.ChatTokenTopLogProbabilityDetails"/> instance for mocking. </returns>
+    public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = default, ReadOnlyMemory<byte>? utf8Bytes = null)
     {
-        utf8ByteValues ??= new List<int>();
-
-        return new ChatTokenTopLogProbabilityInfo(
+        return new ChatTokenTopLogProbabilityDetails(
             token,
             logProbability,
-            utf8ByteValues.ToList(),
+            utf8Bytes,
             serializedAdditionalRawData: null);
     }
 
@@ -111,8 +108,8 @@ public static partial class OpenAIChatModelFactory
         IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null,
         ChatMessageRole? role = null,
         string refusalUpdate = null,
-        IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = null,
-        IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = null,
+        IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null,
+        IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null,
         ChatFinishReason? finishReason = null,
         DateTimeOffset createdAt = default,
         string model = null,
@@ -121,8 +118,8 @@ public static partial class OpenAIChatModelFactory
     {
         contentUpdate ??= new List<ChatMessageContentPart>();
         toolCallUpdates ??= new List<StreamingChatToolCallUpdate>();
-        contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityInfo>();
-        refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityInfo>();
+        contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
+        refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
         InternalChatCompletionStreamResponseDelta delta = new InternalChatCompletionStreamResponseDelta(
             contentUpdate.ToList(),

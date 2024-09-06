@@ -59,19 +59,16 @@ namespace OpenAI
             return new ChatFunction(functionDescription, functionName, functionParameters, serializedAdditionalRawData: null);
         }
 
-        public static ChatTokenLogProbabilityInfo ChatTokenLogProbabilityInfo(string token = null, float logProbability = default, IEnumerable<int> utf8ByteValues = null, IEnumerable<ChatTokenTopLogProbabilityInfo> topLogProbabilities = null)
+        public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = default, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null)
         {
-            utf8ByteValues ??= new List<int>();
-            topLogProbabilities ??= new List<ChatTokenTopLogProbabilityInfo>();
+            topLogProbabilities ??= new List<ChatTokenTopLogProbabilityDetails>();
 
-            return new ChatTokenLogProbabilityInfo(token, logProbability, utf8ByteValues?.ToList(), topLogProbabilities?.ToList(), serializedAdditionalRawData: null);
+            return new ChatTokenLogProbabilityDetails(token, logProbability, utf8Bytes, topLogProbabilities?.ToList(), serializedAdditionalRawData: null);
         }
 
-        public static ChatTokenTopLogProbabilityInfo ChatTokenTopLogProbabilityInfo(string token = null, float logProbability = default, IEnumerable<int> utf8ByteValues = null)
+        public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = default, ReadOnlyMemory<byte>? utf8Bytes = null)
         {
-            utf8ByteValues ??= new List<int>();
-
-            return new ChatTokenTopLogProbabilityInfo(token, logProbability, utf8ByteValues?.ToList(), serializedAdditionalRawData: null);
+            return new ChatTokenTopLogProbabilityDetails(token, logProbability, utf8Bytes, serializedAdditionalRawData: null);
         }
 
         public static ChatTokenUsage ChatTokenUsage(int outputTokens = default, int inputTokens = default, int totalTokens = default)

@@ -16,7 +16,7 @@ public partial class ChatExamples
         ChatCompletionOptions options = new()
         {
             ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
-                name: "math_reasoning",
+                jsonSchemaFormatName: "math_reasoning",
                 jsonSchema: BinaryData.FromString("""
                     {
                         "type": "object",
@@ -39,7 +39,7 @@ public partial class ChatExamples
                         "additionalProperties": false
                     }
                     """),
-            strictSchemaEnabled: true)
+                jsonSchemaIsStrict: true)
         };
 
         ChatCompletion chatCompletion = await client.CompleteChatAsync(

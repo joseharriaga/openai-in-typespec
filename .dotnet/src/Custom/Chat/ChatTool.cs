@@ -68,7 +68,7 @@ public partial class ChatTool
     ///     </para>
     /// </summary>
     /// <remarks> Present when <see cref="Kind"/> is <see cref="ChatToolKind.Function"/>. </remarks>
-    public bool? StrictParameterSchemaEnabled => Function?.Strict;
+    public bool? FunctionSchemaIsStrict => Function?.Strict;
 
     /// <summary> Creates a new <see cref="ChatTool"/> representing a function that the model may call. </summary>
     /// <param name="functionName"> The name of the function. </param>
@@ -106,7 +106,7 @@ public partial class ChatTool
     ///         </code>
     ///     </para>
     /// </param>
-    /// <param name="strictParameterSchemaEnabled">
+    /// <param name="functionSchemaIsStrict">
     ///     <para>
     ///         Whether to enable strict schema adherence when generating the function call. If set to <c>true</c>, the
     ///         model will follow the exact schema defined in <paramref name="functionParameters"/>.
@@ -117,7 +117,7 @@ public partial class ChatTool
     ///         <see href="https://platform.openai.com/docs/api-reference/chat/docs/guides/function-calling">function calling guide</see>.
     ///     </para>
     /// </param> 
-    public static ChatTool CreateFunctionTool(string functionName, string functionDescription = null, BinaryData functionParameters = null, bool? strictParameterSchemaEnabled = null)
+    public static ChatTool CreateFunctionTool(string functionName, string functionDescription = null, BinaryData functionParameters = null, bool? functionSchemaIsStrict = null)
     {
         Argument.AssertNotNull(functionName, nameof(functionName));
 
@@ -125,7 +125,7 @@ public partial class ChatTool
         {
             Description = functionDescription,
             Parameters = functionParameters,
-            Strict = strictParameterSchemaEnabled,
+            Strict = functionSchemaIsStrict,
         };
 
         return new(

@@ -34,7 +34,7 @@ public abstract partial class ChatResponseFormat
     ///     Creates a new <see cref="ChatResponseFormat"/> requesting adherence to the specified JSON schema,
     ///     a.k.a. structured outputs.
     /// </summary>
-    /// <param name="name"> The name of the response format. </param>
+    /// <param name="jsonSchemaFormatName"> The name of the response format. </param>
     /// <param name="jsonSchema">
     ///     <para>
     ///         The schema of the response format, described as a JSON schema. Learn more in the
@@ -72,11 +72,11 @@ public abstract partial class ChatResponseFormat
     ///         </code>
     ///     </para>
     /// </param>
-    /// <param name="description">
+    /// <param name="jsonSchemaFormatDescription">
     ///     The description of what the response format is for, which is used by the model to determine how to respond
     ///     in the format.
     /// </param>
-    /// <param name="strictSchemaEnabled">
+    /// <param name="jsonSchemaIsStrict">
     ///     <para>
     ///         Whether to enable strict schema adherence when generating the response. If set to <c>true</c>, the
     ///         model will follow the exact schema defined in <paramref name="jsonSchema"/>.
@@ -87,18 +87,18 @@ public abstract partial class ChatResponseFormat
     ///         <see href="https://platform.openai.com/docs/guides/structured-outputs">structured outputs guide</see>.
     ///     </para>
     /// </param> 
-    /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="jsonSchema"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="name"/> is an empty string, and was expected to be non-empty. </exception>
-    public static ChatResponseFormat CreateJsonSchemaFormat(string name, BinaryData jsonSchema, string description = null, bool? strictSchemaEnabled = null)
+    /// <exception cref="ArgumentNullException"> <paramref name="jsonSchemaFormatName"/> or <paramref name="jsonSchema"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="jsonSchemaFormatName"/> is an empty string, and was expected to be non-empty. </exception>
+    public static ChatResponseFormat CreateJsonSchemaFormat(string jsonSchemaFormatName, BinaryData jsonSchema, string jsonSchemaFormatDescription = null, bool? jsonSchemaIsStrict = null)
     {
-        Argument.AssertNotNullOrEmpty(name, nameof(name));
+        Argument.AssertNotNullOrEmpty(jsonSchemaFormatName, nameof(jsonSchemaFormatName));
         Argument.AssertNotNull(jsonSchema, nameof(jsonSchema));
 
         InternalResponseFormatJsonSchemaJsonSchema internalSchema = new(
-            description,
-            name,
+            jsonSchemaFormatDescription,
+            jsonSchemaFormatName,
             jsonSchema,
-            strictSchemaEnabled,
+            jsonSchemaIsStrict,
             serializedAdditionalRawData: null);
 
         return new InternalChatResponseFormatJsonSchema(internalSchema);

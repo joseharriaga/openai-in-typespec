@@ -85,22 +85,24 @@ public partial class ChatTool
     ///         <see href="https://json-schema.org/understanding-json-schema">JSON schema reference documentation</see>.
     ///     </para>
     ///     <para>
-    ///         The <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/> method
-    ///         provides an easy definition interface using the <c>dynamic</c> type:
+    ///         You can easily create a JSON schema via the factory methods of the <see cref="BinaryData"/> class, such
+    ///         as <see cref="BinaryData.FromBytes(byte[])"/> or <see cref="BinaryData.FromString(string)"/>. For
+    ///         example, the following code defines a simple schema for a function that takes a customer's order ID as
+    ///         a <c>string</c> parameter:
     ///         <code>
-    ///             BinaryData functionParameters = BinaryData.FromObjectAsJson(new
-    ///             {
-    ///                 type = "object",
-    ///                 properties = new
+    ///             BinaryData functionParameters = BinaryData.FromBytes("""
     ///                 {
-    ///                     your_function_parameter = new
-    ///                     {
-    ///                         type = "string",
-    ///                         description = "The description of your function paramater."
-    ///                     }
-    ///                 },
-    ///                 required = new[] { "your_function_parameter" }
-    ///             });
+    ///                     "type": "object",
+    ///                     "properties": {
+    ///                         "order_id": {
+    ///                             "type": "string",
+    ///                             "description": "The customer's order ID."
+    ///                         }
+    ///                     },
+    ///                     "required": ["order_id"],
+    ///                     "additionalProperties": false
+    ///                 }
+    ///                 """u8.ToArray());
     ///         </code>
     ///     </para>
     /// </param>

@@ -25,7 +25,12 @@ namespace OpenAI.Batch
         {
         }
 
-        internal PipelineMessage CreateCreateBatchRequest(BinaryContent content, RequestOptions options)
+        internal virtual CreateBatchOperation CreateBatchOperation(string batchId, string status, PipelineResponse response)
+        {
+            return new CreateBatchOperation(_pipeline, _endpoint, batchId, status, response);
+        }
+
+        internal virtual PipelineMessage CreateCreateBatchRequest(BinaryContent content, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -42,7 +47,7 @@ namespace OpenAI.Batch
             return message;
         }
 
-        internal PipelineMessage CreateGetBatchesRequest(string after, int? limit, RequestOptions options)
+        internal virtual PipelineMessage CreateGetBatchesRequest(string after, int? limit, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -65,7 +70,7 @@ namespace OpenAI.Batch
             return message;
         }
 
-        internal PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions options)
+        internal virtual PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -81,7 +86,7 @@ namespace OpenAI.Batch
             return message;
         }
 
-        internal PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions options)
+        internal virtual PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;

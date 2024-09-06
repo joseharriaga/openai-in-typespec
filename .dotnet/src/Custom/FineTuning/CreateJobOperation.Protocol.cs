@@ -90,7 +90,7 @@ public partial class CreateJobOperation : OperationResult
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string status = doc.RootElement.GetProperty("status"u8).GetString()!;
 
-        return new CreateJobOperation(client.Pipeline, client.Endpoint, token.JobId, status, response);
+        return client.CreateJobOperation(token.JobId, status, response);
     }
 
     /// <inheritdoc/>
@@ -273,7 +273,7 @@ public partial class CreateJobOperation : OperationResult
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
-    internal PipelineMessage CreateRetrieveFineTuningJobRequest(string fineTuningJobId, RequestOptions? options)
+    internal virtual PipelineMessage CreateRetrieveFineTuningJobRequest(string fineTuningJobId, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
@@ -289,7 +289,7 @@ public partial class CreateJobOperation : OperationResult
         return message;
     }
 
-    internal PipelineMessage CreateCancelFineTuningJobRequest(string fineTuningJobId, RequestOptions? options)
+    internal virtual PipelineMessage CreateCancelFineTuningJobRequest(string fineTuningJobId, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
@@ -306,7 +306,7 @@ public partial class CreateJobOperation : OperationResult
         return message;
     }
 
-    internal PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions? options)
+    internal virtual PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
@@ -331,7 +331,7 @@ public partial class CreateJobOperation : OperationResult
         return message;
     }
 
-    internal PipelineMessage CreateGetFineTuningEventsRequest(string fineTuningJobId, string after, int? limit, RequestOptions? options)
+    internal virtual PipelineMessage CreateGetFineTuningEventsRequest(string fineTuningJobId, string after, int? limit, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;

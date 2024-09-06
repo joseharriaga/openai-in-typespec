@@ -65,7 +65,7 @@ public partial class CreateBatchOperation : OperationResult
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string status = doc.RootElement.GetProperty("status"u8).GetString()!;
 
-        return new CreateBatchOperation(client.Pipeline, client.Endpoint, token.BatchId, status, response);
+        return client.CreateBatchOperation(token.BatchId, status, response);
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ public partial class CreateBatchOperation : OperationResult
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string status = doc.RootElement.GetProperty("status"u8).GetString()!;
 
-        return new CreateBatchOperation(client.Pipeline, client.Endpoint, token.BatchId, status, response);
+        return client.CreateBatchOperation(token.BatchId, status, response);
     }
 
     /// <inheritdoc/>
@@ -198,7 +198,7 @@ public partial class CreateBatchOperation : OperationResult
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
-    internal PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions? options)
+    internal virtual PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
@@ -214,7 +214,7 @@ public partial class CreateBatchOperation : OperationResult
         return message;
     }
 
-    internal PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions? options)
+    internal virtual PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;

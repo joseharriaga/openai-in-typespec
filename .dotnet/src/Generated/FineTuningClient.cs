@@ -31,7 +31,12 @@ namespace OpenAI.FineTuning
             _endpoint = endpoint;
         }
 
-        internal PipelineMessage CreateCreateFineTuningJobRequest(BinaryContent content, RequestOptions options)
+        internal virtual CreateJobOperation CreateJobOperation(string jobId, string status, PipelineResponse response)
+        {
+            return new CreateJobOperation(_pipeline, _endpoint, jobId, status, response);
+        }
+
+        internal virtual PipelineMessage CreateCreateFineTuningJobRequest(BinaryContent content, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -48,7 +53,7 @@ namespace OpenAI.FineTuning
             return message;
         }
 
-        internal PipelineMessage CreateGetPaginatedFineTuningJobsRequest(string after, int? limit, RequestOptions options)
+        internal virtual PipelineMessage CreateGetPaginatedFineTuningJobsRequest(string after, int? limit, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -71,7 +76,7 @@ namespace OpenAI.FineTuning
             return message;
         }
 
-        internal PipelineMessage CreateRetrieveFineTuningJobRequest(string fineTuningJobId, RequestOptions options)
+        internal virtual PipelineMessage CreateRetrieveFineTuningJobRequest(string fineTuningJobId, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -81,73 +86,6 @@ namespace OpenAI.FineTuning
             uri.Reset(_endpoint);
             uri.AppendPath("/fine_tuning/jobs/", false);
             uri.AppendPath(fineTuningJobId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
-        }
-
-        internal PipelineMessage CreateCancelFineTuningJobRequest(string fineTuningJobId, RequestOptions options)
-        {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/fine_tuning/jobs/", false);
-            uri.AppendPath(fineTuningJobId, true);
-            uri.AppendPath("/cancel", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
-        }
-
-        internal PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions options)
-        {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/fine_tuning/jobs/", false);
-            uri.AppendPath(fineTuningJobId, true);
-            uri.AppendPath("/checkpoints", false);
-            if (after != null)
-            {
-                uri.AppendQuery("after", after, true);
-            }
-            if (limit != null)
-            {
-                uri.AppendQuery("limit", limit.Value, true);
-            }
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
-        }
-
-        internal PipelineMessage CreateGetFineTuningEventsRequest(string fineTuningJobId, string after, int? limit, RequestOptions options)
-        {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/fine_tuning/jobs/", false);
-            uri.AppendPath(fineTuningJobId, true);
-            uri.AppendPath("/events", false);
-            if (after != null)
-            {
-                uri.AppendQuery("after", after, true);
-            }
-            if (limit != null)
-            {
-                uri.AppendQuery("limit", limit.Value, true);
-            }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);

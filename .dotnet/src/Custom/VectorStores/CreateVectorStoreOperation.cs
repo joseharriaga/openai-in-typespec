@@ -68,7 +68,7 @@ public partial class CreateVectorStoreOperation : OperationResult
         PipelineResponse response = result.GetRawResponse();
         VectorStore vectorStore = VectorStore.FromResponse(response);
 
-        return new CreateVectorStoreOperation(client.Pipeline, client.Endpoint, FromValue(vectorStore, response));
+        return client.CreateCreateVectorStoreOperation(FromValue(vectorStore, response));
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ public partial class CreateVectorStoreOperation : OperationResult
         PipelineResponse response = result.GetRawResponse();
         VectorStore vectorStore = VectorStore.FromResponse(response);
 
-        return new CreateVectorStoreOperation(client.Pipeline, client.Endpoint, FromValue(vectorStore, response));
+        return client.CreateCreateVectorStoreOperation(FromValue(vectorStore, response));
     }
 
     /// <inheritdoc/>

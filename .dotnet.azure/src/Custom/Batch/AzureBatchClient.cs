@@ -3,7 +3,6 @@
 
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using OpenAI.Batch;
 
 namespace Azure.AI.OpenAI.Batch;
 
@@ -36,7 +35,7 @@ internal partial class AzureBatchClient : BatchClient
     protected AzureBatchClient()
     { }
 
-    internal override CreateBatchOperation CreateBatchOperation(string batchId, string status, PipelineResponse response)
+    internal override CreateBatchOperation CreateCreateBatchOperation(string batchId, string status, PipelineResponse response)
     {
         return new AzureCreateBatchOperation(Pipeline, _endpoint, batchId, status, response, _deploymentName, _apiVersion);
     }

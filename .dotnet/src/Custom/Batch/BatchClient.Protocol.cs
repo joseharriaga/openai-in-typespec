@@ -19,7 +19,7 @@ public partial class BatchClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> A <see cref="CreateBatchOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateCreateBatchOperation"/> that can be used to wait for 
     /// the operation to complete, or cancel the operation. </returns>
     public virtual async Task<CreateBatchOperation> CreateBatchAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null)
     {
@@ -48,7 +48,7 @@ public partial class BatchClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> A <see cref="CreateBatchOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateCreateBatchOperation"/> that can be used to wait for 
     /// the operation to complete, or cancel the operation. </returns>
     public virtual CreateBatchOperation CreateBatch(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null)
     {

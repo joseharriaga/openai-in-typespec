@@ -12,7 +12,7 @@ namespace OpenAI.FineTuning;
 /// <summary>
 /// A long-running operation for creating a new model from a given dataset.
 /// </summary>
-public partial class CreateJobOperation : OperationResult
+public class CreateJobOperation : OperationResult
 {
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;
@@ -63,7 +63,7 @@ public partial class CreateJobOperation : OperationResult
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string status = doc.RootElement.GetProperty("status"u8).GetString()!;
 
-        return new CreateJobOperation(client.Pipeline, client.Endpoint, token.JobId, status, response);
+        return client.CreateCreateJobOperation(token.JobId, status, response);
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public partial class CreateJobOperation : OperationResult
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string status = doc.RootElement.GetProperty("status"u8).GetString()!;
 
-        return client.CreateJobOperation(token.JobId, status, response);
+        return client.CreateCreateJobOperation(token.JobId, status, response);
     }
 
     /// <inheritdoc/>

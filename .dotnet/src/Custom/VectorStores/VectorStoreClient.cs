@@ -83,6 +83,21 @@ public partial class VectorStoreClient
         _endpoint = endpoint;
     }
 
+    internal virtual CreateVectorStoreOperation CreateCreateVectorStoreOperation(ClientResult<VectorStore> result)
+    {
+        return new CreateVectorStoreOperation(_pipeline, _endpoint, result);
+    }
+
+    internal virtual AddFileToVectorStoreOperation CreateAddFileToVectorStoreOperation(ClientResult<VectorStoreFileAssociation> result)
+    {
+        return new AddFileToVectorStoreOperation(Pipeline, _endpoint, result);
+    }
+
+    internal virtual CreateBatchFileJobOperation CreateBatchFileJobOperation(ClientResult<VectorStoreBatchFileJob> result)
+    {
+        return new CreateBatchFileJobOperation(Pipeline, _endpoint, result);
+    }
+
     /// <summary> Creates a vector store. </summary>
     /// <param name="waitUntilCompleted"> Value indicating whether the method
     /// should return after the operation has been started and is still running
@@ -121,7 +136,7 @@ public partial class VectorStoreClient
     /// <param name="vectorStoreId"> The ID of the vector store to retrieve. </param>
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <returns> A representation of an existing <see cref="VectorStore"/>. </returns>
-    public virtual async Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default)
+    internal virtual async Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
@@ -551,5 +566,77 @@ public partial class VectorStoreClient
         RequestOptions options = cancellationToken.ToRequestOptions();
 
         return CreateBatchFileJob(vectorStoreId, content, waitUntilCompleted, options);
+    }
+
+    internal virtual PipelineMessage CreateCreateVectorStoreFileBatchRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
+    {
+        var message = _pipeline.CreateMessage();
+        message.ResponseClassifier = PipelineMessageClassifier200;
+        var request = message.Request;
+        request.Method = "POST";
+        var uri = new ClientUriBuilder();
+        uri.Reset(_endpoint);
+        uri.AppendPath("/vector_stores/", false);
+        uri.AppendPath(vectorStoreId, true);
+        uri.AppendPath("/file_batches", false);
+        request.Uri = uri.ToUri();
+        request.Headers.Set("Accept", "application/json");
+        request.Headers.Set("Content-Type", "application/json");
+        request.Content = content;
+        message.Apply(options);
+        return message;
+    }
+
+    internal virtual PipelineMessage CreateGetVectorStoreFileRequest(string vectorStoreId, string fileId, RequestOptions options)
+    {
+        var message = _pipeline.CreateMessage();
+        message.ResponseClassifier = PipelineMessageClassifier200;
+        var request = message.Request;
+        request.Method = "GET";
+        var uri = new ClientUriBuilder();
+        uri.Reset(_endpoint);
+        uri.AppendPath("/vector_stores/", false);
+        uri.AppendPath(vectorStoreId, true);
+        uri.AppendPath("/files/", false);
+        uri.AppendPath(fileId, true);
+        request.Uri = uri.ToUri();
+        request.Headers.Set("Accept", "application/json");
+        message.Apply(options);
+        return message;
+    }
+
+    internal virtual PipelineMessage CreateCreateVectorStoreRequest(BinaryContent content, RequestOptions options)
+    {
+        var message = _pipeline.CreateMessage();
+        message.ResponseClassifier = PipelineMessageClassifier200;
+        var request = message.Request;
+        request.Method = "POST";
+        var uri = new ClientUriBuilder();
+        uri.Reset(_endpoint);
+        uri.AppendPath("/vector_stores", false);
+        request.Uri = uri.ToUri();
+        request.Headers.Set("Accept", "application/json");
+        request.Headers.Set("Content-Type", "application/json");
+        request.Content = content;
+        message.Apply(options);
+        return message;
+    }
+
+    internal virtual PipelineMessage CreateGetVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions options)
+    {
+        var message = _pipeline.CreateMessage();
+        message.ResponseClassifier = PipelineMessageClassifier200;
+        var request = message.Request;
+        request.Method = "GET";
+        var uri = new ClientUriBuilder();
+        uri.Reset(_endpoint);
+        uri.AppendPath("/vector_stores/", false);
+        uri.AppendPath(vectorStoreId, true);
+        uri.AppendPath("/file_batches/", false);
+        uri.AppendPath(batchId, true);
+        request.Uri = uri.ToUri();
+        request.Headers.Set("Accept", "application/json");
+        message.Apply(options);
+        return message;
     }
 }

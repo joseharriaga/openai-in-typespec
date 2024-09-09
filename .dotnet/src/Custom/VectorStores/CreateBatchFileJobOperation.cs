@@ -76,7 +76,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
-        return new CreateBatchFileJobOperation(client.Pipeline, client.Endpoint, FromValue(job, response));
+        return client.CreateBatchFileJobOperation(FromValue(job, response));
     }
 
     /// <summary>
@@ -101,7 +101,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
-        return new CreateBatchFileJobOperation(client.Pipeline, client.Endpoint, FromValue(job, response));
+        return client.CreateBatchFileJobOperation(FromValue(job, response));
     }
 
     /// <inheritdoc/>

@@ -145,7 +145,7 @@ public partial class VectorStoreClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions options)
+    internal virtual async Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
@@ -163,7 +163,7 @@ public partial class VectorStoreClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions options)
+    internal virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 

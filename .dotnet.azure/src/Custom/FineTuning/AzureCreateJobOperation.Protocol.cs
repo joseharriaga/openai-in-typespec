@@ -4,12 +4,12 @@ using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
-namespace Azure.AI.OpenAI.Custom.FineTuning;
+namespace Azure.AI.OpenAI.FineTuning;
 
 /// <summary>
 /// A long-running operation for creating a new model from a given dataset.
 /// </summary>
-public partial class AzureCreateJobOperation : CreateJobOperation
+public class AzureCreateJobOperation : CreateJobOperation
 {
     private readonly PipelineMessageClassifier DeleteJobClassifier = PipelineMessageClassifier.Create(stackalloc ushort[] { 204 });
     private readonly ClientPipeline _pipeline;

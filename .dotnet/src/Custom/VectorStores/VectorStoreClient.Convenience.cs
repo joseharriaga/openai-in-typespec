@@ -27,22 +27,6 @@ public partial class VectorStoreClient
         => ModifyVectorStore(vectorStore?.Id, options);
 
     /// <summary>
-    /// Gets an up-to-date instance of an existing vector store.
-    /// </summary>
-    /// <param name="vectorStore"> The existing vector store instance to get an updated instance of. </param>
-    /// <returns> The refreshed vector store instance. </returns>
-    public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(VectorStore vectorStore)
-        => GetVectorStoreAsync(vectorStore?.Id);
-
-    /// <summary>
-    /// Gets an up-to-date instance of an existing vector store.
-    /// </summary>
-    /// <param name="vectorStore"> The existing vector store instance to get an updated instance of. </param>
-    /// <returns> The refreshed vector store instance. </returns>
-    public virtual ClientResult<VectorStore> GetVectorStore(VectorStore vectorStore)
-        => GetVectorStore(vectorStore?.Id);
-
-    /// <summary>
     /// Deletes a vector store.
     /// </summary>
     /// <param name="vectorStore"> The vector store to delete. </param>

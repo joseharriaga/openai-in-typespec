@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Azure.AI.OpenAI.Tests.Utils.Config;
 using NUnit.Framework;
 using OpenAI;
+using OpenAI.Assistants;
 using OpenAI.Files;
 using OpenAI.TestFramework;
 using OpenAI.VectorStores;
@@ -110,7 +111,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             Assert.That(vectorStore.Name, Is.EqualTo($"Test Vector Store {i}"));
         }
 
-        AsyncPageCollection<VectorStore> response = client.GetVectorStoresAsync(new VectorStoreCollectionOptions() { Order = ListOrder.NewestFirst });
+        AsyncPageCollection<VectorStore> response = client.GetVectorStoresAsync(new VectorStoreCollectionOptions() { Order = VectorStoreCollectionOrder.Descending });
         Assert.That(response, Is.Not.Null);
 
         int lastIdSeen = int.MaxValue;

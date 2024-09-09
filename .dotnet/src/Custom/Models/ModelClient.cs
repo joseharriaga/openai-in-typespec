@@ -15,10 +15,11 @@ namespace OpenAI.Models;
 [CodeGenSuppress("ModelClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("GetModelsAsync")]
 [CodeGenSuppress("GetModels")]
-[CodeGenSuppress("RetrieveAsync", typeof(string))]
-[CodeGenSuppress("Retrieve", typeof(string))]
-[CodeGenSuppress("DeleteAsync", typeof(string))]
-[CodeGenSuppress("Delete", typeof(string))]
+[CodeGenSuppress("RetrieveModelAsync", typeof(string))]
+[CodeGenSuppress("RetrieveModel", typeof(string))]
+[CodeGenSuppress("DeleteModelAsync", typeof(string))]
+[CodeGenSuppress("DeleteModel", typeof(string))]
+
 public partial class ModelClient
 {
     // CUSTOM:

@@ -16,6 +16,7 @@ model Error {
   type: string;
 }
 
+@error
 model ErrorResponse {
   error: Error;
 }

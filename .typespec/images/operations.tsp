@@ -17,6 +17,7 @@ interface Images {
   @tag("Images")
   @summary("Creates an image given a prompt")
   createImage(
+    @header accept: "application/json",
     @body requestBody: CreateImageRequest,
   ): ImagesResponse | ErrorResponse;
 
@@ -26,6 +27,7 @@ interface Images {
   @tag("Images")
   @summary("Creates an edited or extended image given an original image and a prompt.")
   createImageEdit(
+    @header accept: "application/json",
     @header contentType: "multipart/form-data",
     @body requestBody: CreateImageEditRequest,
   ): ImagesResponse | ErrorResponse;
@@ -36,6 +38,7 @@ interface Images {
   @tag("Images")
   @summary("Creates an edited or extended image given an original image and a prompt.")
   createImageVariation(
+    @header accept: "application/json",
     @header contentType: "multipart/form-data",
     @body requestBody: CreateImageVariationRequest,
   ): ImagesResponse | ErrorResponse;

@@ -158,8 +158,8 @@ public class ImageGenerationTests(bool isAsync) : OpenAiTestBase(isAsync)
         ChatClient chatClient = GetTestClient<ChatClient>("gpt-4o");
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
-                ChatMessageContentPart.CreateTextMessageContentPart($"Describe this image for me. {descriptionHint}"),
-                ChatMessageContentPart.CreateImageMessageContentPart(imageUri)),
+                ChatMessageContentPart.CreateTextPart($"Describe this image for me. {descriptionHint}"),
+                ChatMessageContentPart.CreateImagePart(imageUri)),
         ];
         ChatCompletionOptions chatOptions = new() { MaxTokens = 2048 };
         ClientResult<ChatCompletion> result = await chatClient.CompleteChatAsync(messages, chatOptions);
@@ -172,8 +172,8 @@ public class ImageGenerationTests(bool isAsync) : OpenAiTestBase(isAsync)
         ChatClient chatClient = GetTestClient<ChatClient>();
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
-                ChatMessageContentPart.CreateTextMessageContentPart($"Describe this image for me. {descriptionHint}"),
-                ChatMessageContentPart.CreateImageMessageContentPart(imageBytes, "image/png")),
+                ChatMessageContentPart.CreateTextPart($"Describe this image for me. {descriptionHint}"),
+                ChatMessageContentPart.CreateImagePart(imageBytes, "image/png")),
         ];
         ChatCompletionOptions chatOptions = new() { MaxTokens = 2048 };
         ClientResult<ChatCompletion> result = await chatClient.CompleteChatAsync(messages, chatOptions);

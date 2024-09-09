@@ -342,7 +342,6 @@ namespace OpenAI.Assistants {
         CodeInterpreterToolDefinition IPersistableModel<CodeInterpreterToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<CodeInterpreterToolDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<CodeInterpreterToolDefinition>.Write(ModelReaderWriterOptions options);
-        protected internal override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class CodeInterpreterToolResources : IJsonModel<CodeInterpreterToolResources>, IPersistableModel<CodeInterpreterToolResources> {
         public IList<string> FileIds { get; set; }
@@ -359,7 +358,6 @@ namespace OpenAI.Assistants {
         FileSearchToolDefinition IPersistableModel<FileSearchToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<FileSearchToolDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<FileSearchToolDefinition>.Write(ModelReaderWriterOptions options);
-        protected internal override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class FileSearchToolResources : IJsonModel<FileSearchToolResources>, IPersistableModel<FileSearchToolResources> {
         public IList<VectorStoreCreationHelper> NewVectorStores { get; }
@@ -382,7 +380,6 @@ namespace OpenAI.Assistants {
         FunctionToolDefinition IPersistableModel<FunctionToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<FunctionToolDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<FunctionToolDefinition>.Write(ModelReaderWriterOptions options);
-        protected internal override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class MessageCollectionOptions {
         public string AfterId { get; set; }
@@ -406,7 +403,6 @@ namespace OpenAI.Assistants {
         MessageContent IPersistableModel<MessageContent>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<MessageContent>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<MessageContent>.Write(ModelReaderWriterOptions options);
-        protected abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class MessageContentUpdate : StreamingUpdate {
         public MessageImageDetail? ImageDetail { get; }
@@ -955,7 +951,6 @@ namespace OpenAI.Assistants {
         ToolDefinition IPersistableModel<ToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ToolDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ToolDefinition>.Write(ModelReaderWriterOptions options);
-        protected internal abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ToolOutput : IJsonModel<ToolOutput>, IPersistableModel<ToolOutput> {
         public ToolOutput();
@@ -1215,7 +1210,6 @@ namespace OpenAI.Chat {
         AssistantChatMessage IPersistableModel<AssistantChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<AssistantChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<AssistantChatMessage>.Write(ModelReaderWriterOptions options);
-        protected internal override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ChatClient {
         protected ChatClient();
@@ -1320,10 +1314,24 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatFunctionChoice>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatFunctionChoice>.Write(ModelReaderWriterOptions options);
     }
+    public readonly partial struct ChatImageDetailLevel : IEquatable<ChatImageDetailLevel> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public ChatImageDetailLevel(string value);
+        public static ChatImageDetailLevel Auto { get; }
+        public static ChatImageDetailLevel High { get; }
+        public static ChatImageDetailLevel Low { get; }
+        public readonly bool Equals(ChatImageDetailLevel other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ChatImageDetailLevel left, ChatImageDetailLevel right);
+        public static implicit operator ChatImageDetailLevel(string value);
+        public static bool operator !=(ChatImageDetailLevel left, ChatImageDetailLevel right);
+        public override readonly string ToString();
+    }
     public abstract class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
-        protected ChatMessage();
-        protected internal ChatMessage(ChatMessageRole role, IEnumerable<ChatMessageContentPart> contentParts);
-        protected internal ChatMessage(ChatMessageRole role, string content);
         public IList<ChatMessageContentPart> Content { get; }
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
         public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null);
@@ -1331,6 +1339,7 @@ namespace OpenAI.Chat {
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
         public static AssistantChatMessage CreateAssistantMessage(string content);
+        [Obsolete("This field is marked as deprecated.")]
         public static FunctionChatMessage CreateFunctionMessage(string functionName, string content);
         public static SystemChatMessage CreateSystemMessage(params ChatMessageContentPart[] contentParts);
         public static SystemChatMessage CreateSystemMessage(IEnumerable<ChatMessageContentPart> contentParts);
@@ -1347,27 +1356,25 @@ namespace OpenAI.Chat {
         ChatMessage IPersistableModel<ChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatMessage>.Write(ModelReaderWriterOptions options);
-        protected internal abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>, IPersistableModel<ChatMessageContentPart> {
         public BinaryData ImageBytes { get; }
         public string ImageBytesMediaType { get; }
-        public ImageChatMessageContentPartDetail? ImageDetail { get; }
+        public ChatImageDetailLevel? ImageDetailLevel { get; }
         public Uri ImageUri { get; }
         public ChatMessageContentPartKind Kind { get; }
         public string Refusal { get; }
         public string Text { get; }
-        public static ChatMessageContentPart CreateImageMessageContentPart(BinaryData imageBytes, string imageBytesMediaType, ImageChatMessageContentPartDetail? imageDetail = null);
-        public static ChatMessageContentPart CreateImageMessageContentPart(Uri imageUri, ImageChatMessageContentPartDetail? imageDetail = null);
-        public static ChatMessageContentPart CreateRefusalMessageContentPart(string refusal);
-        public static ChatMessageContentPart CreateTextMessageContentPart(string text);
-        public static implicit operator ChatMessageContentPart(string content);
+        public static ChatMessageContentPart CreateImagePart(BinaryData imageBytes, string imageBytesMediaType, ChatImageDetailLevel? imageDetailLevel = null);
+        public static ChatMessageContentPart CreateImagePart(Uri imageUri, ChatImageDetailLevel? imageDetailLevel = null);
+        public static ChatMessageContentPart CreateRefusalPart(string refusal);
+        public static ChatMessageContentPart CreateTextPart(string text);
+        public static implicit operator ChatMessageContentPart(string text);
         ChatMessageContentPart IJsonModel<ChatMessageContentPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatMessageContentPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatMessageContentPart IPersistableModel<ChatMessageContentPart>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatMessageContentPart>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatMessageContentPart>.Write(ModelReaderWriterOptions options);
-        public override string ToString();
     }
     public readonly partial struct ChatMessageContentPartKind : IEquatable<ChatMessageContentPartKind> {
         private readonly object _dummy;
@@ -1393,29 +1400,15 @@ namespace OpenAI.Chat {
         Tool = 3,
         Function = 4
     }
-    public abstract class ChatResponseFormat : IEquatable<ChatResponseFormat>, IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
-        public static ChatResponseFormat JsonObject { get; }
-        public static ChatResponseFormat Text { get; }
+    public abstract class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
         public static ChatResponseFormat CreateJsonObjectFormat();
-        public static ChatResponseFormat CreateJsonSchemaFormat(string name, BinaryData jsonSchema, string description = null, bool? strictSchemaEnabled = null);
+        public static ChatResponseFormat CreateJsonSchemaFormat(string jsonSchemaFormatName, BinaryData jsonSchema, string jsonSchemaFormatDescription = null, bool? jsonSchemaIsStrict = null);
         public static ChatResponseFormat CreateTextFormat();
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override int GetHashCode();
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static bool operator ==(ChatResponseFormat first, ChatResponseFormat second);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static bool operator !=(ChatResponseFormat first, ChatResponseFormat second);
         ChatResponseFormat IJsonModel<ChatResponseFormat>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatResponseFormat>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatResponseFormat IPersistableModel<ChatResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatResponseFormat>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatResponseFormat>.Write(ModelReaderWriterOptions options);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        bool IEquatable<ChatResponseFormat>.Equals(ChatResponseFormat other);
-        public override string ToString();
-        protected internal abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ChatTokenLogProbabilityInfo : IJsonModel<ChatTokenLogProbabilityInfo>, IPersistableModel<ChatTokenLogProbabilityInfo> {
         public float LogProbability { get; }
@@ -1452,9 +1445,9 @@ namespace OpenAI.Chat {
         public string FunctionDescription { get; }
         public string FunctionName { get; }
         public BinaryData FunctionParameters { get; }
+        public bool? FunctionSchemaIsStrict { get; }
         public ChatToolKind Kind { get; }
-        public bool? StrictParameterSchemaEnabled { get; }
-        public static ChatTool CreateFunctionTool(string functionName, string functionDescription = null, BinaryData functionParameters = null, bool? strictParameterSchemaEnabled = null);
+        public static ChatTool CreateFunctionTool(string functionName, string functionDescription = null, BinaryData functionParameters = null, bool? functionSchemaIsStrict = null);
         ChatTool IJsonModel<ChatTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatTool>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatTool IPersistableModel<ChatTool>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1489,10 +1482,10 @@ namespace OpenAI.Chat {
         public override readonly string ToString();
     }
     public class ChatToolChoice : IJsonModel<ChatToolChoice>, IPersistableModel<ChatToolChoice> {
-        public ChatToolChoice(ChatTool tool);
-        public static ChatToolChoice Auto { get; }
-        public static ChatToolChoice None { get; }
-        public static ChatToolChoice Required { get; }
+        public static ChatToolChoice CreateAutoChoice();
+        public static ChatToolChoice CreateFunctionChoice(string functionName);
+        public static ChatToolChoice CreateNoneChoice();
+        public static ChatToolChoice CreateRequiredChoice();
         ChatToolChoice IJsonModel<ChatToolChoice>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatToolChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatToolChoice IPersistableModel<ChatToolChoice>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1523,24 +1516,6 @@ namespace OpenAI.Chat {
         FunctionChatMessage IPersistableModel<FunctionChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<FunctionChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<FunctionChatMessage>.Write(ModelReaderWriterOptions options);
-        protected internal override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-    }
-    public readonly partial struct ImageChatMessageContentPartDetail : IEquatable<ImageChatMessageContentPartDetail> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public ImageChatMessageContentPartDetail(string value);
-        public static ImageChatMessageContentPartDetail Auto { get; }
-        public static ImageChatMessageContentPartDetail High { get; }
-        public static ImageChatMessageContentPartDetail Low { get; }
-        public readonly bool Equals(ImageChatMessageContentPartDetail other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(ImageChatMessageContentPartDetail left, ImageChatMessageContentPartDetail right);
-        public static implicit operator ImageChatMessageContentPartDetail(string value);
-        public static bool operator !=(ImageChatMessageContentPartDetail left, ImageChatMessageContentPartDetail right);
-        public override readonly string ToString();
     }
     public static class OpenAIChatModelFactory {
         public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, IEnumerable<ChatMessageContentPart> content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
@@ -1602,7 +1577,6 @@ namespace OpenAI.Chat {
         SystemChatMessage IPersistableModel<SystemChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<SystemChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<SystemChatMessage>.Write(ModelReaderWriterOptions options);
-        protected internal override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class ToolChatMessage : ChatMessage, IJsonModel<ToolChatMessage>, IPersistableModel<ToolChatMessage> {
         public ToolChatMessage(string toolCallId, params ChatMessageContentPart[] contentParts);
@@ -1614,7 +1588,6 @@ namespace OpenAI.Chat {
         ToolChatMessage IPersistableModel<ToolChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ToolChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ToolChatMessage>.Write(ModelReaderWriterOptions options);
-        protected internal override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
     public class UserChatMessage : ChatMessage, IJsonModel<UserChatMessage>, IPersistableModel<UserChatMessage> {
         public UserChatMessage(params ChatMessageContentPart[] content);
@@ -1626,7 +1599,6 @@ namespace OpenAI.Chat {
         UserChatMessage IPersistableModel<UserChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<UserChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<UserChatMessage>.Write(ModelReaderWriterOptions options);
-        protected internal override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
     }
 }
 namespace OpenAI.Embeddings {

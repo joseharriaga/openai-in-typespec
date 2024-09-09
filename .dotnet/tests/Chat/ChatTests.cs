@@ -117,8 +117,8 @@ public class ChatTests : OpenAiTestBase
         ChatClient client = GetTestClient<ChatClient>();
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
-                ChatMessageContentPart.CreateTextMessageContentPart("Describe this image for me."),
-                ChatMessageContentPart.CreateImageMessageContentPart(imageData, mediaType)),
+                ChatMessageContentPart.CreateTextPart("Describe this image for me."),
+                ChatMessageContentPart.CreateImagePart(imageData, mediaType)),
         ];
         ChatCompletionOptions options = new() { MaxTokens = 2048 };
 
@@ -282,17 +282,17 @@ public class ChatTests : OpenAiTestBase
         {
             ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
                 "some_color_schema",
-                BinaryData.FromString("""
+                BinaryData.FromBytes("""
                     {
                         "type": "object",
                         "properties": {},
                         "additionalProperties": false
                     }
-                    """),
+                    """u8.ToArray()),
                 "an object that describes color components by name",
-                strictSchemaEnabled: false)
+                jsonSchemaIsStrict: false)
         };
-        ChatCompletion completion = await client.CompleteChatAsync(["What are the hex values for red, green, and blue?"], options);
+        ChatCompletion completion = await client.CompleteChatAsync([ new UserChatMessage("What are the hex values for red, green, and blue?") ], options);
         Assert.That(completion, Is.Not.Null);
         Console.WriteLine(completion);
     }
@@ -350,29 +350,29 @@ public class ChatTests : OpenAiTestBase
         {
             ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
                 "test_schema",
-                BinaryData.FromString("""
+                BinaryData.FromBytes("""
                     {
-                      "type": "object",
-                      "properties": {
-                        "answer": {
-                          "type": "string"
+                        "type": "object",
+                        "properties": {
+                            "answer": {
+                                "type": "string"
+                            },
+                            "steps": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
                         },
-                        "steps": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        }
-                      },
-                      "required": [
-                        "answer",
-                        "steps"
-                      ],
-                      "additionalProperties": false
+                        "required": [
+                            "answer",
+                            "steps"
+                        ],
+                        "additionalProperties": false
                     }
-                    """),
+                    """u8.ToArray()),
                 "a single final answer with a supporting collection of steps",
-                strictSchemaEnabled: true)
+                jsonSchemaIsStrict: true)
         };
         ChatCompletion completion = await client.CompleteChatAsync(messages, options);
         Assert.That(completion, Is.Not.Null);
@@ -397,32 +397,32 @@ public class ChatTests : OpenAiTestBase
         {
             ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
                 "food_recipe",
-                BinaryData.FromString("""
+                BinaryData.FromBytes("""
                     {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string"
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "ingredients": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "steps": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
                         },
-                        "ingredients": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        },
-                        "steps": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        }
-                      },
-                      "required": ["name", "ingredients", "steps"],
-                      "additionalProperties": false
+                        "required": ["name", "ingredients", "steps"],
+                        "additionalProperties": false
                     }
-                    """),
+                    """u8.ToArray()),
                 "a description of a recipe to create a meal or dish",
-                strictSchemaEnabled: true),
+                jsonSchemaIsStrict: true),
             Temperature = 0
         };
         ClientResult<ChatCompletion> completionResult = await client.CompleteChatAsync(messages, options);
@@ -435,7 +435,7 @@ public class ChatTests : OpenAiTestBase
         Assert.That(contextMessage.Refusal, Has.Length.GreaterThan(0));
 
         messages.Add(contextMessage);
-        messages.Add("Why can't you help me?");
+        messages.Add(new UserChatMessage("Why can't you help me?"));
 
         completion = await client.CompleteChatAsync(messages);
         Assert.That(completion.Refusal, Is.Null.Or.Empty);
@@ -455,31 +455,32 @@ public class ChatTests : OpenAiTestBase
         {
             ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
                 "food_recipe",
-                BinaryData.FromString("""
+                BinaryData.FromBytes("""
                     {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string"
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "ingredients": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "steps": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
                         },
-                        "ingredients": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        },
-                        "steps": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        }
-                      },
-                      "required": ["name", "ingredients", "steps"],
-                      "additionalProperties": false
+                        "required": ["name", "ingredients", "steps"],
+                        "additionalProperties": false
                     }
-                    """), "a description of a recipe to create a meal or dish",
-                strictSchemaEnabled: true)
+                    """u8.ToArray()),
+                "a description of a recipe to create a meal or dish",
+                jsonSchemaIsStrict: true)
         };
 
         ChatFinishReason? finishReason = null;

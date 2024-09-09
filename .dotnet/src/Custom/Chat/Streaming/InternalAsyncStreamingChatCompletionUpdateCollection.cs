@@ -15,11 +15,11 @@ namespace OpenAI.Chat;
 /// <summary>
 /// Implementation of collection abstraction over streaming chat updates.
 /// </summary>
-internal class AsyncStreamingChatCompletionUpdateCollection : AsyncCollectionResult<StreamingChatCompletionUpdate>
+internal class InternalAsyncStreamingChatCompletionUpdateCollection : AsyncCollectionResult<StreamingChatCompletionUpdate>
 {
     private readonly Func<Task<ClientResult>> _getResultAsync;
 
-    public AsyncStreamingChatCompletionUpdateCollection(Func<Task<ClientResult>> getResultAsync) : base()
+    public InternalAsyncStreamingChatCompletionUpdateCollection(Func<Task<ClientResult>> getResultAsync) : base()
     {
         Argument.AssertNotNull(getResultAsync, nameof(getResultAsync));
 
@@ -36,7 +36,7 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncCollectionRes
         private static ReadOnlySpan<byte> TerminalData => "[DONE]"u8;
 
         private readonly Func<Task<ClientResult>> _getResultAsync;
-        private readonly AsyncStreamingChatCompletionUpdateCollection _enumerable;
+        private readonly InternalAsyncStreamingChatCompletionUpdateCollection _enumerable;
         private readonly CancellationToken _cancellationToken;
 
         // These enumerators represent what is effectively a doubly-nested
@@ -53,7 +53,7 @@ internal class AsyncStreamingChatCompletionUpdateCollection : AsyncCollectionRes
         private bool _started;
 
         public AsyncStreamingChatUpdateEnumerator(Func<Task<ClientResult>> getResultAsync,
-            AsyncStreamingChatCompletionUpdateCollection enumerable,
+            InternalAsyncStreamingChatCompletionUpdateCollection enumerable,
             CancellationToken cancellationToken)
         {
             Debug.Assert(getResultAsync is not null);

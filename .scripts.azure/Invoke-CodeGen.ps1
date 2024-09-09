@@ -8,7 +8,7 @@ function Invoke([scriptblock]$script) {
 }
 
 function Make-Internals-Settable {
-  Get-ChildItem "$dotnetAzureFolder\src\Generated" -File -Filter "Internal*.cs" | ForEach-Object {
+  Get-ChildItem "$dotnetAzureFolder\sdk\openai\Azure.AI.OpenAI\src\Generated" -File -Filter "Internal*.cs" | ForEach-Object {
       $content = Get-Content $_.FullName -Raw
       $newContent = $content -replace 'public(.*?)\{ get; \}', 'internal$1{ get; set; }'
       Set-Content -Path $_.FullName -Value $newContent
@@ -16,7 +16,7 @@ function Make-Internals-Settable {
 }
 
 function Partialize-ClientPipelineExtensions {
-    $file = Get-ChildItem -Path "$dotnetAzureFolder\src\Generated\Internal\ClientPipelineExtensions.cs"
+    $file = Get-ChildItem -Path "$dotnetAzureFolder\sdk\openai\Azure.AI.OpenAI\src\Generated\Internal\ClientPipelineExtensions.cs"
     $content = Get-Content -Path $file -Raw
     Write-Output "Editing $($file.FullName)"
     $content = $content -creplace "internal static class ClientPipelineExtensions", "internal static partial class ClientPipelineExtensions"
@@ -24,7 +24,7 @@ function Partialize-ClientPipelineExtensions {
 }
 
 function Partialize-ClientUriBuilder {
-    $file = Get-ChildItem -Path "$dotnetAzureFolder\src\Generated\Internal\ClientUriBuilder.cs"
+    $file = Get-ChildItem -Path "$dotnetAzureFolder\sdk\openai\Azure.AI.OpenAI\src\Generated\Internal\ClientUriBuilder.cs"
     $content = Get-Content -Path $file -Raw
     Write-Output "Editing $($file.FullName)"
     $content = $content -creplace "internal class ClientUriBuilder", "internal partial class ClientUriBuilder"
@@ -48,7 +48,7 @@ function Prune-Generated-Files {
       "*ContentTextAnnotationsFileCitation*"
   )
 
-  Get-ChildItem "$dotnetAzureFolder\src\Generated" -File | ForEach-Object {
+  Get-ChildItem "$dotnetAzureFolder\sdk\openai\Azure.AI.OpenAI\src\Generated" -File | ForEach-Object {
       $generatedFile = $_;
       $generatedFilename = $_.Name;
       $keepFile = $false
@@ -76,7 +76,7 @@ try {
   Invoke { npm ci }
   Invoke { npm exec --no -- tsp format **/*tsp }
   Invoke { npm exec --no -- tsp compile . }
-#   Invoke { npm exec --no -- tsp compile main.tsp --emit @azure-tools/typespec-csharp --option @azure-tools/typespec-csharp.emitter-output-dir="$dotnetAzureFolder/src" }
+#   Invoke { npm exec --no -- tsp compile main.tsp --emit @azure-tools/typespec-csharp --option @azure-tools/typespec-csharp.emitter-output-dir="$dotnetAzureFolder/sdk/openai/Azure.AI.OpenAI/src" }
   Prune-Generated-Files
   Make-Internals-Settable
   Partialize-ClientPipelineExtensions

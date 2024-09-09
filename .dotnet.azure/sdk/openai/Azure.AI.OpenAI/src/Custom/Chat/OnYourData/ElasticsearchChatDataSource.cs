@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("ElasticsearchChatDataSource")]
+// [CodeGenSuppress("ElasticsearchChatDataSource", typeof(string), typeof(IDictionary<string, BinaryData>), typeof(InternalElasticsearchChatDataSourceParameters))]
 public partial class ElasticsearchChatDataSource : AzureChatDataSource
 {
     [CodeGenMember("Parameters")]

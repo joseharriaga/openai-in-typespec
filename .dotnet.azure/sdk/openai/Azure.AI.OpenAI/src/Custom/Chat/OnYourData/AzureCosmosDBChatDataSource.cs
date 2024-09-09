@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("AzureCosmosDBChatDataSource")]
+// [CodeGenSuppress("AzureCosmosDBChatDataSource", typeof(string), typeof(IDictionary<string, BinaryData>), typeof(InternalAzureCosmosDBChatDataSourceParameters))]
 public partial class AzureCosmosDBChatDataSource : AzureChatDataSource
 {
     [CodeGenMember("Parameters")]

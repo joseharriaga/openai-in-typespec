@@ -1,11 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("AzureSearchChatDataSource")]
+// [CodeGenSuppress("AzureSearchChatDataSource", typeof(string), typeof(IDictionary<string, BinaryData>), typeof(InternalAzureSearchChatDataSourceParameters))]
 public partial class AzureSearchChatDataSource : AzureChatDataSource
 {
     [CodeGenMember("Parameters")]

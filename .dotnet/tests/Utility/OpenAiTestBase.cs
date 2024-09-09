@@ -184,6 +184,20 @@ public class OpenAiTestBase : RecordedClientTestBase
         return RecordedTestMode.Playback;
     }
 
+    protected override bool GetDefaultAutomaticRecordEnabled()
+    {
+        string? enabledString = TestContext.Parameters["DisableAutoRecording"]
+            ?? Environment.GetEnvironmentVariable("OPENAI_DISABLE_AUTO_RECORDING")
+            ?? Environment.GetEnvironmentVariable("AZURE_DISABLE_AUTO_RECORDING");
+
+        if (bool.TryParse(enabledString, out bool enabled))
+        {
+            return !enabled;
+        }
+
+        return true;
+    }
+
     protected override ProxyServiceOptions CreateProxyServiceOptions()
         => new()
         {

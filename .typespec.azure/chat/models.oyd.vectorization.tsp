@@ -1,5 +1,8 @@
+import "@typespec/versioning";
 import "../../.typespec/chat/models.tsp";
 import "./models.oyd.auth.tsp";
+
+using TypeSpec.Versioning;
 
 namespace AzureOpenAI;
 
@@ -75,4 +78,14 @@ model AzureChatDataSourceModelIdVectorizationSource
 
   /** The embedding model build ID to use for vectorization. */
   model_id: string;
+}
+
+/**
+ * Represents an integrated vectorization source as defined within the supporting search resource.
+ */
+@added(AzureOpenAIServiceApiVersion.v2024_08_01_preview)
+model AzureChatDataSourceIntegratedVectorizationSource
+  extends AzureChatDataSourceVectorizationSource {
+  /** The type identifier, always 'integrated' for this vectorization source type. */
+  type: "integrated";
 }

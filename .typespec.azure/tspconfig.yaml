@@ -3,10 +3,10 @@ emit:
   - "@azure-tools/typespec-csharp"
 options:
   "@typespec/openapi3":
-    output-file: "{project-root}/../.openapi3.azure/openapi3-azure-openai.yaml"
+    output-file: "{project-root}/../.openapi3.azure/openapi3-azure-openai-{version}-generated.yaml"
   "@azure-tools/typespec-csharp":
     namespace: "Azure.AI.OpenAI"
-    emitter-output-dir: "{project-root}/../.dotnet.azure/src"
+    emitter-output-dir: "{project-root}/../.dotnet.azure/sdk/openai/Azure.AI.OpenAI/src"
     generate-convenience-methods: false
     unreferenced-types-handling: keepAll
     model-namespace: false

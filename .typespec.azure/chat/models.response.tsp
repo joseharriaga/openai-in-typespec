@@ -49,9 +49,6 @@ model AzureChatMessageContext {
     /** The original search score for the retrieval. */
     original_search_score?: float64;
 
-    /** The rerank score for the retrieval. */
-    rerank_score?: float64;
-
     /** If applicable, an indication of why the document was filtered. */
     filter_reason?: "score" | "rerank";
   };
@@ -98,4 +95,7 @@ alias AzureChatDataSourceCitation = {
 
   /** The chunk ID for the citation. */
   chunk_id?: string;
+
+  /** The rerank score for the retrieval. */
+  rerank_score?: float64;
 };

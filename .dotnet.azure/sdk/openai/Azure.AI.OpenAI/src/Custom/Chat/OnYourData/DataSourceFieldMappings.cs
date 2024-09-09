@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
+
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("AzureSearchChatDataSourceParametersFieldsMapping")]
@@ -21,9 +23,6 @@ public partial class DataSourceFieldMappings
     /// <see cref="AzureCosmosDBChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
     /// <see cref="PineconeChatDataSource"/>.
     /// </para>
-    /// <para>
-    /// It is not applicable to types including: <see cref="AzureMachineLearningIndexChatDataSource"/>.
-    /// </para>
     /// </remarks>
     [CodeGenMember("UrlField")]
     public string UrlFieldName { get; init;}
@@ -34,9 +33,6 @@ public partial class DataSourceFieldMappings
     /// This field is applicable to data source types including: <see cref="AzureSearchChatDataSource"/>,
     /// <see cref="AzureCosmosDBChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
     /// <see cref="PineconeChatDataSource"/>.
-    /// </para>
-    /// <para>
-    /// It is not applicable to types including: <see cref="AzureMachineLearningIndexChatDataSource"/>.
     /// </para>
     /// </remarks>
     [CodeGenMember("FilepathField")]
@@ -49,9 +45,6 @@ public partial class DataSourceFieldMappings
     /// <see cref="AzureCosmosDBChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
     /// <see cref="PineconeChatDataSource"/>.
     /// </para>
-    /// <para>
-    /// It is not applicable to types including: <see cref="AzureMachineLearningIndexChatDataSource"/>.
-    /// </para>
     /// </remarks>
     [CodeGenMember("ContentFields")]
     public IList<string> ContentFieldNames { get; } = new ChangeTrackingList<string>();
@@ -62,9 +55,6 @@ public partial class DataSourceFieldMappings
     /// This field is applicable to data source types including: <see cref="AzureSearchChatDataSource"/>,
     /// <see cref="AzureCosmosDBChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
     /// <see cref="PineconeChatDataSource"/>.
-    /// </para>
-    /// <para>
-    /// It is not applicable to types including: <see cref="AzureMachineLearningIndexChatDataSource"/>.
     /// </para>
     /// </remarks>
     [CodeGenMember("ContentFieldsSeparator")]
@@ -77,8 +67,7 @@ public partial class DataSourceFieldMappings
     /// <see cref="AzureCosmosDBChatDataSource"/>, and <see cref="ElasticsearchChatDataSource"/>.
     /// </para>
     /// <para>
-    /// It is not applicable to types including: <see cref="AzureMachineLearningIndexChatDataSource"/> and
-    /// <see cref="PineconeChatDataSource"/>.
+    /// It is not applicable to types including: <see cref="PineconeChatDataSource"/>.
     /// </para>
     /// </remarks>
     [CodeGenMember("VectorFields")]

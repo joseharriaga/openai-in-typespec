@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
@@ -51,13 +53,6 @@ public partial class ElasticsearchChatDataSource : AzureChatDataSource
     {
         get => InternalParameters.Strictness;
         init => InternalParameters.Strictness = value;
-    }
-
-    /// <inheritdoc cref="InternalElasticsearchChatDataSourceParameters.RoleInformation"/>
-    public string RoleInformation
-    {
-        get => InternalParameters.RoleInformation;
-        init => InternalParameters.RoleInformation = value;
     }
 
     /// <inheritdoc cref="InternalElasticsearchChatDataSourceParameters.MaxSearchQueries"/>

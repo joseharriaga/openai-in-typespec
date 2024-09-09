@@ -1,6 +1,7 @@
 import "@typespec/http";
 import "@typespec/openapi3";
 import "@typespec/openapi";
+import "@typespec/versioning";
 
 import "./assistants";
 import "./chat";
@@ -9,6 +10,7 @@ import "./runs";
 import "./messages";
 
 using TypeSpec.Http;
+using TypeSpec.Versioning;
 
 @service({
   title: "Azure OpenAI Service",
@@ -42,4 +44,35 @@ using TypeSpec.Http;
     }
   ]>
 )
+@versioned(AzureOpenAI.AzureOpenAIServiceApiVersion)
 namespace AzureOpenAI;
+
+/**
+ * Known service API versions for Azure OpenAI.
+ */
+enum AzureOpenAIServiceApiVersion {
+  /**
+   * The 2024-04-01-preview service API version label.
+   */
+  v2024_04_01_preview: "2024-04-01-preview",
+
+  /**
+   * The 2024-05-01-preview service API version label.
+   */
+  v2024_05_01_preview: "2024-05-01-preview",
+
+  /**
+   * The 2024-06-01 (stable) service API version label.
+   */
+  v2024_06_01: "2024-06-01",
+
+  /**
+   * The 2024-07-01-preview service API version label.
+   */
+  v2024_07_01_preview: "2024-07-01-preview",
+
+  /**
+   * The 2024-08-01-preview service API version label.
+   */
+  v2024_08_01_preview: "2024-08-01-preview",
+}

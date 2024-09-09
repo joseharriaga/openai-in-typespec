@@ -1,6 +1,11 @@
+import "@typespec/versioning";
+
 import "../../.typespec/chat/models.tsp";
+import "../main.tsp";
 import "./models.oyd.auth.tsp";
 import "./models.oyd.vectorization.tsp";
+
+using TypeSpec.Versioning;
 
 namespace AzureOpenAI;
 
@@ -92,13 +97,18 @@ model AzureSearchChatDataSource extends AzureChatDataSource {
 
     /**
      * The vectorization source to use with Azure Search.
-     * Supported sources for Azure Search include endpoint and deployment name.
+     * Supported sources for Azure Search include endpoint, deployment name, and integrated.
      */
-    embedding_dependency?: AzureChatDataSourceEndpointVectorizationSource | AzureChatDataSourceDeploymentNameVectorizationSource;
+    @typeChangedFrom(
+      AzureOpenAIServiceApiVersion.v2024_08_01_preview,
+      AzureChatDataSourceEndpointVectorizationSource | AzureChatDataSourceDeploymentNameVectorizationSource
+    )
+    embedding_dependency?: AzureChatDataSourceEndpointVectorizationSource | AzureChatDataSourceDeploymentNameVectorizationSource | AzureChatDataSourceIntegratedVectorizationSource;
   };
 }
 
 /** Represents a data source configuration that will use an Azure Machine Learning vector index. */
+@removed(AzureOpenAIServiceApiVersion.v2024_08_01_preview)
 model AzureMachineLearningIndexChatDataSource extends AzureChatDataSource {
   /** The discriminated type identifier, which is always 'azure_ml_index'. */
   type: "azure_ml_index";
@@ -209,6 +219,58 @@ model PineconeChatDataSource extends AzureChatDataSource {
   };
 }
 
+@added(AzureOpenAIServiceApiVersion.v2024_08_01_preview)
+model MongoDBChatDataSource extends AzureChatDataSource {
+  /** The discriminated type identifier, which is always 'mongo_db'. */
+  type: "mongo_db";
+
+  /** The parameter information to control the use of the MongoDB data source. */
+  parameters: {
+    ...AzureChatDataSourceCommonParameters;
+
+    /** The name of the MongoDB cluster endpoint. */
+    endpoint: string;
+
+    /** The name of the MongoDB database. */
+    database_name: string;
+
+    /** The name of the MongoDB collection. */
+    collection_name: string;
+
+    /** The name of the MongoDB application. */
+    app_name: string;
+
+    /** The name of the MongoDB index. */
+    index_name: string;
+
+    /**
+     * The authentication mechanism to use with Pinecone.
+     * Supported authentication mechanisms for Pinecone include: username and password.
+     */
+    @added(AzureOpenAIServiceApiVersion.v2024_08_01_preview)
+    authentication: AzureChatDataSourceUsernameAndPasswordAuthenticationOptions;
+
+    /**
+     * The vectorization source to use as an embedding dependency for the MongoDB data source.
+     * Supported vectorization sources for MongoDB include: endpoint, deployment name.
+     */
+    embedding_dependency: AzureChatDataSourceEndpointVectorizationSource | AzureChatDataSourceDeploymentNameVectorizationSource;
+
+    /**
+     * Field mappings to apply to data used by the MongoDB data source.
+     * Note that content and vector field mappings are required for MongoDB.
+     */
+    fields_mapping: {
+      content_fields: string[];
+      vector_fields: string[];
+      title_field?: string;
+      url_field?: string;
+      filepath_field?: string;
+      content_fields_separator?: string;
+    };
+  };
+}
+
 alias AzureChatDataSourceCommonParameters = {
   /** The configured number of documents to feature in the query. */
   top_n_documents?: int32;
@@ -229,6 +291,7 @@ alias AzureChatDataSourceCommonParameters = {
    * generating a response. You can describe the assistant's personality and tell it how to format responses.
    * This is limited to 100 tokens and counts against the overall token limit.
    */
+  @removed(AzureOpenAIServiceApiVersion.v2024_08_01_preview)
   role_information?: string;
 
   /**
@@ -248,7 +311,7 @@ alias AzureChatDataSourceCommonParameters = {
    * By default, citations and intent will be requested.
    */
   @maxItems(3)
-  include_contexts?: ("citations" | "intent" | "all_retrieved_documents")[] = [
+  include_contexts?: ("citations" | "intent" | "all_retrieved_documents")[] = #[
     "citations",
     "intent"
   ];

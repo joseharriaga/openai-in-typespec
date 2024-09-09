@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
@@ -65,13 +67,6 @@ public partial class PineconeChatDataSource : AzureChatDataSource
     {
         get => InternalParameters.Strictness;
         init => InternalParameters.Strictness = value;
-    }
-
-    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.RoleInformation"/>
-    public string RoleInformation
-    {
-        get => InternalParameters.RoleInformation;
-        init => InternalParameters.RoleInformation = value;
     }
 
     /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.MaxSearchQueries"/>

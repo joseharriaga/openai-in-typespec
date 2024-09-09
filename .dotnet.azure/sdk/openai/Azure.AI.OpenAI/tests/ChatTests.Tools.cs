@@ -20,9 +20,8 @@ namespace Azure.AI.OpenAI.Tests
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
-        private const string TOOL_TEMPERATURE_NAME = "get_future_temperature";
         private static readonly ChatTool TOOL_TEMPERATURE = ChatTool.CreateFunctionTool(
-            TOOL_TEMPERATURE_NAME,
+            "get_future_temperature",
             "requests the anticipated future temperature at a provided location to help inform advice about topics like choice of attire",
             BinaryData.FromString(
             """
@@ -75,7 +74,7 @@ namespace Azure.AI.OpenAI.Tests
                 {
                     ToolChoiceTestType.None => ChatToolChoice.CreateNoneChoice(),
                     ToolChoiceTestType.Auto => ChatToolChoice.CreateAutoChoice(),
-                    ToolChoiceTestType.Tool => ChatToolChoice.CreateFunctionChoice(TOOL_TEMPERATURE_NAME),
+                    ToolChoiceTestType.Tool => ChatToolChoice.CreateFunctionChoice(TOOL_TEMPERATURE.FunctionName),
                     ToolChoiceTestType.Required => ChatToolChoice.CreateRequiredChoice(),
                     _ => throw new NotImplementedException(),
                 },
@@ -130,7 +129,7 @@ namespace Azure.AI.OpenAI.Tests
             ChatToolCall toolCall = completion.ToolCalls[0];
             Assert.That(toolCall.Id, Is.Not.Null.Or.Empty);
             Assert.That(toolCall.Kind, Is.EqualTo(ChatToolCallKind.Function));
-            Assert.That(toolCall.FunctionName, Is.EqualTo(TOOL_TEMPERATURE_NAME));
+            Assert.That(toolCall.FunctionName, Is.EqualTo(TOOL_TEMPERATURE.FunctionName));
             Assert.That(toolCall.FunctionArguments, Is.Not.Null);
             var parsedArgs = JsonSerializer.Deserialize<TemperatureFunctionRequestArguments>(toolCall.FunctionArguments, SERIALIZER_OPTIONS)!;
             Assert.That(parsedArgs, Is.Not.Null);
@@ -177,7 +176,7 @@ namespace Azure.AI.OpenAI.Tests
         [TestCase(ToolChoiceTestType.None)]
         [TestCase(ToolChoiceTestType.Auto)]
         [TestCase(ToolChoiceTestType.Tool)]
-        [TestCase(ToolChoiceTestType.Required, Ignore = "This seems to be considered invalid")]
+        [TestCase(ToolChoiceTestType.Required)]
         public async Task SimpleToolWorksStreaming(ToolChoiceTestType toolChoice)
         {
             StringBuilder content = new();
@@ -200,7 +199,7 @@ namespace Azure.AI.OpenAI.Tests
                 {
                     ToolChoiceTestType.None => ChatToolChoice.CreateNoneChoice(),
                     ToolChoiceTestType.Auto => ChatToolChoice.CreateAutoChoice(),
-                    ToolChoiceTestType.Tool => ChatToolChoice.CreateFunctionChoice(TOOL_TEMPERATURE_NAME),
+                    ToolChoiceTestType.Tool => ChatToolChoice.CreateFunctionChoice(TOOL_TEMPERATURE.FunctionName),
                     ToolChoiceTestType.Required => ChatToolChoice.CreateRequiredChoice(),
                     _ => throw new NotImplementedException(),
                 },
@@ -223,7 +222,7 @@ namespace Azure.AI.OpenAI.Tests
                     Assert.That(toolUpdate.Index, Is.EqualTo(0));
                     Assert.That(toolUpdate.Id, Is.Null.Or.Not.Empty);
                     toolId ??= toolUpdate.Id;
-                    Assert.That(toolUpdate.FunctionName, Is.Null.Or.EqualTo(TOOL_TEMPERATURE_NAME));
+                    Assert.That(toolUpdate.FunctionName, Is.Null.Or.EqualTo(TOOL_TEMPERATURE.FunctionName));
                     toolName ??= toolUpdate.FunctionName;
 
                     Assert.That(toolUpdate.FunctionArgumentsUpdate, Is.Not.Null);

@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Azure OpenAI Service
-  version: 2024-08-01-preview
+  version: 2024-05-01-preview
 tags:
   - name: Chat
   - name: Images
@@ -372,6 +372,10 @@ components:
               chunk_id:
                 type: string
                 description: The chunk ID for the citation.
+              rerank_score:
+                type: number
+                format: double
+                description: The rerank score for the retrieval.
             required:
               - content
           description: The citations produced by the data retrieval.
@@ -393,6 +397,10 @@ components:
             chunk_id:
               type: string
               description: The chunk ID for the citation.
+            rerank_score:
+              type: number
+              format: double
+              description: The rerank score for the retrieval.
             search_queries:
               type: array
               items:
@@ -406,10 +414,6 @@ components:
               type: number
               format: double
               description: The original search score for the retrieval.
-            rerank_score:
-              type: number
-              format: double
-              description: The rerank score for the retrieval.
             filter_reason:
               type: string
               enum:
@@ -1176,7 +1180,7 @@ components:
                 - $ref: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
               description: |-
                 The vectorization source to use with Azure Search.
-                Supported sources for Azure Search include endpoint and deployment name.
+                Supported sources for Azure Search include endpoint, deployment name, and integrated.
           required:
             - endpoint
             - index_name

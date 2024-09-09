@@ -1,4 +1,7 @@
+import "@typespec/versioning";
 import "../../.typespec/chat/models.tsp";
+
+using TypeSpec.Versioning;
 
 namespace AzureOpenAI;
 
@@ -11,6 +14,14 @@ model AzureChatDataSourceApiKeyAuthenticationOptions
   extends AzureChatDataSourceAuthenticationOptions {
   type: "api_key";
   key: string;
+}
+
+@added(AzureOpenAIServiceApiVersion.v2024_08_01_preview)
+model AzureChatDataSourceUsernameAndPasswordAuthenticationOptions
+  extends AzureChatDataSourceAuthenticationOptions {
+  type: "username_and_password";
+  username: string;
+  password: string;
 }
 
 model AzureChatDataSourceConnectionStringAuthenticationOptions

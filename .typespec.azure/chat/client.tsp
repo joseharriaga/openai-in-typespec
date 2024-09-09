@@ -17,9 +17,6 @@ using AzureOpenAI;
 @@access(AzureCosmosDBChatDataSource, Access.public);
 @@usage(AzureCosmosDBChatDataSource, Usage.input);
 
-@@access(AzureMachineLearningIndexChatDataSource, Access.public);
-@@usage(AzureMachineLearningIndexChatDataSource, Usage.input);
-
 @@access(AzureSearchChatDataSource, Access.public);
 @@usage(AzureSearchChatDataSource, Usage.input);
 

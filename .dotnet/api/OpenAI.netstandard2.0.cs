@@ -1668,6 +1668,14 @@ namespace OpenAI.Files {
         public FileClient(ApiKeyCredential credential);
         protected internal FileClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
+        public virtual ClientResult AddUploadPart(string uploadId, BinaryContent content, string contentType, RequestOptions options = null);
+        public virtual Task<ClientResult> AddUploadPartAsync(string uploadId, BinaryContent content, string contentType, RequestOptions options = null);
+        public virtual ClientResult CancelUpload(string uploadId, RequestOptions options = null);
+        public virtual Task<ClientResult> CancelUploadAsync(string uploadId, RequestOptions options = null);
+        public virtual ClientResult CompleteUpload(string uploadId, BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult> CompleteUploadAsync(string uploadId, BinaryContent content, RequestOptions options = null);
+        public virtual ClientResult CreateUpload(BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult> CreateUploadAsync(BinaryContent content, RequestOptions options = null);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteFile(string fileId, RequestOptions options);
         public virtual ClientResult<bool> DeleteFile(string fileId, CancellationToken cancellationToken = default);

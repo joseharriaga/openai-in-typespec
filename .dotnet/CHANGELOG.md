@@ -4,6 +4,9 @@
 
 ### Features Added
 
+- Added support for the Uploads API in `FileClient`. This `Experimental` feature allows uploading large files in multiple parts.
+  - The feature is supported by the `CreateUpload`, `AddUploadPart`, `CompleteUpload`, and `CancelUpload` protocol methods.
+
 ### Breaking Changes
 
 - Renamed `ChatMessageContentPart`'s `CreateTextMessageContentPart` factory method to `CreateTextPart`.

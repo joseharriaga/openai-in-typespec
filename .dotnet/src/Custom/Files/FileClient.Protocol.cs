@@ -2,6 +2,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace OpenAI.Files;
@@ -208,5 +209,53 @@ public partial class FileClient
 
         using PipelineMessage message = CreateDownloadFileRequest(fileId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+    }
+
+    [Experimental("OPENAI001")]
+    public virtual async Task<ClientResult> CreateUploadAsync(BinaryContent content, RequestOptions options = null)
+    {
+        return await _internalUploadsClient.CreateUploadAsync(content, options).ConfigureAwait(false);
+    }
+
+    [Experimental("OPENAI001")]
+    public virtual ClientResult CreateUpload(BinaryContent content, RequestOptions options = null)
+    {
+        return _internalUploadsClient.CreateUpload(content, options);
+    }
+
+    [Experimental("OPENAI001")]
+    public virtual async Task<ClientResult> AddUploadPartAsync(string uploadId, BinaryContent content, string contentType, RequestOptions options = null)
+    {
+        return await _internalUploadsClient.AddUploadPartAsync(uploadId, content, contentType, options).ConfigureAwait(false);
+    }
+
+    [Experimental("OPENAI001")]
+    public virtual ClientResult AddUploadPart(string uploadId, BinaryContent content, string contentType, RequestOptions options = null)
+    {
+        return _internalUploadsClient.AddUploadPart(uploadId, content, contentType, options);
+    }
+
+    [Experimental("OPENAI001")]
+    public virtual async Task<ClientResult> CompleteUploadAsync(string uploadId, BinaryContent content, RequestOptions options = null)
+    {
+        return await _internalUploadsClient.CompleteUploadAsync(uploadId, content, options).ConfigureAwait(false);
+    }
+
+    [Experimental("OPENAI001")]
+    public virtual ClientResult CompleteUpload(string uploadId, BinaryContent content, RequestOptions options = null)
+    {
+        return _internalUploadsClient.CompleteUpload(uploadId, content, options);
+    }
+
+    [Experimental("OPENAI001")]
+    public virtual async Task<ClientResult> CancelUploadAsync(string uploadId, RequestOptions options = null)
+    {
+        return await _internalUploadsClient.CancelUploadAsync(uploadId, options).ConfigureAwait(false);
+    }
+
+    [Experimental("OPENAI001")]
+    public virtual ClientResult CancelUpload(string uploadId, RequestOptions options = null)
+    {
+        return _internalUploadsClient.CancelUpload(uploadId, options);
     }
 }

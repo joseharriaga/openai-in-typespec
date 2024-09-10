@@ -6,6 +6,10 @@
     "resource_group": "Sanitized",
     "subscription_id": "Sanitized"
   },
+  "assistant": {
+    "endpoint": "https://Sanitized.openai.azure.com/",
+    "key": "Sanitized"
+  },
   "audio": {
     "deployment": "whisper"
   },

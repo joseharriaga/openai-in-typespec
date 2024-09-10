@@ -8,8 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("MongoDBChatDataSource")]
-// [CodeGenSuppress(nameof(MongoDBChatDataSource), typeof(string), typeof(IDictionary<string,BinaryData>), typeof(InternalMongoDBChatDataSourceParameters))]
-
 public partial class MongoDBChatDataSource : AzureChatDataSource
 {
     [CodeGenMember("Parameters")]
@@ -19,84 +17,84 @@ public partial class MongoDBChatDataSource : AzureChatDataSource
     required public DataSourceAuthentication Authentication
     {
         get => InternalParameters.Authentication;
-        init => InternalParameters.Authentication = value;
+        set => InternalParameters.Authentication = value;
     }
 
     /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.Endpoint"/>
     required public string EndpointName
     {
         get => InternalParameters.Endpoint;
-        init => InternalParameters.Endpoint = value;
+        set => InternalParameters.Endpoint = value;
     }
 
     /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.CollectionName"/>
     required public string CollectionName
     {
         get => InternalParameters.CollectionName;
-        init => InternalParameters.CollectionName = value;
+        set => InternalParameters.CollectionName = value;
     }
 
     /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.AppName"/>
     required public string AppName
     {
         get => InternalParameters.AppName;
-        init => InternalParameters.AppName = value;
+        set => InternalParameters.AppName = value;
     }
 
     /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.IndexName"/>
     required public string IndexName
     {
         get => InternalParameters.IndexName;
-        init => InternalParameters.IndexName = value;
+        set => InternalParameters.IndexName = value;
     }
 
     /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.TopNDocuments"/>
     public int? TopNDocuments
     {
         get => InternalParameters.TopNDocuments;
-        init => InternalParameters.TopNDocuments = value;
+        set => InternalParameters.TopNDocuments = value;
     }
 
     /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.InScope"/>
     public bool? InScope
     {
         get => InternalParameters.InScope;
-        init => InternalParameters.InScope = value;
+        set => InternalParameters.InScope = value;
     }
 
     /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.Strictness"/>
     public int? Strictness
     {
         get => InternalParameters.Strictness;
-        init => InternalParameters.Strictness = value;
+        set => InternalParameters.Strictness = value;
     }
 
     /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.MaxSearchQueries"/>
     public int? MaxSearchQueries
     {
         get => InternalParameters.MaxSearchQueries;
-        init => InternalParameters.MaxSearchQueries = value;
+        set => InternalParameters.MaxSearchQueries = value;
     }
 
     /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.AllowPartialResult"/>
     public bool? AllowPartialResult
     {
         get => InternalParameters.AllowPartialResult;
-        init => InternalParameters.AllowPartialResult = value;
+        set => InternalParameters.AllowPartialResult = value;
     }
 
     /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.OutputContextFlags"/>
-    public DataSourceOutputContextFlags? OutputContextFlags
+    public DataSourceOutputContexts? OutputContextFlags
     {
         get => InternalParameters.OutputContextFlags;
-        init => InternalParameters.OutputContextFlags = value;
+        set => InternalParameters.OutputContextFlags = value;
     }
 
     /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.VectorizationSource"/>
     public DataSourceVectorizer VectorizationSource
     {
         get => InternalParameters.EmbeddingDependency;
-        init => InternalParameters.EmbeddingDependency = value;
+        set => InternalParameters.EmbeddingDependency = value;
     }
 
     /// <summary>

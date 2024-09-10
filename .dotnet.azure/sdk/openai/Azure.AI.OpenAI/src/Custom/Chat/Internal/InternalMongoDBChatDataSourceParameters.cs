@@ -10,10 +10,10 @@ internal partial class InternalMongoDBChatDataSourceParameters
 {
     [CodeGenMember("IncludeContexts")]
     private IList<string> _internalIncludeContexts = new ChangeTrackingList<string>();
-    private DataSourceOutputContextFlags? _outputContextFlags;
+    private DataSourceOutputContexts? _outputContextFlags;
 
-    /// <inheritdoc cref="DataSourceOutputContextFlags"/>
-    public DataSourceOutputContextFlags? OutputContextFlags
+    /// <inheritdoc cref="DataSourceOutputContexts"/>
+    public DataSourceOutputContexts? OutputContextFlags
     {
         get => DataSourceOutputContextFlagsExtensions.FromStringList(_internalIncludeContexts);
         internal set
@@ -43,7 +43,7 @@ internal partial class InternalMongoDBChatDataSourceParameters
     /// <remarks>
     /// MongoDB data sources support any of the following options:
     /// <list type="bullet">
-    /// <item><see cref="DataSourceAuthentication.FromUsernameAndPasword
+    /// <item><see cref="DataSourceAuthentication.FromUsernameAndPassword(string,string)"/></item>
     /// </list>
     /// </remarks>
     [CodeGenMember("Authentication")]

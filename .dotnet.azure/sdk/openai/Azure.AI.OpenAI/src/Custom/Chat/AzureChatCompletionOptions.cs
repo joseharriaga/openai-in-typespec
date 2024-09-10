@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using Azure.AI.OpenAI.Chat;
 using Azure.AI.OpenAI.Internal;
 
-namespace Azure.AI.OpenAI;
+namespace Azure.AI.OpenAI.Chat;
 
 public static partial class AzureChatCompletionOptionsExtensions
 {

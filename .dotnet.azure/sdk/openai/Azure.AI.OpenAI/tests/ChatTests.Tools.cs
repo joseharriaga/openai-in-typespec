@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Azure.AI.OpenAI.Chat;
+using Azure.AI.OpenAI.Images;
 using OpenAI.Chat;
 using OpenAI.TestFramework;
 
@@ -89,10 +91,10 @@ namespace Azure.AI.OpenAI.Tests
             Assert.IsNotNull(completion);
             Assert.That(completion.Id, Is.Not.Null.Or.Empty);
 
-            ContentFilterResultForPrompt filter = completion.GetContentFilterResultForPrompt();
+            RequestContentFilterResult filter = completion.GetRequestContentFilterResult();
             Assert.IsNotNull(filter);
             Assert.That(filter.SelfHarm, Is.Not.Null);
-            Assert.That(filter.SelfHarm.Filtered, Is.False);
+            Assert.That(filter.SelfHarm.IsFiltered, Is.False);
             Assert.That(filter.SelfHarm.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
 
             if (toolChoice == ToolChoiceTestType.None)
@@ -154,17 +156,17 @@ namespace Azure.AI.OpenAI.Tests
             Assert.That(completion, Is.Not.Null);
             Assert.That(completion.FinishReason, Is.EqualTo(ChatFinishReason.Stop));
 
-            ContentFilterResultForPrompt promptFilter = completion.GetContentFilterResultForPrompt();
+            RequestContentFilterResult promptFilter = completion.GetRequestContentFilterResult();
             Assert.That(promptFilter, Is.Not.Null);
             Assert.That(promptFilter.Hate, Is.Not.Null);
             Assert.That(promptFilter.Hate.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
-            Assert.That(promptFilter.Hate.Filtered, Is.False);
+            Assert.That(promptFilter.Hate.IsFiltered, Is.False);
 
-            ContentFilterResultForResponse responseFilter = completion.GetContentFilterResultForResponse();
+            ResponseContentFilterResult responseFilter = completion.GetResponseContentFilterResult();
             Assert.That(responseFilter, Is.Not.Null);
             Assert.That(responseFilter.Hate, Is.Not.Null);
             Assert.That(responseFilter.Hate.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
-            Assert.That(responseFilter.Hate.Filtered, Is.False);
+            Assert.That(responseFilter.Hate.IsFiltered, Is.False);
 
             Assert.That(completion.Content, Has.Count.GreaterThan(0));
             Assert.That(completion.Content, Has.All.Not.Null);
@@ -240,7 +242,7 @@ namespace Azure.AI.OpenAI.Tests
                 var promptFilter = update.GetContentFilterResultForPrompt();
                 if (!foundPromptFilter && promptFilter?.Hate != null)
                 {
-                    Assert.That(promptFilter.Hate.Filtered, Is.False);
+                    Assert.That(promptFilter.Hate.IsFiltered, Is.False);
                     Assert.That(promptFilter.Hate.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
                     foundPromptFilter = true;
                 }
@@ -248,7 +250,7 @@ namespace Azure.AI.OpenAI.Tests
                 var responseFilter = update.GetContentFilterResultForResponse();
                 if (!foundResponseFilter && responseFilter?.Hate != null)
                 {
-                    Assert.That(responseFilter.Hate.Filtered, Is.False);
+                    Assert.That(responseFilter.Hate.IsFiltered, Is.False);
                     Assert.That(responseFilter.Hate.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
                     foundResponseFilter = true;
                 }

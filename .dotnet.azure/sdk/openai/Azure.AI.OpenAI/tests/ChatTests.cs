@@ -79,7 +79,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
             },
             AllowPartialResult = true,
             QueryType = DataSourceQueryType.Simple,
-            OutputContextFlags = DataSourceOutputContextFlags.AllRetrievedDocuments | DataSourceOutputContextFlags.Citations,
+            OutputContextFlags = DataSourceOutputContexts.AllRetrievedDocuments | DataSourceOutputContexts.Citations,
             VectorizationSource = DataSourceVectorizer.FromEndpoint(
                 new Uri("https://my-embedding.com"),
                 DataSourceAuthentication.FromApiKey("embedding-api-key")),
@@ -332,11 +332,11 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         ChatClient client = GetTestClient();
         ClientResult<ChatCompletion> chatCompletionResult = await client.CompleteChatAsync([ChatMessage.CreateUserMessage("Hello, world!")]);
         ChatCompletion chatCompletion = chatCompletionResult;
-        ContentFilterResultForPrompt promptFilterResult = chatCompletion.GetContentFilterResultForPrompt();
+        RequestContentFilterResult promptFilterResult = chatCompletion.GetRequestContentFilterResult();
         Assert.That(promptFilterResult, Is.Not.Null);
-        Assert.That(promptFilterResult.Sexual?.Filtered, Is.False);
+        Assert.That(promptFilterResult.Sexual?.IsFiltered, Is.False);
         Assert.That(promptFilterResult.Sexual?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
-        ContentFilterResultForResponse responseFilterResult = chatCompletion.GetContentFilterResultForResponse();
+        ResponseContentFilterResult responseFilterResult = chatCompletion.GetResponseContentFilterResult();
         Assert.That(responseFilterResult, Is.Not.Null);
         Assert.That(responseFilterResult.Hate?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
         if (responseFilterResult.ProtectedMaterialCode is not null)
@@ -575,10 +575,10 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         if (update.CreatedAt == UNIX_EPOCH)
         {
             // This is the first message that usually contains the service's request content filtering
-            ContentFilterResultForPrompt promptFilter = update.GetContentFilterResultForPrompt();
+            RequestContentFilterResult promptFilter = update.GetContentFilterResultForPrompt();
             if (promptFilter?.SelfHarm != null)
             {
-                Assert.That(promptFilter.SelfHarm.Filtered, Is.False);
+                Assert.That(promptFilter.SelfHarm.IsFiltered, Is.False);
                 Assert.That(promptFilter.SelfHarm.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
                 foundPromptFilter = true;
             }
@@ -616,10 +616,10 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
             if (!foundResponseFilter)
             {
-                ContentFilterResultForResponse responseFilter = update.GetContentFilterResultForResponse();
+                ResponseContentFilterResult responseFilter = update.GetContentFilterResultForResponse();
                 if (responseFilter?.Violence != null)
                 {
-                    Assert.That(responseFilter.Violence.Filtered, Is.False);
+                    Assert.That(responseFilter.Violence.IsFiltered, Is.False);
                     Assert.That(responseFilter.Violence.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
                     foundResponseFilter = true;
                 }

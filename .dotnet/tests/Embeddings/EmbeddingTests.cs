@@ -28,7 +28,7 @@ public partial class EmbeddingTests : SyncAsyncTestBase
     [Test]
     public async Task GenerateSingleEmbedding()
     {
-        EmbeddingClient client = new("text-embedding-3-small");
+        EmbeddingClient client = new("text-embedding-3-small", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
         string input = "Hello, world!";
 
@@ -39,7 +39,7 @@ public partial class EmbeddingTests : SyncAsyncTestBase
         Assert.That(embedding.Index, Is.EqualTo(0));
         Assert.That(embedding.Vector, Is.Not.Null);
         Assert.That(embedding.Vector.Span.Length, Is.EqualTo(1536));
-        
+
         float[] array = embedding.Vector.ToArray();
         Assert.That(array.Length, Is.EqualTo(1536));
     }
@@ -49,7 +49,7 @@ public partial class EmbeddingTests : SyncAsyncTestBase
     [TestCase(EmbeddingsInputKind.UsingIntegers)]
     public async Task GenerateMultipleEmbeddings(EmbeddingsInputKind embeddingsInputKind)
     {
-        EmbeddingClient client = new("text-embedding-3-small");
+        EmbeddingClient client = new("text-embedding-3-small", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
         const int Dimensions = 456;
 

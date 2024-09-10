@@ -1,8 +1,10 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using NUnit.Framework;
 using OpenAI.Chat;
 using OpenAI.Tests.Utility;
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -22,8 +24,9 @@ public partial class ChatToolTests : SyncAsyncTestBase
     {
     }
 
+    private const string GetNumberForWordToolName = "get_number_for_word";
     private static ChatTool s_numberForWordTool = ChatTool.CreateFunctionTool(
-        "get_number_for_word",
+        GetNumberForWordToolName,
         "gets an arbitrary number assigned to a given word",
         BinaryData.FromString("""
             {
@@ -37,17 +40,15 @@ public partial class ChatToolTests : SyncAsyncTestBase
             """)
         );
 
-    private const string GetFavoriteColorToolFunctionName = "get_favorite_color";
-
+    private const string GetFavoriteColorToolName = "get_favorite_color";
     private static ChatTool s_getFavoriteColorTool = ChatTool.CreateFunctionTool(
-        GetFavoriteColorToolFunctionName,
+        GetFavoriteColorToolName,
         "gets the favorite color of the caller"
     );
 
-    private const string GetFavoriteColorForMonthToolFunctionName = "get_favorite_color_for_month";
-
+    private const string GetFavoriteColorForMonthToolName = "get_favorite_color_for_month";
     private static ChatTool s_getFavoriteColorForMonthTool = ChatTool.CreateFunctionTool(
-        GetFavoriteColorForMonthToolFunctionName,
+        GetFavoriteColorForMonthToolName,
         "gets the caller's favorite color for a given month",
         BinaryData.FromString("""
             {
@@ -63,11 +64,10 @@ public partial class ChatToolTests : SyncAsyncTestBase
             """)
     );
 
-    private const string GetFavoriteColorForMonthFunctionName = "get_favorite_color_for_month";
-
 #pragma warning disable CS0618
+    private const string GetFavoriteColorForMonthFunctionName = "get_favorite_color_for_month";
     private static ChatFunction s_getFavoriteColorForMonthFunction = new ChatFunction(
-        GetFavoriteColorForMonthToolFunctionName,
+        GetFavoriteColorForMonthFunctionName,
         "gets the caller's favorite color for a given month",
         BinaryData.FromString("""
             {
@@ -85,7 +85,6 @@ public partial class ChatToolTests : SyncAsyncTestBase
 #pragma warning restore CS0618
 
     private const string GetWeatherForCityToolName = "get_weather_for_city";
-
     private static ChatTool s_getWeatherForCityTool = ChatTool.CreateFunctionTool(
         GetWeatherForCityToolName,
         "gets the current weather for a given city",
@@ -104,7 +103,6 @@ public partial class ChatToolTests : SyncAsyncTestBase
     );
 
     private const string GetMoodForWeatherToolName = "get_mood_for_weather";
-
     private static ChatTool s_getMoodForWeatherTool = ChatTool.CreateFunctionTool(
         GetMoodForWeatherToolName,
         "gets the caller's mood for a given weather",
@@ -131,9 +129,9 @@ public partial class ChatToolTests : SyncAsyncTestBase
         foreach (var (choice, reason) in new (ChatToolChoice, ChatFinishReason)[]
         {
             (null, ChatFinishReason.ToolCalls),
-            (ChatToolChoice.None, ChatFinishReason.Stop),
-            (new ChatToolChoice(s_numberForWordTool), ChatFinishReason.Stop),
-            (ChatToolChoice.Auto, ChatFinishReason.ToolCalls),
+            (ChatToolChoice.CreateNoneChoice(), ChatFinishReason.Stop),
+            (ChatToolChoice.CreateFunctionChoice(GetNumberForWordToolName), ChatFinishReason.Stop),
+            (ChatToolChoice.CreateAutoChoice(), ChatFinishReason.ToolCalls),
             // TODO: Add test for ChatToolChoice.Required
         })
         {
@@ -166,7 +164,7 @@ public partial class ChatToolTests : SyncAsyncTestBase
         Assert.That(result.Value.ToolCalls.Count, Is.EqualTo(1));
         var toolCall = result.Value.ToolCalls[0];
         var toolCallArguments = BinaryData.FromString(toolCall.FunctionArguments).ToObjectFromJson<Dictionary<string, object>>();
-        Assert.That(toolCall.FunctionName, Is.EqualTo(GetFavoriteColorToolFunctionName));
+        Assert.That(toolCall.FunctionName, Is.EqualTo(GetFavoriteColorToolName));
         Assert.That(toolCall.Id, Is.Not.Null.And.Not.Empty);
         Assert.That(toolCallArguments.Count, Is.EqualTo(0));
 
@@ -198,7 +196,7 @@ public partial class ChatToolTests : SyncAsyncTestBase
         Assert.That(result.Value.FinishReason, Is.EqualTo(ChatFinishReason.ToolCalls));
         Assert.That(result.Value.ToolCalls?.Count, Is.EqualTo(1));
         var toolCall = result.Value.ToolCalls[0];
-        Assert.That(toolCall.FunctionName, Is.EqualTo(GetFavoriteColorForMonthToolFunctionName));
+        Assert.That(toolCall.FunctionName, Is.EqualTo(GetFavoriteColorForMonthToolName));
         JsonObject argumentsJson = JsonSerializer.Deserialize<JsonObject>(toolCall.FunctionArguments);
         Assert.That(argumentsJson.Count, Is.EqualTo(1));
         Assert.That(argumentsJson.ContainsKey("month_name"));
@@ -334,5 +332,85 @@ public partial class ChatToolTests : SyncAsyncTestBase
             : client.CompleteChat(messages, options);
 
         Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("bored"));
+    }
+
+    public enum SchemaPresence { WithSchema, WithoutSchema }
+    public enum StrictnessPresence { Unspecified, Strict, NotStrict }
+    public enum FailureExpectation { FailureExpected, FailureNotExpected }
+
+    [Test]
+    [TestCase(SchemaPresence.WithoutSchema, StrictnessPresence.Unspecified)]
+    [TestCase(SchemaPresence.WithoutSchema, StrictnessPresence.NotStrict)]
+    [TestCase(SchemaPresence.WithoutSchema, StrictnessPresence.Strict, FailureExpectation.FailureExpected)]
+    [TestCase(SchemaPresence.WithSchema, StrictnessPresence.Unspecified)]
+    [TestCase(SchemaPresence.WithSchema, StrictnessPresence.NotStrict)]
+    [TestCase(SchemaPresence.WithSchema, StrictnessPresence.Strict)]
+    public async Task StructuredOutputs(
+        SchemaPresence schemaPresence,
+        StrictnessPresence strictnessPresence,
+        FailureExpectation failureExpectation = FailureExpectation.FailureNotExpected)
+    {
+        // Note: proper output requires 2024-08-06 or later models
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "gpt-4o-2024-08-06");
+
+        const string toolName = "get_favorite_color_for_day_of_week";
+        const string toolDescription = "Given a weekday name like Tuesday, gets the favorite color of the user on that day.";
+        BinaryData toolSchema = schemaPresence == SchemaPresence.WithSchema
+            ? BinaryData.FromObjectAsJson(new
+            {
+                type = "object",
+                properties = new
+                {
+                    the_day_of_the_week = new
+                    {
+                        type = "string"
+                    }
+                },
+                required = new[] { "the_day_of_the_week" },
+                additionalProperties = !(strictnessPresence == StrictnessPresence.Strict),
+            })
+            : null;
+        bool? useStrictSchema = strictnessPresence switch
+        {
+            StrictnessPresence.Strict => true,
+            StrictnessPresence.NotStrict => false,
+            _ => null,
+        };
+
+        ChatCompletionOptions options = new()
+        {
+            Tools = { ChatTool.CreateFunctionTool(toolName, toolDescription, toolSchema, useStrictSchema) },
+        };
+
+        List<ChatMessage> messages = [
+            new SystemChatMessage("Call applicable tools when the user asks a question. Prefer JSON output when possible."),
+            new UserChatMessage("What's my favorite color on Tuesday?"),
+        ];
+
+        if (failureExpectation == FailureExpectation.FailureExpected)
+        {
+            ClientResultException thrownException = Assert.ThrowsAsync<ClientResultException>(async () =>
+            {
+                ChatCompletion completion = IsAsync
+                    ? await client.CompleteChatAsync(messages, options)
+                    : client.CompleteChat(messages, options);
+            });
+            Assert.That(thrownException.Message, Does.Contain("function.parameters"));
+        }
+        else
+        {
+            ChatCompletion completion = IsAsync
+                ? await client.CompleteChatAsync(messages, options)
+                : client.CompleteChat(messages, options);
+            Assert.That(completion.FinishReason, Is.EqualTo(ChatFinishReason.ToolCalls));
+            Assert.That(completion.ToolCalls, Has.Count.EqualTo(1));
+            Assert.That(completion.ToolCalls[0].FunctionArguments, Is.Not.Null.And.Not.Empty);
+
+            if (schemaPresence == SchemaPresence.WithSchema && strictnessPresence == StrictnessPresence.Strict)
+            {
+                using JsonDocument argumentsDocument = JsonDocument.Parse(completion.ToolCalls[0].FunctionArguments);
+                Assert.That(argumentsDocument.RootElement.GetProperty("the_day_of_the_week").GetString(), Is.EqualTo("Tuesday"));
+            }
+        }
     }
 }

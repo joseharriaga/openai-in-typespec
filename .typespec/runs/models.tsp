@@ -34,7 +34,10 @@ model CreateRunRequest {
   `model`?:
     | string
     | "gpt-4o"
+    | "gpt-4o-2024-08-06"
     | "gpt-4o-2024-05-13"
+    | "gpt-4o-mini"
+    | "gpt-4o-mini-2024-07-18"
     | "gpt-4-turbo"
     | "gpt-4-turbo-2024-04-09"
     | "gpt-4-0125-preview"
@@ -68,6 +71,7 @@ model CreateRunRequest {
   /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
   tools?: CreateRunRequestTools | null;
 
+  // Tool customization: specialize known metadata string maps
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
@@ -110,6 +114,7 @@ model CreateRunRequest {
 }
 
 model ModifyRunRequest {
+  // Tool customization: specialize known metadata string maps
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
@@ -127,7 +132,10 @@ model CreateThreadAndRunRequest {
   `model`?:
     | string
     | "gpt-4o"
+    | "gpt-4o-2024-08-06"
     | "gpt-4o-2024-05-13"
+    | "gpt-4o-mini"
+    | "gpt-4o-mini-2024-07-18"
     | "gpt-4-turbo"
     | "gpt-4-turbo-2024-04-09"
     | "gpt-4-0125-preview"
@@ -164,15 +172,14 @@ model CreateThreadAndRunRequest {
         A list of [file](/docs/api-reference/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.
         """)
       @maxItems(20)
-      file_ids?: string[] = [];
+      file_ids?: string[] = #[];
     };
-    file_search?: {
-      /** The ID of the [vector store](/docs/api-reference/vector-stores/object) attached to this assistant. There can be a maximum of 1 vector store attached to the assistant. */
-      @maxItems(1)
-      vector_store_ids?: string[];
-    };
+
+    // Tool customization: use custom type for sophisticated union
+    file_search?: ToolResourcesFileSearchIdsOnly;
   } | null;
 
+  // Tool customization: specialize known metadata string maps
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata?: Record<string> | null;
@@ -348,7 +355,7 @@ model RunStepDetailsToolCallsFileSearchObject
 
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
-  file_search: Record<string>;
+  file_search: Record<unknown>;
 }
 
 // Tool customization: apply custom, common base type to union items
@@ -512,8 +519,9 @@ model RunObject {
   /** The list of tools that the [assistant](/docs/api-reference/assistants) used for this run. */
   @maxItems(20)
   @extension("x-oaiExpandable", true)
-  tools: AssistantToolDefinition[] = [];
+  tools: AssistantToolDefinition[] = #[];
 
+  // Tool customization: specialize known metadata string maps
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
@@ -612,6 +620,7 @@ model RunStepObject {
   @encode("unixTimestamp", int32)
   completed_at: utcDateTime | null;
 
+  // Tool customization: specialize known metadata string maps
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maxium of 512 characters long. */
   @extension("x-oaiTypeLabel", "map")
   metadata: Record<string> | null;
@@ -767,7 +776,7 @@ model RunStepDeltaStepDetailsToolCallsFileSearchObject
 
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
-  file_search: Record<string>;
+  file_search: Record<unknown>;
 }
 
 // Tool customization: apply custom, common base type to union items

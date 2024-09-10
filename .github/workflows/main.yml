@@ -15,12 +15,12 @@ jobs:
       version_suffix_args: ${{ format('--version-suffix="alpha.{0}"', github.run_number) }}
     steps:
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.x
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build
         run: dotnet build
@@ -52,7 +52,7 @@ jobs:
         working-directory: .dotnet
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: ${{github.workspace}}/artifacts
@@ -77,16 +77,52 @@ jobs:
         working-directory: .dotnet
 
   azure_build: # Development mirror only; validate AOAI compilation
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Builds on all supported .Net versions on all supported OS platforms. It also 
+        # distributes the tests across these OSes.
+        os_net:
+          - runs-on: ubuntu-latest
+            test_framework: net8.0
+          - runs-on: macos-latest
+            test_framework: net6.0
+          - runs-on: windows-latest
+            test_framework: net462
+    runs-on: ${{ matrix.os_net.runs-on }}
     steps:
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET 6 and .Net 8
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.x
+          # .Net Framework 4.6.2 is pre-installed on Windows 10 versions 1607 and newer
+          dotnet-version: |
+            6.x
+            8.x
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build
-        run: dotnet build
-        working-directory: .dotnet.azure
+        run: dotnet build -p:Configuration=unsigned
+        working-directory: .dotnet.azure/sdk/openai
+
+      - name: Test (${{ matrix.os_net.test_framework }})
+        run: >-
+          dotnet test
+          --framework ${{ matrix.os_net.test_framework }}
+          --no-build
+          --filter "(TestCategory!=Live)"
+          --logger "trx;LogFileName=Azure.AI.OpenAI.Tests.trx"
+          --logger:"console;verbosity=quiet"
+          --blame-crash-dump-type full
+          --blame-hang-dump-type full
+          --blame-hang-timeout 15minutes
+          --results-directory "${{github.workspace}}/TestResults"
+          Azure.AI.OpenAI/tests/Azure.AI.OpenAI.Tests.csproj
+        working-directory: .dotnet.azure/sdk/openai
+
+      - name: Publish test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults-${{ matrix.os_net.runs-on }}-${{ matrix.os_net.test_framework }}
+          path: TestResults
+        if: ${{ always() }}

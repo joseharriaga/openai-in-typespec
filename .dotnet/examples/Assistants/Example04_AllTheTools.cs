@@ -14,8 +14,6 @@ public partial class AssistantExamples
     [Test]
     public void Example04_AllTheTools()
     {
-#pragma warning disable OPENAI001
-
         #region Define a function tool
         static string GetNameOfFamilyMember(string relation)
             => relation switch
@@ -45,7 +43,7 @@ public partial class AssistantExamples
         };
 
         #region Upload a mock file for use with file search
-        FileClient fileClient = new();
+        FileClient fileClient = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
         OpenAIFileInfo favoriteNumberFile = fileClient.UploadFile(
             BinaryData.FromString("""
                 This file contains the favorite numbers for individuals.
@@ -59,7 +57,7 @@ public partial class AssistantExamples
         #endregion
 
         #region Create an assistant with functions, file search, and code interpreter all enabled
-        AssistantClient client = new();
+        AssistantClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
         Assistant assistant = client.CreateAssistant("gpt-4-turbo", new AssistantCreationOptions()
         {
             Instructions = "Use functions to resolve family relations into the names of people. Use file search to "
@@ -138,7 +136,7 @@ public partial class AssistantExamples
         if (run.Status == RunStatus.Completed)
         {
             PageCollection<ThreadMessage> messagePages
-                = client.GetMessages(run.ThreadId, new MessageCollectionOptions() { Order = ListOrder.OldestFirst });
+                = client.GetMessages(run.ThreadId, new MessageCollectionOptions() { Order = MessageCollectionOrder.Ascending });
             IEnumerable<ThreadMessage> messages = messagePages.GetAllValues();
 
             foreach (ThreadMessage message in messages)
@@ -175,7 +173,7 @@ public partial class AssistantExamples
             PageCollection<RunStep> runSteps = client.GetRunSteps(
                 run, new RunStepCollectionOptions()
                 {
-                    Order = ListOrder.OldestFirst
+                    Order = RunStepCollectionOrder.Ascending
                 });
             foreach (RunStep step in runSteps.GetAllValues())
             {

@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>This is the OpenAI client library for developing .NET applications with rich experience.</Description>
     <AssemblyTitle>SDK Code Generation OpenAI</AssemblyTitle>
-    <PackageTags>OpenAI</PackageTags>
+    <PackageTags>OpenAI;openai-dotnet;ChatGPT;Dall-E</PackageTags>
 
     <VersionPrefix>2.0.0</VersionPrefix>
-    <VersionSuffix>beta.8</VersionSuffix>
+    <VersionSuffix>beta.11</VersionSuffix>
 
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
@@ -35,6 +35,9 @@
 
     <!-- Disable unused fields warnings -->
     <NoWarn>$(NoWarn),0169</NoWarn>
+
+    <!-- Disable warnings for experimental APIs -->
+    <NoWarn>$(NoWarn),OPENAI001;</NoWarn>
 
     <Configurations>Debug;Release;Unsigned</Configurations>
   </PropertyGroup>

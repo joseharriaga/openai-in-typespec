@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Assistants;
 
+[Experimental("OPENAI001")]
 [CodeGenModel("AssistantToolsFunction")]
 [CodeGenSuppress(nameof(FunctionToolDefinition), typeof(InternalFunctionDefinition))]
 public partial class FunctionToolDefinition : ToolDefinition
@@ -34,15 +35,21 @@ public partial class FunctionToolDefinition : ToolDefinition
         set => _internalFunction.Parameters = value;
     }
 
+    public bool? StrictParameterSchemaEnabled
+    {
+        get => _internalFunction.Strict;
+        set => _internalFunction.Strict = value;
+    }
+
     /// <summary>
     /// Creates a new instance of <see cref="FunctionToolDefinition"/>. 
     /// </summary>
     [SetsRequiredMembers]
-    public FunctionToolDefinition(string name, string description = null, BinaryData parameters = null)
+    public FunctionToolDefinition(string name)
         : base("function")
     {
         Argument.AssertNotNullOrEmpty(name, nameof(name));
-        _internalFunction = new(description, name, parameters, null);
+        _internalFunction = new(null, name, null, null, null);
     }
 
     /// <summary>

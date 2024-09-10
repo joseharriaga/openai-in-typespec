@@ -2,6 +2,7 @@ import "@typespec/http";
 import "@typespec/openapi3";
 import "@typespec/openapi";
 
+import "./administration";
 import "./audio";
 import "./assistants";
 import "./batch";
@@ -17,6 +18,7 @@ import "./moderations";
 import "./runs";
 import "./threads";
 import "./vector-stores";
+import "./uploads";
 
 using TypeSpec.Http;
 

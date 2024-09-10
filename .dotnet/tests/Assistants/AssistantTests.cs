@@ -29,9 +29,9 @@ public partial class AssistantTests
             return;
         }
 
-        AssistantClient client = new();
-        FileClient fileClient = new();
-        VectorStoreClient vectorStoreClient = new();
+        AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);
+        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
+        VectorStoreClient vectorStoreClient = GetTestClient<VectorStoreClient>(TestScenario.VectorStores);
         RequestOptions requestOptions = new()
         {
             ErrorOptions = ClientErrorBehaviors.NoThrow,
@@ -206,7 +206,7 @@ public partial class AssistantTests
         };
         AssistantThread thread = client.CreateThread(options);
         Validate(thread);
-        PageResult<ThreadMessage> messagesPage = client.GetMessages(thread, new MessageCollectionOptions() { Order = ListOrder.OldestFirst }).GetCurrentPage();
+        PageResult<ThreadMessage> messagesPage = client.GetMessages(thread, new MessageCollectionOptions() { Order = MessageCollectionOrder.Ascending }).GetCurrentPage();
         Assert.That(messagesPage.Values.Count, Is.EqualTo(2));
         Assert.That(messagesPage.Values[0].Role, Is.EqualTo(MessageRole.User));
         Assert.That(messagesPage.Values[0].Content?.Count, Is.EqualTo(1));
@@ -273,7 +273,7 @@ public partial class AssistantTests
         });
         Validate(assistant);
 
-        FileClient fileClient = new();
+        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
         OpenAIFileInfo equationFile = fileClient.UploadFile(
             BinaryData.FromString("""
             x,y
@@ -351,25 +351,24 @@ public partial class AssistantTests
         AssistantClient client = GetTestClient();
         Assistant assistant = client.CreateAssistant("gpt-4o-mini", new()
         {
-            ResponseFormat = AssistantResponseFormat.JsonObject,
+            ResponseFormat = AssistantResponseFormat.CreateAutoFormat(),
         });
         Validate(assistant);
-        Assert.That(assistant.ResponseFormat, Is.EqualTo(AssistantResponseFormat.JsonObject));
+        Assert.That(assistant.ResponseFormat == "auto");
         assistant = client.ModifyAssistant(assistant, new()
         {
-            ResponseFormat = AssistantResponseFormat.Text,
+            ResponseFormat = AssistantResponseFormat.CreateTextFormat(),
         });
-        Assert.That(assistant.ResponseFormat, Is.EqualTo(AssistantResponseFormat.Text));
+        Assert.That(assistant.ResponseFormat == AssistantResponseFormat.CreateTextFormat());
         AssistantThread thread = client.CreateThread();
         Validate(thread);
         ThreadMessage message = client.CreateMessage(thread, MessageRole.User, ["Write some JSON for me!"]);
         Validate(message);
         ThreadRun run = client.CreateRun(thread, assistant, new()
         {
-            ResponseFormat = AssistantResponseFormat.JsonObject,
+            ResponseFormat = AssistantResponseFormat.CreateJsonObjectFormat(),
         });
-        Validate(run);
-        Assert.That(run.ResponseFormat, Is.EqualTo(AssistantResponseFormat.JsonObject));
+        Assert.That(run.ResponseFormat == AssistantResponseFormat.CreateJsonObjectFormat());
     }
 
     [Test]
@@ -439,7 +438,7 @@ public partial class AssistantTests
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        PageCollection<ThreadMessage> messagePages = client.GetMessages(run.ThreadId, new MessageCollectionOptions() { Order = ListOrder.NewestFirst });
+        PageCollection<ThreadMessage> messagePages = client.GetMessages(run.ThreadId, new MessageCollectionOptions() { Order = MessageCollectionOrder.Descending });
         PageResult<ThreadMessage> firstPage = messagePages.GetCurrentPage();
         Assert.That(firstPage.Values.Count, Is.GreaterThan(1));
         Assert.That(firstPage.Values[0].Role, Is.EqualTo(MessageRole.Assistant));
@@ -450,7 +449,7 @@ public partial class AssistantTests
     [Test]
     public async Task StreamingRunWorks()
     {
-        AssistantClient client = new();
+        AssistantClient client = GetTestClient();
         Assistant assistant = await client.CreateAssistantAsync("gpt-4o-mini");
         Validate(assistant);
 
@@ -499,7 +498,11 @@ public partial class AssistantTests
     public async Task StreamingToolCall()
     {
         AssistantClient client = GetTestClient();
-        FunctionToolDefinition getWeatherTool = new("get_current_weather", "Gets the user's current weather");
+        FunctionToolDefinition getWeatherTool = new()
+        {
+            FunctionName = "get_current_weather",
+            Description = "Gets the user's current weather",
+        };
         Assistant assistant = await client.CreateAssistantAsync("gpt-4o-mini", new()
         {
             Tools = { getWeatherTool }
@@ -557,7 +560,7 @@ public partial class AssistantTests
     public void BasicFileSearchWorks()
     {
         // First, we need to upload a simple test file.
-        FileClient fileClient = new();
+        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
         OpenAIFileInfo testFile = fileClient.UploadFile(
             BinaryData.FromString("""
             This file describes the favorite foods of several people.
@@ -649,7 +652,7 @@ public partial class AssistantTests
         } while (run?.Status.IsTerminal == false);
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        IEnumerable<ThreadMessage> messages = client.GetMessages(thread, new() { Order = ListOrder.NewestFirst }).GetAllValues();
+        IEnumerable<ThreadMessage> messages = client.GetMessages(thread, new() { Order = MessageCollectionOrder.Descending }).GetAllValues();
         int messageCount = 0;
         bool hasCake = false;
         foreach (ThreadMessage message in messages)
@@ -675,6 +678,67 @@ public partial class AssistantTests
     }
 
     [Test]
+    public async Task BasicFileSearchStreamingWorks()
+    {
+        const string fileContent = """
+                The favorite food of several people:
+                - Summanus Ferdinand: tacos
+                - Tekakwitha Effie: pizza
+                - Filip Carola: cake
+                """;
+
+        const string fileName = "favorite_foods.txt";
+
+        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
+        AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);
+
+        // First, upload a simple test file.
+        OpenAIFileInfo testFile = fileClient.UploadFile(BinaryData.FromString(fileContent), fileName, FileUploadPurpose.Assistants);
+        Validate(testFile);
+
+        // Create an assistant, using the creation helper to make a new vector store.
+        AssistantCreationOptions assistantCreationOptions = new()
+        {
+            Tools = { new FileSearchToolDefinition() },
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    NewVectorStores = { new VectorStoreCreationHelper([testFile.Id]) }
+                }
+            }
+        };
+        Assistant assistant = client.CreateAssistant("gpt-4o-mini", assistantCreationOptions);
+        Validate(assistant);
+
+        Assert.That(assistant.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        string vectorStoreId = assistant.ToolResources.FileSearch.VectorStoreIds[0];
+        _vectorStoreIdsToDelete.Add(vectorStoreId);
+
+        // Create a thread.
+        ThreadCreationOptions threadCreationOptions = new()
+        {
+            InitialMessages = { "Using the files you have available, what's Filip's favorite food?" }
+        };
+        AssistantThread thread = client.CreateThread(threadCreationOptions);
+        Validate(thread);
+
+        // Create run and stream the results.
+        AsyncCollectionResult<StreamingUpdate> streamingResult = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+        string message = string.Empty;
+
+        await foreach (StreamingUpdate update in streamingResult)
+        {
+            if (update is MessageContentUpdate contentUpdate)
+            {
+                message += $"{contentUpdate.Text}";
+            }
+        }
+
+        Assert.That(message, Does.Contain("cake"));
+    }
+
+    [Test]
     public async Task Pagination_CanEnumerateAssistants()
     {
         AssistantClient client = GetTestClient();
@@ -692,7 +756,7 @@ public partial class AssistantTests
 
         // Page through collection
         int count = 0;
-        IAsyncEnumerable<Assistant> assistants = client.GetAssistantsAsync(new AssistantCollectionOptions() { Order = ListOrder.NewestFirst }).GetAllValuesAsync();
+        IAsyncEnumerable<Assistant> assistants = client.GetAssistantsAsync(new AssistantCollectionOptions() { Order = AssistantCollectionOrder.Descending }).GetAllValuesAsync();
 
         int lastIdSeen = int.MaxValue;
 
@@ -737,8 +801,8 @@ public partial class AssistantTests
         AsyncPageCollection<Assistant> pages = client.GetAssistantsAsync(
             new AssistantCollectionOptions()
             {
-                Order = ListOrder.NewestFirst,
-                PageSize = 2
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
             });
 
         int lastIdSeen = int.MaxValue;
@@ -787,8 +851,8 @@ public partial class AssistantTests
         AsyncPageCollection<Assistant> pages = client.GetAssistantsAsync(
             new AssistantCollectionOptions()
             {
-                Order = ListOrder.NewestFirst,
-                PageSize = 2
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
             });
 
         // Simulate rehydration of the collection
@@ -845,8 +909,8 @@ public partial class AssistantTests
         AsyncPageCollection<Assistant> pages = client.GetAssistantsAsync(
             new AssistantCollectionOptions()
             {
-                Order = ListOrder.NewestFirst,
-                PageSize = 2
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
             });
 
         // Call the rehydration method, passing a typed OpenAIPageToken
@@ -944,7 +1008,7 @@ public partial class AssistantTests
         });
         Validate(assistant);
 
-        FileClient fileClient = new();
+        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
         OpenAIFileInfo equationFile = fileClient.UploadFile(
             BinaryData.FromString("""
             x,y

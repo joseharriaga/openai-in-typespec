@@ -6,7 +6,7 @@ namespace OpenAI.VectorStores;
 internal partial class InternalCreateVectorStoreFileBatchRequest { }
 
 [CodeGenModel("CreateVectorStoreFileRequest")]
-internal partial class InternalCreateVectorStoreFileRequest {}
+internal partial class InternalCreateVectorStoreFileRequest { }
 
 [CodeGenModel("DeleteVectorStoreFileResponse")]
 internal partial class InternalDeleteVectorStoreFileResponse { }
@@ -67,3 +67,6 @@ internal partial class InternalUnknownChunkingStrategy { }
 
 [CodeGenModel("UnknownFileChunkingStrategyResponseParam")]
 internal partial class InternalUnknownFileChunkingStrategyResponseParamProxy { }
+
+[CodeGenModel("ListFilesInVectorStoreBatchRequestOrder")]
+internal readonly partial struct InternalListFilesInVectorStoreBatchRequestOrder { }

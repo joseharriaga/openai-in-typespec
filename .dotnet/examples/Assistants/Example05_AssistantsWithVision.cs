@@ -12,7 +12,6 @@ public partial class AssistantExamples
     public void Example05_AssistantsWithVision()
     {
         // Assistants is a beta API and subject to change; acknowledge its experimental status by suppressing the matching warning.
-#pragma warning disable OPENAI001
         OpenAIClient openAIClient = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
         FileClient fileClient = openAIClient.GetFileClient();
         AssistantClient assistantClient = openAIClient.GetAssistantClient();
@@ -65,7 +64,7 @@ public partial class AssistantExamples
         }
 
         // Delete temporary resources, if desired
-        _ = fileClient.DeleteFile(pictureOfAppleFile);
+        _ = fileClient.DeleteFile(pictureOfAppleFile.Id);
         _ = assistantClient.DeleteThread(thread);
         _ = assistantClient.DeleteAssistant(assistant);
     }

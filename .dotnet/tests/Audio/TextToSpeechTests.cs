@@ -23,8 +23,8 @@ public partial class TextToSpeechTests : SyncAsyncTestBase
         AudioClient client = GetTestClient<AudioClient>(TestScenario.Audio_TTS);
 
         BinaryData audio = IsAsync
-            ? await client.GenerateSpeechFromTextAsync("Hello, world! This is a test.", GeneratedSpeechVoice.Shimmer)
-            : client.GenerateSpeechFromText("Hello, world! This is a test.", GeneratedSpeechVoice.Shimmer);
+            ? await client.GenerateSpeechAsync("Hello, world! This is a test.", GeneratedSpeechVoice.Shimmer)
+            : client.GenerateSpeech("Hello, world! This is a test.", GeneratedSpeechVoice.Shimmer);
 
         Assert.That(audio, Is.Not.Null);
         ValidateGeneratedAudio(audio, "hello");
@@ -32,23 +32,35 @@ public partial class TextToSpeechTests : SyncAsyncTestBase
 
     [Test]
     [TestCase(null)]
-    [TestCase(GeneratedSpeechFormat.Mp3)]
-    [TestCase(GeneratedSpeechFormat.Opus)]
-    [TestCase(GeneratedSpeechFormat.Aac)]
-    [TestCase(GeneratedSpeechFormat.Flac)]
-    [TestCase(GeneratedSpeechFormat.Wav)]
-    [TestCase(GeneratedSpeechFormat.Pcm)]
-    public async Task OutputFormatWorks(GeneratedSpeechFormat? responseFormat)
+    [TestCase("mp3")]
+    [TestCase("opus")]
+    [TestCase("aac")]
+    [TestCase("flac")]
+    [TestCase("wav")]
+    [TestCase("pcm")]
+    public async Task OutputFormatWorks(string responseFormat)
     {
         AudioClient client = GetTestClient<AudioClient>(TestScenario.Audio_TTS);
 
-        SpeechGenerationOptions options = responseFormat == null
-            ? new()
-            : new() { ResponseFormat = responseFormat };
+        SpeechGenerationOptions options = new();
+
+        if (!string.IsNullOrEmpty(responseFormat))
+        {
+            options.ResponseFormat = responseFormat switch
+            {
+                "mp3" => GeneratedSpeechFormat.Mp3,
+                "opus" => GeneratedSpeechFormat.Opus,
+                "aac" => GeneratedSpeechFormat.Aac,
+                "flac" => GeneratedSpeechFormat.Flac,
+                "wav" => GeneratedSpeechFormat.Wav,
+                "pcm" => GeneratedSpeechFormat.Pcm,
+                _ => throw new ArgumentException("Invalid response format")
+            };
+        }
 
         BinaryData audio = IsAsync
-            ? await client.GenerateSpeechFromTextAsync("Hello, world!", GeneratedSpeechVoice.Alloy, options)
-            : client.GenerateSpeechFromText("Hello, world!", GeneratedSpeechVoice.Alloy, options);
+            ? await client.GenerateSpeechAsync("Hello, world!", GeneratedSpeechVoice.Alloy, options)
+            : client.GenerateSpeech("Hello, world!", GeneratedSpeechVoice.Alloy, options);
 
         Assert.That(audio, Is.Not.Null);
     }

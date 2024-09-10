@@ -38,7 +38,7 @@ public partial class FineTuningClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> A <see cref="CreateCreateJobOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the fine tuning job, or 
     /// cancel the operation. </returns>
     public virtual async Task<CreateJobOperation> CreateJobAsync(
@@ -77,7 +77,7 @@ public partial class FineTuningClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> A <see cref="CreateCreateJobOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the fine tuning job, or 
     /// cancel the operation. </returns>
     public virtual CreateJobOperation CreateJob(

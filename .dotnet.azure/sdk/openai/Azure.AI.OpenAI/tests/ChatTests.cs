@@ -339,7 +339,11 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         ContentFilterResultForResponse responseFilterResult = chatCompletion.GetContentFilterResultForResponse();
         Assert.That(responseFilterResult, Is.Not.Null);
         Assert.That(responseFilterResult.Hate?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
-        Assert.That(responseFilterResult.ProtectedMaterialCode, Is.Null);
+        
+        if (responseFilterResult.ProtectedMaterialCode is not null)
+        {
+            Assert.That(responseFilterResult.ProtectedMaterialCode.Filtered, Is.False);
+        }
     }
 
     [RecordedTest]

@@ -63,13 +63,13 @@ public partial class StreamingChatCompletionUpdate
     /// </summary>
     public IReadOnlyList<ChatTokenLogProbabilityInfo> ContentTokenLogProbabilities
         => _contentTokenLogProbabilities
-            ??= InternalChoice?.Logprobs.Content
+            ??= InternalChoice?.Logprobs?.Content
                 ?? new ChangeTrackingList<ChatTokenLogProbabilityInfo>();
 
     // CUSTOM: Flattened refusal logprobs property.
     public IReadOnlyList<ChatTokenLogProbabilityInfo> RefusalTokenLogProbabilities
         => _refusalTokenLogProbabilities
-            ??= InternalChoice?.Logprobs.Refusal
+            ??= InternalChoice?.Logprobs?.Refusal
                 ?? new ChangeTrackingList<ChatTokenLogProbabilityInfo>();
 
     // CUSTOM: Flattened choice delta property.

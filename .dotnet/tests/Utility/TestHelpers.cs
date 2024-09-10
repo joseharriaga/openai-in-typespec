@@ -5,6 +5,7 @@ using OpenAI.Batch;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using OpenAI.Files;
+using OpenAI.FineTuning;
 using OpenAI.Images;
 using OpenAI.Models;
 using OpenAI.Moderations;
@@ -61,6 +62,7 @@ internal static class TestHelpers
             TestScenario.Images => new ImageClient(overrideModel ?? "dall-e-3", credential, options),
             TestScenario.Models => new ModelClient(credential, options),
             TestScenario.Moderations => new ModerationClient(overrideModel ?? "text-moderation-stable", credential, options),
+            TestScenario.FineTuning => new FineTuningClient(options),
 #pragma warning disable OPENAI001
             TestScenario.VectorStores => new VectorStoreClient(credential, options),
 #pragma warning restore OPENAI001

@@ -19,6 +19,7 @@ Write-Output ""
 $net80ref = Get-ChildItem -Recurse `
     -Path "$($env:ProgramFiles)\dotnet\packs\Microsoft.NETCore.App.Ref" `
     -Include "net8.0" | Select-Object -Last 1
+    
 $systemClientModelRef = Get-ChildItem -Recurse `
     -Path "$($env:UserProfile)\.nuget\packages\system.clientmodel\1.1.0-beta.5" `
     -Include "netstandard2.0" | Select-Object -Last 1

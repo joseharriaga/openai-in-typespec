@@ -85,10 +85,12 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         deleted = await client.DeleteVectorStoreAsync(vectorStore.Id);
         Assert.That(deleted, Is.True);
 
-        vectorStore = await client.CreateVectorStoreAsync(new VectorStoreCreationOptions()
+        var options = new VectorStoreCreationOptions();
+        foreach (var file in testFiles)
         {
-            FileIds = testFiles.Select(file => file.Id).ToList()
-        });
+            options.FileIds.Add(file.Id);
+        }
+        vectorStore = await client.CreateVectorStoreAsync(options);
         Validate(vectorStore);
         Assert.Multiple(() =>
         {

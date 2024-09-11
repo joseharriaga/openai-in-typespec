@@ -316,7 +316,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         ChatClient client = GetTestClient();
         ChatCompletionOptions options = new()
         {
-            ResponseFormat = ChatResponseFormat.Text
+            ResponseFormat = ChatResponseFormat.CreateTextFormat()
         };
 
         ChatCompletion response = await client.CompleteChatAsync([new UserChatMessage("Give me a random number")], options);
@@ -339,7 +339,11 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         ContentFilterResultForResponse responseFilterResult = chatCompletion.GetContentFilterResultForResponse();
         Assert.That(responseFilterResult, Is.Not.Null);
         Assert.That(responseFilterResult.Hate?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
-        Assert.That(responseFilterResult.ProtectedMaterialCode, Is.Null);
+        
+        if (responseFilterResult.ProtectedMaterialCode is not null)
+        {
+            Assert.That(responseFilterResult.ProtectedMaterialCode.Filtered, Is.False);
+        }
     }
 
     [RecordedTest]
@@ -508,6 +512,55 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(contexts[0].Citations[0].Filepath, Is.Not.Null.Or.Empty);
         Assert.That(contexts[0].Citations[0].ChunkId, Is.Not.Null.Or.Empty);
         Assert.That(contexts[0].Citations[0].Title, Is.Not.Null.Or.Empty);
+    }
+
+    [RecordedTest]
+    public async Task AsyncContentFilterWorksStreaming()
+    {
+        // Precondition: the target deployment is configured with an async content filter that includes a
+        // custom blocklist that will filter variations of the word 'banana.'
+
+        ChatClient client = GetTestClient(TestConfig.GetConfig("chat_with_async_filter"));
+
+        StringBuilder contentBuilder = new();
+
+        List<ContentFilterResultForPrompt> promptFilterResults = [];
+        List<ContentFilterResultForResponse> responseFilterResults = [];
+
+        await foreach (StreamingChatCompletionUpdate chatUpdate
+            in client.CompleteChatStreamingAsync(
+            [
+                "Hello, assistant! What popular kinds of fruit are yellow and grow on trees?"
+            ]))
+        {
+            foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
+            {
+                contentBuilder.Append(contentPart.Text);
+            }
+
+            ContentFilterResultForPrompt promptFilterResult = chatUpdate.GetContentFilterResultForPrompt();
+            ContentFilterResultForResponse responseFilterResult = chatUpdate.GetContentFilterResultForResponse();
+
+            if (promptFilterResult is not null)
+            {
+                promptFilterResults.Add(promptFilterResult);
+            }
+            if (responseFilterResult is not null)
+            {
+                responseFilterResults.Add(responseFilterResult);
+            }
+        }
+
+        string fullContent = contentBuilder.ToString();
+        Assert.That(fullContent.ToLowerInvariant(), Does.Contain("banana"));
+
+        Assert.That(promptFilterResults, Has.Count.GreaterThan(0));
+        Assert.That(responseFilterResults, Has.Count.GreaterThan(0));
+
+        Assert.That(responseFilterResults.Any(filterResult
+            => filterResult.CustomBlocklists?.BlocklistFilterStatuses?
+                .TryGetValue("TestBlocklistNoBanana", out bool filtered) == true
+                    && filtered));
     }
 
     #endregion

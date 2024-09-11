@@ -2,9 +2,24 @@
 
 ## 2.0.0-beta.12 (Unreleased)
 
+### Features Added
+
+### Breaking Changes
+
+- Renamed `ChatMessageContentPart`'s `CreateTextMessageContentPart` factory method to `CreateTextPart`. (commit_hash)
+- Renamed `ChatMessageContentPart`'s `CreateImageMessageContentPart` factory method to `CreateImagePart`. (commit_hash)
+- Renamed `ChatMessageContentPart`'s `CreateRefusalMessageContentPart` factory method to `CreateRefusalPart`. (commit_hash)
+- Renamed `ImageChatMessageContentPartDetail` to `ChatImageDetailLevel`.
+- Removed `ChatMessageContentPart`'s `ToString` overload. (commit_hash)
+- Removed the common `ListOrder` enum from the top-level `OpenAI` namespace in favor of individual enums in their corresponding sub-namespace. (commit_hash)
+- Renamed the `PageSize` property to `PageSizeLimit`. (commit_hash)
+- Removed setter from collection properties.
+
 ### Bugs Fixed
 
 - Addressed an issue that caused multi-page queries of fine-tuning jobs, checkpoints, and events to fail. (commit_hash)
+
+### Other Changes
 
 ## 2.0.0-beta.11 (2024-09-03)
 

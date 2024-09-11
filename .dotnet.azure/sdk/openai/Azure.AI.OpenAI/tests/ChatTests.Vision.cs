@@ -24,22 +24,22 @@ namespace Azure.AI.OpenAI.Tests
             ChatMessageContentPart imagePart;
             if (useUri)
             {
-                imagePart = ChatMessageContentPart.CreateImageMessageContentPart(
-                    imageAsset.Url, ImageChatMessageContentPartDetail.Low);
+                imagePart = ChatMessageContentPart.CreateImagePart(
+                    imageAsset.Url, ChatImageDetailLevel.Low);
             }
             else
             {
                 using var stream = File.OpenRead(imageAsset.RelativePath);
                 var imageData = BinaryData.FromStream(stream);
 
-                imagePart = ChatMessageContentPart.CreateImageMessageContentPart(
-                    imageData, imageAsset.MimeType, ImageChatMessageContentPartDetail.Low);
+                imagePart = ChatMessageContentPart.CreateImagePart(
+                    imageData, imageAsset.MimeType, ChatImageDetailLevel.Low);
             }
 
             ChatMessage[] messages =
             [
                 new SystemChatMessage("You are a helpful assistant that helps describe images."),
-                new UserChatMessage(imagePart, ChatMessageContentPart.CreateTextMessageContentPart("describe this image"))
+                new UserChatMessage(imagePart, ChatMessageContentPart.CreateTextPart("describe this image"))
             ];
 
             ChatCompletionOptions options = new()
@@ -94,22 +94,22 @@ namespace Azure.AI.OpenAI.Tests
             var imageAsset = Assets.DogAndCat;
             if (useUri)
             {
-                imagePart = ChatMessageContentPart.CreateImageMessageContentPart(
-                    imageAsset.Url, ImageChatMessageContentPartDetail.Low);
+                imagePart = ChatMessageContentPart.CreateImagePart(
+                    imageAsset.Url, ChatImageDetailLevel.Low);
             }
             else
             {
                 using var stream = File.OpenRead(imageAsset.RelativePath);
                 var imageData = BinaryData.FromStream(stream);
 
-                imagePart = ChatMessageContentPart.CreateImageMessageContentPart(
-                    imageData, imageAsset.MimeType, ImageChatMessageContentPartDetail.Low);
+                imagePart = ChatMessageContentPart.CreateImagePart(
+                    imageData, imageAsset.MimeType, ChatImageDetailLevel.Low);
             }
 
             ChatMessage[] messages =
             [
                 new SystemChatMessage("You are a helpful assistant that helps describe images."),
-                new UserChatMessage(imagePart, ChatMessageContentPart.CreateTextMessageContentPart("describe this image"))
+                new UserChatMessage(imagePart, ChatMessageContentPart.CreateTextPart("describe this image"))
             ];
 
             ChatCompletionOptions options = new()

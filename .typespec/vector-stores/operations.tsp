@@ -27,7 +27,7 @@ interface VectorStores {
      * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
      * for descending order.
      */
-    @query order?: ListOrder = ListOrder.desc,
+    @query order?: "asc" | "desc" = "desc",
 
     /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
@@ -103,7 +103,7 @@ interface VectorStores {
      * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
      * for descending order.
      */
-    @query order?: ListOrder = ListOrder.desc,
+    @query order?: "asc" | "desc" = "desc",
 
     /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
@@ -223,7 +223,7 @@ interface VectorStores {
      * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
      * for descending order.
      */
-    @query order?: ListOrder = ListOrder.desc,
+    @query order?: "asc" | "desc" = "desc",
 
     /**
      * A cursor for use in pagination. `after` is an object ID that defines your place in the list.

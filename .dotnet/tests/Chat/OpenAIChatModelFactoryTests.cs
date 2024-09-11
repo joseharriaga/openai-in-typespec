@@ -76,8 +76,8 @@ public partial class OpenAIChatModelFactoryTests
     public void ChatCompletionWithContentWorks()
     {
         IEnumerable<ChatMessageContentPart> content = [
-            ChatMessageContentPart.CreateTextMessageContentPart("first part"),
-            ChatMessageContentPart.CreateTextMessageContentPart("second part")
+            ChatMessageContentPart.CreateTextPart("first part"),
+            ChatMessageContentPart.CreateTextPart("second part")
         ];
         ChatCompletion chatCompletion = OpenAIChatModelFactory.ChatCompletion(content: content);
 
@@ -121,8 +121,8 @@ public partial class OpenAIChatModelFactoryTests
     public void ChatCompletionWithToolCallsWorks()
     {
         IEnumerable<ChatToolCall> toolCalls = [
-            ChatToolCall.CreateFunctionToolCall("id1", "get_recipe", string.Empty),
-            ChatToolCall.CreateFunctionToolCall("id2", "get_location", string.Empty)
+            ChatToolCall.CreateFunctionToolCall("id1", "get_recipe", "{}"),
+            ChatToolCall.CreateFunctionToolCall("id2", "get_location", "{}")
         ];
         ChatCompletion chatCompletion = OpenAIChatModelFactory.ChatCompletion(toolCalls: toolCalls);
 
@@ -508,8 +508,8 @@ public partial class OpenAIChatModelFactoryTests
     public void StreamingChatCompletionUpdateWithContentUpdateWorks()
     {
         IEnumerable<ChatMessageContentPart> contentUpdate = [
-            ChatMessageContentPart.CreateTextMessageContentPart("first part"),
-            ChatMessageContentPart.CreateTextMessageContentPart("second part")
+            ChatMessageContentPart.CreateTextPart("first part"),
+            ChatMessageContentPart.CreateTextPart("second part")
         ];
         StreamingChatCompletionUpdate streamingChatCompletionUpdate = OpenAIChatModelFactory.StreamingChatCompletionUpdate(contentUpdate: contentUpdate);
 

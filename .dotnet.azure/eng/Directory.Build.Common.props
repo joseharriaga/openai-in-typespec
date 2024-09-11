@@ -1,0 +1,56 @@
+﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- A simplified version of the AOAI repo configuration to keep things consistent across these two repos with the parts that matter -->
+  <PropertyGroup>
+    <IsTestProject Condition="'$(IsTestProject)' == '' and $(MSBuildProjectName.EndsWith('.Tests'))">true</IsTestProject>
+    <IsTestSupportProject Condition="'$(IsTestSupportProject)' == '' and '$(IsTestProject)' != 'true' and ($(MSBuildProjectDirectory.Contains('/tests/')) or $(MSBuildProjectDirectory.Contains('\tests\')))">true</IsTestSupportProject>
+    <IsClientLibrary Condition="'$(IsClientLibrary)' == '' and '$(IsTestProject)' != 'true' and '$(IsTestSupportProject)' != 'true'">true</IsClientLibrary>
+    <LangVersion>11.0</LangVersion>
+    <ImportRepoCommonSettings>true</ImportRepoCommonSettings>
+    <NoWarn>
+      $(NoWarn);
+      NU5105;
+      
+      CA1812;
+      CA1716; <!-- avoid using method names that are reserved in other languages -->
+      CA1308; <!-- prefer ToUpperInvariant  -->
+      CA1819; <!-- Properties should not return arrays -->
+      CA1710; <!-- Use Collection sufix -->
+      CA1028; <!-- Enum backing type should be int -->
+      CA1032; <!-- Add default exception ctors -->
+      CA1063; <!-- Dispose implementation -->
+      CA1066; <!-- Implement IEquatable -->
+      CA1815; <!-- Equality members on structs -->
+      CA2007; <!-- Do not directly await a Task without calling ConfigureAwait (replaced by AZC0012) -->
+      CA2231; <!-- Override Equality operators -->
+      CA2225; <!-- Provide alternative to implicit operators -->
+      CA1714; <!-- Flags should have plural names -->
+      CA1062; <!-- Public parameter should be checked for null -->
+      CA1031; <!-- Don't catch generic exceptions -->
+      CA2000; <!-- Call dispose on IDisposable objects -->
+      CA2012; <!-- ValueTask should only be awaited once - conflicts with EnsureCompleted check -->
+      
+      MSB3245; <!-- Do not warn if a package reference is unavailable -->
+      AZPROVISION001; <!-- Provisioning -->
+    </NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="'$(IsClientLibrary)' == 'true'">
+      <PropertyGroup>
+        <RequiredTargetFrameworks>netstandard2.0</RequiredTargetFrameworks>
+        <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
+        <CodeAnalysisRuleSet>$(RepoEngPath)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+      </PropertyGroup>
+    </When>
+    
+    <When Condition="'$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true'">
+      <PropertyGroup>
+        <RequiredTargetFrameworks>net8.0;net6.0</RequiredTargetFrameworks>
+        <RequiredTargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(RequiredTargetFrameworks);net462</RequiredTargetFrameworks>
+      </PropertyGroup>
+    </When>
+  </Choose>
+
+
+</Project>

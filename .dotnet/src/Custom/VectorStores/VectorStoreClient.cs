@@ -43,15 +43,20 @@ namespace OpenAI.VectorStores;
 [Experimental("OPENAI001")]
 public partial class VectorStoreClient
 {
-    // CUSTOM:
-    // - Used a custom pipeline.
-    // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="VectorStoreClient">. </summary>
-    /// <param name="credential"> The API key to authenticate with the service. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
-    public VectorStoreClient(ApiKeyCredential credential) : this(credential, new OpenAIClientOptions())
-    {
-    }
+    internal Uri Endpoint => _endpoint;
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="VectorStoreClient"/> that will use an API key when authenticating.
+    /// </summary>
+    /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
+    public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options = null)
+        : this(
+              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
+              OpenAIClient.GetEndpoint(options),
+              options)
+    { }
 
     // CUSTOM:
     // - Used a custom pipeline.
@@ -87,27 +92,35 @@ public partial class VectorStoreClient
     }
 
     /// <summary> Creates a vector store. </summary>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStore"> The <see cref="VectorStoreCreationOptions"/> to use. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStore"/> is null. </exception>
-    /// <remarks> Create vector store. </remarks>
-    public virtual async Task<ClientResult<VectorStore>> CreateVectorStoreAsync(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for 
+    /// the vector store creation to complete. </returns>
+    public virtual async Task<CreateVectorStoreOperation> CreateVectorStoreAsync(bool waitUntilCompleted, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
     {
         using BinaryContent content = vectorStore?.ToBinaryContent();
-        ClientResult result = await CreateVectorStoreAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return await CreateVectorStoreAsync(content, waitUntilCompleted, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
     }
 
     /// <summary> Creates a vector store. </summary>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStore"> The <see cref="VectorStoreCreationOptions"/> to use. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStore"/> is null. </exception>
-    /// <remarks> Create vector store. </remarks>
-    public virtual ClientResult<VectorStore> CreateVectorStore(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for 
+    /// the vector store creation to complete. </returns>
+    public virtual CreateVectorStoreOperation CreateVectorStore(bool waitUntilCompleted, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
     {
         using BinaryContent content = vectorStore?.ToBinaryContent();
-        ClientResult result = CreateVectorStore(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return CreateVectorStore(content, waitUntilCompleted, cancellationToken.ToRequestOptions());
     }
 
     /// <summary>
@@ -283,37 +296,45 @@ public partial class VectorStoreClient
     /// <summary>
     /// Associates a single, uploaded file with a vector store, beginning ingestion of the file into the vector store.
     /// </summary>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStoreId"> The ID of the vector store to associate the file with. </param>
     /// <param name="fileId"> The ID of the file to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns>
-    /// A <see cref="VectorStoreFileAssociation"/> instance that represents the new association.
-    /// </returns>
-    public virtual async Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
+    /// the vector store file addition to complete. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is null. </exception>
+    public virtual async Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(bool waitUntilCompleted, string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
     {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
+
         InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
-        ClientResult protocolResult = await AddFileToVectorStoreAsync(vectorStoreId, internalRequest.ToBinaryContent(), cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
-        VectorStoreFileAssociation fileAssociation = VectorStoreFileAssociation.FromResponse(protocolResponse);
-        return ClientResult.FromValue(fileAssociation, protocolResponse);
+        return await AddFileToVectorStoreAsync(vectorStoreId, internalRequest.ToBinaryContent(), waitUntilCompleted, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Associates a single, uploaded file with a vector store, beginning ingestion of the file into the vector store.
     /// </summary>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStoreId"> The ID of the vector store to associate the file with. </param>
     /// <param name="fileId"> The ID of the file to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns>
-    /// A <see cref="VectorStoreFileAssociation"/> instance that represents the new association.
-    /// </returns>
-    public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
+    /// the vector store file addition to complete. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is null. </exception>
+    public virtual AddFileToVectorStoreOperation AddFileToVectorStore(bool waitUntilCompleted, string vectorStoreId, string fileId, CancellationToken cancellationToken = default)
     {
+        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
+        Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
+
         InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
-        ClientResult protocolResult = AddFileToVectorStore(vectorStoreId, internalRequest.ToBinaryContent(), cancellationToken.ToRequestOptions());
-        PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
-        VectorStoreFileAssociation fileAssociation = VectorStoreFileAssociation.FromResponse(protocolResponse);
-        return ClientResult.FromValue(fileAssociation, protocolResponse);
+        return AddFileToVectorStore(vectorStoreId, internalRequest.ToBinaryContent(), waitUntilCompleted, cancellationToken.ToRequestOptions());
     }
 
     /// <summary>
@@ -487,265 +508,56 @@ public partial class VectorStoreClient
     }
 
     /// <summary>
-    /// Begins a batch job to associate multiple jobs with a vector store, beginning the ingestion process.
+    /// Adds multiple files in a batch to the vector store, beginning the ingestion process.
     /// </summary>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStoreId"> The ID of the vector store to associate files with. </param>
     /// <param name="fileIds"> The IDs of the files to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the batch operation. </returns>
-    public virtual async Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
+    /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
+    public virtual async Task<CreateBatchFileJobOperation> CreateBatchFileJobAsync(
+        string vectorStoreId,
+        IEnumerable<string> fileIds,
+        bool waitUntilCompleted,
+        CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileIds, nameof(fileIds));
 
         BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds).ToBinaryContent();
-        ClientResult result = await CreateBatchFileJobAsync(vectorStoreId, content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        PipelineResponse response = result?.GetRawResponse();
-        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
-        return ClientResult.FromValue(value, response);
+        RequestOptions options = cancellationToken.ToRequestOptions();
+
+        return await CreateBatchFileJobAsync(vectorStoreId, content, waitUntilCompleted, options).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Begins a batch job to associate multiple jobs with a vector store, beginning the ingestion process.
     /// </summary>
+    /// <param name="waitUntilCompleted"> Value indicating whether the method
+    /// should return after the operation has been started and is still running
+    /// on the service, or wait until the operation has completed to return.
+    /// </param>
     /// <param name="vectorStoreId"> The ID of the vector store to associate files with. </param>
     /// <param name="fileIds"> The IDs of the files to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the batch operation. </returns>
-    public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
+    /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
+    public virtual CreateBatchFileJobOperation CreateBatchFileJob(
+        string vectorStoreId,
+        IEnumerable<string> fileIds,
+        bool waitUntilCompleted,
+        CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileIds, nameof(fileIds));
 
         BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds).ToBinaryContent();
-        ClientResult result = CreateBatchFileJob(vectorStoreId, content, cancellationToken.ToRequestOptions());
-        PipelineResponse response = result?.GetRawResponse();
-        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
-        return ClientResult.FromValue(value, response);
-    }
+        RequestOptions options = cancellationToken.ToRequestOptions();
 
-    /// <summary>
-    /// Gets an existing vector store batch file ingestion job from a known vector store ID and job ID.
-    /// </summary>
-    /// <param name="vectorStoreId"> The ID of the vector store into which the batch of files was started. </param>
-    /// <param name="batchJobId"> The ID of the batch operation adding files to the vector store. </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the ingestion operation. </returns>
-    public virtual async Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default)
-    {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
-
-        ClientResult result = await GetBatchFileJobAsync(vectorStoreId, batchJobId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        PipelineResponse response = result?.GetRawResponse();
-        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
-        return ClientResult.FromValue(value, response);
-    }
-
-    /// <summary>
-    /// Gets an existing vector store batch file ingestion job from a known vector store ID and job ID.
-    /// </summary>
-    /// <param name="vectorStoreId"> The ID of the vector store into which the batch of files was started. </param>
-    /// <param name="batchJobId"> The ID of the batch operation adding files to the vector store. </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the ingestion operation. </returns>
-    public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default)
-    {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
-
-        ClientResult result = GetBatchFileJob(vectorStoreId, batchJobId, cancellationToken.ToRequestOptions());
-        PipelineResponse response = result?.GetRawResponse();
-        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
-        return ClientResult.FromValue(value, response);
-    }
-
-    /// <summary>
-    /// Cancels an in-progress <see cref="VectorStoreBatchFileJob"/>.
-    /// </summary>
-    /// <param name="vectorStoreId">
-    /// The ID of the <see cref="VectorStore"/> that is the ingestion target of the batch job being cancelled.
-    /// </param>
-    /// <param name="batchJobId">
-    /// The ID of the <see cref="VectorStoreBatchFileJob"/> that should be canceled. 
-    /// </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
-    public virtual async Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default)
-    {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
-
-        ClientResult result = await CancelBatchFileJobAsync(vectorStoreId, batchJobId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        PipelineResponse response = result?.GetRawResponse();
-        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
-        return ClientResult.FromValue(value, response);
-    }
-
-    /// <summary>
-    /// Cancels an in-progress <see cref="VectorStoreBatchFileJob"/>.
-    /// </summary>
-    /// <param name="vectorStoreId">
-    /// The ID of the <see cref="VectorStore"/> that is the ingestion target of the batch job being cancelled.
-    /// </param>
-    /// <param name="batchJobId">
-    /// The ID of the <see cref="VectorStoreBatchFileJob"/> that should be canceled. 
-    /// </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
-    public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default)
-    {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
-
-        ClientResult result = CancelBatchFileJob(vectorStoreId, batchJobId, cancellationToken.ToRequestOptions());
-        PipelineResponse response = result?.GetRawResponse();
-        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
-        return ClientResult.FromValue(value, response);
-    }
-
-    /// <summary>
-    /// Gets a page collection of file associations associated with a vector store batch file job, representing the files
-    /// that were scheduled for ingestion into the vector store.
-    /// </summary>
-    /// <param name="vectorStoreId">
-    /// The ID of the vector store into which the file batch was scheduled for ingestion.
-    /// </param>
-    /// <param name="batchJobId">
-    /// The ID of the batch file job that was previously scheduled.
-    /// </param>
-    /// <param name="options"> Options describing the collection to return. </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
-        string vectorStoreId,
-        string batchJobId,
-        VectorStoreFileAssociationCollectionOptions options = default,
-        CancellationToken cancellationToken = default)
-    {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
-
-        return GetFileAssociationsAsync(vectorStoreId, batchJobId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
-            as AsyncPageCollection<VectorStoreFileAssociation>;
-    }
-
-    /// <summary>
-    /// Rehydrates a page collection of file associations from a page token.
-    /// </summary>
-    /// <param name="vectorStoreId">
-    /// The ID of the vector store into which the file batch was scheduled for ingestion.
-    /// </param>
-    /// <param name="batchJobId">
-    /// The ID of the batch file job that was previously scheduled.
-    /// </param>
-    /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
-        string vectorStoreId,
-        string batchJobId,
-        ContinuationToken firstPageToken,
-        CancellationToken cancellationToken = default)
-    {
-        Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
-
-        VectorStoreFileBatchesPageToken pageToken = VectorStoreFileBatchesPageToken.FromToken(firstPageToken);
-
-        if (vectorStoreId != pageToken.VectorStoreId)
-        {
-            throw new ArgumentException(
-                "Invalid page token. 'vectorStoreId' value does not match page token value.",
-                nameof(vectorStoreId));
-        }
-
-        if (batchJobId != pageToken.BatchId)
-        {
-            throw new ArgumentException(
-                "Invalid page token. 'batchJobId' value does not match page token value.",
-                nameof(vectorStoreId));
-        }
-
-        return GetFileAssociationsAsync(vectorStoreId, batchJobId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions())
-            as AsyncPageCollection<VectorStoreFileAssociation>;
-    }
-
-    /// <summary>
-    /// Gets a page collection of file associations associated with a vector store batch file job, representing the files
-    /// that were scheduled for ingestion into the vector store.
-    /// </summary>
-    /// <param name="vectorStoreId">
-    /// The ID of the vector store into which the file batch was scheduled for ingestion.
-    /// </param>
-    /// <param name="batchJobId">
-    /// The ID of the batch file job that was previously scheduled.
-    /// </param>
-    /// <param name="options"> Options describing the collection to return. </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(
-        string vectorStoreId,
-        string batchJobId,
-        VectorStoreFileAssociationCollectionOptions options = default,
-        CancellationToken cancellationToken = default)
-    {
-        Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
-        Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
-
-        return GetFileAssociations(vectorStoreId, batchJobId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
-            as PageCollection<VectorStoreFileAssociation>;
-    }
-
-    /// <summary>
-    /// Rehydrates a page collection of file associations from a page token.
-    /// that were scheduled for ingestion into the vector store.
-    /// </summary>
-    /// <param name="vectorStoreId">
-    /// The ID of the vector store into which the file batch was scheduled for ingestion.
-    /// </param>
-    /// <param name="batchJobId">
-    /// The ID of the batch file job that was previously scheduled.
-    /// </param>
-    /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(
-        string vectorStoreId,
-        string batchJobId,
-        ContinuationToken firstPageToken,
-        CancellationToken cancellationToken = default)
-    {
-        Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
-
-        VectorStoreFileBatchesPageToken pageToken = VectorStoreFileBatchesPageToken.FromToken(firstPageToken);
-
-        if (vectorStoreId != pageToken.VectorStoreId)
-        {
-            throw new ArgumentException(
-                "Invalid page token. 'vectorStoreId' value does not match page token value.",
-                nameof(vectorStoreId));
-        }
-
-        if (batchJobId != pageToken.BatchId)
-        {
-            throw new ArgumentException(
-                "Invalid page token. 'batchJobId' value does not match page token value.",
-                nameof(vectorStoreId));
-        }
-
-        return GetFileAssociations(vectorStoreId, batchJobId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions())
-            as PageCollection<VectorStoreFileAssociation>;
+        return CreateBatchFileJob(vectorStoreId, content, waitUntilCompleted, options);
     }
 }

@@ -306,8 +306,8 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(content.Text, Does
             .Contain("Fahrenheit")
             .Or.Contain("Celsius")
-            .Or.Contain("°F")
-            .Or.Contain("°C")
+            .Or.Contain("ï¿½F")
+            .Or.Contain("ï¿½C")
             .Or.Contain("oven"));
     }
 
@@ -566,6 +566,55 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(contexts[0].Citations[0].Title, Is.Not.Null.Or.Empty);
     }
 
+    [RecordedTest]
+    public async Task AsyncContentFilterWorksStreaming()
+    {
+        // Precondition: the target deployment is configured with an async content filter that includes a
+        // custom blocklist that will filter variations of the word 'banana.'
+
+        ChatClient client = GetTestClient(TestConfig.GetConfig("chat_with_async_filter"));
+
+        StringBuilder contentBuilder = new();
+
+        List<RequestContentFilterResult> promptFilterResults = [];
+        List<ResponseContentFilterResult> responseFilterResults = [];
+
+        await foreach (StreamingChatCompletionUpdate chatUpdate
+            in client.CompleteChatStreamingAsync(
+            [
+                "Hello, assistant! What popular kinds of fruit are yellow and grow on trees?"
+            ]))
+        {
+            foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
+            {
+                contentBuilder.Append(contentPart.Text);
+            }
+
+            RequestContentFilterResult promptFilterResult = chatUpdate.GetRequestContentFilterResult();
+            ResponseContentFilterResult responseFilterResult = chatUpdate.GetResponseContentFilterResult();
+
+            if (promptFilterResult is not null)
+            {
+                promptFilterResults.Add(promptFilterResult);
+            }
+            if (responseFilterResult is not null)
+            {
+                responseFilterResults.Add(responseFilterResult);
+            }
+        }
+
+        string fullContent = contentBuilder.ToString();
+        Assert.That(fullContent.ToLowerInvariant(), Does.Contain("banana"));
+
+        Assert.That(promptFilterResults, Has.Count.GreaterThan(0));
+        Assert.That(responseFilterResults, Has.Count.GreaterThan(0));
+
+        Assert.That(responseFilterResults.Any(filterResult
+            => filterResult.CustomBlocklists?.BlocklistFilterStatuses?
+                .TryGetValue("TestBlocklistNoBanana", out bool filtered) == true
+                    && filtered));
+    }
+
     #endregion
 
     #region Helper methods
@@ -575,7 +624,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         if (update.CreatedAt == UNIX_EPOCH)
         {
             // This is the first message that usually contains the service's request content filtering
-            RequestContentFilterResult promptFilter = update.GetContentFilterResultForPrompt();
+            RequestContentFilterResult promptFilter = update.GetRequestContentFilterResult();
             if (promptFilter?.SelfHarm != null)
             {
                 Assert.That(promptFilter.SelfHarm.IsFiltered, Is.False);
@@ -616,7 +665,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
             if (!foundResponseFilter)
             {
-                ResponseContentFilterResult responseFilter = update.GetContentFilterResultForResponse();
+                ResponseContentFilterResult responseFilter = update.GetResponseContentFilterResult();
                 if (responseFilter?.Violence != null)
                 {
                     Assert.That(responseFilter.Violence.IsFiltered, Is.False);

@@ -239,7 +239,7 @@ namespace Azure.AI.OpenAI.Tests
                     content.Append(part.Text);
                 }
 
-                var promptFilter = update.GetContentFilterResultForPrompt();
+                var promptFilter = update.GetRequestContentFilterResult();
                 if (!foundPromptFilter && promptFilter?.Hate != null)
                 {
                     Assert.That(promptFilter.Hate.IsFiltered, Is.False);
@@ -247,7 +247,7 @@ namespace Azure.AI.OpenAI.Tests
                     foundPromptFilter = true;
                 }
 
-                var responseFilter = update.GetContentFilterResultForResponse();
+                var responseFilter = update.GetResponseContentFilterResult();
                 if (!foundResponseFilter && responseFilter?.Hate != null)
                 {
                     Assert.That(responseFilter.Hate.IsFiltered, Is.False);

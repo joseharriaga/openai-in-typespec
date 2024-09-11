@@ -25,7 +25,7 @@ public static partial class AzureStreamingChatCompletionUpdateExtensions
     }
 
     [Experimental("AOAI001")]
-    public static RequestContentFilterResult GetContentFilterResultForPrompt(this StreamingChatCompletionUpdate chatUpdate)
+    public static RequestContentFilterResult GetRequestContentFilterResult(this StreamingChatCompletionUpdate chatUpdate)
     {
         return AdditionalPropertyHelpers.GetAdditionalListProperty<RequestContentFilterResult>(
             chatUpdate.SerializedAdditionalRawData,
@@ -33,7 +33,7 @@ public static partial class AzureStreamingChatCompletionUpdateExtensions
     }
 
     [Experimental("AOAI001")]
-    public static ResponseContentFilterResult GetContentFilterResultForResponse(this StreamingChatCompletionUpdate chatUpdate)
+    public static ResponseContentFilterResult GetResponseContentFilterResult(this StreamingChatCompletionUpdate chatUpdate)
     {
         return AdditionalPropertyHelpers.GetAdditionalProperty<ResponseContentFilterResult>(
             chatUpdate?.Choices?.ElementAtOrDefault(0)?.SerializedAdditionalRawData,

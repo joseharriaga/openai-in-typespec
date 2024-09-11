@@ -19,6 +19,11 @@
     "key": "Sanitized",
     "deployment": "gpt-4o-0806"
   },
+  "chat_with_async_filter": {
+    "endpoint": "https://Sanitized.openai.azure.com/",
+    "key": "Sanitized",
+    "deployment": "gpt-4o-mini-async-block-banana"
+  },
   "embedding": {
     "deployment": "text-embedding-ada-002"
   },

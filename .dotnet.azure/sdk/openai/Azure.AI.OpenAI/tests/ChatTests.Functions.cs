@@ -206,7 +206,7 @@ public partial class ChatTests
                 content.Append(part.Text);
             }
 
-            var promptFilter = update.GetContentFilterResultForPrompt();
+            var promptFilter = update.GetRequestContentFilterResult();
             if (!foundPromptFilter && promptFilter?.Hate != null)
             {
                 Assert.That(promptFilter.Hate.IsFiltered, Is.False);
@@ -214,7 +214,7 @@ public partial class ChatTests
                 foundPromptFilter = true;
             }
 
-            var responseFilter = update.GetContentFilterResultForResponse();
+            var responseFilter = update.GetResponseContentFilterResult();
             if (!foundResponseFilter && responseFilter?.Hate != null)
             {
                 Assert.That(responseFilter.Hate.IsFiltered, Is.False);

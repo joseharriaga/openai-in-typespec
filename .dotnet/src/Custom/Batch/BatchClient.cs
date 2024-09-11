@@ -37,11 +37,9 @@ public partial class BatchClient
     /// <param name="options"> Additional options to customize the client. </param>
     /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
     public BatchClient(ApiKeyCredential credential, OpenAIClientOptions options = null)
-        : this(
-              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
-              OpenAIClient.GetEndpoint(options),
-              options) 
-    { }
+    {
+        Argument.AssertNotNull(credential, nameof(credential));
+        options ??= new OpenAIClientOptions();
 
         _pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);

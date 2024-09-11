@@ -52,20 +52,6 @@ public partial class VectorStoreClient
     /// <param name="options"> Additional options to customize the client. </param>
     /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
     public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options = null)
-        : this(
-              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(credential, requireExplicitCredential: true), options),
-              OpenAIClient.GetEndpoint(options),
-              options)
-    { }
-
-    // CUSTOM:
-    // - Used a custom pipeline.
-    // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="VectorStoreClient">. </summary>
-    /// <param name="credential"> The API key to authenticate with the service. </param>
-    /// <param name="options"> The options to configure the client. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
-    public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options)
     {
         Argument.AssertNotNull(credential, nameof(credential));
         options ??= new OpenAIClientOptions();

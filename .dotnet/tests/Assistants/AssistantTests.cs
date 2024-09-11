@@ -905,7 +905,6 @@ public partial class AssistantTests : SyncAsyncTestBase
         Assert.That(hasCake, Is.True);
     }
 
-    // TODO: check if test supports sync/async.
     [Test]
     public async Task BasicFileSearchStreamingWorks()
     {
@@ -952,15 +951,31 @@ public partial class AssistantTests : SyncAsyncTestBase
         AssistantThread thread = client.CreateThread(threadCreationOptions);
         Validate(thread);
 
-        // Create run and stream the results.
-        AsyncCollectionResult<StreamingUpdate> streamingResult = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
         string message = string.Empty;
 
-        await foreach (StreamingUpdate update in streamingResult)
+        // Create run and stream the results.
+        if (IsAsync)
         {
-            if (update is MessageContentUpdate contentUpdate)
+            AsyncCollectionResult<StreamingUpdate> streamingResult = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+
+            await foreach (StreamingUpdate update in streamingResult)
             {
-                message += $"{contentUpdate.Text}";
+                if (update is MessageContentUpdate contentUpdate)
+                {
+                    message += $"{contentUpdate.Text}";
+                }
+            }
+        }
+        else
+        {
+            CollectionResult<StreamingUpdate> streamingResult = client.CreateRunStreaming(thread.Id, assistant.Id);
+
+            foreach (StreamingUpdate update in streamingResult)
+            {
+                if (update is MessageContentUpdate contentUpdate)
+                {
+                    message += $"{contentUpdate.Text}";
+                }
             }
         }
 

@@ -68,9 +68,9 @@ public partial class GenerateSpeechTests : SyncAsyncTestBase
         byte[] audioBytes = audio.ToArray();
         byte[] expectedFileHeader = responseFormat switch
         {
-            GeneratedSpeechFormat.Opus => Encoding.ASCII.GetBytes("OggS"),
-            GeneratedSpeechFormat.Flac => Encoding.ASCII.GetBytes("fLaC"),
-            GeneratedSpeechFormat.Wav => Encoding.ASCII.GetBytes("RIFF"),
+            "opus" => Encoding.ASCII.GetBytes("OggS"),
+            "flac" => Encoding.ASCII.GetBytes("fLaC"),
+            "wav" => Encoding.ASCII.GetBytes("RIFF"),
             _ => []
         };
 

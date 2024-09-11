@@ -11,19 +11,19 @@ namespace OpenAI.FineTuning
     internal partial class InternalListFineTuningJobEventsResponse
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalListFineTuningJobEventsResponse(IEnumerable<FineTuningJobEvent> data, bool hasMore)
+        internal InternalListFineTuningJobEventsResponse(bool hasMore, IEnumerable<FineTuningJobEvent> data)
         {
             Argument.AssertNotNull(data, nameof(data));
 
-            Data = data.ToList();
             HasMore = hasMore;
+            Data = data.ToList();
         }
 
-        internal InternalListFineTuningJobEventsResponse(IReadOnlyList<FineTuningJobEvent> data, InternalListFineTuningJobEventsResponseObject @object, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListFineTuningJobEventsResponse(bool hasMore, IReadOnlyList<FineTuningJobEvent> data, InternalListFineTuningJobEventsResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
+            HasMore = hasMore;
             Data = data;
             Object = @object;
-            HasMore = hasMore;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -31,9 +31,8 @@ namespace OpenAI.FineTuning
         {
         }
 
+        public bool HasMore { get; }
         public IReadOnlyList<FineTuningJobEvent> Data { get; }
         public InternalListFineTuningJobEventsResponseObject Object { get; } = InternalListFineTuningJobEventsResponseObject.List;
-
-        public bool HasMore { get; }
     }
 }

@@ -6471,10 +6471,12 @@ components:
     ListFineTuningJobEventsResponse:
       type: object
       required:
+        - has_more
         - data
         - object
-        - has_more
       properties:
+        has_more:
+          type: boolean
         data:
           type: array
           items:
@@ -6483,8 +6485,6 @@ components:
           type: string
           enum:
             - list
-        has_more:
-          type: boolean
     ListMessagesResponse:
       type: object
       required:

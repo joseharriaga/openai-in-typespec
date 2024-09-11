@@ -8,7 +8,4 @@ public partial class ContentFilterSeverityResult
 {
     [CodeGenMember("Severity")]
     public ContentFilterSeverity Severity { get; }
-
-    [CodeGenMember("Filtered")]
-    public bool IsFiltered { get; }
 }

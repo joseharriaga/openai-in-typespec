@@ -76,7 +76,7 @@ namespace Azure.AI.OpenAI.Tests
             var responseFilter = response.Value.GetResponseContentFilterResult();
             Assert.That(responseFilter, Is.Not.Null);
             Assert.That(responseFilter.Hate, Is.Not.Null);
-            Assert.That(responseFilter.Hate.IsFiltered, Is.False);
+            Assert.That(responseFilter.Hate.Filtered, Is.False);
             Assert.That(responseFilter.Hate.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
         }
 

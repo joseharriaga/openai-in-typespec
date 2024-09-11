@@ -94,7 +94,7 @@ namespace Azure.AI.OpenAI.Tests
             RequestContentFilterResult filter = completion.GetRequestContentFilterResult();
             Assert.IsNotNull(filter);
             Assert.That(filter.SelfHarm, Is.Not.Null);
-            Assert.That(filter.SelfHarm.IsFiltered, Is.False);
+            Assert.That(filter.SelfHarm.Filtered, Is.False);
             Assert.That(filter.SelfHarm.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
 
             if (toolChoice == ToolChoiceTestType.None)
@@ -160,13 +160,13 @@ namespace Azure.AI.OpenAI.Tests
             Assert.That(promptFilter, Is.Not.Null);
             Assert.That(promptFilter.Hate, Is.Not.Null);
             Assert.That(promptFilter.Hate.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
-            Assert.That(promptFilter.Hate.IsFiltered, Is.False);
+            Assert.That(promptFilter.Hate.Filtered, Is.False);
 
             ResponseContentFilterResult responseFilter = completion.GetResponseContentFilterResult();
             Assert.That(responseFilter, Is.Not.Null);
             Assert.That(responseFilter.Hate, Is.Not.Null);
             Assert.That(responseFilter.Hate.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
-            Assert.That(responseFilter.Hate.IsFiltered, Is.False);
+            Assert.That(responseFilter.Hate.Filtered, Is.False);
 
             Assert.That(completion.Content, Has.Count.GreaterThan(0));
             Assert.That(completion.Content, Has.All.Not.Null);
@@ -242,7 +242,7 @@ namespace Azure.AI.OpenAI.Tests
                 var promptFilter = update.GetRequestContentFilterResult();
                 if (!foundPromptFilter && promptFilter?.Hate != null)
                 {
-                    Assert.That(promptFilter.Hate.IsFiltered, Is.False);
+                    Assert.That(promptFilter.Hate.Filtered, Is.False);
                     Assert.That(promptFilter.Hate.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
                     foundPromptFilter = true;
                 }
@@ -250,7 +250,7 @@ namespace Azure.AI.OpenAI.Tests
                 var responseFilter = update.GetResponseContentFilterResult();
                 if (!foundResponseFilter && responseFilter?.Hate != null)
                 {
-                    Assert.That(responseFilter.Hate.IsFiltered, Is.False);
+                    Assert.That(responseFilter.Hate.Filtered, Is.False);
                     Assert.That(responseFilter.Hate.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
                     foundResponseFilter = true;
                 }

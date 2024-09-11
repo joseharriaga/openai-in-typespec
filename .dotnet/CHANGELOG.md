@@ -13,6 +13,7 @@
 - Removed `ChatMessageContentPart`'s `ToString` overload. (commit_hash)
 - Removed the common `ListOrder` enum from the top-level `OpenAI` namespace in favor of individual enums in their corresponding sub-namespace. (commit_hash)
 - Renamed the `PageSize` property to `PageSizeLimit`. (commit_hash)
+- Removed setter from collection properties.
 
 ### Bugs Fixed
 

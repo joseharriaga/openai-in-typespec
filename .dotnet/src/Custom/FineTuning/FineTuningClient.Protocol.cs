@@ -109,10 +109,10 @@ public partial class FineTuningClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options)
+    public virtual IAsyncEnumerable<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options)
     {
-        using PipelineMessage message = CreateGetPaginatedFineTuningJobsRequest(after, limit, options);
-        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        FineTuningJobsPageEnumerator enumerator = new FineTuningJobsPageEnumerator(_pipeline, _endpoint, after, limit, options);
+        return PageCollectionHelpers.CreateAsync(enumerator);
     }
 
     // CUSTOM:
@@ -126,10 +126,10 @@ public partial class FineTuningClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetJobs(string after, int? limit, RequestOptions options)
+    public virtual IEnumerable<ClientResult> GetJobs(string after, int? limit, RequestOptions options)
     {
-        using PipelineMessage message = CreateGetPaginatedFineTuningJobsRequest(after, limit, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        FineTuningJobsPageEnumerator enumerator = new FineTuningJobsPageEnumerator(_pipeline, _endpoint, after, limit, options);
+        return PageCollectionHelpers.Create(enumerator);
     }
 
     // CUSTOM:

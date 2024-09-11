@@ -24,13 +24,6 @@ namespace OpenAI.FineTuning
         {
         }
 
-        internal FineTuningClient(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
-        {
-            _pipeline = pipeline;
-            _keyCredential = keyCredential;
-            _endpoint = endpoint;
-        }
-
         internal PipelineMessage CreateCancelFineTuningJobRequest(string fineTuningJobId, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();

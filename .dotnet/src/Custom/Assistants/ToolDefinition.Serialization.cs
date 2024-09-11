@@ -1,7 +1,4 @@
-using System;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace OpenAI.Assistants;
@@ -15,5 +12,5 @@ public abstract partial class ToolDefinition : IJsonModel<ToolDefinition>
     internal static void WriteCore(ToolDefinition instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
         => instance.WriteCore(writer, options);
 
-    protected abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+    internal abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
 }

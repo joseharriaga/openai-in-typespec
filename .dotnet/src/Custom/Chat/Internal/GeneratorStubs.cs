@@ -57,11 +57,17 @@ internal readonly partial struct InternalCreateChatCompletionFunctionResponseCho
 [CodeGenModel("CreateChatCompletionFunctionResponseObject")]
 internal readonly partial struct InternalCreateChatCompletionFunctionResponseObject { }
 
+[CodeGenModel("ChatCompletionRequestMessageContentPartRefusal")]
+internal partial class InternalChatCompletionRequestMessageContentPartRefusal { }
+
+[CodeGenModel("ChatCompletionRequestMessageContentPartRefusalType")]
+internal readonly partial struct InternalChatCompletionRequestMessageContentPartRefusalType { }
+
 [CodeGenModel("CreateChatCompletionRequestModel")]
 internal readonly partial struct InternalCreateChatCompletionRequestModel { }
 
-[CodeGenModel("CreateChatCompletionRequestResponseFormatType")]
-internal readonly partial struct InternalCreateChatCompletionRequestResponseFormatType { }
+[CodeGenModel("CreateChatCompletionRequestServiceTier")]
+internal readonly partial struct InternalCreateChatCompletionRequestServiceTier { }
 
 [CodeGenModel("CreateChatCompletionRequestToolChoice")]
 internal readonly partial struct InternalCreateChatCompletionRequestToolChoice { }
@@ -75,6 +81,9 @@ internal partial class InternalCreateChatCompletionResponseChoiceLogprobs { }
 [CodeGenModel("CreateChatCompletionResponseObject")]
 internal readonly partial struct InternalCreateChatCompletionResponseObject { }
 
+[CodeGenModel("CreateChatCompletionResponseServiceTier")]
+internal readonly partial struct InternalCreateChatCompletionResponseServiceTier { }
+
 [CodeGenModel("CreateChatCompletionStreamResponseChoice")]
 internal partial class InternalCreateChatCompletionStreamResponseChoice { }
 
@@ -87,10 +96,11 @@ internal partial class InternalCreateChatCompletionStreamResponseChoiceLogprobs 
 [CodeGenModel("CreateChatCompletionStreamResponseObject")]
 internal readonly partial struct InternalCreateChatCompletionStreamResponseObject { }
 
+[CodeGenModel("CreateChatCompletionStreamResponseServiceTier")]
+internal readonly partial struct InternalCreateChatCompletionStreamResponseServiceTier { }
+
 [CodeGenModel("CreateChatCompletionStreamResponseUsage")]
 internal partial class InternalCreateChatCompletionStreamResponseUsage { }
 
 [CodeGenModel("FunctionParameters")]
 internal partial class InternalFunctionParameters { }
-
-

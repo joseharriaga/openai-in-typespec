@@ -13,6 +13,7 @@ namespace OpenAI.VectorStores;
 /// The service client for OpenAI vector store operations.
 /// </summary>
 [CodeGenClient("VectorStores")]
+[CodeGenSuppress("VectorStoreClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateVectorStoreAsync", typeof(VectorStoreCreationOptions))]
 [CodeGenSuppress("CreateVectorStore", typeof(VectorStoreCreationOptions))]
 [CodeGenSuppress("GetVectorStoreAsync", typeof(string))]
@@ -21,10 +22,10 @@ namespace OpenAI.VectorStores;
 [CodeGenSuppress("ModifyVectorStore", typeof(string), typeof(VectorStoreModificationOptions))]
 [CodeGenSuppress("DeleteVectorStoreAsync", typeof(string))]
 [CodeGenSuppress("DeleteVectorStore", typeof(string))]
-[CodeGenSuppress("GetVectorStoresAsync", typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
-[CodeGenSuppress("GetVectorStores", typeof(int?), typeof(ListOrder?), typeof(string), typeof(string))]
-[CodeGenSuppress("GetVectorStoreFilesAsync", typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
-[CodeGenSuppress("GetVectorStoreFiles", typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
+[CodeGenSuppress("GetVectorStoresAsync", typeof(int?), typeof(VectorStoreCollectionOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("GetVectorStores", typeof(int?), typeof(VectorStoreCollectionOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("GetVectorStoreFilesAsync", typeof(string), typeof(int?), typeof(VectorStoreFileAssociationCollectionOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
+[CodeGenSuppress("GetVectorStoreFiles", typeof(string), typeof(int?), typeof(VectorStoreFileAssociationCollectionOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
 [CodeGenSuppress("CreateVectorStoreFileAsync", typeof(string), typeof(InternalCreateVectorStoreFileRequest))]
 [CodeGenSuppress("CreateVectorStoreFile", typeof(string), typeof(InternalCreateVectorStoreFileRequest))]
 [CodeGenSuppress("GetVectorStoreFileAsync", typeof(string), typeof(string))]
@@ -37,8 +38,8 @@ namespace OpenAI.VectorStores;
 [CodeGenSuppress("GetVectorStoreFileBatch", typeof(string), typeof(string))]
 [CodeGenSuppress("CancelVectorStoreFileBatchAsync", typeof(string), typeof(string))]
 [CodeGenSuppress("CancelVectorStoreFileBatch", typeof(string), typeof(string))]
-[CodeGenSuppress("GetFilesInVectorStoreBatchesAsync", typeof(string), typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
-[CodeGenSuppress("GetFilesInVectorStoreBatches", typeof(string), typeof(string), typeof(int?), typeof(ListOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
+[CodeGenSuppress("GetFilesInVectorStoreBatchesAsync", typeof(string), typeof(string), typeof(int?), typeof(InternalListFilesInVectorStoreBatchRequestOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
+[CodeGenSuppress("GetFilesInVectorStoreBatches", typeof(string), typeof(string), typeof(int?), typeof(InternalListFilesInVectorStoreBatchRequestOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
 [Experimental("OPENAI001")]
 public partial class VectorStoreClient
 {
@@ -57,30 +58,37 @@ public partial class VectorStoreClient
               options)
     { }
 
-    /// <summary>
-    /// Initializes a new instance of <see cref="VectorStoreClient"/> that will use an API key from the OPENAI_API_KEY
-    /// environment variable when authenticating.
-    /// </summary>
-    /// <remarks>
-    /// To provide an explicit credential instead of using the environment variable, use an alternate constructor like
-    /// <see cref="VectorStoreClient(ApiKeyCredential,OpenAIClientOptions)"/>.
-    /// </remarks>
-    /// <param name="options"> Additional options to customize the client. </param>
-    /// <exception cref="InvalidOperationException"> The OPENAI_API_KEY environment variable was not found. </exception>
-    public VectorStoreClient(OpenAIClientOptions options = null)
-        : this(
-              OpenAIClient.CreatePipeline(OpenAIClient.GetApiKey(), options),
-              OpenAIClient.GetEndpoint(options),
-              options)
-    { }
-
-    /// <summary> Initializes a new instance of VectorStoreClient. </summary>
-    /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-    /// <param name="endpoint"> OpenAI Endpoint. </param>
-    protected internal VectorStoreClient(ClientPipeline pipeline, Uri endpoint, OpenAIClientOptions options)
+    // CUSTOM:
+    // - Used a custom pipeline.
+    // - Demoted the endpoint parameter to be a property in the options class.
+    /// <summary> Initializes a new instance of <see cref="VectorStoreClient">. </summary>
+    /// <param name="credential"> The API key to authenticate with the service. </param>
+    /// <param name="options"> The options to configure the client. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
+    public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options)
     {
+        Argument.AssertNotNull(credential, nameof(credential));
+        options ??= new OpenAIClientOptions();
+
+        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        _endpoint = OpenAIClient.GetEndpoint(options);
+    }
+
+    // CUSTOM:
+    // - Used a custom pipeline.
+    // - Demoted the endpoint parameter to be a property in the options class.
+    // - Made protected.
+    /// <summary> Initializes a new instance of <see cref="VectorStoreClient">. </summary>
+    /// <param name="pipeline"> The HTTP pipeline to send and receive REST requests and responses. </param>
+    /// <param name="options"> The options to configure the client. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="pipeline"/> is null. </exception>
+    protected internal VectorStoreClient(ClientPipeline pipeline, OpenAIClientOptions options)
+    {
+        Argument.AssertNotNull(pipeline, nameof(pipeline));
+        options ??= new OpenAIClientOptions();
+
         _pipeline = pipeline;
-        _endpoint = endpoint;
+        _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
     internal virtual CreateVectorStoreOperation CreateCreateVectorStoreOperation(ClientResult<VectorStore> result)
@@ -239,7 +247,7 @@ public partial class VectorStoreClient
         VectorStoreCollectionOptions options = default,
         CancellationToken cancellationToken = default)
     {
-        return GetVectorStoresAsync(options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
+        return GetVectorStoresAsync(options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
             as AsyncPageCollection<VectorStore>;
     }
 
@@ -276,7 +284,7 @@ public partial class VectorStoreClient
         VectorStoreCollectionOptions options = default,
         CancellationToken cancellationToken = default)
     {
-        return GetVectorStores(options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
+        return GetVectorStores(options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
             as PageCollection<VectorStore>;
     }
 
@@ -364,7 +372,7 @@ public partial class VectorStoreClient
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
-        return GetFileAssociationsAsync(vectorStoreId, options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
+        return GetFileAssociationsAsync(vectorStoreId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
             as AsyncPageCollection<VectorStoreFileAssociation>;
     }
 
@@ -408,7 +416,7 @@ public partial class VectorStoreClient
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
-        return GetFileAssociations(vectorStoreId, options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
+        return GetFileAssociations(vectorStoreId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
             as PageCollection<VectorStoreFileAssociation>;
     }
 

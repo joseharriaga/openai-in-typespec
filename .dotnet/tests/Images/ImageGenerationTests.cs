@@ -976,8 +976,8 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
         ChatClient chatClient = GetTestClient<ChatClient>(TestScenario.Chat);
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
-                ChatMessageContentPart.CreateTextMessageContentPart($"Describe this image for me. {descriptionHint}"),
-                ChatMessageContentPart.CreateImageMessageContentPart(imageUri)),
+                ChatMessageContentPart.CreateTextPart($"Describe this image for me. {descriptionHint}"),
+                ChatMessageContentPart.CreateImagePart(imageUri)),
         ];
         ChatCompletionOptions chatOptions = new() { MaxTokens = 2048 };
         ClientResult<ChatCompletion> result = chatClient.CompleteChat(messages, chatOptions);
@@ -990,8 +990,8 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
         ChatClient chatClient = GetTestClient<ChatClient>(TestScenario.Chat);
         IEnumerable<ChatMessage> messages = [
             new UserChatMessage(
-                ChatMessageContentPart.CreateTextMessageContentPart($"Describe this image for me. {descriptionHint}"),
-                ChatMessageContentPart.CreateImageMessageContentPart(imageBytes, "image/png")),
+                ChatMessageContentPart.CreateTextPart($"Describe this image for me. {descriptionHint}"),
+                ChatMessageContentPart.CreateImagePart(imageBytes, "image/png")),
         ];
         ChatCompletionOptions chatOptions = new() { MaxTokens = 2048 };
         ClientResult<ChatCompletion> result = chatClient.CompleteChat(messages, chatOptions);

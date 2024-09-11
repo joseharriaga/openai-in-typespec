@@ -18,7 +18,7 @@ tags:
   - name: Vector Stores
   - name: Uploads
 paths:
-  /v1/assistants:
+  /assistants:
     post:
       tags:
         - Assistants
@@ -63,7 +63,10 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            $ref: '#/components/schemas/ListOrder'
+            type: string
+            enum:
+              - asc
+              - desc
             default: desc
         - name: after
           in: query
@@ -92,7 +95,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListAssistantsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/assistants/{assistant_id}:
+  /assistants/{assistant_id}:
     get:
       tags:
         - Assistants
@@ -162,7 +165,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteAssistantResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/audio/speech:
+  /audio/speech:
     post:
       tags:
         - Audio
@@ -189,7 +192,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateSpeechRequest'
-  /v1/audio/transcriptions:
+  /audio/transcriptions:
     post:
       tags:
         - Audio
@@ -215,7 +218,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateTranscriptionRequestMultiPart'
-  /v1/audio/translations:
+  /audio/translations:
     post:
       tags:
         - Audio
@@ -241,7 +244,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateTranslationRequestMultiPart'
-  /v1/batches:
+  /batches:
     post:
       tags:
         - Batch
@@ -322,7 +325,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListBatchesResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/batches/{batch_id}:
+  /batches/{batch_id}:
     get:
       tags:
         - Batch
@@ -344,7 +347,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/Batch'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/batches/{batch_id}/cancel:
+  /batches/{batch_id}/cancel:
     post:
       tags:
         - Batch
@@ -366,7 +369,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/Batch'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/chat/completions:
+  /chat/completions:
     post:
       tags:
         - Chat
@@ -388,7 +391,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateChatCompletionRequest'
-  /v1/completions:
+  /completions:
     post:
       tags:
         - Completions
@@ -410,7 +413,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateCompletionRequest'
-  /v1/embeddings:
+  /embeddings:
     post:
       tags:
         - Embeddings
@@ -432,7 +435,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateEmbeddingRequest'
-  /v1/files:
+  /files:
     post:
       tags:
         - Files
@@ -483,7 +486,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListFilesResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/files/{file_id}:
+  /files/{file_id}:
     get:
       tags:
         - Files
@@ -526,7 +529,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteFileResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/files/{file_id}/content:
+  /files/{file_id}/content:
     get:
       tags:
         - Files
@@ -549,7 +552,7 @@ paths:
                   - type: string
                     format: byte
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/fine_tuning/jobs:
+  /fine_tuning/jobs:
     post:
       tags:
         - Fine-tuning
@@ -605,7 +608,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListPaginatedFineTuningJobsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/fine_tuning/jobs/{fine_tuning_job_id}:
+  /fine_tuning/jobs/{fine_tuning_job_id}:
     get:
       tags:
         - Fine-tuning
@@ -630,7 +633,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/FineTuningJob'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/fine_tuning/jobs/{fine_tuning_job_id}/cancel:
+  /fine_tuning/jobs/{fine_tuning_job_id}/cancel:
     post:
       tags:
         - Fine-tuning
@@ -652,7 +655,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/FineTuningJob'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/fine_tuning/jobs/{fine_tuning_job_id}/checkpoints:
+  /fine_tuning/jobs/{fine_tuning_job_id}/checkpoints:
     get:
       tags:
         - Fine-tuning
@@ -688,7 +691,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListFineTuningJobCheckpointsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/fine_tuning/jobs/{fine_tuning_job_id}/events:
+  /fine_tuning/jobs/{fine_tuning_job_id}/events:
     get:
       tags:
         - Fine-tuning
@@ -724,7 +727,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListFineTuningJobEventsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/images/edits:
+  /images/edits:
     post:
       tags:
         - Images
@@ -746,7 +749,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateImageEditRequestMultiPart'
-  /v1/images/generations:
+  /images/generations:
     post:
       tags:
         - Images
@@ -768,7 +771,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateImageRequest'
-  /v1/images/variations:
+  /images/variations:
     post:
       tags:
         - Images
@@ -790,7 +793,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateImageVariationRequestMultiPart'
-  /v1/models:
+  /models:
     get:
       tags:
         - Models
@@ -808,7 +811,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListModelsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/models/{model}:
+  /models/{model}:
     get:
       tags:
         - Models
@@ -853,7 +856,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteModelResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/moderations:
+  /moderations:
     post:
       tags:
         - Moderations
@@ -875,7 +878,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateModerationRequest'
-  /v1/threads:
+  /threads:
     post:
       tags:
         - Assistants
@@ -897,7 +900,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateThreadRequest'
-  /v1/threads/runs:
+  /threads/runs:
     post:
       tags:
         - Assistants
@@ -919,7 +922,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateThreadAndRunRequest'
-  /v1/threads/{thread_id}:
+  /threads/{thread_id}:
     get:
       tags:
         - Assistants
@@ -989,7 +992,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteThreadResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/threads/{thread_id}/messages:
+  /threads/{thread_id}/messages:
     post:
       tags:
         - Assistants
@@ -1046,7 +1049,10 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            $ref: '#/components/schemas/ListOrder'
+            type: string
+            enum:
+              - asc
+              - desc
             default: desc
         - name: after
           in: query
@@ -1075,7 +1081,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListMessagesResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/threads/{thread_id}/messages/{message_id}:
+  /threads/{thread_id}/messages/{message_id}:
     get:
       tags:
         - Assistants
@@ -1163,7 +1169,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteMessageResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/threads/{thread_id}/runs:
+  /threads/{thread_id}/runs:
     post:
       tags:
         - Assistants
@@ -1220,7 +1226,10 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            $ref: '#/components/schemas/ListOrder'
+            type: string
+            enum:
+              - asc
+              - desc
             default: desc
         - name: after
           in: query
@@ -1249,7 +1258,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListRunsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/threads/{thread_id}/runs/{run_id}:
+  /threads/{thread_id}/runs/{run_id}:
     get:
       tags:
         - Assistants
@@ -1310,7 +1319,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ModifyRunRequest'
-  /v1/threads/{thread_id}/runs/{run_id}/cancel:
+  /threads/{thread_id}/runs/{run_id}/cancel:
     post:
       tags:
         - Assistants
@@ -1338,7 +1347,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/RunObject'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/threads/{thread_id}/runs/{run_id}/steps:
+  /threads/{thread_id}/runs/{run_id}/steps:
     get:
       tags:
         - Assistants
@@ -1374,7 +1383,10 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            $ref: '#/components/schemas/ListOrder'
+            type: string
+            enum:
+              - asc
+              - desc
             default: desc
         - name: after
           in: query
@@ -1403,7 +1415,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListRunStepsResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/threads/{thread_id}/runs/{run_id}/steps/{step_id}:
+  /threads/{thread_id}/runs/{run_id}/steps/{step_id}:
     get:
       tags:
         - Assistants
@@ -1437,7 +1449,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/RunStepObject'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/threads/{thread_id}/runs/{run_id}/submit_tool_outputs:
+  /threads/{thread_id}/runs/{run_id}/submit_tool_outputs:
     post:
       tags:
         - Assistants
@@ -1474,7 +1486,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SubmitToolOutputsRunRequest'
-  /v1/uploads:
+  /uploads:
     post:
       tags:
         - Uploads
@@ -1504,7 +1516,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateUploadRequest'
-  /v1/uploads/{upload_id}/cancel:
+  /uploads/{upload_id}/cancel:
     post:
       tags:
         - Uploads
@@ -1525,7 +1537,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/Upload'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/uploads/{upload_id}/complete:
+  /uploads/{upload_id}/complete:
     post:
       tags:
         - Uploads
@@ -1559,7 +1571,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CompleteUploadRequest'
-  /v1/uploads/{upload_id}/parts:
+  /uploads/{upload_id}/parts:
     post:
       tags:
         - Uploads
@@ -1591,7 +1603,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/AddUploadPartRequestMultiPart'
-  /v1/vector_stores:
+  /vector_stores:
     get:
       tags:
         - Vector Stores
@@ -1615,7 +1627,10 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            $ref: '#/components/schemas/ListOrder'
+            type: string
+            enum:
+              - asc
+              - desc
             default: desc
         - name: after
           in: query
@@ -1665,7 +1680,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateVectorStoreRequest'
-  /v1/vector_stores/{vector_store_id}:
+  /vector_stores/{vector_store_id}:
     get:
       tags:
         - Vector Stores
@@ -1735,7 +1750,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/DeleteVectorStoreResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/vector_stores/{vector_store_id}/file_batches:
+  /vector_stores/{vector_store_id}/file_batches:
     post:
       tags:
         - Vector Stores
@@ -1763,7 +1778,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateVectorStoreFileBatchRequest'
-  /v1/vector_stores/{vector_store_id}/file_batches/{batch_id}:
+  /vector_stores/{vector_store_id}/file_batches/{batch_id}:
     get:
       tags:
         - Vector Stores
@@ -1791,7 +1806,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/VectorStoreFileBatchObject'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel:
+  /vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel:
     post:
       tags:
         - Vector Stores
@@ -1819,7 +1834,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/VectorStoreFileBatchObject'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/vector_stores/{vector_store_id}/file_batches/{batch_id}/files:
+  /vector_stores/{vector_store_id}/file_batches/{batch_id}/files:
     get:
       tags:
         - Vector Stores
@@ -1855,7 +1870,10 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            $ref: '#/components/schemas/ListOrder'
+            type: string
+            enum:
+              - asc
+              - desc
             default: desc
         - name: after
           in: query
@@ -1890,7 +1908,7 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/ListVectorStoreFilesResponse'
                   - $ref: '#/components/schemas/ErrorResponse'
-  /v1/vector_stores/{vector_store_id}/files:
+  /vector_stores/{vector_store_id}/files:
     get:
       tags:
         - Vector Stores
@@ -1920,7 +1938,10 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            $ref: '#/components/schemas/ListOrder'
+            type: string
+            enum:
+              - asc
+              - desc
             default: desc
         - name: after
           in: query
@@ -1982,7 +2003,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateVectorStoreFileRequest'
-  /v1/vector_stores/{vector_store_id}/files/{file_id}:
+  /vector_stores/{vector_store_id}/files/{file_id}:
     get:
       tags:
         - Vector Stores
@@ -2879,8 +2900,7 @@ components:
               description: An unique identifier for the OpenAI API request. Please include this request ID when contacting support.
             body:
               type: object
-              additionalProperties:
-                type: string
+              additionalProperties: {}
               description: The JSON body of the response
               x-oaiTypeLabel: map
           nullable: true
@@ -6460,13 +6480,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Model'
-    ListOrder:
-      anyOf:
-        - type: string
-        - type: string
-          enum:
-            - asc
-            - desc
     ListPaginatedFineTuningJobsResponse:
       type: object
       required:
@@ -8261,8 +8274,7 @@ components:
           description: The type of tool call. This is always going to be `file_search` for this type of tool call.
         file_search:
           type: object
-          additionalProperties:
-            type: string
+          additionalProperties: {}
           description: For now, this is always going to be an empty object.
           x-oaiTypeLabel: map
       allOf:
@@ -8460,8 +8472,7 @@ components:
           description: The type of tool call. This is always going to be `file_search` for this type of tool call.
         file_search:
           type: object
-          additionalProperties:
-            type: string
+          additionalProperties: {}
           description: For now, this is always going to be an empty object.
           x-oaiTypeLabel: map
       allOf:
@@ -9411,6 +9422,6 @@ components:
       type: http
       scheme: bearer
 servers:
-  - url: https://api.openai.com
+  - url: https://api.openai.com/v1
     description: OpenAI Endpoint
     variables: {}

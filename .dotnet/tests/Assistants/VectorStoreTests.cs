@@ -92,13 +92,15 @@ public partial class VectorStoreTests : SyncAsyncTestBase
         Assert.That(deleted, Is.True);
         _vectorStoresToDelete.RemoveAt(_vectorStoresToDelete.Count - 1);
 
-        creationOptions = new VectorStoreCreationOptions()
+        creationOptions = new VectorStoreCreationOptions();
+        foreach (var file in testFiles)
         {
-            FileIds = testFiles.Select(file => file.Id).ToList()
-        };
+            creationOptions.FileIds.Add(file.Id);
+        }
         vectorStore = IsAsync
             ? await client.CreateVectorStoreAsync(creationOptions)
             : client.CreateVectorStore(creationOptions);
+
         Validate(vectorStore);
         Assert.Multiple(() =>
         {
@@ -126,7 +128,7 @@ public partial class VectorStoreTests : SyncAsyncTestBase
         int lastIdSeen = int.MaxValue;
         int count = 0;
 
-        foreach (VectorStore vectorStore in client.GetVectorStores(new VectorStoreCollectionOptions() { Order = ListOrder.NewestFirst }).GetAllValues())
+        foreach (VectorStore vectorStore in client.GetVectorStores(new VectorStoreCollectionOptions() { Order = VectorStoreCollectionOrder.Descending }).GetAllValues())
         {
             Assert.That(vectorStore.Id, Is.Not.Null);
             if (vectorStore.Name?.StartsWith("Test Vector Store ") == true)
@@ -165,7 +167,7 @@ public partial class VectorStoreTests : SyncAsyncTestBase
         int lastIdSeen = int.MaxValue;
         int count = 0;
 
-        await foreach (VectorStore vectorStore in client.GetVectorStoresAsync(new VectorStoreCollectionOptions() { Order = ListOrder.NewestFirst }).GetAllValuesAsync())
+        await foreach (VectorStore vectorStore in client.GetVectorStoresAsync(new VectorStoreCollectionOptions() { Order = VectorStoreCollectionOrder.Descending }).GetAllValuesAsync())
         {
             Assert.That(vectorStore.Id, Is.Not.Null);
             if (vectorStore.Name?.StartsWith("Test Vector Store ") == true)
@@ -454,12 +456,16 @@ public partial class VectorStoreTests : SyncAsyncTestBase
 
         VectorStoreCreationOptions creationOptions = new VectorStoreCreationOptions()
         {
-            FileIds = testFiles.Select(file => file.Id).ToList(),
             ChunkingStrategy = chunkingStrategy,
         };
+        foreach (var file in testFiles)
+        {
+            creationOptions.FileIds.Add(file.Id);
+        }
         VectorStore vectorStore = IsAsync
             ? await client.CreateVectorStoreAsync(creationOptions)
             : client.CreateVectorStore(creationOptions);
+
         Validate(vectorStore);
         Assert.That(vectorStore.FileCounts.Total, Is.EqualTo(5));
 

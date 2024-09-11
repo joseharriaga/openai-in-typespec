@@ -61,7 +61,7 @@ namespace OpenAI;
 [CodeGenSuppress("GetVectorStoreClientClient")]
 public partial class OpenAIClient
 {
-    private const string OpenAIV1Endpoint = "https://api.openai.com";
+    private const string OpenAIV1Endpoint = "https://api.openai.com/v1";
     private const string OpenAIBetaHeaderValue = "assistants=v2";
 
     private static class KnownHeaderNames
@@ -148,6 +148,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="BatchClient"/>. </returns>
+    [Experimental("OPENAI001")]
     public virtual BatchClient GetBatchClient() => new(_pipeline, _options);
 
     /// <summary>
@@ -192,6 +193,7 @@ public partial class OpenAIClient
     /// the same configuration details.
     /// </remarks>
     /// <returns> A new <see cref="FineTuningClient"/>. </returns>
+    [Experimental("OPENAI001")]
     public virtual FineTuningClient GetFineTuningClient() => new(_pipeline, _options);
 
     /// <summary>

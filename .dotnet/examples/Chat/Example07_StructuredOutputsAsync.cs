@@ -16,7 +16,7 @@ public partial class ChatExamples
         ChatCompletionOptions options = new()
         {
             ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
-                name: "math_reasoning",
+                jsonSchemaFormatName: "math_reasoning",
                 jsonSchema: BinaryData.FromString("""
                     {
                         "type": "object",
@@ -39,15 +39,15 @@ public partial class ChatExamples
                         "additionalProperties": false
                     }
                     """),
-            strictSchemaEnabled: true)
+                jsonSchemaIsStrict: true)
         };
 
         ChatCompletion chatCompletion = await client.CompleteChatAsync(
-            ["How can I solve 8x + 7 = -23?"],
+            [ new UserChatMessage("How can I solve 8x + 7 = -23?") ],
             options);
 
         using JsonDocument structuredJson = JsonDocument.Parse(chatCompletion.ToString());
-        
+
         Console.WriteLine($"Final answer: {structuredJson.RootElement.GetProperty("final_answer").GetString()}");
         Console.WriteLine("Reasoning steps:");
 

@@ -34,8 +34,8 @@ public partial class CombinationExamples
                 new SystemChatMessage("Assume the role of a cranky art critic. When asked to describe or "
                     + "evaluate imagery, focus on criticizing elements of subject, composition, and other details."),
                 new UserChatMessage(
-                    ChatMessageContentPart.CreateTextMessageContentPart("describe the following image in a few sentences"),
-                    ChatMessageContentPart.CreateImageMessageContentPart(imageGeneration.ImageUri)),
+                    ChatMessageContentPart.CreateTextPart("describe the following image in a few sentences"),
+                    ChatMessageContentPart.CreateImagePart(imageGeneration.ImageUri)),
             ],
             new ChatCompletionOptions()
             {
@@ -53,7 +53,7 @@ public partial class CombinationExamples
             GeneratedSpeechVoice.Fable,
             new SpeechGenerationOptions()
             {
-                Speed = 0.9f,
+                SpeedRatio = 0.9f,
                 ResponseFormat = GeneratedSpeechFormat.Opus,
             });
         FileInfo ttsFileInfo = new($"{chatCompletion.Id}.opus");
@@ -89,7 +89,7 @@ public partial class CombinationExamples
             GeneratedSpeechVoice.Onyx,
             new SpeechGenerationOptions()
             {
-                Speed = 1.1f,
+                SpeedRatio = 1.1f,
                 ResponseFormat = GeneratedSpeechFormat.Opus,
             });
         _ = Task.Run(async () =>
@@ -120,8 +120,8 @@ public partial class CombinationExamples
             [
                 new SystemChatMessage("Assume the role of an art critic. Although usually cranky and occasionally even referred to as a 'curmudgeon', you're somehow entirely smitten with the subject presented to you and, despite your best efforts, can't help but lavish praise when you're asked to appraise a provided image."),
                 new UserChatMessage(
-                    ChatMessageContentPart.CreateTextMessageContentPart("Evaluate this image for me. What is it, and what do you think of it?"),
-                    ChatMessageContentPart.CreateImageMessageContentPart(imageLocation)),
+                    ChatMessageContentPart.CreateTextPart("Evaluate this image for me. What is it, and what do you think of it?"),
+                    ChatMessageContentPart.CreateImagePart(imageLocation)),
             ],
             new ChatCompletionOptions()
             {
@@ -136,7 +136,7 @@ public partial class CombinationExamples
             GeneratedSpeechVoice.Fable,
             new SpeechGenerationOptions()
             {
-                Speed = 0.9f,
+                SpeedRatio = 0.9f,
                 ResponseFormat = GeneratedSpeechFormat.Opus,
             });
         FileInfo criticAudioFileInfo = new($"{criticalAppraisalResult.Value.Id}-appraisal.opus");

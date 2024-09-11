@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Assistants;
 
 /// <summary>
 /// Represents additional options available when modifying an existing <see cref="Assistant"/>.
 /// </summary>
+[Experimental("OPENAI001")]
 [CodeGenModel("ModifyAssistantRequest")]
 public partial class AssistantModificationOptions
 {
@@ -20,7 +22,7 @@ public partial class AssistantModificationOptions
     /// There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
     /// </summary>
     [CodeGenMember("Tools")]
-    public IList<ToolDefinition> DefaultTools { get; set; } = new ChangeTrackingList<ToolDefinition>();
+    public IList<ToolDefinition> DefaultTools { get; } = new ChangeTrackingList<ToolDefinition>();
 
     // CUSTOM: reuse common request/response models for tool resources. Note that modification operations use the
     //          response models (which do not contain resource initialization helpers).

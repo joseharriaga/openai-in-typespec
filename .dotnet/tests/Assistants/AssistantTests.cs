@@ -270,7 +270,7 @@ public partial class AssistantTests : SyncAsyncTestBase
             ? await client.CreateThreadAsync(options)
             : client.CreateThread(options);
         Validate(thread);
-        MessageCollectionOptions collectionOptions = new MessageCollectionOptions() { Order = ListOrder.OldestFirst };
+        MessageCollectionOptions collectionOptions = new MessageCollectionOptions() { Order = MessageCollectionOrder.Ascending };
         PageResult<ThreadMessage> messagesPage = IsAsync
             ? await client.GetMessagesAsync(thread, collectionOptions).GetCurrentPageAsync()
             : client.GetMessages(thread, collectionOptions).GetCurrentPage();
@@ -535,7 +535,7 @@ public partial class AssistantTests : SyncAsyncTestBase
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        PageCollection<ThreadMessage> messagePages = client.GetMessages(run.ThreadId, new MessageCollectionOptions() { Order = ListOrder.NewestFirst });
+        PageCollection<ThreadMessage> messagePages = client.GetMessages(run.ThreadId, new MessageCollectionOptions() { Order = MessageCollectionOrder.Descending });
         PageResult<ThreadMessage> firstPage = messagePages.GetCurrentPage();
         Assert.That(firstPage.Values.Count, Is.GreaterThan(1));
         Assert.That(firstPage.Values[0].Role, Is.EqualTo(MessageRole.Assistant));
@@ -880,7 +880,7 @@ public partial class AssistantTests : SyncAsyncTestBase
         } while (run?.Status.IsTerminal == false);
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        IEnumerable<ThreadMessage> messages = client.GetMessages(thread, new() { Order = ListOrder.NewestFirst }).GetAllValues();
+        IEnumerable<ThreadMessage> messages = client.GetMessages(thread, new() { Order = MessageCollectionOrder.Descending }).GetAllValues();
         int messageCount = 0;
         bool hasCake = false;
         foreach (ThreadMessage message in messages)
@@ -905,6 +905,68 @@ public partial class AssistantTests : SyncAsyncTestBase
         Assert.That(hasCake, Is.True);
     }
 
+    // TODO: check if test supports sync/async.
+    [Test]
+    public async Task BasicFileSearchStreamingWorks()
+    {
+        const string fileContent = """
+                The favorite food of several people:
+                - Summanus Ferdinand: tacos
+                - Tekakwitha Effie: pizza
+                - Filip Carola: cake
+                """;
+
+        const string fileName = "favorite_foods.txt";
+
+        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
+        AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);
+
+        // First, upload a simple test file.
+        OpenAIFileInfo testFile = fileClient.UploadFile(BinaryData.FromString(fileContent), fileName, FileUploadPurpose.Assistants);
+        Validate(testFile);
+
+        // Create an assistant, using the creation helper to make a new vector store.
+        AssistantCreationOptions assistantCreationOptions = new()
+        {
+            Tools = { new FileSearchToolDefinition() },
+            ToolResources = new()
+            {
+                FileSearch = new()
+                {
+                    NewVectorStores = { new VectorStoreCreationHelper([testFile.Id]) }
+                }
+            }
+        };
+        Assistant assistant = client.CreateAssistant("gpt-4o-mini", assistantCreationOptions);
+        Validate(assistant);
+
+        Assert.That(assistant.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        string vectorStoreId = assistant.ToolResources.FileSearch.VectorStoreIds[0];
+        _vectorStoreIdsToDelete.Add(vectorStoreId);
+
+        // Create a thread.
+        ThreadCreationOptions threadCreationOptions = new()
+        {
+            InitialMessages = { "Using the files you have available, what's Filip's favorite food?" }
+        };
+        AssistantThread thread = client.CreateThread(threadCreationOptions);
+        Validate(thread);
+
+        // Create run and stream the results.
+        AsyncCollectionResult<StreamingUpdate> streamingResult = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+        string message = string.Empty;
+
+        await foreach (StreamingUpdate update in streamingResult)
+        {
+            if (update is MessageContentUpdate contentUpdate)
+            {
+                message += $"{contentUpdate.Text}";
+            }
+        }
+
+        Assert.That(message, Does.Contain("cake"));
+    }
+
     [Test]
     public async Task Pagination_CanEnumerateAssistantsAsync()
     {
@@ -925,7 +987,7 @@ public partial class AssistantTests : SyncAsyncTestBase
 
         // Page through collection
         int count = 0;
-        IAsyncEnumerable<Assistant> assistants = client.GetAssistantsAsync(new AssistantCollectionOptions() { Order = ListOrder.NewestFirst }).GetAllValuesAsync();
+        IAsyncEnumerable<Assistant> assistants = client.GetAssistantsAsync(new AssistantCollectionOptions() { Order = AssistantCollectionOrder.Descending }).GetAllValuesAsync();
 
         int lastIdSeen = int.MaxValue;
 
@@ -968,7 +1030,7 @@ public partial class AssistantTests : SyncAsyncTestBase
 
         // Page through collection
         int count = 0;
-        IEnumerable<Assistant> assistants = client.GetAssistants(new AssistantCollectionOptions() { Order = ListOrder.NewestFirst }).GetAllValues();
+        IEnumerable<Assistant> assistants = client.GetAssistants(new AssistantCollectionOptions() { Order = AssistantCollectionOrder.Descending }).GetAllValues();
 
         int lastIdSeen = int.MaxValue;
 
@@ -1015,8 +1077,8 @@ public partial class AssistantTests : SyncAsyncTestBase
         AsyncPageCollection<Assistant> pages = client.GetAssistantsAsync(
             new AssistantCollectionOptions()
             {
-                Order = ListOrder.NewestFirst,
-                PageSize = 2
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
             });
 
         int lastIdSeen = int.MaxValue;
@@ -1070,8 +1132,8 @@ public partial class AssistantTests : SyncAsyncTestBase
         PageCollection<Assistant> pages = client.GetAssistants(
             new AssistantCollectionOptions()
             {
-                Order = ListOrder.NewestFirst,
-                PageSize = 2
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
             });
 
         int lastIdSeen = int.MaxValue;
@@ -1122,8 +1184,8 @@ public partial class AssistantTests : SyncAsyncTestBase
         AsyncPageCollection<Assistant> pages = client.GetAssistantsAsync(
             new AssistantCollectionOptions()
             {
-                Order = ListOrder.NewestFirst,
-                PageSize = 2
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
             });
 
         // Simulate rehydration of the collection
@@ -1182,8 +1244,8 @@ public partial class AssistantTests : SyncAsyncTestBase
         PageCollection<Assistant> pages = client.GetAssistants(
             new AssistantCollectionOptions()
             {
-                Order = ListOrder.NewestFirst,
-                PageSize = 2
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
             });
 
         // Simulate rehydration of the collection
@@ -1242,8 +1304,8 @@ public partial class AssistantTests : SyncAsyncTestBase
         AsyncPageCollection<Assistant> pages = client.GetAssistantsAsync(
             new AssistantCollectionOptions()
             {
-                Order = ListOrder.NewestFirst,
-                PageSize = 2
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
             });
 
         // Call the rehydration method, passing a typed OpenAIPageToken
@@ -1300,8 +1362,8 @@ public partial class AssistantTests : SyncAsyncTestBase
         PageCollection<Assistant> pages = client.GetAssistants(
             new AssistantCollectionOptions()
             {
-                Order = ListOrder.NewestFirst,
-                PageSize = 2
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
             });
 
         // Call the rehydration method, passing a typed OpenAIPageToken

@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-@route("/v1/images")
+@route("/images")
 interface Images {
   @route("generations")
   @post

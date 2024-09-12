@@ -2152,14 +2152,14 @@ namespace OpenAI.Moderations {
         public ModerationClient(string model, ApiKeyCredential credential, OpenAIClientOptions options);
         public ModerationClient(string model, ApiKeyCredential credential);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<ModerationResult> ClassifyTextInput(string input, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<ModerationResult>> ClassifyTextInputAsync(string input, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult ClassifyTextInputs(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<ModerationCollection> ClassifyTextInputs(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
+        public virtual ClientResult ClassifyText(BinaryContent content, RequestOptions options = null);
+        public virtual ClientResult<ModerationCollection> ClassifyText(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ModerationResult> ClassifyText(string input, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> ClassifyTextInputsAsync(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<ModerationCollection>> ClassifyTextInputsAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult> ClassifyTextAsync(BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult<ModerationCollection>> ClassifyTextAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ModerationResult>> ClassifyTextAsync(string input, CancellationToken cancellationToken = default);
     }
     public class ModerationCollection : ObjectModel.ReadOnlyCollection<ModerationResult>, IJsonModel<ModerationCollection>, IPersistableModel<ModerationCollection> {
         public string Id { get; }

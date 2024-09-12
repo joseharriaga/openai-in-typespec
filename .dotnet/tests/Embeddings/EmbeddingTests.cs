@@ -37,10 +37,12 @@ public partial class EmbeddingTests : SyncAsyncTestBase
             : client.GenerateEmbedding(input);
         Assert.That(embedding, Is.Not.Null);
         Assert.That(embedding.Index, Is.EqualTo(0));
-        Assert.That(embedding.Vector, Is.Not.Null);
-        Assert.That(embedding.Vector.Span.Length, Is.EqualTo(1536));
 
-        float[] array = embedding.Vector.ToArray();
+        ReadOnlyMemory<float> vector = embedding.GetAsFloat();
+        Assert.That(vector, Is.Not.Null);
+        Assert.That(vector.Span.Length, Is.EqualTo(1536));
+
+        float[] array = vector.ToArray();
         Assert.That(array.Length, Is.EqualTo(1536));
     }
 
@@ -96,10 +98,12 @@ public partial class EmbeddingTests : SyncAsyncTestBase
         for (int i = 0; i < embeddings.Count; i++)
         {
             Assert.That(embeddings[i].Index, Is.EqualTo(i));
-            Assert.That(embeddings[i].Vector, Is.Not.Null);
-            Assert.That(embeddings[i].Vector.Span.Length, Is.EqualTo(Dimensions));
 
-            float[] array = embeddings[i].Vector.ToArray();
+            ReadOnlyMemory<float> vector = embeddings[i].GetAsFloat();
+            Assert.That(vector, Is.Not.Null);
+            Assert.That(vector.Span.Length, Is.EqualTo(Dimensions));
+
+            float[] array = vector.ToArray();
             Assert.That(array.Length, Is.EqualTo(Dimensions));
         }
     }

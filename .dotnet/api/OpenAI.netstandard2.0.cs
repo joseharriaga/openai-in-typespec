@@ -1652,7 +1652,7 @@ namespace OpenAI.Chat {
 namespace OpenAI.Embeddings {
     public class Embedding : IJsonModel<Embedding>, IPersistableModel<Embedding> {
         public int Index { get; }
-        public ReadOnlyMemory<float> Vector { get; }
+        public ReadOnlyMemory<float> GetAsFloat();
         Embedding IJsonModel<Embedding>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<Embedding>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         Embedding IPersistableModel<Embedding>.Create(BinaryData data, ModelReaderWriterOptions options);

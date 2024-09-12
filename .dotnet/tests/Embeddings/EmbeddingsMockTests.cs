@@ -45,7 +45,7 @@ public partial class EmbeddingsMockTests : SyncAsyncTestBase
             ? await client.GenerateEmbeddingAsync("prompt")
             : client.GenerateEmbedding("prompt");
 
-        float[] vector = embedding.Vector.ToArray();
+        float[] vector = embedding.GetAsFloat().ToArray();
         Assert.That(vector.SequenceEqual([1f, 2f, 3f]));
     }
 
@@ -114,7 +114,7 @@ public partial class EmbeddingsMockTests : SyncAsyncTestBase
             : client.GenerateEmbeddings(["prompt"]);
         Embedding embedding = embeddings.Single();
 
-        float[] vector = embedding.Vector.ToArray();
+        float[] vector = embedding.GetAsFloat().ToArray();
         Assert.That(vector.SequenceEqual([1f, 2f, 3f]));
     }
 
@@ -183,7 +183,7 @@ public partial class EmbeddingsMockTests : SyncAsyncTestBase
             : client.GenerateEmbeddings([[1]]);
         Embedding embedding = embeddings.Single();
 
-        float[] vector = embedding.Vector.ToArray();
+        float[] vector = embedding.GetAsFloat().ToArray();
         Assert.That(vector.SequenceEqual([1f, 2f, 3f]));
     }
 

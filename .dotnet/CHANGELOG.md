@@ -14,7 +14,7 @@
 - Removed the common `ListOrder` enum from the top-level `OpenAI` namespace in favor of individual enums in their corresponding sub-namespace. (commit_hash)
 - Renamed the `PageSize` property to `PageSizeLimit`. (commit_hash)
 - Removed setter from collection properties. (commit_hash)
-- Updated the `Embedding.Vector` property to the `Embedding.GetAsFloat()` method. (commit_hash)
+- Updated the `Embedding.Vector` property to the `Embedding.ToFloats()` method. (commit_hash)
 
 ### Bugs Fixed
 

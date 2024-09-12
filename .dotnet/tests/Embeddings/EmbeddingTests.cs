@@ -38,7 +38,7 @@ public partial class EmbeddingTests : SyncAsyncTestBase
         Assert.That(embedding, Is.Not.Null);
         Assert.That(embedding.Index, Is.EqualTo(0));
 
-        ReadOnlyMemory<float> vector = embedding.GetAsFloat();
+        ReadOnlyMemory<float> vector = embedding.ToFloats();
         Assert.That(vector, Is.Not.Null);
         Assert.That(vector.Span.Length, Is.EqualTo(1536));
 
@@ -99,7 +99,7 @@ public partial class EmbeddingTests : SyncAsyncTestBase
         {
             Assert.That(embeddings[i].Index, Is.EqualTo(i));
 
-            ReadOnlyMemory<float> vector = embeddings[i].GetAsFloat();
+            ReadOnlyMemory<float> vector = embeddings[i].ToFloats();
             Assert.That(vector, Is.Not.Null);
             Assert.That(vector.Span.Length, Is.EqualTo(Dimensions));
 

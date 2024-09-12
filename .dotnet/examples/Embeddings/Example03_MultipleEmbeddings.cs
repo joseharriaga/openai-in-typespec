@@ -22,7 +22,7 @@ public partial class EmbeddingExamples
 
         foreach (Embedding embedding in collection)
         {
-            ReadOnlyMemory<float> vector = embedding.GetAsFloat();
+            ReadOnlyMemory<float> vector = embedding.ToFloats();
 
             Console.WriteLine($"Dimension: {vector.Length}");
             Console.WriteLine($"Floats: ");

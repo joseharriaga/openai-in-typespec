@@ -101,7 +101,7 @@ public partial class Embedding
     /// Gets the embedding vector as a list of floats.
     /// </summary>
     /// <returns>A read-only memory segment of floats representing the embedding vector.</returns>
-    public ReadOnlyMemory<float> GetAsFloat() => _vector;
+    public ReadOnlyMemory<float> ToFloats() => _vector;
 
     // CUSTOM: Implemented custom logic to transform from BinaryData to ReadOnlyMemory<float>.
     private static ReadOnlyMemory<float> ConvertToVectorOfFloats(BinaryData binaryData)

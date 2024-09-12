@@ -103,8 +103,6 @@ public partial class Embedding
     /// <returns>A read-only memory segment of floats representing the embedding vector.</returns>
     public ReadOnlyMemory<float> GetAsFloat() => _vector;
 
-
-
     // CUSTOM: Implemented custom logic to transform from BinaryData to ReadOnlyMemory<float>.
     private static ReadOnlyMemory<float> ConvertToVectorOfFloats(BinaryData binaryData)
     {

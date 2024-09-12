@@ -22,9 +22,9 @@ internal class MultipartFormDataBinaryContent : BinaryContent
 
     public string ContentType => _multipartContent.Headers.ContentType.ToString();
 
-    public void Add(byte[] stream, string name, string fileName, string contentType = null)
+    public void Add(byte[] bytes, string name, string fileName, string contentType = null)
     {
-        ByteArrayContent content = new(stream);
+        ByteArrayContent content = new(bytes);
         if (contentType is not null)
         {
             content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);

@@ -37,14 +37,14 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
     {
         VectorStoreClient client = GetTestClient();
 
-        VectorStore vectorStore = await client.CreateVectorStoreAsync();
-        Validate(vectorStore);
-        bool deleted = await client.DeleteVectorStoreAsync(vectorStore);
+        CreateVectorStoreOperation createVectorStoreOperation = await client.CreateVectorStoreAsync(false);
+        Validate(createVectorStoreOperation);
+        bool deleted = await client.DeleteVectorStoreAsync(createVectorStoreOperation.GetVectorStore());
         Assert.That(deleted, Is.True);
 
         IReadOnlyList<OpenAIFileInfo> testFiles = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 5);
 
-        vectorStore = await client.CreateVectorStoreAsync(new VectorStoreCreationOptions()
+        createVectorStoreOperation = await client.CreateVectorStoreAsync(false, new VectorStoreCreationOptions()
         {
             FileIds = { testFiles[0].Id },
             Name = "test vector store",
@@ -58,7 +58,8 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
                 ["test-key"] = "test-value",
             },
         });
-        Validate(vectorStore);
+        Validate(createVectorStoreOperation);
+        VectorStore vectorStore = createVectorStoreOperation.GetVectorStore();
         Assert.Multiple(() =>
         {
             Assert.That(vectorStore.Name, Is.EqualTo("test vector store"));
@@ -70,7 +71,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             Assert.That(vectorStore.Status, Is.EqualTo(VectorStoreStatus.InProgress));
             Assert.That(vectorStore.Metadata?.TryGetValue("test-key", out string metadataValue) == true && metadataValue == "test-value");
         });
-        vectorStore = await client.GetVectorStoreAsync(vectorStore);
+        vectorStore = createVectorStoreOperation.GetVectorStore();
         Assert.Multiple(() =>
         {
             Assert.That(vectorStore.Name, Is.EqualTo("test vector store"));
@@ -85,10 +86,12 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         deleted = await client.DeleteVectorStoreAsync(vectorStore.Id);
         Assert.That(deleted, Is.True);
 
-        vectorStore = await client.CreateVectorStoreAsync(new VectorStoreCreationOptions()
+        createVectorStoreOperation = await client.CreateVectorStoreAsync(false, new VectorStoreCreationOptions()
         {
             FileIds = testFiles.Select(file => file.Id).ToList()
         });
+
+        vectorStore = createVectorStoreOperation.GetVectorStore();
         Validate(vectorStore);
         Assert.Multiple(() =>
         {
@@ -103,10 +106,13 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         VectorStoreClient client = GetTestClient();
         for (int i = 0; i < 10; i++)
         {
-            VectorStore vectorStore = await client.CreateVectorStoreAsync(new VectorStoreCreationOptions()
+            CreateVectorStoreOperation createVectorStoreOperation = await client.CreateVectorStoreAsync(
+                false,
+                new VectorStoreCreationOptions()
             {
                 Name = $"Test Vector Store {i}",
             });
+            VectorStore vectorStore = createVectorStoreOperation.GetVectorStore();
             Validate(vectorStore);
             Assert.That(vectorStore.Name, Is.EqualTo($"Test Vector Store {i}"));
         }
@@ -140,14 +146,16 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
     public async Task CanAssociateFiles()
     {
         VectorStoreClient client = GetTestClient();
-        VectorStore vectorStore = await client.CreateVectorStoreAsync();
+        CreateVectorStoreOperation createVectorStoreOperation = await client.CreateVectorStoreAsync(false);
+        VectorStore vectorStore = createVectorStoreOperation.GetVectorStore();
         Validate(vectorStore);
 
         IReadOnlyList<OpenAIFileInfo> files = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 3);
 
         foreach (OpenAIFileInfo file in files)
         {
-            VectorStoreFileAssociation association = await client.AddFileToVectorStoreAsync(vectorStore, file);
+            AddFileToVectorStoreOperation addFileToVectorStoreOperation = await client.AddFileToVectorStoreAsync(vectorStore, file, false);
+            VectorStoreFileAssociation association = addFileToVectorStoreOperation.GetFileAssociation();
             Validate(association);
             Assert.Multiple(() =>
             {
@@ -181,12 +189,14 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
     public async Task CanUseBatchIngestion()
     {
         VectorStoreClient client = GetTestClient();
-        VectorStore vectorStore = await client.CreateVectorStoreAsync();
+        CreateVectorStoreOperation createVectorStoreOperation = await client.CreateVectorStoreAsync(false);
+        VectorStore vectorStore = createVectorStoreOperation.GetVectorStore();
         Validate(vectorStore);
 
         IReadOnlyList<OpenAIFileInfo> testFiles = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 3);
 
-        VectorStoreBatchFileJob batchJob = await client.CreateBatchFileJobAsync(vectorStore, testFiles);
+        CreateBatchFileJobOperation createBatchFileJobOperation = await client.CreateBatchFileJobAsync(vectorStore, testFiles, false);
+        VectorStoreBatchFileJob batchJob = createBatchFileJobOperation.GetFileBatch();
         Assert.Multiple(() =>
         {
             Assert.That(batchJob.BatchId, Is.Not.Null);
@@ -194,13 +204,11 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             Assert.That(batchJob.Status, Is.EqualTo(VectorStoreBatchFileJobStatus.InProgress));
         });
 
-        batchJob = await WaitUntilReturnLast(
-            batchJob,
-            () => client.GetBatchFileJobAsync(batchJob),
-            b => b.Status != VectorStoreBatchFileJobStatus.InProgress);
+        createBatchFileJobOperation.WaitForCompletion();
+        batchJob = createBatchFileJobOperation.GetFileBatch();
         Assert.That(batchJob.Status, Is.EqualTo(VectorStoreBatchFileJobStatus.Completed));
 
-        AsyncPageCollection<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(batchJob);
+        AsyncPageCollection<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(vectorStore);
         await foreach (VectorStoreFileAssociation association in response.GetAllValuesAsync())
         {
             Assert.Multiple(() =>

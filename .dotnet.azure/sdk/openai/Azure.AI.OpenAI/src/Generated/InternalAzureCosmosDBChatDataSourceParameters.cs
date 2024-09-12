@@ -53,7 +53,7 @@ namespace Azure.AI.OpenAI.Chat
         /// </param>
         /// <param name="fieldMappings"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="containerName"/>, <paramref name="databaseName"/>, <paramref name="vectorizationSource"/>, <paramref name="indexName"/>, <paramref name="authentication"/> or <paramref name="fieldMappings"/> is null. </exception>
-        internal InternalAzureCosmosDBChatDataSourceParameters(string containerName, string databaseName, DataSourceVectorizer vectorizationSource, string indexName, DataSourceAuthentication authentication, DataSourceFieldMappings fieldMappings)
+        public InternalAzureCosmosDBChatDataSourceParameters(string containerName, string databaseName, DataSourceVectorizer vectorizationSource, string indexName, DataSourceAuthentication authentication, DataSourceFieldMappings fieldMappings)
         {
             Argument.AssertNotNull(containerName, nameof(containerName));
             Argument.AssertNotNull(databaseName, nameof(databaseName));
@@ -124,24 +124,24 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> The configured number of documents to feature in the query. </summary>
-        internal int? TopNDocuments { get; set; }
+        public int? TopNDocuments { get; set; }
         /// <summary> Whether queries should be restricted to use of the indexed data. </summary>
-        internal bool? InScope { get; set; }
+        public bool? InScope { get; set; }
         /// <summary>
         /// The configured strictness of the search relevance filtering.
         /// Higher strictness will increase precision but lower recall of the answer.
         /// </summary>
-        internal int? Strictness { get; set; }
+        public int? Strictness { get; set; }
         /// <summary>
         /// The maximum number of rewritten queries that should be sent to the search provider for a single user message.
         /// By default, the system will make an automatic determination.
         /// </summary>
-        internal int? MaxSearchQueries { get; set; }
+        public int? MaxSearchQueries { get; set; }
         /// <summary>
         /// If set to true, the system will allow partial search results to be used and the request will fail if all
         /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
         /// </summary>
-        internal bool? AllowPartialResult { get; set; }
+        public bool? AllowPartialResult { get; set; }
         /// <summary> Gets the container name. </summary>
         internal string ContainerName { get; set; }
         /// <summary> Gets the database name. </summary>

@@ -66,6 +66,7 @@ public partial class ChatCompletion
     public IReadOnlyList<ChatToolCall> ToolCalls => Choices[0].Message.ToolCalls;
 
     // CUSTOM: Flattened choice message property.
+    [Obsolete($"This property is obsolete. Please use {nameof(ToolCalls)} instead.")]
     public ChatFunctionCall FunctionCall => Choices[0].Message.FunctionCall;
 
     // CUSTOM: Flattened choice message property.

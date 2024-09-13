@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -97,9 +98,7 @@ public partial class ChatCompletionOptions
     // CUSTOM:
     // - Renamed.
     // - Changed type to avoid BinaryData.
-    /// <summary>
-    /// Deprecated in favor of <see cref="ToolChoice"/>.
-    /// </summary>
+    [Obsolete($"This property is obsolete. Please use {nameof(ToolChoice)} instead.")]
     [CodeGenMember("FunctionCall")]
     public ChatFunctionChoice FunctionChoice { get; set; }
 
@@ -138,10 +137,14 @@ public partial class ChatCompletionOptions
     [CodeGenMember("User")]
     public string EndUserId { get; set; }
 
-    // CUSTOM: Added the Experimental attribute
+    // CUSTOM: Added the Experimental attribute.
     /// <summary>
     /// If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same seed and parameters should return the same result.
     /// </summary>
     [Experimental("OPENAI001")]
     public long? Seed { get; set; }
+
+    // CUSTOM: Added the Obsolete attribute.
+    [Obsolete($"This property is obsolete. Please use {nameof(Tools)} instead.")]
+    public IList<ChatFunction> Functions { get; }
 }

@@ -9,57 +9,91 @@ namespace OpenAI;
 
 internal class PageCollectionHelpers
 {
-    public static PageCollection<T> Create<T>(PageEnumerator<T> enumerator)
-        => new EnumeratorPageCollection<T>(enumerator);
+    //public static AsyncCollectionResult<T> CreateAsync<T>(PageEnumerator<T> enumerator)
+    //    => new AsyncPaginatedCollectionResult<T>(enumerator);
 
-    public static AsyncPageCollection<T> CreateAsync<T>(PageEnumerator<T> enumerator)
-        => new AsyncEnumeratorPageCollection<T>(enumerator);
+    public static CollectionResult<T> Create<T>(PageEnumerator<T> enumerator)
+        => new PaginatedCollectionResult<T>(enumerator);
 
-    public static IEnumerable<ClientResult> Create(PageResultEnumerator enumerator)
+    //public static AsyncCollectionResult CreateAsync(PageEnumerator enumerator)
+    //    => new AsyncPaginatedCollectionResult(enumerator);
+
+    public static CollectionResult Create(PageEnumerator enumerator)
+        => new PaginatedCollectionResult(enumerator);
+
+    private class PaginatedCollectionResult<T> : CollectionResult<T>
     {
-        while (enumerator.MoveNext())
+        private readonly PageEnumerator<T> _pageEnumerator;
+
+        public PaginatedCollectionResult(PageEnumerator<T> pageEnumerator)
         {
-            yield return enumerator.Current;
+            _pageEnumerator = pageEnumerator;
+        }
+
+        public override ContinuationToken? ContinuationToken
+        {
+            get => throw new NotImplementedException();
+            protected set => throw new NotImplementedException();
+        }
+
+        public override IEnumerable<BinaryData> AsRawValues()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerator<T> GetEnumerator()
+        {
+            while (_pageEnumerator.MoveNext())
+            {
+                IEnumerable<T> page = _pageEnumerator.GetCurrentPage();
+                foreach (T value in page)
+                {
+                    yield return value;
+                }
+            }
         }
     }
 
-    public static async IAsyncEnumerable<ClientResult> CreateAsync(PageResultEnumerator enumerator)
+    private class PaginatedCollectionResult : CollectionResult
     {
-        while (await enumerator.MoveNextAsync().ConfigureAwait(false))
-        {
-            yield return enumerator.Current;
-        }
-    }
+        private readonly PageEnumerator _pageEnumerator;
 
-    private class EnumeratorPageCollection<T> : PageCollection<T>
-    {
-        private readonly PageEnumerator<T> _enumerator;
-
-        public EnumeratorPageCollection(PageEnumerator<T> enumerator)
+        public PaginatedCollectionResult(PageEnumerator pageEnumerator)
         {
-            _enumerator = enumerator;
+            _pageEnumerator = pageEnumerator;
         }
 
-        protected override PageResult<T> GetCurrentPageCore()
-            => _enumerator.GetCurrentPage();
-
-        protected override IEnumerator<PageResult<T>> GetEnumeratorCore()
-            => _enumerator;
-    }
-
-    private class AsyncEnumeratorPageCollection<T> : AsyncPageCollection<T>
-    {
-        private readonly PageEnumerator<T> _enumerator;
-
-        public AsyncEnumeratorPageCollection(PageEnumerator<T> enumerator)
+        public override ContinuationToken? ContinuationToken
         {
-            _enumerator = enumerator;
+            get => throw new NotImplementedException();
+            protected set => throw new NotImplementedException();
         }
 
-        protected override async Task<PageResult<T>> GetCurrentPageAsyncCore()
-            => await _enumerator.GetCurrentPageAsync().ConfigureAwait(false);
+        public override IEnumerable<BinaryData> AsRawValues()
+        {
+            while (_pageEnumerator.MoveNext())
+            {
+                ClientResult page = _pageEnumerator.Current;
+                foreach (BinaryData rawValue in GetValuesFromPage(page))
+                {
+                    yield return rawValue;
+                }
+            }
+        }
 
-        protected override IAsyncEnumerator<PageResult<T>> GetAsyncEnumeratorCore(CancellationToken cancellationToken = default)
-            => _enumerator;
+        // TODO: This has to be custom to the service schema
+        private IEnumerable<BinaryData> GetValuesFromPage(ClientResult page)
+        {
+            PipelineResponse response = page.GetRawResponse();
+
+            using JsonDocument doc = JsonDocument.Parse(response.Content);
+
+            IEnumerable<JsonElement> els = doc.RootElement.EnumerateArray();
+            foreach (JsonElement el in els)
+            {
+                // TODO: fix perf
+                yield return BinaryData.FromString(el.ToString());
+            }
+        }
     }
 }

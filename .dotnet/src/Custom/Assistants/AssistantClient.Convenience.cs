@@ -133,7 +133,7 @@ public partial class AssistantClient
     /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
     /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
     /// <returns> A collection of pages of <see cref="ThreadMessage"/>. </returns>
-    public virtual AsyncPageCollection<ThreadMessage> GetMessagesAsync(
+    public virtual AsyncCollectionResult<ThreadMessage> GetMessagesAsync(
         AssistantThread thread,
         MessageCollectionOptions options = default)
     {

@@ -53,7 +53,7 @@ public partial class BatchClient
     public virtual IAsyncEnumerable<ClientResult> GetBatchesAsync(string after, int? limit, RequestOptions options)
     {
         BatchesPageEnumerator enumerator = new BatchesPageEnumerator(_pipeline, _endpoint, after, limit, options);
-        return PageCollectionHelpers.CreateAsync(enumerator);
+        return CollectionResultHelpers.CreateAsync(enumerator);
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ public partial class BatchClient
     public virtual IEnumerable<ClientResult> GetBatches(string after, int? limit, RequestOptions options)
     {
         BatchesPageEnumerator enumerator = new BatchesPageEnumerator(_pipeline, _endpoint, after, limit, options);
-        return PageCollectionHelpers.Create(enumerator);
+        return CollectionResultHelpers.Create(enumerator);
     }
 
     /// <summary>

@@ -68,10 +68,10 @@ public partial class AssistantClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IAsyncEnumerable<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
+    public virtual AsyncCollectionResult GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
     {
         AssistantsPageEnumerator enumerator = new(_pipeline, _endpoint, limit, order, after, before, options);
-        return PageCollectionHelpers.CreateAsync(enumerator);
+        return CollectionResultHelpers.CreateAsync(enumerator);
     }
 
     /// <summary>
@@ -99,10 +99,10 @@ public partial class AssistantClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IEnumerable<ClientResult> GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
+    public virtual CollectionResult GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
     {
         AssistantsPageEnumerator enumerator = new(_pipeline, _endpoint, limit, order, after, before, options);
-        return PageCollectionHelpers.Create(enumerator);
+        return CollectionResultHelpers.Create(enumerator);
     }
 
     /// <summary>
@@ -255,12 +255,12 @@ public partial class AssistantClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IAsyncEnumerable<ClientResult> GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+    public virtual AsyncCollectionResult GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
         MessagesPageEnumerator enumerator = new(_pipeline, _endpoint, threadId, limit, order, after, before, options);
-        return PageCollectionHelpers.CreateAsync(enumerator);
+        return CollectionResultHelpers.CreateAsync(enumerator);
     }
 
     /// <summary>
@@ -291,12 +291,12 @@ public partial class AssistantClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IEnumerable<ClientResult> GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+    public virtual CollectionResult GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
         MessagesPageEnumerator enumerator = new(_pipeline, _endpoint, threadId, limit, order, after, before, options);
-        return PageCollectionHelpers.Create(enumerator);
+        return CollectionResultHelpers.Create(enumerator);
     }
 
     /// <inheritdoc cref="InternalAssistantMessageClient.GetMessageAsync"/>
@@ -377,12 +377,12 @@ public partial class AssistantClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IAsyncEnumerable<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+    public virtual AsyncCollectionResult GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
         RunsPageEnumerator enumerator = new(_pipeline, _endpoint, threadId, limit, order, after, before, options);
-        return PageCollectionHelpers.CreateAsync(enumerator);
+        return CollectionResultHelpers.CreateAsync(enumerator);
     }
 
     /// <summary>
@@ -413,12 +413,12 @@ public partial class AssistantClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IEnumerable<ClientResult> GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+    public virtual CollectionResult GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
         RunsPageEnumerator enumerator = new(_pipeline, _endpoint, threadId, limit, order, after, before, options);
-        return PageCollectionHelpers.Create(enumerator);
+        return CollectionResultHelpers.Create(enumerator);
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRunAsync"/>
@@ -490,13 +490,13 @@ public partial class AssistantClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IAsyncEnumerable<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
+    public virtual AsyncCollectionResult GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
         RunStepsPageEnumerator enumerator = new(_pipeline, _endpoint, threadId, runId, limit, order, after, before, options);
-        return PageCollectionHelpers.CreateAsync(enumerator);
+        return CollectionResultHelpers.CreateAsync(enumerator);
     }
 
     /// <summary>
@@ -528,13 +528,13 @@ public partial class AssistantClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IEnumerable<ClientResult> GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
+    public virtual CollectionResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
         RunStepsPageEnumerator enumerator = new(_pipeline, _endpoint, threadId, runId, limit, order, after, before, options);
-        return PageCollectionHelpers.Create(enumerator);
+        return CollectionResultHelpers.Create(enumerator);
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRunStepAsync"/>

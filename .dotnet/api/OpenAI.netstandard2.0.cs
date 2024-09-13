@@ -1170,8 +1170,8 @@ namespace OpenAI.Audio {
     public static class OpenAIAudioModelFactory {
         public static AudioTranscription AudioTranscription(string language = null, TimeSpan? duration = null, string text = null, IEnumerable<TranscribedWord> words = null, IEnumerable<TranscribedSegment> segments = null);
         public static AudioTranslation AudioTranslation(string language = null, TimeSpan? duration = null, string text = null, IEnumerable<TranscribedSegment> segments = null);
-        public static TranscribedSegment TranscribedSegment(int id = 0, long seekOffset = 0, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, float temperature = 0, double averageLogProbability = 0, float compressionRatio = 0, double noSpeechProbability = 0);
-        public static TranscribedWord TranscribedWord(string word = null, TimeSpan start = default, TimeSpan end = default);
+        public static TranscribedSegment TranscribedSegment(int id = 0, int seekOffset = 0, TimeSpan startTime = default, TimeSpan endTime = default, string text = null, IEnumerable<int> tokenIds = null, float temperature = 0, float averageLogProbability = 0, float compressionRatio = 0, float noSpeechProbability = 0);
+        public static TranscribedWord TranscribedWord(string word = null, TimeSpan startTime = default, TimeSpan endTime = default);
     }
     public class SpeechGenerationOptions : IJsonModel<SpeechGenerationOptions>, IPersistableModel<SpeechGenerationOptions> {
         public GeneratedSpeechFormat? ResponseFormat { get; set; }
@@ -1185,16 +1185,16 @@ namespace OpenAI.Audio {
     public readonly partial struct TranscribedSegment : IJsonModel<TranscribedSegment>, IPersistableModel<TranscribedSegment>, IJsonModel<object>, IPersistableModel<object> {
         private readonly object _dummy;
         private readonly int _dummyPrimitive;
-        public double AverageLogProbability { get; }
+        public float AverageLogProbability { get; }
         public float CompressionRatio { get; }
-        public TimeSpan End { get; }
+        public TimeSpan EndTime { get; }
         public int Id { get; }
-        public double NoSpeechProbability { get; }
-        public long SeekOffset { get; }
-        public TimeSpan Start { get; }
+        public float NoSpeechProbability { get; }
+        public int SeekOffset { get; }
+        public TimeSpan StartTime { get; }
         public float Temperature { get; }
         public string Text { get; }
-        public IReadOnlyList<long> TokenIds { get; }
+        public IReadOnlyList<int> TokenIds { get; }
         readonly TranscribedSegment IJsonModel<TranscribedSegment>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         readonly void IJsonModel<TranscribedSegment>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         readonly object IJsonModel<object>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -1209,8 +1209,8 @@ namespace OpenAI.Audio {
     public readonly partial struct TranscribedWord : IJsonModel<TranscribedWord>, IPersistableModel<TranscribedWord>, IJsonModel<object>, IPersistableModel<object> {
         private readonly object _dummy;
         private readonly int _dummyPrimitive;
-        public TimeSpan End { get; }
-        public TimeSpan Start { get; }
+        public TimeSpan EndTime { get; }
+        public TimeSpan StartTime { get; }
         public string Word { get; }
         readonly TranscribedWord IJsonModel<TranscribedWord>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         readonly void IJsonModel<TranscribedWord>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);

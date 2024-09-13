@@ -17,20 +17,20 @@ namespace OpenAI
 {
     internal static partial class OpenAIModelFactory
     {
-        public static TranscribedWord TranscribedWord(string word = null, TimeSpan start = default, TimeSpan end = default)
+        public static TranscribedWord TranscribedWord(string word = null, TimeSpan startTime = default, TimeSpan endTime = default)
         {
-            return new TranscribedWord(word, start, end, serializedAdditionalRawData: null);
+            return new TranscribedWord(word, startTime, endTime, serializedAdditionalRawData: null);
         }
 
-        public static TranscribedSegment TranscribedSegment(int id = default, long seekOffset = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, float temperature = default, double averageLogProbability = default, float compressionRatio = default, double noSpeechProbability = default)
+        public static TranscribedSegment TranscribedSegment(int id = default, int seekOffset = default, TimeSpan startTime = default, TimeSpan endTime = default, string text = null, IEnumerable<int> tokenIds = null, float temperature = default, float averageLogProbability = default, float compressionRatio = default, float noSpeechProbability = default)
         {
-            tokenIds ??= new List<long>();
+            tokenIds ??= new List<int>();
 
             return new TranscribedSegment(
                 id,
                 seekOffset,
-                start,
-                end,
+                startTime,
+                endTime,
                 text,
                 tokenIds?.ToList(),
                 temperature,

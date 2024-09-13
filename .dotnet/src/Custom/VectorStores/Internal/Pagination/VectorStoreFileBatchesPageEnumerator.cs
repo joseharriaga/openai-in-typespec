@@ -1,6 +1,7 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -83,17 +84,17 @@ internal partial class VectorStoreFileBatchesPageEnumerator : PageEnumerator<Vec
         return hasMore;
     }
 
-    public override PageResult<VectorStoreFileAssociation> GetPageFromResult(ClientResult result)
-    {
-        PipelineResponse response = result.GetRawResponse();
+    //public override PageResult<VectorStoreFileAssociation> GetPageFromResult(ClientResult result)
+    //{
+    //    PipelineResponse response = result.GetRawResponse();
 
-        InternalListVectorStoreFilesResponse list = ModelReaderWriter.Read<InternalListVectorStoreFilesResponse>(response.Content)!;
+    //    InternalListVectorStoreFilesResponse list = ModelReaderWriter.Read<InternalListVectorStoreFilesResponse>(response.Content)!;
 
-        VectorStoreFilesPageToken pageToken = VectorStoreFilesPageToken.FromOptions(_vectorStoreId, _limit, _order, _after, _before, _filter);
-        VectorStoreFilesPageToken? nextPageToken = pageToken.GetNextPageToken(list.HasMore, list.LastId);
+    //    VectorStoreFilesPageToken pageToken = VectorStoreFilesPageToken.FromOptions(_vectorStoreId, _limit, _order, _after, _before, _filter);
+    //    VectorStoreFilesPageToken? nextPageToken = pageToken.GetNextPageToken(list.HasMore, list.LastId);
 
-        return PageResult<VectorStoreFileAssociation>.Create(list.Data, pageToken, nextPageToken, response);
-    }
+    //    return PageResult<VectorStoreFileAssociation>.Create(list.Data, pageToken, nextPageToken, response);
+    //}
 
     internal virtual async Task<ClientResult> GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string? order, string? after, string? before, string? filter, RequestOptions options)
     {
@@ -150,6 +151,16 @@ internal partial class VectorStoreFileBatchesPageEnumerator : PageEnumerator<Vec
         request.Headers.Set("Accept", "application/json");
         message.Apply(options);
         return message;
+    }
+
+    public override IEnumerable<VectorStoreFileAssociation> GetValuesFromPage(ClientResult pageResult)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override ContinuationToken? GetNextPageToken(ClientResult currentPageResult)
+    {
+        throw new NotImplementedException();
     }
 
     private static PipelineMessageClassifier? _pipelineMessageClassifier200;

@@ -1,4 +1,6 @@
-﻿using System.ClientModel;
+﻿using System;
+using System.ClientModel;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,8 +8,13 @@ using System.Threading.Tasks;
 
 namespace OpenAI;
 
-internal abstract class PageEnumerator :
-    IAsyncEnumerator<ClientResult>,
+
+/// <summary>
+/// Abstract type defining methods that service clients must provide in order
+/// to implement an enumerator over raw HTTP responses that represent the pages
+/// that deliver subsets of items in a paginated collection.
+/// </summary>
+internal abstract class PageEnumerator : IAsyncEnumerator<ClientResult>,
     IEnumerator<ClientResult>
 {
     private ClientResult? _current;
@@ -24,6 +31,15 @@ internal abstract class PageEnumerator :
     public abstract ClientResult GetNext(ClientResult result);
 
     public abstract bool HasNext(ClientResult result);
+
+    /// <summary>
+    /// Gets the continuation token that a client method can use to obtain the
+    /// page after <paramref name="currentPageResult"/>, or null if there is no
+    /// next page.
+    /// </summary>
+    /// <param name="currentPageResult"></param>
+    /// <returns></returns>
+    public abstract ContinuationToken? GetNextPageToken(ClientResult currentPageResult);
 
     object IEnumerator.Current => ((IEnumerator<ClientResult>)this).Current;
 

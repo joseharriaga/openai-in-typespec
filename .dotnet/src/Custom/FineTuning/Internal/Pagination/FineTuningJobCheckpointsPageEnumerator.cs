@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OpenAI.FineTuning;
 
-internal partial class FineTuningJobCheckpointsPageEnumerator : PageResultEnumerator
+internal partial class FineTuningJobCheckpointsPageEnumerator : PageEnumerator
 {
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;
@@ -120,6 +120,11 @@ internal partial class FineTuningJobCheckpointsPageEnumerator : PageResultEnumer
         request.Headers.Set("Accept", "application/json");
         message.Apply(options);
         return message;
+    }
+
+    public override ContinuationToken? GetNextPageToken(ClientResult currentPageResult)
+    {
+        throw new NotImplementedException();
     }
 
     private static PipelineMessageClassifier? _pipelineMessageClassifier200;

@@ -1,6 +1,7 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -81,17 +82,17 @@ internal partial class RunStepsPageEnumerator : PageEnumerator<RunStep>
         return hasMore;
     }
 
-    public override PageResult<RunStep> GetPageFromResult(ClientResult result)
-    {
-        PipelineResponse response = result.GetRawResponse();
+    //public override PageResult<RunStep> GetPageFromResult(ClientResult result)
+    //{
+    //    PipelineResponse response = result.GetRawResponse();
 
-        InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
+    //    InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
 
-        RunStepsPageToken pageToken = RunStepsPageToken.FromOptions(_threadId, _runId, _limit, _order, _after, _before);
-        RunStepsPageToken? nextPageToken = pageToken.GetNextPageToken(list.HasMore, list.LastId);
+    //    RunStepsPageToken pageToken = RunStepsPageToken.FromOptions(_threadId, _runId, _limit, _order, _after, _before);
+    //    RunStepsPageToken? nextPageToken = pageToken.GetNextPageToken(list.HasMore, list.LastId);
 
-        return PageResult<RunStep>.Create(list.Data, pageToken, nextPageToken, response);
-    }
+    //    return PageResult<RunStep>.Create(list.Data, pageToken, nextPageToken, response);
+    //}
 
     internal async virtual Task<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string? order, string? after, string? before, RequestOptions? options)
     {
@@ -144,6 +145,16 @@ internal partial class RunStepsPageEnumerator : PageEnumerator<RunStep>
         request.Headers.Set("Accept", "application/json");
         message.Apply(options);
         return message;
+    }
+
+    public override IEnumerable<RunStep> GetValuesFromPage(ClientResult pageResult)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override ContinuationToken? GetNextPageToken(ClientResult currentPageResult)
+    {
+        throw new NotImplementedException();
     }
 
     private static PipelineMessageClassifier? _pipelineMessageClassifier200;

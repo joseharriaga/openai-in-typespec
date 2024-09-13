@@ -36,6 +36,10 @@ public partial class ChatClient
     {
     }
 
+    public ChatClient(string model, string apiKey) : this(model, new ApiKeyCredential(apiKey), new OpenAIClientOptions())
+    {
+    }
+
     // CUSTOM:
     // - Added `model` parameter.
     // - Used a custom pipeline.
@@ -57,6 +61,10 @@ public partial class ChatClient
         _pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
         _telemetry = new OpenTelemetrySource(model, _endpoint);
+    }
+    public ChatClient(string model, string apiKey, OpenAIClientOptions options)
+        : this(model, new ApiKeyCredential(apiKey), options)
+    {
     }
 
     // CUSTOM:

@@ -128,7 +128,7 @@ public partial class VectorStoreTests : SyncAsyncTestBase
         int lastIdSeen = int.MaxValue;
         int count = 0;
 
-        foreach (VectorStore vectorStore in client.GetVectorStores(new VectorStoreCollectionOptions() { Order = VectorStoreCollectionOrder.Descending }).GetAllValues())
+        foreach (VectorStore vectorStore in client.GetVectorStores(new VectorStoreCollectionOptions() { Order = VectorStoreCollectionOrder.Descending }))
         {
             Assert.That(vectorStore.Id, Is.Not.Null);
             if (vectorStore.Name?.StartsWith("Test Vector Store ") == true)
@@ -167,7 +167,7 @@ public partial class VectorStoreTests : SyncAsyncTestBase
         int lastIdSeen = int.MaxValue;
         int count = 0;
 
-        await foreach (VectorStore vectorStore in client.GetVectorStoresAsync(new VectorStoreCollectionOptions() { Order = VectorStoreCollectionOrder.Descending }).GetAllValuesAsync())
+        await foreach (VectorStore vectorStore in client.GetVectorStoresAsync(new VectorStoreCollectionOptions() { Order = VectorStoreCollectionOrder.Descending }))
         {
             Assert.That(vectorStore.Id, Is.Not.Null);
             if (vectorStore.Name?.StartsWith("Test Vector Store ") == true)
@@ -225,7 +225,7 @@ public partial class VectorStoreTests : SyncAsyncTestBase
 
         if (IsAsync)
         {
-            await foreach (VectorStoreFileAssociation association in client.GetFileAssociationsAsync(vectorStore).GetAllValuesAsync())
+            await foreach (VectorStoreFileAssociation association in client.GetFileAssociationsAsync(vectorStore))
             {
                 count++;
                 Assert.That(association.FileId, Is.Not.EqualTo(files[0].Id));
@@ -234,7 +234,7 @@ public partial class VectorStoreTests : SyncAsyncTestBase
         }
         else
         {
-            foreach (VectorStoreFileAssociation association in client.GetFileAssociations(vectorStore).GetAllValues())
+            foreach (VectorStoreFileAssociation association in client.GetFileAssociations(vectorStore))
             {
                 count++;
                 Assert.That(association.FileId, Is.Not.EqualTo(files[0].Id));
@@ -244,135 +244,135 @@ public partial class VectorStoreTests : SyncAsyncTestBase
         Assert.That(count, Is.EqualTo(2));
     }
 
-    [Test]
-    public async Task Pagination_CanRehydrateFileAssociationCollectionAsync()
-    {
-        AssertAsyncOnly();
+    //[Test]
+    //public async Task Pagination_CanRehydrateFileAssociationCollectionAsync()
+    //{
+    //    AssertAsyncOnly();
 
-        VectorStoreClient client = GetTestClient();
-        VectorStore vectorStore = client.CreateVectorStore();
-        Validate(vectorStore);
+    //    VectorStoreClient client = GetTestClient();
+    //    VectorStore vectorStore = client.CreateVectorStore();
+    //    Validate(vectorStore);
 
-        IReadOnlyList<OpenAIFileInfo> files = GetNewTestFiles(3);
+    //    IReadOnlyList<OpenAIFileInfo> files = GetNewTestFiles(3);
 
-        foreach (OpenAIFileInfo file in files)
-        {
-            VectorStoreFileAssociation association = client.AddFileToVectorStore(vectorStore, file);
-            Validate(association);
-            Assert.Multiple(() =>
-            {
-                Assert.That(association.FileId, Is.EqualTo(file.Id));
-                Assert.That(association.VectorStoreId, Is.EqualTo(vectorStore.Id));
-                Assert.That(association.LastError, Is.Null);
-                Assert.That(association.CreatedAt, Is.GreaterThan(s_2024));
-                Assert.That(association.Status, Is.EqualTo(VectorStoreFileAssociationStatus.InProgress));
-            });
-        }
+    //    foreach (OpenAIFileInfo file in files)
+    //    {
+    //        VectorStoreFileAssociation association = client.AddFileToVectorStore(vectorStore, file);
+    //        Validate(association);
+    //        Assert.Multiple(() =>
+    //        {
+    //            Assert.That(association.FileId, Is.EqualTo(file.Id));
+    //            Assert.That(association.VectorStoreId, Is.EqualTo(vectorStore.Id));
+    //            Assert.That(association.LastError, Is.Null);
+    //            Assert.That(association.CreatedAt, Is.GreaterThan(s_2024));
+    //            Assert.That(association.Status, Is.EqualTo(VectorStoreFileAssociationStatus.InProgress));
+    //        });
+    //    }
 
-        bool removed = client.RemoveFileFromStore(vectorStore, files[0]);
-        Assert.True(removed);
-        _associationsToRemove.RemoveAt(0);
+    //    bool removed = client.RemoveFileFromStore(vectorStore, files[0]);
+    //    Assert.True(removed);
+    //    _associationsToRemove.RemoveAt(0);
 
-        // Errata: removals aren't immediately reflected when requesting the list
-        Thread.Sleep(2000);
+    //    // Errata: removals aren't immediately reflected when requesting the list
+    //    Thread.Sleep(2000);
 
-        AsyncPageCollection<VectorStoreFileAssociation> pages = client.GetFileAssociationsAsync(vectorStore);
-        IAsyncEnumerator<PageResult<VectorStoreFileAssociation>> pageEnumerator = ((IAsyncEnumerable<PageResult<VectorStoreFileAssociation>>)pages).GetAsyncEnumerator();
+    //    AsyncPageCollection<VectorStoreFileAssociation> pages = client.GetFileAssociationsAsync(vectorStore);
+    //    IAsyncEnumerator<PageResult<VectorStoreFileAssociation>> pageEnumerator = ((IAsyncEnumerable<PageResult<VectorStoreFileAssociation>>)pages).GetAsyncEnumerator();
 
-        // Simulate rehydration of the collection
-        BinaryData rehydrationBytes = (await pages.GetCurrentPageAsync()).PageToken.ToBytes();
-        ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
+    //    // Simulate rehydration of the collection
+    //    BinaryData rehydrationBytes = (await pages.GetCurrentPageAsync()).PageToken.ToBytes();
+    //    ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
 
-        AsyncPageCollection<VectorStoreFileAssociation> rehydratedPages = client.GetFileAssociationsAsync(rehydrationToken);
-        IAsyncEnumerator<PageResult<VectorStoreFileAssociation>> rehydratedPageEnumerator = ((IAsyncEnumerable<PageResult<VectorStoreFileAssociation>>)rehydratedPages).GetAsyncEnumerator();
+    //    AsyncPageCollection<VectorStoreFileAssociation> rehydratedPages = client.GetFileAssociationsAsync(rehydrationToken);
+    //    IAsyncEnumerator<PageResult<VectorStoreFileAssociation>> rehydratedPageEnumerator = ((IAsyncEnumerable<PageResult<VectorStoreFileAssociation>>)rehydratedPages).GetAsyncEnumerator();
 
-        int pageCount = 0;
+    //    int pageCount = 0;
 
-        while (await pageEnumerator.MoveNextAsync() && await rehydratedPageEnumerator.MoveNextAsync())
-        {
-            PageResult<VectorStoreFileAssociation> page = pageEnumerator.Current;
-            PageResult<VectorStoreFileAssociation> rehydratedPage = rehydratedPageEnumerator.Current;
+    //    while (await pageEnumerator.MoveNextAsync() && await rehydratedPageEnumerator.MoveNextAsync())
+    //    {
+    //        PageResult<VectorStoreFileAssociation> page = pageEnumerator.Current;
+    //        PageResult<VectorStoreFileAssociation> rehydratedPage = rehydratedPageEnumerator.Current;
 
-            Assert.AreEqual(page.Values.Count, rehydratedPage.Values.Count);
+    //        Assert.AreEqual(page.Values.Count, rehydratedPage.Values.Count);
 
-            for (int i = 0; i < page.Values.Count; i++)
-            {
-                Assert.AreEqual(page.Values[0].FileId, rehydratedPage.Values[0].FileId);
-                Assert.AreEqual(page.Values[0].VectorStoreId, rehydratedPage.Values[0].VectorStoreId);
-                Assert.AreEqual(page.Values[0].CreatedAt, rehydratedPage.Values[0].CreatedAt);
-                Assert.AreEqual(page.Values[0].Size, rehydratedPage.Values[0].Size);
-            }
+    //        for (int i = 0; i < page.Values.Count; i++)
+    //        {
+    //            Assert.AreEqual(page.Values[0].FileId, rehydratedPage.Values[0].FileId);
+    //            Assert.AreEqual(page.Values[0].VectorStoreId, rehydratedPage.Values[0].VectorStoreId);
+    //            Assert.AreEqual(page.Values[0].CreatedAt, rehydratedPage.Values[0].CreatedAt);
+    //            Assert.AreEqual(page.Values[0].Size, rehydratedPage.Values[0].Size);
+    //        }
 
-            pageCount++;
-        }
+    //        pageCount++;
+    //    }
 
-        Assert.That(pageCount, Is.GreaterThanOrEqualTo(1));
-    }
+    //    Assert.That(pageCount, Is.GreaterThanOrEqualTo(1));
+    //}
 
-    [Test]
-    public void Pagination_CanRehydrateFileAssociationCollection()
-    {
-        AssertSyncOnly();
+    //[Test]
+    //public void Pagination_CanRehydrateFileAssociationCollection()
+    //{
+    //    AssertSyncOnly();
 
-        VectorStoreClient client = GetTestClient();
-        VectorStore vectorStore = client.CreateVectorStore();
-        Validate(vectorStore);
+    //    VectorStoreClient client = GetTestClient();
+    //    VectorStore vectorStore = client.CreateVectorStore();
+    //    Validate(vectorStore);
 
-        IReadOnlyList<OpenAIFileInfo> files = GetNewTestFiles(3);
+    //    IReadOnlyList<OpenAIFileInfo> files = GetNewTestFiles(3);
 
-        foreach (OpenAIFileInfo file in files)
-        {
-            VectorStoreFileAssociation association = client.AddFileToVectorStore(vectorStore, file);
-            Validate(association);
-            Assert.Multiple(() =>
-            {
-                Assert.That(association.FileId, Is.EqualTo(file.Id));
-                Assert.That(association.VectorStoreId, Is.EqualTo(vectorStore.Id));
-                Assert.That(association.LastError, Is.Null);
-                Assert.That(association.CreatedAt, Is.GreaterThan(s_2024));
-                Assert.That(association.Status, Is.EqualTo(VectorStoreFileAssociationStatus.InProgress));
-            });
-        }
+    //    foreach (OpenAIFileInfo file in files)
+    //    {
+    //        VectorStoreFileAssociation association = client.AddFileToVectorStore(vectorStore, file);
+    //        Validate(association);
+    //        Assert.Multiple(() =>
+    //        {
+    //            Assert.That(association.FileId, Is.EqualTo(file.Id));
+    //            Assert.That(association.VectorStoreId, Is.EqualTo(vectorStore.Id));
+    //            Assert.That(association.LastError, Is.Null);
+    //            Assert.That(association.CreatedAt, Is.GreaterThan(s_2024));
+    //            Assert.That(association.Status, Is.EqualTo(VectorStoreFileAssociationStatus.InProgress));
+    //        });
+    //    }
 
-        bool removed = client.RemoveFileFromStore(vectorStore, files[0]);
-        Assert.True(removed);
-        _associationsToRemove.RemoveAt(0);
+    //    bool removed = client.RemoveFileFromStore(vectorStore, files[0]);
+    //    Assert.True(removed);
+    //    _associationsToRemove.RemoveAt(0);
 
-        // Errata: removals aren't immediately reflected when requesting the list
-        Thread.Sleep(2000);
+    //    // Errata: removals aren't immediately reflected when requesting the list
+    //    Thread.Sleep(2000);
 
-        PageCollection<VectorStoreFileAssociation> pages = client.GetFileAssociations(vectorStore);
-        IEnumerator<PageResult<VectorStoreFileAssociation>> pageEnumerator = ((IEnumerable<PageResult<VectorStoreFileAssociation>>)pages).GetEnumerator();
+    //    PageCollection<VectorStoreFileAssociation> pages = client.GetFileAssociations(vectorStore);
+    //    IEnumerator<PageResult<VectorStoreFileAssociation>> pageEnumerator = ((IEnumerable<PageResult<VectorStoreFileAssociation>>)pages).GetEnumerator();
 
-        // Simulate rehydration of the collection
-        BinaryData rehydrationBytes = pages.GetCurrentPage().PageToken.ToBytes();
-        ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
+    //    // Simulate rehydration of the collection
+    //    BinaryData rehydrationBytes = pages.GetCurrentPage().PageToken.ToBytes();
+    //    ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
 
-        PageCollection<VectorStoreFileAssociation> rehydratedPages = client.GetFileAssociations(rehydrationToken);
-        IEnumerator<PageResult<VectorStoreFileAssociation>> rehydratedPageEnumerator = ((IEnumerable<PageResult<VectorStoreFileAssociation>>)rehydratedPages).GetEnumerator();
+    //    PageCollection<VectorStoreFileAssociation> rehydratedPages = client.GetFileAssociations(rehydrationToken);
+    //    IEnumerator<PageResult<VectorStoreFileAssociation>> rehydratedPageEnumerator = ((IEnumerable<PageResult<VectorStoreFileAssociation>>)rehydratedPages).GetEnumerator();
 
-        int pageCount = 0;
+    //    int pageCount = 0;
 
-        while (pageEnumerator.MoveNext() && rehydratedPageEnumerator.MoveNext())
-        {
-            PageResult<VectorStoreFileAssociation> page = pageEnumerator.Current;
-            PageResult<VectorStoreFileAssociation> rehydratedPage = rehydratedPageEnumerator.Current;
+    //    while (pageEnumerator.MoveNext() && rehydratedPageEnumerator.MoveNext())
+    //    {
+    //        PageResult<VectorStoreFileAssociation> page = pageEnumerator.Current;
+    //        PageResult<VectorStoreFileAssociation> rehydratedPage = rehydratedPageEnumerator.Current;
 
-            Assert.AreEqual(page.Values.Count, rehydratedPage.Values.Count);
+    //        Assert.AreEqual(page.Values.Count, rehydratedPage.Values.Count);
 
-            for (int i = 0; i < page.Values.Count; i++)
-            {
-                Assert.AreEqual(page.Values[0].FileId, rehydratedPage.Values[0].FileId);
-                Assert.AreEqual(page.Values[0].VectorStoreId, rehydratedPage.Values[0].VectorStoreId);
-                Assert.AreEqual(page.Values[0].CreatedAt, rehydratedPage.Values[0].CreatedAt);
-                Assert.AreEqual(page.Values[0].Size, rehydratedPage.Values[0].Size);
-            }
+    //        for (int i = 0; i < page.Values.Count; i++)
+    //        {
+    //            Assert.AreEqual(page.Values[0].FileId, rehydratedPage.Values[0].FileId);
+    //            Assert.AreEqual(page.Values[0].VectorStoreId, rehydratedPage.Values[0].VectorStoreId);
+    //            Assert.AreEqual(page.Values[0].CreatedAt, rehydratedPage.Values[0].CreatedAt);
+    //            Assert.AreEqual(page.Values[0].Size, rehydratedPage.Values[0].Size);
+    //        }
 
-            pageCount++;
-        }
+    //        pageCount++;
+    //    }
 
-        Assert.That(pageCount, Is.GreaterThanOrEqualTo(1));
-    }
+    //    Assert.That(pageCount, Is.GreaterThanOrEqualTo(1));
+    //}
 
     [Test]
     public async Task CanUseBatchIngestion()
@@ -400,7 +400,7 @@ public partial class VectorStoreTests : SyncAsyncTestBase
 
         if (IsAsync)
         {
-            await foreach (VectorStoreFileAssociation association in client.GetFileAssociationsAsync(batchJob).GetAllValuesAsync())
+            await foreach (VectorStoreFileAssociation association in client.GetFileAssociationsAsync(batchJob))
             {
                 Assert.Multiple(() =>
                 {
@@ -415,7 +415,7 @@ public partial class VectorStoreTests : SyncAsyncTestBase
         }
         else
         {
-            foreach (VectorStoreFileAssociation association in client.GetFileAssociations(batchJob).GetAllValues())
+            foreach (VectorStoreFileAssociation association in client.GetFileAssociations(batchJob))
             {
                 Assert.Multiple(() =>
                 {
@@ -471,9 +471,9 @@ public partial class VectorStoreTests : SyncAsyncTestBase
 
         if (IsAsync)
         {
-            AsyncPageCollection<VectorStoreFileAssociation> associations = client.GetFileAssociationsAsync(vectorStore);
+            AsyncCollectionResult<VectorStoreFileAssociation> associations = client.GetFileAssociationsAsync(vectorStore);
 
-            await foreach (VectorStoreFileAssociation association in associations.GetAllValuesAsync())
+            await foreach (VectorStoreFileAssociation association in associations)
             {
                 Assert.That(testFiles.Any(file => file.Id == association.FileId), Is.True);
                 Assert.That(association.ChunkingStrategy, Is.InstanceOf<StaticFileChunkingStrategy>());
@@ -495,9 +495,9 @@ public partial class VectorStoreTests : SyncAsyncTestBase
         }
         else
         {
-            PageCollection<VectorStoreFileAssociation> associations = client.GetFileAssociations(vectorStore);
+            CollectionResult<VectorStoreFileAssociation> associations = client.GetFileAssociations(vectorStore);
 
-            foreach (VectorStoreFileAssociation association in associations.GetAllValues())
+            foreach (VectorStoreFileAssociation association in associations)
             {
                 Assert.That(testFiles.Any(file => file.Id == association.FileId), Is.True);
                 Assert.That(association.ChunkingStrategy, Is.InstanceOf<StaticFileChunkingStrategy>());

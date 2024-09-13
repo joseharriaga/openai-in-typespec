@@ -40,6 +40,10 @@ public partial class AssistantClient
     {
     }
 
+    public AssistantClient(string apiKey) : this(new ApiKeyCredential(apiKey))
+    {
+    }
+
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
@@ -57,6 +61,11 @@ public partial class AssistantClient
         _messageSubClient = new(_pipeline, options);
         _runSubClient = new(_pipeline, options);
         _threadSubClient = new(_pipeline, options);
+    }
+
+    public AssistantClient(string apiKey, OpenAIClientOptions options)
+        : this(new ApiKeyCredential(apiKey), options)
+    {
     }
 
     // CUSTOM:

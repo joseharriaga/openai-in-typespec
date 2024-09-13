@@ -38,6 +38,10 @@ public partial class ImageClient
     {
     }
 
+    public ImageClient(string model, string apiKey) : this(model, new ApiKeyCredential(apiKey))
+    { 
+    }
+
     // CUSTOM:
     // - Added `model` parameter.
     // - Used a custom pipeline.
@@ -57,6 +61,11 @@ public partial class ImageClient
         _model = model;
         _pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
+    }
+
+    public ImageClient(string model, string apiKey, OpenAIClientOptions options)
+        :this(model, new ApiKeyCredential(apiKey), options)
+    {
     }
 
     // CUSTOM:

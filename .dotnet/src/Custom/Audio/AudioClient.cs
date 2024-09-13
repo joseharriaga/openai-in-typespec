@@ -33,7 +33,13 @@ public partial class AudioClient
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> or <paramref name="credential"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
-    public AudioClient(string model, ApiKeyCredential credential) : this(model, credential, new OpenAIClientOptions())
+    public AudioClient(string model, ApiKeyCredential credential)
+        : this(model, credential, new OpenAIClientOptions())
+    {
+    }
+
+    public AudioClient(string model, string apiKey)
+        : this(model, new ApiKeyCredential(apiKey))
     {
     }
 
@@ -56,6 +62,11 @@ public partial class AudioClient
         _model = model;
         _pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
+    }
+
+    public AudioClient(string model, string apiKey, OpenAIClientOptions options)
+        : this(model, new ApiKeyCredential(apiKey), options)
+    {
     }
 
     // CUSTOM:

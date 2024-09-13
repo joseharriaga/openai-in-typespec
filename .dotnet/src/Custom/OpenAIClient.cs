@@ -84,7 +84,7 @@ public partial class OpenAIClient
     {
     }
 
-    public OpenAIClient(string apiKey) : this(new ApiKeyCredential(apiKey), new OpenAIClientOptions())
+    public OpenAIClient(string apiKey) : this(new ApiKeyCredential(apiKey))
     {
     }
 

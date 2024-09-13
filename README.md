@@ -1,6 +1,6 @@
 # A conversion of the OpenAI OpenAPI to TypeSpec
 
-Snapshot: ADO 2ed9c3463d2390d829acbd1838d57f026354ed7f
+Snapshot: https://raw.githubusercontent.com/openai/openai-openapi/f990f1d36ccea1e0da552db05469a58e51f592ee/openapi.yaml
 Ingestion tool: 4656bf77bafec7983f2879d6340068e04c87d372
 
 

@@ -79,24 +79,24 @@ namespace OpenAI.Chat
                     writer.WriteNull("top_logprobs");
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("max_tokens") != true && Optional.IsDefined(InternalMaxTokens))
+            if (SerializedAdditionalRawData?.ContainsKey("max_tokens") != true && Optional.IsDefined(_deprecatedMaxTokens))
             {
-                if (InternalMaxTokens != null)
+                if (_deprecatedMaxTokens != null)
                 {
                     writer.WritePropertyName("max_tokens"u8);
-                    writer.WriteNumberValue(InternalMaxTokens.Value);
+                    writer.WriteNumberValue(_deprecatedMaxTokens.Value);
                 }
                 else
                 {
                     writer.WriteNull("max_tokens");
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("max_completion_tokens") != true && Optional.IsDefined(MaxTokens))
+            if (SerializedAdditionalRawData?.ContainsKey("max_completion_tokens") != true && Optional.IsDefined(_maxCompletionTokens))
             {
-                if (MaxTokens != null)
+                if (_maxCompletionTokens != null)
                 {
                     writer.WritePropertyName("max_completion_tokens"u8);
-                    writer.WriteNumberValue(MaxTokens.Value);
+                    writer.WriteNumberValue(_maxCompletionTokens.Value);
                 }
                 else
                 {

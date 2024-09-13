@@ -619,45 +619,6 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
     #region Tests for interim o1 model support regarding new max_completion_tokens
 
-    [Test]
-    [Category("Smoke")]
-    public void TemporaryTokenSerializationSwapWorks()
-    {
-        void AssertExpectedMaxTokenValues(ChatCompletionOptions options, int? expectedOldMaxTokens = null, int? expectedNewMaxTokens = null)
-        {
-            int? actualOldMaxTokens = null;
-            int? actualNewMaxTokens = null;
-            BinaryData serializedOptions = ModelReaderWriter.Write(options);
-            using JsonDocument jsonOptions = JsonDocument.Parse(serializedOptions);
-            if (jsonOptions.RootElement.TryGetProperty("max_tokens", out JsonElement oldMaxTokensElement)
-                && oldMaxTokensElement.ValueKind == JsonValueKind.Number)
-            {
-                actualOldMaxTokens = oldMaxTokensElement.GetInt32();
-            }
-            if (jsonOptions.RootElement.TryGetProperty("max_completion_tokens", out JsonElement newMaxTokensElement)
-                && newMaxTokensElement.ValueKind == JsonValueKind.Number)
-            {
-                actualNewMaxTokens = newMaxTokensElement.GetInt32();
-            }
-
-            Assert.That(actualOldMaxTokens, Is.EqualTo(expectedOldMaxTokens));
-            Assert.That(actualNewMaxTokens, Is.EqualTo(expectedNewMaxTokens));
-        }
-
-        const int expectedMaxTokensValue = 123;
-
-        ChatCompletionOptions options = new()
-        {
-            MaxTokens = expectedMaxTokensValue,
-        };
-
-        AssertExpectedMaxTokenValues(options, expectedNewMaxTokens: expectedMaxTokensValue);
-        options.ToggleMaxTokensJsonPropertyName();
-        AssertExpectedMaxTokenValues(options, expectedOldMaxTokens: expectedMaxTokensValue);
-        options.ToggleMaxTokensJsonPropertyName();
-        AssertExpectedMaxTokenValues(options, expectedNewMaxTokens: expectedMaxTokensValue);
-    }
-
     #endregion
     #region Helper methods
 

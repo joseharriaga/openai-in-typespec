@@ -146,13 +146,30 @@ public partial class ChatCompletionOptions
     [Experimental("OPENAI001")]
     public long? Seed { get; set; }
 
-    // CUSTOM: Hide deprecated max_tokens and reroute to newer max_completion_tokens
+    // CUSTOM: Hide deprecated max_tokens and reroute to newer max_completion_tokens.
     [CodeGenMember("MaxTokens")]
-    internal int? InternalMaxTokens { get; set; }
+    internal int? _deprecatedMaxTokens { get; set; }
 
+    // CUSTOM: Add legacy `max_tokens` routing.
     /// <summary>
     /// An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and, on applicable models, reasoning tokens.
     /// </summary>
+    public int? MaxTokens
+    {
+        get => _maxCompletionTokens ?? _deprecatedMaxTokens;
+        set
+        {
+            if (_deprecatedMaxTokens is not null)
+            {
+                _deprecatedMaxTokens = value;
+            }
+            else
+            {
+                _maxCompletionTokens = value;
+            }
+        }
+    }
+
     [CodeGenMember("MaxCompletionTokens")]
-    public int? MaxTokens { get; set; }
+    internal int? _maxCompletionTokens;
 }

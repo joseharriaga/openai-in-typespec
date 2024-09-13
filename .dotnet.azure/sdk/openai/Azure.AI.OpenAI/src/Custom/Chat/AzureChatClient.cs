@@ -87,9 +87,9 @@ internal partial class AzureChatClient : ChatClient
         options ??= new();
         if (options.MaxTokens is not null)
         {
-#pragma warning disable AOAI001
-            options.ToggleMaxTokensJsonPropertyName();
-#pragma warning restore
+            options.SerializedAdditionalRawData ??= new Dictionary<string, BinaryData>();
+            options.SerializedAdditionalRawData["max_completion_tokens"] = BinaryData.FromObjectAsJson("__EMPTY__");
+            options.SerializedAdditionalRawData["max_tokens"] = BinaryData.FromObjectAsJson(options.MaxTokens);
         }
     }
 }

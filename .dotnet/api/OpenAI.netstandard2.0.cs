@@ -1997,22 +1997,22 @@ namespace OpenAI.Models {
         public virtual ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteModel(string model, RequestOptions options);
-        public virtual ClientResult<bool> DeleteModel(string model);
+        public virtual ClientResult<bool> DeleteModel(string model, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteModelAsync(string model, RequestOptions options);
-        public virtual Task<ClientResult<bool>> DeleteModelAsync(string model);
+        public virtual Task<ClientResult<bool>> DeleteModelAsync(string model, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetModel(string model, RequestOptions options);
-        public virtual ClientResult<OpenAIModelInfo> GetModel(string model);
+        public virtual ClientResult<OpenAIModelInfo> GetModel(string model, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetModelAsync(string model, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIModelInfo>> GetModelAsync(string model);
-        public virtual ClientResult<OpenAIModelInfoCollection> GetModels();
+        public virtual Task<ClientResult<OpenAIModelInfo>> GetModelAsync(string model, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetModels(RequestOptions options);
-        public virtual Task<ClientResult<OpenAIModelInfoCollection>> GetModelsAsync();
+        public virtual ClientResult<OpenAIModelInfoCollection> GetModels(CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetModelsAsync(RequestOptions options);
+        public virtual Task<ClientResult<OpenAIModelInfoCollection>> GetModelsAsync(CancellationToken cancellationToken = default);
     }
     public class OpenAIModelInfo : IJsonModel<OpenAIModelInfo>, IPersistableModel<OpenAIModelInfo> {
         public DateTimeOffset CreatedAt { get; }

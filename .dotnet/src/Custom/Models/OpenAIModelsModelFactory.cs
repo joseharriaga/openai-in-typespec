@@ -7,6 +7,17 @@ namespace OpenAI.Models;
 /// <summary> Model factory for models. </summary>
 public static partial class OpenAIModelsModelFactory
 {
+    /// <summary> Initializes a new instance of <see cref="OpenAI.Models.DeleteModelResult"/>. </summary>
+    /// <returns> A new <see cref="OpenAI.Models.DeleteModelResult"/> instance for mocking. </returns>
+    public static DeleteModelResult DeleteModelResult(string id = null, bool deleted = default)
+    {
+        return new DeleteModelResult(
+            id,
+            deleted,
+            InternalDeleteModelResponseObject.Model,
+            serializedAdditionalRawData: null);
+    }
+
     /// <summary> Initializes a new instance of <see cref="OpenAI.Models.OpenAIModelInfo"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Models.OpenAIModelInfo"/> instance for mocking. </returns>
     public static OpenAIModelInfo OpenAIModelInfo(string id = null, DateTimeOffset createdAt = default, string ownedBy = null)

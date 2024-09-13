@@ -5,12 +5,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Models
+namespace OpenAI.VectorStores
 {
-    internal partial class InternalDeleteModelResponse
+    public partial class DeleteVectorStoreResult
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalDeleteModelResponse(string id, bool deleted)
+        internal DeleteVectorStoreResult(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));
 
@@ -18,7 +18,7 @@ namespace OpenAI.Models
             Deleted = deleted;
         }
 
-        internal InternalDeleteModelResponse(string id, bool deleted, InternalDeleteModelResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal DeleteVectorStoreResult(string id, bool deleted, InternalDeleteVectorStoreResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Deleted = deleted;
@@ -26,12 +26,11 @@ namespace OpenAI.Models
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal InternalDeleteModelResponse()
+        internal DeleteVectorStoreResult()
         {
         }
 
         public string Id { get; }
         public bool Deleted { get; }
-        public InternalDeleteModelResponseObject Object { get; } = InternalDeleteModelResponseObject.Model;
     }
 }

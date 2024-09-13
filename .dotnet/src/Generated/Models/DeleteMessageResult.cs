@@ -5,12 +5,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.VectorStores
+namespace OpenAI.Assistants
 {
-    internal partial class InternalDeleteVectorStoreFileResponse
+    public partial class DeleteMessageResult
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalDeleteVectorStoreFileResponse(string id, bool deleted)
+        internal DeleteMessageResult(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));
 
@@ -18,7 +18,7 @@ namespace OpenAI.VectorStores
             Deleted = deleted;
         }
 
-        internal InternalDeleteVectorStoreFileResponse(string id, bool deleted, InternalDeleteVectorStoreFileResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal DeleteMessageResult(string id, bool deleted, InternalDeleteMessageResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             Deleted = deleted;
@@ -26,12 +26,11 @@ namespace OpenAI.VectorStores
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal InternalDeleteVectorStoreFileResponse()
+        internal DeleteMessageResult()
         {
         }
 
         public string Id { get; }
         public bool Deleted { get; }
-        public InternalDeleteVectorStoreFileResponseObject Object { get; } = InternalDeleteVectorStoreFileResponseObject.VectorStoreFileDeleted;
     }
 }

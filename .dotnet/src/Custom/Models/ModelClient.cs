@@ -104,14 +104,14 @@ public partial class ModelClient
     /// <param name="model"> The name of the model to delete. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<bool>> DeleteModelAsync(string model)
+    public virtual async Task<ClientResult<DeleteModelResult>> DeleteModelAsync(string model)
     {
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
         ClientResult result = await DeleteModelAsync(model, null).ConfigureAwait(false);
         PipelineResponse response = result?.GetRawResponse();
-        InternalDeleteModelResponse value = InternalDeleteModelResponse.FromResponse(response);
-        return ClientResult.FromValue(value.Deleted, response);
+        DeleteModelResult value = DeleteModelResult.FromResponse(response);
+        return ClientResult.FromValue(value, response);
     }
 
     /// <summary> Deletes the specified fine-tuned model. </summary>
@@ -119,13 +119,13 @@ public partial class ModelClient
     /// <param name="model"> The name of the model to delete. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual ClientResult<bool> DeleteModel(string model)
+    public virtual ClientResult<DeleteModelResult> DeleteModel(string model)
     {
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
         ClientResult result = DeleteModel(model, null);
         PipelineResponse response = result?.GetRawResponse();
-        InternalDeleteModelResponse value = InternalDeleteModelResponse.FromResponse(response);
-        return ClientResult.FromValue(value.Deleted, response);
+        DeleteModelResult value = DeleteModelResult.FromResponse(response);
+        return ClientResult.FromValue(value, response);
     }
 }

@@ -248,13 +248,13 @@ public partial class FileClient
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<bool>> DeleteFileAsync(string fileId, CancellationToken cancellationToken = default)
+    public virtual async Task<ClientResult<DeleteFileResult>> DeleteFileAsync(string fileId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         ClientResult result = await DeleteFileAsync(fileId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        InternalDeleteFileResponse internalDeletion = InternalDeleteFileResponse.FromResponse(result.GetRawResponse());
-        return ClientResult.FromValue(internalDeletion.Deleted, result.GetRawResponse());
+        DeleteFileResult value = DeleteFileResult.FromResponse(result.GetRawResponse());
+        return ClientResult.FromValue(value, result.GetRawResponse());
     }
 
     /// <summary> Deletes the specified file. </summary>
@@ -262,13 +262,13 @@ public partial class FileClient
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="fileId"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="fileId"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual ClientResult<bool> DeleteFile(string fileId, CancellationToken cancellationToken = default)
+    public virtual ClientResult<DeleteFileResult> DeleteFile(string fileId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         ClientResult result = DeleteFile(fileId, cancellationToken.ToRequestOptions());
-        InternalDeleteFileResponse internalDeletion = InternalDeleteFileResponse.FromResponse(result.GetRawResponse());
-        return ClientResult.FromValue(internalDeletion.Deleted, result.GetRawResponse());
+        DeleteFileResult value = DeleteFileResult.FromResponse(result.GetRawResponse());
+        return ClientResult.FromValue(value, result.GetRawResponse());
     }
 
     /// <summary> Downloads the content of the specified file. </summary>

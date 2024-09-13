@@ -33,7 +33,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="assistant"> The assistant to delete. </param>
     /// <returns> A value indicating whether the deletion was successful. </returns>
-    public virtual Task<ClientResult<bool>> DeleteAssistantAsync(Assistant assistant)
+    public virtual Task<ClientResult<DeleteAssistantResult>> DeleteAssistantAsync(Assistant assistant)
         => DeleteAssistantAsync(assistant?.Id);
 
     /// <summary>
@@ -41,7 +41,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="assistant"> The assistant to delete. </param>
     /// <returns> A value indicating whether the deletion was successful. </returns>
-    public virtual ClientResult<bool> DeleteAssistant(Assistant assistant)
+    public virtual ClientResult<DeleteAssistantResult> DeleteAssistant(Assistant assistant)
         => DeleteAssistant(assistant?.Id);
 
     /// <summary>
@@ -83,7 +83,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="thread"> The thread to delete. </param>
     /// <returns> A value indicating whether the deletion was successful. </returns>
-    public virtual Task<ClientResult<bool>> DeleteThreadAsync(AssistantThread thread)
+    public virtual Task<ClientResult<DeleteThreadResult>> DeleteThreadAsync(AssistantThread thread)
         => DeleteThreadAsync(thread?.Id);
 
     /// <summary>
@@ -91,7 +91,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="thread"> The thread to delete. </param>
     /// <returns> A value indicating whether the deletion was successful. </returns>
-    public virtual ClientResult<bool> DeleteThread(AssistantThread thread)
+    public virtual ClientResult<DeleteThreadResult> DeleteThread(AssistantThread thread)
         => DeleteThread(thread?.Id);
 
     /// <summary>
@@ -199,7 +199,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="message"> The message to delete. </param>
     /// <returns> A value indicating whether the deletion was successful. </returns>
-    public virtual Task<ClientResult<bool>> DeleteMessageAsync(ThreadMessage message)
+    public virtual Task<ClientResult<DeleteMessageResult>> DeleteMessageAsync(ThreadMessage message)
         => DeleteMessageAsync(message?.ThreadId, message?.Id);
 
     /// <summary>
@@ -207,7 +207,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="message"> The message to delete. </param>
     /// <returns> A value indicating whether the deletion was successful. </returns>
-    public virtual ClientResult<bool> DeleteMessage(ThreadMessage message)
+    public virtual ClientResult<DeleteMessageResult> DeleteMessage(ThreadMessage message)
         => DeleteMessage(message?.ThreadId, message?.Id);
 
     /// <summary>

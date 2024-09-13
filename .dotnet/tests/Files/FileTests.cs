@@ -222,22 +222,23 @@ public partial class FileTests : SyncAsyncTestBase
         string filename = "test-file-delete-me.txt";
 
         OpenAIFileInfo uploadedFile = await client.UploadFileAsync(file, filename, FileUploadPurpose.Assistants);
-        bool deleted;
+        DeleteFileResult result;
 
         if (useFileInfoOverload)
         {
-            deleted = IsAsync
+            result = IsAsync
                 ? await client.DeleteFileAsync(uploadedFile.Id)
                 : client.DeleteFile(uploadedFile.Id);
         }
         else
         {
-            deleted = IsAsync
+            result = IsAsync
                 ? await client.DeleteFileAsync(uploadedFile.Id)
                 : client.DeleteFile(uploadedFile.Id);
         }
 
-        Assert.That(deleted, Is.True);
+        Assert.That(result.Id, Is.EqualTo(uploadedFile.Id));
+        Assert.That(result.Deleted, Is.True);
     }
 
     [Test]

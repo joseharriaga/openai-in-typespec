@@ -8,16 +8,16 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Files
+namespace OpenAI.VectorStores
 {
-    internal partial class InternalDeleteFileResponse : IJsonModel<InternalDeleteFileResponse>
+    public partial class RemoveFileFromStoreResult : IJsonModel<RemoveFileFromStoreResult>
     {
-        void IJsonModel<InternalDeleteFileResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<RemoveFileFromStoreResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteFileResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RemoveFileFromStoreResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalDeleteFileResponse)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(RemoveFileFromStoreResult)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -26,15 +26,15 @@ namespace OpenAI.Files
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(Id);
             }
+            if (SerializedAdditionalRawData?.ContainsKey("deleted") != true)
+            {
+                writer.WritePropertyName("deleted"u8);
+                writer.WriteBooleanValue(Removed);
+            }
             if (SerializedAdditionalRawData?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("deleted") != true)
-            {
-                writer.WritePropertyName("deleted"u8);
-                writer.WriteBooleanValue(Deleted);
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -58,19 +58,19 @@ namespace OpenAI.Files
             writer.WriteEndObject();
         }
 
-        InternalDeleteFileResponse IJsonModel<InternalDeleteFileResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        RemoveFileFromStoreResult IJsonModel<RemoveFileFromStoreResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteFileResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RemoveFileFromStoreResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalDeleteFileResponse)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(RemoveFileFromStoreResult)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalDeleteFileResponse(document.RootElement, options);
+            return DeserializeRemoveFileFromStoreResult(document.RootElement, options);
         }
 
-        internal static InternalDeleteFileResponse DeserializeInternalDeleteFileResponse(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static RemoveFileFromStoreResult DeserializeRemoveFileFromStoreResult(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -79,8 +79,8 @@ namespace OpenAI.Files
                 return null;
             }
             string id = default;
-            InternalDeleteFileResponseObject @object = default;
             bool deleted = default;
+            InternalDeleteVectorStoreFileResponseObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -90,14 +90,14 @@ namespace OpenAI.Files
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("object"u8))
-                {
-                    @object = new InternalDeleteFileResponseObject(property.Value.GetString());
-                    continue;
-                }
                 if (property.NameEquals("deleted"u8))
                 {
                     deleted = property.Value.GetBoolean();
+                    continue;
+                }
+                if (property.NameEquals("object"u8))
+                {
+                    @object = new InternalDeleteVectorStoreFileResponseObject(property.Value.GetString());
                     continue;
                 }
                 if (true)
@@ -107,44 +107,44 @@ namespace OpenAI.Files
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalDeleteFileResponse(id, @object, deleted, serializedAdditionalRawData);
+            return new RemoveFileFromStoreResult(id, deleted, @object, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<InternalDeleteFileResponse>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<RemoveFileFromStoreResult>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteFileResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RemoveFileFromStoreResult>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalDeleteFileResponse)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(RemoveFileFromStoreResult)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalDeleteFileResponse IPersistableModel<InternalDeleteFileResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
+        RemoveFileFromStoreResult IPersistableModel<RemoveFileFromStoreResult>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalDeleteFileResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<RemoveFileFromStoreResult>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalDeleteFileResponse(document.RootElement, options);
+                        return DeserializeRemoveFileFromStoreResult(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalDeleteFileResponse)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(RemoveFileFromStoreResult)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalDeleteFileResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<RemoveFileFromStoreResult>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalDeleteFileResponse FromResponse(PipelineResponse response)
+        internal static RemoveFileFromStoreResult FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalDeleteFileResponse(document.RootElement);
+            return DeserializeRemoveFileFromStoreResult(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

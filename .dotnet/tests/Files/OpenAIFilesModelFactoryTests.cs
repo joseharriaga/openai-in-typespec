@@ -11,6 +11,35 @@ namespace OpenAI.Tests.Files;
 public partial class OpenAIFilesModelFactoryTests
 {
     [Test]
+    public void DeleteFileResultWithNoPropertiesWorks()
+    {
+        DeleteFileResult deleteFileResult = OpenAIFilesModelFactory.DeleteFileResult();
+
+        Assert.That(deleteFileResult.Id, Is.Null);
+        Assert.That(deleteFileResult.Deleted, Is.EqualTo(false));
+    }
+
+    [Test]
+    public void DeleteFileResultWithIdWorks()
+    {
+        string id = "modelId";
+        DeleteFileResult deleteFileResult = OpenAIFilesModelFactory.DeleteFileResult(id: id);
+
+        Assert.That(deleteFileResult.Id, Is.EqualTo(id));
+        Assert.That(deleteFileResult.Deleted, Is.EqualTo(false));
+    }
+
+    [Test]
+    public void DeleteFileResultWithDeletedWorks()
+    {
+        bool deleted = true;
+        DeleteFileResult deleteFileResult = OpenAIFilesModelFactory.DeleteFileResult(deleted: deleted);
+
+        Assert.That(deleteFileResult.Id, Is.Null);
+        Assert.That(deleteFileResult.Deleted, Is.EqualTo(deleted));
+    }
+
+    [Test]
     public void OpenAIFileInfoWithNoPropertiesWorks()
     {
         OpenAIFileInfo openAIFileInfo = OpenAIFilesModelFactory.OpenAIFileInfo();

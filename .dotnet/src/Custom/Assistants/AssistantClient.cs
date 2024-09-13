@@ -251,14 +251,14 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="assistantId"> The ID of the assistant to delete. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A value indicating whether the deletion was successful. </returns>
-    public virtual async Task<ClientResult<bool>> DeleteAssistantAsync(string assistantId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="DeleteAssistantResult"/> instance. </returns>
+    public virtual async Task<ClientResult<DeleteAssistantResult>> DeleteAssistantAsync(string assistantId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
         ClientResult protocolResult = await DeleteAssistantAsync(assistantId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return CreateResultFromProtocol(protocolResult, response
-            => InternalDeleteAssistantResponse.FromResponse(response).Deleted);
+            => DeleteAssistantResult.FromResponse(response));
     }
 
     /// <summary>
@@ -266,14 +266,14 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="assistantId"> The ID of the assistant to delete. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A value indicating whether the deletion was successful. </returns>
-    public virtual ClientResult<bool> DeleteAssistant(string assistantId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="DeleteAssistantResult"/> instance. </returns>
+    public virtual ClientResult<DeleteAssistantResult> DeleteAssistant(string assistantId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
         ClientResult protocolResult = DeleteAssistant(assistantId, cancellationToken.ToRequestOptions());
         return CreateResultFromProtocol(protocolResult, response
-            => InternalDeleteAssistantResponse.FromResponse(response).Deleted);
+            => DeleteAssistantResult.FromResponse(response));
     }
 
     /// <summary>
@@ -365,14 +365,14 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="threadId"> The ID of the thread to delete. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A value indicating whether the deletion was successful. </returns>
-    public virtual async Task<ClientResult<bool>> DeleteThreadAsync(string threadId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="DeleteThreadResult"/> instance. </returns>
+    public virtual async Task<ClientResult<DeleteThreadResult>> DeleteThreadAsync(string threadId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
         ClientResult protocolResult = await DeleteThreadAsync(threadId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return CreateResultFromProtocol(protocolResult, response
-            => InternalDeleteThreadResponse.FromResponse(response).Deleted);
+            => DeleteThreadResult.FromResponse(response));
     }
 
     /// <summary>
@@ -380,14 +380,14 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="threadId"> The ID of the thread to delete. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A value indicating whether the deletion was successful. </returns>
-    public virtual ClientResult<bool> DeleteThread(string threadId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="DeleteThreadResult"/> instance. </returns>
+    public virtual ClientResult<DeleteThreadResult> DeleteThread(string threadId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
         ClientResult protocolResult = DeleteThread(threadId, cancellationToken.ToRequestOptions());
         return CreateResultFromProtocol(protocolResult, response
-            => InternalDeleteThreadResponse.FromResponse(response).Deleted);
+            => DeleteThreadResult.FromResponse(response));
     }
 
     /// <summary>
@@ -607,15 +607,15 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread associated with the message. </param>
     /// <param name="messageId"> The ID of the message. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A value indicating whether the deletion was successful. </returns>
-    public virtual async Task<ClientResult<bool>> DeleteMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="DeleteMessageResult"/> instance. </returns>
+    public virtual async Task<ClientResult<DeleteMessageResult>> DeleteMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
 
         ClientResult protocolResult = await DeleteMessageAsync(threadId, messageId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return CreateResultFromProtocol(protocolResult, response =>
-            InternalDeleteMessageResponse.FromResponse(response).Deleted);
+            DeleteMessageResult.FromResponse(response));
     }
 
     /// <summary>
@@ -624,15 +624,15 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread associated with the message. </param>
     /// <param name="messageId"> The ID of the message. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A value indicating whether the deletion was successful. </returns>
-    public virtual ClientResult<bool> DeleteMessage(string threadId, string messageId, CancellationToken cancellationToken = default)
+    /// <returns> A <see cref="DeleteMessageResult"/> instance. </returns>
+    public virtual ClientResult<DeleteMessageResult> DeleteMessage(string threadId, string messageId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(messageId, nameof(messageId));
 
         ClientResult protocolResult = DeleteMessage(threadId, messageId, cancellationToken.ToRequestOptions());
         return CreateResultFromProtocol(protocolResult, response =>
-            InternalDeleteMessageResponse.FromResponse(response).Deleted);
+            DeleteMessageResult.FromResponse(response));
     }
 
     /// <summary>

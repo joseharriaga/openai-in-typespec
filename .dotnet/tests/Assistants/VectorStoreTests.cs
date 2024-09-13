@@ -35,10 +35,11 @@ public partial class VectorStoreTests : SyncAsyncTestBase
             ? await client.CreateVectorStoreAsync()
             : client.CreateVectorStore();
         Validate(vectorStore);
-        bool deleted = IsAsync
+        DeleteVectorStoreResult deletionResult = IsAsync
             ? await client.DeleteVectorStoreAsync(vectorStore)
             : client.DeleteVectorStore(vectorStore);
-        Assert.That(deleted, Is.True);
+        Assert.That(deletionResult.Id, Is.EqualTo(vectorStore.Id));
+        Assert.That(deletionResult.Deleted, Is.True);
         _vectorStoresToDelete.RemoveAt(_vectorStoresToDelete.Count - 1);
 
         IReadOnlyList<OpenAIFileInfo> testFiles = GetNewTestFiles(5);
@@ -86,10 +87,11 @@ public partial class VectorStoreTests : SyncAsyncTestBase
             Assert.That(vectorStore.Metadata?.TryGetValue("test-key", out string metadataValue) == true && metadataValue == "test-value");
         });
 
-        deleted = IsAsync
+        deletionResult = IsAsync
             ? await client.DeleteVectorStoreAsync(vectorStore.Id)
             : client.DeleteVectorStore(vectorStore.Id);
-        Assert.That(deleted, Is.True);
+        Assert.That(deletionResult.Id, Is.EqualTo(vectorStore.Id));
+        Assert.That(deletionResult.Deleted, Is.True);
         _vectorStoresToDelete.RemoveAt(_vectorStoresToDelete.Count - 1);
 
         creationOptions = new VectorStoreCreationOptions();
@@ -212,10 +214,11 @@ public partial class VectorStoreTests : SyncAsyncTestBase
             });
         }
 
-        bool removed = IsAsync
+        RemoveFileFromStoreResult removalResult = IsAsync
             ? await client.RemoveFileFromStoreAsync(vectorStore, files[0])
             : client.RemoveFileFromStore(vectorStore, files[0]);
-        Assert.True(removed);
+        Assert.That(removalResult.Id, Is.EqualTo(files[0].Id));
+        Assert.True(removalResult.Removed);
         _associationsToRemove.RemoveAt(0);
 
         // Errata: removals aren't immediately reflected when requesting the list
@@ -269,8 +272,9 @@ public partial class VectorStoreTests : SyncAsyncTestBase
             });
         }
 
-        bool removed = client.RemoveFileFromStore(vectorStore, files[0]);
-        Assert.True(removed);
+        RemoveFileFromStoreResult removalResult = client.RemoveFileFromStore(vectorStore, files[0]);
+        Assert.That(removalResult.Id, Is.EqualTo(files[0].Id));
+        Assert.True(removalResult.Removed);
         _associationsToRemove.RemoveAt(0);
 
         // Errata: removals aren't immediately reflected when requesting the list
@@ -334,8 +338,9 @@ public partial class VectorStoreTests : SyncAsyncTestBase
             });
         }
 
-        bool removed = client.RemoveFileFromStore(vectorStore, files[0]);
-        Assert.True(removed);
+        RemoveFileFromStoreResult removalResult = client.RemoveFileFromStore(vectorStore, files[0]);
+        Assert.That(removalResult.Id, Is.EqualTo(files[0].Id));
+        Assert.True(removalResult.Removed);
         _associationsToRemove.RemoveAt(0);
 
         // Errata: removals aren't immediately reflected when requesting the list

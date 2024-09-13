@@ -14,6 +14,11 @@
 - Removed the common `ListOrder` enum from the top-level `OpenAI` namespace in favor of individual enums in their corresponding sub-namespace. (commit_hash)
 - Renamed the `PageSize` property to `PageSizeLimit`. (commit_hash)
 - Removed setter from collection properties.
+- Updated deletion methods to return a result object instead of a `bool`. Affected methods:
+  - `DeleteAssitant`, `DeleteMessage`, and `DeleteThread` in `AssistantClient`.
+  - `DeleteVectorStore` and `RemoveFileFromStore` in `VectorStoreClient`.
+  - `DeleteModel` in `ModelClient`.
+  - `DeleteFile` in `FileClient`.
 
 ### Bugs Fixed
 

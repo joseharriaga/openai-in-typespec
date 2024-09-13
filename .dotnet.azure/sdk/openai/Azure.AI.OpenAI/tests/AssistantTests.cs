@@ -59,8 +59,9 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
             Name = "test assistant name",
         });
         Assert.That(assistant.Name, Is.EqualTo("test assistant name"));
-        bool deleted = await client.DeleteAssistantAsync(assistant.Id);
-        Assert.That(deleted, Is.True);
+        DeleteAssistantResult deletionResult = await client.DeleteAssistantAsync(assistant.Id);
+        Assert.That(deletionResult.Id, Is.EqualTo(assistant.Id));
+        Assert.That(deletionResult.Deleted, Is.True);
         assistant = await client.CreateAssistantAsync(modelName, new AssistantCreationOptions()
         {
             Metadata =
@@ -93,8 +94,9 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
         AssistantThread thread = await client.CreateThreadAsync();
         Validate(thread);
         Assert.That(thread.CreatedAt, Is.GreaterThan(s_2024));
-        bool deleted = await client.DeleteThreadAsync(thread.Id);
-        Assert.That(deleted, Is.True);
+        DeleteThreadResult deletionResult = await client.DeleteThreadAsync(thread.Id);
+        Assert.That(deletionResult.Id, Is.EqualTo(thread.Id));
+        Assert.That(deletionResult.Deleted, Is.True);
 
         ThreadCreationOptions options = new()
         {
@@ -247,8 +249,9 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
 
         if (aoaiDeleteBugFixed)
         {
-            bool deleted = await client.DeleteMessageAsync(message);
-            Assert.That(deleted, Is.True);
+            DeleteMessageResult deletionResult = await client.DeleteMessageAsync(message);
+            Assert.That(deletionResult.Id, Is.EqualTo(message.Id));
+            Assert.That(deletionResult.Deleted, Is.True);
         }
 
         message = await client.CreateMessageAsync(thread.Id, MessageRole.User, ["Goodbye, world!"], new MessageCreationOptions()

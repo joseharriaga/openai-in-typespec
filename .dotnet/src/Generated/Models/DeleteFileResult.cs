@@ -5,12 +5,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenAI.Assistants
+namespace OpenAI.Files
 {
-    internal partial class InternalDeleteMessageResponse
+    public partial class DeleteFileResult
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalDeleteMessageResponse(string id, bool deleted)
+        internal DeleteFileResult(string id, bool deleted)
         {
             Argument.AssertNotNull(id, nameof(id));
 
@@ -18,20 +18,20 @@ namespace OpenAI.Assistants
             Deleted = deleted;
         }
 
-        internal InternalDeleteMessageResponse(string id, bool deleted, InternalDeleteMessageResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal DeleteFileResult(string id, InternalDeleteFileResponseObject @object, bool deleted, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
-            Deleted = deleted;
             Object = @object;
+            Deleted = deleted;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal InternalDeleteMessageResponse()
+        internal DeleteFileResult()
         {
         }
 
         public string Id { get; }
+
         public bool Deleted { get; }
-        public InternalDeleteMessageResponseObject Object { get; } = InternalDeleteMessageResponseObject.ThreadMessageDeleted;
     }
 }

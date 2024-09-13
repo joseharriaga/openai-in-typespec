@@ -11,6 +11,35 @@ namespace OpenAI.Tests.Models;
 public partial class OpenAIModelsModelFactoryTests
 {
     [Test]
+    public void DeleteModelResultWithNoPropertiesWorks()
+    {
+        DeleteModelResult deleteModelResult = OpenAIModelsModelFactory.DeleteModelResult();
+
+        Assert.That(deleteModelResult.Id, Is.Null);
+        Assert.That(deleteModelResult.Deleted, Is.EqualTo(false));
+    }
+
+    [Test]
+    public void DeleteModelResultWithIdWorks()
+    {
+        string id = "modelId";
+        DeleteModelResult deleteModelResult = OpenAIModelsModelFactory.DeleteModelResult(id: id);
+
+        Assert.That(deleteModelResult.Id, Is.EqualTo(id));
+        Assert.That(deleteModelResult.Deleted, Is.EqualTo(false));
+    }
+
+    [Test]
+    public void DeleteModelResultWithDeletedWorks()
+    {
+        bool deleted = true;
+        DeleteModelResult deleteModelResult = OpenAIModelsModelFactory.DeleteModelResult(deleted: deleted);
+
+        Assert.That(deleteModelResult.Id, Is.Null);
+        Assert.That(deleteModelResult.Deleted, Is.EqualTo(deleted));
+    }
+
+    [Test]
     public void OpenAIModelInfoWithNoPropertiesWorks()
     {
         OpenAIModelInfo openAIModelInfo = OpenAIModelsModelFactory.OpenAIModelInfo();

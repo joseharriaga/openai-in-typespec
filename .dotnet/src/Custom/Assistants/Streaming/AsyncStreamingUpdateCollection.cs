@@ -31,6 +31,16 @@ internal class AsyncStreamingUpdateCollection : AsyncCollectionResult<StreamingU
         return new AsyncStreamingUpdateEnumerator(_getResultAsync, this, cancellationToken);
     }
 
+    public override ContinuationToken? GetContinuationToken(ClientResult page)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override IAsyncEnumerable<ClientResult> GetRawPagesAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     private sealed class AsyncStreamingUpdateEnumerator : IAsyncEnumerator<StreamingUpdate>
     {
         private static ReadOnlySpan<byte> TerminalData => "[DONE]"u8;
@@ -110,7 +120,7 @@ internal class AsyncStreamingUpdateCollection : AsyncCollectionResult<StreamingU
         {
             ClientResult result = await _getResultAsync().ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
-            _enumerable.SetRawResponse(response);
+            //_enumerable.SetRawResponse(response);
 
             if (response.ContentStream is null)
             {
@@ -137,8 +147,10 @@ internal class AsyncStreamingUpdateCollection : AsyncCollectionResult<StreamingU
 
                 // Dispose the response so we don't leave the unbuffered
                 // network stream open.
-                PipelineResponse response = _enumerable.GetRawResponse();
-                response.Dispose();
+
+                // TODO: restore this functionality
+                //PipelineResponse response = _enumerable.GetRawResponse();
+                //response.Dispose();
             }
         }
     }

@@ -50,7 +50,7 @@ public partial class BatchClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual IAsyncEnumerable<ClientResult> GetBatchesAsync(string after, int? limit, RequestOptions options)
+    public virtual AsyncCollectionResult GetBatchesAsync(string after, int? limit, RequestOptions options)
     {
         BatchesPageEnumerator enumerator = new BatchesPageEnumerator(_pipeline, _endpoint, after, limit, options);
         return CollectionResultHelpers.CreateAsync(enumerator);
@@ -64,7 +64,7 @@ public partial class BatchClient
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual IEnumerable<ClientResult> GetBatches(string after, int? limit, RequestOptions options)
+    public virtual CollectionResult GetBatches(string after, int? limit, RequestOptions options)
     {
         BatchesPageEnumerator enumerator = new BatchesPageEnumerator(_pipeline, _endpoint, after, limit, options);
         return CollectionResultHelpers.Create(enumerator);

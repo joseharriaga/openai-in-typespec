@@ -31,6 +31,16 @@ internal class InternalAsyncStreamingChatCompletionUpdateCollection : AsyncColle
         return new AsyncStreamingChatUpdateEnumerator(_getResultAsync, this, cancellationToken);
     }
 
+    public override ContinuationToken? GetContinuationToken(ClientResult page)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override IAsyncEnumerable<ClientResult> GetRawPagesAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     private sealed class AsyncStreamingChatUpdateEnumerator : IAsyncEnumerator<StreamingChatCompletionUpdate>
     {
         private static ReadOnlySpan<byte> TerminalData => "[DONE]"u8;
@@ -111,7 +121,7 @@ internal class InternalAsyncStreamingChatCompletionUpdateCollection : AsyncColle
         {
             ClientResult result = await _getResultAsync().ConfigureAwait(false);
             PipelineResponse response = result.GetRawResponse();
-            _enumerable.SetRawResponse(response);
+            //_enumerable.SetRawResponse(response);
 
             if (response.ContentStream is null)
             {
@@ -138,8 +148,10 @@ internal class InternalAsyncStreamingChatCompletionUpdateCollection : AsyncColle
 
                 // Dispose the response so we don't leave the unbuffered
                 // network stream open.
-                PipelineResponse response = _enumerable.GetRawResponse();
-                response.Dispose();
+
+                // TODO: Restore
+                //PipelineResponse response = _enumerable.GetRawResponse();
+                //response.Dispose();
             }
         }
     }

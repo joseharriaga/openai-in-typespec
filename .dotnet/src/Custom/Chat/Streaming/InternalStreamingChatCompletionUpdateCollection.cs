@@ -25,9 +25,19 @@ internal class InternalStreamingChatCompletionUpdateCollection : CollectionResul
         _getResult = getResult;
     }
 
+    public override ContinuationToken? GetContinuationToken(ClientResult page)
+    {
+        throw new NotImplementedException();
+    }
+
     public override IEnumerator<StreamingChatCompletionUpdate> GetEnumerator()
     {
         return new StreamingChatUpdateEnumerator(_getResult, this);
+    }
+
+    public override IEnumerable<ClientResult> GetRawPages()
+    {
+        throw new NotImplementedException();
     }
 
     private sealed class StreamingChatUpdateEnumerator : IEnumerator<StreamingChatCompletionUpdate>
@@ -108,7 +118,7 @@ internal class InternalStreamingChatCompletionUpdateCollection : CollectionResul
         {
             ClientResult result = _getResult();
             PipelineResponse response = result.GetRawResponse();
-            _enumerable.SetRawResponse(response);
+            //_enumerable.SetRawResponse(response);
 
             if (response.ContentStream is null)
             {
@@ -139,8 +149,10 @@ internal class InternalStreamingChatCompletionUpdateCollection : CollectionResul
 
                 // Dispose the response so we don't leave the unbuffered
                 // network stream open.
-                PipelineResponse response = _enumerable.GetRawResponse();
-                response.Dispose();
+
+                // TODO: restore
+                //PipelineResponse response = _enumerable.GetRawResponse();
+                //response.Dispose();
             }
         }
     }

@@ -24,9 +24,19 @@ internal class StreamingUpdateCollection : CollectionResult<StreamingUpdate>
         _getResult = getResult;
     }
 
+    public override ContinuationToken? GetContinuationToken(ClientResult page)
+    {
+        throw new NotImplementedException();
+    }
+
     public override IEnumerator<StreamingUpdate> GetEnumerator()
     {
         return new StreamingUpdateEnumerator(_getResult, this);
+    }
+
+    public override IEnumerable<ClientResult> GetRawPages()
+    {
+        throw new NotImplementedException();
     }
 
     private sealed class StreamingUpdateEnumerator : IEnumerator<StreamingUpdate>
@@ -106,7 +116,7 @@ internal class StreamingUpdateCollection : CollectionResult<StreamingUpdate>
         {
             ClientResult result = _getResult();
             PipelineResponse response = result.GetRawResponse();
-            _enumerable.SetRawResponse(response);
+            //_enumerable.SetRawResponse(response);
 
             if (response.ContentStream is null)
             {
@@ -137,8 +147,10 @@ internal class StreamingUpdateCollection : CollectionResult<StreamingUpdate>
 
                 // Dispose the response so we don't leave the unbuffered
                 // network stream open.
-                PipelineResponse response = _enumerable.GetRawResponse();
-                response.Dispose();
+
+                // Restore
+                //PipelineResponse response = _enumerable.GetRawResponse();
+                //response.Dispose();
             }
         }
     }

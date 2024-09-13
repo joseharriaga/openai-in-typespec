@@ -8,6 +8,7 @@ namespace OpenAI.Chat;
 /// </summary>
 [CodeGenModel("CreateChatCompletionRequest")]
 [CodeGenSuppress("ChatCompletionOptions", typeof(IEnumerable<ChatMessage>), typeof(InternalCreateChatCompletionRequestModel))]
+[CodeGenSerialization(nameof(Messages), SerializationValueHook = nameof(SerializeMessagesValue))]
 [CodeGenSerialization(nameof(StopSequences), SerializationValueHook = nameof(SerializeStopSequencesValue), DeserializationValueHook = nameof(DeserializeStopSequencesValue))]
 [CodeGenSerialization(nameof(LogitBiases), SerializationValueHook = nameof(SerializeLogitBiasesValue), DeserializationValueHook = nameof(DeserializeLogitBiasesValue))]
 public partial class ChatCompletionOptions
@@ -144,4 +145,14 @@ public partial class ChatCompletionOptions
     /// </summary>
     [Experimental("OPENAI001")]
     public long? Seed { get; set; }
+
+    // CUSTOM: Hide deprecated max_tokens and reroute to newer max_completion_tokens
+    [CodeGenMember("MaxTokens")]
+    internal int? InternalMaxTokens { get; set; }
+
+    /// <summary>
+    /// An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and, on applicable models, reasoning tokens.
+    /// </summary>
+    [CodeGenMember("MaxCompletionTokens")]
+    public int? MaxTokens { get; set; }
 }

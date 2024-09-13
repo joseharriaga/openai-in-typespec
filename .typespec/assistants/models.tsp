@@ -13,9 +13,9 @@ namespace OpenAI;
 @doc("""
   Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4 Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
   
-  Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which guarantees the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+  Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
   
-  Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
+  Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
   
   **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
   """)
@@ -212,12 +212,31 @@ model AssistantToolsFileSearch extends AssistantToolDefinition {
     @doc("""
       The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
       
-      Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/number-of-chunks-returned) for more information.
+      Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
       """)
     @minValue(1)
     @maxValue(50)
     max_num_results?: int32;
+
+    ranking_options?: FileSearchRankingOptions;
   };
+}
+
+@doc("""
+  The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
+  
+  See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
+  """)
+model FileSearchRankingOptions {
+  @doc("""
+    The ranker to use for the file search. If not specified will use the `auto` ranker.
+    """)
+  ranker?: "auto" | "default_2024_08_21";
+
+  /** The score threshold for the file search. All values must be a floating point number between 0 and 1. */
+  @minValue(0)
+  @maxValue(1)
+  score_threshold: float32;
 }
 
 model AssistantToolsFileSearchTypeOnly {

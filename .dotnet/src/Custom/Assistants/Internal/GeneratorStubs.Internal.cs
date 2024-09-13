@@ -372,3 +372,15 @@ internal partial class InternalMessageDeltaContentRefusalObject { }
 
 [CodeGenModel("ToolResourcesFileSearchIdsOnly")]
 internal partial class InternalToolResourcesFileSearchIdsOnly { }
+
+[CodeGenModel("RunStepDetailsToolCallsFileSearchRankingOptionsObject")]
+internal partial class InternalRunStepDetailsToolCallsFileSearchRankingOptionsObject { }
+
+[CodeGenModel("RunStepDetailsToolCallsFileSearchRankingOptionsObjectRanker")]
+internal readonly partial struct InternalRunStepDetailsToolCallsFileSearchRankingOptionsObjectRanker { }
+
+[CodeGenModel("RunStepDetailsToolCallsFileSearchResultObjectContent")]
+internal partial class InternalRunStepDetailsToolCallsFileSearchResultObjectContent { }
+
+[CodeGenModel("RunStepDetailsToolCallsFileSearchResultObjectContentType")]
+internal readonly partial struct InternalRunStepDetailsToolCallsFileSearchResultObjectContentType { }

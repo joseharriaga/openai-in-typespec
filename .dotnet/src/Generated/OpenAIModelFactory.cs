@@ -74,11 +74,6 @@ namespace OpenAI
             return new ChatTokenTopLogProbabilityInfo(token, logProbability, utf8ByteValues?.ToList(), serializedAdditionalRawData: null);
         }
 
-        public static ChatTokenUsage ChatTokenUsage(int outputTokens = default, int inputTokens = default, int totalTokens = default)
-        {
-            return new ChatTokenUsage(outputTokens, inputTokens, totalTokens, serializedAdditionalRawData: null);
-        }
-
         public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokens = default, int totalTokens = default)
         {
             return new EmbeddingTokenUsage(inputTokens, totalTokens, serializedAdditionalRawData: null);

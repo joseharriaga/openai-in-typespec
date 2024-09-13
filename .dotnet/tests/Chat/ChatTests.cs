@@ -122,7 +122,6 @@ public partial class ChatTests : SyncAsyncTestBase
             firstTokenReceiptTime ??= stopwatch.Elapsed;
             latestTokenReceiptTime = stopwatch.Elapsed;
             usage ??= chatUpdate.Usage;
-            Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
             updateCount++;
         }
         Assert.That(updateCount, Is.GreaterThan(1));
@@ -130,6 +129,7 @@ public partial class ChatTests : SyncAsyncTestBase
         Assert.That(usage, Is.Not.Null);
         Assert.That(usage?.InputTokens, Is.GreaterThan(0));
         Assert.That(usage?.OutputTokens, Is.GreaterThan(0));
+        Assert.That(usage?.ReasoningTokens, Is.EqualTo(0));
         Assert.That(usage.InputTokens + usage.OutputTokens, Is.EqualTo(usage.TotalTokens));
 
         // Validate that network stream was disposed - this will show up as the
@@ -382,7 +382,7 @@ public partial class ChatTests : SyncAsyncTestBase
 
         Assert.That(completion.Content, Has.Count.EqualTo(1));
         Assert.That(completion.Content[0].Text.ToLowerInvariant(), Does.Contain("ahoy").Or.Contain("matey"));
-        Assert.That(completion.Content[0].Text.ToLowerInvariant(), Does.Contain("pup").Or.Contain("kit"));
+        Assert.That(completion.Content[0].Text.ToLowerInvariant(), Does.Contain("dog").Or.Contain("pup").Or.Contain("kit"));
     }
 
     [Test]
@@ -496,7 +496,6 @@ public partial class ChatTests : SyncAsyncTestBase
     }
 
     [Test]
-    [Ignore("As of 2024-08-20, refusal is not yet populated on streamed chat completion chunks.")]
     public async Task StreamingStructuredRefusalWorks()
     {
         ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "gpt-4o-2024-08-06");
@@ -599,5 +598,27 @@ public partial class ChatTests : SyncAsyncTestBase
 
         Assert.AreEqual(result.Value.Usage.InputTokens, input.value);
         Assert.AreEqual(result.Value.Usage.OutputTokens, output.value);
+    }
+
+    [Test]
+    public async Task ReasoningTokensWork()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "o1-mini");
+
+        UserChatMessage message = new("Using a comprehensive evaluation of popular media in the 1970s and 1980s, what were the most common sci-fi themes?");
+        ChatCompletionOptions options = new()
+        {
+            MaxTokens = 2148
+        };
+        ClientResult<ChatCompletion> completionResult = IsAsync
+            ? await client.CompleteChatAsync([message], options)
+            : client.CompleteChat([message], options);
+        ChatCompletion completion = completionResult;
+
+        Assert.That(completion, Is.Not.Null);
+        Assert.That(completion.Usage, Is.Not.Null);
+        Assert.That(completion.FinishReason, Is.EqualTo(ChatFinishReason.Stop));
+        Assert.That(completion.Usage.ReasoningTokens, Is.GreaterThan(0));
+        Assert.That(completion.Usage.ReasoningTokens, Is.LessThan(completion.Usage.OutputTokens));
     }
 }

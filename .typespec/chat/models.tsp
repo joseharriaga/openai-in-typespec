@@ -22,9 +22,13 @@ model CreateChatCompletionRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`:
     | string
+    | "o1-preview"
+    | "o1-preview-2024-09-12"
+    | "o1-mini"
+    | "o1-mini-2024-09-12"
     | "gpt-4o"
-    | "gpt-4o-2024-05-13"
     | "gpt-4o-2024-08-06"
+    | "gpt-4o-2024-05-13"
     | "chatgpt-4o-latest"
     | "gpt-4o-mini"
     | "gpt-4o-mini-2024-07-18"
@@ -77,12 +81,16 @@ model CreateChatCompletionRequest {
   @maxValue(20)
   top_logprobs?: int32 | null;
 
-  /**
-   * The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
-   *
-   * The total length of input tokens and generated tokens is limited by the model's context length. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
-   */
+  #deprecated "This field is marked as deprecated."
+  @doc("""
+    The maximum number of [tokens](/tokenizer) that can be generated in the chat completion. This value can be used to control [costs](https://openai.com/api/pricing/) for text generated via API.
+    
+    This value is now deprecated in favor of `max_completion_tokens`, and is not compatible with [o1 series models](/docs/guides/reasoning).
+    """)
   max_tokens?: int32 | null;
+
+  /** An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and [reasoning tokens](/docs/guides/reasoning). */
+  max_completion_tokens?: int32 | null;
 
   @doc("""
     How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs.
@@ -104,9 +112,9 @@ model CreateChatCompletionRequest {
   @doc("""
     An object specifying the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4o mini](/docs/models/gpt-4o-mini), [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
     
-    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which guarantees the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
     
-    Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
+    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
     
     **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
     """)
@@ -124,7 +132,8 @@ model CreateChatCompletionRequest {
 
   @doc("""
     Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
-      - If set to 'auto', the system will utilize scale tier credits until they are exhausted.
+      - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted. 
+      - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
       - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
       - When not set, the default behavior is 'auto'.
     

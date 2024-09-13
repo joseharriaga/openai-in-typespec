@@ -132,7 +132,7 @@ public partial class ChatTests
         requestOptions = new()
         {
             Functions = { FUNCTION_TEMPERATURE },
-            MaxTokens = requestOptions.MaxTokens,
+            MaxTokens = 512,
         };
 
         completion = await client.CompleteChatAsync(messages, requestOptions);

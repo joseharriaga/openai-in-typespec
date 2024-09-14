@@ -13,7 +13,10 @@
 - Removed `ChatMessageContentPart`'s `ToString` overload. (commit_hash)
 - Removed the common `ListOrder` enum from the top-level `OpenAI` namespace in favor of individual enums in their corresponding sub-namespace. (commit_hash)
 - Renamed the `PageSize` property to `PageSizeLimit`. (commit_hash)
-- Removed setter from collection properties.
+- Removed setters from collection properties. (commit_hash)
+- Renamed `ChatTokenLogProbabilityInfo` to `ChatTokenLogProbabilityDetails`. (commit_hash)
+- Renamed `ChatTokenTopLogProbabilityInfo` to `ChatTokenTopLogProbabilityDetails`. (commit_hash)
+- Renamed the `Utf8ByteValues` properties of `ChatTokenLogProbabilityDetails` and `ChatTokenTopLogProbabilityDetails` to `Utf8Bytes` and changed their type from `IReadOnlyList<int>` to `ReadOnlyMemory<byte>?`
 
 ### Bugs Fixed
 

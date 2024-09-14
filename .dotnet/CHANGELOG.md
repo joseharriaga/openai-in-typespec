@@ -24,6 +24,8 @@
 
 ### Other Changes
 
+- Added support for `CancellationToken` to `ModelClient` methods. (commit_hash)
+
 ## 2.0.0-beta.11 (2024-09-03)
 
 ### Features Added

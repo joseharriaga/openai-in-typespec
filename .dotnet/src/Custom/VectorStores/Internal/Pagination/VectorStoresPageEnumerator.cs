@@ -75,18 +75,6 @@ internal partial class VectorStoresPageEnumerator : PageEnumerator<VectorStore>
         return hasMore;
     }
 
-    //public override PageResult<VectorStore> GetPageFromResult(ClientResult result)
-    //{
-    //    PipelineResponse response = result.GetRawResponse();
-
-    //    InternalListVectorStoresResponse list = ModelReaderWriter.Read<InternalListVectorStoresResponse>(response.Content)!;
-
-    //    VectorStoresPageToken pageToken = VectorStoresPageToken.FromOptions(_limit, _order, _after, _before);
-    //    VectorStoresPageToken? nextPageToken = pageToken.GetNextPageToken(list.HasMore, list.LastId);
-
-    //    return PageResult<VectorStore>.Create(list.Data, pageToken, nextPageToken, response);
-    //}
-
     internal virtual async Task<ClientResult> GetVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options)
     {
         using PipelineMessage message = CreateGetVectorStoresRequest(limit, order, after, before, options);

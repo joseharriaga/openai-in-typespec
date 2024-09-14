@@ -76,18 +76,6 @@ internal partial class AssistantsPageEnumerator : PageEnumerator<Assistant>
         return hasMore;
     }
 
-    //public override PageResult<Assistant> GetPageFromResult(ClientResult result)
-    //{
-    //    PipelineResponse response = result.GetRawResponse();
-
-    //    InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
-
-    //    AssistantsPageToken pageToken = AssistantsPageToken.FromOptions(_limit, _order, _after, _before);
-    //    AssistantsPageToken? nextPageToken = pageToken.GetNextPageToken(list.HasMore, list.LastId);
-
-    //    return PageResult<Assistant>.Create(list.Data, pageToken, nextPageToken, response);
-    //}
-
     internal virtual async Task<ClientResult> GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
     {
         using PipelineMessage message = CreateGetAssistantsRequest(limit, order, after, before, options);

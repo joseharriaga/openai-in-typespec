@@ -82,18 +82,6 @@ internal partial class RunStepsPageEnumerator : PageEnumerator<RunStep>
         return hasMore;
     }
 
-    //public override PageResult<RunStep> GetPageFromResult(ClientResult result)
-    //{
-    //    PipelineResponse response = result.GetRawResponse();
-
-    //    InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
-
-    //    RunStepsPageToken pageToken = RunStepsPageToken.FromOptions(_threadId, _runId, _limit, _order, _after, _before);
-    //    RunStepsPageToken? nextPageToken = pageToken.GetNextPageToken(list.HasMore, list.LastId);
-
-    //    return PageResult<RunStep>.Create(list.Data, pageToken, nextPageToken, response);
-    //}
-
     internal async virtual Task<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string? order, string? after, string? before, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));

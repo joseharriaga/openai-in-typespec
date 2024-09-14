@@ -78,18 +78,6 @@ internal partial class RunsPageEnumerator : PageEnumerator<ThreadRun>
         return hasMore;
     }
 
-    //public override PageResult<ThreadRun> GetPageFromResult(ClientResult result)
-    //{
-    //    PipelineResponse response = result.GetRawResponse();
-
-    //    InternalListRunsResponse list = ModelReaderWriter.Read<InternalListRunsResponse>(response.Content)!;
-
-    //    RunsPageToken pageToken = RunsPageToken.FromOptions(_threadId, _limit, _order, _after, _before);
-    //    RunsPageToken? nextPageToken = pageToken.GetNextPageToken(list.HasMore, list.LastId);
-
-    //    return PageResult<ThreadRun>.Create(list.Data, pageToken, nextPageToken, response);
-    //}
-
     internal async virtual Task<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));

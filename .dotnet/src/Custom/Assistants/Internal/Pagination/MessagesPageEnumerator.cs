@@ -80,18 +80,6 @@ internal partial class MessagesPageEnumerator : PageEnumerator<ThreadMessage>
         return hasMore;
     }
 
-    //public override PageResult<ThreadMessage> GetPageFromResult(ClientResult result)
-    //{
-    //    PipelineResponse response = result.GetRawResponse();
-
-    //    InternalListMessagesResponse list = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content)!;
-
-    //    MessagesPageToken pageToken = MessagesPageToken.FromOptions(_threadId, _limit, _order, _after, _before);
-    //    MessagesPageToken? nextPageToken = pageToken.GetNextPageToken(list.HasMore, list.LastId);
-
-    //    return PageResult<ThreadMessage>.Create(list.Data, pageToken, nextPageToken, response);
-    //}
-
     internal virtual async Task<ClientResult> GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));

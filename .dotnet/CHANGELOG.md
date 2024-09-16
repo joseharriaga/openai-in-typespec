@@ -29,6 +29,7 @@
 ### Other Changes
 
 - Added support for `CancellationToken` to `ModelClient` methods. (commit_hash)
+- Applied the `Obsolete` attribute where appropriate to align with the existing deprecations in the REST API. (commit_hash)
 
 ## 2.0.0-beta.11 (2024-09-03)
 

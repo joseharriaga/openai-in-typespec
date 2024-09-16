@@ -281,7 +281,7 @@ public partial class VectorStoreTests : SyncAsyncTestBase
 
         // Use enumerators instead of enumerables to faciliate advancing the collections
         // at the same time.
-        AsyncCollectionResult<VectorStoreFileAssociation> fileAssociations = client.GetFileAssociationsAsync(vectorStore, new VectorStoreFileAssociationCollectionOptions() { PageSizeLimit = 2});
+        AsyncCollectionResult<VectorStoreFileAssociation> fileAssociations = client.GetFileAssociationsAsync(vectorStore, new VectorStoreFileAssociationCollectionOptions() { PageSizeLimit = 2 });
         IAsyncEnumerable<ClientResult> pages = fileAssociations.GetRawPagesAsync();
         IAsyncEnumerator<ClientResult> pageEnumerator = pages.GetAsyncEnumerator();
         await pageEnumerator.MoveNextAsync();
@@ -297,8 +297,8 @@ public partial class VectorStoreTests : SyncAsyncTestBase
         IAsyncEnumerator<ClientResult> rehydratedPageEnumerator = rehydratedPages.GetAsyncEnumerator();
 
         int pageCount = 0;
-        
-        while ( await pageEnumerator.MoveNextAsync() && await rehydratedPageEnumerator.MoveNextAsync())
+
+        while (await pageEnumerator.MoveNextAsync() && await rehydratedPageEnumerator.MoveNextAsync())
         {
             ClientResult page = pageEnumerator.Current;
             ClientResult rehydratedPage = rehydratedPageEnumerator.Current;

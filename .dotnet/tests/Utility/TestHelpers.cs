@@ -43,7 +43,7 @@ internal static class TestHelpers
 
     public static OpenAIClient GetTestTopLevelClient() => GetTestClient<OpenAIClient>(TestScenario.TopLevel);
 
-    public static T GetTestClient<T>(TestScenario scenario,  string overrideModel = null, OpenAIClientOptions options = default)
+    public static T GetTestClient<T>(TestScenario scenario, string overrideModel = null, OpenAIClientOptions options = default)
     {
         options ??= new();
         ApiKeyCredential credential = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));

@@ -603,7 +603,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         }),
         PipelinePosition.PerCall);
 
-        OpenAIClient topLevelClient = new("mock-credential", options);
+        OpenAIClient topLevelClient = new(new ApiKeyCredential("mock-credential"), options);
         ChatClient firstClient = topLevelClient.GetChatClient("mock-model");
         ClientResult first = firstClient.CompleteChat(new UserChatMessage("Hello, world"));
 

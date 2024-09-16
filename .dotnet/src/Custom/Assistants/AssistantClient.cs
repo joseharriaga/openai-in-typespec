@@ -131,8 +131,14 @@ public partial class AssistantClient
         AssistantCollectionOptions options = default,
         CancellationToken cancellationToken = default)
     {
-        return GetAssistantsAsync(options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
-            as AsyncCollectionResult<Assistant>;
+        AsyncCollectionResult result = GetAssistantsAsync(options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions());
+
+        if (result is not AsyncCollectionResult<Assistant> assistantCollection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'AsyncCollectionResult<Assistant>'.");
+        }
+
+        return assistantCollection;
     }
 
     /// <summary>
@@ -151,8 +157,14 @@ public partial class AssistantClient
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
         AssistantCollectionPageToken pageToken = AssistantCollectionPageToken.FromToken(firstPageToken);
-        return GetAssistantsAsync(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken.Before, cancellationToken.ToRequestOptions())
-            as AsyncCollectionResult<Assistant>;
+        AsyncCollectionResult result = GetAssistantsAsync(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken.Before, cancellationToken.ToRequestOptions());
+
+        if (result is not AsyncCollectionResult<Assistant> assistantCollection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'AsyncCollectionResult<Assistant>'.");
+        }
+
+        return assistantCollection;
     }
 
     /// <summary>
@@ -168,8 +180,14 @@ public partial class AssistantClient
         AssistantCollectionOptions options = default,
         CancellationToken cancellationToken = default)
     {
-        return GetAssistants(options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
-            as CollectionResult<Assistant>;
+        CollectionResult result = GetAssistants(options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions());
+
+        if (result is not CollectionResult<Assistant> assistantCollection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'CollectionResult<Assistant>'.");
+        }
+
+        return assistantCollection;
     }
 
     /// <summary>
@@ -188,8 +206,14 @@ public partial class AssistantClient
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
         AssistantCollectionPageToken pageToken = AssistantCollectionPageToken.FromToken(firstPageToken);
-        return GetAssistants(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken.Before, cancellationToken.ToRequestOptions())
-            as CollectionResult<Assistant>;
+        CollectionResult result = GetAssistants(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken.Before, cancellationToken.ToRequestOptions());
+
+        if (result is not CollectionResult<Assistant> assistantCollection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'CollectionResult<Assistant>'.");
+        }
+
+        return assistantCollection;
     }
 
     /// <summary>
@@ -475,8 +499,14 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return GetMessagesAsync(threadId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
-            as AsyncCollectionResult<ThreadMessage>;
+        AsyncCollectionResult result = GetMessagesAsync(threadId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions());
+
+        if (result is not AsyncCollectionResult<ThreadMessage> collection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'AsyncCollectionResult<ThreadMessage>'.");
+        }
+
+        return collection;
     }
 
     /// <summary>
@@ -495,8 +525,14 @@ public partial class AssistantClient
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
         MessageCollectionPageToken pageToken = MessageCollectionPageToken.FromToken(firstPageToken);
-        return GetMessagesAsync(pageToken?.ThreadId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
-            as AsyncCollectionResult<ThreadMessage>;
+        AsyncCollectionResult result = GetMessagesAsync(pageToken?.ThreadId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions());
+
+        if (result is not AsyncCollectionResult<ThreadMessage> collection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'AsyncCollectionResult<ThreadMessage>'.");
+        }
+
+        return collection;
     }
 
     /// <summary>
@@ -516,8 +552,14 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return GetMessages(threadId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
-            as CollectionResult<ThreadMessage>;
+        CollectionResult result = GetMessages(threadId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions());
+
+        if (result is not CollectionResult<ThreadMessage> collection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'CollectionResult<ThreadMessage>'.");
+        }
+
+        return collection;
     }
 
     /// <summary>
@@ -536,8 +578,14 @@ public partial class AssistantClient
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
         MessageCollectionPageToken pageToken = MessageCollectionPageToken.FromToken(firstPageToken);
-        return GetMessages(pageToken?.ThreadId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
-            as CollectionResult<ThreadMessage>;
+        CollectionResult result = GetMessages(pageToken?.ThreadId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions());
+
+        if (result is not CollectionResult<ThreadMessage> collection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'CollectionResult<ThreadMessage>'.");
+        }
+
+        return collection;
 
     }
 
@@ -848,8 +896,14 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return GetRunsAsync(threadId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
-            as AsyncCollectionResult<ThreadRun>;
+        AsyncCollectionResult result = GetRunsAsync(threadId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions());
+
+        if (result is not AsyncCollectionResult<ThreadRun> collection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'AsyncCollectionResult<ThreadRun>'.");
+        }
+
+        return collection;
     }
 
     /// <summary>
@@ -868,8 +922,14 @@ public partial class AssistantClient
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
         RunCollectionPageToken pageToken = RunCollectionPageToken.FromToken(firstPageToken);
-        return GetRunsAsync(pageToken?.ThreadId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
-            as AsyncCollectionResult<ThreadRun>;
+        AsyncCollectionResult result = GetRunsAsync(pageToken?.ThreadId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions());
+
+        if (result is not AsyncCollectionResult<ThreadRun> collection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'AsyncCollectionResult<ThreadRun>'.");
+        }
+
+        return collection;
     }
 
     /// <summary>
@@ -889,8 +949,14 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        return GetRuns(threadId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
-            as CollectionResult<ThreadRun>;
+        CollectionResult result = GetRuns(threadId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions());
+
+        if (result is not CollectionResult<ThreadRun> collection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'CollectionResult<ThreadRun>'.");
+        }
+
+        return collection;
     }
 
     /// <summary>
@@ -909,8 +975,14 @@ public partial class AssistantClient
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
         RunCollectionPageToken pageToken = RunCollectionPageToken.FromToken(firstPageToken);
-        return GetRuns(pageToken?.ThreadId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
-            as CollectionResult<ThreadRun>;
+        CollectionResult result = GetRuns(pageToken?.ThreadId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions());
+
+        if (result is not CollectionResult<ThreadRun> collection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'CollectionResult<ThreadRun>'.");
+        }
+
+        return collection;
     }
 
     /// <summary>
@@ -1119,8 +1191,14 @@ public partial class AssistantClient
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
         RunStepCollectionPageToken pageToken = RunStepCollectionPageToken.FromToken(firstPageToken);
-        return GetRunStepsAsync(pageToken?.ThreadId, pageToken?.RunId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
-            as AsyncCollectionResult<RunStep>;
+        AsyncCollectionResult result = GetRunStepsAsync(pageToken?.ThreadId, pageToken?.RunId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions());
+        
+        if (result is not AsyncCollectionResult<RunStep> collection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'AsyncCollectionResult<RunStep>'.");
+        }
+
+        return collection;
     }
 
     /// <summary>
@@ -1143,8 +1221,14 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        return GetRunSteps(threadId, runId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
-            as CollectionResult<RunStep>;
+        CollectionResult result = GetRunSteps(threadId, runId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions());
+
+        if (result is not CollectionResult<RunStep> collection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'CollectionResult<RunStep>'.");
+        }
+
+        return collection;
     }
 
     /// <summary>

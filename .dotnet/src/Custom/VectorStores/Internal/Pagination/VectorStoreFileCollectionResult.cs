@@ -2,7 +2,6 @@
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading;
 
 #nullable enable
 
@@ -26,7 +25,6 @@ internal class VectorStoreFileCollectionResult : CollectionResult<VectorStoreFil
         ClientPipeline pipeline, RequestOptions? options,
         string vectorStoreId, 
         int? limit, string? order, string? after, string? before, string? filter)
-        : base(options?.CancellationToken ?? CancellationToken.None)
     {
         _vectorStoreClient = messageClient;
         _pipeline = pipeline;

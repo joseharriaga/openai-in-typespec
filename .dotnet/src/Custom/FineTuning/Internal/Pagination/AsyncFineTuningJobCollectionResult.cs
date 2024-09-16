@@ -3,7 +3,6 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 
 #nullable enable
@@ -23,7 +22,6 @@ internal class AsyncFineTuningJobCollectionResult : AsyncCollectionResult
     public AsyncFineTuningJobCollectionResult(FineTuningClient fineTuningClient,
         ClientPipeline pipeline, RequestOptions? options,
         int? limit, string after)
-        : base(options?.CancellationToken ?? CancellationToken.None)
     {
         _fineTuningClient = fineTuningClient;
         _pipeline = pipeline;

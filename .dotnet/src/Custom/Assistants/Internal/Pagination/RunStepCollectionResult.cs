@@ -2,7 +2,6 @@
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading;
 
 #nullable enable
 
@@ -25,7 +24,6 @@ internal class RunStepCollectionResult : CollectionResult<RunStep>
         RequestOptions? options,
         string threadId, string runId, 
         int? limit, string? order, string? after, string? before)
-        : base(options?.CancellationToken ?? CancellationToken.None)
     {
         _runClient = runClient;
         _options = options;

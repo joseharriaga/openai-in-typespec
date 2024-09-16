@@ -14,6 +14,7 @@ internal class AsyncVectorStoreCollectionResult : AsyncCollectionResult<VectorSt
     private readonly VectorStoreClient _vectorStoreClient;
     private readonly ClientPipeline _pipeline;
     private readonly RequestOptions? _options;
+    private readonly CancellationToken _cancellationToken;
 
     // Initial values
     private readonly int? _limit;
@@ -24,11 +25,11 @@ internal class AsyncVectorStoreCollectionResult : AsyncCollectionResult<VectorSt
     public AsyncVectorStoreCollectionResult(VectorStoreClient vectorStoreClient,
         ClientPipeline pipeline, RequestOptions? options,
         int? limit, string? order, string? after, string? before)
-        : base(options?.CancellationToken ?? CancellationToken.None)
     {
         _vectorStoreClient = vectorStoreClient;
         _pipeline = pipeline;
         _options = options;
+        _cancellationToken = _options?.CancellationToken ?? default;
 
         _limit = limit;
         _order = order;
@@ -52,7 +53,7 @@ internal class AsyncVectorStoreCollectionResult : AsyncCollectionResult<VectorSt
     {
         PipelineResponse response = page.GetRawResponse();
         InternalListVectorStoresResponse list = ModelReaderWriter.Read<InternalListVectorStoresResponse>(response.Content)!;
-        return list.Data.ToAsyncEnumerable(CancellationToken);
+        return list.Data.ToAsyncEnumerable(_cancellationToken);
     }
 
     public override ContinuationToken? GetContinuationToken(ClientResult page)

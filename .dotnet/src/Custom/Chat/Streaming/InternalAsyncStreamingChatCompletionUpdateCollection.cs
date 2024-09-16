@@ -16,15 +16,17 @@ namespace OpenAI.Chat;
 /// </summary>
 internal class InternalAsyncStreamingChatCompletionUpdateCollection : AsyncCollectionResult<StreamingChatCompletionUpdate>
 {
-    private readonly Func<CancellationToken, Task<ClientResult>> _sendRequestAsync;
+    private readonly Func<Task<ClientResult>> _sendRequestAsync;
+    private readonly CancellationToken _cancellationToken;
 
     public InternalAsyncStreamingChatCompletionUpdateCollection(
-        Func<CancellationToken, Task<ClientResult>> sendRequestAsync,
-        CancellationToken cancellationToken) : base(cancellationToken)
+        Func<Task<ClientResult>> sendRequestAsync,
+        CancellationToken cancellationToken)
     {
         Argument.AssertNotNull(sendRequestAsync, nameof(sendRequestAsync));
 
         _sendRequestAsync = sendRequestAsync;
+        _cancellationToken = cancellationToken;
     }
 
     public override ContinuationToken? GetContinuationToken(ClientResult page)
@@ -36,12 +38,12 @@ internal class InternalAsyncStreamingChatCompletionUpdateCollection : AsyncColle
     {
         // We don't currently support resuming a dropped connection from the
         // last received event, so the response collection has a single element.
-        yield return await _sendRequestAsync(CancellationToken);
+        yield return await _sendRequestAsync();
     }
 
     protected async override IAsyncEnumerable<StreamingChatCompletionUpdate> GetValuesFromPageAsync(ClientResult page)
     {
-        await using IAsyncEnumerator<StreamingChatCompletionUpdate> enumerator = new AsyncStreamingChatUpdateEnumerator(page, CancellationToken);
+        await using IAsyncEnumerator<StreamingChatCompletionUpdate> enumerator = new AsyncStreamingChatUpdateEnumerator(page, _cancellationToken);
         while (await enumerator.MoveNextAsync().ConfigureAwait(false))
         {
             yield return enumerator.Current;

@@ -2,7 +2,6 @@
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading;
 
 #nullable enable
 
@@ -23,7 +22,6 @@ internal class RunCollectionResult : CollectionResult<ThreadRun>
     public RunCollectionResult(InternalAssistantRunClient runClient,
         RequestOptions? options,
         string threadId, int? limit, string? order, string? after, string? before)
-        : base(options?.CancellationToken ?? CancellationToken.None)
     {
         _runClient = runClient;
         _options = options;

@@ -2,7 +2,6 @@
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading;
 
 #nullable enable
 
@@ -21,7 +20,6 @@ internal class BatchCollectionResult : CollectionResult
     public BatchCollectionResult(BatchClient batchClient,
         ClientPipeline pipeline, RequestOptions? options,
         int? limit, string after)
-        : base(options?.CancellationToken ?? CancellationToken.None)
     {
         _batchClient = batchClient;
         _pipeline = pipeline;

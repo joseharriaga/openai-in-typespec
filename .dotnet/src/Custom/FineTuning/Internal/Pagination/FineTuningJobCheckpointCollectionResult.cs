@@ -3,7 +3,6 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
 
 #nullable enable
 
@@ -23,7 +22,6 @@ internal class FineTuningJobCheckpointCollectionResult : CollectionResult
     public FineTuningJobCheckpointCollectionResult(FineTuningClient fineTuningClient,
         ClientPipeline pipeline, RequestOptions? options,
         string jobId, int? limit, string after)
-        : base(options?.CancellationToken ?? CancellationToken.None)
     {
         _fineTuningClient = fineTuningClient;
         _pipeline = pipeline;

@@ -13,6 +13,7 @@ internal class AsyncRunStepCollectionResult : AsyncCollectionResult<RunStep>
 {
     private readonly InternalAssistantRunClient _runClient;
     private readonly RequestOptions? _options;
+    private readonly CancellationToken _cancellationToken;
 
     // Initial values
     private readonly string _threadId;
@@ -26,10 +27,10 @@ internal class AsyncRunStepCollectionResult : AsyncCollectionResult<RunStep>
         RequestOptions? options,
         string threadId, string runId, 
         int? limit, string? order, string? after, string? before)
-        : base(options?.CancellationToken ?? CancellationToken.None)
     {
         _runClient = runClient;
         _options = options;
+        _cancellationToken = _options?.CancellationToken ?? default;
 
         _threadId = threadId;
         _runId = runId;
@@ -57,7 +58,7 @@ internal class AsyncRunStepCollectionResult : AsyncCollectionResult<RunStep>
 
         PipelineResponse response = page.GetRawResponse();
         InternalListRunStepsResponse list = ModelReaderWriter.Read<InternalListRunStepsResponse>(response.Content)!;
-        return list.Data.ToAsyncEnumerable(CancellationToken);
+        return list.Data.ToAsyncEnumerable(_cancellationToken);
     }
 
     public override ContinuationToken? GetContinuationToken(ClientResult page)

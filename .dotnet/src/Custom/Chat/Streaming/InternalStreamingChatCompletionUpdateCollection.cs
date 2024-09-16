@@ -16,16 +16,17 @@ namespace OpenAI.Chat;
 /// </summary>
 internal class InternalStreamingChatCompletionUpdateCollection : CollectionResult<StreamingChatCompletionUpdate>
 {
-    private readonly Func<CancellationToken, ClientResult> _sendRequest;
+    private readonly Func<ClientResult> _sendRequest;
+    private readonly CancellationToken _cancellationToken;
 
     public InternalStreamingChatCompletionUpdateCollection(
-        Func<CancellationToken, ClientResult> sendRequest,
+        Func< ClientResult> sendRequest,
         CancellationToken cancellationToken)
-        : base(cancellationToken)
     {
         Argument.AssertNotNull(sendRequest, nameof(sendRequest));
 
         _sendRequest = sendRequest;
+        _cancellationToken = cancellationToken;
     }
 
     public override ContinuationToken? GetContinuationToken(ClientResult page)
@@ -36,12 +37,12 @@ internal class InternalStreamingChatCompletionUpdateCollection : CollectionResul
     {
         // We don't currently support resuming a dropped connection from the
         // last received event, so the response collection has a single element.
-        yield return _sendRequest(CancellationToken);
+        yield return _sendRequest();
     }
 
     protected override IEnumerable<StreamingChatCompletionUpdate> GetValuesFromPage(ClientResult page)
     {
-        using IEnumerator<StreamingChatCompletionUpdate> enumerator = new StreamingChatUpdateEnumerator(page, CancellationToken);
+        using IEnumerator<StreamingChatCompletionUpdate> enumerator = new StreamingChatUpdateEnumerator(page, _cancellationToken);
         while (enumerator.MoveNext())
         {
             yield return enumerator.Current;

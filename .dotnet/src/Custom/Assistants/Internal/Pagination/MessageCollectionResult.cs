@@ -2,7 +2,6 @@
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading;
 
 #nullable enable
 
@@ -24,7 +23,6 @@ internal class MessageCollectionResult : CollectionResult<ThreadMessage>
     public MessageCollectionResult(InternalAssistantMessageClient messageClient,
         RequestOptions? options,
         string threadId, int? limit, string? order, string? after, string? before)
-        : base(options?.CancellationToken ?? CancellationToken.None)
     {
         _messageClient = messageClient;
         _options = options;

@@ -2,7 +2,6 @@
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading;
 
 #nullable enable
 
@@ -23,7 +22,6 @@ internal class AssistantCollectionResult : CollectionResult<Assistant>
     public AssistantCollectionResult(AssistantClient assistantClient,
         ClientPipeline pipeline, RequestOptions? options,
         int? limit, string? order, string? after, string? before)
-        : base(options?.CancellationToken ?? CancellationToken.None)
     {
         _assistantClient = assistantClient;
         _pipeline = pipeline;

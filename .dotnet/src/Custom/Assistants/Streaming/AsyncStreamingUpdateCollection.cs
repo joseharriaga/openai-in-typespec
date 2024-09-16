@@ -16,16 +16,16 @@ namespace OpenAI.Assistants;
 /// </summary>
 internal class AsyncStreamingUpdateCollection : AsyncCollectionResult<StreamingUpdate>
 {
-    private readonly Func<CancellationToken, Task<ClientResult>> _sendRequestAsync;
+    private readonly Func<Task<ClientResult>> _sendRequestAsync;
+    private readonly CancellationToken _cancellationToken;
 
-    public AsyncStreamingUpdateCollection(
-        Func<CancellationToken, Task<ClientResult>> sendRequestAsync,
+    public AsyncStreamingUpdateCollection(Func<Task<ClientResult>> sendRequestAsync, 
         CancellationToken cancellationToken) 
-        : base(cancellationToken)
     {
         Argument.AssertNotNull(sendRequestAsync, nameof(sendRequestAsync));
 
         _sendRequestAsync = sendRequestAsync;
+        _cancellationToken = cancellationToken;
     }
 
     public override ContinuationToken? GetContinuationToken(ClientResult page)
@@ -36,12 +36,12 @@ internal class AsyncStreamingUpdateCollection : AsyncCollectionResult<StreamingU
     {
         // We don't currently support resuming a dropped connection from the
         // last received event, so the response collection has a single element.
-        yield return await _sendRequestAsync(CancellationToken);
+        yield return await _sendRequestAsync();
     }
 
     protected async override IAsyncEnumerable<StreamingUpdate> GetValuesFromPageAsync(ClientResult page)
     {
-        await using IAsyncEnumerator<StreamingUpdate> enumerator = new AsyncStreamingUpdateEnumerator(page, CancellationToken);
+        await using IAsyncEnumerator<StreamingUpdate> enumerator = new AsyncStreamingUpdateEnumerator(page, _cancellationToken);
         while (await enumerator.MoveNextAsync().ConfigureAwait(false))
         {
             yield return enumerator.Current;

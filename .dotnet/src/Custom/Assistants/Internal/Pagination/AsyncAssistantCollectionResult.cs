@@ -14,6 +14,7 @@ internal class AsyncAssistantCollectionResult : AsyncCollectionResult<Assistant>
     private readonly AssistantClient _assistantClient;
     private readonly ClientPipeline _pipeline;
     private readonly RequestOptions? _options;
+    private readonly CancellationToken _cancellationToken;
 
     // Initial values
     private readonly int? _limit;
@@ -24,11 +25,11 @@ internal class AsyncAssistantCollectionResult : AsyncCollectionResult<Assistant>
     public AsyncAssistantCollectionResult(AssistantClient assistantClient,
         ClientPipeline pipeline, RequestOptions options,
         int? limit, string? order, string? after, string? before)
-        : base(options?.CancellationToken ?? CancellationToken.None)
     {
         _assistantClient = assistantClient;
         _pipeline = pipeline;
         _options = options;
+        _cancellationToken = _options?.CancellationToken ?? default;
 
         _limit = limit;
         _order = order;
@@ -54,7 +55,7 @@ internal class AsyncAssistantCollectionResult : AsyncCollectionResult<Assistant>
 
         PipelineResponse response = page.GetRawResponse();
         InternalListAssistantsResponse list = ModelReaderWriter.Read<InternalListAssistantsResponse>(response.Content)!;
-        return list.Data.ToAsyncEnumerable(CancellationToken);
+        return list.Data.ToAsyncEnumerable(_cancellationToken);
     }
 
     public override ContinuationToken? GetContinuationToken(ClientResult page)

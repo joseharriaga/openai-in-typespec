@@ -14,6 +14,7 @@ internal class AsyncMessageCollectionResult : AsyncCollectionResult<ThreadMessag
 {
     private readonly InternalAssistantMessageClient _messageClient;
     private readonly RequestOptions? _options;
+    private readonly CancellationToken _cancellationToken;
 
     // Initial values
     private readonly string _threadId;
@@ -25,10 +26,10 @@ internal class AsyncMessageCollectionResult : AsyncCollectionResult<ThreadMessag
     public AsyncMessageCollectionResult(InternalAssistantMessageClient messageClient,
         RequestOptions? options,
         string threadId, int? limit, string? order, string? after, string? before)
-        : base(options?.CancellationToken ?? CancellationToken.None)
     {
         _messageClient = messageClient;
         _options = options;
+        _cancellationToken = _options?.CancellationToken ?? default;
 
         _threadId = threadId;
         _limit = limit;
@@ -55,7 +56,7 @@ internal class AsyncMessageCollectionResult : AsyncCollectionResult<ThreadMessag
 
         PipelineResponse response = page.GetRawResponse();
         InternalListMessagesResponse list = ModelReaderWriter.Read<InternalListMessagesResponse>(response.Content)!;
-        return list.Data.ToAsyncEnumerable(CancellationToken);
+        return list.Data.ToAsyncEnumerable(_cancellationToken);
     }
 
     public override ContinuationToken? GetContinuationToken(ClientResult page)

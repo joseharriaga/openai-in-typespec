@@ -15,16 +15,17 @@ namespace OpenAI.Assistants;
 /// </summary>
 internal class StreamingUpdateCollection : CollectionResult<StreamingUpdate>
 {
-    private readonly Func<CancellationToken, ClientResult> _sendRequest;
+    private readonly Func<ClientResult> _sendRequest;
+    private readonly CancellationToken _cancellationToken;
 
     public StreamingUpdateCollection(
-        Func<CancellationToken, ClientResult> sendRequest,
+        Func< ClientResult> sendRequest,
         CancellationToken cancellationToken)
-        : base(cancellationToken)
     {
         Argument.AssertNotNull(sendRequest, nameof(sendRequest));
 
         _sendRequest = sendRequest;
+        _cancellationToken = cancellationToken;
     }
 
     public override ContinuationToken? GetContinuationToken(ClientResult page)
@@ -35,11 +36,11 @@ internal class StreamingUpdateCollection : CollectionResult<StreamingUpdate>
     {
         // We don't currently support resuming a dropped connection from the
         // last received event, so the response collection has a single element.
-        yield return _sendRequest(CancellationToken);
+        yield return _sendRequest();
     }
     protected override IEnumerable<StreamingUpdate> GetValuesFromPage(ClientResult page)
     {
-        using IEnumerator<StreamingUpdate> enumerator = new StreamingUpdateEnumerator(page, CancellationToken);
+        using IEnumerator<StreamingUpdate> enumerator = new StreamingUpdateEnumerator(page, _cancellationToken);
         while (enumerator.MoveNext())
         {
             yield return enumerator.Current;

@@ -17,20 +17,20 @@ namespace OpenAI
 {
     internal static partial class OpenAIModelFactory
     {
-        public static TranscribedWord TranscribedWord(string word = null, TimeSpan start = default, TimeSpan end = default)
+        public static TranscribedWord TranscribedWord(string word = null, TimeSpan startTime = default, TimeSpan endTime = default)
         {
-            return new TranscribedWord(word, start, end, serializedAdditionalRawData: null);
+            return new TranscribedWord(word, startTime, endTime, serializedAdditionalRawData: null);
         }
 
-        public static TranscribedSegment TranscribedSegment(int id = default, long seekOffset = default, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, float temperature = default, double averageLogProbability = default, float compressionRatio = default, double noSpeechProbability = default)
+        public static TranscribedSegment TranscribedSegment(int id = default, int seekOffset = default, TimeSpan startTime = default, TimeSpan endTime = default, string text = null, IEnumerable<int> tokenIds = null, float temperature = default, float averageLogProbability = default, float compressionRatio = default, float noSpeechProbability = default)
         {
-            tokenIds ??= new List<long>();
+            tokenIds ??= new List<int>();
 
             return new TranscribedSegment(
                 id,
                 seekOffset,
-                start,
-                end,
+                startTime,
+                endTime,
                 text,
                 tokenIds?.ToList(),
                 temperature,
@@ -59,19 +59,16 @@ namespace OpenAI
             return new ChatFunction(functionDescription, functionName, functionParameters, serializedAdditionalRawData: null);
         }
 
-        public static ChatTokenLogProbabilityInfo ChatTokenLogProbabilityInfo(string token = null, float logProbability = default, IEnumerable<int> utf8ByteValues = null, IEnumerable<ChatTokenTopLogProbabilityInfo> topLogProbabilities = null)
+        public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = default, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null)
         {
-            utf8ByteValues ??= new List<int>();
-            topLogProbabilities ??= new List<ChatTokenTopLogProbabilityInfo>();
+            topLogProbabilities ??= new List<ChatTokenTopLogProbabilityDetails>();
 
-            return new ChatTokenLogProbabilityInfo(token, logProbability, utf8ByteValues?.ToList(), topLogProbabilities?.ToList(), serializedAdditionalRawData: null);
+            return new ChatTokenLogProbabilityDetails(token, logProbability, utf8Bytes, topLogProbabilities?.ToList(), serializedAdditionalRawData: null);
         }
 
-        public static ChatTokenTopLogProbabilityInfo ChatTokenTopLogProbabilityInfo(string token = null, float logProbability = default, IEnumerable<int> utf8ByteValues = null)
+        public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = default, ReadOnlyMemory<byte>? utf8Bytes = null)
         {
-            utf8ByteValues ??= new List<int>();
-
-            return new ChatTokenTopLogProbabilityInfo(token, logProbability, utf8ByteValues?.ToList(), serializedAdditionalRawData: null);
+            return new ChatTokenTopLogProbabilityDetails(token, logProbability, utf8Bytes, serializedAdditionalRawData: null);
         }
 
         public static ChatTokenUsage ChatTokenUsage(int outputTokens = default, int inputTokens = default, int totalTokens = default)

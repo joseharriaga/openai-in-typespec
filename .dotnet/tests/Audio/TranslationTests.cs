@@ -87,11 +87,11 @@ public partial class TranslationTests : SyncAsyncTestBase
 
                 if (i > 0)
                 {
-                    Assert.That(segment.Start, Is.GreaterThanOrEqualTo(translation.Segments[i - 1].End));
+                    Assert.That(segment.StartTime, Is.GreaterThanOrEqualTo(translation.Segments[i - 1].EndTime));
                 }
 
                 Assert.That(segment.Id, Is.EqualTo(i));
-                Assert.That(segment.End, Is.GreaterThanOrEqualTo(segment.Start));
+                Assert.That(segment.EndTime, Is.GreaterThanOrEqualTo(segment.StartTime));
                 Assert.That(segment.TokenIds, Is.Not.Null.And.Not.Empty);
 
                 Assert.That(segment.AverageLogProbability, Is.LessThan(-0.001f).Or.GreaterThan(0.001f));

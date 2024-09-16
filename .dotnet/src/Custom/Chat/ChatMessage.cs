@@ -137,18 +137,18 @@ public abstract partial class ChatMessage
 
     #region ToolChatMessage
     /// <inheritdoc cref="ToolChatMessage(string, string)"/>
-    public static ToolChatMessage CreateToolChatMessage(string toolCallId, string content) => new(toolCallId, content);
+    public static ToolChatMessage CreateToolMessage(string toolCallId, string content) => new(toolCallId, content);
 
     /// <inheritdoc cref="ToolChatMessage(string, IEnumerable{ChatMessageContentPart})"/>
-    public static ToolChatMessage CreateToolChatMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts) => new(toolCallId, contentParts);
+    public static ToolChatMessage CreateToolMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts) => new(toolCallId, contentParts);
 
     /// <inheritdoc cref="ToolChatMessage(string, ChatMessageContentPart[])"/>
-    public static ToolChatMessage CreateToolChatMessage(string toolCallId, params ChatMessageContentPart[] contentParts) => new(toolCallId, contentParts);
+    public static ToolChatMessage CreateToolMessage(string toolCallId, params ChatMessageContentPart[] contentParts) => new(toolCallId, contentParts);
     #endregion
 
     #region FunctionChatMessage
     /// <inheritdoc cref="FunctionChatMessage(string, string)"/>
-    [Obsolete("This field is marked as deprecated.")]
+    [Obsolete($"This method is obsolete. Please use {nameof(CreateToolMessage)} instead.")]
     public static FunctionChatMessage CreateFunctionMessage(string functionName, string content) => new(functionName, content);
     #endregion
 

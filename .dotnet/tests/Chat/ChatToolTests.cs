@@ -209,6 +209,7 @@ public partial class ChatToolTests : SyncAsyncTestBase
         Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("chartreuse"));
     }
 
+#pragma warning disable CS0618
     [Test]
     public async Task FunctionsWork()
     {
@@ -233,14 +234,13 @@ public partial class ChatToolTests : SyncAsyncTestBase
         Assert.That(argumentsJson.ContainsKey("month_name"));
         Assert.That(argumentsJson["month_name"].ToString().ToLowerInvariant(), Is.EqualTo("february"));
         messages.Add(new AssistantChatMessage(result.Value));
-#pragma warning disable CS0618
         messages.Add(new FunctionChatMessage(GetFavoriteColorForMonthFunctionName, "chartreuse"));
-#pragma warning restore CS0618
         result = IsAsync
             ? await client.CompleteChatAsync(messages, options)
             : client.CompleteChat(messages, options);
         Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring("chartreuse"));
     }
+#pragma warning restore CS0618
 
     [Test]
     public async Task ParallelToolCalls()

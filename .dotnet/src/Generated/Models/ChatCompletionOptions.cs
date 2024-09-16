@@ -46,6 +46,5 @@ namespace OpenAI.Chat
         public float? Temperature { get; set; }
         public float? TopP { get; set; }
         public IList<ChatTool> Tools { get; }
-        public IList<ChatFunction> Functions { get; }
     }
 }

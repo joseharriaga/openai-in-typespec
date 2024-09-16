@@ -13,7 +13,14 @@
 - Removed `ChatMessageContentPart`'s `ToString` overload. (commit_hash)
 - Removed the common `ListOrder` enum from the top-level `OpenAI` namespace in favor of individual enums in their corresponding sub-namespace. (commit_hash)
 - Renamed the `PageSize` property to `PageSizeLimit`. (commit_hash)
-- Removed setter from collection properties. (commit_hash)
+- Removed setters from collection properties. (commit_hash)
+- Renamed `ChatTokenLogProbabilityInfo` to `ChatTokenLogProbabilityDetails`. (commit_hash)
+- Renamed `ChatTokenTopLogProbabilityInfo` to `ChatTokenTopLogProbabilityDetails`. (commit_hash)
+- Renamed the `Utf8ByteValues` properties of `ChatTokenLogProbabilityDetails` and `ChatTokenTopLogProbabilityDetails` to `Utf8Bytes` and changed their type from `IReadOnlyList<int>` to `ReadOnlyMemory<byte>?`. (commit_hash)
+- Renamed the `Start` and `End` properties of `TranscribedSegment` and `TranscribedWord` to `StartTime` and `EndTime`. (commit_hash)
+- Changed the type of `TranscribedSegment`'s `AverageLogProbability` and `NoSpeechProbability` properties from `double` to `float`. (commit_hash)
+- Changed the type of `TranscribedSegment`'s `SeekOffset` property from `long` to `int`. (commit_hash)
+- Changed the type of `TranscribedSegment`'s `TokenIds` property from `IReadOnlyList<long>` to `IReadOnlyList<int>`. (commit_hash)
 - Updated the `Embedding.Vector` property to the `Embedding.ToFloats()` method. (commit_hash)
 
 ### Bugs Fixed
@@ -21,6 +28,9 @@
 - Addressed an issue that caused multi-page queries of fine-tuning jobs, checkpoints, and events to fail. (commit_hash)
 
 ### Other Changes
+
+- Added support for `CancellationToken` to `ModelClient` methods. (commit_hash)
+- Applied the `Obsolete` attribute where appropriate to align with the existing deprecations in the REST API. (commit_hash)
 
 ## 2.0.0-beta.11 (2024-09-03)
 

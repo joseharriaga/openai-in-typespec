@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace OpenAI.Chat;
@@ -8,6 +9,7 @@ namespace OpenAI.Chat;
 /// <see cref="ChatFunction"/> instance as well as a <see cref="ChatFunctionCall"/> made by the model on an
 /// <c>assistant</c> response message.
 /// </summary>
+[Obsolete($"This class is obsolete. Please use {nameof(ToolChatMessage)} instead.")]
 [CodeGenModel("ChatCompletionRequestFunctionMessage")]
 [CodeGenSuppress("FunctionChatMessage", typeof(IEnumerable<ChatMessageContentPart>), typeof(string))]
 public partial class FunctionChatMessage : ChatMessage

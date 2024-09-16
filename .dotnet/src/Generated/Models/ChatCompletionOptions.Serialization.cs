@@ -252,7 +252,7 @@ namespace OpenAI.Chat
                 writer.WriteStartArray();
                 foreach (var item in Functions)
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WriteObjectValue<ChatFunction>(item, options);
                 }
                 writer.WriteEndArray();
             }

@@ -228,25 +228,27 @@ public partial class ChatTests : SyncAsyncTestBase
             options = new();
         }
 
-        ChatCompletion chatCompletions = await client.CompleteChatAsync(messages, options);
+        ClientResult<ChatCompletion> result = await client.CompleteChatAsync(messages, options);
+        string raw = result.GetRawResponse().Content.ToString();
+        ChatCompletion chatCompletions = result.Value;
         Assert.That(chatCompletions, Is.Not.Null);
 
         if (includeLogProbabilities)
         {
-            IReadOnlyList<ChatTokenLogProbabilityInfo> chatTokenLogProbabilities = chatCompletions.ContentTokenLogProbabilities;
+            IReadOnlyList<ChatTokenLogProbabilityDetails> chatTokenLogProbabilities = chatCompletions.ContentTokenLogProbabilities;
             Assert.That(chatTokenLogProbabilities, Is.Not.Null.Or.Empty);
 
-            foreach (ChatTokenLogProbabilityInfo tokenLogProbs in chatTokenLogProbabilities)
+            foreach (ChatTokenLogProbabilityDetails tokenLogProbs in chatTokenLogProbabilities)
             {
                 Assert.That(tokenLogProbs.Token, Is.Not.Null.Or.Empty);
-                Assert.That(tokenLogProbs.Utf8ByteValues, Is.Not.Null);
+                Assert.That(tokenLogProbs.Utf8Bytes, Is.Not.Null);
                 Assert.That(tokenLogProbs.TopLogProbabilities, Is.Not.Null.Or.Empty);
                 Assert.That(tokenLogProbs.TopLogProbabilities, Has.Count.EqualTo(topLogProbabilityCount));
 
-                foreach (ChatTokenTopLogProbabilityInfo tokenTopLogProbs in tokenLogProbs.TopLogProbabilities)
+                foreach (ChatTokenTopLogProbabilityDetails tokenTopLogProbs in tokenLogProbs.TopLogProbabilities)
                 {
                     Assert.That(tokenTopLogProbs.Token, Is.Not.Null.Or.Empty);
-                    Assert.That(tokenTopLogProbs.Utf8ByteValues, Is.Not.Null);
+                    Assert.That(tokenTopLogProbs.Utf8Bytes, Is.Not.Null);
                 }
             }
         }
@@ -293,17 +295,17 @@ public partial class ChatTests : SyncAsyncTestBase
                 Assert.That(chatCompletionUpdate.ContentTokenLogProbabilities, Is.Not.Null.Or.Empty);
                 Assert.That(chatCompletionUpdate.ContentTokenLogProbabilities, Has.Count.EqualTo(1));
 
-                foreach (ChatTokenLogProbabilityInfo tokenLogProbs in chatCompletionUpdate.ContentTokenLogProbabilities)
+                foreach (ChatTokenLogProbabilityDetails tokenLogProbs in chatCompletionUpdate.ContentTokenLogProbabilities)
                 {
                     Assert.That(tokenLogProbs.Token, Is.Not.Null.Or.Empty);
-                    Assert.That(tokenLogProbs.Utf8ByteValues, Is.Not.Null);
+                    Assert.That(tokenLogProbs.Utf8Bytes, Is.Not.Null);
                     Assert.That(tokenLogProbs.TopLogProbabilities, Is.Not.Null.Or.Empty);
                     Assert.That(tokenLogProbs.TopLogProbabilities, Has.Count.EqualTo(topLogProbabilityCount));
 
-                    foreach (ChatTokenTopLogProbabilityInfo tokenTopLogProbs in tokenLogProbs.TopLogProbabilities)
+                    foreach (ChatTokenTopLogProbabilityDetails tokenTopLogProbs in tokenLogProbs.TopLogProbabilities)
                     {
                         Assert.That(tokenTopLogProbs.Token, Is.Not.Null.Or.Empty);
-                        Assert.That(tokenTopLogProbs.Utf8ByteValues, Is.Not.Null);
+                        Assert.That(tokenTopLogProbs.Utf8Bytes, Is.Not.Null);
                     }
                 }
             }

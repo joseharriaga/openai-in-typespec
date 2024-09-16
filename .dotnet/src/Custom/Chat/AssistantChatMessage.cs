@@ -11,6 +11,11 @@ namespace OpenAI.Chat;
 [CodeGenModel("ChatCompletionRequestAssistantMessage")]
 public partial class AssistantChatMessage : ChatMessage
 {
+    // CUSTOM: Made internal.
+    internal AssistantChatMessage()
+    {
+    }
+
     /// <summary>
     /// Creates a new instance of <see cref="AssistantChatMessage"/> using a collection of content items.
     /// For <c>assistant</c> messages, this can be one or more of type <c>text</c> or exactly one of type <c>refusal</c>.
@@ -123,6 +128,6 @@ public partial class AssistantChatMessage : ChatMessage
     [CodeGenMember("ToolCalls")]
     public IList<ChatToolCall> ToolCalls { get; } = new ChangeTrackingList<ChatToolCall>();
 
-    // CUSTOM: Made internal.
-    internal AssistantChatMessage() { }
+    [Obsolete($"This property is obsolete. Please use {nameof(ToolCalls)} instead.")]
+    public ChatFunctionCall FunctionCall { get; set; }
 }

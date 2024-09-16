@@ -204,7 +204,9 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
 
         // upload training data
         OpenAIFileInfo uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
+#pragma warning disable CS0618
         Assert.That(uploadedFile.Status, Is.EqualTo(OpenAIFileStatus.Processed));
+#pragma warning restore CS0618
 
         // Create the fine tuning job
         using var requestContent = new FineTuningOptions()
@@ -321,6 +323,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         OpenAIFileInfo uploadedFile = await fileClient.UploadFileAsync(path, FileUploadPurpose.FineTune);
         Validate(uploadedFile);
 
+#pragma warning disable CS0618
         uploadedFile = await WaitUntilReturnLast(
             uploadedFile,
             () => fileClient.GetFileAsync(uploadedFile.Id),
@@ -328,6 +331,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             TimeSpan.FromSeconds(5),
             TimeSpan.FromMinutes(5))
             .ConfigureAwait(false);
+#pragma warning restore CS0618
 
         return uploadedFile;
     }

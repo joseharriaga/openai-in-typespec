@@ -21,5 +21,26 @@ function Partialize-ClientPipelineExtensions {
     $content | Set-Content -Path $file.FullName -NoNewline
 }
 
+function Remove-ObsoleteAttribute {
+    $root = Split-Path $PSScriptRoot -Parent
+    $directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Models"
+
+    $targets = @(
+        "ChatFunction.cs",
+        "FunctionChatMessage.cs")
+        
+    foreach ($target in $targets) {
+        $file = Get-ChildItem -Path $directory -Filter $target
+        $content = Get-Content -Path $file -Raw
+
+        Write-Output "Editing $($file.FullName)"
+
+        $content = $content -creplace "\s+\[Obsolete\((`")+(.*)(`")+\)\]", ""
+
+        $content | Set-Content -Path $file.FullName -NoNewline
+    }
+}
+
 Remove-MultipartFormDataBinaryContent
 Partialize-ClientPipelineExtensions
+Remove-ObsoleteAttribute

@@ -93,8 +93,8 @@ public partial class TranscriptionMockTests : SyncAsyncTestBase
         TranscribedWord word = transcription.Words.Single();
 
         Assert.That(word.Word, Is.EqualTo("pneumonoultramicroscopicsilicovolcanoconiosis"));
-        Assert.That(word.Start, Is.EqualTo(TimeSpan.FromSeconds(2.5)));
-        Assert.That(word.End, Is.EqualTo(TimeSpan.FromSeconds(7.5)));
+        Assert.That(word.StartTime, Is.EqualTo(TimeSpan.FromSeconds(2.5)));
+        Assert.That(word.EndTime, Is.EqualTo(TimeSpan.FromSeconds(7.5)));
     }
 
     [Test]
@@ -127,14 +127,14 @@ public partial class TranscriptionMockTests : SyncAsyncTestBase
 
         Assert.That(segment.Id, Is.EqualTo(15));
         Assert.That(segment.SeekOffset, Is.EqualTo(50));
-        Assert.That(segment.Start, Is.EqualTo(TimeSpan.FromSeconds(2.5)));
-        Assert.That(segment.End, Is.EqualTo(TimeSpan.FromSeconds(7.5)));
+        Assert.That(segment.StartTime, Is.EqualTo(TimeSpan.FromSeconds(2.5)));
+        Assert.That(segment.EndTime, Is.EqualTo(TimeSpan.FromSeconds(7.5)));
         Assert.That(segment.Text, Is.EqualTo("The quick brown fox got lost."));
         Assert.That(segment.TokenIds.SequenceEqual([255, 305, 678]));
         Assert.That(segment.Temperature, Is.EqualTo(0.8f));
-        Assert.That(segment.AverageLogProbability, Is.EqualTo(-0.3));
+        Assert.That(segment.AverageLogProbability, Is.EqualTo(-0.3f));
         Assert.That(segment.CompressionRatio, Is.EqualTo(1.5f));
-        Assert.That(segment.NoSpeechProbability, Is.EqualTo(0.2));
+        Assert.That(segment.NoSpeechProbability, Is.EqualTo(0.2f));
     }
 
     [Test]

@@ -1211,8 +1211,8 @@ namespace OpenAI.Audio {
     public static class OpenAIAudioModelFactory {
         public static AudioTranscription AudioTranscription(string language = null, TimeSpan? duration = null, string text = null, IEnumerable<TranscribedWord> words = null, IEnumerable<TranscribedSegment> segments = null);
         public static AudioTranslation AudioTranslation(string language = null, TimeSpan? duration = null, string text = null, IEnumerable<TranscribedSegment> segments = null);
-        public static TranscribedSegment TranscribedSegment(int id = 0, long seekOffset = 0, TimeSpan start = default, TimeSpan end = default, string text = null, IEnumerable<long> tokenIds = null, float temperature = 0, double averageLogProbability = 0, float compressionRatio = 0, double noSpeechProbability = 0);
-        public static TranscribedWord TranscribedWord(string word = null, TimeSpan start = default, TimeSpan end = default);
+        public static TranscribedSegment TranscribedSegment(int id = 0, int seekOffset = 0, TimeSpan startTime = default, TimeSpan endTime = default, string text = null, IEnumerable<int> tokenIds = null, float temperature = 0, float averageLogProbability = 0, float compressionRatio = 0, float noSpeechProbability = 0);
+        public static TranscribedWord TranscribedWord(string word = null, TimeSpan startTime = default, TimeSpan endTime = default);
     }
     public class SpeechGenerationOptions : IJsonModel<SpeechGenerationOptions>, IPersistableModel<SpeechGenerationOptions> {
         public GeneratedSpeechFormat? ResponseFormat { get; set; }
@@ -1226,16 +1226,16 @@ namespace OpenAI.Audio {
     public readonly partial struct TranscribedSegment : IJsonModel<TranscribedSegment>, IPersistableModel<TranscribedSegment>, IJsonModel<object>, IPersistableModel<object> {
         private readonly object _dummy;
         private readonly int _dummyPrimitive;
-        public double AverageLogProbability { get; }
+        public float AverageLogProbability { get; }
         public float CompressionRatio { get; }
-        public TimeSpan End { get; }
+        public TimeSpan EndTime { get; }
         public int Id { get; }
-        public double NoSpeechProbability { get; }
-        public long SeekOffset { get; }
-        public TimeSpan Start { get; }
+        public float NoSpeechProbability { get; }
+        public int SeekOffset { get; }
+        public TimeSpan StartTime { get; }
         public float Temperature { get; }
         public string Text { get; }
-        public IReadOnlyList<long> TokenIds { get; }
+        public IReadOnlyList<int> TokenIds { get; }
         readonly TranscribedSegment IJsonModel<TranscribedSegment>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         readonly void IJsonModel<TranscribedSegment>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         readonly object IJsonModel<object>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -1250,8 +1250,8 @@ namespace OpenAI.Audio {
     public readonly partial struct TranscribedWord : IJsonModel<TranscribedWord>, IPersistableModel<TranscribedWord>, IJsonModel<object>, IPersistableModel<object> {
         private readonly object _dummy;
         private readonly int _dummyPrimitive;
-        public TimeSpan End { get; }
-        public TimeSpan Start { get; }
+        public TimeSpan EndTime { get; }
+        public TimeSpan StartTime { get; }
         public string Word { get; }
         readonly TranscribedWord IJsonModel<TranscribedWord>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         readonly void IJsonModel<TranscribedWord>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -1290,6 +1290,7 @@ namespace OpenAI.Chat {
         public AssistantChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
         public AssistantChatMessage(string content);
+        [Obsolete("This property is obsolete. Please use ToolCalls instead.")]
         public ChatFunctionCall FunctionCall { get; set; }
         public string ParticipantName { get; set; }
         public string Refusal { get; set; }
@@ -1321,14 +1322,15 @@ namespace OpenAI.Chat {
     }
     public class ChatCompletion : IJsonModel<ChatCompletion>, IPersistableModel<ChatCompletion> {
         public IReadOnlyList<ChatMessageContentPart> Content { get; }
-        public IReadOnlyList<ChatTokenLogProbabilityInfo> ContentTokenLogProbabilities { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities { get; }
         public DateTimeOffset CreatedAt { get; }
         public ChatFinishReason FinishReason { get; }
+        [Obsolete("This property is obsolete. Please use ToolCalls instead.")]
         public ChatFunctionCall FunctionCall { get; }
         public string Id { get; }
         public string Model { get; }
         public string Refusal { get; }
-        public IReadOnlyList<ChatTokenLogProbabilityInfo> RefusalTokenLogProbabilities { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityDetails> RefusalTokenLogProbabilities { get; }
         public ChatMessageRole Role { get; }
         public string SystemFingerprint { get; }
         public IReadOnlyList<ChatToolCall> ToolCalls { get; }
@@ -1343,7 +1345,9 @@ namespace OpenAI.Chat {
     public class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>, IPersistableModel<ChatCompletionOptions> {
         public string EndUserId { get; set; }
         public float? FrequencyPenalty { get; set; }
+        [Obsolete("This property is obsolete. Please use ToolChoice instead.")]
         public ChatFunctionChoice FunctionChoice { get; set; }
+        [Obsolete("This property is obsolete. Please use Tools instead.")]
         public IList<ChatFunction> Functions { get; }
         public bool? IncludeLogProbabilities { get; set; }
         public IDictionary<int, int> LogitBiases { get; }
@@ -1371,7 +1375,7 @@ namespace OpenAI.Chat {
         ToolCalls = 3,
         FunctionCall = 4
     }
-    [Obsolete("This field is marked as deprecated.")]
+    [Obsolete("This class is obsolete. Please use ChatTool instead.")]
     public class ChatFunction : IJsonModel<ChatFunction>, IPersistableModel<ChatFunction> {
         public ChatFunction(string functionName, string functionDescription = null, BinaryData functionParameters = null);
         public string FunctionDescription { get; set; }
@@ -1383,6 +1387,7 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatFunction>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatFunction>.Write(ModelReaderWriterOptions options);
     }
+    [Obsolete("This class is obsolete. Please use ChatToolCall instead.")]
     public class ChatFunctionCall : IJsonModel<ChatFunctionCall>, IPersistableModel<ChatFunctionCall> {
         public ChatFunctionCall(string functionName, string functionArguments);
         public string FunctionArguments { get; }
@@ -1393,6 +1398,7 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatFunctionCall>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatFunctionCall>.Write(ModelReaderWriterOptions options);
     }
+    [Obsolete("This class is obsolete. Please use ChatToolChoice instead.")]
     public class ChatFunctionChoice : IJsonModel<ChatFunctionChoice>, IPersistableModel<ChatFunctionChoice> {
         public ChatFunctionChoice(ChatFunction chatFunction);
         public static ChatFunctionChoice Auto { get; }
@@ -1428,14 +1434,14 @@ namespace OpenAI.Chat {
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
         public static AssistantChatMessage CreateAssistantMessage(string content);
-        [Obsolete("This field is marked as deprecated.")]
+        [Obsolete("This method is obsolete. Please use CreateToolMessage instead.")]
         public static FunctionChatMessage CreateFunctionMessage(string functionName, string content);
         public static SystemChatMessage CreateSystemMessage(params ChatMessageContentPart[] contentParts);
         public static SystemChatMessage CreateSystemMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static SystemChatMessage CreateSystemMessage(string content);
-        public static ToolChatMessage CreateToolChatMessage(string toolCallId, params ChatMessageContentPart[] contentParts);
-        public static ToolChatMessage CreateToolChatMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts);
-        public static ToolChatMessage CreateToolChatMessage(string toolCallId, string content);
+        public static ToolChatMessage CreateToolMessage(string toolCallId, params ChatMessageContentPart[] contentParts);
+        public static ToolChatMessage CreateToolMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts);
+        public static ToolChatMessage CreateToolMessage(string toolCallId, string content);
         public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts);
         public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static UserChatMessage CreateUserMessage(string content);
@@ -1499,26 +1505,26 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatResponseFormat>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatResponseFormat>.Write(ModelReaderWriterOptions options);
     }
-    public class ChatTokenLogProbabilityInfo : IJsonModel<ChatTokenLogProbabilityInfo>, IPersistableModel<ChatTokenLogProbabilityInfo> {
+    public class ChatTokenLogProbabilityDetails : IJsonModel<ChatTokenLogProbabilityDetails>, IPersistableModel<ChatTokenLogProbabilityDetails> {
         public float LogProbability { get; }
         public string Token { get; }
-        public IReadOnlyList<ChatTokenTopLogProbabilityInfo> TopLogProbabilities { get; }
-        public IReadOnlyList<int> Utf8ByteValues { get; }
-        ChatTokenLogProbabilityInfo IJsonModel<ChatTokenLogProbabilityInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ChatTokenLogProbabilityInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ChatTokenLogProbabilityInfo IPersistableModel<ChatTokenLogProbabilityInfo>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ChatTokenLogProbabilityInfo>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ChatTokenLogProbabilityInfo>.Write(ModelReaderWriterOptions options);
+        public IReadOnlyList<ChatTokenTopLogProbabilityDetails> TopLogProbabilities { get; }
+        public ReadOnlyMemory<byte>? Utf8Bytes { get; }
+        ChatTokenLogProbabilityDetails IJsonModel<ChatTokenLogProbabilityDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ChatTokenLogProbabilityDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ChatTokenLogProbabilityDetails IPersistableModel<ChatTokenLogProbabilityDetails>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ChatTokenLogProbabilityDetails>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ChatTokenLogProbabilityDetails>.Write(ModelReaderWriterOptions options);
     }
-    public class ChatTokenTopLogProbabilityInfo : IJsonModel<ChatTokenTopLogProbabilityInfo>, IPersistableModel<ChatTokenTopLogProbabilityInfo> {
+    public class ChatTokenTopLogProbabilityDetails : IJsonModel<ChatTokenTopLogProbabilityDetails>, IPersistableModel<ChatTokenTopLogProbabilityDetails> {
         public float LogProbability { get; }
         public string Token { get; }
-        public IReadOnlyList<int> Utf8ByteValues { get; }
-        ChatTokenTopLogProbabilityInfo IJsonModel<ChatTokenTopLogProbabilityInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ChatTokenTopLogProbabilityInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ChatTokenTopLogProbabilityInfo IPersistableModel<ChatTokenTopLogProbabilityInfo>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ChatTokenTopLogProbabilityInfo>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ChatTokenTopLogProbabilityInfo>.Write(ModelReaderWriterOptions options);
+        public ReadOnlyMemory<byte>? Utf8Bytes { get; }
+        ChatTokenTopLogProbabilityDetails IJsonModel<ChatTokenTopLogProbabilityDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ChatTokenTopLogProbabilityDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ChatTokenTopLogProbabilityDetails IPersistableModel<ChatTokenTopLogProbabilityDetails>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ChatTokenTopLogProbabilityDetails>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ChatTokenTopLogProbabilityDetails>.Write(ModelReaderWriterOptions options);
     }
     public class ChatTokenUsage : IJsonModel<ChatTokenUsage>, IPersistableModel<ChatTokenUsage> {
         public int InputTokens { get; }
@@ -1597,7 +1603,7 @@ namespace OpenAI.Chat {
         public static bool operator !=(ChatToolKind left, ChatToolKind right);
         public override readonly string ToString();
     }
-    [Obsolete("This field is marked as deprecated.")]
+    [Obsolete("This class is obsolete. Please use ToolChatMessage instead.")]
     public class FunctionChatMessage : ChatMessage, IJsonModel<FunctionChatMessage>, IPersistableModel<FunctionChatMessage> {
         public FunctionChatMessage(string functionName, string content = null);
         public string FunctionName { get; }
@@ -1608,23 +1614,25 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<FunctionChatMessage>.Write(ModelReaderWriterOptions options);
     }
     public static class OpenAIChatModelFactory {
-        public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, IEnumerable<ChatMessageContentPart> content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
-        public static ChatTokenLogProbabilityInfo ChatTokenLogProbabilityInfo(string token = null, float logProbability = 0, IEnumerable<int> utf8ByteValues = null, IEnumerable<ChatTokenTopLogProbabilityInfo> topLogProbabilities = null);
-        public static ChatTokenTopLogProbabilityInfo ChatTokenTopLogProbabilityInfo(string token = null, float logProbability = 0, IEnumerable<int> utf8ByteValues = null);
+        public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, IEnumerable<ChatMessageContentPart> content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
+        public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
         public static ChatTokenUsage ChatTokenUsage(int outputTokens = 0, int inputTokens = 0, int totalTokens = 0, int? reasoningTokens = null);
-        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string id = null, IEnumerable<ChatMessageContentPart> contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityInfo> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityInfo> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string id = null, IEnumerable<ChatMessageContentPart> contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null);
         public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = 0, string id = null, ChatToolCallKind kind = default, string functionName = null, string functionArgumentsUpdate = null);
     }
     public class StreamingChatCompletionUpdate : IJsonModel<StreamingChatCompletionUpdate>, IPersistableModel<StreamingChatCompletionUpdate> {
-        public IReadOnlyList<ChatTokenLogProbabilityInfo> ContentTokenLogProbabilities { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities { get; }
         public IReadOnlyList<ChatMessageContentPart> ContentUpdate { get; }
         public DateTimeOffset CreatedAt { get; }
         public ChatFinishReason? FinishReason { get; }
+        [Obsolete("This property is obsolete. Please use ToolCallUpdates instead.")]
         public StreamingChatFunctionCallUpdate FunctionCallUpdate { get; }
         public string Id { get; }
         public string Model { get; }
-        public IReadOnlyList<ChatTokenLogProbabilityInfo> RefusalTokenLogProbabilities { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityDetails> RefusalTokenLogProbabilities { get; }
         public string RefusalUpdate { get; }
         public ChatMessageRole? Role { get; }
         public string SystemFingerprint { get; }
@@ -1636,6 +1644,7 @@ namespace OpenAI.Chat {
         string IPersistableModel<StreamingChatCompletionUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<StreamingChatCompletionUpdate>.Write(ModelReaderWriterOptions options);
     }
+    [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
     public class StreamingChatFunctionCallUpdate : IJsonModel<StreamingChatFunctionCallUpdate>, IPersistableModel<StreamingChatFunctionCallUpdate> {
         public string FunctionArgumentsUpdate { get; }
         public string FunctionName { get; }
@@ -1817,7 +1826,9 @@ namespace OpenAI.Files {
         public string Id { get; }
         public OpenAIFilePurpose Purpose { get; }
         public int? SizeInBytes { get; }
+        [Obsolete("This property is obsolete. If this is a fine-tuning training file, it may take some time to process after it has been uploaded. While the file is processing, you can still create a fine-tuning job but it will not start until the file processing has completed.")]
         public OpenAIFileStatus Status { get; }
+        [Obsolete("This property is obsolete. For details on why a fine-tuning training file failed validation, see the `error` field on the fine-tuning job.")]
         public string StatusDetails { get; }
         OpenAIFileInfo IJsonModel<OpenAIFileInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<OpenAIFileInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -1857,6 +1868,7 @@ namespace OpenAI.Files {
         public static OpenAIFileInfo OpenAIFileInfo(string id = null, int? sizeInBytes = null, DateTimeOffset createdAt = default, string filename = null, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null);
         public static OpenAIFileInfoCollection OpenAIFileInfoCollection(IEnumerable<OpenAIFileInfo> items = null);
     }
+    [Obsolete("This struct is obsolete. If this is a fine-tuning training file, it may take some time to process after it has been uploaded. While the file is processing, you can still create a fine-tuning job but it will not start until the file processing has completed.")]
     public readonly partial struct OpenAIFileStatus : IEquatable<OpenAIFileStatus> {
         private readonly object _dummy;
         private readonly int _dummyPrimitive;
@@ -2039,22 +2051,22 @@ namespace OpenAI.Models {
         public virtual ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteModel(string model, RequestOptions options);
-        public virtual ClientResult<bool> DeleteModel(string model);
+        public virtual ClientResult<bool> DeleteModel(string model, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteModelAsync(string model, RequestOptions options);
-        public virtual Task<ClientResult<bool>> DeleteModelAsync(string model);
+        public virtual Task<ClientResult<bool>> DeleteModelAsync(string model, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetModel(string model, RequestOptions options);
-        public virtual ClientResult<OpenAIModelInfo> GetModel(string model);
+        public virtual ClientResult<OpenAIModelInfo> GetModel(string model, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetModelAsync(string model, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIModelInfo>> GetModelAsync(string model);
-        public virtual ClientResult<OpenAIModelInfoCollection> GetModels();
+        public virtual Task<ClientResult<OpenAIModelInfo>> GetModelAsync(string model, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetModels(RequestOptions options);
-        public virtual Task<ClientResult<OpenAIModelInfoCollection>> GetModelsAsync();
+        public virtual ClientResult<OpenAIModelInfoCollection> GetModels(CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetModelsAsync(RequestOptions options);
+        public virtual Task<ClientResult<OpenAIModelInfoCollection>> GetModelsAsync(CancellationToken cancellationToken = default);
     }
     public class OpenAIModelInfo : IJsonModel<OpenAIModelInfo>, IPersistableModel<OpenAIModelInfo> {
         public DateTimeOffset CreatedAt { get; }

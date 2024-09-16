@@ -79,8 +79,7 @@ public partial class FineTuningClient
     /// <returns> The response returned from the service. </returns>
     public virtual AsyncCollectionResult GetJobsAsync(string after, int? limit, RequestOptions options)
     {
-        FineTuningJobsPageEnumerator enumerator = new FineTuningJobsPageEnumerator(_pipeline, _endpoint, after, limit, options);
-        return CollectionResultHelpers.CreateAsync(enumerator);
+        return new AsyncFineTuningJobCollectionResult(this, _pipeline, options, limit, after);
     }
 
     // CUSTOM:
@@ -96,8 +95,7 @@ public partial class FineTuningClient
     /// <returns> The response returned from the service. </returns>
     public virtual CollectionResult GetJobs(string after, int? limit, RequestOptions options)
     {
-        FineTuningJobsPageEnumerator enumerator = new FineTuningJobsPageEnumerator(_pipeline, _endpoint, after, limit, options);
-        return CollectionResultHelpers.Create(enumerator);
+        return new FineTuningJobCollectionResult(this, _pipeline, options, limit, after);
     }
 
     // CUSTOM:
@@ -202,8 +200,7 @@ public partial class FineTuningClient
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
-        FineTuningJobEventsPageEnumerator enumerator = new FineTuningJobEventsPageEnumerator(_pipeline, _endpoint, jobId, after, limit, options);
-        return CollectionResultHelpers.CreateAsync(enumerator);
+        return new AsyncFineTuningJobEventCollectionResult(this, _pipeline, options, jobId, limit, after);
     }
 
     // CUSTOM:
@@ -224,8 +221,7 @@ public partial class FineTuningClient
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
-        FineTuningJobEventsPageEnumerator enumerator = new FineTuningJobEventsPageEnumerator(_pipeline, _endpoint, jobId, after, limit, options);
-        return CollectionResultHelpers.Create(enumerator);
+        return new FineTuningJobEventCollectionResult(this, _pipeline, options, jobId, limit, after);
     }
 
     /// <summary>
@@ -243,8 +239,8 @@ public partial class FineTuningClient
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
-        FineTuningJobCheckpointsPageEnumerator enumerator = new FineTuningJobCheckpointsPageEnumerator(_pipeline, _endpoint, jobId, after, limit, options);
-        return CollectionResultHelpers.CreateAsync(enumerator);
+        return new AsyncFineTuningJobCheckpointCollectionResult(this, _pipeline, options, jobId, limit, after);
+
     }
 
     /// <summary>
@@ -262,7 +258,6 @@ public partial class FineTuningClient
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
-        FineTuningJobCheckpointsPageEnumerator enumerator = new FineTuningJobCheckpointsPageEnumerator(_pipeline, _endpoint, jobId, after, limit, options);
-        return CollectionResultHelpers.Create(enumerator);
+        return new FineTuningJobCheckpointCollectionResult(this, _pipeline, options, jobId, limit, after);
     }
 }

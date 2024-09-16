@@ -1,5 +1,6 @@
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
@@ -8,9 +9,9 @@ using System.Text.Json;
 
 namespace OpenAI.Assistants;
 
-internal class RunStepsPageToken : ContinuationToken
+internal class RunStepCollectionPageToken : ContinuationToken
 {
-    protected RunStepsPageToken(string threadId, string runId, int? limit, string? order, string? after, string? before)
+    protected RunStepCollectionPageToken(string threadId, string runId, int? limit, string? order, string? after, string? before)
     {
         ThreadId = threadId;
         RunId = runId;
@@ -70,19 +71,9 @@ internal class RunStepsPageToken : ContinuationToken
         return BinaryData.FromStream(stream);
     }
 
-    public RunStepsPageToken? GetNextPageToken(bool hasMore, string? lastId)
+    public static RunStepCollectionPageToken FromToken(ContinuationToken pageToken)
     {
-        if (!hasMore || lastId is null)
-        {
-            return null;
-        }
-
-        return new RunStepsPageToken(ThreadId, RunId, Limit, Order, After, Before);
-    }
-
-    public static RunStepsPageToken FromToken(ContinuationToken pageToken)
-    {
-        if (pageToken is RunStepsPageToken token)
+        if (pageToken is RunStepCollectionPageToken token)
         {
             return token;
         }
@@ -163,6 +154,21 @@ internal class RunStepsPageToken : ContinuationToken
         return new(threadId, runId, limit, order, after, before);
     }
 
-    public static RunStepsPageToken FromOptions(string threadId, string runId, int? limit, string? order, string? after, string? before)
-        => new RunStepsPageToken(threadId, runId, limit, order, after, before);
+    public static RunStepCollectionPageToken FromOptions(string threadId, string runId, int? limit, string? order, string? after, string? before)
+        => new(threadId, runId, limit, order, after, before);
+
+    public static RunStepCollectionPageToken? FromResponse(ClientResult result, string threadId, string runId, int? limit, string? order, string? before)
+    {
+        PipelineResponse response = result.GetRawResponse();
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        string lastId = doc.RootElement.GetProperty("last_id"u8).GetString()!;
+        bool hasMore = doc.RootElement.GetProperty("has_more"u8).GetBoolean();
+
+        if (!hasMore || lastId is null)
+        {
+            return null;
+        }
+
+        return new(threadId, runId, limit, order, lastId, before);
+    }
 }

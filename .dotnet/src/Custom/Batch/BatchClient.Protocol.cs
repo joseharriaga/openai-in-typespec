@@ -1,7 +1,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OpenAI.Batch;
@@ -52,8 +51,7 @@ public partial class BatchClient
     /// <returns> The response returned from the service. </returns>
     public virtual AsyncCollectionResult GetBatchesAsync(string after, int? limit, RequestOptions options)
     {
-        BatchesPageEnumerator enumerator = new BatchesPageEnumerator(_pipeline, _endpoint, after, limit, options);
-        return CollectionResultHelpers.CreateAsync(enumerator);
+        return new AsyncBatchCollectionResult(this, _pipeline, options, limit, after);
     }
 
     /// <summary>
@@ -66,8 +64,7 @@ public partial class BatchClient
     /// <returns> The response returned from the service. </returns>
     public virtual CollectionResult GetBatches(string after, int? limit, RequestOptions options)
     {
-        BatchesPageEnumerator enumerator = new BatchesPageEnumerator(_pipeline, _endpoint, after, limit, options);
-        return CollectionResultHelpers.Create(enumerator);
+        return new BatchCollectionResult(this, _pipeline, options, limit, after);
     }
 
     /// <summary>

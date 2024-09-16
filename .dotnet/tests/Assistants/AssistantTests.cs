@@ -9,6 +9,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using static OpenAI.Tests.TestHelpers;
@@ -233,9 +234,9 @@ public partial class AssistantTests : SyncAsyncTestBase
             : client.ModifyMessage(message, modificationOptions);
         Assert.That(message.Metadata.TryGetValue("messageMetadata", out metadataValue) && metadataValue == "newValue");
 
-        List<ThreadMessage> messages = IsAsync ?
-            await client.GetMessagesAsync(thread).ToListAsync() :
-            client.GetMessages(thread).ToList();
+        List<ThreadMessage> messages = IsAsync
+            ? await client.GetMessagesAsync(thread).ToListAsync()
+            : [.. client.GetMessages(thread)];
 
         Assert.That(messages.Count, Is.EqualTo(1));
         Assert.That(messages[0].Id, Is.EqualTo(message.Id));
@@ -270,9 +271,9 @@ public partial class AssistantTests : SyncAsyncTestBase
             : client.CreateThread(options);
         Validate(thread);
         MessageCollectionOptions collectionOptions = new MessageCollectionOptions() { Order = MessageCollectionOrder.Ascending };
-        List<ThreadMessage> messages = IsAsync ?
-            await client.GetMessagesAsync(thread).ToListAsync() :
-            client.GetMessages(thread).ToList();
+        List<ThreadMessage> messages = IsAsync
+            ? await client.GetMessagesAsync(thread, collectionOptions).ToListAsync()
+            : client.GetMessages(thread, collectionOptions).ToList();
         Assert.That(messages.Count, Is.EqualTo(2));
         Assert.That(messages[0].Role, Is.EqualTo(MessageRole.User));
         Assert.That(messages[0].Content?.Count, Is.EqualTo(1));
@@ -1068,457 +1069,488 @@ public partial class AssistantTests : SyncAsyncTestBase
         Assert.That(count, Is.GreaterThanOrEqualTo(10));
     }
 
-    //[Test]
-    //public async Task Pagination_CanPageThroughAssistantCollectionAsync()
-    //{
-    //    AssertAsyncOnly();
-
-    //    AssistantClient client = GetTestClient();
-
-    //    // Create assistant collection
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
-    //        {
-    //            Name = $"Test Assistant {i}"
-    //        });
-    //        Validate(assistant);
-    //        Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
-    //    }
-
-    //    // Page through collection
-    //    int count = 0;
-    //    int pageCount = 0;
-    //    AsyncCollectionResult<Assistant> pages = client.GetAssistantsAsync(
-    //        new AssistantCollectionOptions()
-    //        {
-    //            Order = AssistantCollectionOrder.Descending,
-    //            PageSizeLimit = 2
-    //        });
-
-    //    int lastIdSeen = int.MaxValue;
-
-    //    await foreach (PageResult<Assistant> page in pages)
-    //    {
-    //        foreach (Assistant assistant in page.Values)
-    //        {
-    //            Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-    //            if (assistant.Name?.StartsWith("Test Assistant ") == true)
-    //            {
-    //                Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
-    //                Assert.That(seenId, Is.LessThan(lastIdSeen));
-    //                lastIdSeen = seenId;
-    //            }
-    //            count++;
-    //        }
-
-    //        pageCount++;
-    //        if (lastIdSeen == 0 || count > 100)
-    //        {
-    //            break;
-    //        }
-    //    }
-
-    //    Assert.That(count, Is.GreaterThanOrEqualTo(10));
-    //    Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
-    //}
-
-    //[Test]
-    //public void Pagination_CanPageThroughAssistantCollection()
-    //{
-    //    AssertSyncOnly();
-
-    //    AssistantClient client = GetTestClient();
-
-    //    // Create assistant collection
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
-    //        {
-    //            Name = $"Test Assistant {i}"
-    //        });
-    //        Validate(assistant);
-    //        Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
-    //    }
-
-    //    // Page through collection
-    //    int count = 0;
-    //    int pageCount = 0;
-    //    CollectionResult<Assistant> pages = client.GetAssistants(
-    //        new AssistantCollectionOptions()
-    //        {
-    //            Order = AssistantCollectionOrder.Descending,
-    //            PageSizeLimit = 2
-    //        });
-
-    //    int lastIdSeen = int.MaxValue;
-
-    //    foreach (PageResult<Assistant> page in pages)
-    //    {
-    //        foreach (Assistant assistant in page.Values)
-    //        {
-    //            Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-    //            if (assistant.Name?.StartsWith("Test Assistant ") == true)
-    //            {
-    //                Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
-    //                Assert.That(seenId, Is.LessThan(lastIdSeen));
-    //                lastIdSeen = seenId;
-    //            }
-    //            count++;
-    //        }
-
-    //        pageCount++;
-    //        if (lastIdSeen == 0 || count > 100)
-    //        {
-    //            break;
-    //        }
-    //    }
-
-    //    Assert.That(count, Is.GreaterThanOrEqualTo(10));
-    //    Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
-    //}
-
-    //[Test]
-    //public async Task Pagination_CanRehydrateAssistantPageCollectionFromBytesAsync()
-    //{
-    //    AssertAsyncOnly();
-
-    //    AssistantClient client = GetTestClient();
-
-    //    // Create assistant collection
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
-    //        {
-    //            Name = $"Test Assistant {i}"
-    //        });
-    //        Validate(assistant);
-    //        Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
-    //    }
-
-    //    AsyncCollectionResult<Assistant> pages = client.GetAssistantsAsync(
-    //        new AssistantCollectionOptions()
-    //        {
-    //            Order = AssistantCollectionOrder.Descending,
-    //            PageSizeLimit = 2
-    //        });
-
-    //    // Simulate rehydration of the collection
-    //    BinaryData rehydrationBytes = (await pages.GetCurrentPageAsync().ConfigureAwait(false)).PageToken.ToBytes();
-    //    ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
-
-    //    AsyncCollectionResult<Assistant> rehydratedPages = client.GetAssistantsAsync(rehydrationToken);
-
-    //    int count = 0;
-    //    int pageCount = 0;
-    //    int lastIdSeen = int.MaxValue;
-
-    //    await foreach (PageResult<Assistant> page in rehydratedPages)
-    //    {
-    //        foreach (Assistant assistant in page.Values)
-    //        {
-    //            Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-    //            if (assistant.Name?.StartsWith("Test Assistant ") == true)
-    //            {
-    //                Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
-    //                Assert.That(seenId, Is.LessThan(lastIdSeen));
-    //                lastIdSeen = seenId;
-    //            }
-    //            count++;
-    //        }
-
-    //        pageCount++;
-    //        if (lastIdSeen == 0 || count > 100)
-    //        {
-    //            break;
-    //        }
-    //    }
-
-    //    Assert.That(count, Is.GreaterThanOrEqualTo(10));
-    //    Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
-    //}
-
-    //[Test]
-    //public void Pagination_CanRehydrateAssistantPageCollectionFromBytes()
-    //{
-    //    AssertSyncOnly();
-
-    //    AssistantClient client = GetTestClient();
-
-    //    // Create assistant collection
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
-    //        {
-    //            Name = $"Test Assistant {i}"
-    //        });
-    //        Validate(assistant);
-    //        Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
-    //    }
-
-    //    CollectionResult<Assistant> pages = client.GetAssistants(
-    //        new AssistantCollectionOptions()
-    //        {
-    //            Order = AssistantCollectionOrder.Descending,
-    //            PageSizeLimit = 2
-    //        });
-
-    //    // Simulate rehydration of the collection
-    //    BinaryData rehydrationBytes = pages.GetCurrentPage().PageToken.ToBytes();
-    //    ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
-
-    //    CollectionResult<Assistant> rehydratedPages = client.GetAssistants(rehydrationToken);
-
-    //    int count = 0;
-    //    int pageCount = 0;
-    //    int lastIdSeen = int.MaxValue;
-
-    //    foreach (PageResult<Assistant> page in rehydratedPages)
-    //    {
-    //        foreach (Assistant assistant in page.Values)
-    //        {
-    //            Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-    //            if (assistant.Name?.StartsWith("Test Assistant ") == true)
-    //            {
-    //                Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
-    //                Assert.That(seenId, Is.LessThan(lastIdSeen));
-    //                lastIdSeen = seenId;
-    //            }
-    //            count++;
-    //        }
-
-    //        pageCount++;
-    //        if (lastIdSeen == 0 || count > 100)
-    //        {
-    //            break;
-    //        }
-    //    }
-
-    //    Assert.That(count, Is.GreaterThanOrEqualTo(10));
-    //    Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
-    //}
-
-    //[Test]
-    //public async Task Pagination_CanRehydrateAssistantPageCollectionFromPageTokenAsync()
-    //{
-    //    AssertAsyncOnly();
-
-    //    AssistantClient client = GetTestClient();
-
-    //    // Create assistant collection
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
-    //        {
-    //            Name = $"Test Assistant {i}"
-    //        });
-    //        Validate(assistant);
-    //        Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
-    //    }
-
-    //    AsyncCollectionResult<Assistant> pages = client.GetAssistantsAsync(
-    //        new AssistantCollectionOptions()
-    //        {
-    //            Order = AssistantCollectionOrder.Descending,
-    //            PageSizeLimit = 2
-    //        });
-
-    //    // Call the rehydration method, passing a typed OpenAIPageToken
-    //    PageResult<Assistant> firstPage = await pages.GetCurrentPageAsync().ConfigureAwait(false);
-    //    AsyncCollectionResult<Assistant> rehydratedPages = client.GetAssistantsAsync(firstPage.PageToken);
-
-    //    int count = 0;
-    //    int pageCount = 0;
-    //    int lastIdSeen = int.MaxValue;
-
-    //    await foreach (PageResult<Assistant> page in rehydratedPages)
-    //    {
-    //        foreach (Assistant assistant in page.Values)
-    //        {
-    //            Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-    //            if (assistant.Name?.StartsWith("Test Assistant ") == true)
-    //            {
-    //                Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
-    //                Assert.That(seenId, Is.LessThan(lastIdSeen));
-    //                lastIdSeen = seenId;
-    //            }
-    //            count++;
-    //        }
-
-    //        pageCount++;
-    //        if (lastIdSeen == 0 || count > 100)
-    //        {
-    //            break;
-    //        }
-    //    }
-
-    //    Assert.That(count, Is.GreaterThanOrEqualTo(10));
-    //    Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
-    //}
-
-    //[Test]
-    //public void Pagination_CanRehydrateAssistantPageCollectionFromPageToken()
-    //{
-    //    AssertSyncOnly();
-
-    //    AssistantClient client = GetTestClient();
-
-    //    // Create assistant collection
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
-    //        {
-    //            Name = $"Test Assistant {i}"
-    //        });
-    //        Validate(assistant);
-    //        Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
-    //    }
-
-    //    CollectionResult<Assistant> pages = client.GetAssistants(
-    //        new AssistantCollectionOptions()
-    //        {
-    //            Order = AssistantCollectionOrder.Descending,
-    //            PageSizeLimit = 2
-    //        });
-
-    //    // Call the rehydration method, passing a typed OpenAIPageToken
-    //    PageResult<Assistant> firstPage = pages.GetCurrentPage();
-    //    CollectionResult<Assistant> rehydratedPages = client.GetAssistants(firstPage.PageToken);
-
-    //    int count = 0;
-    //    int pageCount = 0;
-    //    int lastIdSeen = int.MaxValue;
-
-    //    foreach (PageResult<Assistant> page in rehydratedPages)
-    //    {
-    //        foreach (Assistant assistant in page.Values)
-    //        {
-    //            Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-    //            if (assistant.Name?.StartsWith("Test Assistant ") == true)
-    //            {
-    //                Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
-    //                Assert.That(seenId, Is.LessThan(lastIdSeen));
-    //                lastIdSeen = seenId;
-    //            }
-    //            count++;
-    //        }
-
-    //        pageCount++;
-    //        if (lastIdSeen == 0 || count > 100)
-    //        {
-    //            break;
-    //        }
-    //    }
-
-    //    Assert.That(count, Is.GreaterThanOrEqualTo(10));
-    //    Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
-    //}
-
-    //[Test]
-    //public async Task Pagination_CanCastAssistantPageCollectionToConvenienceFromProtocolAsync()
-    //{
-    //    AssertAsyncOnly();
-
-    //    AssistantClient client = GetTestClient();
-
-    //    // Create assistant collection
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
-    //        {
-    //            Name = $"Test Assistant {i}"
-    //        });
-    //        Validate(assistant);
-    //        Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
-    //    }
-
-    //    // Call the protocol method
-    //    IAsyncEnumerable<ClientResult> pages = client.GetAssistantsAsync(limit: 2, order: "desc", after: null, before: null, options: default);
-
-    //    // Cast to the convenience type
-    //    AsyncCollectionResult<Assistant> assistantPages = (AsyncCollectionResult<Assistant>)pages;
-
-    //    int count = 0;
-    //    int pageCount = 0;
-    //    int lastIdSeen = int.MaxValue;
-
-    //    await foreach (PageResult<Assistant> page in assistantPages)
-    //    {
-    //        foreach (Assistant assistant in page.Values)
-    //        {
-    //            Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-    //            if (assistant.Name?.StartsWith("Test Assistant ") == true)
-    //            {
-    //                Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
-    //                Assert.That(seenId, Is.LessThan(lastIdSeen));
-    //                lastIdSeen = seenId;
-    //            }
-    //            count++;
-    //        }
-
-    //        pageCount++;
-    //        if (lastIdSeen == 0 || count > 100)
-    //        {
-    //            break;
-    //        }
-    //    }
-
-    //    Assert.That(count, Is.GreaterThanOrEqualTo(10));
-    //    Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
-    //}
-
-    //[Test]
-    //public void Pagination_CanCastAssistantPageCollectionToConvenienceFromProtocol()
-    //{
-    //    AssertSyncOnly();
-
-    //    AssistantClient client = GetTestClient();
-
-    //    // Create assistant collection
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
-    //        {
-    //            Name = $"Test Assistant {i}"
-    //        });
-    //        Validate(assistant);
-    //        Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
-    //    }
-
-    //    // Call the protocol method
-    //    IEnumerable<ClientResult> pages = client.GetAssistants(limit: 2, order: "desc", after: null, before: null, options: default);
-
-    //    // Cast to the convenience type
-    //    CollectionResult<Assistant> assistantPages = (CollectionResult<Assistant>)pages;
-
-    //    int count = 0;
-    //    int pageCount = 0;
-    //    int lastIdSeen = int.MaxValue;
-
-    //    foreach (PageResult<Assistant> page in assistantPages)
-    //    {
-    //        foreach (Assistant assistant in page.Values)
-    //        {
-    //            Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
-    //            if (assistant.Name?.StartsWith("Test Assistant ") == true)
-    //            {
-    //                Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
-    //                Assert.That(seenId, Is.LessThan(lastIdSeen));
-    //                lastIdSeen = seenId;
-    //            }
-    //            count++;
-    //        }
-
-    //        pageCount++;
-    //        if (lastIdSeen == 0 || count > 100)
-    //        {
-    //            break;
-    //        }
-    //    }
-
-    //    Assert.That(count, Is.GreaterThanOrEqualTo(10));
-    //    Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
-    //}
+    [Test]
+    public async Task Pagination_CanPageThroughAssistantCollectionAsync()
+    {
+        AssertAsyncOnly();
+
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            {
+                Name = $"Test Assistant {i}"
+            });
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+        }
+
+        // Page through collection
+        int count = 0;
+        int pageCount = 0;
+        AsyncCollectionResult<Assistant> assistants = client.GetAssistantsAsync(
+            new AssistantCollectionOptions()
+            {
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
+            });
+
+        int lastIdSeen = int.MaxValue;
+
+        await foreach (ClientResult page in assistants.GetRawPagesAsync())
+        {
+            foreach (Assistant assistant in GetAssistantsFromPage(page))
+            {
+                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
+                if (assistant.Name?.StartsWith("Test Assistant ") == true)
+                {
+                    Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
+                    Assert.That(seenId, Is.LessThan(lastIdSeen));
+                    lastIdSeen = seenId;
+                }
+                count++;
+            }
+
+            pageCount++;
+            if (lastIdSeen == 0 || count > 100)
+            {
+                break;
+            }
+        }
+
+        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
+    }
+
+    [Test]
+    public void Pagination_CanPageThroughAssistantCollection()
+    {
+        AssertSyncOnly();
+
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            {
+                Name = $"Test Assistant {i}"
+            });
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+        }
+
+        // Page through collection
+        int count = 0;
+        int pageCount = 0;
+        CollectionResult<Assistant> assistants = client.GetAssistants(
+            new AssistantCollectionOptions()
+            {
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
+            });
+
+        int lastIdSeen = int.MaxValue;
+
+        foreach (ClientResult page in assistants.GetRawPages())
+        {
+            foreach (Assistant assistant in GetAssistantsFromPage(page))
+            {
+                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
+                if (assistant.Name?.StartsWith("Test Assistant ") == true)
+                {
+                    Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
+                    Assert.That(seenId, Is.LessThan(lastIdSeen));
+                    lastIdSeen = seenId;
+                }
+                count++;
+            }
+
+            pageCount++;
+            if (lastIdSeen == 0 || count > 100)
+            {
+                break;
+            }
+        }
+
+        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
+    }
+
+    private static IEnumerable<Assistant> GetAssistantsFromPage(ClientResult page)
+    {
+        PipelineResponse response = page.GetRawResponse();
+        JsonDocument doc = JsonDocument.Parse(response.Content);
+        IEnumerable<JsonElement> els = doc.RootElement.GetProperty("data").EnumerateArray();
+
+        // TODO: improve perf
+        return els.Select(el => ModelReaderWriter.Read<Assistant>(BinaryData.FromString(el.GetRawText())));
+    }
+
+    [Test]
+    public async Task Pagination_CanRehydrateAssistantPageCollectionFromBytesAsync()
+    {
+        AssertAsyncOnly();
+
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            {
+                Name = $"Test Assistant {i}"
+            });
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+        }
+
+        AsyncCollectionResult<Assistant> assistants = client.GetAssistantsAsync(
+            new AssistantCollectionOptions()
+            {
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
+            });
+
+        // Simulate rehydration of the collection
+        ClientResult firstPage = await assistants.GetRawPagesAsync().FirstAsync();
+        BinaryData rehydrationBytes = assistants.GetContinuationToken(firstPage).ToBytes();
+        ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
+
+        AsyncCollectionResult<Assistant> rehydratedPages = client.GetAssistantsAsync(rehydrationToken);
+
+        int count = 0;
+        int pageCount = 0;
+        int lastIdSeen = int.MaxValue;
+
+        await foreach (ClientResult page in assistants.GetRawPagesAsync())
+        {
+            foreach (Assistant assistant in GetAssistantsFromPage(page))
+            {
+                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
+                if (assistant.Name?.StartsWith("Test Assistant ") == true)
+                {
+                    Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
+                    Assert.That(seenId, Is.LessThan(lastIdSeen));
+                    lastIdSeen = seenId;
+                }
+                count++;
+            }
+
+            pageCount++;
+            if (lastIdSeen == 0 || count > 100)
+            {
+                break;
+            }
+        }
+
+        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
+    }
+
+    [Test]
+    public void Pagination_CanRehydrateAssistantPageCollectionFromBytes()
+    {
+        AssertSyncOnly();
+
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            {
+                Name = $"Test Assistant {i}"
+            });
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+        }
+
+        CollectionResult<Assistant> assistants = client.GetAssistants(
+            new AssistantCollectionOptions()
+            {
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
+            });
+
+        // Simulate rehydration of the collection
+        ClientResult firstPage = assistants.GetRawPages().First();
+        BinaryData rehydrationBytes = assistants.GetContinuationToken(firstPage).ToBytes();
+        ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
+
+        CollectionResult<Assistant> rehydratedPages = client.GetAssistants(rehydrationToken);
+
+        int count = 0;
+        int pageCount = 0;
+        int lastIdSeen = int.MaxValue;
+
+        foreach (ClientResult page in rehydratedPages.GetRawPages())
+        {
+            foreach (Assistant assistant in GetAssistantsFromPage(page))
+            {
+                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
+                if (assistant.Name?.StartsWith("Test Assistant ") == true)
+                {
+                    Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
+                    Assert.That(seenId, Is.LessThan(lastIdSeen));
+                    lastIdSeen = seenId;
+                }
+                count++;
+            }
+
+            pageCount++;
+            if (lastIdSeen == 0 || count > 100)
+            {
+                break;
+            }
+        }
+
+        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
+    }
+
+    [Test]
+    public async Task Pagination_CanRehydrateAssistantPageCollectionFromPageTokenAsync()
+    {
+        AssertAsyncOnly();
+
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        List<Assistant> createdAssistants = [];
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            {
+                Name = $"Test Assistant {i}"
+            });
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+
+            createdAssistants.Add(assistant);
+        }
+
+        AsyncCollectionResult<Assistant> assistants = client.GetAssistantsAsync(
+            new AssistantCollectionOptions()
+            {
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
+            });
+
+        // Since we asked for descending order, reverse the order of createdAssistants.
+        createdAssistants.Reverse();
+
+        // Call the rehydration method, passing a typed OpenAIPageToken
+        ClientResult firstPage = await assistants.GetRawPagesAsync().FirstAsync();
+        ContinuationToken nextPageToken = assistants.GetContinuationToken(firstPage);
+        AsyncCollectionResult<Assistant> rehydratedAssistantCollection = client.GetAssistantsAsync(nextPageToken);
+
+        // Since we're asking for the next page after the first one, remove the first two items from the 
+        // createdAssistants
+        createdAssistants = createdAssistants.Skip(2).ToList();
+
+        int count = 0;
+        int pageCount = 0;
+        int lastIdSeen = int.MaxValue;
+
+        List<Assistant> rehydratedAssistants = [];
+
+        await foreach (ClientResult page in rehydratedAssistantCollection.GetRawPagesAsync())
+        {
+            foreach (Assistant assistant in GetAssistantsFromPage(page))
+            {
+                if (assistant.Name?.StartsWith("Test Assistant ") == true)
+                {
+                    Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
+                    Assert.That(seenId, Is.LessThan(lastIdSeen));
+                    lastIdSeen = seenId;
+                    count++;
+                }
+
+                rehydratedAssistants.Add(assistant);
+            }
+
+            pageCount++;
+            if (lastIdSeen == 0 || count > 100)
+            {
+                break;
+            }
+        }
+
+        Assert.That(createdAssistants[0].Id, Is.EqualTo(rehydratedAssistants[0].Id));
+
+        Assert.That(count, Is.GreaterThanOrEqualTo(8));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(4));
+    }
+
+    [Test]
+    public void Pagination_CanRehydrateAssistantPageCollectionFromPageToken()
+    {
+        AssertSyncOnly();
+
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        List<Assistant> createdAssistants = [];
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            {
+                Name = $"Test Assistant {i}"
+            });
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+
+            createdAssistants.Add(assistant);
+        }
+
+        CollectionResult<Assistant> assistants = client.GetAssistants(
+            new AssistantCollectionOptions()
+            {
+                Order = AssistantCollectionOrder.Descending,
+                PageSizeLimit = 2
+            });
+
+        // Since we asked for descending order, reverse the order of createdAssistants.
+        createdAssistants.Reverse();
+
+        // Call the rehydration method, passing a typed OpenAIPageToken
+        ClientResult firstPage = assistants.GetRawPages().First();
+        ContinuationToken nextPageToken = assistants.GetContinuationToken(firstPage);
+        CollectionResult<Assistant> rehydratedAssistantCollection = client.GetAssistants(nextPageToken);
+
+        // Since we're asking for the next page after the first one, remove the first two items from the 
+        // createdAssistants
+        createdAssistants = createdAssistants.Skip(2).ToList();
+
+        int count = 0;
+        int pageCount = 0;
+        int lastIdSeen = int.MaxValue;
+
+        List<Assistant> rehydratedAssistants = [];
+
+        foreach (ClientResult page in rehydratedAssistantCollection.GetRawPages())
+        {
+            foreach (Assistant assistant in GetAssistantsFromPage(page))
+            {
+                if (assistant.Name?.StartsWith("Test Assistant ") == true)
+                {
+                    Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
+                    Assert.That(seenId, Is.LessThan(lastIdSeen));
+                    lastIdSeen = seenId;
+                    count++;
+                }
+                rehydratedAssistants.Add(assistant);
+            }
+
+            pageCount++;
+            if (lastIdSeen == 0 || count > 100)
+            {
+                break;
+            }
+        }
+
+        Assert.That(createdAssistants[0].Id, Is.EqualTo(rehydratedAssistants[0].Id));
+
+        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
+    }
+
+    [Test]
+    public async Task Pagination_CanCastAssistantPageCollectionToConvenienceFromProtocolAsync()
+    {
+        AssertAsyncOnly();
+
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        List<Assistant> createdAssistants = [];
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            {
+                Name = $"Test Assistant {i}"
+            });
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+
+            createdAssistants.Add(assistant);
+        }
+
+        // Call the protocol method
+        AsyncCollectionResult assistantsProtocol = client.GetAssistantsAsync(limit: 2, order: "desc", after: null, before: null, options: default);
+
+        // Cast to the convenience type
+        AsyncCollectionResult<Assistant> assistants = (AsyncCollectionResult<Assistant>)assistantsProtocol;
+
+        // Since we asked for descending order, reverse the order of createdAssistants.
+        createdAssistants.Reverse();
+
+        int count = 0;
+        
+        // Validate that the protocol return type cast to the convenience return type
+        // functions correctly as the convenience return type.
+        await foreach (Assistant assistant in assistants)
+        {
+            Assert.AreEqual(createdAssistants[count++].Id, assistant.Id);
+
+            if (count >= createdAssistants.Count)
+            {
+                break;
+            }
+        }
+
+        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+    }
+
+    [Test]
+    public void Pagination_CanCastAssistantPageCollectionToConvenienceFromProtocol()
+    {
+        AssertSyncOnly();
+
+        AssistantClient client = GetTestClient();
+
+        // Create assistant collection
+        List<Assistant> createdAssistants = [];
+        for (int i = 0; i < 10; i++)
+        {
+            Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
+            {
+                Name = $"Test Assistant {i}"
+            });
+            Validate(assistant);
+            Assert.That(assistant.Name, Is.EqualTo($"Test Assistant {i}"));
+
+            createdAssistants.Add(assistant);
+        }
+
+        // Call the protocol method
+        CollectionResult assistantsProtocol = client.GetAssistants(limit: 2, order: "desc", after: null, before: null, options: default);
+
+        // Cast to the convenience type
+        CollectionResult<Assistant> assistants = (CollectionResult<Assistant>)assistantsProtocol;
+
+        // Since we asked for descending order, reverse the order of createdAssistants.
+        createdAssistants.Reverse();
+
+        int count = 0;
+
+        // Validate that the protocol return type cast to the convenience return type
+        // functions correctly as the convenience return type.
+        foreach (Assistant assistant in assistants)
+        {
+            Assert.AreEqual(createdAssistants[count++].Id, assistant.Id);
+
+            if (count >= createdAssistants.Count)
+            {
+                break;
+            }
+        }
+
+        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+    }
 
     //[Test]
     //public async Task Pagination_CanRehydrateRunStepPageCollectionFromBytesAsync()

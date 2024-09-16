@@ -1,16 +1,17 @@
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 
 #nullable enable
 
-namespace OpenAI.VectorStores;
+namespace OpenAI.Assistants;
 
-internal class VectorStoresPageToken : ContinuationToken
+internal class AssistantCollectionPageToken : ContinuationToken
 {
-    protected VectorStoresPageToken(int? limit, string? order, string? after, string? before)
+    protected AssistantCollectionPageToken(int? limit, string? order, string? after, string? before)
     {
         Limit = limit;
         Order = order;
@@ -61,28 +62,18 @@ internal class VectorStoresPageToken : ContinuationToken
         return BinaryData.FromStream(stream);
     }
 
-    public VectorStoresPageToken? GetNextPageToken(bool hasMore, string? lastId)
+    public static AssistantCollectionPageToken FromToken(ContinuationToken token)
     {
-        if (!hasMore || lastId is null)
+        if (token is AssistantCollectionPageToken pageToken)
         {
-            return null;
+            return pageToken;
         }
 
-        return new(Limit, Order, lastId, Before);
-    }
-
-    public static VectorStoresPageToken FromToken(ContinuationToken pageToken)
-    {
-        if (pageToken is VectorStoresPageToken token)
-        {
-            return token;
-        }
-
-        BinaryData data = pageToken.ToBytes();
+        BinaryData data = token.ToBytes();
 
         if (data.ToMemory().Length == 0)
         {
-            throw new ArgumentException("Failed to create VectorStoresPageToken from provided pageToken.", nameof(pageToken));
+            throw new ArgumentException("Failed to create AssistantsPageToken from provided pageToken.", nameof(pageToken));
         }
 
         Utf8JsonReader reader = new(data);
@@ -137,6 +128,21 @@ internal class VectorStoresPageToken : ContinuationToken
         return new(limit, order, after, before);
     }
 
-    public static VectorStoresPageToken FromOptions(int? limit, string? order, string? after, string? before)
-        => new(limit, order, after, before);
+    public static AssistantCollectionPageToken FromOptions(int? limit, string? order, string? after, string? before)
+        => new AssistantCollectionPageToken(limit, order, after, before);
+
+    public static AssistantCollectionPageToken? FromResponse(ClientResult result, int? limit, string? order, string? before)
+    {
+        PipelineResponse response = result.GetRawResponse();
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        string lastId = doc.RootElement.GetProperty("last_id"u8).GetString()!;
+        bool hasMore = doc.RootElement.GetProperty("has_more"u8).GetBoolean();
+
+        if (!hasMore || lastId is null)
+        {
+            return null;
+        }
+
+        return new(limit, order, lastId, before);
+    }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
@@ -70,8 +69,7 @@ public partial class AssistantClient
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual AsyncCollectionResult GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
     {
-        AssistantsPageEnumerator enumerator = new(_pipeline, _endpoint, limit, order, after, before, options);
-        return CollectionResultHelpers.CreateAsync(enumerator);
+        return new AsyncAssistantCollectionResult(this, _pipeline, options, limit, order, after, before);
     }
 
     /// <summary>
@@ -101,8 +99,7 @@ public partial class AssistantClient
     [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual CollectionResult GetAssistants(int? limit, string order, string after, string before, RequestOptions options)
     {
-        AssistantsPageEnumerator enumerator = new(_pipeline, _endpoint, limit, order, after, before, options);
-        return CollectionResultHelpers.Create(enumerator);
+        return new AssistantCollectionResult(this, _pipeline, options, limit, order, after, before);
     }
 
     /// <summary>
@@ -259,8 +256,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        MessagesPageEnumerator enumerator = new(_pipeline, _endpoint, threadId, limit, order, after, before, options);
-        return CollectionResultHelpers.CreateAsync(enumerator);
+        return new AsyncMessageCollectionResult(_messageSubClient, options, threadId, limit, order, after, before);
     }
 
     /// <summary>
@@ -295,8 +291,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        MessagesPageEnumerator enumerator = new(_pipeline, _endpoint, threadId, limit, order, after, before, options);
-        return CollectionResultHelpers.Create(enumerator);
+        return new MessageCollectionResult(_messageSubClient, options, threadId, limit, order, after, before);
     }
 
     /// <inheritdoc cref="InternalAssistantMessageClient.GetMessageAsync"/>
@@ -381,8 +376,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        RunsPageEnumerator enumerator = new(_pipeline, _endpoint, threadId, limit, order, after, before, options);
-        return CollectionResultHelpers.CreateAsync(enumerator);
+        return new AsyncRunCollectionResult(_runSubClient, options, threadId, limit, order, after, before);
     }
 
     /// <summary>
@@ -417,8 +411,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-        RunsPageEnumerator enumerator = new(_pipeline, _endpoint, threadId, limit, order, after, before, options);
-        return CollectionResultHelpers.Create(enumerator);
+        return new RunCollectionResult(_runSubClient, options, threadId, limit, order, after, before);
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRunAsync"/>
@@ -495,8 +488,7 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        RunStepsPageEnumerator enumerator = new(_pipeline, _endpoint, threadId, runId, limit, order, after, before, options);
-        return CollectionResultHelpers.CreateAsync(enumerator);
+        return new AsyncRunStepCollectionResult(_runSubClient, options,threadId, runId, limit, order, after, before);
     }
 
     /// <summary>
@@ -533,8 +525,7 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        RunStepsPageEnumerator enumerator = new(_pipeline, _endpoint, threadId, runId, limit, order, after, before, options);
-        return CollectionResultHelpers.Create(enumerator);
+        return new RunStepCollectionResult(_runSubClient, options, threadId, runId, limit, order, after, before);
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRunStepAsync"/>

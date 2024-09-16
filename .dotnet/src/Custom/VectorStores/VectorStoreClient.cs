@@ -238,7 +238,7 @@ public partial class VectorStoreClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        VectorStoresPageToken pageToken = VectorStoresPageToken.FromToken(firstPageToken);
+        VectorStoreCollectionPageToken pageToken = VectorStoreCollectionPageToken.FromToken(firstPageToken);
         return GetVectorStoresAsync(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
             as AsyncCollectionResult<VectorStore>;
     }
@@ -275,7 +275,7 @@ public partial class VectorStoreClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        VectorStoresPageToken pageToken = VectorStoresPageToken.FromToken(firstPageToken);
+        VectorStoreCollectionPageToken pageToken = VectorStoreCollectionPageToken.FromToken(firstPageToken);
         return GetVectorStores(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
             as CollectionResult<VectorStore>;
     }
@@ -355,7 +355,7 @@ public partial class VectorStoreClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        VectorStoreFilesPageToken pageToken = VectorStoreFilesPageToken.FromToken(firstPageToken);
+        VectorStoreFileCollectionPageToken pageToken = VectorStoreFileCollectionPageToken.FromToken(firstPageToken);
         return GetFileAssociationsAsync(pageToken?.VectorStoreId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions())
             as AsyncCollectionResult<VectorStoreFileAssociation>;
     }
@@ -399,7 +399,7 @@ public partial class VectorStoreClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        VectorStoreFilesPageToken pageToken = VectorStoreFilesPageToken.FromToken(firstPageToken);
+        VectorStoreFileCollectionPageToken pageToken = VectorStoreFileCollectionPageToken.FromToken(firstPageToken);
         return GetFileAssociations(pageToken?.VectorStoreId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions())
             as CollectionResult<VectorStoreFileAssociation>;
     }
@@ -656,7 +656,7 @@ public partial class VectorStoreClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        VectorStoreFileBatchesPageToken pageToken = VectorStoreFileBatchesPageToken.FromToken(firstPageToken);
+        VectorStoreFileBatchCollectionPageToken pageToken = VectorStoreFileBatchCollectionPageToken.FromToken(firstPageToken);
 
         if (vectorStoreId != pageToken.VectorStoreId)
         {
@@ -729,7 +729,7 @@ public partial class VectorStoreClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        VectorStoreFileBatchesPageToken pageToken = VectorStoreFileBatchesPageToken.FromToken(firstPageToken);
+        VectorStoreFileBatchCollectionPageToken pageToken = VectorStoreFileBatchCollectionPageToken.FromToken(firstPageToken);
 
         if (vectorStoreId != pageToken.VectorStoreId)
         {

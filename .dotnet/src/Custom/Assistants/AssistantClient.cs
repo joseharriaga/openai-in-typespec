@@ -150,7 +150,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        AssistantsPageToken pageToken = AssistantsPageToken.FromToken(firstPageToken);
+        AssistantCollectionPageToken pageToken = AssistantCollectionPageToken.FromToken(firstPageToken);
         return GetAssistantsAsync(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken.Before, cancellationToken.ToRequestOptions())
             as AsyncCollectionResult<Assistant>;
     }
@@ -187,7 +187,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        AssistantsPageToken pageToken = AssistantsPageToken.FromToken(firstPageToken);
+        AssistantCollectionPageToken pageToken = AssistantCollectionPageToken.FromToken(firstPageToken);
         return GetAssistants(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken.Before, cancellationToken.ToRequestOptions())
             as CollectionResult<Assistant>;
     }
@@ -494,7 +494,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        MessagesPageToken pageToken = MessagesPageToken.FromToken(firstPageToken);
+        MessageCollectionPageToken pageToken = MessageCollectionPageToken.FromToken(firstPageToken);
         return GetMessagesAsync(pageToken?.ThreadId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
             as AsyncCollectionResult<ThreadMessage>;
     }
@@ -535,7 +535,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        MessagesPageToken pageToken = MessagesPageToken.FromToken(firstPageToken);
+        MessageCollectionPageToken pageToken = MessageCollectionPageToken.FromToken(firstPageToken);
         return GetMessages(pageToken?.ThreadId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
             as CollectionResult<ThreadMessage>;
 
@@ -708,11 +708,11 @@ public partial class AssistantClient
         options.AssistantId = assistantId;
         options.Stream = true;
 
-        async Task<ClientResult> getResultAsync() =>
+        async Task<ClientResult> sendRequestAsync(CancellationToken cancellationToken) =>
             await CreateRunAsync(threadId, options.ToBinaryContent(), cancellationToken.ToRequestOptions(streaming: true))
             .ConfigureAwait(false);
 
-        return new AsyncStreamingUpdateCollection(getResultAsync);
+        return new AsyncStreamingUpdateCollection(sendRequestAsync, cancellationToken);
     }
 
     /// <summary>
@@ -736,9 +736,8 @@ public partial class AssistantClient
         options.AssistantId = assistantId;
         options.Stream = true;
 
-        ClientResult getResult() => CreateRun(threadId, options.ToBinaryContent(), cancellationToken.ToRequestOptions(streaming: true));
-
-        return new StreamingUpdateCollection(getResult);
+        ClientResult sendRequest(CancellationToken cancellationToken) => CreateRun(threadId, options.ToBinaryContent(), cancellationToken.ToRequestOptions(streaming: true));
+        return new StreamingUpdateCollection(sendRequest, cancellationToken);
     }
 
     /// <summary>
@@ -802,11 +801,11 @@ public partial class AssistantClient
         runOptions.Stream = true;
         BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
 
-        async Task<ClientResult> getResultAsync() =>
+        async Task<ClientResult> sendRequestAsync(CancellationToken cancellationToken) =>
             await CreateThreadAndRunAsync(protocolContent, cancellationToken.ToRequestOptions(streaming: true))
             .ConfigureAwait(false);
 
-        return new AsyncStreamingUpdateCollection(getResultAsync);
+        return new AsyncStreamingUpdateCollection(sendRequestAsync, cancellationToken);
     }
 
     /// <summary>
@@ -828,9 +827,8 @@ public partial class AssistantClient
         runOptions.Stream = true;
         BinaryContent protocolContent = CreateThreadAndRunProtocolContent(assistantId, threadOptions, runOptions);
 
-        ClientResult getResult() => CreateThreadAndRun(protocolContent, cancellationToken.ToRequestOptions(streaming: true));
-
-        return new StreamingUpdateCollection(getResult);
+        ClientResult sendRequest(CancellationToken cancellationToken) => CreateThreadAndRun(protocolContent, cancellationToken.ToRequestOptions(streaming: true));
+        return new StreamingUpdateCollection(sendRequest, cancellationToken);
     }
 
     /// <summary>
@@ -869,7 +867,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        RunsPageToken pageToken = RunsPageToken.FromToken(firstPageToken);
+        RunCollectionPageToken pageToken = RunCollectionPageToken.FromToken(firstPageToken);
         return GetRunsAsync(pageToken?.ThreadId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
             as AsyncCollectionResult<ThreadRun>;
     }
@@ -910,7 +908,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        RunsPageToken pageToken = RunsPageToken.FromToken(firstPageToken);
+        RunCollectionPageToken pageToken = RunCollectionPageToken.FromToken(firstPageToken);
         return GetRuns(pageToken?.ThreadId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
             as CollectionResult<ThreadRun>;
     }
@@ -1017,11 +1015,11 @@ public partial class AssistantClient
         BinaryContent content = new InternalSubmitToolOutputsRunRequest(toolOutputs.ToList(), stream: true, null)
             .ToBinaryContent();
 
-        async Task<ClientResult> getResultAsync() =>
+        async Task<ClientResult> sendRequestAsync(CancellationToken cancellationToken) =>
             await SubmitToolOutputsToRunAsync(threadId, runId, content, cancellationToken.ToRequestOptions(streaming: true))
             .ConfigureAwait(false);
 
-        return new AsyncStreamingUpdateCollection(getResultAsync);
+        return new AsyncStreamingUpdateCollection(sendRequestAsync, cancellationToken);
     }
 
     /// <summary>
@@ -1045,9 +1043,8 @@ public partial class AssistantClient
         BinaryContent content = new InternalSubmitToolOutputsRunRequest(toolOutputs.ToList(), stream: true, null)
             .ToBinaryContent();
 
-        ClientResult getResult() => SubmitToolOutputsToRun(threadId, runId, content, cancellationToken.ToRequestOptions(streaming: true));
-
-        return new StreamingUpdateCollection(getResult);
+        ClientResult sendRequest(CancellationToken cancellationToken) => SubmitToolOutputsToRun(threadId, runId, content, cancellationToken.ToRequestOptions(streaming: true));
+        return new StreamingUpdateCollection(sendRequest, cancellationToken);
     }
 
     /// <summary>
@@ -1121,7 +1118,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        RunStepsPageToken pageToken = RunStepsPageToken.FromToken(firstPageToken);
+        RunStepCollectionPageToken pageToken = RunStepCollectionPageToken.FromToken(firstPageToken);
         return GetRunStepsAsync(pageToken?.ThreadId, pageToken?.RunId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
             as AsyncCollectionResult<RunStep>;
     }
@@ -1165,7 +1162,7 @@ public partial class AssistantClient
     {
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
-        RunStepsPageToken pageToken = RunStepsPageToken.FromToken(firstPageToken);
+        RunStepCollectionPageToken pageToken = RunStepCollectionPageToken.FromToken(firstPageToken);
         return GetRunSteps(pageToken?.ThreadId, pageToken?.RunId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions())
             as CollectionResult<RunStep>;
     }

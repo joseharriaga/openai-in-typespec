@@ -322,7 +322,7 @@ public partial class OpenAIChatModelFactoryTests
 
         Assert.That(chatTokenLogProbabilityDetails.Token, Is.Null);
         Assert.That(chatTokenLogProbabilityDetails.LogProbability, Is.EqualTo(0f));
-        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes, Is.Null);
         Assert.That(chatTokenLogProbabilityDetails.TopLogProbabilities, Is.Not.Null.And.Empty);
     }
 
@@ -334,7 +334,7 @@ public partial class OpenAIChatModelFactoryTests
 
         Assert.That(chatTokenLogProbabilityDetails.Token, Is.EqualTo(token));
         Assert.That(chatTokenLogProbabilityDetails.LogProbability, Is.EqualTo(0f));
-        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes, Is.Null);
         Assert.That(chatTokenLogProbabilityDetails.TopLogProbabilities, Is.Not.Null.And.Empty);
     }
 
@@ -346,7 +346,7 @@ public partial class OpenAIChatModelFactoryTests
 
         Assert.That(chatTokenLogProbabilityDetails.Token, Is.Null);
         Assert.That(chatTokenLogProbabilityDetails.LogProbability, Is.EqualTo(logProbability));
-        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes, Is.Null);
         Assert.That(chatTokenLogProbabilityDetails.TopLogProbabilities, Is.Not.Null.And.Empty);
     }
 
@@ -373,7 +373,7 @@ public partial class OpenAIChatModelFactoryTests
 
         Assert.That(chatTokenLogProbabilityDetails.Token, Is.Null);
         Assert.That(chatTokenLogProbabilityDetails.LogProbability, Is.EqualTo(0f));
-        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenLogProbabilityDetails.Utf8Bytes, Is.Null);
         Assert.That(chatTokenLogProbabilityDetails.TopLogProbabilities.SequenceEqual(topLogProbabilities), Is.True);
     }
 
@@ -384,7 +384,7 @@ public partial class OpenAIChatModelFactoryTests
 
         Assert.That(chatTokenTopLogProbabilityDetails.Token, Is.Null);
         Assert.That(chatTokenTopLogProbabilityDetails.LogProbability, Is.EqualTo(0f));
-        Assert.That(chatTokenTopLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenTopLogProbabilityDetails.Utf8Bytes, Is.Null);
     }
 
     [Test]
@@ -395,7 +395,7 @@ public partial class OpenAIChatModelFactoryTests
 
         Assert.That(chatTokenTopLogProbabilityDetails.Token, Is.EqualTo(token));
         Assert.That(chatTokenTopLogProbabilityDetails.LogProbability, Is.EqualTo(0f));
-        Assert.That(chatTokenTopLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenTopLogProbabilityDetails.Utf8Bytes, Is.Null);
     }
 
     [Test]
@@ -406,7 +406,7 @@ public partial class OpenAIChatModelFactoryTests
 
         Assert.That(chatTokenTopLogProbabilityDetails.Token, Is.Null);
         Assert.That(chatTokenTopLogProbabilityDetails.LogProbability, Is.EqualTo(logProbability));
-        Assert.That(chatTokenTopLogProbabilityDetails.Utf8Bytes, Is.Not.Null.And.Empty);
+        Assert.That(chatTokenTopLogProbabilityDetails.Utf8Bytes, Is.Null);
     }
 
     [Test]

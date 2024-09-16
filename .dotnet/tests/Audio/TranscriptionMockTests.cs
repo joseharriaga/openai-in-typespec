@@ -132,9 +132,9 @@ public partial class TranscriptionMockTests : SyncAsyncTestBase
         Assert.That(segment.Text, Is.EqualTo("The quick brown fox got lost."));
         Assert.That(segment.TokenIds.SequenceEqual([255, 305, 678]));
         Assert.That(segment.Temperature, Is.EqualTo(0.8f));
-        Assert.That(segment.AverageLogProbability, Is.EqualTo(-0.3));
+        Assert.That(segment.AverageLogProbability, Is.EqualTo(-0.3f));
         Assert.That(segment.CompressionRatio, Is.EqualTo(1.5f));
-        Assert.That(segment.NoSpeechProbability, Is.EqualTo(0.2));
+        Assert.That(segment.NoSpeechProbability, Is.EqualTo(0.2f));
     }
 
     [Test]

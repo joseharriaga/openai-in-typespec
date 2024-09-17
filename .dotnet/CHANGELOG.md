@@ -28,6 +28,7 @@
 ### Bugs Fixed
 
 - Addressed an issue that caused multi-page queries of fine-tuning jobs, checkpoints, and events to fail. (commit_hash)
+- Removed the public default constructors from `VectorStoreExpirationPolicy` and `FunctionToolDefinition`. (commit_hash)
 
 ### Other Changes
 

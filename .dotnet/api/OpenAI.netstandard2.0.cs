@@ -369,10 +369,9 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<FileSearchToolResources>.Write(ModelReaderWriterOptions options);
     }
     public class FunctionToolDefinition : ToolDefinition, IJsonModel<FunctionToolDefinition>, IPersistableModel<FunctionToolDefinition> {
-        public FunctionToolDefinition();
         public FunctionToolDefinition(string name);
         public string Description { get; set; }
-        public required string FunctionName { get; set; }
+        public string FunctionName { get; set; }
         public BinaryData Parameters { get; set; }
         public bool? StrictParameterSchemaEnabled { get; set; }
         FunctionToolDefinition IJsonModel<FunctionToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -2347,10 +2346,9 @@ namespace OpenAI.VectorStores {
         LastActiveAt = 1
     }
     public class VectorStoreExpirationPolicy : IJsonModel<VectorStoreExpirationPolicy>, IPersistableModel<VectorStoreExpirationPolicy> {
-        public VectorStoreExpirationPolicy();
         public VectorStoreExpirationPolicy(VectorStoreExpirationAnchor anchor, int days);
-        public required VectorStoreExpirationAnchor Anchor { get; set; }
-        public required int Days { get; set; }
+        public VectorStoreExpirationAnchor Anchor { get; set; }
+        public int Days { get; set; }
         VectorStoreExpirationPolicy IJsonModel<VectorStoreExpirationPolicy>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<VectorStoreExpirationPolicy>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         VectorStoreExpirationPolicy IPersistableModel<VectorStoreExpirationPolicy>.Create(BinaryData data, ModelReaderWriterOptions options);

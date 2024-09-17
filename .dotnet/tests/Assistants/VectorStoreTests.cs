@@ -46,11 +46,7 @@ public partial class VectorStoreTests : SyncAsyncTestBase
         {
             FileIds = { testFiles[0].Id },
             Name = "test vector store",
-            ExpirationPolicy = new VectorStoreExpirationPolicy()
-            {
-                Anchor = VectorStoreExpirationAnchor.LastActiveAt,
-                Days = 3,
-            },
+            ExpirationPolicy = new VectorStoreExpirationPolicy(VectorStoreExpirationAnchor.LastActiveAt, 3),
             Metadata =
             {
                 ["test-key"] = "test-value",

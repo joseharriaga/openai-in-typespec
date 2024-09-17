@@ -1351,7 +1351,7 @@ namespace OpenAI.Chat {
         public IList<ChatFunction> Functions { get; }
         public bool? IncludeLogProbabilities { get; set; }
         public IDictionary<int, int> LogitBiases { get; }
-        public int? MaxTokens { get; set; }
+        public int? MaxOutputTokenCount { get; set; }
         public bool? ParallelToolCallsEnabled { get; set; }
         public float? PresencePenalty { get; set; }
         public ChatResponseFormat ResponseFormat { get; set; }
@@ -1495,6 +1495,14 @@ namespace OpenAI.Chat {
         Tool = 3,
         Function = 4
     }
+    public class ChatOutputTokenUsageDetails : IJsonModel<ChatOutputTokenUsageDetails>, IPersistableModel<ChatOutputTokenUsageDetails> {
+        public int ReasoningTokenCount { get; }
+        ChatOutputTokenUsageDetails IJsonModel<ChatOutputTokenUsageDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ChatOutputTokenUsageDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ChatOutputTokenUsageDetails IPersistableModel<ChatOutputTokenUsageDetails>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ChatOutputTokenUsageDetails>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ChatOutputTokenUsageDetails>.Write(ModelReaderWriterOptions options);
+    }
     public abstract class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
         public static ChatResponseFormat CreateJsonObjectFormat();
         public static ChatResponseFormat CreateJsonSchemaFormat(string jsonSchemaFormatName, BinaryData jsonSchema, string jsonSchemaFormatDescription = null, bool? jsonSchemaIsStrict = null);
@@ -1527,10 +1535,10 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<ChatTokenTopLogProbabilityDetails>.Write(ModelReaderWriterOptions options);
     }
     public class ChatTokenUsage : IJsonModel<ChatTokenUsage>, IPersistableModel<ChatTokenUsage> {
-        public int InputTokens { get; }
-        public int OutputTokens { get; }
-        public int ReasoningTokens { get; }
-        public int TotalTokens { get; }
+        public int InputTokenCount { get; }
+        public int OutputTokenCount { get; }
+        public ChatOutputTokenUsageDetails OutputTokenDetails { get; }
+        public int TotalTokenCount { get; }
         ChatTokenUsage IJsonModel<ChatTokenUsage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatTokenUsage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatTokenUsage IPersistableModel<ChatTokenUsage>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1615,9 +1623,10 @@ namespace OpenAI.Chat {
     }
     public static class OpenAIChatModelFactory {
         public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, IEnumerable<ChatMessageContentPart> content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokens = 0);
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
-        public static ChatTokenUsage ChatTokenUsage(int outputTokens = 0, int inputTokens = 0, int totalTokens = 0, int? reasoningTokens = null);
+        public static ChatTokenUsage ChatTokenUsage(int outputTokens = 0, int inputTokens = 0, int totalTokens = 0, ChatOutputTokenUsageDetails outputTokenDetails = null);
         public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string id = null, IEnumerable<ChatMessageContentPart> contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
         [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null);

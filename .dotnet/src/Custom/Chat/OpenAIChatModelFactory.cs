@@ -90,14 +90,21 @@ public static partial class OpenAIChatModelFactory
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatTokenUsage"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.ChatTokenUsage"/> instance for mocking. </returns>
-    public static ChatTokenUsage ChatTokenUsage(int outputTokens = default, int inputTokens = default, int totalTokens = default, int? reasoningTokens = default)
+    public static ChatTokenUsage ChatTokenUsage(int outputTokens = default, int inputTokens = default, int totalTokens = default, ChatOutputTokenUsageDetails outputTokenDetails = default)
     {
         return new ChatTokenUsage(
             outputTokens,
             inputTokens,
             totalTokens,
-            new(reasoningTokens, serializedAdditionalRawData: null),
+            outputTokenDetails,
             serializedAdditionalRawData: null);
+    }
+
+    /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatOutputTokenUsageDetails"/>. </summary>
+    /// <returns> A new <see cref="OpenAI.Chat.ChatOutputTokenusageDetails"/> instance for mocking. </returns>
+    public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokens = default)
+    {
+        return new ChatOutputTokenUsageDetails(reasoningTokens, serializedAdditionalRawData: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatCompletionUpdate"/>. </summary>

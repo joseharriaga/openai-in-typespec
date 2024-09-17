@@ -71,6 +71,16 @@ namespace OpenAI
             return new ChatTokenTopLogProbabilityDetails(token, logProbability, utf8Bytes, serializedAdditionalRawData: null);
         }
 
+        public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = default, int inputTokenCount = default, int totalTokenCount = default, ChatOutputTokenUsageDetails outputTokenDetails = null)
+        {
+            return new ChatTokenUsage(outputTokenCount, inputTokenCount, totalTokenCount, outputTokenDetails, serializedAdditionalRawData: null);
+        }
+
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default)
+        {
+            return new ChatOutputTokenUsageDetails(reasoningTokenCount, serializedAdditionalRawData: null);
+        }
+
         public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokens = default, int totalTokens = default)
         {
             return new EmbeddingTokenUsage(inputTokens, totalTokens, serializedAdditionalRawData: null);

@@ -68,7 +68,7 @@ public partial class ChatTests
                 _ => throw new NotImplementedException(),
             },
             Functions = { FUNCTION_TEMPERATURE },
-            MaxTokens = 512,
+            MaxOutputTokenCount = 512,
         };
 
         ClientResult<ChatCompletion> response = await client.CompleteChatAsync(messages, requestOptions);
@@ -132,7 +132,7 @@ public partial class ChatTests
         requestOptions = new()
         {
             Functions = { FUNCTION_TEMPERATURE },
-            MaxTokens = 512,
+            MaxOutputTokenCount = 512,
         };
 
         completion = await client.CompleteChatAsync(messages, requestOptions);
@@ -181,7 +181,7 @@ public partial class ChatTests
                 _ => throw new NotImplementedException(),
             },
             Functions = { FUNCTION_TEMPERATURE },
-            MaxTokens = 512,
+            MaxOutputTokenCount = 512,
         };
 
         Action<StreamingChatCompletionUpdate> validateUpdate = (update) =>
@@ -254,7 +254,7 @@ public partial class ChatTests
             requestOptions = new()
             {
                 Functions = { FUNCTION_TEMPERATURE },
-                MaxTokens = requestOptions.MaxTokens,
+                MaxOutputTokenCount = requestOptions.MaxOutputTokenCount,
             };
 
             content.Clear();

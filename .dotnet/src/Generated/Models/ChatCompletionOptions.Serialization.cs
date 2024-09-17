@@ -91,12 +91,12 @@ namespace OpenAI.Chat
                     writer.WriteNull("max_tokens");
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("max_completion_tokens") != true && Optional.IsDefined(_maxCompletionTokens))
+            if (SerializedAdditionalRawData?.ContainsKey("max_completion_tokens") != true && Optional.IsDefined(MaxOutputTokenCount))
             {
-                if (_maxCompletionTokens != null)
+                if (MaxOutputTokenCount != null)
                 {
                     writer.WritePropertyName("max_completion_tokens"u8);
-                    writer.WriteNumberValue(_maxCompletionTokens.Value);
+                    writer.WriteNumberValue(MaxOutputTokenCount.Value);
                 }
                 else
                 {

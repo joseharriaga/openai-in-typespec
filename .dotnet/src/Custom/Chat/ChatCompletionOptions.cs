@@ -153,24 +153,9 @@ public partial class ChatCompletionOptions
     /// <summary>
     /// An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and, on applicable models, reasoning tokens.
     /// </summary>
-    public int? MaxTokens
-    {
-        get => _maxCompletionTokens ?? _deprecatedMaxTokens;
-        set
-        {
-            if (_deprecatedMaxTokens is not null)
-            {
-                _deprecatedMaxTokens = value;
-            }
-            else
-            {
-                _maxCompletionTokens = value;
-            }
-        }
-    }
-
     [CodeGenMember("MaxCompletionTokens")]
-    internal int? _maxCompletionTokens;
+    public int? MaxOutputTokenCount { get; set; }
+
     // CUSTOM: Added the Obsolete attribute.
     [Obsolete($"This property is obsolete. Please use {nameof(Tools)} instead.")]
     public IList<ChatFunction> Functions { get; }

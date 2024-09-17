@@ -85,11 +85,11 @@ internal partial class AzureChatClient : ChatClient
     private static void PostfixSwapMaxTokens(ref ChatCompletionOptions options)
     {
         options ??= new();
-        if (options.MaxTokens is not null)
+        if (options.MaxOutputTokenCount is not null)
         {
             options.SerializedAdditionalRawData ??= new Dictionary<string, BinaryData>();
             options.SerializedAdditionalRawData["max_completion_tokens"] = BinaryData.FromObjectAsJson("__EMPTY__");
-            options.SerializedAdditionalRawData["max_tokens"] = BinaryData.FromObjectAsJson(options.MaxTokens);
+            options.SerializedAdditionalRawData["max_tokens"] = BinaryData.FromObjectAsJson(options.MaxOutputTokenCount);
         }
     }
 }

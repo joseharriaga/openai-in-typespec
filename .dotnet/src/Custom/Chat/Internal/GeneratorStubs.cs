@@ -104,6 +104,3 @@ internal partial class InternalCreateChatCompletionStreamResponseUsage { }
 
 [CodeGenModel("FunctionParameters")]
 internal partial class InternalFunctionParameters { }
-
-[CodeGenModel("CompletionUsageCompletionTokensDetails")]
-internal partial class InternalCompletionUsageCompletionTokensDetails { }

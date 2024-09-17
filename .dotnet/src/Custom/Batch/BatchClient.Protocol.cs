@@ -129,4 +129,77 @@ public partial class BatchClient
         using PipelineMessage message = CreateRetrieveBatchRequest(batchId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
+
+    internal virtual PipelineMessage CreateCreateBatchRequest(BinaryContent content, RequestOptions options)
+    {
+        var message = _pipeline.CreateMessage();
+        message.ResponseClassifier = PipelineMessageClassifier200;
+        var request = message.Request;
+        request.Method = "POST";
+        var uri = new ClientUriBuilder();
+        uri.Reset(_endpoint);
+        uri.AppendPath("/batches", false);
+        request.Uri = uri.ToUri();
+        request.Headers.Set("Accept", "application/json");
+        request.Headers.Set("Content-Type", "application/json");
+        request.Content = content;
+        message.Apply(options);
+        return message;
+    }
+
+    internal virtual PipelineMessage CreateGetBatchesRequest(string after, int? limit, RequestOptions options)
+    {
+        var message = _pipeline.CreateMessage();
+        message.ResponseClassifier = PipelineMessageClassifier200;
+        var request = message.Request;
+        request.Method = "GET";
+        var uri = new ClientUriBuilder();
+        uri.Reset(_endpoint);
+        uri.AppendPath("/batches", false);
+        if (after != null)
+        {
+            uri.AppendQuery("after", after, true);
+        }
+        if (limit != null)
+        {
+            uri.AppendQuery("limit", limit.Value, true);
+        }
+        request.Uri = uri.ToUri();
+        request.Headers.Set("Accept", "application/json");
+        message.Apply(options);
+        return message;
+    }
+
+    internal virtual PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions options)
+    {
+        var message = _pipeline.CreateMessage();
+        message.ResponseClassifier = PipelineMessageClassifier200;
+        var request = message.Request;
+        request.Method = "GET";
+        var uri = new ClientUriBuilder();
+        uri.Reset(_endpoint);
+        uri.AppendPath("/batches/", false);
+        uri.AppendPath(batchId, true);
+        request.Uri = uri.ToUri();
+        request.Headers.Set("Accept", "application/json");
+        message.Apply(options);
+        return message;
+    }
+
+    internal virtual PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions options)
+    {
+        var message = _pipeline.CreateMessage();
+        message.ResponseClassifier = PipelineMessageClassifier200;
+        var request = message.Request;
+        request.Method = "POST";
+        var uri = new ClientUriBuilder();
+        uri.Reset(_endpoint);
+        uri.AppendPath("/batches/", false);
+        uri.AppendPath(batchId, true);
+        uri.AppendPath("/cancel", false);
+        request.Uri = uri.ToUri();
+        request.Headers.Set("Accept", "application/json");
+        message.Apply(options);
+        return message;
+    }
 }

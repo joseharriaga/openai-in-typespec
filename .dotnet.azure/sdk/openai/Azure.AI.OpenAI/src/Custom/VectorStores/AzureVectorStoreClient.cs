@@ -47,40 +47,4 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
     {
         return new AzureCreateBatchFileJobOperation(Pipeline, _endpoint, result, _apiVersion);
     }
-
-    internal override PipelineMessage CreateGetVectorStoreFileRequest(string vectorStoreId, string fileId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
-            .WithMethod("GET")
-            .WithPath("vector_stores", vectorStoreId, "files", fileId)
-            .WithAccept("application/json")
-            .WithOptions(options)
-            .Build();
-
-    internal override PipelineMessage CreateCreateVectorStoreRequest(BinaryContent content, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
-            .WithMethod("POST")
-            .WithPath("vector_stores")
-            .WithContent(content, "application/json")
-            .WithAccept("application/json")
-            .WithOptions(options)
-            .Build();
-
-    internal override PipelineMessage CreateCreateVectorStoreFileBatchRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
-            .WithMethod("POST")
-            .WithPath("vector_stores", vectorStoreId, "file_batches")
-            .WithContent(content, "application/json")
-            .WithAccept("application/json")
-            .WithOptions(options)
-            .Build();
-
-    internal override PipelineMessage CreateGetVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
-            .WithMethod("GET")
-            .WithPath("vector_stores", vectorStoreId, "file_batches", batchId)
-            .WithAccept("application/json")
-            .WithOptions(options)
-            .Build();
-
-
 }

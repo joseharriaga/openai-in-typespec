@@ -17,10 +17,9 @@ namespace Azure.AI.OpenAI.Tests;
 public partial class ChatTests
 {
     [Obsolete]
-    private static readonly ChatFunction FUNCTION_TEMPERATURE = new(
-        "get_future_temperature",
-        "requests the anticipated future temperature at a provided location to help inform advice about topics like choice of attire",
-        BinaryData.FromString(
+    private static readonly ChatFunction FUNCTION_TEMPERATURE = new("get_future_temperature") {
+        FunctionDescription = "requests the anticipated future temperature at a provided location to help inform advice about topics like choice of attire",
+        FunctionParameters = BinaryData.FromString(
             """
             {
                 "type": "object",
@@ -35,7 +34,7 @@ public partial class ChatTests
                     }
                 }
             }
-            """));
+            """) };
 
     public enum FunctionCallTestType
     {
@@ -123,11 +122,13 @@ public partial class ChatTests
 
         // Complete the function call
         messages.Add(new AssistantChatMessage(completion.FunctionCall));
-        messages.Add(new FunctionChatMessage(FUNCTION_TEMPERATURE.FunctionName, JsonSerializer.Serialize(new
+        var functionChatMessage = new FunctionChatMessage(FUNCTION_TEMPERATURE.FunctionName);
+        functionChatMessage.Content.Add(ChatMessageContentPart.CreateTextPart(JsonSerializer.Serialize(new
         {
             temperature = 31,
             unit = "celsius"
         })));
+        messages.Add(functionChatMessage);
 
         requestOptions = new()
         {
@@ -245,12 +246,14 @@ public partial class ChatTests
             //             us manual control are internal. So let's use JSON.
             var converted = ModelReaderWriter.Read<ChatFunctionCall>(BinaryData.FromString(JsonSerializer.Serialize(new { name = functionName, arguments = functionArgs.ToString() })));
             messages.Add(new AssistantChatMessage(converted));
-            messages.Add(new FunctionChatMessage(FUNCTION_TEMPERATURE.FunctionName, JsonSerializer.Serialize(new
+            var functionChatMessage = new FunctionChatMessage(FUNCTION_TEMPERATURE.FunctionName);
+            functionChatMessage.Content.Add(ChatMessageContentPart.CreateTextPart(JsonSerializer.Serialize(new
             {
                 temperature = 31,
                 unit = "celsius"
             })));
-
+            messages.Add(functionChatMessage);
+            
             requestOptions = new()
             {
                 Functions = { FUNCTION_TEMPERATURE },

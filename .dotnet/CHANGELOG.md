@@ -22,6 +22,8 @@
 - Changed the type of `TranscribedSegment`'s `SeekOffset` property from `long` to `int`. (commit_hash)
 - Changed the type of `TranscribedSegment`'s `TokenIds` property from `IReadOnlyList<long>` to `IReadOnlyList<int>`. (commit_hash)
 - Updated the `Embedding.Vector` property to the `Embedding.ToFloats()` method. (commit_hash)
+- Removed the optional parameter from the constructors of `VectorStoreCreationHelper`, `AssistantChatMessage`, `ChatFunction`, and `FunctionChatMessage`. (commit_hash)
+- Removed the optional `purpose` parameter from `FileClient.GetFilesAsync` and `FileClient.GetFiles` methods, and added overloads where `purpose` is required. (commit_hash)
 
 ### Bugs Fixed
 

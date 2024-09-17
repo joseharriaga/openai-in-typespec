@@ -1,10 +1,8 @@
-﻿using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using OpenAI.Chat;
 using OpenAI.Tests.Utility;
 using System;
 using System.ClientModel;
-using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -66,10 +64,10 @@ public partial class ChatToolTests : SyncAsyncTestBase
 
 #pragma warning disable CS0618
     private const string GetFavoriteColorForMonthFunctionName = "get_favorite_color_for_month";
-    private static ChatFunction s_getFavoriteColorForMonthFunction = new ChatFunction(
-        GetFavoriteColorForMonthFunctionName,
-        "gets the caller's favorite color for a given month",
-        BinaryData.FromString("""
+    private static ChatFunction s_getFavoriteColorForMonthFunction = new ChatFunction(GetFavoriteColorForMonthFunctionName)
+    {
+        FunctionDescription = "gets the caller's favorite color for a given month",
+        FunctionParameters = BinaryData.FromString("""
             {
                 "type": "object",
                 "properties": {
@@ -81,7 +79,7 @@ public partial class ChatToolTests : SyncAsyncTestBase
                 "required": [ "month_name" ]
             }
             """)
-    );
+    };
 #pragma warning restore CS0618
 
     private const string GetWeatherForCityToolName = "get_weather_for_city";
@@ -234,7 +232,9 @@ public partial class ChatToolTests : SyncAsyncTestBase
         Assert.That(argumentsJson.ContainsKey("month_name"));
         Assert.That(argumentsJson["month_name"].ToString().ToLowerInvariant(), Is.EqualTo("february"));
         messages.Add(new AssistantChatMessage(result.Value));
-        messages.Add(new FunctionChatMessage(GetFavoriteColorForMonthFunctionName, "chartreuse"));
+        var functionChatMessage = new FunctionChatMessage(GetFavoriteColorForMonthFunctionName);
+        functionChatMessage.Content.Add(ChatMessageContentPart.CreateTextPart("chartreuse"));
+        messages.Add(functionChatMessage);
         result = IsAsync
             ? await client.CompleteChatAsync(messages, options)
             : client.CompleteChat(messages, options);

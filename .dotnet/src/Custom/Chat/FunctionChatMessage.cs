@@ -24,7 +24,7 @@ public partial class FunctionChatMessage : ChatMessage
     ///     The textual content that represents the output or result from the called function. There is no format
     ///     restriction (e.g. JSON) imposed on this content.
     /// </param>
-    public FunctionChatMessage(string functionName, string content = null)
+    public FunctionChatMessage(string functionName, string content)
         : base(ChatMessageRole.Function, content)
     {
         Argument.AssertNotNull(functionName, nameof(functionName));

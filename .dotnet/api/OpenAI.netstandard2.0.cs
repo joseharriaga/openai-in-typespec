@@ -1063,8 +1063,8 @@ namespace OpenAI.Assistants {
     }
     public class VectorStoreCreationHelper : IJsonModel<VectorStoreCreationHelper>, IPersistableModel<VectorStoreCreationHelper> {
         public VectorStoreCreationHelper();
-        public VectorStoreCreationHelper(IEnumerable<OpenAIFileInfo> files, IDictionary<string, string> metadata = null);
-        public VectorStoreCreationHelper(IEnumerable<string> fileIds, IDictionary<string, string> metadata = null);
+        public VectorStoreCreationHelper(IEnumerable<OpenAIFileInfo> files);
+        public VectorStoreCreationHelper(IEnumerable<string> fileIds);
         public FileChunkingStrategy ChunkingStrategy { get; set; }
         public IList<string> FileIds { get; }
         public IDictionary<string, string> Metadata { get; }
@@ -1285,10 +1285,10 @@ namespace OpenAI.Batch {
 namespace OpenAI.Chat {
     public class AssistantChatMessage : ChatMessage, IJsonModel<AssistantChatMessage>, IPersistableModel<AssistantChatMessage> {
         public AssistantChatMessage(ChatCompletion chatCompletion);
-        public AssistantChatMessage(ChatFunctionCall functionCall, string content = null);
+        public AssistantChatMessage(ChatFunctionCall functionCall);
         public AssistantChatMessage(params ChatMessageContentPart[] contentParts);
         public AssistantChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
-        public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
+        public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls);
         public AssistantChatMessage(string content);
         [Obsolete("This property is obsolete. Please use ToolCalls instead.")]
         public ChatFunctionCall FunctionCall { get; set; }
@@ -1377,7 +1377,7 @@ namespace OpenAI.Chat {
     }
     [Obsolete("This class is obsolete. Please use ChatTool instead.")]
     public class ChatFunction : IJsonModel<ChatFunction>, IPersistableModel<ChatFunction> {
-        public ChatFunction(string functionName, string functionDescription = null, BinaryData functionParameters = null);
+        public ChatFunction(string functionName);
         public string FunctionDescription { get; set; }
         public string FunctionName { get; }
         public BinaryData FunctionParameters { get; set; }
@@ -1429,10 +1429,10 @@ namespace OpenAI.Chat {
     public abstract class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
         public IList<ChatMessageContentPart> Content { get; }
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
-        public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null);
+        public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall);
         public static AssistantChatMessage CreateAssistantMessage(params ChatMessageContentPart[] contentParts);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatMessageContentPart> contentParts);
-        public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null);
+        public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls);
         public static AssistantChatMessage CreateAssistantMessage(string content);
         [Obsolete("This method is obsolete. Please use CreateToolMessage instead.")]
         public static FunctionChatMessage CreateFunctionMessage(string functionName, string content);
@@ -1613,7 +1613,7 @@ namespace OpenAI.Chat {
     }
     [Obsolete("This class is obsolete. Please use ToolChatMessage instead.")]
     public class FunctionChatMessage : ChatMessage, IJsonModel<FunctionChatMessage>, IPersistableModel<FunctionChatMessage> {
-        public FunctionChatMessage(string functionName, string content = null);
+        public FunctionChatMessage(string functionName, string content);
         public string FunctionName { get; }
         FunctionChatMessage IJsonModel<FunctionChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<FunctionChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -1712,12 +1712,12 @@ namespace OpenAI.Chat {
 namespace OpenAI.Embeddings {
     public class Embedding : IJsonModel<Embedding>, IPersistableModel<Embedding> {
         public int Index { get; }
-        public ReadOnlyMemory<float> Vector { get; }
         Embedding IJsonModel<Embedding>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<Embedding>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         Embedding IPersistableModel<Embedding>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<Embedding>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<Embedding>.Write(ModelReaderWriterOptions options);
+        public ReadOnlyMemory<float> ToFloats();
     }
     public class EmbeddingClient {
         protected EmbeddingClient();
@@ -1776,6 +1776,14 @@ namespace OpenAI.Files {
         public FileClient(ApiKeyCredential credential);
         protected internal FileClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public virtual ClientPipeline Pipeline { get; }
+        public virtual ClientResult AddUploadPart(string uploadId, BinaryContent content, string contentType, RequestOptions options = null);
+        public virtual Task<ClientResult> AddUploadPartAsync(string uploadId, BinaryContent content, string contentType, RequestOptions options = null);
+        public virtual ClientResult CancelUpload(string uploadId, RequestOptions options = null);
+        public virtual Task<ClientResult> CancelUploadAsync(string uploadId, RequestOptions options = null);
+        public virtual ClientResult CompleteUpload(string uploadId, BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult> CompleteUploadAsync(string uploadId, BinaryContent content, RequestOptions options = null);
+        public virtual ClientResult CreateUpload(BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult> CreateUploadAsync(BinaryContent content, RequestOptions options = null);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteFile(string fileId, RequestOptions options);
         public virtual ClientResult<bool> DeleteFile(string fileId, CancellationToken cancellationToken = default);
@@ -1794,12 +1802,14 @@ namespace OpenAI.Files {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFileAsync(string fileId, RequestOptions options);
         public virtual Task<ClientResult<OpenAIFileInfo>> GetFileAsync(string fileId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<OpenAIFileInfoCollection> GetFiles(OpenAIFilePurpose? purpose = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFileInfoCollection> GetFiles(OpenAIFilePurpose purpose, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetFiles(string purpose, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIFileInfoCollection>> GetFilesAsync(OpenAIFilePurpose? purpose = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFileInfoCollection> GetFiles(CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<OpenAIFileInfoCollection>> GetFilesAsync(OpenAIFilePurpose purpose, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFilesAsync(string purpose, RequestOptions options);
+        public virtual Task<ClientResult<OpenAIFileInfoCollection>> GetFilesAsync(CancellationToken cancellationToken = default);
         public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string filename, FileUploadPurpose purpose);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult UploadFile(BinaryContent content, string contentType, RequestOptions options = null);

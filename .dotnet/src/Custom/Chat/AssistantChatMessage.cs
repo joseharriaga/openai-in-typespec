@@ -58,9 +58,8 @@ public partial class AssistantChatMessage : ChatMessage
     /// were provided by the model.
     /// </summary>
     /// <param name="toolCalls"> The <c>tool_calls</c> made by the model. </param>
-    /// <param name="content"> Optional text content associated with the message. </param>
-    public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls, string content = null)
-        : base(ChatMessageRole.Assistant, content)
+    public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls)
+        : base(ChatMessageRole.Assistant)
     {
         Argument.AssertNotNull(toolCalls, nameof(toolCalls));
 
@@ -75,9 +74,8 @@ public partial class AssistantChatMessage : ChatMessage
     /// (deprecated in favor of <c>tool_calls</c>) that was made by the model.
     /// </summary>
     /// <param name="functionCall"> The <c>function_call</c> made by the model. </param>
-    /// <param name="content"> Optional text content associated with the message. </param>
-    public AssistantChatMessage(ChatFunctionCall functionCall, string content = null)
-        : base(ChatMessageRole.Assistant, content)
+    public AssistantChatMessage(ChatFunctionCall functionCall)
+        : base(ChatMessageRole.Assistant)
     {
         Argument.AssertNotNull(functionCall, nameof(functionCall));
 

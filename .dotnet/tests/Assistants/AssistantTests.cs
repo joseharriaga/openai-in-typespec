@@ -1216,20 +1216,20 @@ public partial class AssistantTests : SyncAsyncTestBase
 
         // Simulate rehydration of the collection
         ClientResult firstPage = await assistants.GetRawPagesAsync().FirstAsync();
-        BinaryData rehydrationBytes = assistants.GetContinuationToken(firstPage).ToBytes();
-        ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
+        BinaryData rehydrationTokenBytes = assistants.GetContinuationToken(firstPage).ToBytes();
+        ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationTokenBytes);
 
-        AsyncCollectionResult<Assistant> rehydratedPages = client.GetAssistantsAsync(rehydrationToken);
+        // This starts the collection on the second page.
+        AsyncCollectionResult<Assistant> rehydratedAssistants = client.GetAssistantsAsync(rehydrationToken);
 
         int count = 0;
         int pageCount = 0;
         int lastIdSeen = int.MaxValue;
 
-        await foreach (ClientResult page in assistants.GetRawPagesAsync())
+        await foreach (ClientResult page in rehydratedAssistants.GetRawPagesAsync())
         {
             foreach (Assistant assistant in GetAssistantsFromPage(page))
             {
-                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
                 if (assistant.Name?.StartsWith("Test Assistant ") == true)
                 {
                     Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
@@ -1246,8 +1246,10 @@ public partial class AssistantTests : SyncAsyncTestBase
             }
         }
 
-        Assert.That(count, Is.GreaterThanOrEqualTo(10));
-        Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
+        // We should only see eight items and four pages because we rehydrated the
+        // collection starting on the second page.
+        Assert.That(count, Is.EqualTo(8));
+        Assert.That(pageCount, Is.EqualTo(4));
     }
 
     [Test]
@@ -1277,26 +1279,27 @@ public partial class AssistantTests : SyncAsyncTestBase
 
         // Simulate rehydration of the collection
         ClientResult firstPage = assistants.GetRawPages().First();
-        BinaryData rehydrationBytes = assistants.GetContinuationToken(firstPage).ToBytes();
-        ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
+        BinaryData rehydrationTokenBytes = assistants.GetContinuationToken(firstPage).ToBytes();
+        ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationTokenBytes);
 
-        CollectionResult<Assistant> rehydratedPages = client.GetAssistants(rehydrationToken);
+        // This starts the collection on the second page.
+        CollectionResult<Assistant> rehydratedAssistants = client.GetAssistants(rehydrationToken);
 
         int count = 0;
         int pageCount = 0;
         int lastIdSeen = int.MaxValue;
 
-        foreach (ClientResult page in rehydratedPages.GetRawPages())
+        foreach (ClientResult page in rehydratedAssistants.GetRawPages())
         {
             foreach (Assistant assistant in GetAssistantsFromPage(page))
             {
-                Console.WriteLine($"[{count,3}] {assistant.Id} {assistant.CreatedAt:s} {assistant.Name}");
                 if (assistant.Name?.StartsWith("Test Assistant ") == true)
                 {
                     Assert.That(int.TryParse(assistant.Name["Test Assistant ".Length..], out int seenId), Is.True);
                     Assert.That(seenId, Is.LessThan(lastIdSeen));
                     lastIdSeen = seenId;
                 }
+
                 count++;
             }
 
@@ -1307,8 +1310,10 @@ public partial class AssistantTests : SyncAsyncTestBase
             }
         }
 
-        Assert.That(count, Is.GreaterThanOrEqualTo(10));
-        Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
+        // We should only see eight items and four pages because we rehydrated the
+        // collection starting on the second page.
+        Assert.That(count, Is.EqualTo(8));
+        Assert.That(pageCount, Is.EqualTo(4));
     }
 
     [Test]

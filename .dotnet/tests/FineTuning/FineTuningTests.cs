@@ -45,7 +45,7 @@ public partial class FineTuningTests
             return;
         }
 
-        FileClient fileClient = new();
+        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
         RequestOptions requestOptions = new()
         {
             ErrorOptions = ClientErrorBehaviors.NoThrow,

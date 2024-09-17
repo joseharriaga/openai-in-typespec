@@ -149,7 +149,7 @@ public abstract partial class ChatMessage
     #region FunctionChatMessage
     /// <inheritdoc cref="FunctionChatMessage(string, string)"/>
     [Obsolete($"This method is obsolete. Please use {nameof(CreateToolMessage)} instead.")]
-    public static FunctionChatMessage CreateFunctionMessage(string functionName) => new(functionName);
+    public static FunctionChatMessage CreateFunctionMessage(string functionName, string content) => new(functionName, content);
     #endregion
 
     /// <summary>

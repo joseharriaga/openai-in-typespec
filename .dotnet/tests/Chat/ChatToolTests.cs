@@ -232,9 +232,7 @@ public partial class ChatToolTests : SyncAsyncTestBase
         Assert.That(argumentsJson.ContainsKey("month_name"));
         Assert.That(argumentsJson["month_name"].ToString().ToLowerInvariant(), Is.EqualTo("february"));
         messages.Add(new AssistantChatMessage(result.Value));
-        var functionChatMessage = new FunctionChatMessage(GetFavoriteColorForMonthFunctionName);
-        functionChatMessage.Content.Add(ChatMessageContentPart.CreateTextPart("chartreuse"));
-        messages.Add(functionChatMessage);
+        messages.Add(new FunctionChatMessage(GetFavoriteColorForMonthFunctionName, "chartreuse"));
         result = IsAsync
             ? await client.CompleteChatAsync(messages, options)
             : client.CompleteChat(messages, options);

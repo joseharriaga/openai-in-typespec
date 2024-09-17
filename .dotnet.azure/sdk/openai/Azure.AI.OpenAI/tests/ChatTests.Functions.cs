@@ -122,13 +122,11 @@ public partial class ChatTests
 
         // Complete the function call
         messages.Add(new AssistantChatMessage(completion.FunctionCall));
-        var functionChatMessage = new FunctionChatMessage(FUNCTION_TEMPERATURE.FunctionName);
-        functionChatMessage.Content.Add(ChatMessageContentPart.CreateTextPart(JsonSerializer.Serialize(new
+        messages.Add(new FunctionChatMessage(FUNCTION_TEMPERATURE.FunctionName, JsonSerializer.Serialize(new
         {
             temperature = 31,
             unit = "celsius"
         })));
-        messages.Add(functionChatMessage);
 
         requestOptions = new()
         {
@@ -246,14 +244,12 @@ public partial class ChatTests
             //             us manual control are internal. So let's use JSON.
             var converted = ModelReaderWriter.Read<ChatFunctionCall>(BinaryData.FromString(JsonSerializer.Serialize(new { name = functionName, arguments = functionArgs.ToString() })));
             messages.Add(new AssistantChatMessage(converted));
-            var functionChatMessage = new FunctionChatMessage(FUNCTION_TEMPERATURE.FunctionName);
-            functionChatMessage.Content.Add(ChatMessageContentPart.CreateTextPart(JsonSerializer.Serialize(new
+            messages.Add(new FunctionChatMessage(FUNCTION_TEMPERATURE.FunctionName, JsonSerializer.Serialize(new
             {
                 temperature = 31,
                 unit = "celsius"
             })));
-            messages.Add(functionChatMessage);
-            
+
             requestOptions = new()
             {
                 Functions = { FUNCTION_TEMPERATURE },

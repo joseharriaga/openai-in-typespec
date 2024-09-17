@@ -20,8 +20,12 @@ public partial class FunctionChatMessage : ChatMessage
     /// <param name="functionName">
     ///     The name of the called function that this message provides information from.
     /// </param>
-    public FunctionChatMessage(string functionName)
-        : base(ChatMessageRole.Function)
+    /// <param name="content">
+    ///     The textual content that represents the output or result from the called function. There is no format
+    ///     restriction (e.g. JSON) imposed on this content.
+    /// </param>
+    public FunctionChatMessage(string functionName, string content)
+        : base(ChatMessageRole.Function, content)
     {
         Argument.AssertNotNull(functionName, nameof(functionName));
 

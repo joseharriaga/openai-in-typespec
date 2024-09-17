@@ -581,8 +581,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
             """));
         Assert.That(assistantMessage.Content, Has.Count.EqualTo(1));
         Assert.That(assistantMessage.Content[0], Is.Null);
-        FunctionChatMessage functionMessage = new("my_function");
-        functionMessage.Content.Add(null);
+        FunctionChatMessage functionMessage = new("my_function", null);
         BinaryData serializedMessage = ModelReaderWriter.Write(functionMessage);
         Console.WriteLine(serializedMessage.ToString());
 

@@ -34,7 +34,7 @@ public partial class ChatTests
                     }
                 }
             }
-            """) };
+            """)};
 
     public enum FunctionCallTestType
     {

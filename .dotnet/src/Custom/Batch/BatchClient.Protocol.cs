@@ -36,7 +36,7 @@ public partial class BatchClient
         string batchId = doc.RootElement.GetProperty("id"u8).GetString();
         string status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        CreateBatchOperation operation = new(_pipeline, _endpoint, batchId, status, response);
+        CreateBatchOperation operation = this.CreateCreateBatchOperation(batchId, status, response);
         return await operation.WaitUntilAsync(waitUntilCompleted, options).ConfigureAwait(false);
     }
 
@@ -64,7 +64,7 @@ public partial class BatchClient
         string batchId = doc.RootElement.GetProperty("id"u8).GetString();
         string status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        CreateBatchOperation operation = new(_pipeline, _endpoint, batchId, status, response);
+        CreateBatchOperation operation = this.CreateCreateBatchOperation(batchId, status, response);
         return operation.WaitUntil(waitUntilCompleted, options);
     }
 

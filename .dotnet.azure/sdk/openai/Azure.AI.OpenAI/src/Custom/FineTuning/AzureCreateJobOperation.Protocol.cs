@@ -73,7 +73,7 @@ public class AzureCreateJobOperation : CreateJobOperation
         .WithOptions(options)
         .Build();
 
-    internal override PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions? options)
+    internal override PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string? after, int? limit, RequestOptions? options)
     => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, _apiVersion)
         .WithMethod("GET")
         .WithPath("fine_tuning", "jobs", fineTuningJobId, "checkpoints")
@@ -83,7 +83,7 @@ public class AzureCreateJobOperation : CreateJobOperation
         .WithOptions(options)
         .Build();
 
-    internal override PipelineMessage CreateGetFineTuningEventsRequest(string fineTuningJobId, string after, int? limit, RequestOptions? options)
+    internal override PipelineMessage CreateGetFineTuningEventsRequest(string fineTuningJobId, string? after, int? limit, RequestOptions? options)
     => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, _apiVersion)
         .WithMethod("GET")
         .WithPath("fine_tuning", "jobs", fineTuningJobId, "events")

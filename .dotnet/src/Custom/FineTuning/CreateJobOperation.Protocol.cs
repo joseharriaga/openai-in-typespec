@@ -222,7 +222,7 @@ public class CreateJobOperation : OperationResult
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetJobEventsAsync(string after, int? limit, RequestOptions? options)
+    public virtual async Task<ClientResult> GetJobEventsAsync(string? after, int? limit, RequestOptions? options)
     {
         using PipelineMessage message = CreateGetFineTuningEventsRequest(_jobId, after, limit, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
@@ -239,7 +239,7 @@ public class CreateJobOperation : OperationResult
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetJobEvents(string after, int? limit, RequestOptions? options)
+    public virtual ClientResult GetJobEvents(string? after, int? limit, RequestOptions? options)
     {
         using PipelineMessage message = CreateGetFineTuningEventsRequest(_jobId, after, limit, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
@@ -253,7 +253,7 @@ public class CreateJobOperation : OperationResult
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetJobCheckpointsAsync(string after, int? limit, RequestOptions? options)
+    public virtual async Task<ClientResult> GetJobCheckpointsAsync(string? after, int? limit, RequestOptions? options)
     {
         using PipelineMessage message = CreateGetFineTuningJobCheckpointsRequest(_jobId, after, limit, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
@@ -267,7 +267,7 @@ public class CreateJobOperation : OperationResult
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetJobCheckpoints(string after, int? limit, RequestOptions? options)
+    public virtual ClientResult GetJobCheckpoints(string? after, int? limit, RequestOptions? options)
     {
         using PipelineMessage message = CreateGetFineTuningJobCheckpointsRequest(_jobId, after, limit, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
@@ -306,7 +306,7 @@ public class CreateJobOperation : OperationResult
         return message;
     }
 
-    internal virtual PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions? options)
+    internal virtual PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string? after, int? limit, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
@@ -331,7 +331,7 @@ public class CreateJobOperation : OperationResult
         return message;
     }
 
-    internal virtual PipelineMessage CreateGetFineTuningEventsRequest(string fineTuningJobId, string after, int? limit, RequestOptions? options)
+    internal virtual PipelineMessage CreateGetFineTuningEventsRequest(string fineTuningJobId, string? after, int? limit, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;

@@ -107,7 +107,7 @@ public partial class VectorStoreClient
         PipelineResponse response = await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
         VectorStore value = VectorStore.FromResponse(response);
 
-        CreateVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
+        CreateVectorStoreOperation operation = this.CreateCreateVectorStoreOperation(ClientResult.FromValue(value, response));
         return await operation.WaitUntilAsync(waitUntilCompleted, options).ConfigureAwait(false);
     }
 
@@ -131,7 +131,7 @@ public partial class VectorStoreClient
         PipelineResponse response = _pipeline.ProcessMessage(message, options);
         VectorStore value = VectorStore.FromResponse(response);
 
-        CreateVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
+        CreateVectorStoreOperation operation = this.CreateCreateVectorStoreOperation(ClientResult.FromValue(value, response));
         return operation.WaitUntil(waitUntilCompleted, options);
     }
 
@@ -344,7 +344,7 @@ public partial class VectorStoreClient
         PipelineResponse response = await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
         VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
 
-        AddFileToVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
+        AddFileToVectorStoreOperation operation = this.CreateAddFileToVectorStoreOperation(ClientResult.FromValue(value, response));
         return await operation.WaitUntilAsync(waitUntilCompleted, options).ConfigureAwait(false);
     }
 
@@ -373,7 +373,7 @@ public partial class VectorStoreClient
         PipelineResponse response = _pipeline.ProcessMessage(message, options);
         VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
 
-        AddFileToVectorStoreOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(value, response));
+        AddFileToVectorStoreOperation operation = this.CreateAddFileToVectorStoreOperation(ClientResult.FromValue(value, response));
         return operation.WaitUntil(waitUntilCompleted, options);
     }
 
@@ -486,7 +486,7 @@ public partial class VectorStoreClient
         PipelineResponse response = await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
-        CreateBatchFileJobOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(job, response));
+        CreateBatchFileJobOperation operation = this.CreateBatchFileJobOperation(ClientResult.FromValue(job, response));
         return await operation.WaitUntilAsync(waitUntilCompleted, options).ConfigureAwait(false);
     }
 
@@ -519,7 +519,7 @@ public partial class VectorStoreClient
         PipelineResponse response = _pipeline.ProcessMessage(message, options);
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
-        CreateBatchFileJobOperation operation = new(_pipeline, _endpoint, ClientResult.FromValue(job, response));
+        CreateBatchFileJobOperation operation = this.CreateBatchFileJobOperation(ClientResult.FromValue(job, response));
         return operation.WaitUntil(waitUntilCompleted, options);
     }
 

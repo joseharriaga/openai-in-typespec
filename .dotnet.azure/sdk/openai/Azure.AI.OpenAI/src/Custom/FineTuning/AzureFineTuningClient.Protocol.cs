@@ -27,6 +27,18 @@ internal partial class AzureFineTuningClient : FineTuningClient
         return await operation.WaitUntilAsync(waitUntilCompleted, options).ConfigureAwait(false);
     }
 
+    public override IAsyncEnumerable<ClientResult> GetJobsAsync(string after, int? limit, RequestOptions options)
+    {
+        AzureFineTuningJobsPageEnumerator enumerator = new AzureFineTuningJobsPageEnumerator(Pipeline, _endpoint, after, limit, _apiVersion, options);
+        return PageCollectionHelpers.CreateAsync(enumerator);
+    }
+
+    public override IEnumerable<ClientResult> GetJobs(string after, int? limit, RequestOptions options)
+    {
+        AzureFineTuningJobsPageEnumerator enumerator = new AzureFineTuningJobsPageEnumerator(Pipeline, _endpoint, after, limit, _apiVersion, options);
+        return PageCollectionHelpers.Create(enumerator);
+    }
+
     internal override PipelineMessage CreateCreateFineTuningJobRequest(BinaryContent content, RequestOptions options)
     => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
         .WithMethod("POST")

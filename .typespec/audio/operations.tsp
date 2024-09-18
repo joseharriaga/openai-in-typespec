@@ -32,7 +32,7 @@ interface Audio {
   @tag("Audio")
   @summary("Transcribes audio into the input language.")
   createTranscription(
-    @header accept: "application/json, text/plain",
+    @header accept: "application/json",
     @header contentType: "multipart/form-data",
     @body requestBody: CreateTranscriptionRequest,
   ):
@@ -52,7 +52,7 @@ interface Audio {
   @tag("Audio")
   @summary("Translates audio into English..")
   createTranslation(
-    @header accept: "application/json, text/plain",
+    @header accept: "application/json",
 
     @header contentType: "multipart/form-data",
 

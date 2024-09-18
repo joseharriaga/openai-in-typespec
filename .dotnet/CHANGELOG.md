@@ -39,6 +39,7 @@
 - Removed the optional parameter from the constructors of `VectorStoreCreationHelper`, `AssistantChatMessage`, and `ChatFunction`. (commit_hash)
 - Removed the optional `purpose` parameter from `FileClient.GetFilesAsync` and `FileClient.GetFiles` methods, and added overloads where `purpose` is required. (commit_hash)
 - Renamed `ModerationClient`'s `ClassifyTextInput` methods to `ClassifyText`. (commit_hash)
+- Removed duplicated `Created` property from `GeneratedImageCollection`. (commit_hash)
 
 ### Bugs Fixed
 

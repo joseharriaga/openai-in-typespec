@@ -13,7 +13,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationCategoriesWithNoPropertiesWorks()
     {
-        ModerationCategories moderationCategories = OpenAIModerationsModelFactory.ModerationCategories();
+        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories();
 
         Assert.That(moderationCategories.Hate, Is.False);
         Assert.That(moderationCategories.HateThreatening, Is.False);
@@ -31,7 +31,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationCategoriesWithHateWorks()
     {
-        ModerationCategories moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(hate: true);
+        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(hate: true);
 
         Assert.That(moderationCategories.Hate, Is.True);
         Assert.That(moderationCategories.HateThreatening, Is.False);
@@ -49,7 +49,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationCategoriesWithHateThreateningWorks()
     {
-        ModerationCategories moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(hateThreatening: true);
+        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(hateThreatening: true);
 
         Assert.That(moderationCategories.Hate, Is.False);
         Assert.That(moderationCategories.HateThreatening, Is.True);
@@ -67,7 +67,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationCategoriesWithHarassmentWorks()
     {
-        ModerationCategories moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(harassment: true);
+        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(harassment: true);
 
         Assert.That(moderationCategories.Hate, Is.False);
         Assert.That(moderationCategories.HateThreatening, Is.False);
@@ -85,7 +85,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationCategoriesWithHarassmentThreateningWorks()
     {
-        ModerationCategories moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(harassmentThreatening: true);
+        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(harassmentThreatening: true);
 
         Assert.That(moderationCategories.Hate, Is.False);
         Assert.That(moderationCategories.HateThreatening, Is.False);
@@ -103,7 +103,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationCategoriesWithSelfHarmWorks()
     {
-        ModerationCategories moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(selfHarm: true);
+        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(selfHarm: true);
 
         Assert.That(moderationCategories.Hate, Is.False);
         Assert.That(moderationCategories.HateThreatening, Is.False);
@@ -121,7 +121,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationCategoriesWithSelfHarmIntentWorks()
     {
-        ModerationCategories moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(selfHarmIntent: true);
+        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(selfHarmIntent: true);
 
         Assert.That(moderationCategories.Hate, Is.False);
         Assert.That(moderationCategories.HateThreatening, Is.False);
@@ -139,7 +139,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationCategoriesWithSelfHarmInstructionWorks()
     {
-        ModerationCategories moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(selfHarmInstructions: true);
+        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(selfHarmInstructions: true);
 
         Assert.That(moderationCategories.Hate, Is.False);
         Assert.That(moderationCategories.HateThreatening, Is.False);
@@ -157,7 +157,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationCategoriesWithSexualWorks()
     {
-        ModerationCategories moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(sexual: true);
+        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(sexual: true);
 
         Assert.That(moderationCategories.Hate, Is.False);
         Assert.That(moderationCategories.HateThreatening, Is.False);
@@ -175,7 +175,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationCategoriesWithSexualMinorsWorks()
     {
-        ModerationCategories moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(sexualMinors: true);
+        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(sexualMinors: true);
 
         Assert.That(moderationCategories.Hate, Is.False);
         Assert.That(moderationCategories.HateThreatening, Is.False);
@@ -193,7 +193,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationCategoriesWithViolenceWorks()
     {
-        ModerationCategories moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(violence: true);
+        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(violence: true);
 
         Assert.That(moderationCategories.Hate, Is.False);
         Assert.That(moderationCategories.HateThreatening, Is.False);
@@ -211,7 +211,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationCategoriesWithViolenceGraphicWorks()
     {
-        ModerationCategories moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(violenceGraphic: true);
+        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(violenceGraphic: true);
 
         Assert.That(moderationCategories.Hate, Is.False);
         Assert.That(moderationCategories.HateThreatening, Is.False);
@@ -522,7 +522,7 @@ public partial class OpenAIModerationsModelFactoryTests
     [Test]
     public void ModerationResultWithCategoriesWorks()
     {
-        ModerationCategories categories = OpenAIModerationsModelFactory.ModerationCategories(hate: true);
+        ModerationCategory categories = OpenAIModerationsModelFactory.ModerationCategories(hate: true);
         ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(categories: categories);
 
         Assert.That(moderationResult.Flagged, Is.False);

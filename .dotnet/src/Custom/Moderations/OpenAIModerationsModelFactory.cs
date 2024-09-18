@@ -6,42 +6,11 @@ namespace OpenAI.Moderations;
 /// <summary> Model factory for models. </summary>
 public static partial class OpenAIModerationsModelFactory
 {
-    /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationCategories"/>. </summary>
-    /// <returns> A new <see cref="OpenAI.Moderations.ModerationCategories"/> instance for mocking. </returns>
-    public static ModerationCategories ModerationCategories(bool hate = default, bool hateThreatening = default, bool harassment = default, bool harassmentThreatening = default, bool selfHarm = default, bool selfHarmIntent = default, bool selfHarmInstructions = default, bool sexual = default, bool sexualMinors = default, bool violence = default, bool violenceGraphic = default)
+    /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationCategory"/>. </summary>
+    /// <returns> A new <see cref="OpenAI.Moderations.ModerationCategory"/> instance for mocking. </returns>
+    public static ModerationCategory ModerationCategory(bool isFlagged = default, float score = default)
     {
-        return new ModerationCategories(
-            hate,
-            hateThreatening,
-            harassment,
-            harassmentThreatening,
-            selfHarm,
-            selfHarmIntent,
-            selfHarmInstructions,
-            sexual,
-            sexualMinors,
-            violence,
-            violenceGraphic,
-            serializedAdditionalRawData: null);
-    }
-
-    /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationCategoryScores"/>. </summary>
-    /// <returns> A new <see cref="OpenAI.Moderations.ModerationCategoryScores"/> instance for mocking. </returns>
-    public static ModerationCategoryScores ModerationCategoryScores(float hate = default, float hateThreatening = default, float harassment = default, float harassmentThreatening = default, float selfHarm = default, float selfHarmIntent = default, float selfHarmInstructions = default, float sexual = default, float sexualMinors = default, float violence = default, float violenceGraphic = default)
-    {
-        return new ModerationCategoryScores(
-            hate,
-            hateThreatening,
-            harassment,
-            harassmentThreatening,
-            selfHarm,
-            selfHarmIntent,
-            selfHarmInstructions,
-            sexual,
-            sexualMinors,
-            violence,
-            violenceGraphic,
-            serializedAdditionalRawData: null);
+        return new ModerationCategory(isFlagged, score);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationCollection"/>. </summary>
@@ -59,12 +28,21 @@ public static partial class OpenAIModerationsModelFactory
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationResult"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Moderations.ModerationResult"/> instance for mocking. </returns>
-    public static ModerationResult ModerationResult(bool flagged = default, ModerationCategories categories = null, ModerationCategoryScores categoryScores = null)
+    public static ModerationResult ModerationResult(bool flagged = default, ModerationCategory hate = default, ModerationCategory hateThreatening = default, ModerationCategory harassment = default, ModerationCategory harassmentThreatening = default, ModerationCategory selfHarm = default, ModerationCategory selfHarmIntent = default, ModerationCategory selfHarmInstructions = default, ModerationCategory sexual = default, ModerationCategory sexualMinors = default, ModerationCategory violence = default, ModerationCategory violenceGraphic = default)
     {
         return new ModerationResult(
             flagged,
-            categories,
-            categoryScores,
+            hate,
+            hateThreatening,
+            harassment,
+            harassmentThreatening,
+            selfHarm,
+            selfHarmIntent,
+            selfHarmInstructions,
+            sexual,
+            sexualMinors,
+            violence,
+            violenceGraphic,
             serializedAdditionalRawData: null);
     }
 }

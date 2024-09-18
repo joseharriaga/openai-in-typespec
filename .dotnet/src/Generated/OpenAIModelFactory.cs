@@ -105,45 +105,6 @@ namespace OpenAI
             return new ModerationCollection(id, model, results?.ToList());
         }
 
-        public static ModerationResult ModerationResult(bool flagged = default, ModerationCategories categories = null, ModerationCategoryScores categoryScores = null)
-        {
-            return new ModerationResult(flagged, categories, categoryScores, serializedAdditionalRawData: null);
-        }
-
-        public static ModerationCategories ModerationCategories(bool hate = default, bool hateThreatening = default, bool harassment = default, bool harassmentThreatening = default, bool selfHarm = default, bool selfHarmIntent = default, bool selfHarmInstructions = default, bool sexual = default, bool sexualMinors = default, bool violence = default, bool violenceGraphic = default)
-        {
-            return new ModerationCategories(
-                hate,
-                hateThreatening,
-                harassment,
-                harassmentThreatening,
-                selfHarm,
-                selfHarmIntent,
-                selfHarmInstructions,
-                sexual,
-                sexualMinors,
-                violence,
-                violenceGraphic,
-                serializedAdditionalRawData: null);
-        }
-
-        public static ModerationCategoryScores ModerationCategoryScores(float hate = default, float hateThreatening = default, float harassment = default, float harassmentThreatening = default, float selfHarm = default, float selfHarmIntent = default, float selfHarmInstructions = default, float sexual = default, float sexualMinors = default, float violence = default, float violenceGraphic = default)
-        {
-            return new ModerationCategoryScores(
-                hate,
-                hateThreatening,
-                harassment,
-                harassmentThreatening,
-                selfHarm,
-                selfHarmIntent,
-                selfHarmInstructions,
-                sexual,
-                sexualMinors,
-                violence,
-                violenceGraphic,
-                serializedAdditionalRawData: null);
-        }
-
         public static RunError RunError(RunErrorCode code = default, string message = null)
         {
             return new RunError(code, message, serializedAdditionalRawData: null);

@@ -1,34 +1,28 @@
-using System;
+﻿using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 
 #nullable enable
 
-namespace OpenAI.Assistants;
+namespace OpenAI.FineTuning;
 
-internal class RunsPageToken : ContinuationToken
+internal class FineTuningJobCheckpointCollectionPageToken : ContinuationToken
 {
-    protected RunsPageToken(string threadId, int? limit, string? order, string? after, string? before)
+    protected FineTuningJobCheckpointCollectionPageToken(string jobId, int? limit, string? after)
     {
-        ThreadId = threadId;
-
+        JobId = jobId;
         Limit = limit;
-        Order = order;
         After = after;
-        Before = before;
     }
 
-    public string ThreadId { get; }
+    public string JobId { get; }
 
     public int? Limit { get; }
 
-    public string? Order { get; }
-
     public string? After { get; }
-
-    public string? Before { get; }
 
     public override BinaryData ToBytes()
     {
@@ -36,26 +30,16 @@ internal class RunsPageToken : ContinuationToken
         using Utf8JsonWriter writer = new(stream);
 
         writer.WriteStartObject();
-        writer.WriteString("threadId", ThreadId);
+        writer.WriteString("jobId", JobId);
 
         if (Limit.HasValue)
         {
             writer.WriteNumber("limit", Limit.Value);
         }
 
-        if (Order is not null)
-        {
-            writer.WriteString("order", Order);
-        }
-
         if (After is not null)
         {
             writer.WriteString("after", After);
-        }
-
-        if (Before is not null)
-        {
-            writer.WriteString("before", Before);
         }
 
         writer.WriteEndObject();
@@ -66,19 +50,9 @@ internal class RunsPageToken : ContinuationToken
         return BinaryData.FromStream(stream);
     }
 
-    public RunsPageToken? GetNextPageToken(bool hasMore, string? lastId)
+    public static FineTuningJobCheckpointCollectionPageToken FromToken(ContinuationToken pageToken)
     {
-        if (!hasMore || lastId is null)
-        {
-            return null;
-        }
-
-        return new RunsPageToken(ThreadId, Limit, Order, After, Before);
-    }
-
-    public static RunsPageToken FromToken(ContinuationToken pageToken)
-    {
-        if (pageToken is RunsPageToken token)
+        if (pageToken is FineTuningJobCheckpointCollectionPageToken token)
         {
             return token;
         }
@@ -87,16 +61,14 @@ internal class RunsPageToken : ContinuationToken
 
         if (data.ToMemory().Length == 0)
         {
-            throw new ArgumentException("Failed to create RunsPageToken from provided pageToken.", nameof(pageToken));
+            throw new ArgumentException("Failed to create FineTuningJobCheckpointCollectionPageToken from provided pageToken.", nameof(pageToken));
         }
 
         Utf8JsonReader reader = new(data);
 
-        string threadId = null!;
+        string jobId = null!;
         int? limit = null;
-        string? order = null;
         string? after = null;
-        string? before = null;
 
         reader.Read();
 
@@ -115,44 +87,49 @@ internal class RunsPageToken : ContinuationToken
 
             switch (propertyName)
             {
-                case "threadId":
+                case "jobId":
                     reader.Read();
                     Debug.Assert(reader.TokenType == JsonTokenType.String);
-                    threadId = reader.GetString()!;
+                    jobId = reader.GetString()!;
                     break;
                 case "limit":
                     reader.Read();
                     Debug.Assert(reader.TokenType == JsonTokenType.Number);
                     limit = reader.GetInt32();
                     break;
-                case "order":
-                    reader.Read();
-                    Debug.Assert(reader.TokenType == JsonTokenType.String);
-                    order = reader.GetString();
-                    break;
                 case "after":
                     reader.Read();
                     Debug.Assert(reader.TokenType == JsonTokenType.String);
                     after = reader.GetString();
-                    break;
-                case "before":
-                    reader.Read();
-                    Debug.Assert(reader.TokenType == JsonTokenType.String);
-                    before = reader.GetString();
                     break;
                 default:
                     throw new JsonException($"Unrecognized property '{propertyName}'.");
             }
         }
 
-        if (threadId is null)
+        if (jobId is null)
         {
-            throw new ArgumentException("Failed to create RunsPageToken from provided pageToken.", nameof(pageToken));
+            throw new ArgumentException("Failed to create FineTuningJobCheckpointCollectionPageToken from provided pageToken.", nameof(pageToken));
         }
 
-        return new(threadId, limit, order, after, before);
+        return new(jobId, limit, after);
     }
 
-    public static RunsPageToken FromOptions(string threadId, int? limit, string? order, string? after, string? before)
-        => new RunsPageToken(threadId, limit, order, after, before);
+    public static FineTuningJobCheckpointCollectionPageToken FromOptions(string jobId, int? limit, string? after)
+        => new(jobId, limit, after);
+
+    public static FineTuningJobCheckpointCollectionPageToken? FromResponse(ClientResult result, string jobId, int? limit)
+    {
+        PipelineResponse response = result.GetRawResponse();
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        string lastId = doc.RootElement.GetProperty("last_id"u8).GetString()!;
+        bool hasMore = doc.RootElement.GetProperty("has_more"u8).GetBoolean();
+
+        if (!hasMore || lastId is null)
+        {
+            return null;
+        }
+
+        return new(jobId, limit, lastId);
+    }
 }

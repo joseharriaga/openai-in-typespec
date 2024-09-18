@@ -1,5 +1,6 @@
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
@@ -8,11 +9,12 @@ using System.Text.Json;
 
 namespace OpenAI.VectorStores;
 
-internal class VectorStoreFilesPageToken : ContinuationToken
+internal class VectorStoreFileBatchCollectionPageToken : ContinuationToken
 {
-    protected VectorStoreFilesPageToken(string vectorStoreId, int? limit, string? order, string? after, string? before, string? filter)
+    protected VectorStoreFileBatchCollectionPageToken(string vectorStoreId, string batchId, int? limit, string? order, string? after, string? before, string? filter)
     {
         VectorStoreId = vectorStoreId;
+        BatchId = batchId;
 
         Limit = limit;
         Order = order;
@@ -20,7 +22,10 @@ internal class VectorStoreFilesPageToken : ContinuationToken
         Before = before;
         Filter = filter;
     }
+
     public string VectorStoreId { get; }
+
+    public string BatchId { get; }
 
     public int? Limit { get; }
 
@@ -39,6 +44,7 @@ internal class VectorStoreFilesPageToken : ContinuationToken
 
         writer.WriteStartObject();
         writer.WriteString("vectorStoreId", VectorStoreId);
+        writer.WriteString("batchId", BatchId);
 
         if (Limit.HasValue)
         {
@@ -73,19 +79,9 @@ internal class VectorStoreFilesPageToken : ContinuationToken
         return BinaryData.FromStream(stream);
     }
 
-    public VectorStoreFilesPageToken? GetNextPageToken(bool hasMore, string? lastId)
+    public static VectorStoreFileBatchCollectionPageToken FromToken(ContinuationToken pageToken)
     {
-        if (!hasMore || lastId is null)
-        {
-            return null;
-        }
-
-        return new(VectorStoreId, Limit, Order, lastId, Before, Filter);
-    }
-
-    public static VectorStoreFilesPageToken FromToken(ContinuationToken pageToken)
-    {
-        if (pageToken is VectorStoreFilesPageToken token)
+        if (pageToken is VectorStoreFileBatchCollectionPageToken token)
         {
             return token;
         }
@@ -94,12 +90,13 @@ internal class VectorStoreFilesPageToken : ContinuationToken
 
         if (data.ToMemory().Length == 0)
         {
-            throw new ArgumentException("Failed to create VectorStoreFilesPageToken from provided pageToken.", nameof(pageToken));
+            throw new ArgumentException("Failed to create VectorStoreFileBatchesPageToken from provided pageToken.", nameof(pageToken));
         }
 
         Utf8JsonReader reader = new(data);
 
         string vectorStoreId = null!;
+        string batchId = null!;
         int? limit = null;
         string? order = null;
         string? after = null;
@@ -127,6 +124,11 @@ internal class VectorStoreFilesPageToken : ContinuationToken
                     reader.Read();
                     Debug.Assert(reader.TokenType == JsonTokenType.String);
                     vectorStoreId = reader.GetString()!;
+                    break;
+                case "batchId":
+                    reader.Read();
+                    Debug.Assert(reader.TokenType == JsonTokenType.String);
+                    batchId = reader.GetString()!;
                     break;
                 case "limit":
                     reader.Read();
@@ -158,14 +160,30 @@ internal class VectorStoreFilesPageToken : ContinuationToken
             }
         }
 
-        if (vectorStoreId is null)
+        if (vectorStoreId is null ||
+            batchId is null)
         {
-            throw new ArgumentException("Failed to create VectorStoreFilesPageToken from provided pageToken.", nameof(pageToken));
+            throw new ArgumentException("Failed to create VectorStoreFileBatchesPageToken from provided pageToken.", nameof(pageToken));
         }
 
-        return new(vectorStoreId, limit, order, after, before, filter);
+        return new(vectorStoreId, batchId, limit, order, after, before, filter);
     }
 
-    public static VectorStoreFilesPageToken FromOptions(string vectorStoreId, int? limit, string? order, string? after, string? before, string? filter)
-        => new(vectorStoreId, limit, order, after, before, filter);
+    public static VectorStoreFileBatchCollectionPageToken FromOptions(string vectorStoreId, string batchId, int? limit, string? order, string? after, string? before, string? filter)
+        => new(vectorStoreId, batchId, limit, order, after, before, filter);
+
+    public static VectorStoreFileBatchCollectionPageToken? FromResponse(ClientResult result, string vectorStoreId, string batchId, int? limit, string? order, string? before, string? filter)
+    {
+        PipelineResponse response = result.GetRawResponse();
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        string lastId = doc.RootElement.GetProperty("last_id"u8).GetString()!;
+        bool hasMore = doc.RootElement.GetProperty("has_more"u8).GetBoolean();
+
+        if (!hasMore || lastId is null)
+        {
+            return null;
+        }
+
+        return new(vectorStoreId, batchId, limit, order, lastId, before, filter);
+    }
 }

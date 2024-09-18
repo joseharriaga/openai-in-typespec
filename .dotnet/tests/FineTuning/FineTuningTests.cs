@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -70,7 +71,7 @@ internal class FineTuningTests : SyncAsyncTestBase
 
         FineTuningClient client = GetTestClient<FineTuningClient>(TestScenario.FineTuning);
 
-        await foreach (ClientResult result in client.GetJobsAsync(after: null, limit: null, options: null))
+        await foreach (ClientResult result in client.GetJobsAsync(after: null, limit: null, options: null).GetRawPagesAsync())
         {
             BinaryData response = result.GetRawResponse().Content;
             JsonDocument jsonDocument = JsonDocument.Parse(response);
@@ -88,7 +89,7 @@ internal class FineTuningTests : SyncAsyncTestBase
 
         FineTuningClient client = GetTestClient<FineTuningClient>(TestScenario.FineTuning);
 
-        foreach (ClientResult result in client.GetJobs(after: null, limit: null, options: null))
+        foreach (ClientResult result in client.GetJobs(after: null, limit: null, options: null).GetRawPages())
         {
             BinaryData response = result.GetRawResponse().Content;
             JsonDocument jsonDocument = JsonDocument.Parse(response);
@@ -123,7 +124,7 @@ internal class FineTuningTests : SyncAsyncTestBase
         AssertAsyncOnly();
 
         FineTuningClient client = GetTestClient<FineTuningClient>(TestScenario.FineTuning);
-        IAsyncEnumerable<ClientResult> enumerable = client.GetJobEventsAsync("fakeJobId", after: null, limit: null, options: null);
+        IAsyncEnumerable<ClientResult> enumerable = client.GetJobEventsAsync("fakeJobId", after: null, limit: null, options: null).GetRawPagesAsync();
         IAsyncEnumerator<ClientResult> enumerator = enumerable.GetAsyncEnumerator();
 
         ClientResultException ex = Assert.ThrowsAsync<ClientResultException>(async () => await enumerator.MoveNextAsync());
@@ -137,7 +138,7 @@ internal class FineTuningTests : SyncAsyncTestBase
         AssertSyncOnly();
 
         FineTuningClient client = GetTestClient<FineTuningClient>(TestScenario.FineTuning);
-        IEnumerable<ClientResult> enumerable = client.GetJobEvents("fakeJobId", after: null, limit: null, options: null);
+        IEnumerable<ClientResult> enumerable = client.GetJobEvents("fakeJobId", after: null, limit: null, options: null).GetRawPages();
         IEnumerator<ClientResult> enumerator = enumerable.GetEnumerator();
 
         ClientResultException ex = Assert.Throws<ClientResultException>(() => enumerator.MoveNext());
@@ -151,7 +152,7 @@ internal class FineTuningTests : SyncAsyncTestBase
         AssertAsyncOnly();
 
         FineTuningClient client = GetTestClient<FineTuningClient>(TestScenario.FineTuning);
-        IAsyncEnumerable<ClientResult> enumerable = client.GetJobCheckpointsAsync("fakeJobId", after: null, limit: null, options: null);
+        IAsyncEnumerable<ClientResult> enumerable = client.GetJobCheckpointsAsync("fakeJobId", after: null, limit: null, options: null).GetRawPagesAsync();
         IAsyncEnumerator<ClientResult> enumerator = enumerable.GetAsyncEnumerator();
 
         ClientResultException ex = Assert.ThrowsAsync<ClientResultException>(async () => await enumerator.MoveNextAsync());
@@ -165,7 +166,7 @@ internal class FineTuningTests : SyncAsyncTestBase
         AssertSyncOnly();
 
         FineTuningClient client = GetTestClient<FineTuningClient>(TestScenario.FineTuning);
-        IEnumerable<ClientResult> enumerable = client.GetJobCheckpoints("fakeJobId", after: null, limit: null, options: null);
+        IEnumerable<ClientResult> enumerable = client.GetJobCheckpoints("fakeJobId", after: null, limit: null, options: null).GetRawPages();
         IEnumerator<ClientResult> enumerator = enumerable.GetEnumerator();
 
         ClientResultException ex = Assert.Throws<ClientResultException>(() => enumerator.MoveNext());

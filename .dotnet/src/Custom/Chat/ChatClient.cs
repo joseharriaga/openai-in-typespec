@@ -36,6 +36,10 @@ public partial class ChatClient
     {
     }
 
+    public ChatClient(string model, string apiKey) : this(model, new ApiKeyCredential(apiKey), new OpenAIClientOptions())
+    {
+    }
+
     // CUSTOM:
     // - Added `model` parameter.
     // - Used a custom pipeline.
@@ -57,6 +61,10 @@ public partial class ChatClient
         _pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
         _telemetry = new OpenTelemetrySource(model, _endpoint);
+    }
+    public ChatClient(string model, string apiKey, OpenAIClientOptions options)
+        : this(model, new ApiKeyCredential(apiKey), options)
+    {
     }
 
     // CUSTOM:
@@ -179,9 +187,9 @@ public partial class ChatClient
 
         using BinaryContent content = options.ToBinaryContent();
 
-        async Task<ClientResult> getResultAsync() =>
+        async Task<ClientResult> sendRequestAsync() =>
             await CompleteChatAsync(content, cancellationToken.ToRequestOptions(streaming: true)).ConfigureAwait(false);
-        return new InternalAsyncStreamingChatCompletionUpdateCollection(getResultAsync);
+        return new InternalAsyncStreamingChatCompletionUpdateCollection(sendRequestAsync, cancellationToken);
     }
 
     /// <summary>
@@ -205,8 +213,8 @@ public partial class ChatClient
         CreateChatCompletionOptions(messages, ref options, stream: true);
 
         using BinaryContent content = options.ToBinaryContent();
-        ClientResult getResult() => CompleteChat(content, cancellationToken.ToRequestOptions(streaming: true));
-        return new InternalStreamingChatCompletionUpdateCollection(getResult);
+        ClientResult sendRequest() => CompleteChat(content, cancellationToken.ToRequestOptions(streaming: true));
+        return new InternalStreamingChatCompletionUpdateCollection(sendRequest, cancellationToken);
     }
 
     /// <summary>

@@ -84,6 +84,10 @@ public partial class OpenAIClient
     {
     }
 
+    public OpenAIClient(string apiKey) : this(new ApiKeyCredential(apiKey))
+    {
+    }
+
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
@@ -99,6 +103,11 @@ public partial class OpenAIClient
         _pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
         _options = options;
+    }
+
+    public OpenAIClient(string apiKey, OpenAIClientOptions options) :
+        this(new ApiKeyCredential(apiKey), options)
+    {
     }
 
     // CUSTOM: Added protected internal constructor that takes a ClientPipeline.

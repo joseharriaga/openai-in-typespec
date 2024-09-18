@@ -92,7 +92,7 @@ public partial class VectorStoreClient
     /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
     /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
     /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         VectorStore vectorStore,
         VectorStoreFileAssociationCollectionOptions options = default)
             => GetFileAssociationsAsync(vectorStore?.Id, options);
@@ -109,7 +109,7 @@ public partial class VectorStoreClient
     /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
     /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
     /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(
+    public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(
         VectorStore vectorStore,
         VectorStoreFileAssociationCollectionOptions options = default)
             => GetFileAssociations(vectorStore?.Id, options);
@@ -224,7 +224,7 @@ public partial class VectorStoreClient
     /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
     /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
     /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFileAssociationsAsync(
+    public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         VectorStoreBatchFileJob batchJob,
         VectorStoreFileAssociationCollectionOptions options = default)
             => GetFileAssociationsAsync(batchJob?.VectorStoreId, batchJob?.BatchId, options);
@@ -239,7 +239,7 @@ public partial class VectorStoreClient
     /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
     /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
     /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual PageCollection<VectorStoreFileAssociation> GetFileAssociations(
+    public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(
         VectorStoreBatchFileJob batchJob,
         VectorStoreFileAssociationCollectionOptions options = default)
             => GetFileAssociations(batchJob?.VectorStoreId, batchJob?.BatchId, options);

@@ -1,22 +1,28 @@
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 
 #nullable enable
 
-namespace OpenAI.Assistants;
+namespace OpenAI.VectorStores;
 
-internal class AssistantsPageToken : ContinuationToken
+internal class VectorStoreFileCollectionPageToken : ContinuationToken
 {
-    protected AssistantsPageToken(int? limit, string? order, string? after, string? before)
+    protected VectorStoreFileCollectionPageToken(string vectorStoreId, int? limit, string? order, string? after, string? before, string? filter)
     {
+        VectorStoreId = vectorStoreId;
+
         Limit = limit;
         Order = order;
         After = after;
         Before = before;
+        Filter = filter;
     }
+
+    public string VectorStoreId { get; }
 
     public int? Limit { get; }
 
@@ -26,12 +32,15 @@ internal class AssistantsPageToken : ContinuationToken
 
     public string? Before { get; }
 
+    public string? Filter { get; }
+
     public override BinaryData ToBytes()
     {
         using MemoryStream stream = new();
         using Utf8JsonWriter writer = new(stream);
 
         writer.WriteStartObject();
+        writer.WriteString("vectorStoreId", VectorStoreId);
 
         if (Limit.HasValue)
         {
@@ -53,6 +62,11 @@ internal class AssistantsPageToken : ContinuationToken
             writer.WriteString("before", Before);
         }
 
+        if (Filter is not null)
+        {
+            writer.WriteString("filter", Filter);
+        }
+
         writer.WriteEndObject();
 
         writer.Flush();
@@ -61,36 +75,28 @@ internal class AssistantsPageToken : ContinuationToken
         return BinaryData.FromStream(stream);
     }
 
-    public AssistantsPageToken? GetNextPageToken(bool hasMore, string? lastId)
+    public static VectorStoreFileCollectionPageToken FromToken(ContinuationToken pageToken)
     {
-        if (!hasMore || lastId is null)
+        if (pageToken is VectorStoreFileCollectionPageToken token)
         {
-            return null;
+            return token;
         }
 
-        return new AssistantsPageToken(Limit, Order, After, Before);
-    }
-
-    public static AssistantsPageToken FromToken(ContinuationToken token)
-    {
-        if (token is AssistantsPageToken pageToken)
-        {
-            return pageToken;
-        }
-
-        BinaryData data = token.ToBytes();
+        BinaryData data = pageToken.ToBytes();
 
         if (data.ToMemory().Length == 0)
         {
-            throw new ArgumentException("Failed to create AssistantsPageToken from provided pageToken.", nameof(pageToken));
+            throw new ArgumentException("Failed to create VectorStoreFilesPageToken from provided pageToken.", nameof(pageToken));
         }
 
         Utf8JsonReader reader = new(data);
 
+        string vectorStoreId = null!;
         int? limit = null;
         string? order = null;
         string? after = null;
         string? before = null;
+        string? filter = null;
 
         reader.Read();
 
@@ -109,6 +115,11 @@ internal class AssistantsPageToken : ContinuationToken
 
             switch (propertyName)
             {
+                case "vectorStoreId":
+                    reader.Read();
+                    Debug.Assert(reader.TokenType == JsonTokenType.String);
+                    vectorStoreId = reader.GetString()!;
+                    break;
                 case "limit":
                     reader.Read();
                     Debug.Assert(reader.TokenType == JsonTokenType.Number);
@@ -129,14 +140,39 @@ internal class AssistantsPageToken : ContinuationToken
                     Debug.Assert(reader.TokenType == JsonTokenType.String);
                     before = reader.GetString();
                     break;
+                case "filter":
+                    reader.Read();
+                    Debug.Assert(reader.TokenType == JsonTokenType.String);
+                    filter = reader.GetString();
+                    break;
                 default:
                     throw new JsonException($"Unrecognized property '{propertyName}'.");
             }
         }
 
-        return new(limit, order, after, before);
+        if (vectorStoreId is null)
+        {
+            throw new ArgumentException("Failed to create VectorStoreFilesPageToken from provided pageToken.", nameof(pageToken));
+        }
+
+        return new(vectorStoreId, limit, order, after, before, filter);
     }
 
-    public static AssistantsPageToken FromOptions(int? limit, string? order, string? after, string? before)
-        => new AssistantsPageToken(limit, order, after, before);
+    public static VectorStoreFileCollectionPageToken FromOptions(string vectorStoreId, int? limit, string? order, string? after, string? before, string? filter)
+        => new(vectorStoreId, limit, order, after, before, filter);
+
+    public static VectorStoreFileCollectionPageToken? FromResponse(ClientResult result, string vectorStoreId, int? limit, string? order, string? before, string? filter)
+    {
+        PipelineResponse response = result.GetRawResponse();
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        string lastId = doc.RootElement.GetProperty("last_id"u8).GetString()!;
+        bool hasMore = doc.RootElement.GetProperty("has_more"u8).GetBoolean();
+
+        if (!hasMore || lastId is null)
+        {
+            return null;
+        }
+
+        return new(vectorStoreId, limit, order, lastId, before, filter);
+    }
 }

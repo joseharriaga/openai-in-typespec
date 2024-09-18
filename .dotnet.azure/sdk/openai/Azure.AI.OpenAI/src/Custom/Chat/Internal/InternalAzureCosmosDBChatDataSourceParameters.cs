@@ -2,9 +2,11 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
+[Experimental("AOAI001")]
 [CodeGenModel("AzureCosmosDBChatDataSourceParameters")]
 internal partial class InternalAzureCosmosDBChatDataSourceParameters
 {

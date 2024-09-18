@@ -62,10 +62,10 @@ namespace Azure.AI.OpenAI
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeContentFilterProtectedMaterialCitedResult(document.RootElement, options);
+            return DeserializeContentFilterProtectedMaterialCitationResult(document.RootElement, options);
         }
 
-        internal static ContentFilterProtectedMaterialCitationResult DeserializeContentFilterProtectedMaterialCitedResult(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ContentFilterProtectedMaterialCitationResult DeserializeContentFilterProtectedMaterialCitationResult(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -125,7 +125,7 @@ namespace Azure.AI.OpenAI
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeContentFilterProtectedMaterialCitedResult(document.RootElement, options);
+                        return DeserializeContentFilterProtectedMaterialCitationResult(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(ContentFilterProtectedMaterialCitationResult)} does not support reading '{options.Format}' format.");
@@ -139,7 +139,7 @@ namespace Azure.AI.OpenAI
         internal static ContentFilterProtectedMaterialCitationResult FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeContentFilterProtectedMaterialCitedResult(document.RootElement);
+            return DeserializeContentFilterProtectedMaterialCitationResult(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

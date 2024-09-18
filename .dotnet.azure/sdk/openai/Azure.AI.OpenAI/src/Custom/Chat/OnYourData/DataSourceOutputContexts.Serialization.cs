@@ -2,11 +2,13 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
 internal static partial class DataSourceOutputContextsExtensions
 {
+    [Experimental("AOAI001")]
     public static IList<string> ToStringList(this DataSourceOutputContexts flags)
     {
         List<string> contexts = [];
@@ -25,6 +27,7 @@ internal static partial class DataSourceOutputContextsExtensions
         return contexts;
     }
 
+    [Experimental("AOAI001")]
     public static DataSourceOutputContexts? FromStringList(IList<string> strings)
     {
         if (strings is null)

@@ -2,10 +2,12 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("AzureSearchChatDataSourceParametersFieldsMapping")]
+[Experimental("AOAI001")]
 public partial class DataSourceFieldMappings
 {
     /// <summary>
@@ -20,7 +22,7 @@ public partial class DataSourceFieldMappings
     /// <remarks>
     /// <para>
     /// This field is applicable to data source types including: <see cref="AzureAISearchChatDataSource"/>,
-    /// <see cref="AzureCosmosDBChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
+    /// <see cref="CosmosChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
     /// <see cref="PineconeChatDataSource"/>.
     /// </para>
     /// </remarks>
@@ -31,7 +33,7 @@ public partial class DataSourceFieldMappings
     /// <remarks>
     /// <para>
     /// This field is applicable to data source types including: <see cref="AzureAISearchChatDataSource"/>,
-    /// <see cref="AzureCosmosDBChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
+    /// <see cref="CosmosChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
     /// <see cref="PineconeChatDataSource"/>.
     /// </para>
     /// </remarks>
@@ -42,7 +44,7 @@ public partial class DataSourceFieldMappings
     /// <remarks>
     /// <para>
     /// This field is applicable to data source types including: <see cref="AzureAISearchChatDataSource"/>,
-    /// <see cref="AzureCosmosDBChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
+    /// <see cref="CosmosChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
     /// <see cref="PineconeChatDataSource"/>.
     /// </para>
     /// </remarks>
@@ -53,7 +55,7 @@ public partial class DataSourceFieldMappings
     /// <remarks>
     /// <para>
     /// This field is applicable to data source types including: <see cref="AzureAISearchChatDataSource"/>,
-    /// <see cref="AzureCosmosDBChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
+    /// <see cref="CosmosChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
     /// <see cref="PineconeChatDataSource"/>.
     /// </para>
     /// </remarks>
@@ -64,7 +66,7 @@ public partial class DataSourceFieldMappings
     /// <remarks>
     /// <para>
     /// This field is applicable to data source types including: <see cref="AzureAISearchChatDataSource"/>,
-    /// <see cref="AzureCosmosDBChatDataSource"/>, and <see cref="ElasticsearchChatDataSource"/>.
+    /// <see cref="CosmosChatDataSource"/>, and <see cref="ElasticsearchChatDataSource"/>.
     /// </para>
     /// <para>
     /// It is not applicable to types including: <see cref="PineconeChatDataSource"/>.

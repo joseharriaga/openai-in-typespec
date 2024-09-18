@@ -101,7 +101,7 @@ namespace Azure.AI.OpenAI
                     {
                         continue;
                     }
-                    citation = ContentFilterProtectedMaterialCitationResult.DeserializeContentFilterProtectedMaterialCitedResult(property.Value, options);
+                    citation = ContentFilterProtectedMaterialCitationResult.DeserializeContentFilterProtectedMaterialCitationResult(property.Value, options);
                     continue;
                 }
                 if (options.Format != "W")

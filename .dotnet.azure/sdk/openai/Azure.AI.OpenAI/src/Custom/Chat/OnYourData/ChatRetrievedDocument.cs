@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("AzureChatMessageContextAllRetrievedDocuments")]
+[Experimental("AOAI001")]
 public partial class ChatRetrievedDocument
 {
     [CodeGenMember("Filepath")]

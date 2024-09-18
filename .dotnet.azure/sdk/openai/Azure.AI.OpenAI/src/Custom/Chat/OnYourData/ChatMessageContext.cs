@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("AzureChatMessageContext")]
+[Experimental("AOAI001")]
 public partial class ChatMessageContext
 {
     /// <summary> Summary information about documents retrieved by the data retrieval operation. </summary>

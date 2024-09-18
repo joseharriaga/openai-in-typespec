@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("AzureChatMessageContextCitation")]
+[Experimental("AOAI001")]
+
 public partial class ChatCitation
 {
     /// <summary> The location of the citation. </summary>

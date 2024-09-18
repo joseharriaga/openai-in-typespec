@@ -72,7 +72,7 @@ namespace Azure.AI.OpenAI.Chat
             {
                 switch (discriminator.GetString())
                 {
-                    case "azure_cosmos_db": return AzureCosmosDBChatDataSource.DeserializeAzureCosmosDBChatDataSource(element, options);
+                    case "azure_cosmos_db": return CosmosChatDataSource.DeserializeCosmosChatDataSource(element, options);
                     case "azure_search": return AzureAISearchChatDataSource.DeserializeAzureAISearchChatDataSource(element, options);
                     case "elasticsearch": return ElasticsearchChatDataSource.DeserializeElasticsearchChatDataSource(element, options);
                     case "mongo_db": return MongoDBChatDataSource.DeserializeMongoDBChatDataSource(element, options);

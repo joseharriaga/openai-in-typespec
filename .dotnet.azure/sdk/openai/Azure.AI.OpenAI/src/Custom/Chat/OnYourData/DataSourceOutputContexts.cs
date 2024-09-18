@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Azure.AI.OpenAI.Chat;
 
 /// <summary>
@@ -16,6 +18,7 @@ namespace Azure.AI.OpenAI.Chat;
 /// </para>
 /// </remarks>
 [Flags]
+[Experimental("AOAI001")]
 public enum DataSourceOutputContexts : int
 {
     Intent = 1 << 0,

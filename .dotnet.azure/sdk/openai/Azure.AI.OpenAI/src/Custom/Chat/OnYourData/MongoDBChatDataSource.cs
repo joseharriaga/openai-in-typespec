@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("MongoDBChatDataSource")]
+[Experimental("AOAI001")]
 public partial class MongoDBChatDataSource : ChatDataSource
 {
     [CodeGenMember("Parameters")]

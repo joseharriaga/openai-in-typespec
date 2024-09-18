@@ -100,7 +100,7 @@ public class AudioTests(bool isAsync) : AoaiTestBase<AudioClient>(isAsync)
         using Stream audioFileStream = File.OpenRead(audioInfo.RelativePath);
         AudioTranscriptionOptions options = new()
         {
-            Granularities = granularityFlags,
+            TimestampGranularities = granularityFlags,
             ResponseFormat = AudioTranscriptionFormat.Verbose,
         };
         ClientResult<AudioTranscription> transcriptionResult = await client.TranscribeAudioAsync(

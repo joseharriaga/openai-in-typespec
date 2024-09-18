@@ -151,31 +151,31 @@ internal partial class InternalRunObjectRequiredActionSubmitToolOutputs { privat
 internal partial class InternalRunToolCallObjectFunction { }
 
 [CodeGenModel("ListAssistantsResponse")]
-internal partial class InternalListAssistantsResponse : IInternalListResponse<Assistant> { }
+internal partial class InternalListAssistantsResponse { }
 
 [CodeGenModel("ListAssistantsResponseObject")]
 internal readonly partial struct InternalListAssistantsResponseObject { }
 
 [CodeGenModel("ListThreadsResponse")]
-internal partial class InternalListThreadsResponse : IInternalListResponse<AssistantThread> { }
+internal partial class InternalListThreadsResponse { }
 
 [CodeGenModel("ListThreadsResponseObject")]
 internal readonly partial struct InternalListThreadsResponseObject { }
 
 [CodeGenModel("ListMessagesResponse")]
-internal partial class InternalListMessagesResponse : IInternalListResponse<ThreadMessage> { }
+internal partial class InternalListMessagesResponse { }
 
 [CodeGenModel("ListMessagesResponseObject")]
 internal readonly partial struct InternalListMessagesResponseObject { }
 
 [CodeGenModel("ListRunsResponse")]
-internal partial class InternalListRunsResponse : IInternalListResponse<ThreadRun> { }
+internal partial class InternalListRunsResponse { }
 
 [CodeGenModel("ListRunsResponseObject")]
 internal readonly partial struct InternalListRunsResponseObject { }
 
 [CodeGenModel("ListRunStepsResponse")]
-internal partial class InternalListRunStepsResponse : IInternalListResponse<RunStep> { }
+internal partial class InternalListRunStepsResponse { }
 
 [CodeGenModel("ListRunStepsResponseObject")]
 internal readonly partial struct InternalListRunStepsResponseObject { }

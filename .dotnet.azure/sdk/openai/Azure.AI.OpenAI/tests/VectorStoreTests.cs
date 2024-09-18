@@ -71,7 +71,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             Assert.That(vectorStore.Status, Is.EqualTo(VectorStoreStatus.InProgress));
             Assert.That(vectorStore.Metadata?.TryGetValue("test-key", out string metadataValue) == true && metadataValue == "test-value");
         });
-        vectorStore = createVectorStoreOperation.GetVectorStore();
+        vectorStore = createVectorStoreOperation.Value;
         Assert.Multiple(() =>
         {
             Assert.That(vectorStore.Name, Is.EqualTo("test vector store"));
@@ -147,7 +147,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
     {
         VectorStoreClient client = GetTestClient();
         CreateVectorStoreOperation createVectorStoreOperation = await client.CreateVectorStoreAsync(false);
-        VectorStore vectorStore = createVectorStoreOperation.GetVectorStore();
+        VectorStore vectorStore = createVectorStoreOperation.Value;
         Validate(vectorStore);
 
         IReadOnlyList<OpenAIFileInfo> files = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 3);
@@ -155,7 +155,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         foreach (OpenAIFileInfo file in files)
         {
             AddFileToVectorStoreOperation addFileToVectorStoreOperation = await client.AddFileToVectorStoreAsync(vectorStore, file, false);
-            VectorStoreFileAssociation association = addFileToVectorStoreOperation.GetFileAssociation();
+            VectorStoreFileAssociation association = addFileToVectorStoreOperation.Value;
             Validate(association);
             Assert.Multiple(() =>
             {
@@ -208,7 +208,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         batchJob = createBatchFileJobOperation.GetFileBatch();
         Assert.That(batchJob.Status, Is.EqualTo(VectorStoreBatchFileJobStatus.Completed));
 
-        AsyncPageCollection<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(vectorStore);
+        AsyncPageCollection<VectorStoreFileAssociation> response = createBatchFileJobOperation.GetFilesInBatchAsync();
         await foreach (VectorStoreFileAssociation association in response.GetAllValuesAsync())
         {
             Assert.Multiple(() =>

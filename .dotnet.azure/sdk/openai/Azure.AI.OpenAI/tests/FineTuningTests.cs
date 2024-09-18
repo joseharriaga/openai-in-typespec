@@ -22,7 +22,7 @@ namespace Azure.AI.OpenAI.Tests;
 
 public class FineTuningTests : AoaiTestBase<FineTuningClient>
 {
-    public FineTuningTests(bool isAsync) : base(isAsync, RecordedTestMode.Live)
+    public FineTuningTests(bool isAsync) : base(isAsync)
     { }
 
     [Test]
@@ -145,7 +145,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             TrainingFile = uploadedFile.Id
         }.ToBinaryContent();
 
-        //TODO handle synchronous versions of operations
+        // TODO handle synchronous versions of operations
         CreateJobOperation operation = await client.CreateJobAsync(requestContent, new());
         var jobFromResult = await operation.GetJobAsync(null);
         FineTuningJob job = ValidateAndParse<FineTuningJob>(jobFromResult);
@@ -156,9 +156,9 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             Assert.True(deleted, "Failed to delete fine tuning job: {0}", job.ID);
         });
 
-        //Wait for some events to become available
+        // Wait for some events to become available
         ClientResult result;
-        ListResponse < FineTuningJobEvent > events;
+        ListResponse <FineTuningJobEvent> events;
         int maxLoops = 10;
         do
         {
@@ -181,7 +181,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         } while (maxLoops-- > 0);
 
         // Cancel the fine tuning job
-        result = await operation.CancelAsync(null);
+        result = await operation.CancelAsync(options: null);
         job = ValidateAndParse<FineTuningJob>(result);
 
         // Make sure the job status shows as cancelled
@@ -210,7 +210,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         }.ToBinaryContent();
 
         CreateJobOperation operation = await client.CreateJobAsync(requestContent, false);
-        FineTuningJob job = ValidateAndParse<FineTuningJob>(await operation.GetJobAsync(null));
+        FineTuningJob job = ValidateAndParse<FineTuningJob>(ClientResult.FromResponse(operation.GetRawResponse()));
         Assert.That(job.ID, Is.Not.Null.Or.Empty);
         Assert.That(job.Error, Is.Null);
         Assert.That(job.Status, !(Is.Null.Or.EqualTo("failed").Or.EqualTo("cancelled")));

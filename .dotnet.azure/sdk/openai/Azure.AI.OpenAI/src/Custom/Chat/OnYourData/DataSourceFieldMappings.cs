@@ -19,7 +19,7 @@ public partial class DataSourceFieldMappings
     /// </summary>
     /// <remarks>
     /// <para>
-    /// This field is applicable to data source types including: <see cref="AzureSearchChatDataSource"/>,
+    /// This field is applicable to data source types including: <see cref="AzureAISearchChatDataSource"/>,
     /// <see cref="AzureCosmosDBChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
     /// <see cref="PineconeChatDataSource"/>.
     /// </para>
@@ -30,18 +30,18 @@ public partial class DataSourceFieldMappings
     /// <summary> The name of the index field to use as a filepath. </summary>
     /// <remarks>
     /// <para>
-    /// This field is applicable to data source types including: <see cref="AzureSearchChatDataSource"/>,
+    /// This field is applicable to data source types including: <see cref="AzureAISearchChatDataSource"/>,
     /// <see cref="AzureCosmosDBChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
     /// <see cref="PineconeChatDataSource"/>.
     /// </para>
     /// </remarks>
     [CodeGenMember("FilepathField")]
-    public string FilepathFieldName { get; set; }
+    public string FilePathFieldName { get; set; }
 
     /// <summary> The names of index fields that should be treated as content. </summary>
     /// <remarks>
     /// <para>
-    /// This field is applicable to data source types including: <see cref="AzureSearchChatDataSource"/>,
+    /// This field is applicable to data source types including: <see cref="AzureAISearchChatDataSource"/>,
     /// <see cref="AzureCosmosDBChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
     /// <see cref="PineconeChatDataSource"/>.
     /// </para>
@@ -52,7 +52,7 @@ public partial class DataSourceFieldMappings
     /// <summary> The separator pattern that content fields should use. </summary>
     /// <remarks>
     /// <para>
-    /// This field is applicable to data source types including: <see cref="AzureSearchChatDataSource"/>,
+    /// This field is applicable to data source types including: <see cref="AzureAISearchChatDataSource"/>,
     /// <see cref="AzureCosmosDBChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, and
     /// <see cref="PineconeChatDataSource"/>.
     /// </para>
@@ -63,7 +63,7 @@ public partial class DataSourceFieldMappings
     /// <summary> The names of fields that represent vector data. </summary>
     /// <remarks>
     /// <para>
-    /// This field is applicable to data source types including: <see cref="AzureSearchChatDataSource"/>,
+    /// This field is applicable to data source types including: <see cref="AzureAISearchChatDataSource"/>,
     /// <see cref="AzureCosmosDBChatDataSource"/>, and <see cref="ElasticsearchChatDataSource"/>.
     /// </para>
     /// <para>
@@ -75,7 +75,7 @@ public partial class DataSourceFieldMappings
 
     /// <summary> The names of fields that represent image vector data. </summary>
     /// <remarks>
-    /// This configuration is only applicable to <see cref="AzureSearchChatDataSource"/>.
+    /// This configuration is only applicable to <see cref="AzureAISearchChatDataSource"/>.
     /// </remarks>
     [CodeGenMember("ImageVectorFields")]
     public IList<string> ImageVectorFieldNames { get; } = new ChangeTrackingList<string>();

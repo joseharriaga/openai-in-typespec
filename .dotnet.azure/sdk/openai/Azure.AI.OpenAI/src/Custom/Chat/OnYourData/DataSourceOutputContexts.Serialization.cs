@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat;
 
-internal static partial class DataSourceOutputContextFlagsExtensions
+internal static partial class DataSourceOutputContextsExtensions
 {
     public static IList<string> ToStringList(this DataSourceOutputContexts flags)
     {

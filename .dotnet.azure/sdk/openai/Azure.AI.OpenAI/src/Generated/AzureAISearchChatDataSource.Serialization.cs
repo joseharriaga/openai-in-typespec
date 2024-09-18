@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    public partial class AzureSearchChatDataSource : IJsonModel<AzureSearchChatDataSource>
+    public partial class AzureAISearchChatDataSource : IJsonModel<AzureAISearchChatDataSource>
     {
-        void IJsonModel<AzureSearchChatDataSource>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<AzureAISearchChatDataSource>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureSearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureAISearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureSearchChatDataSource)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(AzureAISearchChatDataSource)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -53,19 +53,19 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        AzureSearchChatDataSource IJsonModel<AzureSearchChatDataSource>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AzureAISearchChatDataSource IJsonModel<AzureAISearchChatDataSource>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureSearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureAISearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(AzureSearchChatDataSource)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(AzureAISearchChatDataSource)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeAzureSearchChatDataSource(document.RootElement, options);
+            return DeserializeAzureAISearchChatDataSource(document.RootElement, options);
         }
 
-        internal static AzureSearchChatDataSource DeserializeAzureSearchChatDataSource(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AzureAISearchChatDataSource DeserializeAzureAISearchChatDataSource(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -96,46 +96,46 @@ namespace Azure.AI.OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new AzureSearchChatDataSource(type, serializedAdditionalRawData, parameters);
+            return new AzureAISearchChatDataSource(type, serializedAdditionalRawData, parameters);
         }
 
-        BinaryData IPersistableModel<AzureSearchChatDataSource>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<AzureAISearchChatDataSource>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureSearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureAISearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(AzureSearchChatDataSource)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AzureAISearchChatDataSource)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AzureSearchChatDataSource IPersistableModel<AzureSearchChatDataSource>.Create(BinaryData data, ModelReaderWriterOptions options)
+        AzureAISearchChatDataSource IPersistableModel<AzureAISearchChatDataSource>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureSearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AzureAISearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeAzureSearchChatDataSource(document.RootElement, options);
+                        return DeserializeAzureAISearchChatDataSource(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(AzureSearchChatDataSource)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AzureAISearchChatDataSource)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<AzureSearchChatDataSource>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<AzureAISearchChatDataSource>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The result to deserialize the model from. </param>
-        internal static new AzureSearchChatDataSource FromResponse(PipelineResponse response)
+        internal static new AzureAISearchChatDataSource FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAzureSearchChatDataSource(document.RootElement);
+            return DeserializeAzureAISearchChatDataSource(document.RootElement);
         }
 
         /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>

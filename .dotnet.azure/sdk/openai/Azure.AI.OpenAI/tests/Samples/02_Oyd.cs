@@ -25,7 +25,7 @@ public partial class AzureOpenAISamples
         #pragma warning disable AOAI001
 
         ChatCompletionOptions options = new();
-        options.AddDataSource(new AzureSearchChatDataSource()
+        options.AddDataSource(new AzureAISearchChatDataSource()
         {
             Endpoint = new Uri("https://your-search-resource.search.windows.net"),
             IndexName = "contoso-products-index",
@@ -39,13 +39,13 @@ public partial class AzureOpenAISamples
             ],
             options);
 
-        AzureChatMessageContext onYourDataContext = completion.GetAzureMessageContext();
+        ChatMessageContext onYourDataContext = completion.GetAzureMessageContext();
 
         if (onYourDataContext?.Intent is not null)
         {
             Console.WriteLine($"Intent: {onYourDataContext.Intent}");
         }
-        foreach (AzureChatCitation citation in onYourDataContext?.Citations ?? [])
+        foreach (ChatCitation citation in onYourDataContext?.Citations ?? [])
         {
             Console.WriteLine($"Citation: {citation.Content}");
         }

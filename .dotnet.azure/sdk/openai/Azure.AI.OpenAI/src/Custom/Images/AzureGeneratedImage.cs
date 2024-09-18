@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Images;
 
-public static class AzureGeneratedImageExtensions
+public static class AzureImageExtensions
 {
     [Experimental("AOAI001")]
     public static RequestImageContentFilterResult GetRequestContentFilterResult(this GeneratedImage image)

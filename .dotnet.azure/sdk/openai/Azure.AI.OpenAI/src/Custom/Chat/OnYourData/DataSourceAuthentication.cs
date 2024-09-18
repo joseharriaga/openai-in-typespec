@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Azure.Core;
+
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("AzureChatDataSourceAuthenticationOptions")]
@@ -20,6 +22,6 @@ public partial class DataSourceAuthentication
         => new InternalAzureChatDataSourceEncodedApiKeyAuthenticationOptions(encodedApiKey);
     public static DataSourceAuthentication FromSystemManagedIdentity()
         => new InternalAzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions();
-    public static DataSourceAuthentication FromUserManagedIdentity(string identityResourceId)
-        => new InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions(identityResourceId);
+    public static DataSourceAuthentication FromUserManagedIdentity(ResourceIdentifier identityResource)
+        => new InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions(identityResource);
 }

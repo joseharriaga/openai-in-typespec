@@ -144,7 +144,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// </param>
     /// <param name="credential"> The API key to use when authenticating with the provided endpoint. </param>
     /// <param name="options"> The scenario-independent options to use. </param>
-    public AzureOpenAIClient(Uri endpoint, TokenCredential credential, AzureOpenAIClientOptions options = null)
+    public AzureOpenAIClient(Uri endpoint, TokenCredential credential, AzureOpenAIClientOptions options)
         : this(CreatePipeline(credential, options), endpoint, options)
     { }
 

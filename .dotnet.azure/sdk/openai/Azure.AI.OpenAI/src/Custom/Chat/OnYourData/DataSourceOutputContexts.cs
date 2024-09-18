@@ -5,7 +5,7 @@ namespace Azure.AI.OpenAI.Chat;
 
 /// <summary>
 /// The <c>include_context</c> flags to request for an On Your Data retrieval result, which control what information
-/// will be available on <see cref="AzureChatMessageContext"/> instances in the response.
+/// will be available on <see cref="ChatMessageContext"/> instances in the response.
 /// </summary>
 /// <remarks>
 /// By default, <c>intent</c> and <c>citations</c> will be requested.

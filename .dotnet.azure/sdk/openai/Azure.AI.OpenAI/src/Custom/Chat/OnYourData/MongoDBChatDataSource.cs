@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("MongoDBChatDataSource")]
-public partial class MongoDBChatDataSource : AzureChatDataSource
+public partial class MongoDBChatDataSource : ChatDataSource
 {
     [CodeGenMember("Parameters")]
     internal InternalMongoDBChatDataSourceParameters InternalParameters { get; }
@@ -77,17 +77,17 @@ public partial class MongoDBChatDataSource : AzureChatDataSource
     }
 
     /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.AllowPartialResult"/>
-    public bool? AllowPartialResult
+    public bool? AllowPartialResults
     {
         get => InternalParameters.AllowPartialResult;
         set => InternalParameters.AllowPartialResult = value;
     }
 
-    /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.OutputContextFlags"/>
-    public DataSourceOutputContexts? OutputContextFlags
+    /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.OutputContexts"/>
+    public DataSourceOutputContexts? OutputContexts
     {
-        get => InternalParameters.OutputContextFlags;
-        set => InternalParameters.OutputContextFlags = value;
+        get => InternalParameters.OutputContexts;
+        set => InternalParameters.OutputContexts = value;
     }
 
     /// <inheritdoc cref="InternalAzureSearchChatDataSourceParameters.VectorizationSource"/>

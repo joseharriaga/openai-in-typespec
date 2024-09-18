@@ -38,6 +38,7 @@
 - Updated the `Embedding.Vector` property to the `Embedding.ToFloats()` method. (commit_hash)
 - Removed the optional parameter from the constructors of `VectorStoreCreationHelper`, `AssistantChatMessage`, and `ChatFunction`. (commit_hash)
 - Removed the optional `purpose` parameter from `FileClient.GetFilesAsync` and `FileClient.GetFiles` methods, and added overloads where `purpose` is required. (commit_hash)
+- Renamed `ModerationClient`'s `ClassifyTextInput` methods to `ClassifyText`. (commit_hash)
 
 ### Bugs Fixed
 

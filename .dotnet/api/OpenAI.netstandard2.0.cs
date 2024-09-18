@@ -1154,12 +1154,25 @@ namespace OpenAI.Audio {
         string IPersistableModel<AudioTranscription>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<AudioTranscription>.Write(ModelReaderWriterOptions options);
     }
-    public enum AudioTranscriptionFormat {
-        Text = 0,
-        Simple = 1,
-        Verbose = 2,
-        Srt = 3,
-        Vtt = 4
+    public readonly partial struct AudioTranscriptionFormat : IEquatable<AudioTranscriptionFormat> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public AudioTranscriptionFormat(string value);
+        public static AudioTranscriptionFormat Simple { get; }
+        public static AudioTranscriptionFormat Srt { get; }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static AudioTranscriptionFormat Text { get; }
+        public static AudioTranscriptionFormat Verbose { get; }
+        public static AudioTranscriptionFormat Vtt { get; }
+        public readonly bool Equals(AudioTranscriptionFormat other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(AudioTranscriptionFormat left, AudioTranscriptionFormat right);
+        public static implicit operator AudioTranscriptionFormat(string value);
+        public static bool operator !=(AudioTranscriptionFormat left, AudioTranscriptionFormat right);
+        public override readonly string ToString();
     }
     public class AudioTranscriptionOptions : IJsonModel<AudioTranscriptionOptions>, IPersistableModel<AudioTranscriptionOptions> {
         public string Language { get; set; }
@@ -1184,12 +1197,25 @@ namespace OpenAI.Audio {
         string IPersistableModel<AudioTranslation>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<AudioTranslation>.Write(ModelReaderWriterOptions options);
     }
-    public enum AudioTranslationFormat {
-        Text = 0,
-        Simple = 1,
-        Verbose = 2,
-        Srt = 3,
-        Vtt = 4
+    public readonly partial struct AudioTranslationFormat : IEquatable<AudioTranslationFormat> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public AudioTranslationFormat(string value);
+        public static AudioTranslationFormat Simple { get; }
+        public static AudioTranslationFormat Srt { get; }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static AudioTranslationFormat Text { get; }
+        public static AudioTranslationFormat Verbose { get; }
+        public static AudioTranslationFormat Vtt { get; }
+        public readonly bool Equals(AudioTranslationFormat other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(AudioTranslationFormat left, AudioTranslationFormat right);
+        public static implicit operator AudioTranslationFormat(string value);
+        public static bool operator !=(AudioTranslationFormat left, AudioTranslationFormat right);
+        public override readonly string ToString();
     }
     public class AudioTranslationOptions : IJsonModel<AudioTranslationOptions>, IPersistableModel<AudioTranslationOptions> {
         public string Prompt { get; set; }
@@ -2023,9 +2049,21 @@ namespace OpenAI.Images {
         Bytes = 0,
         Uri = 1
     }
-    public enum GeneratedImageQuality {
-        High = 0,
-        Standard = 1
+    public readonly partial struct GeneratedImageQuality : IEquatable<GeneratedImageQuality> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public GeneratedImageQuality(string value);
+        public static GeneratedImageQuality High { get; }
+        public static GeneratedImageQuality Standard { get; }
+        public readonly bool Equals(GeneratedImageQuality other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(GeneratedImageQuality left, GeneratedImageQuality right);
+        public static implicit operator GeneratedImageQuality(string value);
+        public static bool operator !=(GeneratedImageQuality left, GeneratedImageQuality right);
+        public override readonly string ToString();
     }
     public readonly partial struct GeneratedImageSize : IEquatable<GeneratedImageSize> {
         private readonly object _dummy;
@@ -2045,9 +2083,21 @@ namespace OpenAI.Images {
         public static bool operator !=(GeneratedImageSize left, GeneratedImageSize right);
         public override readonly string ToString();
     }
-    public enum GeneratedImageStyle {
-        Vivid = 0,
-        Natural = 1
+    public readonly partial struct GeneratedImageStyle : IEquatable<GeneratedImageStyle> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public GeneratedImageStyle(string value);
+        public static GeneratedImageStyle Natural { get; }
+        public static GeneratedImageStyle Vivid { get; }
+        public readonly bool Equals(GeneratedImageStyle other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(GeneratedImageStyle left, GeneratedImageStyle right);
+        public static implicit operator GeneratedImageStyle(string value);
+        public static bool operator !=(GeneratedImageStyle left, GeneratedImageStyle right);
+        public override readonly string ToString();
     }
     public class ImageClient {
         protected ImageClient();

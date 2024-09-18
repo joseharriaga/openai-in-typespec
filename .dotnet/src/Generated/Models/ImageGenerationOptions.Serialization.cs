@@ -53,7 +53,7 @@ namespace OpenAI.Images
             if (SerializedAdditionalRawData?.ContainsKey("quality") != true && Optional.IsDefined(Quality))
             {
                 writer.WritePropertyName("quality"u8);
-                writer.WriteStringValue(Quality.Value.ToSerialString());
+                writer.WriteStringValue(Quality.Value.ToString());
             }
             if (SerializedAdditionalRawData?.ContainsKey("response_format") != true && Optional.IsDefined(ResponseFormat))
             {
@@ -84,7 +84,7 @@ namespace OpenAI.Images
                 if (Style != null)
                 {
                     writer.WritePropertyName("style"u8);
-                    writer.WriteStringValue(Style.Value.ToSerialString());
+                    writer.WriteStringValue(Style.Value.ToString());
                 }
                 else
                 {
@@ -181,7 +181,7 @@ namespace OpenAI.Images
                     {
                         continue;
                     }
-                    quality = property.Value.GetString().ToGeneratedImageQuality();
+                    quality = new GeneratedImageQuality(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("response_format"u8))
@@ -211,7 +211,7 @@ namespace OpenAI.Images
                         style = null;
                         continue;
                     }
-                    style = property.Value.GetString().ToGeneratedImageStyle();
+                    style = new GeneratedImageStyle(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("user"u8))

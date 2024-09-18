@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace OpenAI.Audio;
 
@@ -49,16 +50,7 @@ public partial class AudioTranscriptionOptions
 
         if (ResponseFormat is not null)
         {
-            string value = ResponseFormat switch
-            {
-                AudioTranscriptionFormat.Simple => "json",
-                AudioTranscriptionFormat.Verbose => "verbose_json",
-                AudioTranscriptionFormat.Srt => "srt",
-                AudioTranscriptionFormat.Vtt => "vtt",
-                _ => throw new ArgumentException(nameof(ResponseFormat))
-            };
-
-            content.Add(value, "response_format");
+            content.Add(ResponseFormat.ToString(), "response_format");
         }
 
         if (Temperature is not null)

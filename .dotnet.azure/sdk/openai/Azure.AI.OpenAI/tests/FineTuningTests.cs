@@ -209,7 +209,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             TrainingFile = uploadedFile.Id
         }.ToBinaryContent();
 
-        CreateJobOperation operation = await client.CreateJobAsync(requestContent, false);
+        CreateJobOperation operation = await client.CreateJobAsync(requestContent, waitForCompletion: false);
         FineTuningJob job = ValidateAndParse<FineTuningJob>(ClientResult.FromResponse(operation.GetRawResponse()));
         Assert.That(job.ID, Is.Not.Null.Or.Empty);
         Assert.That(job.Error, Is.Null);

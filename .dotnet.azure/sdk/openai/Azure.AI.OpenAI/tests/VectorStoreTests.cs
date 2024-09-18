@@ -37,7 +37,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
     {
         VectorStoreClient client = GetTestClient();
 
-        CreateVectorStoreOperation createVectorStoreOperation = await client.CreateVectorStoreAsync(false);
+        CreateVectorStoreOperation createVectorStoreOperation = await client.CreateVectorStoreAsync(waitUntilCompleted: false);
         Validate(createVectorStoreOperation);
         bool deleted = await client.DeleteVectorStoreAsync(createVectorStoreOperation.GetVectorStore());
         Assert.That(deleted, Is.True);

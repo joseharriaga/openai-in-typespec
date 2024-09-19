@@ -35,10 +35,10 @@ public partial class VectorStoreTests : SyncAsyncTestBase
             ? await client.CreateVectorStoreAsync()
             : client.CreateVectorStore();
         Validate(vectorStore);
-        DeleteVectorStoreResult deletionResult = IsAsync
+        VectorStoreDeletionResult deletionResult = IsAsync
             ? await client.DeleteVectorStoreAsync(vectorStore)
             : client.DeleteVectorStore(vectorStore);
-        Assert.That(deletionResult.Id, Is.EqualTo(vectorStore.Id));
+        Assert.That(deletionResult.VectorStoreId, Is.EqualTo(vectorStore.Id));
         Assert.That(deletionResult.Deleted, Is.True);
         _vectorStoresToDelete.RemoveAt(_vectorStoresToDelete.Count - 1);
 
@@ -90,7 +90,7 @@ public partial class VectorStoreTests : SyncAsyncTestBase
         deletionResult = IsAsync
             ? await client.DeleteVectorStoreAsync(vectorStore.Id)
             : client.DeleteVectorStore(vectorStore.Id);
-        Assert.That(deletionResult.Id, Is.EqualTo(vectorStore.Id));
+        Assert.That(deletionResult.VectorStoreId, Is.EqualTo(vectorStore.Id));
         Assert.That(deletionResult.Deleted, Is.True);
         _vectorStoresToDelete.RemoveAt(_vectorStoresToDelete.Count - 1);
 
@@ -214,10 +214,10 @@ public partial class VectorStoreTests : SyncAsyncTestBase
             });
         }
 
-        RemoveFileFromStoreResult removalResult = IsAsync
+        FileFromStoreRemovalResult removalResult = IsAsync
             ? await client.RemoveFileFromStoreAsync(vectorStore, files[0])
             : client.RemoveFileFromStore(vectorStore, files[0]);
-        Assert.That(removalResult.Id, Is.EqualTo(files[0].Id));
+        Assert.That(removalResult.FileId, Is.EqualTo(files[0].Id));
         Assert.True(removalResult.Removed);
         _associationsToRemove.RemoveAt(0);
 
@@ -272,8 +272,8 @@ public partial class VectorStoreTests : SyncAsyncTestBase
             });
         }
 
-        RemoveFileFromStoreResult removalResult = client.RemoveFileFromStore(vectorStore, files[0]);
-        Assert.That(removalResult.Id, Is.EqualTo(files[0].Id));
+        FileFromStoreRemovalResult removalResult = client.RemoveFileFromStore(vectorStore, files[0]);
+        Assert.That(removalResult.FileId, Is.EqualTo(files[0].Id));
         Assert.True(removalResult.Removed);
         _associationsToRemove.RemoveAt(0);
 
@@ -338,8 +338,8 @@ public partial class VectorStoreTests : SyncAsyncTestBase
             });
         }
 
-        RemoveFileFromStoreResult removalResult = client.RemoveFileFromStore(vectorStore, files[0]);
-        Assert.That(removalResult.Id, Is.EqualTo(files[0].Id));
+        FileFromStoreRemovalResult removalResult = client.RemoveFileFromStore(vectorStore, files[0]);
+        Assert.That(removalResult.FileId, Is.EqualTo(files[0].Id));
         Assert.True(removalResult.Removed);
         _associationsToRemove.RemoveAt(0);
 

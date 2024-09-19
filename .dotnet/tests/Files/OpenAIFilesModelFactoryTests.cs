@@ -12,32 +12,32 @@ public partial class OpenAIFilesModelFactoryTests
 {
 #pragma warning disable CS0618
     [Test]
-    public void DeleteFileResultWithNoPropertiesWorks()
+    public void FileDeletionResultWithNoPropertiesWorks()
     {
-        DeleteFileResult deleteFileResult = OpenAIFilesModelFactory.DeleteFileResult();
+        FileDeletionResult fileDeletionResult = OpenAIFilesModelFactory.FileDeletionResult();
 
-        Assert.That(deleteFileResult.Id, Is.Null);
-        Assert.That(deleteFileResult.Deleted, Is.EqualTo(false));
+        Assert.That(fileDeletionResult.FileId, Is.Null);
+        Assert.That(fileDeletionResult.Deleted, Is.EqualTo(false));
     }
 
     [Test]
-    public void DeleteFileResultWithIdWorks()
+    public void FileDeletionResultWithFileIdWorks()
     {
-        string id = "modelId";
-        DeleteFileResult deleteFileResult = OpenAIFilesModelFactory.DeleteFileResult(id: id);
+        string fileId = "fileId";
+        FileDeletionResult fileDeletionResult = OpenAIFilesModelFactory.FileDeletionResult(fileId: fileId);
 
-        Assert.That(deleteFileResult.Id, Is.EqualTo(id));
-        Assert.That(deleteFileResult.Deleted, Is.EqualTo(false));
+        Assert.That(fileDeletionResult.FileId, Is.EqualTo(fileId));
+        Assert.That(fileDeletionResult.Deleted, Is.EqualTo(false));
     }
 
     [Test]
-    public void DeleteFileResultWithDeletedWorks()
+    public void FileDeletionResultWithDeletedWorks()
     {
         bool deleted = true;
-        DeleteFileResult deleteFileResult = OpenAIFilesModelFactory.DeleteFileResult(deleted: deleted);
+        FileDeletionResult fileDeletionResult = OpenAIFilesModelFactory.FileDeletionResult(deleted: deleted);
 
-        Assert.That(deleteFileResult.Id, Is.Null);
-        Assert.That(deleteFileResult.Deleted, Is.EqualTo(deleted));
+        Assert.That(fileDeletionResult.FileId, Is.Null);
+        Assert.That(fileDeletionResult.Deleted, Is.EqualTo(deleted));
     }
 
     [Test]

@@ -228,7 +228,7 @@ public partial class FileTests : SyncAsyncTestBase
         string filename = "test-file-delete-me.txt";
 
         OpenAIFileInfo uploadedFile = await client.UploadFileAsync(file, filename, FileUploadPurpose.Assistants);
-        DeleteFileResult result;
+        FileDeletionResult result;
 
         if (useFileInfoOverload)
         {
@@ -243,7 +243,7 @@ public partial class FileTests : SyncAsyncTestBase
                 : client.DeleteFile(uploadedFile.Id);
         }
 
-        Assert.That(result.Id, Is.EqualTo(uploadedFile.Id));
+        Assert.That(result.FileId, Is.EqualTo(uploadedFile.Id));
         Assert.That(result.Deleted, Is.True);
     }
 

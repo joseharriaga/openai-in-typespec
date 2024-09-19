@@ -7,30 +7,28 @@ using System.Collections.Generic;
 
 namespace OpenAI.Files
 {
-    public partial class DeleteFileResult
+    public partial class FileDeletionResult
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal DeleteFileResult(string id, bool deleted)
+        internal FileDeletionResult(string fileId, bool deleted)
         {
-            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(fileId, nameof(fileId));
 
-            Id = id;
+            FileId = fileId;
             Deleted = deleted;
         }
 
-        internal DeleteFileResult(string id, InternalDeleteFileResponseObject @object, bool deleted, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal FileDeletionResult(string fileId, InternalDeleteFileResponseObject @object, bool deleted, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Id = id;
+            FileId = fileId;
             Object = @object;
             Deleted = deleted;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal DeleteFileResult()
+        internal FileDeletionResult()
         {
         }
-
-        public string Id { get; }
 
         public bool Deleted { get; }
     }

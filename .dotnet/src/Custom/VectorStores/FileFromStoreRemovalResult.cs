@@ -1,8 +1,11 @@
 ﻿namespace OpenAI.VectorStores;
 
 [CodeGenModel("DeleteVectorStoreFileResponse")]
-public partial class RemoveFileFromStoreResult
+public partial class FileFromStoreRemovalResult
 {
+    [CodeGenMember("Id")]
+    public string FileId { get; }
+
     [CodeGenMember("Deleted")]
     public bool Removed { get; }
 

@@ -113,13 +113,13 @@ public partial class ModelClient
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<DeleteModelResult>> DeleteModelAsync(string model, CancellationToken cancellationToken = default)
+    public virtual async Task<ClientResult<ModelDeletionResult>> DeleteModelAsync(string model, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
         ClientResult result = await DeleteModelAsync(model, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result?.GetRawResponse();
-        DeleteModelResult value = DeleteModelResult.FromResponse(response);
+        ModelDeletionResult value = ModelDeletionResult.FromResponse(response);
         return ClientResult.FromValue(value, response);
     }
 
@@ -129,13 +129,13 @@ public partial class ModelClient
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual ClientResult<DeleteModelResult> DeleteModel(string model, CancellationToken cancellationToken = default)
+    public virtual ClientResult<ModelDeletionResult> DeleteModel(string model, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
         ClientResult result = DeleteModel(model, cancellationToken.ToRequestOptions());
         PipelineResponse response = result?.GetRawResponse();
-        DeleteModelResult value = DeleteModelResult.FromResponse(response);
+        ModelDeletionResult value = ModelDeletionResult.FromResponse(response);
         return ClientResult.FromValue(value, response);
     }
 }

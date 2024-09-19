@@ -39,8 +39,8 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
 
         VectorStore vectorStore = await client.CreateVectorStoreAsync();
         Validate(vectorStore);
-        DeleteVectorStoreResult deletionResult = await client.DeleteVectorStoreAsync(vectorStore);
-        Assert.That(deletionResult.Id, Is.EqualTo(vectorStore.Id));
+        VectorStoreDeletionResult deletionResult = await client.DeleteVectorStoreAsync(vectorStore);
+        Assert.That(deletionResult.VectorStoreId, Is.EqualTo(vectorStore.Id));
         Assert.That(deletionResult.Deleted, Is.True);
 
         IReadOnlyList<OpenAIFileInfo> testFiles = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 5);
@@ -84,7 +84,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         });
 
         deletionResult = await client.DeleteVectorStoreAsync(vectorStore.Id);
-        Assert.That(deletionResult.Id, Is.EqualTo(vectorStore.Id));
+        Assert.That(deletionResult.VectorStoreId, Is.EqualTo(vectorStore.Id));
         Assert.That(deletionResult.Deleted, Is.True);
 
         var options = new VectorStoreCreationOptions();
@@ -163,8 +163,8 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             });
         }
 
-        RemoveFileFromStoreResult removalResult = await client.RemoveFileFromStoreAsync(vectorStore, files[0]);
-        Assert.That(removalResult.Id, Is.EqualTo(files[0].Id));
+        FileFromStoreRemovalResult removalResult = await client.RemoveFileFromStoreAsync(vectorStore, files[0]);
+        Assert.That(removalResult.FileId, Is.EqualTo(files[0].Id));
         Assert.True(removalResult.Removed);
 
         // Errata: removals aren't immediately reflected when requesting the list

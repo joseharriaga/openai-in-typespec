@@ -102,30 +102,30 @@ namespace OpenAI.Assistants {
         public virtual Task<ClientResult<AssistantThread>> CreateThreadAsync(ThreadCreationOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateThreadAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<DeleteAssistantResult> DeleteAssistant(Assistant assistant);
+        public virtual ClientResult<AssistantDeletionResult> DeleteAssistant(Assistant assistant);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteAssistant(string assistantId, RequestOptions options);
-        public virtual ClientResult<DeleteAssistantResult> DeleteAssistant(string assistantId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<DeleteAssistantResult>> DeleteAssistantAsync(Assistant assistant);
+        public virtual ClientResult<AssistantDeletionResult> DeleteAssistant(string assistantId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<AssistantDeletionResult>> DeleteAssistantAsync(Assistant assistant);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteAssistantAsync(string assistantId, RequestOptions options);
-        public virtual Task<ClientResult<DeleteAssistantResult>> DeleteAssistantAsync(string assistantId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<DeleteMessageResult> DeleteMessage(ThreadMessage message);
+        public virtual Task<ClientResult<AssistantDeletionResult>> DeleteAssistantAsync(string assistantId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<MessageDeletionResult> DeleteMessage(ThreadMessage message);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteMessage(string threadId, string messageId, RequestOptions options);
-        public virtual ClientResult<DeleteMessageResult> DeleteMessage(string threadId, string messageId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<DeleteMessageResult>> DeleteMessageAsync(ThreadMessage message);
+        public virtual ClientResult<MessageDeletionResult> DeleteMessage(string threadId, string messageId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<MessageDeletionResult>> DeleteMessageAsync(ThreadMessage message);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteMessageAsync(string threadId, string messageId, RequestOptions options);
-        public virtual Task<ClientResult<DeleteMessageResult>> DeleteMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<DeleteThreadResult> DeleteThread(AssistantThread thread);
+        public virtual Task<ClientResult<MessageDeletionResult>> DeleteMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ThreadDeletionResult> DeleteThread(AssistantThread thread);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteThread(string threadId, RequestOptions options);
-        public virtual ClientResult<DeleteThreadResult> DeleteThread(string threadId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<DeleteThreadResult>> DeleteThreadAsync(AssistantThread thread);
+        public virtual ClientResult<ThreadDeletionResult> DeleteThread(string threadId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ThreadDeletionResult>> DeleteThreadAsync(AssistantThread thread);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteThreadAsync(string threadId, RequestOptions options);
-        public virtual Task<ClientResult<DeleteThreadResult>> DeleteThreadAsync(string threadId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ThreadDeletionResult>> DeleteThreadAsync(string threadId, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetAssistant(string assistantId, RequestOptions options);
         public virtual ClientResult<Assistant> GetAssistant(string assistantId, CancellationToken cancellationToken = default);
@@ -279,6 +279,15 @@ namespace OpenAI.Assistants {
         string IPersistableModel<AssistantCreationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<AssistantCreationOptions>.Write(ModelReaderWriterOptions options);
     }
+    public class AssistantDeletionResult : IJsonModel<AssistantDeletionResult>, IPersistableModel<AssistantDeletionResult> {
+        public string AssistantId { get; }
+        public bool Deleted { get; }
+        AssistantDeletionResult IJsonModel<AssistantDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<AssistantDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        AssistantDeletionResult IPersistableModel<AssistantDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<AssistantDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<AssistantDeletionResult>.Write(ModelReaderWriterOptions options);
+    }
     public class AssistantModificationOptions : IJsonModel<AssistantModificationOptions>, IPersistableModel<AssistantModificationOptions> {
         public IList<ToolDefinition> DefaultTools { get; }
         public string Description { get; set; }
@@ -351,34 +360,6 @@ namespace OpenAI.Assistants {
         string IPersistableModel<CodeInterpreterToolResources>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<CodeInterpreterToolResources>.Write(ModelReaderWriterOptions options);
     }
-<<<<<<< HEAD
-    public class DeleteAssistantResult : IJsonModel<DeleteAssistantResult>, IPersistableModel<DeleteAssistantResult> {
-        public bool Deleted { get; }
-        public string Id { get; }
-        DeleteAssistantResult IJsonModel<DeleteAssistantResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<DeleteAssistantResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        DeleteAssistantResult IPersistableModel<DeleteAssistantResult>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<DeleteAssistantResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<DeleteAssistantResult>.Write(ModelReaderWriterOptions options);
-    }
-    public class DeleteMessageResult : IJsonModel<DeleteMessageResult>, IPersistableModel<DeleteMessageResult> {
-        public bool Deleted { get; }
-        public string Id { get; }
-        DeleteMessageResult IJsonModel<DeleteMessageResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<DeleteMessageResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        DeleteMessageResult IPersistableModel<DeleteMessageResult>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<DeleteMessageResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<DeleteMessageResult>.Write(ModelReaderWriterOptions options);
-    }
-    public class DeleteThreadResult : IJsonModel<DeleteThreadResult>, IPersistableModel<DeleteThreadResult> {
-        public bool Deleted { get; }
-        public string Id { get; }
-        DeleteThreadResult IJsonModel<DeleteThreadResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<DeleteThreadResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        DeleteThreadResult IPersistableModel<DeleteThreadResult>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<DeleteThreadResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<DeleteThreadResult>.Write(ModelReaderWriterOptions options);
-=======
     public readonly partial struct FileSearchRanker : IEquatable<FileSearchRanker> {
         private readonly object _dummy;
         private readonly int _dummyPrimitive;
@@ -405,7 +386,6 @@ namespace OpenAI.Assistants {
         FileSearchRankingOptions IPersistableModel<FileSearchRankingOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<FileSearchRankingOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<FileSearchRankingOptions>.Write(ModelReaderWriterOptions options);
->>>>>>> main
     }
     public class FileSearchToolDefinition : ToolDefinition, IJsonModel<FileSearchToolDefinition>, IPersistableModel<FileSearchToolDefinition> {
         public int? MaxResults { get; set; }
@@ -505,6 +485,15 @@ namespace OpenAI.Assistants {
         MessageCreationOptions IPersistableModel<MessageCreationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<MessageCreationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<MessageCreationOptions>.Write(ModelReaderWriterOptions options);
+    }
+    public class MessageDeletionResult : IJsonModel<MessageDeletionResult>, IPersistableModel<MessageDeletionResult> {
+        public bool Deleted { get; }
+        public string MessageId { get; }
+        MessageDeletionResult IJsonModel<MessageDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<MessageDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        MessageDeletionResult IPersistableModel<MessageDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<MessageDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<MessageDeletionResult>.Write(ModelReaderWriterOptions options);
     }
     public class MessageFailureDetails : IJsonModel<MessageFailureDetails>, IPersistableModel<MessageFailureDetails> {
         public MessageFailureReason Reason { get; }
@@ -974,6 +963,15 @@ namespace OpenAI.Assistants {
         ThreadCreationOptions IPersistableModel<ThreadCreationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ThreadCreationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ThreadCreationOptions>.Write(ModelReaderWriterOptions options);
+    }
+    public class ThreadDeletionResult : IJsonModel<ThreadDeletionResult>, IPersistableModel<ThreadDeletionResult> {
+        public bool Deleted { get; }
+        public string ThreadId { get; }
+        ThreadDeletionResult IJsonModel<ThreadDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ThreadDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ThreadDeletionResult IPersistableModel<ThreadDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ThreadDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ThreadDeletionResult>.Write(ModelReaderWriterOptions options);
     }
     public class ThreadInitializationMessage : MessageCreationOptions {
         public ThreadInitializationMessage(MessageRole role, IEnumerable<MessageContent> content);
@@ -1799,15 +1797,6 @@ namespace OpenAI.Embeddings {
     }
 }
 namespace OpenAI.Files {
-    public class DeleteFileResult : IJsonModel<DeleteFileResult>, IPersistableModel<DeleteFileResult> {
-        public bool Deleted { get; }
-        public string Id { get; }
-        DeleteFileResult IJsonModel<DeleteFileResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<DeleteFileResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        DeleteFileResult IPersistableModel<DeleteFileResult>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<DeleteFileResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<DeleteFileResult>.Write(ModelReaderWriterOptions options);
-    }
     public class FileClient {
         protected FileClient();
         public FileClient(ApiKeyCredential credential, OpenAIClientOptions options);
@@ -1824,10 +1813,10 @@ namespace OpenAI.Files {
         public virtual Task<ClientResult> CreateUploadAsync(BinaryContent content, RequestOptions options = null);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteFile(string fileId, RequestOptions options);
-        public virtual ClientResult<DeleteFileResult> DeleteFile(string fileId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<FileDeletionResult> DeleteFile(string fileId, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteFileAsync(string fileId, RequestOptions options);
-        public virtual Task<ClientResult<DeleteFileResult>> DeleteFileAsync(string fileId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<FileDeletionResult>> DeleteFileAsync(string fileId, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DownloadFile(string fileId, RequestOptions options);
         public virtual ClientResult<BinaryData> DownloadFile(string fileId, CancellationToken cancellationToken = default);
@@ -1858,6 +1847,15 @@ namespace OpenAI.Files {
         public virtual Task<ClientResult> UploadFileAsync(BinaryContent content, string contentType, RequestOptions options = null);
         public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(string filePath, FileUploadPurpose purpose);
+    }
+    public class FileDeletionResult : IJsonModel<FileDeletionResult>, IPersistableModel<FileDeletionResult> {
+        public bool Deleted { get; }
+        public string FileId { get; }
+        FileDeletionResult IJsonModel<FileDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<FileDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        FileDeletionResult IPersistableModel<FileDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<FileDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<FileDeletionResult>.Write(ModelReaderWriterOptions options);
     }
     public readonly partial struct FileUploadPurpose : IEquatable<FileUploadPurpose> {
         private readonly object _dummy;
@@ -1922,7 +1920,7 @@ namespace OpenAI.Files {
         public override readonly string ToString();
     }
     public static class OpenAIFilesModelFactory {
-        public static DeleteFileResult DeleteFileResult(string id = null, bool deleted = false);
+        public static FileDeletionResult FileDeletionResult(string fileId = null, bool deleted = false);
         public static OpenAIFileInfo OpenAIFileInfo(string id = null, int? sizeInBytes = null, DateTimeOffset createdAt = default, string filename = null, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null);
         public static OpenAIFileInfoCollection OpenAIFileInfoCollection(IEnumerable<OpenAIFileInfo> items = null);
     }
@@ -2100,15 +2098,6 @@ namespace OpenAI.Images {
     }
 }
 namespace OpenAI.Models {
-    public class DeleteModelResult : IJsonModel<DeleteModelResult>, IPersistableModel<DeleteModelResult> {
-        public bool Deleted { get; }
-        public string Id { get; }
-        DeleteModelResult IJsonModel<DeleteModelResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<DeleteModelResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        DeleteModelResult IPersistableModel<DeleteModelResult>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<DeleteModelResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<DeleteModelResult>.Write(ModelReaderWriterOptions options);
-    }
     public class ModelClient {
         protected ModelClient();
         public ModelClient(ApiKeyCredential credential, OpenAIClientOptions options);
@@ -2117,10 +2106,10 @@ namespace OpenAI.Models {
         public virtual ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteModel(string model, RequestOptions options);
-        public virtual ClientResult<DeleteModelResult> DeleteModel(string model, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ModelDeletionResult> DeleteModel(string model, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteModelAsync(string model, RequestOptions options);
-        public virtual Task<ClientResult<DeleteModelResult>> DeleteModelAsync(string model, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ModelDeletionResult>> DeleteModelAsync(string model, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetModel(string model, RequestOptions options);
         public virtual ClientResult<OpenAIModelInfo> GetModel(string model, CancellationToken cancellationToken = default);
@@ -2133,6 +2122,15 @@ namespace OpenAI.Models {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetModelsAsync(RequestOptions options);
         public virtual Task<ClientResult<OpenAIModelInfoCollection>> GetModelsAsync(CancellationToken cancellationToken = default);
+    }
+    public class ModelDeletionResult : IJsonModel<ModelDeletionResult>, IPersistableModel<ModelDeletionResult> {
+        public bool Deleted { get; }
+        public string ModelId { get; }
+        ModelDeletionResult IJsonModel<ModelDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ModelDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ModelDeletionResult IPersistableModel<ModelDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ModelDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ModelDeletionResult>.Write(ModelReaderWriterOptions options);
     }
     public class OpenAIModelInfo : IJsonModel<OpenAIModelInfo>, IPersistableModel<OpenAIModelInfo> {
         public DateTimeOffset CreatedAt { get; }
@@ -2152,7 +2150,7 @@ namespace OpenAI.Models {
         BinaryData IPersistableModel<OpenAIModelInfoCollection>.Write(ModelReaderWriterOptions options);
     }
     public static class OpenAIModelsModelFactory {
-        public static DeleteModelResult DeleteModelResult(string id = null, bool deleted = false);
+        public static ModelDeletionResult ModelDeletionResult(string modelId = null, bool deleted = false);
         public static OpenAIModelInfo OpenAIModelInfo(string id = null, DateTimeOffset createdAt = default, string ownedBy = null);
         public static OpenAIModelInfoCollection OpenAIModelInfoCollection(IEnumerable<OpenAIModelInfo> items = null);
     }
@@ -2236,15 +2234,6 @@ namespace OpenAI.Moderations {
     }
 }
 namespace OpenAI.VectorStores {
-    public class DeleteVectorStoreResult : IJsonModel<DeleteVectorStoreResult>, IPersistableModel<DeleteVectorStoreResult> {
-        public bool Deleted { get; }
-        public string Id { get; }
-        DeleteVectorStoreResult IJsonModel<DeleteVectorStoreResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<DeleteVectorStoreResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        DeleteVectorStoreResult IPersistableModel<DeleteVectorStoreResult>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<DeleteVectorStoreResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<DeleteVectorStoreResult>.Write(ModelReaderWriterOptions options);
-    }
     public abstract class FileChunkingStrategy : IJsonModel<FileChunkingStrategy>, IPersistableModel<FileChunkingStrategy> {
         public static FileChunkingStrategy Auto { get; }
         public static FileChunkingStrategy Unknown { get; }
@@ -2255,14 +2244,14 @@ namespace OpenAI.VectorStores {
         string IPersistableModel<FileChunkingStrategy>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<FileChunkingStrategy>.Write(ModelReaderWriterOptions options);
     }
-    public class RemoveFileFromStoreResult : IJsonModel<RemoveFileFromStoreResult>, IPersistableModel<RemoveFileFromStoreResult> {
-        public string Id { get; }
+    public class FileFromStoreRemovalResult : IJsonModel<FileFromStoreRemovalResult>, IPersistableModel<FileFromStoreRemovalResult> {
+        public string FileId { get; }
         public bool Removed { get; }
-        RemoveFileFromStoreResult IJsonModel<RemoveFileFromStoreResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<RemoveFileFromStoreResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        RemoveFileFromStoreResult IPersistableModel<RemoveFileFromStoreResult>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<RemoveFileFromStoreResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<RemoveFileFromStoreResult>.Write(ModelReaderWriterOptions options);
+        FileFromStoreRemovalResult IJsonModel<FileFromStoreRemovalResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<FileFromStoreRemovalResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        FileFromStoreRemovalResult IPersistableModel<FileFromStoreRemovalResult>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<FileFromStoreRemovalResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<FileFromStoreRemovalResult>.Write(ModelReaderWriterOptions options);
     }
     public class StaticFileChunkingStrategy : FileChunkingStrategy, IJsonModel<StaticFileChunkingStrategy>, IPersistableModel<StaticFileChunkingStrategy> {
         public StaticFileChunkingStrategy(int maxTokensPerChunk, int overlappingTokenCount);
@@ -2356,14 +2345,14 @@ namespace OpenAI.VectorStores {
         public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<VectorStore>> CreateVectorStoreAsync(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<DeleteVectorStoreResult> DeleteVectorStore(VectorStore vectorStore);
+        public virtual ClientResult<VectorStoreDeletionResult> DeleteVectorStore(VectorStore vectorStore);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteVectorStore(string vectorStoreId, RequestOptions options);
-        public virtual ClientResult<DeleteVectorStoreResult> DeleteVectorStore(string vectorStoreId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<DeleteVectorStoreResult>> DeleteVectorStoreAsync(VectorStore vectorStore);
+        public virtual ClientResult<VectorStoreDeletionResult> DeleteVectorStore(string vectorStoreId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<VectorStoreDeletionResult>> DeleteVectorStoreAsync(VectorStore vectorStore);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteVectorStoreAsync(string vectorStoreId, RequestOptions options);
-        public virtual Task<ClientResult<DeleteVectorStoreResult>> DeleteVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<VectorStoreDeletionResult>> DeleteVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default);
         public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(VectorStoreBatchFileJob batchJob);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
@@ -2424,14 +2413,14 @@ namespace OpenAI.VectorStores {
         public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ModifyVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<RemoveFileFromStoreResult> RemoveFileFromStore(VectorStore vectorStore, OpenAIFileInfo file);
+        public virtual ClientResult<FileFromStoreRemovalResult> RemoveFileFromStore(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult RemoveFileFromStore(string vectorStoreId, string fileId, RequestOptions options);
-        public virtual ClientResult<RemoveFileFromStoreResult> RemoveFileFromStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<RemoveFileFromStoreResult>> RemoveFileFromStoreAsync(VectorStore vectorStore, OpenAIFileInfo file);
+        public virtual ClientResult<FileFromStoreRemovalResult> RemoveFileFromStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<FileFromStoreRemovalResult>> RemoveFileFromStoreAsync(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, RequestOptions options);
-        public virtual Task<ClientResult<RemoveFileFromStoreResult>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<FileFromStoreRemovalResult>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
     }
     public class VectorStoreCollectionOptions {
         public string AfterId { get; set; }
@@ -2466,6 +2455,15 @@ namespace OpenAI.VectorStores {
         VectorStoreCreationOptions IPersistableModel<VectorStoreCreationOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<VectorStoreCreationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<VectorStoreCreationOptions>.Write(ModelReaderWriterOptions options);
+    }
+    public class VectorStoreDeletionResult : IJsonModel<VectorStoreDeletionResult>, IPersistableModel<VectorStoreDeletionResult> {
+        public bool Deleted { get; }
+        public string VectorStoreId { get; }
+        VectorStoreDeletionResult IJsonModel<VectorStoreDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<VectorStoreDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        VectorStoreDeletionResult IPersistableModel<VectorStoreDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<VectorStoreDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<VectorStoreDeletionResult>.Write(ModelReaderWriterOptions options);
     }
     public enum VectorStoreExpirationAnchor {
         Unknown = 0,

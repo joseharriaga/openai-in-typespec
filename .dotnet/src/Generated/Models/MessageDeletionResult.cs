@@ -7,30 +7,28 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    public partial class DeleteAssistantResult
+    public partial class MessageDeletionResult
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal DeleteAssistantResult(string id, bool deleted)
+        internal MessageDeletionResult(string messageId, bool deleted)
         {
-            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(messageId, nameof(messageId));
 
-            Id = id;
+            MessageId = messageId;
             Deleted = deleted;
         }
 
-        internal DeleteAssistantResult(string id, bool deleted, InternalDeleteAssistantResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeletionResult(string messageId, bool deleted, InternalDeleteMessageResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Id = id;
+            MessageId = messageId;
             Deleted = deleted;
             Object = @object;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal DeleteAssistantResult()
+        internal MessageDeletionResult()
         {
         }
-
-        public string Id { get; }
         public bool Deleted { get; }
     }
 }

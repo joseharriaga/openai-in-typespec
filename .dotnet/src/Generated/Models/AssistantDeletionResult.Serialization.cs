@@ -8,23 +8,23 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.VectorStores
+namespace OpenAI.Assistants
 {
-    public partial class DeleteVectorStoreResult : IJsonModel<DeleteVectorStoreResult>
+    public partial class AssistantDeletionResult : IJsonModel<AssistantDeletionResult>
     {
-        void IJsonModel<DeleteVectorStoreResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<AssistantDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteVectorStoreResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantDeletionResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(DeleteVectorStoreResult)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(AssistantDeletionResult)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             if (SerializedAdditionalRawData?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
-                writer.WriteStringValue(Id);
+                writer.WriteStringValue(AssistantId);
             }
             if (SerializedAdditionalRawData?.ContainsKey("deleted") != true)
             {
@@ -58,19 +58,19 @@ namespace OpenAI.VectorStores
             writer.WriteEndObject();
         }
 
-        DeleteVectorStoreResult IJsonModel<DeleteVectorStoreResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AssistantDeletionResult IJsonModel<AssistantDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteVectorStoreResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantDeletionResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(DeleteVectorStoreResult)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(AssistantDeletionResult)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeDeleteVectorStoreResult(document.RootElement, options);
+            return DeserializeAssistantDeletionResult(document.RootElement, options);
         }
 
-        internal static DeleteVectorStoreResult DeserializeDeleteVectorStoreResult(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AssistantDeletionResult DeserializeAssistantDeletionResult(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -80,7 +80,7 @@ namespace OpenAI.VectorStores
             }
             string id = default;
             bool deleted = default;
-            InternalDeleteVectorStoreResponseObject @object = default;
+            InternalDeleteAssistantResponseObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -97,7 +97,7 @@ namespace OpenAI.VectorStores
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new InternalDeleteVectorStoreResponseObject(property.Value.GetString());
+                    @object = new InternalDeleteAssistantResponseObject(property.Value.GetString());
                     continue;
                 }
                 if (true)
@@ -107,44 +107,44 @@ namespace OpenAI.VectorStores
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new DeleteVectorStoreResult(id, deleted, @object, serializedAdditionalRawData);
+            return new AssistantDeletionResult(id, deleted, @object, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<DeleteVectorStoreResult>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<AssistantDeletionResult>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteVectorStoreResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantDeletionResult>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(DeleteVectorStoreResult)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AssistantDeletionResult)} does not support writing '{options.Format}' format.");
             }
         }
 
-        DeleteVectorStoreResult IPersistableModel<DeleteVectorStoreResult>.Create(BinaryData data, ModelReaderWriterOptions options)
+        AssistantDeletionResult IPersistableModel<AssistantDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteVectorStoreResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<AssistantDeletionResult>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeDeleteVectorStoreResult(document.RootElement, options);
+                        return DeserializeAssistantDeletionResult(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(DeleteVectorStoreResult)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(AssistantDeletionResult)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<DeleteVectorStoreResult>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<AssistantDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static DeleteVectorStoreResult FromResponse(PipelineResponse response)
+        internal static AssistantDeletionResult FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeDeleteVectorStoreResult(document.RootElement);
+            return DeserializeAssistantDeletionResult(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

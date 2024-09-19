@@ -8,33 +8,33 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Files
+namespace OpenAI.Assistants
 {
-    public partial class DeleteFileResult : IJsonModel<DeleteFileResult>
+    public partial class MessageDeletionResult : IJsonModel<MessageDeletionResult>
     {
-        void IJsonModel<DeleteFileResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<MessageDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteFileResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageDeletionResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(DeleteFileResult)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(MessageDeletionResult)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             if (SerializedAdditionalRawData?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
-                writer.WriteStringValue(Id);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
-            {
-                writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(Object.ToString());
+                writer.WriteStringValue(MessageId);
             }
             if (SerializedAdditionalRawData?.ContainsKey("deleted") != true)
             {
                 writer.WritePropertyName("deleted"u8);
                 writer.WriteBooleanValue(Deleted);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -58,19 +58,19 @@ namespace OpenAI.Files
             writer.WriteEndObject();
         }
 
-        DeleteFileResult IJsonModel<DeleteFileResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        MessageDeletionResult IJsonModel<MessageDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteFileResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageDeletionResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(DeleteFileResult)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(MessageDeletionResult)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeDeleteFileResult(document.RootElement, options);
+            return DeserializeMessageDeletionResult(document.RootElement, options);
         }
 
-        internal static DeleteFileResult DeserializeDeleteFileResult(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static MessageDeletionResult DeserializeMessageDeletionResult(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -79,8 +79,8 @@ namespace OpenAI.Files
                 return null;
             }
             string id = default;
-            InternalDeleteFileResponseObject @object = default;
             bool deleted = default;
+            InternalDeleteMessageResponseObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -90,14 +90,14 @@ namespace OpenAI.Files
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("object"u8))
-                {
-                    @object = new InternalDeleteFileResponseObject(property.Value.GetString());
-                    continue;
-                }
                 if (property.NameEquals("deleted"u8))
                 {
                     deleted = property.Value.GetBoolean();
+                    continue;
+                }
+                if (property.NameEquals("object"u8))
+                {
+                    @object = new InternalDeleteMessageResponseObject(property.Value.GetString());
                     continue;
                 }
                 if (true)
@@ -107,44 +107,44 @@ namespace OpenAI.Files
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new DeleteFileResult(id, @object, deleted, serializedAdditionalRawData);
+            return new MessageDeletionResult(id, deleted, @object, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<DeleteFileResult>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<MessageDeletionResult>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteFileResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageDeletionResult>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(DeleteFileResult)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(MessageDeletionResult)} does not support writing '{options.Format}' format.");
             }
         }
 
-        DeleteFileResult IPersistableModel<DeleteFileResult>.Create(BinaryData data, ModelReaderWriterOptions options)
+        MessageDeletionResult IPersistableModel<MessageDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteFileResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<MessageDeletionResult>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeDeleteFileResult(document.RootElement, options);
+                        return DeserializeMessageDeletionResult(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(DeleteFileResult)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(MessageDeletionResult)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<DeleteFileResult>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<MessageDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static DeleteFileResult FromResponse(PipelineResponse response)
+        internal static MessageDeletionResult FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeDeleteFileResult(document.RootElement);
+            return DeserializeMessageDeletionResult(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

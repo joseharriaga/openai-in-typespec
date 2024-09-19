@@ -7,8 +7,8 @@ function Run-ModelsSubnamespaceCheck {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs" -Recurse
 
     $exclusions = @(
-        "DeleteModelResult.cs",
-        "DeleteModelResult.Serialization.cs",
+        "ModelDeletionResult.cs",
+        "ModelDeletionResult.Serialization.cs",
         "GeneratorStubs.cs",
         "InternalDeleteModelResponseObject.cs",
         "InternalListModelsResponseObject.cs",

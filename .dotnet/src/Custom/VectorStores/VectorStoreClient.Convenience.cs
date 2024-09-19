@@ -46,16 +46,16 @@ public partial class VectorStoreClient
     /// Deletes a vector store.
     /// </summary>
     /// <param name="vectorStore"> The vector store to delete. </param>
-    /// <returns> A <see cref="DeleteVectorStoreResult"/> instance. </returns>
-    public virtual Task<ClientResult<DeleteVectorStoreResult>> DeleteVectorStoreAsync(VectorStore vectorStore)
+    /// <returns> A <see cref="VectorStoreDeletionResult"/> instance. </returns>
+    public virtual Task<ClientResult<VectorStoreDeletionResult>> DeleteVectorStoreAsync(VectorStore vectorStore)
         => DeleteVectorStoreAsync(vectorStore?.Id);
 
     /// <summary>
     /// Deletes a vector store.
     /// </summary>
     /// <param name="vectorStore"> The vector store to delete. </param>
-    /// <returns> A <see cref="DeleteVectorStoreResult"/> instance. </returns>
-    public virtual ClientResult<DeleteVectorStoreResult> DeleteVectorStore(VectorStore vectorStore)
+    /// <returns> A <see cref="VectorStoreDeletionResult"/> instance. </returns>
+    public virtual ClientResult<VectorStoreDeletionResult> DeleteVectorStore(VectorStore vectorStore)
         => DeleteVectorStore(vectorStore?.Id);
 
     /// <summary>
@@ -147,8 +147,8 @@ public partial class VectorStoreClient
     /// </remarks>
     /// <param name="vectorStore"> The vector store that the file should be removed from. </param>
     /// <param name="file"> The file to remove from the vector store. </param>
-    /// <returns> A <see cref="RemoveFileFromStoreResult"/> instance. </returns>
-    public virtual Task<ClientResult<RemoveFileFromStoreResult>> RemoveFileFromStoreAsync(VectorStore vectorStore, OpenAIFileInfo file)
+    /// <returns> A <see cref="FileFromStoreRemovalResult"/> instance. </returns>
+    public virtual Task<ClientResult<FileFromStoreRemovalResult>> RemoveFileFromStoreAsync(VectorStore vectorStore, OpenAIFileInfo file)
         => RemoveFileFromStoreAsync(vectorStore?.Id, file?.Id);
 
     /// <summary>
@@ -160,8 +160,8 @@ public partial class VectorStoreClient
     /// </remarks>
     /// <param name="vectorStore"> The vector store that the file should be removed from. </param>
     /// <param name="file"> The file to remove from the vector store. </param>
-    /// <returns> A <see cref="RemoveFileFromStoreResult"/> instance. </returns>
-    public virtual ClientResult<RemoveFileFromStoreResult> RemoveFileFromStore(VectorStore vectorStore, OpenAIFileInfo file)
+    /// <returns> A <see cref="FileFromStoreRemovalResult"/> instance. </returns>
+    public virtual ClientResult<FileFromStoreRemovalResult> RemoveFileFromStore(VectorStore vectorStore, OpenAIFileInfo file)
         => RemoveFileFromStore(vectorStore?.Id, file?.Id);
 
     /// <summary>

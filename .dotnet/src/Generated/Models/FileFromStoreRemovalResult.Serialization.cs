@@ -8,28 +8,28 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OpenAI.Assistants
+namespace OpenAI.VectorStores
 {
-    public partial class DeleteThreadResult : IJsonModel<DeleteThreadResult>
+    public partial class FileFromStoreRemovalResult : IJsonModel<FileFromStoreRemovalResult>
     {
-        void IJsonModel<DeleteThreadResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<FileFromStoreRemovalResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteThreadResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FileFromStoreRemovalResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(DeleteThreadResult)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(FileFromStoreRemovalResult)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             if (SerializedAdditionalRawData?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
-                writer.WriteStringValue(Id);
+                writer.WriteStringValue(FileId);
             }
             if (SerializedAdditionalRawData?.ContainsKey("deleted") != true)
             {
                 writer.WritePropertyName("deleted"u8);
-                writer.WriteBooleanValue(Deleted);
+                writer.WriteBooleanValue(Removed);
             }
             if (SerializedAdditionalRawData?.ContainsKey("object") != true)
             {
@@ -58,19 +58,19 @@ namespace OpenAI.Assistants
             writer.WriteEndObject();
         }
 
-        DeleteThreadResult IJsonModel<DeleteThreadResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        FileFromStoreRemovalResult IJsonModel<FileFromStoreRemovalResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteThreadResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FileFromStoreRemovalResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(DeleteThreadResult)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(FileFromStoreRemovalResult)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeDeleteThreadResult(document.RootElement, options);
+            return DeserializeFileFromStoreRemovalResult(document.RootElement, options);
         }
 
-        internal static DeleteThreadResult DeserializeDeleteThreadResult(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static FileFromStoreRemovalResult DeserializeFileFromStoreRemovalResult(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -80,7 +80,7 @@ namespace OpenAI.Assistants
             }
             string id = default;
             bool deleted = default;
-            InternalDeleteThreadResponseObject @object = default;
+            InternalDeleteVectorStoreFileResponseObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -97,7 +97,7 @@ namespace OpenAI.Assistants
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new InternalDeleteThreadResponseObject(property.Value.GetString());
+                    @object = new InternalDeleteVectorStoreFileResponseObject(property.Value.GetString());
                     continue;
                 }
                 if (true)
@@ -107,44 +107,44 @@ namespace OpenAI.Assistants
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new DeleteThreadResult(id, deleted, @object, serializedAdditionalRawData);
+            return new FileFromStoreRemovalResult(id, deleted, @object, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<DeleteThreadResult>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<FileFromStoreRemovalResult>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteThreadResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FileFromStoreRemovalResult>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(DeleteThreadResult)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(FileFromStoreRemovalResult)} does not support writing '{options.Format}' format.");
             }
         }
 
-        DeleteThreadResult IPersistableModel<DeleteThreadResult>.Create(BinaryData data, ModelReaderWriterOptions options)
+        FileFromStoreRemovalResult IPersistableModel<FileFromStoreRemovalResult>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DeleteThreadResult>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FileFromStoreRemovalResult>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeDeleteThreadResult(document.RootElement, options);
+                        return DeserializeFileFromStoreRemovalResult(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(DeleteThreadResult)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(FileFromStoreRemovalResult)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<DeleteThreadResult>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<FileFromStoreRemovalResult>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static DeleteThreadResult FromResponse(PipelineResponse response)
+        internal static FileFromStoreRemovalResult FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeDeleteThreadResult(document.RootElement);
+            return DeserializeFileFromStoreRemovalResult(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

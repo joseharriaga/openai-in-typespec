@@ -11,32 +11,32 @@ namespace OpenAI.Tests.Models;
 public partial class OpenAIModelsModelFactoryTests
 {
     [Test]
-    public void DeleteModelResultWithNoPropertiesWorks()
+    public void ModelDeletionResultWithNoPropertiesWorks()
     {
-        DeleteModelResult deleteModelResult = OpenAIModelsModelFactory.DeleteModelResult();
+        ModelDeletionResult modelDeletionResult = OpenAIModelsModelFactory.ModelDeletionResult();
 
-        Assert.That(deleteModelResult.Id, Is.Null);
-        Assert.That(deleteModelResult.Deleted, Is.EqualTo(false));
+        Assert.That(modelDeletionResult.ModelId, Is.Null);
+        Assert.That(modelDeletionResult.Deleted, Is.EqualTo(false));
     }
 
     [Test]
-    public void DeleteModelResultWithIdWorks()
+    public void ModelDeletionResultWithModelIdWorks()
     {
-        string id = "modelId";
-        DeleteModelResult deleteModelResult = OpenAIModelsModelFactory.DeleteModelResult(id: id);
+        string modelId = "modelId";
+        ModelDeletionResult modelDeletionResult = OpenAIModelsModelFactory.ModelDeletionResult(modelId: modelId);
 
-        Assert.That(deleteModelResult.Id, Is.EqualTo(id));
-        Assert.That(deleteModelResult.Deleted, Is.EqualTo(false));
+        Assert.That(modelDeletionResult.ModelId, Is.EqualTo(modelId));
+        Assert.That(modelDeletionResult.Deleted, Is.EqualTo(false));
     }
 
     [Test]
-    public void DeleteModelResultWithDeletedWorks()
+    public void ModelDeletionResultWithDeletedWorks()
     {
         bool deleted = true;
-        DeleteModelResult deleteModelResult = OpenAIModelsModelFactory.DeleteModelResult(deleted: deleted);
+        ModelDeletionResult modelDeletionResult = OpenAIModelsModelFactory.ModelDeletionResult(deleted: deleted);
 
-        Assert.That(deleteModelResult.Id, Is.Null);
-        Assert.That(deleteModelResult.Deleted, Is.EqualTo(deleted));
+        Assert.That(modelDeletionResult.ModelId, Is.Null);
+        Assert.That(modelDeletionResult.Deleted, Is.EqualTo(deleted));
     }
 
     [Test]

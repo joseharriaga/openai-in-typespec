@@ -7,30 +7,28 @@ using System.Collections.Generic;
 
 namespace OpenAI.Models
 {
-    public partial class DeleteModelResult
+    public partial class ModelDeletionResult
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal DeleteModelResult(string id, bool deleted)
+        internal ModelDeletionResult(string modelId, bool deleted)
         {
-            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(modelId, nameof(modelId));
 
-            Id = id;
+            ModelId = modelId;
             Deleted = deleted;
         }
 
-        internal DeleteModelResult(string id, bool deleted, InternalDeleteModelResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ModelDeletionResult(string modelId, bool deleted, InternalDeleteModelResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Id = id;
+            ModelId = modelId;
             Deleted = deleted;
             Object = @object;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal DeleteModelResult()
+        internal ModelDeletionResult()
         {
         }
-
-        public string Id { get; }
         public bool Deleted { get; }
     }
 }

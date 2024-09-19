@@ -88,10 +88,10 @@ public partial class AssistantTests : SyncAsyncTestBase
             ? await client.ModifyAssistantAsync(assistant.Id, modificationOptions)
             : client.ModifyAssistant(assistant.Id, modificationOptions);
         Assert.That(assistant.Name, Is.EqualTo("test assistant name"));
-        DeleteAssistantResult deletionResult = IsAsync
+        AssistantDeletionResult deletionResult = IsAsync
             ? await client.DeleteAssistantAsync(assistant.Id)
             : client.DeleteAssistant(assistant.Id);
-        Assert.That(deletionResult.Id, Is.EqualTo(assistant.Id));
+        Assert.That(deletionResult.AssistantId, Is.EqualTo(assistant.Id));
         Assert.That(deletionResult.Deleted, Is.True);
         _assistantsToDelete.Remove(assistant);
         AssistantCreationOptions creationOptions = new AssistantCreationOptions()
@@ -153,10 +153,10 @@ public partial class AssistantTests : SyncAsyncTestBase
             : client.CreateThread();
         Validate(thread);
         Assert.That(thread.CreatedAt, Is.GreaterThan(s_2024));
-        DeleteThreadResult deletionResult = IsAsync
+        ThreadDeletionResult deletionResult = IsAsync
             ? await client.DeleteThreadAsync(thread.Id)
             : client.DeleteThread(thread.Id);
-        Assert.That(deletionResult.Id, Is.EqualTo(thread.Id));
+        Assert.That(deletionResult.ThreadId, Is.EqualTo(thread.Id));
         Assert.That(deletionResult.Deleted, Is.True);
         _threadsToDelete.Remove(thread);
 
@@ -203,10 +203,10 @@ public partial class AssistantTests : SyncAsyncTestBase
         Assert.That(message.Content?.Count, Is.EqualTo(1));
         Assert.That(message.Content[0], Is.Not.Null);
         Assert.That(message.Content[0].Text, Is.EqualTo("Hello, world!"));
-        DeleteMessageResult deletionResult = IsAsync
+        MessageDeletionResult deletionResult = IsAsync
             ? await client.DeleteMessageAsync(message)
             : client.DeleteMessage(message);
-        Assert.That(deletionResult.Id, Is.EqualTo(message.Id));
+        Assert.That(deletionResult.MessageId, Is.EqualTo(message.Id));
         Assert.That(deletionResult.Deleted, Is.True);
         _messagesToDelete.Remove(message);
 

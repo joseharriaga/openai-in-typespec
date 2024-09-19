@@ -80,6 +80,7 @@ function Run-TopLevelNamespaceCheck {
         "ClientPipelineExtensions.cs",
         "ClientUriBuilder.cs",
         "ErrorResult.cs",
+        "IEnumerableExtensions.cs",
         "IInternalListResponseOfT.cs",
         "InternalFunctionDefinition.cs",
         "InternalFunctionDefinition.Serialization.cs",

@@ -88,10 +88,7 @@ public partial class VectorStoreClient
     /// The vector store to enumerate the file associations of.
     /// </param>
     /// <param name="options"> Options describing the collection to return. </param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
     public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         VectorStore vectorStore,
         VectorStoreFileAssociationCollectionOptions options = default)
@@ -105,10 +102,7 @@ public partial class VectorStoreClient
     /// The ID vector store to enumerate the file associations of.
     /// </param>
     /// <param name="options"> Options describing the collection to return. </param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
     public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(
         VectorStore vectorStore,
         VectorStoreFileAssociationCollectionOptions options = default)
@@ -220,10 +214,7 @@ public partial class VectorStoreClient
     /// </summary>
     /// <param name="batchJob"> The vector store batch file job to retrieve file associations from. </param>
     /// <param name="options"> Options describing the collection to return. </param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
     public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         VectorStoreBatchFileJob batchJob,
         VectorStoreFileAssociationCollectionOptions options = default)
@@ -235,10 +226,7 @@ public partial class VectorStoreClient
     /// </summary>
     /// <param name="batchJob"> The vector store batch file job to retrieve file associations from. </param>
     /// <param name="options"> Options describing the collection to return. </param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
     public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(
         VectorStoreBatchFileJob batchJob,
         VectorStoreFileAssociationCollectionOptions options = default)

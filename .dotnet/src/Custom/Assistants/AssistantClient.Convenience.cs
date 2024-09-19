@@ -129,10 +129,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="thread"> The thread to list messages from. </param>
     /// <param name="options"> Options describing the collection to return. </param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="ThreadMessage"/>. </returns>
+    /// <returns> A collection of <see cref="ThreadMessage"/>. </returns>
     public virtual AsyncCollectionResult<ThreadMessage> GetMessagesAsync(
         AssistantThread thread,
         MessageCollectionOptions options = default)
@@ -147,10 +144,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="thread"> The thread to list messages from. </param>
     /// <param name="options"> Options describing the collection to return. </param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="ThreadMessage"/>. </returns>
+    /// <returns> A collection of <see cref="ThreadMessage"/>. </returns>
     public virtual CollectionResult<ThreadMessage> GetMessages(
         AssistantThread thread,
         MessageCollectionOptions options = default)
@@ -313,10 +307,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="thread"> The thread that runs in the list should be associated with. </param>
     /// <param name="options"> Options describing the collection to return. </param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="ThreadRun"/>. </returns>
+    /// <returns> A collection of <see cref="ThreadRun"/>. </returns>
     public virtual AsyncCollectionResult<ThreadRun> GetRunsAsync(
         AssistantThread thread,
         RunCollectionOptions options = default)
@@ -331,10 +322,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="thread"> The thread that runs in the list should be associated with. </param>
     /// <param name="options"> Options describing the collection to return. </param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="ThreadRun"/>. </returns>
+    /// <returns> A collection of <see cref="ThreadRun"/>. </returns>
     public virtual CollectionResult<ThreadRun> GetRuns(
         AssistantThread thread,
         RunCollectionOptions options = default)
@@ -431,10 +419,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="run"> The run to list run steps from. </param>
     /// <param name="options"> Options describing the collection to return. </param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="RunStep"/>. </returns>
+    /// <returns> A collection of <see cref="RunStep"/>. </returns>
     public virtual AsyncCollectionResult<RunStep> GetRunStepsAsync(
         ThreadRun run,
         RunStepCollectionOptions options = default)
@@ -449,10 +434,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="run"> The run to list run steps from. </param>
     /// <param name="options"> Options describing the collection to return. </param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="RunStep"/>. </returns>
+    /// <returns> A collection of <see cref="RunStep"/>. </returns>
     public virtual CollectionResult<RunStep> GetRunSteps(
         ThreadRun run,
         RunStepCollectionOptions options = default)

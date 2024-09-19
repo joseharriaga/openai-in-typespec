@@ -123,10 +123,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="options"> Options describing the collection to return. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="Assistant"/>. </returns>
+    /// <returns> A collection of <see cref="Assistant"/>. </returns>
     public virtual AsyncCollectionResult<Assistant> GetAssistantsAsync(
         AssistantCollectionOptions options = default,
         CancellationToken cancellationToken = default)
@@ -146,10 +143,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="Assistant"/>. </returns>
+    /// <returns> A collection of <see cref="Assistant"/>. </returns>
     public virtual AsyncCollectionResult<Assistant> GetAssistantsAsync(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
@@ -172,10 +166,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="options"> Options describing the collection to return. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="Assistant"/>. </returns>
+    /// <returns> A collection of <see cref="Assistant"/>. </returns>
     public virtual CollectionResult<Assistant> GetAssistants(
         AssistantCollectionOptions options = default,
         CancellationToken cancellationToken = default)
@@ -195,10 +186,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="Assistant"/>. </returns>
+    /// <returns> A collection of <see cref="Assistant"/>. </returns>
     public virtual CollectionResult<Assistant> GetAssistants(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
@@ -488,10 +476,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread to list messages from. </param>
     /// <param name="options"> Options describing the collection to return. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="ThreadMessage"/>. </returns>
+    /// <returns> A collection of <see cref="ThreadMessage"/>. </returns>
     public virtual AsyncCollectionResult<ThreadMessage> GetMessagesAsync(
         string threadId,
         MessageCollectionOptions options = default,
@@ -514,10 +499,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="ThreadMessage"/>. </returns>
+    /// <returns> A collection of <see cref="ThreadMessage"/>. </returns>
     public virtual AsyncCollectionResult<ThreadMessage> GetMessagesAsync(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
@@ -541,10 +523,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread to list messages from. </param>
     /// <param name="options"> Options describing the collection to return. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="ThreadMessage"/>. </returns>
+    /// <returns> A collection of <see cref="ThreadMessage"/>. </returns>
     public virtual CollectionResult<ThreadMessage> GetMessages(
         string threadId,
         MessageCollectionOptions options = default,
@@ -567,10 +546,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="ThreadMessage"/>. </returns>
+    /// <returns> A collection of <see cref="ThreadMessage"/>. </returns>
     public virtual CollectionResult<ThreadMessage> GetMessages(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
@@ -885,10 +861,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
     /// <param name="options"> Options describing the collection to return. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="ThreadRun"/>. </returns>
+    /// <returns> A collection of <see cref="ThreadRun"/>. </returns>
     public virtual AsyncCollectionResult<ThreadRun> GetRunsAsync(
         string threadId,
         RunCollectionOptions options = default,
@@ -911,10 +884,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="ThreadRun"/>. </returns>
+    /// <returns> A collection of <see cref="ThreadRun"/>. </returns>
     public virtual AsyncCollectionResult<ThreadRun> GetRunsAsync(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
@@ -938,10 +908,7 @@ public partial class AssistantClient
     /// <param name="threadId"> The ID of the thread that runs in the list should be associated with. </param>
     /// <param name="options"> Options describing the collection to return. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="ThreadRun"/>. </returns>
+    /// <returns> A collection of <see cref="ThreadRun"/>. </returns>
     public virtual CollectionResult<ThreadRun> GetRuns(
         string threadId,
         RunCollectionOptions options = default,
@@ -964,10 +931,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="ThreadRun"/>. </returns>
+    /// <returns> A collection of <see cref="ThreadRun"/>. </returns>
     public virtual CollectionResult<ThreadRun> GetRuns(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
@@ -1158,10 +1122,7 @@ public partial class AssistantClient
     /// <param name="runId"> The ID of the run to list run steps from. </param>
     /// <param name="options"></param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="RunStep"/>. </returns>
+    /// <returns> A collection of <see cref="RunStep"/>. </returns>
     public virtual AsyncCollectionResult<RunStep> GetRunStepsAsync(
         string threadId,
         string runId,
@@ -1180,10 +1141,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="RunStep"/>. </returns>
+    /// <returns> A collection of <see cref="RunStep"/>. </returns>
     public virtual AsyncCollectionResult<RunStep> GetRunStepsAsync(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)
@@ -1208,10 +1166,7 @@ public partial class AssistantClient
     /// <param name="runId"> The ID of the run to list run steps from. </param>
     /// <param name="options"></param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="RunStep"/>. </returns>
+    /// <returns> A collection of <see cref="RunStep"/>. </returns>
     public virtual CollectionResult<RunStep> GetRunSteps(
         string threadId,
         string runId,
@@ -1236,10 +1191,7 @@ public partial class AssistantClient
     /// </summary>
     /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="RunStep"/>. </returns>
+    /// <returns> A collection of <see cref="RunStep"/>. </returns>
     public virtual CollectionResult<RunStep> GetRunSteps(
         ContinuationToken firstPageToken,
         CancellationToken cancellationToken = default)

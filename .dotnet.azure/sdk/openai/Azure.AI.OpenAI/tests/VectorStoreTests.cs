@@ -38,8 +38,8 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         VectorStoreClient client = GetTestClient();
 
         CreateVectorStoreOperation createVectorStoreOperation = await client.CreateVectorStoreAsync(waitUntilCompleted: false);
-        Validate(createVectorStoreOperation);
-        bool deleted = await client.DeleteVectorStoreAsync(createVectorStoreOperation.GetVectorStore());
+        Validate(createVectorStoreOperation.Value);
+        bool deleted = await client.DeleteVectorStoreAsync(createVectorStoreOperation.Value);
         Assert.That(deleted, Is.True);
 
         IReadOnlyList<OpenAIFileInfo> testFiles = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 5);
@@ -58,8 +58,8 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
                 ["test-key"] = "test-value",
             },
         });
-        Validate(createVectorStoreOperation);
-        VectorStore vectorStore = createVectorStoreOperation.GetVectorStore();
+        Validate(createVectorStoreOperation.Value);
+        VectorStore vectorStore = createVectorStoreOperation.Value;
         Assert.Multiple(() =>
         {
             Assert.That(vectorStore.Name, Is.EqualTo("test vector store"));
@@ -91,7 +91,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             FileIds = testFiles.Select(file => file.Id).ToList()
         });
 
-        vectorStore = createVectorStoreOperation.GetVectorStore();
+        vectorStore = createVectorStoreOperation.Value;
         Validate(vectorStore);
         Assert.Multiple(() =>
         {

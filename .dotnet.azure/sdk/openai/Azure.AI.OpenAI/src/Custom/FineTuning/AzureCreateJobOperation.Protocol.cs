@@ -9,9 +9,10 @@ namespace Azure.AI.OpenAI.FineTuning;
 /// <summary>
 /// A long-running operation for creating a new model from a given dataset.
 /// </summary>
+[Experimental("OPENAI001")]
 public class AzureCreateJobOperation : CreateJobOperation
 {
-    private readonly PipelineMessageClassifier DeleteJobClassifier = PipelineMessageClassifier.Create(stackalloc ushort[] { 204 });
+    private readonly PipelineMessageClassifier _deleteJobClassifier;
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;
     private readonly string _jobId;
@@ -31,6 +32,7 @@ public class AzureCreateJobOperation : CreateJobOperation
         _endpoint = endpoint;
         _jobId = jobId;
         _apiVersion = apiVersion;
+        _deleteJobClassifier = PipelineMessageClassifier.Create(stackalloc ushort[] { 204 });
     }
 
     [Experimental("AOAI001")]
@@ -53,7 +55,7 @@ public class AzureCreateJobOperation : CreateJobOperation
         .WithMethod("DELETE")
         .WithPath("fine_tuning", "jobs", fineTuningJobId)
         .WithAccept("application/json")
-        .WithClassifier(DeleteJobClassifier)
+        .WithClassifier(_deleteJobClassifier)
         .WithOptions(options)
         .Build();
 

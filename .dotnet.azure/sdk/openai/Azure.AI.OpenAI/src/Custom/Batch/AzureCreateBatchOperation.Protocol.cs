@@ -9,7 +9,7 @@ namespace Azure.AI.OpenAI.Batch;
 /// A long-running operation for executing a batch from an uploaded file of 
 /// requests.
 /// </summary>
-public partial class AzureCreateBatchOperation : CreateBatchOperation
+internal partial class AzureCreateBatchOperation : CreateBatchOperation
 {
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;

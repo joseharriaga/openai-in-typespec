@@ -16,6 +16,7 @@ interface Moderations {
   @tag("Moderations")
   @summary("Classifies if text is potentially harmful.")
   createModeration(
+    @header accept: "application/json",
     @body requestBody: CreateModerationRequest,
   ): CreateModerationResponse | ErrorResponse;
 }

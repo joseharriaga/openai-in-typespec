@@ -1,5 +1,8 @@
+using System;
+
 namespace OpenAI.Chat;
 
+[Obsolete($"This class is obsolete. Please use {nameof(StreamingChatToolCallUpdate)} instead.")]
 [CodeGenModel("ChatCompletionStreamResponseDeltaFunctionCall")]
 public partial class StreamingChatFunctionCallUpdate
 {

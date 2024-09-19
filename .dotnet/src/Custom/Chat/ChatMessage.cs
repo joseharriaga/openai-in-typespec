@@ -78,7 +78,7 @@ public abstract partial class ChatMessage
         }
     }
 
-    internal ChatMessage(ChatMessageRole role, string content)
+    internal ChatMessage(ChatMessageRole role, string content = null)
     {
         Role = role;
 
@@ -126,10 +126,10 @@ public abstract partial class ChatMessage
     public static AssistantChatMessage CreateAssistantMessage(params ChatMessageContentPart[] contentParts) => new(contentParts);
 
     /// <inheritdoc cref="AssistantChatMessage(IEnumerable{ChatToolCall}, string)"/>
-    public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls, string content = null) => new(toolCalls, content);
+    public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls) => new(toolCalls);
 
     /// <inheritdoc cref="AssistantChatMessage(ChatFunctionCall, string)"/>
-    public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall, string content = null) => new(functionCall, content);
+    public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall) => new(functionCall);
 
     /// <inheritdoc cref="AssistantChatMessage(ChatCompletion)"/>
     public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion) => new(chatCompletion);
@@ -137,18 +137,18 @@ public abstract partial class ChatMessage
 
     #region ToolChatMessage
     /// <inheritdoc cref="ToolChatMessage(string, string)"/>
-    public static ToolChatMessage CreateToolChatMessage(string toolCallId, string content) => new(toolCallId, content);
+    public static ToolChatMessage CreateToolMessage(string toolCallId, string content) => new(toolCallId, content);
 
     /// <inheritdoc cref="ToolChatMessage(string, IEnumerable{ChatMessageContentPart})"/>
-    public static ToolChatMessage CreateToolChatMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts) => new(toolCallId, contentParts);
+    public static ToolChatMessage CreateToolMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts) => new(toolCallId, contentParts);
 
     /// <inheritdoc cref="ToolChatMessage(string, ChatMessageContentPart[])"/>
-    public static ToolChatMessage CreateToolChatMessage(string toolCallId, params ChatMessageContentPart[] contentParts) => new(toolCallId, contentParts);
+    public static ToolChatMessage CreateToolMessage(string toolCallId, params ChatMessageContentPart[] contentParts) => new(toolCallId, contentParts);
     #endregion
 
     #region FunctionChatMessage
     /// <inheritdoc cref="FunctionChatMessage(string, string)"/>
-    [Obsolete("This field is marked as deprecated.")]
+    [Obsolete($"This method is obsolete. Please use {nameof(CreateToolMessage)} instead.")]
     public static FunctionChatMessage CreateFunctionMessage(string functionName, string content) => new(functionName, content);
     #endregion
 

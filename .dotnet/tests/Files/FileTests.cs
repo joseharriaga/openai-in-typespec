@@ -88,16 +88,20 @@ public partial class FileTests : SyncAsyncTestBase
         Assert.That(fileInfo1.CreatedAt, Is.EqualTo(uploadedFile1.CreatedAt));
         Assert.That(fileInfo1.Filename, Is.EqualTo(uploadedFile1.Filename));
         Assert.That(fileInfo1.Purpose, Is.EqualTo(uploadedFile1.Purpose));
+#pragma warning disable CS0618
         Assert.That(fileInfo1.Status, Is.EqualTo(uploadedFile1.Status));
         Assert.That(fileInfo1.StatusDetails, Is.EqualTo(uploadedFile1.StatusDetails));
+#pragma warning restore CS0618
 
         Assert.That(fileInfo2, Is.Not.Null);
         Assert.That(fileInfo2.SizeInBytes, Is.EqualTo(uploadedFile2.SizeInBytes));
         Assert.That(fileInfo2.CreatedAt, Is.EqualTo(uploadedFile2.CreatedAt));
         Assert.That(fileInfo2.Filename, Is.EqualTo(uploadedFile2.Filename));
         Assert.That(fileInfo2.Purpose, Is.EqualTo(uploadedFile2.Purpose));
+#pragma warning disable CS0618
         Assert.That(fileInfo2.Status, Is.EqualTo(uploadedFile2.Status));
         Assert.That(fileInfo2.StatusDetails, Is.EqualTo(uploadedFile2.StatusDetails));
+#pragma warning restore CS0618
 
         Assert.That(visionFileInfo, Is.Null);
     }
@@ -187,7 +191,9 @@ public partial class FileTests : SyncAsyncTestBase
         Assert.That(fileInfo.CreatedAt.ToUnixTimeSeconds(), Is.GreaterThan(unixTime2024));
         Assert.That(fileInfo.Filename, Is.EqualTo(expectedFilename));
         Assert.That(fileInfo.Purpose, Is.EqualTo(OpenAIFilePurpose.Vision));
+#pragma warning disable CS0618
         Assert.That(fileInfo.Status, Is.Not.EqualTo(default(OpenAIFileStatus)));
+#pragma warning restore CS0618
     }
 
     [Test]
@@ -290,8 +296,10 @@ public partial class FileTests : SyncAsyncTestBase
         Assert.That(fileInfo.CreatedAt, Is.EqualTo(uploadedFile.CreatedAt));
         Assert.That(fileInfo.Filename, Is.EqualTo(uploadedFile.Filename));
         Assert.That(fileInfo.Purpose, Is.EqualTo(uploadedFile.Purpose));
+#pragma warning disable CS0618
         Assert.That(fileInfo.Status, Is.EqualTo(uploadedFile.Status));
         Assert.That(fileInfo.StatusDetails, Is.EqualTo(uploadedFile.StatusDetails));
+#pragma warning restore CS0618
     }
 
     [Test]

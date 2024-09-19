@@ -51,12 +51,12 @@ model CreateFineTuningJobRequest {
   hyperparameters?: CreateFineTuningJobRequestHyperparameters;
 
   @doc("""
-    A string of up to 18 characters that will be added to your fine-tuned model name.
+    A string of up to 64 characters that will be added to your fine-tuned model name.
     
     For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-4o-mini:openai:custom-model-name:7p4lURel`.
     """)
   @minLength(1)
-  @maxLength(40)
+  @maxLength(64)
   suffix?: string | null = null;
 
   @doc("""

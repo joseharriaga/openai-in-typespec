@@ -18,7 +18,9 @@ interface Models {
     Lists the currently available models, and provides basic information about each one such as the
     owner and availability.
     """)
-  listModels(): ListModelsResponse | ErrorResponse;
+  listModels(
+    @header accept: "application/json"
+  ): ListModelsResponse | ErrorResponse;
 
   @route("{model}")
   @get
@@ -28,7 +30,8 @@ interface Models {
     Retrieves a model instance, providing basic information about the model such as the owner and
     permissioning.
     """)
-  retrieve(
+  retrieveModel(
+    @header accept: "application/json",
     /** The ID of the model to use for this request. */
     @path `model`: string,
   ): Model | ErrorResponse;
@@ -40,7 +43,8 @@ interface Models {
   @summary("""
     Delete a fine-tuned model. You must have the Owner role in your organization to delete a model.
     """)
-  delete(
+  deleteModel(
+    @header accept: "application/json",
     /** The model to delete */
     @path `model`: string,
   ): DeleteModelResponse | ErrorResponse;

@@ -81,7 +81,7 @@ namespace Azure.AI.OpenAI.Tests
                     _ => throw new NotImplementedException(),
                 },
                 Tools = { TOOL_TEMPERATURE },
-                MaxTokens = 512,
+                MaxOutputTokenCount = 512,
             };
 
             ClientResult<ChatCompletion> response = await client.CompleteChatAsync(messages, requestOptions);
@@ -149,7 +149,7 @@ namespace Azure.AI.OpenAI.Tests
             requestOptions = new()
             {
                 Tools = { TOOL_TEMPERATURE },
-                MaxTokens = requestOptions.MaxTokens
+                MaxOutputTokenCount = requestOptions.MaxOutputTokenCount
             };
 
             completion = await client.CompleteChatAsync(messages, requestOptions);
@@ -206,7 +206,7 @@ namespace Azure.AI.OpenAI.Tests
                     _ => throw new NotImplementedException(),
                 },
                 Tools = { TOOL_TEMPERATURE },
-                MaxTokens = 512,
+                MaxOutputTokenCount = 512,
             };
 
             Action<StreamingChatCompletionUpdate> validateUpdate = (update) =>
@@ -298,7 +298,7 @@ namespace Azure.AI.OpenAI.Tests
                 requestOptions = new()
                 {
                     Tools = { TOOL_TEMPERATURE },
-                    MaxTokens = requestOptions.MaxTokens
+                    MaxOutputTokenCount = requestOptions.MaxOutputTokenCount
                 };
 
                 content.Clear();

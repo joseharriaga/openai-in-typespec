@@ -16,6 +16,8 @@ interface Messages {
   @tag("Assistants")
   @summary("Create a message.")
   createMessage(
+    @header accept: "application/json",
+    
     /** The ID of the [thread](/docs/api-reference/threads) to create a message for. */
     @path thread_id: string,
 
@@ -27,6 +29,8 @@ interface Messages {
   @tag("Assistants")
   @summary("Returns a list of messages for a given thread.")
   listMessages(
+    @header accept: "application/json",
+
     /** The ID of the [thread](/docs/api-reference/threads) the messages belong to. */
     @path thread_id: string,
 
@@ -63,6 +67,8 @@ interface Messages {
   @tag("Assistants")
   @summary("Retrieve a message.")
   getMessage(
+    @header accept: "application/json",
+
     /** The ID of the [thread](/docs/api-reference/threads) to which this message belongs. */
     @path thread_id: string,
 
@@ -76,6 +82,8 @@ interface Messages {
   @tag("Assistants")
   @summary("Modifies a message.")
   modifyMessage(
+    @header accept: "application/json",
+
     /** The ID of the thread to which this message belongs. */
     @path thread_id: string,
 
@@ -91,6 +99,8 @@ interface Messages {
   @tag("Assistants")
   @summary("Deletes a message.")
   deleteMessage(
+    @header accept: "application/json",
+
     /** The ID of the thread to which this message belongs. */
     @path thread_id: string,
 

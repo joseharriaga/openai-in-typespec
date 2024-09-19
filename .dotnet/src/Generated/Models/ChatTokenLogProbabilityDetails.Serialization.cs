@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Chat
 {
-    public partial class ChatTokenLogProbabilityInfo : IJsonModel<ChatTokenLogProbabilityInfo>
+    public partial class ChatTokenLogProbabilityDetails : IJsonModel<ChatTokenLogProbabilityDetails>
     {
-        void IJsonModel<ChatTokenLogProbabilityInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ChatTokenLogProbabilityDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatTokenLogProbabilityInfo>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ChatTokenLogProbabilityDetails>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ChatTokenLogProbabilityInfo)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ChatTokenLogProbabilityDetails)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -33,11 +33,11 @@ namespace OpenAI.Chat
             }
             if (SerializedAdditionalRawData?.ContainsKey("bytes") != true)
             {
-                if (Utf8ByteValues != null && Optional.IsCollectionDefined(Utf8ByteValues))
+                if (Utf8Bytes != null)
                 {
                     writer.WritePropertyName("bytes"u8);
                     writer.WriteStartArray();
-                    foreach (var item in Utf8ByteValues)
+                    foreach (var item in Utf8Bytes.Value.Span)
                     {
                         writer.WriteNumberValue(item);
                     }
@@ -54,7 +54,7 @@ namespace OpenAI.Chat
                 writer.WriteStartArray();
                 foreach (var item in TopLogProbabilities)
                 {
-                    writer.WriteObjectValue<ChatTokenTopLogProbabilityInfo>(item, options);
+                    writer.WriteObjectValue<ChatTokenTopLogProbabilityDetails>(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -80,19 +80,19 @@ namespace OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        ChatTokenLogProbabilityInfo IJsonModel<ChatTokenLogProbabilityInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ChatTokenLogProbabilityDetails IJsonModel<ChatTokenLogProbabilityDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatTokenLogProbabilityInfo>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ChatTokenLogProbabilityDetails>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ChatTokenLogProbabilityInfo)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ChatTokenLogProbabilityDetails)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeChatTokenLogProbabilityInfo(document.RootElement, options);
+            return DeserializeChatTokenLogProbabilityDetails(document.RootElement, options);
         }
 
-        internal static ChatTokenLogProbabilityInfo DeserializeChatTokenLogProbabilityInfo(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ChatTokenLogProbabilityDetails DeserializeChatTokenLogProbabilityDetails(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -102,8 +102,8 @@ namespace OpenAI.Chat
             }
             string token = default;
             float logprob = default;
-            IReadOnlyList<int> bytes = default;
-            IReadOnlyList<ChatTokenTopLogProbabilityInfo> topLogprobs = default;
+            ReadOnlyMemory<byte>? bytes = default;
+            IReadOnlyList<ChatTokenTopLogProbabilityDetails> topLogprobs = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -122,23 +122,24 @@ namespace OpenAI.Chat
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        bytes = new ChangeTrackingList<int>();
                         continue;
                     }
-                    List<int> array = new List<int>();
+                    int index = 0;
+                    byte[] array = new byte[property.Value.GetArrayLength()];
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(item.GetInt32());
+                        array[index] = item.GetByte();
+                        index++;
                     }
-                    bytes = array;
+                    bytes = new ReadOnlyMemory<byte>?(array);
                     continue;
                 }
                 if (property.NameEquals("top_logprobs"u8))
                 {
-                    List<ChatTokenTopLogProbabilityInfo> array = new List<ChatTokenTopLogProbabilityInfo>();
+                    List<ChatTokenTopLogProbabilityDetails> array = new List<ChatTokenTopLogProbabilityDetails>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(ChatTokenTopLogProbabilityInfo.DeserializeChatTokenTopLogProbabilityInfo(item, options));
+                        array.Add(ChatTokenTopLogProbabilityDetails.DeserializeChatTokenTopLogProbabilityDetails(item, options));
                     }
                     topLogprobs = array;
                     continue;
@@ -150,44 +151,44 @@ namespace OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ChatTokenLogProbabilityInfo(token, logprob, bytes, topLogprobs, serializedAdditionalRawData);
+            return new ChatTokenLogProbabilityDetails(token, logprob, bytes, topLogprobs, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<ChatTokenLogProbabilityInfo>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ChatTokenLogProbabilityDetails>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatTokenLogProbabilityInfo>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ChatTokenLogProbabilityDetails>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ChatTokenLogProbabilityInfo)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ChatTokenLogProbabilityDetails)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ChatTokenLogProbabilityInfo IPersistableModel<ChatTokenLogProbabilityInfo>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ChatTokenLogProbabilityDetails IPersistableModel<ChatTokenLogProbabilityDetails>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatTokenLogProbabilityInfo>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ChatTokenLogProbabilityDetails>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeChatTokenLogProbabilityInfo(document.RootElement, options);
+                        return DeserializeChatTokenLogProbabilityDetails(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ChatTokenLogProbabilityInfo)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ChatTokenLogProbabilityDetails)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ChatTokenLogProbabilityInfo>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ChatTokenLogProbabilityDetails>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static ChatTokenLogProbabilityInfo FromResponse(PipelineResponse response)
+        internal static ChatTokenLogProbabilityDetails FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeChatTokenLogProbabilityInfo(document.RootElement);
+            return DeserializeChatTokenLogProbabilityDetails(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

@@ -227,6 +227,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         }
     }
 
+#pragma warning disable CS0618
     [Test]
     [TestCase(true)]
     [TestCase(false)]
@@ -253,7 +254,9 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         Assert.That(choiceAsJson.RootElement.ValueKind, Is.EqualTo(JsonValueKind.String));
         Assert.That(choiceAsJson.RootElement.ToString(), Is.EqualTo("auto"));
     }
+#pragma warning restore CS0618
 
+#pragma warning disable CS0618
     [Test]
     [TestCase(true)]
     [TestCase(false)]
@@ -277,9 +280,8 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         else
         {
             // We construct a new instance. Later, we serialize it and confirm it was constructed correctly.
-#pragma warning disable CS0618
+
             choice = new ChatFunctionChoice(new ChatFunction(functionName));
-#pragma warning restore CS0618
         }
 
         BinaryData serializedChoice = ModelReaderWriter.Write(choice);
@@ -300,6 +302,7 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
             Assert.That(additionalPropertyProperty.ValueKind, Is.EqualTo(JsonValueKind.True));
         }
     }
+#pragma warning restore CS0618
 
     [Test]
     [TestCase(true)]
@@ -532,10 +535,10 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
         Assert.That(serialized, Does.Not.Contain("content"));
     }
 
+#pragma warning disable CS0618
     [Test]
     public void SerializeMessagesWithNullProperties()
     {
-#pragma warning disable CS0618 // FunctionChatMessage is deprecated
         AssistantChatMessage assistantMessage = ModelReaderWriter.Read<AssistantChatMessage>(BinaryData.FromString("""
             {
                 "role": "assistant",
@@ -578,14 +581,13 @@ public partial class ChatSmokeTests : SyncAsyncTestBase
             """));
         Assert.That(assistantMessage.Content, Has.Count.EqualTo(1));
         Assert.That(assistantMessage.Content[0], Is.Null);
-        FunctionChatMessage functionMessage = new("my_function");
-        functionMessage.Content.Add(null);
+        FunctionChatMessage functionMessage = new("my_function", null);
         BinaryData serializedMessage = ModelReaderWriter.Write(functionMessage);
         Console.WriteLine(serializedMessage.ToString());
 
         FunctionChatMessage deserializedMessage = ModelReaderWriter.Read<FunctionChatMessage>(serializedMessage);
-#pragma warning restore
     }
+#pragma warning restore CS0618
 
     [Test]
     public void TopLevelClientOptionsPersistence()

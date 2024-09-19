@@ -979,7 +979,7 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
                 ChatMessageContentPart.CreateTextPart($"Describe this image for me. {descriptionHint}"),
                 ChatMessageContentPart.CreateImagePart(imageUri)),
         ];
-        ChatCompletionOptions chatOptions = new() { MaxTokens = 2048 };
+        ChatCompletionOptions chatOptions = new() { MaxOutputTokenCount = 2048 };
         ClientResult<ChatCompletion> result = chatClient.CompleteChat(messages, chatOptions);
 
         Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring(expectedSubstring));
@@ -993,7 +993,7 @@ public partial class ImageGenerationTests : SyncAsyncTestBase
                 ChatMessageContentPart.CreateTextPart($"Describe this image for me. {descriptionHint}"),
                 ChatMessageContentPart.CreateImagePart(imageBytes, "image/png")),
         ];
-        ChatCompletionOptions chatOptions = new() { MaxTokens = 2048 };
+        ChatCompletionOptions chatOptions = new() { MaxOutputTokenCount = 2048 };
         ClientResult<ChatCompletion> result = chatClient.CompleteChat(messages, chatOptions);
 
         Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Contains.Substring(expectedSubstring));

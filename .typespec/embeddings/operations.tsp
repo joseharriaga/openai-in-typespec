@@ -16,6 +16,7 @@ interface Embeddings {
   @tag("Embeddings")
   @summary("Creates an embedding vector representing the input text.")
   createEmbedding(
+    @header accept: "application/json",
     @body requestBody: CreateEmbeddingRequest,
   ): CreateEmbeddingResponse | ErrorResponse;
 }

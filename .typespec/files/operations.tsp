@@ -25,7 +25,10 @@ interface Files {
     Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
     """)
   createFile(
+    @header accept: "application/json",
+
     @header contentType: "multipart/form-data",
+
     @body requestBody: CreateFileRequest,
   ): OpenAIFile | ErrorResponse;
 
@@ -34,6 +37,8 @@ interface Files {
   @tag("Files")
   @summary("Returns a list of files that belong to the user's organization.")
   listFiles(
+    @header accept: "application/json",
+
     // TODO: This is just a string in the OpenAPI spec.
     /** Only return files with the given purpose. */
     @query purpose?: string,
@@ -45,6 +50,8 @@ interface Files {
   @tag("Files")
   @summary("Returns information about a specific file.")
   retrieveFile(
+    @header accept: "application/json",
+
     /** The ID of the file to use for this request. */
     @path file_id: string,
   ): OpenAIFile | ErrorResponse;
@@ -55,6 +62,8 @@ interface Files {
   @tag("Files")
   @summary("Delete a file")
   deleteFile(
+    @header accept: "application/json",
+
     /** The ID of the file to use for this request. */
     @path file_id: string,
   ): DeleteFileResponse | ErrorResponse;
@@ -67,6 +76,8 @@ interface Files {
   // TODO: The OpenAPI spec says this returns a plain string but in reality it is returning
   // the file content as bytes.
   downloadFile(
+    @header accept: "application/json",
+    
     /** The ID of the file to use for this request. */
     @path file_id: string,
   ): bytes | ErrorResponse;

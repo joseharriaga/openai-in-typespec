@@ -55,6 +55,7 @@ public partial class FileClient
 
         _pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
+        _internalUploadsClient = new(_pipeline, options);
     }
 
     public FileClient(string apiKey, OpenAIClientOptions options)

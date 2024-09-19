@@ -179,7 +179,9 @@ paths:
                                               {"type": "text", "text": "What's in this image?"},
                                               {
                                                   "type": "image_url",
-                                                  "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+                                                  "image_url": {
+                                                      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+                                                  }
                                               },
                                           ],
                                       }
@@ -203,9 +205,10 @@ paths:
                                         { type: "text", text: "What's in this image?" },
                                         {
                                           type: "image_url",
-                                          image_url:
-                                            "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
-                                        },
+                                          image_url: {
+                                            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+                                          },
+                                        }
                                       ],
                                     },
                                   ],
@@ -2768,7 +2771,7 @@ paths:
                     response: &moderation_example |
                         {
                           "id": "modr-XXXXX",
-                          "model": "text-moderation-005",
+                          "model": "text-moderation-007",
                           "results": [
                             {
                               "flagged": true,
@@ -4684,6 +4687,17 @@ paths:
                   schema:
                       type: string
                   description: The ID of the thread to run.
+                - name: include[]
+                  in: query
+                  description: &include_param_description |
+                    A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.
+
+                    See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
+                  schema:
+                      type: array
+                      items:
+                          type: string
+                          enum: ["step_details.tool_calls[*].file_search.results[*].content"]
             requestBody:
                 required: true
                 content:
@@ -5644,6 +5658,14 @@ paths:
                   description: *pagination_before_param_description
                   schema:
                       type: string
+                - name: include[]
+                  in: query
+                  description: *include_param_description
+                  schema:
+                      type: array
+                      items:
+                          type: string
+                          enum: ["step_details.tool_calls[*].file_search.results[*].content"]
             responses:
                 "200":
                     description: OK
@@ -5655,7 +5677,7 @@ paths:
                 name: List run steps
                 group: threads
                 beta: true
-                returns: A list of [run step](/docs/api-reference/runs/step-object) objects.
+                returns: A list of [run step](/docs/api-reference/run-steps/step-object) objects.
                 examples:
                     request:
                         curl: |
@@ -5747,6 +5769,14 @@ paths:
                   schema:
                       type: string
                   description: The ID of the run step to retrieve.
+                - name: include[]
+                  in: query
+                  description: *include_param_description
+                  schema:
+                      type: array
+                      items:
+                          type: string
+                          enum: ["step_details.tool_calls[*].file_search.results[*].content"]
             responses:
                 "200":
                     description: OK
@@ -5758,7 +5788,7 @@ paths:
                 name: Retrieve run step
                 group: threads
                 beta: true
-                returns: The [run step](/docs/api-reference/runs/step-object) object matching the specified ID.
+                returns: The [run step](/docs/api-reference/run-steps/step-object) object matching the specified ID.
                 examples:
                     request:
                         curl: |
@@ -7830,7 +7860,9 @@ paths:
                               -H "Authorization: Bearer $OPENAI_ADMIN_KEY" \
                               -H "Content-Type: application/json" \
                               -d '{
-                                  "name": "Project ABC"
+                                  "name": "Project ABC",
+                                  "app_use_case": "Your project use case here",
+                                  "business_website": "https://example.com"
                               }'
                     response:
                         content: |
@@ -7840,7 +7872,9 @@ paths:
                                 "name": "Project ABC",
                                 "created_at": 1711471533,
                                 "archived_at": null,
-                                "status": "active"
+                                "status": "active",
+                                "app_use_case": "Your project use case here",
+                                "business_website": "https://example.com"
                             }
 
     /organization/projects/{project_id}:
@@ -7921,7 +7955,9 @@ paths:
                               -H "Authorization: Bearer $OPENAI_ADMIN_KEY" \
                               -H "Content-Type: application/json" \
                               -d '{
-                                  "name": "Project DEF"
+                                  "name": "Project DEF",
+                                  "app_use_case": "Your project use case here",
+                                  "business_website": "https://example.com"
                               }'
 
     /organization/projects/{project_id}/archive:
@@ -8490,7 +8526,7 @@ paths:
                   description: *pagination_after_param_description
                   required: false
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: Project API keys listed successfully.
@@ -9599,7 +9635,12 @@ components:
                         - type: string
                           enum:
                               [
+                                  "o1-preview",
+                                  "o1-preview-2024-09-12",
+                                  "o1-mini",
+                                  "o1-mini-2024-09-12",
                                   "gpt-4o",
+                                  "gpt-4o-2024-08-06",
                                   "gpt-4o-2024-05-13",
                                   "gpt-4o-2024-08-06",
                                   "chatgpt-4o-latest",
@@ -9657,11 +9698,18 @@ components:
                     nullable: true
                 max_tokens:
                     description: |
-                        The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
+                        The maximum number of [tokens](/tokenizer) that can be generated in the chat completion. This value can be used to control [costs](https://openai.com/api/pricing/) for text generated via API.
 
-                        The total length of input tokens and generated tokens is limited by the model's context length. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
+                        This value is now deprecated in favor of `max_completion_tokens`, and is not compatible with [o1 series models](/docs/guides/reasoning).
                     type: integer
                     nullable: true
+                    deprecated: true
+                max_completion_tokens:
+                    description: |
+                        An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and [reasoning tokens](/docs/guides/reasoning).
+                    type: integer
+                    nullable: true
+
                 n:
                     type: integer
                     minimum: 1
@@ -9681,9 +9729,9 @@ components:
                     description: |
                         An object specifying the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4o mini](/docs/models/gpt-4o-mini), [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
 
-                        Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which guarantees the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+                        Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
 
-                        Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
+                        Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
 
                         **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
                     oneOf:
@@ -9705,7 +9753,8 @@ components:
                 service_tier:
                   description: |
                       Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
-                        - If set to 'auto', the system will utilize scale tier credits until they are exhausted.
+                        - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted. 
+                        - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
                         - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
                         - When not set, the default behavior is 'auto'.
 
@@ -10594,12 +10643,12 @@ components:
                             default: auto
                 suffix:
                     description: |
-                        A string of up to 18 characters that will be added to your fine-tuned model name.
+                        A string of up to 64 characters that will be added to your fine-tuned model name.
 
                         For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-4o-mini:openai:custom-model-name:7p4lURel`.
                     type: string
                     minLength: 1
-                    maxLength: 40
+                    maxLength: 64
                     default: null
                     nullable: true
                 validation_file:
@@ -11703,6 +11752,13 @@ components:
                 total_tokens:
                     type: integer
                     description: Total number of tokens used in the request (prompt + completion).
+                completion_tokens_details:
+                    type: object
+                    description: Breakdown of tokens used in a completion.
+                    properties:
+                        reasoning_tokens:
+                            type: integer
+                            description: Tokens generated by the model for reasoning.
             required:
                 - prompt_tokens
                 - completion_tokens
@@ -11750,9 +11806,9 @@ components:
             description: |
                 Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4 Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
-                Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which guarantees the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+                Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
 
-                Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
+                Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
 
                 **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
             oneOf:
@@ -12232,9 +12288,31 @@ components:
                             description: |
                                 The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
 
-                                Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/number-of-chunks-returned) for more information.
+                                Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
+                        ranking_options:
+                            $ref: "#/components/schemas/FileSearchRankingOptions"
             required:
                 - type
+
+        FileSearchRankingOptions:
+            title: File search tool call ranking options
+            type: object
+            description: |
+                The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
+
+                See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
+            properties:
+                ranker:
+                    type: string
+                    description: The ranker to use for the file search. If not specified will use the `auto` ranker.
+                    enum: ["auto", "default_2024_08_21"]
+                score_threshold:
+                    type: number
+                    description: The score threshold for the file search. All values must be a floating point number between 0 and 1.
+                    minimum: 0
+                    maximum: 1
+            required:
+                - score_threshold
 
         AssistantToolsFileSearchTypeOnly:
             type: object
@@ -14198,10 +14276,71 @@ components:
                     type: object
                     description: For now, this is always going to be an empty object.
                     x-oaiTypeLabel: map
+                    properties:
+                        ranking_options:
+                            $ref: "#/components/schemas/RunStepDetailsToolCallsFileSearchRankingOptionsObject"
+                        results:
+                            type: array
+                            description: The results of the file search.
+                            items:
+                                $ref: "#/components/schemas/RunStepDetailsToolCallsFileSearchResultObject"
             required:
                 - id
                 - type
                 - file_search
+
+        RunStepDetailsToolCallsFileSearchRankingOptionsObject:
+            title: File search tool call ranking options
+            type: object
+            description: The ranking options for the file search.
+            properties:
+                ranker:
+                    type: string
+                    description: The ranker used for the file search.
+                    enum: ["default_2024_08_21"]
+                score_threshold:
+                    type: number
+                    description: The score threshold for the file search. All values must be a floating point number between 0 and 1.
+                    minimum: 0
+                    maximum: 1
+            required:
+                - ranker
+                - score_threshold
+
+        RunStepDetailsToolCallsFileSearchResultObject:
+            title: File search tool call result
+            type: object
+            description: A result instance of the file search.
+            x-oaiTypeLabel: map
+            properties:
+                file_id:
+                    type: string
+                    description: The ID of the file that result was found in.
+                file_name:
+                    type: string
+                    description: The name of the file that result was found in.
+                score:
+                    type: number
+                    description: The score of the result. All values must be a floating point number between 0 and 1.
+                    minimum: 0
+                    maximum: 1
+                content:
+                    type: array
+                    description: The content of the result that was found. The content is only included if requested via the include query parameter.
+                    items:
+                        type: object
+                        properties:
+                            type:
+                                type: string
+                                description: The type of the content.
+                                enum: ["text"]
+                            text:
+                                type: string
+                                description: The text content of the file.
+            required:
+                - file_id
+                - file_name
+                - score
 
         RunStepDeltaStepDetailsToolCallsFileSearchObject:
             title: File search tool call
@@ -14989,9 +15128,9 @@ components:
                   required:
                       - event
                       - data
-                  description: Occurs when a [run step](/docs/api-reference/runs/step-object) is created.
+                  description: Occurs when a [run step](/docs/api-reference/run-steps/step-object) is created.
                   x-oaiMeta:
-                      dataDescription: "`data` is a [run step](/docs/api-reference/runs/step-object)"
+                      dataDescription: "`data` is a [run step](/docs/api-reference/run-steps/step-object)"
                 - type: object
                   properties:
                       event:
@@ -15002,9 +15141,9 @@ components:
                   required:
                       - event
                       - data
-                  description: Occurs when a [run step](/docs/api-reference/runs/step-object) moves to an `in_progress` state.
+                  description: Occurs when a [run step](/docs/api-reference/run-steps/step-object) moves to an `in_progress` state.
                   x-oaiMeta:
-                      dataDescription: "`data` is a [run step](/docs/api-reference/runs/step-object)"
+                      dataDescription: "`data` is a [run step](/docs/api-reference/run-steps/step-object)"
                 - type: object
                   properties:
                       event:
@@ -15015,7 +15154,7 @@ components:
                   required:
                       - event
                       - data
-                  description: Occurs when parts of a [run step](/docs/api-reference/runs/step-object) are being streamed.
+                  description: Occurs when parts of a [run step](/docs/api-reference/run-steps/step-object) are being streamed.
                   x-oaiMeta:
                       dataDescription: "`data` is a [run step delta](/docs/api-reference/assistants-streaming/run-step-delta-object)"
                 - type: object
@@ -15028,9 +15167,9 @@ components:
                   required:
                       - event
                       - data
-                  description: Occurs when a [run step](/docs/api-reference/runs/step-object) is completed.
+                  description: Occurs when a [run step](/docs/api-reference/run-steps/step-object) is completed.
                   x-oaiMeta:
-                      dataDescription: "`data` is a [run step](/docs/api-reference/runs/step-object)"
+                      dataDescription: "`data` is a [run step](/docs/api-reference/run-steps/step-object)"
                 - type: object
                   properties:
                       event:
@@ -15041,9 +15180,9 @@ components:
                   required:
                       - event
                       - data
-                  description: Occurs when a [run step](/docs/api-reference/runs/step-object) fails.
+                  description: Occurs when a [run step](/docs/api-reference/run-steps/step-object) fails.
                   x-oaiMeta:
-                      dataDescription: "`data` is a [run step](/docs/api-reference/runs/step-object)"
+                      dataDescription: "`data` is a [run step](/docs/api-reference/run-steps/step-object)"
                 - type: object
                   properties:
                       event:
@@ -15054,9 +15193,9 @@ components:
                   required:
                       - event
                       - data
-                  description: Occurs when a [run step](/docs/api-reference/runs/step-object) is cancelled.
+                  description: Occurs when a [run step](/docs/api-reference/run-steps/step-object) is cancelled.
                   x-oaiMeta:
-                      dataDescription: "`data` is a [run step](/docs/api-reference/runs/step-object)"
+                      dataDescription: "`data` is a [run step](/docs/api-reference/run-steps/step-object)"
                 - type: object
                   properties:
                       event:
@@ -15067,9 +15206,9 @@ components:
                   required:
                       - event
                       - data
-                  description: Occurs when a [run step](/docs/api-reference/runs/step-object) expires.
+                  description: Occurs when a [run step](/docs/api-reference/run-steps/step-object) expires.
                   x-oaiMeta:
-                      dataDescription: "`data` is a [run step](/docs/api-reference/runs/step-object)"
+                      dataDescription: "`data` is a [run step](/docs/api-reference/run-steps/step-object)"
 
         MessageStreamEvent:
             oneOf:
@@ -15994,6 +16133,12 @@ components:
                     type: string
                     enum: [active, archived]
                     description: "`active` or `archived`"
+                app_use_case:
+                    type: string
+                    description: A description of your business, project, or use case. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
+                business_website:
+                    type: string
+                    description: Your business URL, or if you don't have one yet, a URL to your LinkedIn or other social media. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
             required:
                 - id
                 - object
@@ -16009,7 +16154,9 @@ components:
                         "name": "Project example",
                         "created_at": 1711471533,
                         "archived_at": null,
-                        "status": "active"
+                        "status": "active",
+                        "app_use_case": "Your project use case here",
+                        "business_website": "https://example.com"
                     }
         
         ProjectListResponse:
@@ -16041,6 +16188,12 @@ components:
                 name:
                     type: string
                     description: The friendly name of the project, this name appears in reports.
+                app_use_case:
+                    type: string
+                    description: A description of your business, project, or use case. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
+                business_website:
+                    type: string
+                    description: Your business URL, or if you don't have one yet, a URL to your LinkedIn or other social media. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
             required:
                 - name
 
@@ -16050,6 +16203,12 @@ components:
                 name:
                     type: string
                     description: The updated name of the project, this name appears in reports.
+                app_use_case:
+                    type: string
+                    description: A description of your business, project, or use case. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
+                business_website:
+                    type: string
+                    description: Your business URL, or if you don't have one yet, a URL to your LinkedIn or other social media. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
             required:
                 - name
 

@@ -355,7 +355,47 @@ model RunStepDetailsToolCallsFileSearchObject
 
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
-  file_search: Record<unknown>;
+  file_search: {
+    ranking_options?: RunStepDetailsToolCallsFileSearchRankingOptionsObject;
+
+    /** The results of the file search. */
+    results?: RunStepDetailsToolCallsFileSearchResultObject[];
+  };
+}
+
+/** The ranking options for the file search. */
+model RunStepDetailsToolCallsFileSearchRankingOptionsObject {
+  /** The ranker used for the file search. */
+  ranker: "default_2024_08_21";
+
+  /** The score threshold for the file search. All values must be a floating point number between 0 and 1. */
+  @minValue(0)
+  @maxValue(1)
+  score_threshold: float32;
+}
+
+/** A result instance of the file search. */
+@extension("x-oaiTypeLabel", "map")
+model RunStepDetailsToolCallsFileSearchResultObject {
+  /** The ID of the file that result was found in. */
+  file_id: string;
+
+  /** The name of the file that result was found in. */
+  file_name: string;
+
+  /** The score of the result. All values must be a floating point number between 0 and 1. */
+  @minValue(0)
+  @maxValue(1)
+  score: float32;
+
+  /** The content of the result that was found. The content is only included if requested via the include query parameter. */
+  content?: {
+    /** The type of the content. */
+    type?: "text";
+
+    /** The text content of the file. */
+    text?: string;
+  }[];
 }
 
 // Tool customization: apply custom, common base type to union items

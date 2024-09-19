@@ -62,7 +62,7 @@ namespace Azure.AI.OpenAI.Chat
         /// Note that content and vector field mappings are required for MongoDB.
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="endpoint"/>, <paramref name="databaseName"/>, <paramref name="collectionName"/>, <paramref name="appName"/>, <paramref name="indexName"/>, <paramref name="authentication"/>, <paramref name="embeddingDependency"/> or <paramref name="fieldMappings"/> is null. </exception>
-        internal InternalMongoDBChatDataSourceParameters(string endpoint, string databaseName, string collectionName, string appName, string indexName, DataSourceAuthentication authentication, DataSourceVectorizer embeddingDependency, DataSourceFieldMappings fieldMappings)
+        public InternalMongoDBChatDataSourceParameters(string endpoint, string databaseName, string collectionName, string appName, string indexName, DataSourceAuthentication authentication, DataSourceVectorizer embeddingDependency, DataSourceFieldMappings fieldMappings)
         {
             Argument.AssertNotNull(endpoint, nameof(endpoint));
             Argument.AssertNotNull(databaseName, nameof(databaseName));
@@ -148,24 +148,24 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> The configured number of documents to feature in the query. </summary>
-        internal int? TopNDocuments { get; set; }
+        public int? TopNDocuments { get; set; }
         /// <summary> Whether queries should be restricted to use of the indexed data. </summary>
-        internal bool? InScope { get; set; }
+        public bool? InScope { get; set; }
         /// <summary>
         /// The configured strictness of the search relevance filtering.
         /// Higher strictness will increase precision but lower recall of the answer.
         /// </summary>
-        internal int? Strictness { get; set; }
+        public int? Strictness { get; set; }
         /// <summary>
         /// The maximum number of rewritten queries that should be sent to the search provider for a single user message.
         /// By default, the system will make an automatic determination.
         /// </summary>
-        internal int? MaxSearchQueries { get; set; }
+        public int? MaxSearchQueries { get; set; }
         /// <summary>
         /// If set to true, the system will allow partial search results to be used and the request will fail if all
         /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
         /// </summary>
-        internal bool? AllowPartialResult { get; set; }
+        public bool? AllowPartialResult { get; set; }
         /// <summary> The name of the MongoDB cluster endpoint. </summary>
         internal string Endpoint { get; set; }
         /// <summary> The name of the MongoDB database. </summary>

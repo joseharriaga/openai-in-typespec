@@ -20,10 +20,7 @@ public partial class FileSearchToolDefinition : IJsonModel<FileSearchToolDefinit
         if (Optional.IsDefined(MaxResults))
         {
             writer.WritePropertyName("file_search"u8);
-            writer.WriteStartObject();
-            writer.WritePropertyName("max_num_results"u8);
-            writer.WriteNumberValue(MaxResults.Value);
-            writer.WriteEndObject();
+            writer.WriteObjectValue(_fileSearch, options);
         }
         writer.WriteSerializedAdditionalRawData(SerializedAdditionalRawData, options);
         writer.WriteEndObject();

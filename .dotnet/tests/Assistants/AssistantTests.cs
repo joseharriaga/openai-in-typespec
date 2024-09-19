@@ -773,7 +773,7 @@ public partial class AssistantTests : SyncAsyncTestBase
     }
 
     [Test]
-    public async Task BasicFileSearchWorks()
+    public async Task FileSearchWorks()
     {
         // First, we need to upload a simple test file.
         FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
@@ -791,20 +791,33 @@ public partial class AssistantTests : SyncAsyncTestBase
 
         AssistantClient client = GetTestClient();
 
-        AssistantCreationOptions creationOptions = new AssistantCreationOptions()
+        FileSearchToolDefinition fileSearchTool = new()
         {
-            Tools = { new FileSearchToolDefinition() },
-            ToolResources = new()
+            MaxResults = 2,
+            RankingOptions = new()
             {
-                FileSearch = new()
-                {
-                    NewVectorStores =
-                    {
-                        new VectorStoreCreationHelper([testFile.Id]),
-                    }
-                }
+                ScoreThreshold = 0.5f,
+                Ranker = FileSearchRanker.Default20240821
             }
         };
+
+        FileSearchToolResources fileSearchResources = new()
+        {
+            NewVectorStores =
+            {
+                new VectorStoreCreationHelper([testFile.Id]),
+            },
+        };
+
+        AssistantCreationOptions creationOptions = new AssistantCreationOptions()
+        {
+            Tools = { fileSearchTool },
+            ToolResources = new()
+            {
+                FileSearch = fileSearchResources
+            },
+        };
+
         // Create an assistant, using the creation helper to make a new vector store
         Assistant assistant = IsAsync
             ? await client.CreateAssistantAsync("gpt-4o-mini", creationOptions)
@@ -904,6 +917,27 @@ public partial class AssistantTests : SyncAsyncTestBase
         }
         Assert.That(messageCount > 1);
         Assert.That(hasCake, Is.True);
+
+        List<RunStep> runSteps = client.GetRunSteps(run.ThreadId, run.Id).ToList();
+        Assert.That(runSteps, Is.Not.Null.And.Not.Empty);
+
+        RunStepToolCall fileSearchToolCall = runSteps
+            .SelectMany(runStep => runStep.Details?.ToolCalls ?? [])
+            .FirstOrDefault(toolCall => toolCall.ToolKind == RunStepToolCallKind.FileSearch);
+        Assert.That(fileSearchToolCall, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(fileSearchToolCall.FileSearchRanker, Is.EqualTo(fileSearchTool.RankingOptions.Ranker));
+            Assert.That(fileSearchToolCall.FileSearchScoreThreshold, Is.EqualTo(fileSearchTool.RankingOptions.ScoreThreshold));
+            Assert.That(fileSearchToolCall.FileSearchResults, Has.Count.GreaterThan(0));
+        });
+        Assert.Multiple(() =>
+        {
+            RunStepFileSearchResult fileSearchResult = fileSearchToolCall.FileSearchResults[0];
+            Assert.That(fileSearchResult.FileId, Is.Not.Null.And.Not.Empty);
+            Assert.That(fileSearchResult.FileName, Is.Not.Null.And.Not.Empty);
+            Assert.That(fileSearchResult.Score, Is.GreaterThan(0));
+        });
     }
 
     [Test]

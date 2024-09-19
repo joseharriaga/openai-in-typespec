@@ -17,6 +17,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Returns a list of vector-stores.")
   listVectorStores(
+    @header accept: "application/json",
+
     /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
      * default is 20.
@@ -49,6 +51,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Creates a vector store.")
   createVectorStore(
+    @header accept: "application/json",
+
     @body requestBody: CreateVectorStoreRequest,
   ): VectorStoreObject | ErrorResponse;
 
@@ -58,6 +62,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Retrieves a vector store.")
   getVectorStore(
+    @header accept: "application/json",
+
     /** The ID of the vector store to retrieve. */
     @path vector_store_id: string,
   ): VectorStoreObject | ErrorResponse;
@@ -68,6 +74,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Modifies a vector store.")
   modifyVectorStore(
+    @header accept: "application/json",
+
     /** The ID of the vector store to modify. */
     @path vector_store_id: string,
 
@@ -80,6 +88,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Delete a vector store.")
   deleteVectorStore(
+    @header accept: "application/json",
+
     /** The ID of the vector store to delete. */
     @path vector_store_id: string,
   ): DeleteVectorStoreResponse | ErrorResponse;
@@ -90,6 +100,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Returns a list of vector store files.")
   listVectorStoreFiles(
+    @header accept: "application/json",
+
     /** The ID of the vector store that the files belong to. */
     @path vector_store_id: string,
 
@@ -131,6 +143,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Create a vector store file by attaching a [File](/docs/api-reference/files) to a [vector store](/docs/api-reference/vector-stores/object).")
   createVectorStoreFile(
+    @header accept: "application/json",
+
     /** The ID of the vector store for which to create a File. */
     @path vector_store_id: string,
 
@@ -143,6 +157,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Retrieves a vector store file.")
   getVectorStoreFile(
+    @header accept: "application/json",
+
     /** The ID of the vector store that the file belongs to. */
     @path vector_store_id: string,
 
@@ -156,6 +172,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Delete a vector store file. This will remove the file from the vector store but the file itself will not be deleted. To delete the file, use the [delete file](/docs/api-reference/files/delete) endpoint.")
   deleteVectorStoreFile(
+    @header accept: "application/json",
+
     /** The ID of the vector store that the file belongs to. */
     @path vector_store_id: string,
 
@@ -169,6 +187,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Create a vector store file batch.")
   createVectorStoreFileBatch(
+    @header accept: "application/json",
+
     /** The ID of the vector store for which to create a file batch. */
     @path vector_store_id: string,
 
@@ -181,6 +201,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Retrieves a vector store file batch.")
   getVectorStoreFileBatch(
+    @header accept: "application/json",
+
     /** The ID of the vector store that the file batch belongs to. */
     @path vector_store_id: string,
 
@@ -194,6 +216,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible.")
   cancelVectorStoreFileBatch(
+    @header accept: "application/json",
+
     /** The ID of the vector store that the file batch belongs to. */
     @path vector_store_id: string,
 
@@ -207,6 +231,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Returns a list of vector store files in a batch.")
   listFilesInVectorStoreBatch(
+    @header accept: "application/json",
+    
     /** The ID of the vector store that the file batch belongs to. */
     @path vector_store_id: string,
 

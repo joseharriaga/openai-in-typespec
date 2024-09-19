@@ -24,7 +24,11 @@ interface Uploads {
     
     For guidance on the proper filename extensions for each purpose, please follow the documentation on [creating a File](/docs/api-reference/files/create).
     """)
-  createUpload(@body requestBody: CreateUploadRequest): Upload | ErrorResponse;
+  createUpload(
+    @header accept: "application/json",
+    
+    @body requestBody: CreateUploadRequest
+  ): Upload | ErrorResponse;
 
   @route("{upload_id}/parts")
   @post
@@ -38,8 +42,12 @@ interface Uploads {
     It is possible to add multiple Parts in parallel. You can decide the intended order of the Parts when you [complete the Upload](/docs/api-reference/uploads/complete).
     """)
   addUploadPart(
-    @path upload_id: string,
+    @header accept: "application/json",
+
     @header contentType: "multipart/form-data",
+
+    @path upload_id: string,
+
     @body requestBody: AddUploadPartRequest,
   ): UploadPart | ErrorResponse;
 
@@ -57,7 +65,10 @@ interface Uploads {
     The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.
     """)
   completeUpload(
+    @header accept: "application/json",
+
     @path upload_id: string,
+    
     @body requestBody: CompleteUploadRequest,
   ): Upload | ErrorResponse;
 
@@ -66,5 +77,9 @@ interface Uploads {
   @operationId("cancelUpload")
   @tag("Uploads")
   @summary("Cancels the Upload. No Parts may be added after an Upload is cancelled.")
-  cancelUpload(@path upload_id: string): Upload | ErrorResponse;
+  cancelUpload(
+    @header accept: "application/json",
+    
+    @path upload_id: string
+  ): Upload | ErrorResponse;
 }

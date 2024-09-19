@@ -542,6 +542,12 @@ model Project {
     `active` or `archived`
     """)
   status: "active" | "archived";
+
+  /** A description of your business, project, or use case. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications). */
+  app_use_case?: string;
+
+  /** Your business URL, or if you don't have one yet, a URL to your LinkedIn or other social media. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications). */
+  business_website?: string;
 }
 
 model ProjectListResponse {
@@ -555,11 +561,23 @@ model ProjectListResponse {
 model ProjectCreateRequest {
   /** The friendly name of the project, this name appears in reports. */
   name: string;
+
+  /** A description of your business, project, or use case. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications). */
+  app_use_case?: string;
+
+  /** Your business URL, or if you don't have one yet, a URL to your LinkedIn or other social media. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications). */
+  business_website?: string;
 }
 
 model ProjectUpdateRequest {
   /** The updated name of the project, this name appears in reports. */
   name: string;
+
+  /** A description of your business, project, or use case. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications). */
+  app_use_case?: string;
+
+  /** Your business URL, or if you don't have one yet, a URL to your LinkedIn or other social media. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications). */
+  business_website?: string;
 }
 
 model DefaultProjectErrorResponse {

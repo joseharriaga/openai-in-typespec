@@ -455,9 +455,9 @@ public partial class OpenAIChatModelFactoryTests
     {
         ChatTokenUsage chatTokenUsage = OpenAIChatModelFactory.ChatTokenUsage();
 
-        Assert.That(chatTokenUsage.OutputTokens, Is.EqualTo(0));
-        Assert.That(chatTokenUsage.InputTokens, Is.EqualTo(0));
-        Assert.That(chatTokenUsage.TotalTokens, Is.EqualTo(0));
+        Assert.That(chatTokenUsage.OutputTokenCount, Is.EqualTo(0));
+        Assert.That(chatTokenUsage.InputTokenCount, Is.EqualTo(0));
+        Assert.That(chatTokenUsage.TotalTokenCount, Is.EqualTo(0));
     }
 
     [Test]
@@ -466,9 +466,9 @@ public partial class OpenAIChatModelFactoryTests
         int outputTokens = 271828;
         ChatTokenUsage chatTokenUsage = OpenAIChatModelFactory.ChatTokenUsage(outputTokens: outputTokens);
 
-        Assert.That(chatTokenUsage.OutputTokens, Is.EqualTo(outputTokens));
-        Assert.That(chatTokenUsage.InputTokens, Is.EqualTo(0));
-        Assert.That(chatTokenUsage.TotalTokens, Is.EqualTo(0));
+        Assert.That(chatTokenUsage.OutputTokenCount, Is.EqualTo(outputTokens));
+        Assert.That(chatTokenUsage.InputTokenCount, Is.EqualTo(0));
+        Assert.That(chatTokenUsage.TotalTokenCount, Is.EqualTo(0));
     }
 
     [Test]
@@ -477,9 +477,9 @@ public partial class OpenAIChatModelFactoryTests
         int inputTokens = 271828;
         ChatTokenUsage chatTokenUsage = OpenAIChatModelFactory.ChatTokenUsage(inputTokens: inputTokens);
 
-        Assert.That(chatTokenUsage.OutputTokens, Is.EqualTo(0));
-        Assert.That(chatTokenUsage.InputTokens, Is.EqualTo(inputTokens));
-        Assert.That(chatTokenUsage.TotalTokens, Is.EqualTo(0));
+        Assert.That(chatTokenUsage.OutputTokenCount, Is.EqualTo(0));
+        Assert.That(chatTokenUsage.InputTokenCount, Is.EqualTo(inputTokens));
+        Assert.That(chatTokenUsage.TotalTokenCount, Is.EqualTo(0));
     }
 
     [Test]
@@ -488,9 +488,9 @@ public partial class OpenAIChatModelFactoryTests
         int totalTokens = 271828;
         ChatTokenUsage chatTokenUsage = OpenAIChatModelFactory.ChatTokenUsage(totalTokens: totalTokens);
 
-        Assert.That(chatTokenUsage.OutputTokens, Is.EqualTo(0));
-        Assert.That(chatTokenUsage.InputTokens, Is.EqualTo(0));
-        Assert.That(chatTokenUsage.TotalTokens, Is.EqualTo(totalTokens));
+        Assert.That(chatTokenUsage.OutputTokenCount, Is.EqualTo(0));
+        Assert.That(chatTokenUsage.InputTokenCount, Is.EqualTo(0));
+        Assert.That(chatTokenUsage.TotalTokenCount, Is.EqualTo(totalTokens));
     }
 
     [Test]

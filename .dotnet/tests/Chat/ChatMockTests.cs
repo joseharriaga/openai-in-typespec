@@ -113,9 +113,9 @@ public partial class ChatMockTests : SyncAsyncTestBase
             ? await client.CompleteChatAsync(s_messages)
             : client.CompleteChat(s_messages);
 
-        Assert.That(chatCompletion.Usage.InputTokens, Is.EqualTo(10));
-        Assert.That(chatCompletion.Usage.OutputTokens, Is.EqualTo(20));
-        Assert.That(chatCompletion.Usage.TotalTokens, Is.EqualTo(30));
+        Assert.That(chatCompletion.Usage.InputTokenCount, Is.EqualTo(10));
+        Assert.That(chatCompletion.Usage.OutputTokenCount, Is.EqualTo(20));
+        Assert.That(chatCompletion.Usage.TotalTokenCount, Is.EqualTo(30));
     }
 
     [Test]

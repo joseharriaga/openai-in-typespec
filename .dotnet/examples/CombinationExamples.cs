@@ -39,7 +39,7 @@ public partial class CombinationExamples
             ],
             new ChatCompletionOptions()
             {
-                MaxTokens = 2048,
+                MaxOutputTokenCount = 2048,
             }
             );
 
@@ -77,7 +77,7 @@ public partial class CombinationExamples
             ],
             new ChatCompletionOptions()
             {
-                MaxTokens = 2048,
+                MaxOutputTokenCount = 2048,
             });
         string description = creativeWriterResult.Value.Content[0].Text;
         Console.WriteLine($"Creative helper's creature description:\n{description}");
@@ -125,7 +125,7 @@ public partial class CombinationExamples
             ],
             new ChatCompletionOptions()
             {
-                MaxTokens = 2048,
+                MaxOutputTokenCount = 2048,
             });
         string appraisal = criticalAppraisalResult.Value.Content[0].Text;
         Console.WriteLine($"Critic's appraisal:\n{appraisal}");

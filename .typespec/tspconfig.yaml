@@ -9,3 +9,4 @@ options:
     unreferenced-types-handling: keepAll
     disable-xml-docs: true
     enable-internal-raw-data: true
+    generate-model-factory: false

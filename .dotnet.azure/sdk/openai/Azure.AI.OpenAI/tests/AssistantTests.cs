@@ -80,8 +80,8 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
             },
         });
         Assert.That(modifiedAssistant.Id, Is.EqualTo(assistant.Id));
-        AsyncPageCollection<Assistant> recentAssistants = client.GetAssistantsAsync();
-        Assistant firstAssistant = await recentAssistants.GetAllValuesAsync().FirstOrDefaultAsync();
+        AsyncCollectionResult<Assistant> recentAssistants = client.GetAssistantsAsync();
+        Assistant firstAssistant = await recentAssistants.FirstOrDefaultAsync();
         Assert.That(firstAssistant, Is.Not.Null);
         Assert.That(firstAssistant.Metadata.TryGetValue("testkey", out string newMetadataValue) && newMetadataValue == "goodbye!");
     }
@@ -595,16 +595,12 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
             r => r.Status.IsTerminal);
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        AsyncPageCollection<ThreadMessage> messages = client.GetMessagesAsync(thread, new() { Order = MessageCollectionOrder.Descending });
-        int numPages = 0;
+        AsyncCollectionResult<ThreadMessage> messages = client.GetMessagesAsync(thread, new() { Order = MessageCollectionOrder.Descending });
         int numThreads = 0;
         bool hasCake = false;
-        await foreach (PageResult<ThreadMessage> page in messages)
+        await foreach (ThreadMessage message in messages)
         {
-            numPages++;
-            foreach (ThreadMessage message in page.Values)
-            {
-                numThreads++;
+            numThreads++;
             foreach (MessageContent content in message.Content)
             {
                 Console.WriteLine(content.Text);
@@ -615,9 +611,7 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
                 }
             }
         }
-        }
 
-        Assert.That(numPages, Is.GreaterThan(0));
         Assert.That(numThreads, Is.GreaterThan(0));
         Assert.That(hasCake, Is.True);
     }

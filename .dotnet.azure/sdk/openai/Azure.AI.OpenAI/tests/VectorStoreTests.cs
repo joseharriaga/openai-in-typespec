@@ -113,12 +113,12 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             Assert.That(vectorStore.Name, Is.EqualTo($"Test Vector Store {i}"));
         }
 
-        AsyncPageCollection<VectorStore> response = client.GetVectorStoresAsync(new VectorStoreCollectionOptions() { Order = VectorStoreCollectionOrder.Descending });
+        AsyncCollectionResult<VectorStore> response = client.GetVectorStoresAsync(new VectorStoreCollectionOptions() { Order = VectorStoreCollectionOrder.Descending });
         Assert.That(response, Is.Not.Null);
 
         int lastIdSeen = int.MaxValue;
         int count = 0;
-        await foreach (VectorStore vectorStore in response.GetAllValuesAsync())
+        await foreach (VectorStore vectorStore in response)
         {
             Assert.That(vectorStore.Id, Is.Not.Null);
             if (vectorStore.Name?.StartsWith("Test Vector Store ") == true)
@@ -168,8 +168,8 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         Thread.Sleep(1000);
 
         int count = 0;
-        AsyncPageCollection<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(vectorStore);
-        await foreach (VectorStoreFileAssociation association in response.GetAllValuesAsync())
+        AsyncCollectionResult<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(vectorStore);
+        await foreach (VectorStoreFileAssociation association in response)
         {
             count++;
             Assert.That(association.FileId, Is.Not.EqualTo(files[0].Id));
@@ -202,8 +202,8 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             b => b.Status != VectorStoreBatchFileJobStatus.InProgress);
         Assert.That(batchJob.Status, Is.EqualTo(VectorStoreBatchFileJobStatus.Completed));
 
-        AsyncPageCollection<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(batchJob);
-        await foreach (VectorStoreFileAssociation association in response.GetAllValuesAsync())
+        AsyncCollectionResult<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(batchJob);
+        await foreach (VectorStoreFileAssociation association in response)
         {
             Assert.Multiple(() =>
             {

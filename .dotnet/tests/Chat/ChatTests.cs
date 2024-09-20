@@ -5,7 +5,6 @@ using OpenAI.Tests.Telemetry;
 using OpenAI.Tests.Utility;
 using System;
 using System.ClientModel;
-using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -23,7 +22,7 @@ namespace OpenAI.Tests.Chat;
 [TestFixture(false)]
 [Parallelizable(ParallelScope.All)]
 [Category("Chat")]
-public partial class ChatTests : SyncAsyncTestBase
+public class ChatTests : SyncAsyncTestBase
 {
     public ChatTests(bool isAsync) : base(isAsync)
     {

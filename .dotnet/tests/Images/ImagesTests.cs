@@ -1,12 +1,12 @@
-﻿using System;
+﻿using NUnit.Framework;
+using OpenAI.Chat;
+using OpenAI.Images;
+using OpenAI.Tests.Utility;
+using System;
 using System.ClientModel;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using OpenAI.Chat;
-using OpenAI.Images;
-using OpenAI.Tests.Utility;
 using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Images;
@@ -15,11 +15,11 @@ namespace OpenAI.Tests.Images;
 [TestFixture(false)]
 [Parallelizable(ParallelScope.All)]
 [Category("Images")]
-public partial class ImageGenerationTests : SyncAsyncTestBase
+public class ImagesTests : SyncAsyncTestBase
 {
     private const string CatPrompt = "A big cat with big round eyes and large cat ears, sitting in an empty room and looking at the camera.";
 
-    public ImageGenerationTests(bool isAsync) : base(isAsync)
+    public ImagesTests(bool isAsync) : base(isAsync)
     {
     }
 

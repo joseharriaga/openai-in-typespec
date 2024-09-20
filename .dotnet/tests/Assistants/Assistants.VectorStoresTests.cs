@@ -20,9 +20,18 @@ namespace OpenAI.Tests.VectorStores;
 [TestFixture(false)]
 [Parallelizable(ParallelScope.Fixtures)]
 [Category("Assistants")]
-public partial class VectorStoreTests : SyncAsyncTestBase
+public class VectorStoresTests : SyncAsyncTestBase
 {
-    public VectorStoreTests(bool isAsync)
+    private readonly List<VectorStoreBatchFileJob> _jobsToCancel = [];
+    private readonly List<VectorStoreFileAssociation> _associationsToRemove = [];
+    private readonly List<OpenAIFileInfo> _filesToDelete = [];
+    private readonly List<VectorStore> _vectorStoresToDelete = [];
+
+    private static readonly DateTimeOffset s_2024 = new(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+    private static VectorStoreClient GetTestClient() => GetTestClient<VectorStoreClient>(TestScenario.VectorStores);
+
+    public VectorStoresTests(bool isAsync)
         : base(isAsync)
     {
     }
@@ -641,15 +650,6 @@ public partial class VectorStoreTests : SyncAsyncTestBase
             throw new NotImplementedException($"{nameof(Validate)} helper not implemented for: {typeof(T)}");
         }
     }
-
-    private readonly List<VectorStoreBatchFileJob> _jobsToCancel = [];
-    private readonly List<VectorStoreFileAssociation> _associationsToRemove = [];
-    private readonly List<OpenAIFileInfo> _filesToDelete = [];
-    private readonly List<VectorStore> _vectorStoresToDelete = [];
-
-    private static VectorStoreClient GetTestClient() => GetTestClient<VectorStoreClient>(TestScenario.VectorStores);
-
-    private static readonly DateTimeOffset s_2024 = new(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);
 }
 
 #pragma warning restore OPENAI001

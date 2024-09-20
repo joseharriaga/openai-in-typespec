@@ -1,14 +1,15 @@
-﻿using System;
+﻿using NUnit.Framework;
+using OpenAI.Files;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
-using OpenAI.Files;
 
 namespace OpenAI.Tests.Files;
 
 [Parallelizable(ParallelScope.All)]
+[Category("Files")]
 [Category("Smoke")]
-public partial class OpenAIFilesModelFactoryTests
+public class OpenAIFilesModelFactoryTests
 {
 #pragma warning disable CS0618
     [Test]

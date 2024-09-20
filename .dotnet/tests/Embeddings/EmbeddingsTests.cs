@@ -13,9 +13,11 @@ namespace OpenAI.Tests.Embeddings;
 [TestFixture(false)]
 [Parallelizable(ParallelScope.All)]
 [Category("Embeddings")]
-public partial class EmbeddingTests : SyncAsyncTestBase
+public class EmbeddingsTests : SyncAsyncTestBase
 {
-    public EmbeddingTests(bool isAsync) : base(isAsync)
+    private static EmbeddingClient GetTestClient() => GetTestClient<EmbeddingClient>(TestScenario.Embeddings);
+
+    public EmbeddingsTests(bool isAsync) : base(isAsync)
     {
     }
 
@@ -178,6 +180,4 @@ public partial class EmbeddingTests : SyncAsyncTestBase
     {
         // TODO: Add this test.
     }
-
-    private static EmbeddingClient GetTestClient() => GetTestClient<EmbeddingClient>(TestScenario.Embeddings);
 }

@@ -1,24 +1,25 @@
-﻿using System;
+﻿using NUnit.Framework;
+using OpenAI.Images;
+using OpenAI.Tests.Utility;
+using System;
 using System.ClientModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using OpenAI.Images;
-using OpenAI.Tests.Utility;
 
 namespace OpenAI.Tests.Images;
 
 [TestFixture(true)]
 [TestFixture(false)]
 [Parallelizable(ParallelScope.All)]
+[Category("Images")]
 [Category("Smoke")]
-public partial class ImageGenerationMockTests : SyncAsyncTestBase
+public class ImagesMockTests : SyncAsyncTestBase
 {
     private static readonly ApiKeyCredential s_fakeCredential = new ApiKeyCredential("key");
 
-    public ImageGenerationMockTests(bool isAsync)
+    public ImagesMockTests(bool isAsync)
         : base(isAsync)
     {
     }

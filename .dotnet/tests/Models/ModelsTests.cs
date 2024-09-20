@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NUnit.Framework;
+using OpenAI.Models;
+using OpenAI.Tests.Utility;
+using System;
 using System.ClientModel;
 using System.Linq;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using OpenAI.Models;
-using OpenAI.Tests.Utility;
 using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Models;
@@ -13,9 +13,9 @@ namespace OpenAI.Tests.Models;
 [TestFixture(false)]
 [Parallelizable(ParallelScope.All)]
 [Category("Models")]
-public partial class ModelTests : SyncAsyncTestBase
+public class ModelsTests : SyncAsyncTestBase
 {
-    public ModelTests(bool isAsync) : base(isAsync)
+    public ModelsTests(bool isAsync) : base(isAsync)
     {
     }
 

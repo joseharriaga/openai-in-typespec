@@ -1,21 +1,16 @@
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using NUnit.Framework;
 using OpenAI.Chat;
-using OpenAI.Tests.Telemetry;
 using OpenAI.Tests.Utility;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using static OpenAI.Tests.Telemetry.TestMeterListener;
-using static OpenAI.Tests.TestHelpers;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OpenAI.Tests.Chat;
 
@@ -24,7 +19,7 @@ namespace OpenAI.Tests.Chat;
 [Parallelizable(ParallelScope.All)]
 [Category("Chat")]
 [Category("Smoke")]
-public partial class ChatSmokeTests : SyncAsyncTestBase
+public class ChatSmokeTests : SyncAsyncTestBase
 {
     public ChatSmokeTests(bool isAsync) : base(isAsync)
     {

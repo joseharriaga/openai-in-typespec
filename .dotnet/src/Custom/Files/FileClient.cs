@@ -291,8 +291,7 @@ public partial class FileClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         ClientResult result = await DeleteFileAsync(fileId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        FileDeletionResult value = FileDeletionResult.FromResponse(result.GetRawResponse());
-        return ClientResult.FromValue(value, result.GetRawResponse());
+        return ClientResult.FromValue(FileDeletionResult.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
     /// <summary> Deletes the specified file. </summary>
@@ -305,8 +304,7 @@ public partial class FileClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         ClientResult result = DeleteFile(fileId, cancellationToken.ToRequestOptions());
-        FileDeletionResult value = FileDeletionResult.FromResponse(result.GetRawResponse());
-        return ClientResult.FromValue(value, result.GetRawResponse());
+        return ClientResult.FromValue(FileDeletionResult.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
     /// <summary> Downloads the content of the specified file. </summary>

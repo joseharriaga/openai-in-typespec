@@ -1,11 +1,11 @@
-﻿using System;
+﻿using NUnit.Framework;
+using OpenAI.Files;
+using OpenAI.Tests.Utility;
+using System;
 using System.ClientModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using OpenAI.Files;
-using OpenAI.Tests.Utility;
 using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Files;
@@ -14,9 +14,11 @@ namespace OpenAI.Tests.Files;
 [TestFixture(false)]
 [Parallelizable(ParallelScope.Fixtures)]
 [Category("Files")]
-public partial class FileTests : SyncAsyncTestBase
+public class FilesTests : SyncAsyncTestBase
 {
-    public FileTests(bool isAsync) : base(isAsync)
+    private static FileClient GetTestClient() => GetTestClient<FileClient>(TestScenario.Files);
+
+    public FilesTests(bool isAsync) : base(isAsync)
     {
     }
 
@@ -387,6 +389,4 @@ public partial class FileTests : SyncAsyncTestBase
             : client.UploadFile(fileContent, filename, FileUploadPurpose.Assistants);
         Assert.That(uploadedFile?.Filename, Is.EqualTo(filename));
     }
-
-    private static FileClient GetTestClient() => GetTestClient<FileClient>(TestScenario.Files);
 }

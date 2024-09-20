@@ -135,9 +135,7 @@ public partial class ModelClient
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
         ClientResult result = await DeleteModelAsync(model, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        PipelineResponse response = result?.GetRawResponse();
-        ModelDeletionResult value = ModelDeletionResult.FromResponse(response);
-        return ClientResult.FromValue(value, response);
+        return ClientResult.FromValue(ModelDeletionResult.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
     /// <summary> Deletes the specified fine-tuned model. </summary>
@@ -151,8 +149,6 @@ public partial class ModelClient
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
         ClientResult result = DeleteModel(model, cancellationToken.ToRequestOptions());
-        PipelineResponse response = result?.GetRawResponse();
-        ModelDeletionResult value = ModelDeletionResult.FromResponse(response);
-        return ClientResult.FromValue(value, response);
+        return ClientResult.FromValue(ModelDeletionResult.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 }

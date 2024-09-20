@@ -1,15 +1,26 @@
-﻿using System;
+﻿using NUnit.Framework;
+using OpenAI.Files;
+using OpenAI.Tests.Utility;
+using System;
 using System.ClientModel;
 using System.Text.Json;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using OpenAI.Files;
-using OpenAI.Tests.Utility;
+using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Files;
 
-public partial class FileTests : SyncAsyncTestBase
+[TestFixture(true)]
+[TestFixture(false)]
+[Parallelizable(ParallelScope.Fixtures)]
+[Category("Uploads")]
+public class UploadsTests : SyncAsyncTestBase
 {
+    private static FileClient GetTestClient() => GetTestClient<FileClient>(TestScenario.Files);
+
+    public UploadsTests(bool isAsync) : base(isAsync)
+    {
+    }
+
     [Test]
     [TestCase(true)]
     [TestCase(false)]

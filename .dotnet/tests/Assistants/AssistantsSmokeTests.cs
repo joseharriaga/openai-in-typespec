@@ -1,12 +1,7 @@
 using NUnit.Framework;
 using OpenAI.Assistants;
-using OpenAI.Chat;
-using OpenAI.Files;
-using OpenAI.VectorStores;
 using System;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
-using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.Assistants;
 
@@ -15,7 +10,7 @@ namespace OpenAI.Tests.Assistants;
 [Parallelizable(ParallelScope.Fixtures)]
 [Category("Assistants")]
 [Category("Smoke")]
-public partial class AssistantSmokeTests
+public class AssistantsSmokeTests
 {
     [Test]
     public void RunStepDeserialization()

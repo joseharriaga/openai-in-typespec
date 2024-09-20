@@ -1,14 +1,15 @@
-﻿using System;
+﻿using NUnit.Framework;
+using OpenAI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
-using OpenAI.Models;
 
 namespace OpenAI.Tests.Models;
 
 [Parallelizable(ParallelScope.All)]
+[Category("Models")]
 [Category("Smoke")]
-public partial class OpenAIModelsModelFactoryTests
+public class OpenAIModelsModelFactoryTests
 {
     [Test]
     public void ModelDeletionResultWithNoPropertiesWorks()

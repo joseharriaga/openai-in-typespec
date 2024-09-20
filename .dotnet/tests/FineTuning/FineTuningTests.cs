@@ -1,12 +1,11 @@
-﻿using System;
+﻿using NUnit.Framework;
+using OpenAI.FineTuning;
+using OpenAI.Tests.Utility;
+using System;
 using System.ClientModel;
-using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using OpenAI.FineTuning;
-using OpenAI.Tests.Utility;
 using static OpenAI.Tests.TestHelpers;
 
 namespace OpenAI.Tests.FineTuning;

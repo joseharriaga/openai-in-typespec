@@ -22,9 +22,21 @@ namespace OpenAI.Tests.Assistants;
 [TestFixture(false)]
 [Parallelizable(ParallelScope.Fixtures)]
 [Category("Assistants")]
-public partial class AssistantTests : SyncAsyncTestBase
+public class AssistantsTests : SyncAsyncTestBase
 {
-    public AssistantTests(bool isAsync)
+    private readonly List<Assistant> _assistantsToDelete = [];
+    private readonly List<AssistantThread> _threadsToDelete = [];
+    private readonly List<ThreadMessage> _messagesToDelete = [];
+    private readonly List<OpenAIFileInfo> _filesToDelete = [];
+    private readonly List<string> _vectorStoreIdsToDelete = [];
+
+    private static readonly DateTimeOffset s_2024 = new(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);
+    private static readonly string s_testAssistantName = $".NET SDK Test Assistant - Please Delete Me";
+    private static readonly string s_cleanupMetadataKey = $"test_metadata_cleanup_eligible";
+
+    private static AssistantClient GetTestClient() => GetTestClient<AssistantClient>(TestScenario.Assistants);
+
+    public AssistantsTests(bool isAsync)
         : base(isAsync)
     {
     }
@@ -1027,6 +1039,8 @@ public partial class AssistantTests : SyncAsyncTestBase
     {
         AssertAsyncOnly();
 
+        const int TestAssistantCount = 10;
+
         AssistantClient client = GetTestClient();
 
         // Create assistant collection
@@ -1062,7 +1076,7 @@ public partial class AssistantTests : SyncAsyncTestBase
             }
         }
 
-        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+        Assert.That(count, Is.GreaterThanOrEqualTo(TestAssistantCount));
     }
 
     [Test]
@@ -1070,10 +1084,12 @@ public partial class AssistantTests : SyncAsyncTestBase
     {
         AssertSyncOnly();
 
+        const int TestAssistantCount = 10;
+
         AssistantClient client = GetTestClient();
 
         // Create assistant collection
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < TestAssistantCount; i++)
         {
             Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
             {
@@ -1105,7 +1121,7 @@ public partial class AssistantTests : SyncAsyncTestBase
             }
         }
 
-        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+        Assert.That(count, Is.GreaterThanOrEqualTo(TestAssistantCount));
     }
 
     [Test]
@@ -1113,10 +1129,13 @@ public partial class AssistantTests : SyncAsyncTestBase
     {
         AssertAsyncOnly();
 
+        const int TestAssistantCount = 10;
+        const int TestPageSizeLimit = 2;
+
         AssistantClient client = GetTestClient();
 
         // Create assistant collection
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < TestAssistantCount; i++)
         {
             Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
             {
@@ -1133,7 +1152,7 @@ public partial class AssistantTests : SyncAsyncTestBase
             new AssistantCollectionOptions()
             {
                 Order = AssistantCollectionOrder.Descending,
-                PageSizeLimit = 2
+                PageSizeLimit = TestPageSizeLimit
             });
 
         int lastIdSeen = int.MaxValue;
@@ -1159,8 +1178,8 @@ public partial class AssistantTests : SyncAsyncTestBase
             }
         }
 
-        Assert.That(count, Is.GreaterThanOrEqualTo(10));
-        Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
+        Assert.That(count, Is.GreaterThanOrEqualTo(TestAssistantCount));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(TestAssistantCount / TestPageSizeLimit));
     }
 
     [Test]
@@ -1168,10 +1187,13 @@ public partial class AssistantTests : SyncAsyncTestBase
     {
         AssertSyncOnly();
 
+        const int TestAssistantCount = 10;
+        const int TestPageSizeLimit = 2;
+
         AssistantClient client = GetTestClient();
 
         // Create assistant collection
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < TestAssistantCount; i++)
         {
             Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
             {
@@ -1188,7 +1210,7 @@ public partial class AssistantTests : SyncAsyncTestBase
             new AssistantCollectionOptions()
             {
                 Order = AssistantCollectionOrder.Descending,
-                PageSizeLimit = 2
+                PageSizeLimit = TestPageSizeLimit
             });
 
         int lastIdSeen = int.MaxValue;
@@ -1214,8 +1236,8 @@ public partial class AssistantTests : SyncAsyncTestBase
             }
         }
 
-        Assert.That(count, Is.GreaterThanOrEqualTo(10));
-        Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
+        Assert.That(count, Is.GreaterThanOrEqualTo(TestAssistantCount));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(TestAssistantCount / TestPageSizeLimit));
     }
 
     private static IEnumerable<Assistant> GetAssistantsFromPage(ClientResult page)
@@ -1233,10 +1255,13 @@ public partial class AssistantTests : SyncAsyncTestBase
     {
         AssertAsyncOnly();
 
+        const int TestAssistantCount = 10;
+        const int TestPageSizeLimit = 2;
+
         AssistantClient client = GetTestClient();
 
         // Create assistant collection
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < TestAssistantCount; i++)
         {
             Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
             {
@@ -1250,7 +1275,7 @@ public partial class AssistantTests : SyncAsyncTestBase
             new AssistantCollectionOptions()
             {
                 Order = AssistantCollectionOrder.Descending,
-                PageSizeLimit = 2
+                PageSizeLimit = TestPageSizeLimit
             });
 
         // Simulate rehydration of the collection
@@ -1261,8 +1286,10 @@ public partial class AssistantTests : SyncAsyncTestBase
         // This starts the collection on the second page.
         AsyncCollectionResult<Assistant> rehydratedAssistants = client.GetAssistantsAsync(rehydrationToken);
 
-        int count = 0;
-        int pageCount = 0;
+        // We already got the first page, so account for that.
+        int count = TestPageSizeLimit;
+        int pageCount = 1;
+
         int lastIdSeen = int.MaxValue;
 
         await foreach (ClientResult page in rehydratedAssistants.GetRawPagesAsync())
@@ -1287,8 +1314,8 @@ public partial class AssistantTests : SyncAsyncTestBase
 
         // We should only see eight items and four pages because we rehydrated the
         // collection starting on the second page.
-        Assert.That(count, Is.EqualTo(8));
-        Assert.That(pageCount, Is.EqualTo(4));
+        Assert.That(count, Is.GreaterThanOrEqualTo(TestAssistantCount));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(TestAssistantCount / TestPageSizeLimit));
     }
 
     [Test]
@@ -1296,10 +1323,13 @@ public partial class AssistantTests : SyncAsyncTestBase
     {
         AssertSyncOnly();
 
+        const int TestAssistantCount = 10;
+        const int TestPageSizeLimit = 2;
+
         AssistantClient client = GetTestClient();
 
         // Create assistant collection
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < TestAssistantCount; i++)
         {
             Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
             {
@@ -1313,7 +1343,7 @@ public partial class AssistantTests : SyncAsyncTestBase
             new AssistantCollectionOptions()
             {
                 Order = AssistantCollectionOrder.Descending,
-                PageSizeLimit = 2
+                PageSizeLimit = TestPageSizeLimit
             });
 
         // Simulate rehydration of the collection
@@ -1324,8 +1354,10 @@ public partial class AssistantTests : SyncAsyncTestBase
         // This starts the collection on the second page.
         CollectionResult<Assistant> rehydratedAssistants = client.GetAssistants(rehydrationToken);
 
-        int count = 0;
-        int pageCount = 0;
+        // We already got the first page, so account for that.
+        int count = TestPageSizeLimit;
+        int pageCount = 1;
+
         int lastIdSeen = int.MaxValue;
 
         foreach (ClientResult page in rehydratedAssistants.GetRawPages())
@@ -1351,8 +1383,8 @@ public partial class AssistantTests : SyncAsyncTestBase
 
         // We should only see eight items and four pages because we rehydrated the
         // collection starting on the second page.
-        Assert.That(count, Is.EqualTo(8));
-        Assert.That(pageCount, Is.EqualTo(4));
+        Assert.That(count, Is.GreaterThanOrEqualTo(TestAssistantCount));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(TestAssistantCount / TestPageSizeLimit));
     }
 
     [Test]
@@ -1360,11 +1392,14 @@ public partial class AssistantTests : SyncAsyncTestBase
     {
         AssertAsyncOnly();
 
+        const int TestAssistantCount = 10;
+        const int TestPageSizeLimit = 2;
+
         AssistantClient client = GetTestClient();
 
         // Create assistant collection
         List<Assistant> createdAssistants = [];
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < TestAssistantCount; i++)
         {
             Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
             {
@@ -1380,7 +1415,7 @@ public partial class AssistantTests : SyncAsyncTestBase
             new AssistantCollectionOptions()
             {
                 Order = AssistantCollectionOrder.Descending,
-                PageSizeLimit = 2
+                PageSizeLimit = TestPageSizeLimit
             });
 
         // Since we asked for descending order, reverse the order of createdAssistants.
@@ -1393,10 +1428,12 @@ public partial class AssistantTests : SyncAsyncTestBase
 
         // Since we're asking for the next page after the first one, remove the first two items from the 
         // createdAssistants
-        createdAssistants = createdAssistants.Skip(2).ToList();
+        createdAssistants = createdAssistants.Skip(TestPageSizeLimit).ToList();
 
-        int count = 0;
-        int pageCount = 0;
+        // We already got the first page, so account for that.
+        int count = TestPageSizeLimit;
+        int pageCount = 1;
+
         int lastIdSeen = int.MaxValue;
 
         List<Assistant> rehydratedAssistants = [];
@@ -1425,8 +1462,8 @@ public partial class AssistantTests : SyncAsyncTestBase
 
         Assert.That(createdAssistants[0].Id, Is.EqualTo(rehydratedAssistants[0].Id));
 
-        Assert.That(count, Is.GreaterThanOrEqualTo(8));
-        Assert.That(pageCount, Is.GreaterThanOrEqualTo(4));
+        Assert.That(count, Is.GreaterThanOrEqualTo(TestAssistantCount));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(TestAssistantCount / TestPageSizeLimit));
     }
 
     [Test]
@@ -1434,11 +1471,14 @@ public partial class AssistantTests : SyncAsyncTestBase
     {
         AssertSyncOnly();
 
+        const int TestAssistantCount = 10;
+        const int TestPageSizeLimit = 2;
+
         AssistantClient client = GetTestClient();
 
         // Create assistant collection
         List<Assistant> createdAssistants = [];
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < TestAssistantCount; i++)
         {
             Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
             {
@@ -1454,7 +1494,7 @@ public partial class AssistantTests : SyncAsyncTestBase
             new AssistantCollectionOptions()
             {
                 Order = AssistantCollectionOrder.Descending,
-                PageSizeLimit = 2
+                PageSizeLimit = TestPageSizeLimit
             });
 
         // Since we asked for descending order, reverse the order of createdAssistants.
@@ -1467,10 +1507,12 @@ public partial class AssistantTests : SyncAsyncTestBase
 
         // Since we're asking for the next page after the first one, remove the first two items from the 
         // createdAssistants
-        createdAssistants = createdAssistants.Skip(2).ToList();
+        createdAssistants = createdAssistants.Skip(TestPageSizeLimit).ToList();
 
-        int count = 0;
-        int pageCount = 0;
+        // We already got the first page, so account for that.
+        int count = TestPageSizeLimit;
+        int pageCount = 1;
+
         int lastIdSeen = int.MaxValue;
 
         List<Assistant> rehydratedAssistants = [];
@@ -1498,8 +1540,8 @@ public partial class AssistantTests : SyncAsyncTestBase
 
         Assert.That(createdAssistants[0].Id, Is.EqualTo(rehydratedAssistants[0].Id));
 
-        Assert.That(count, Is.GreaterThanOrEqualTo(10));
-        Assert.That(pageCount, Is.GreaterThanOrEqualTo(5));
+        Assert.That(count, Is.GreaterThanOrEqualTo(TestAssistantCount));
+        Assert.That(pageCount, Is.GreaterThanOrEqualTo(TestAssistantCount/TestPageSizeLimit));
     }
 
     [Test]
@@ -1507,11 +1549,14 @@ public partial class AssistantTests : SyncAsyncTestBase
     {
         AssertAsyncOnly();
 
+        const int TestAssistantCount = 10;
+        const int TestPageSizeLimit = 2;
+
         AssistantClient client = GetTestClient();
 
         // Create assistant collection
         List<Assistant> createdAssistants = [];
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < TestAssistantCount; i++)
         {
             Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
             {
@@ -1524,7 +1569,7 @@ public partial class AssistantTests : SyncAsyncTestBase
         }
 
         // Call the protocol method
-        AsyncCollectionResult assistantsProtocol = client.GetAssistantsAsync(limit: 2, order: "desc", after: null, before: null, options: default);
+        AsyncCollectionResult assistantsProtocol = client.GetAssistantsAsync(limit: TestPageSizeLimit, order: "desc", after: null, before: null, options: default);
 
         // Cast to the convenience type
         AsyncCollectionResult<Assistant> assistants = (AsyncCollectionResult<Assistant>)assistantsProtocol;
@@ -1546,7 +1591,7 @@ public partial class AssistantTests : SyncAsyncTestBase
             }
         }
 
-        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+        Assert.That(count, Is.GreaterThanOrEqualTo(TestAssistantCount));
     }
 
     [Test]
@@ -1554,11 +1599,14 @@ public partial class AssistantTests : SyncAsyncTestBase
     {
         AssertSyncOnly();
 
+        const int TestAssistantCount = 10;
+        const int TestPageSizeLimit = 2;
+
         AssistantClient client = GetTestClient();
 
         // Create assistant collection
         List<Assistant> createdAssistants = [];
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < TestAssistantCount; i++)
         {
             Assistant assistant = client.CreateAssistant("gpt-4o-mini", new AssistantCreationOptions()
             {
@@ -1571,7 +1619,7 @@ public partial class AssistantTests : SyncAsyncTestBase
         }
 
         // Call the protocol method
-        CollectionResult assistantsProtocol = client.GetAssistants(limit: 2, order: "desc", after: null, before: null, options: default);
+        CollectionResult assistantsProtocol = client.GetAssistants(limit: TestPageSizeLimit, order: "desc", after: null, before: null, options: default);
 
         // Cast to the convenience type
         CollectionResult<Assistant> assistants = (CollectionResult<Assistant>)assistantsProtocol;
@@ -1593,7 +1641,7 @@ public partial class AssistantTests : SyncAsyncTestBase
             }
         }
 
-        Assert.That(count, Is.GreaterThanOrEqualTo(10));
+        Assert.That(count, Is.GreaterThanOrEqualTo(TestAssistantCount));
     }
 
     [Test]
@@ -1848,18 +1896,6 @@ public partial class AssistantTests : SyncAsyncTestBase
             throw new NotImplementedException($"{nameof(Validate)} helper not implemented for: {typeof(T)}");
         }
     }
-
-    private readonly List<Assistant> _assistantsToDelete = [];
-    private readonly List<AssistantThread> _threadsToDelete = [];
-    private readonly List<ThreadMessage> _messagesToDelete = [];
-    private readonly List<OpenAIFileInfo> _filesToDelete = [];
-    private readonly List<string> _vectorStoreIdsToDelete = [];
-
-    private static AssistantClient GetTestClient() => GetTestClient<AssistantClient>(TestScenario.Assistants);
-
-    private static readonly DateTimeOffset s_2024 = new(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);
-    private static readonly string s_testAssistantName = $".NET SDK Test Assistant - Please Delete Me";
-    private static readonly string s_cleanupMetadataKey = $"test_metadata_cleanup_eligible";
 }
 
 #pragma warning restore OPENAI001

@@ -5,7 +5,6 @@ using OpenAI.Tests.Utility;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -17,8 +16,10 @@ namespace OpenAI.Tests.Batch;
 [TestFixture(false)]
 [Parallelizable(ParallelScope.All)]
 [Category("Batch")]
-public partial class BatchTests : SyncAsyncTestBase
+public class BatchTests : SyncAsyncTestBase
 {
+    private static BatchClient GetTestClient() => GetTestClient<BatchClient>(TestScenario.Batch);
+
     public BatchTests(bool isAsync) : base(isAsync)
     {
     }
@@ -175,6 +176,4 @@ public partial class BatchTests : SyncAsyncTestBase
         //newBatchDynamic = batchResult.GetRawResponse().Content.ToObjectFromJson<dynamic>();
         //Assert.That(newBatchDynamic.status, Is.EqualTo("cancelling"));
     }
-
-    private static BatchClient GetTestClient() => GetTestClient<BatchClient>(TestScenario.Batch);
 }

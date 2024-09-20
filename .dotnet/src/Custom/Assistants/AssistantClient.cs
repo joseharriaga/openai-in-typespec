@@ -30,6 +30,23 @@ public partial class AssistantClient
     private readonly InternalAssistantRunClient _runSubClient;
     private readonly InternalAssistantThreadClient _threadSubClient;
 
+    // CUSTOM: Added as a convenience.
+    /// <summary> Initializes a new instance of <see cref="AssistantClient">. </summary>
+    /// <param name="apiKey"> The API key to authenticate with the service. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="apiKey"/> is null. </exception>
+    public AssistantClient(string apiKey) : this(new ApiKeyCredential(apiKey), new OpenAIClientOptions())
+    {
+    }
+
+    // CUSTOM: Added as a convenience.
+    /// <summary> Initializes a new instance of <see cref="AssistantClient">. </summary>
+    /// <param name="apiKey"> The API key to authenticate with the service. </param>
+    /// <param name="options"> The options to configure the client. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="apiKey"/> is null. </exception>
+    public AssistantClient(string apiKey, OpenAIClientOptions options) : this(new ApiKeyCredential(apiKey), options)
+    {
+    }
+
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
@@ -37,10 +54,6 @@ public partial class AssistantClient
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
     public AssistantClient(ApiKeyCredential credential) : this(credential, new OpenAIClientOptions())
-    {
-    }
-
-    public AssistantClient(string apiKey) : this(new ApiKeyCredential(apiKey))
     {
     }
 
@@ -61,11 +74,6 @@ public partial class AssistantClient
         _messageSubClient = new(_pipeline, options);
         _runSubClient = new(_pipeline, options);
         _threadSubClient = new(_pipeline, options);
-    }
-
-    public AssistantClient(string apiKey, OpenAIClientOptions options)
-        : this(new ApiKeyCredential(apiKey), options)
-    {
     }
 
     // CUSTOM:

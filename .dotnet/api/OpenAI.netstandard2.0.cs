@@ -1304,6 +1304,8 @@ namespace OpenAI.Batch {
         public BatchClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public BatchClient(ApiKeyCredential credential);
         protected internal BatchClient(ClientPipeline pipeline, OpenAIClientOptions options);
+        public BatchClient(string apiKey, OpenAIClientOptions options);
+        public BatchClient(string apiKey);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult CancelBatch(string batchId, RequestOptions options);
         public virtual Task<ClientResult> CancelBatchAsync(string batchId, RequestOptions options);
@@ -1961,6 +1963,8 @@ namespace OpenAI.FineTuning {
         public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public FineTuningClient(ApiKeyCredential credential);
         protected internal FineTuningClient(ClientPipeline pipeline, OpenAIClientOptions options);
+        public FineTuningClient(string apiKey, OpenAIClientOptions options);
+        public FineTuningClient(string apiKey);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult CancelJob(string jobId, RequestOptions options);
         public virtual Task<ClientResult> CancelJobAsync(string jobId, RequestOptions options);
@@ -2117,6 +2121,8 @@ namespace OpenAI.Models {
         public ModelClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public ModelClient(ApiKeyCredential credential);
         protected internal ModelClient(ClientPipeline pipeline, OpenAIClientOptions options);
+        public ModelClient(string apiKey, OpenAIClientOptions options);
+        public ModelClient(string apiKey);
         public virtual ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteModel(string model, RequestOptions options);
@@ -2211,6 +2217,8 @@ namespace OpenAI.Moderations {
         protected internal ModerationClient(ClientPipeline pipeline, string model, OpenAIClientOptions options);
         public ModerationClient(string model, ApiKeyCredential credential, OpenAIClientOptions options);
         public ModerationClient(string model, ApiKeyCredential credential);
+        public ModerationClient(string model, string apiKey, OpenAIClientOptions options);
+        public ModerationClient(string model, string apiKey);
         public virtual ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ClassifyText(BinaryContent content, RequestOptions options = null);
@@ -2329,6 +2337,8 @@ namespace OpenAI.VectorStores {
         public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public VectorStoreClient(ApiKeyCredential credential);
         protected internal VectorStoreClient(ClientPipeline pipeline, OpenAIClientOptions options);
+        public VectorStoreClient(string apiKey, OpenAIClientOptions options);
+        public VectorStoreClient(string apiKey);
         public virtual ClientPipeline Pipeline { get; }
         public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]

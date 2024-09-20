@@ -9,6 +9,8 @@ namespace OpenAI.Moderations
     [CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Moderations.ModerationResult>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
     public partial class ModerationResult : IJsonModel<ModerationResult>
     {
+        // CUSTOM:
+        // - Serializes `ModerationCategories` and `ModerationCategoryScores` properties.
         void IJsonModel<ModerationResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             var format = options.Format == "W" ? ((IPersistableModel<ModerationResult>)this).GetFormatFromOptions(options) : options.Format;

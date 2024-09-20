@@ -11,446 +11,302 @@ namespace OpenAI.Tests.Moderations;
 public partial class OpenAIModerationsModelFactoryTests
 {
     [Test]
-    public void ModerationCategoriesWithNoPropertiesWorks()
+    public void ModerationCategoryWithNoPropertiesWorks()
     {
-        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories();
+        ModerationCategory moderationCategory = OpenAIModerationsModelFactory.ModerationCategory();
 
-        Assert.That(moderationCategories.Hate, Is.False);
-        Assert.That(moderationCategories.HateThreatening, Is.False);
-        Assert.That(moderationCategories.Harassment, Is.False);
-        Assert.That(moderationCategories.HarassmentThreatening, Is.False);
-        Assert.That(moderationCategories.SelfHarm, Is.False);
-        Assert.That(moderationCategories.SelfHarmIntent, Is.False);
-        Assert.That(moderationCategories.SelfHarmInstructions, Is.False);
-        Assert.That(moderationCategories.Sexual, Is.False);
-        Assert.That(moderationCategories.SexualMinors, Is.False);
-        Assert.That(moderationCategories.Violence, Is.False);
-        Assert.That(moderationCategories.ViolenceGraphic, Is.False);
+        Assert.That(moderationCategory.Flagged, Is.False);
+        Assert.That(moderationCategory.Score, Is.EqualTo(0f));
     }
 
     [Test]
-    public void ModerationCategoriesWithHateWorks()
+    public void ModerationCategoryWithFlagWorks()
     {
-        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(hate: true);
+        ModerationCategory moderationCategory = OpenAIModerationsModelFactory.ModerationCategory(flagged: true);
 
-        Assert.That(moderationCategories.Hate, Is.True);
-        Assert.That(moderationCategories.HateThreatening, Is.False);
-        Assert.That(moderationCategories.Harassment, Is.False);
-        Assert.That(moderationCategories.HarassmentThreatening, Is.False);
-        Assert.That(moderationCategories.SelfHarm, Is.False);
-        Assert.That(moderationCategories.SelfHarmIntent, Is.False);
-        Assert.That(moderationCategories.SelfHarmInstructions, Is.False);
-        Assert.That(moderationCategories.Sexual, Is.False);
-        Assert.That(moderationCategories.SexualMinors, Is.False);
-        Assert.That(moderationCategories.Violence, Is.False);
-        Assert.That(moderationCategories.ViolenceGraphic, Is.False);
+        Assert.That(moderationCategory.Flagged, Is.True);
+        Assert.That(moderationCategory.Score, Is.EqualTo(0f));
     }
 
     [Test]
-    public void ModerationCategoriesWithHateThreateningWorks()
+    public void ModerationCategoryWithScoreWorks()
     {
-        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(hateThreatening: true);
+        ModerationCategory moderationCategory = OpenAIModerationsModelFactory.ModerationCategory(score: 0.85f);
 
-        Assert.That(moderationCategories.Hate, Is.False);
-        Assert.That(moderationCategories.HateThreatening, Is.True);
-        Assert.That(moderationCategories.Harassment, Is.False);
-        Assert.That(moderationCategories.HarassmentThreatening, Is.False);
-        Assert.That(moderationCategories.SelfHarm, Is.False);
-        Assert.That(moderationCategories.SelfHarmIntent, Is.False);
-        Assert.That(moderationCategories.SelfHarmInstructions, Is.False);
-        Assert.That(moderationCategories.Sexual, Is.False);
-        Assert.That(moderationCategories.SexualMinors, Is.False);
-        Assert.That(moderationCategories.Violence, Is.False);
-        Assert.That(moderationCategories.ViolenceGraphic, Is.False);
+        Assert.That(moderationCategory.Flagged, Is.False);
+        Assert.That(moderationCategory.Score, Is.EqualTo(0.85f));
     }
 
     [Test]
-    public void ModerationCategoriesWithHarassmentWorks()
+    public void ModerationResultWithNoPropertiesWorks()
     {
-        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(harassment: true);
+        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult();
 
-        Assert.That(moderationCategories.Hate, Is.False);
-        Assert.That(moderationCategories.HateThreatening, Is.False);
-        Assert.That(moderationCategories.Harassment, Is.True);
-        Assert.That(moderationCategories.HarassmentThreatening, Is.False);
-        Assert.That(moderationCategories.SelfHarm, Is.False);
-        Assert.That(moderationCategories.SelfHarmIntent, Is.False);
-        Assert.That(moderationCategories.SelfHarmInstructions, Is.False);
-        Assert.That(moderationCategories.Sexual, Is.False);
-        Assert.That(moderationCategories.SexualMinors, Is.False);
-        Assert.That(moderationCategories.Violence, Is.False);
-        Assert.That(moderationCategories.ViolenceGraphic, Is.False);
+        Assert.That(moderationResult.Flagged, Is.False);
+
+        Assert.That(moderationResult.Hate, Is.Null);
+        Assert.That(moderationResult.HateThreatening, Is.Null);
+        Assert.That(moderationResult.Harassment, Is.Null);
+        Assert.That(moderationResult.HarassmentThreatening, Is.Null);
+        Assert.That(moderationResult.SelfHarm, Is.Null);
+        Assert.That(moderationResult.SelfHarmIntent, Is.Null);
+        Assert.That(moderationResult.SelfHarmInstructions, Is.Null);
+        Assert.That(moderationResult.Sexual, Is.Null);
+        Assert.That(moderationResult.SexualMinors, Is.Null);
+        Assert.That(moderationResult.Violence, Is.Null);
+        Assert.That(moderationResult.ViolenceGraphic, Is.Null);
     }
 
     [Test]
-    public void ModerationCategoriesWithHarassmentThreateningWorks()
+    public void ModerationResultWithHateWorks()
     {
-        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(harassmentThreatening: true);
+        float hateScore = 0.85f;
+        ModerationCategory category = OpenAIModerationsModelFactory.ModerationCategory(true, hateScore);
+        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(hate: category);
 
-        Assert.That(moderationCategories.Hate, Is.False);
-        Assert.That(moderationCategories.HateThreatening, Is.False);
-        Assert.That(moderationCategories.Harassment, Is.False);
-        Assert.That(moderationCategories.HarassmentThreatening, Is.True);
-        Assert.That(moderationCategories.SelfHarm, Is.False);
-        Assert.That(moderationCategories.SelfHarmIntent, Is.False);
-        Assert.That(moderationCategories.SelfHarmInstructions, Is.False);
-        Assert.That(moderationCategories.Sexual, Is.False);
-        Assert.That(moderationCategories.SexualMinors, Is.False);
-        Assert.That(moderationCategories.Violence, Is.False);
-        Assert.That(moderationCategories.ViolenceGraphic, Is.False);
+        Assert.That(moderationResult.Hate.Flagged, Is.True);
+        Assert.That(moderationResult.Hate.Score, Is.EqualTo(hateScore));
+
+        Assert.That(moderationResult.Flagged, Is.False);
+        Assert.That(moderationResult.HateThreatening, Is.Null);
+        Assert.That(moderationResult.Harassment, Is.Null);
+        Assert.That(moderationResult.HarassmentThreatening, Is.Null);
+        Assert.That(moderationResult.SelfHarm, Is.Null);
+        Assert.That(moderationResult.SelfHarmIntent, Is.Null);
+        Assert.That(moderationResult.SelfHarmInstructions, Is.Null);
+        Assert.That(moderationResult.Sexual, Is.Null);
+        Assert.That(moderationResult.SexualMinors, Is.Null);
+        Assert.That(moderationResult.Violence, Is.Null);
+        Assert.That(moderationResult.ViolenceGraphic, Is.Null);
     }
 
     [Test]
-    public void ModerationCategoriesWithSelfHarmWorks()
+    public void ModerationResultWithHateThreateningWorks()
     {
-        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(selfHarm: true);
+        float hateThreateningScore = 0.85f;
+        ModerationCategory category = OpenAIModerationsModelFactory.ModerationCategory(true, hateThreateningScore);
+        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(hateThreatening: category);
 
-        Assert.That(moderationCategories.Hate, Is.False);
-        Assert.That(moderationCategories.HateThreatening, Is.False);
-        Assert.That(moderationCategories.Harassment, Is.False);
-        Assert.That(moderationCategories.HarassmentThreatening, Is.False);
-        Assert.That(moderationCategories.SelfHarm, Is.True);
-        Assert.That(moderationCategories.SelfHarmIntent, Is.False);
-        Assert.That(moderationCategories.SelfHarmInstructions, Is.False);
-        Assert.That(moderationCategories.Sexual, Is.False);
-        Assert.That(moderationCategories.SexualMinors, Is.False);
-        Assert.That(moderationCategories.Violence, Is.False);
-        Assert.That(moderationCategories.ViolenceGraphic, Is.False);
+        Assert.That(moderationResult.HateThreatening.Flagged, Is.True);
+        Assert.That(moderationResult.HateThreatening.Score, Is.EqualTo(hateThreateningScore));
+
+        Assert.That(moderationResult.Flagged, Is.False);
+        Assert.That(moderationResult.Hate, Is.Null);
+        Assert.That(moderationResult.Harassment, Is.Null);
+        Assert.That(moderationResult.SelfHarm, Is.Null);
+        Assert.That(moderationResult.SelfHarmIntent, Is.Null);
+        Assert.That(moderationResult.SelfHarmInstructions, Is.Null);
+        Assert.That(moderationResult.Sexual, Is.Null);
+        Assert.That(moderationResult.SexualMinors, Is.Null);
+        Assert.That(moderationResult.Violence, Is.Null);
+        Assert.That(moderationResult.ViolenceGraphic, Is.Null);
     }
 
     [Test]
-    public void ModerationCategoriesWithSelfHarmIntentWorks()
+    public void ModerationResultWithHarassmentWorks()
     {
-        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(selfHarmIntent: true);
+        float harassmentScore = 0.85f;
+        ModerationCategory category = OpenAIModerationsModelFactory.ModerationCategory(true, harassmentScore);
+        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(harassment: category);
 
-        Assert.That(moderationCategories.Hate, Is.False);
-        Assert.That(moderationCategories.HateThreatening, Is.False);
-        Assert.That(moderationCategories.Harassment, Is.False);
-        Assert.That(moderationCategories.HarassmentThreatening, Is.False);
-        Assert.That(moderationCategories.SelfHarm, Is.False);
-        Assert.That(moderationCategories.SelfHarmIntent, Is.True);
-        Assert.That(moderationCategories.SelfHarmInstructions, Is.False);
-        Assert.That(moderationCategories.Sexual, Is.False);
-        Assert.That(moderationCategories.SexualMinors, Is.False);
-        Assert.That(moderationCategories.Violence, Is.False);
-        Assert.That(moderationCategories.ViolenceGraphic, Is.False);
+        Assert.That(moderationResult.Harassment.Flagged, Is.True);
+        Assert.That(moderationResult.Harassment.Score, Is.EqualTo(harassmentScore));
+
+        Assert.That(moderationResult.Flagged, Is.False);
+        Assert.That(moderationResult.Hate, Is.Null);
+        Assert.That(moderationResult.HateThreatening, Is.Null);
+        Assert.That(moderationResult.HarassmentThreatening, Is.Null);
+        Assert.That(moderationResult.SelfHarm, Is.Null);
+        Assert.That(moderationResult.SelfHarmIntent, Is.Null);
+        Assert.That(moderationResult.SelfHarmInstructions, Is.Null);
+        Assert.That(moderationResult.Sexual, Is.Null);
+        Assert.That(moderationResult.SexualMinors, Is.Null);
+        Assert.That(moderationResult.Violence, Is.Null);
+        Assert.That(moderationResult.ViolenceGraphic, Is.Null);
     }
 
     [Test]
-    public void ModerationCategoriesWithSelfHarmInstructionWorks()
+    public void ModerationResultWithHarassmentThreateningWorks()
     {
-        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(selfHarmInstructions: true);
+        float harassmentThreateningScore = 0.85f;
+        ModerationCategory category = OpenAIModerationsModelFactory.ModerationCategory(true, harassmentThreateningScore);
+        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(harassmentThreatening: category);
 
-        Assert.That(moderationCategories.Hate, Is.False);
-        Assert.That(moderationCategories.HateThreatening, Is.False);
-        Assert.That(moderationCategories.Harassment, Is.False);
-        Assert.That(moderationCategories.HarassmentThreatening, Is.False);
-        Assert.That(moderationCategories.SelfHarm, Is.False);
-        Assert.That(moderationCategories.SelfHarmIntent, Is.False);
-        Assert.That(moderationCategories.SelfHarmInstructions, Is.True);
-        Assert.That(moderationCategories.Sexual, Is.False);
-        Assert.That(moderationCategories.SexualMinors, Is.False);
-        Assert.That(moderationCategories.Violence, Is.False);
-        Assert.That(moderationCategories.ViolenceGraphic, Is.False);
+        Assert.That(moderationResult.HarassmentThreatening.Flagged, Is.True);
+        Assert.That(moderationResult.HarassmentThreatening.Score, Is.EqualTo(harassmentThreateningScore));
+
+        Assert.That(moderationResult.Flagged, Is.False);
+        Assert.That(moderationResult.Hate, Is.Null);
+        Assert.That(moderationResult.HateThreatening, Is.Null);
+        Assert.That(moderationResult.Harassment, Is.Null);
+        Assert.That(moderationResult.SelfHarm, Is.Null);
+        Assert.That(moderationResult.SelfHarmIntent, Is.Null);
+        Assert.That(moderationResult.SelfHarmInstructions, Is.Null);
+        Assert.That(moderationResult.Sexual, Is.Null);
+        Assert.That(moderationResult.SexualMinors, Is.Null);
+        Assert.That(moderationResult.Violence, Is.Null);
+        Assert.That(moderationResult.ViolenceGraphic, Is.Null);
     }
 
     [Test]
-    public void ModerationCategoriesWithSexualWorks()
+    public void ModerationResultWithSelfHarmWorks()
     {
-        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(sexual: true);
+        float selfHarmScore = 0.85f;
+        ModerationCategory category = OpenAIModerationsModelFactory.ModerationCategory(true, selfHarmScore);
+        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(selfHarm: category);
+        
+        Assert.That(moderationResult.SelfHarm.Flagged, Is.True);
+        Assert.That(moderationResult.SelfHarm.Score, Is.EqualTo(selfHarmScore));
 
-        Assert.That(moderationCategories.Hate, Is.False);
-        Assert.That(moderationCategories.HateThreatening, Is.False);
-        Assert.That(moderationCategories.Harassment, Is.False);
-        Assert.That(moderationCategories.HarassmentThreatening, Is.False);
-        Assert.That(moderationCategories.SelfHarm, Is.False);
-        Assert.That(moderationCategories.SelfHarmIntent, Is.False);
-        Assert.That(moderationCategories.SelfHarmInstructions, Is.False);
-        Assert.That(moderationCategories.Sexual, Is.True);
-        Assert.That(moderationCategories.SexualMinors, Is.False);
-        Assert.That(moderationCategories.Violence, Is.False);
-        Assert.That(moderationCategories.ViolenceGraphic, Is.False);
+        Assert.That(moderationResult.Flagged, Is.False);
+        Assert.That(moderationResult.Hate, Is.Null);
+        Assert.That(moderationResult.HateThreatening, Is.Null);
+        Assert.That(moderationResult.Harassment, Is.Null);
+        Assert.That(moderationResult.HarassmentThreatening, Is.Null);
+        Assert.That(moderationResult.SelfHarmIntent, Is.Null);
+        Assert.That(moderationResult.SelfHarmInstructions, Is.Null);
+        Assert.That(moderationResult.Sexual, Is.Null);
+        Assert.That(moderationResult.SexualMinors, Is.Null);
+        Assert.That(moderationResult.Violence, Is.Null);
+        Assert.That(moderationResult.ViolenceGraphic, Is.Null);
     }
 
     [Test]
-    public void ModerationCategoriesWithSexualMinorsWorks()
+    public void ModerationResultWithSelfHarmIntentWorks()
     {
-        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(sexualMinors: true);
+        float selfHarmIntentScore = 0.85f;
+        ModerationCategory category = OpenAIModerationsModelFactory.ModerationCategory(true, selfHarmIntentScore);
+        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(selfHarmIntent: category);
 
-        Assert.That(moderationCategories.Hate, Is.False);
-        Assert.That(moderationCategories.HateThreatening, Is.False);
-        Assert.That(moderationCategories.Harassment, Is.False);
-        Assert.That(moderationCategories.HarassmentThreatening, Is.False);
-        Assert.That(moderationCategories.SelfHarm, Is.False);
-        Assert.That(moderationCategories.SelfHarmIntent, Is.False);
-        Assert.That(moderationCategories.SelfHarmInstructions, Is.False);
-        Assert.That(moderationCategories.Sexual, Is.False);
-        Assert.That(moderationCategories.SexualMinors, Is.True);
-        Assert.That(moderationCategories.Violence, Is.False);
-        Assert.That(moderationCategories.ViolenceGraphic, Is.False);
+        Assert.That(moderationResult.SelfHarmIntent.Flagged, Is.True);
+        Assert.That(moderationResult.SelfHarmIntent.Score, Is.EqualTo(selfHarmIntentScore));
+
+        Assert.That(moderationResult.Flagged, Is.False);
+        Assert.That(moderationResult.Hate, Is.Null);
+        Assert.That(moderationResult.HateThreatening, Is.Null);
+        Assert.That(moderationResult.Harassment, Is.Null);
+        Assert.That(moderationResult.HarassmentThreatening, Is.Null);
+        Assert.That(moderationResult.SelfHarm, Is.Null);
+        Assert.That(moderationResult.SelfHarmInstructions, Is.Null);
+        Assert.That(moderationResult.Sexual, Is.Null);
+        Assert.That(moderationResult.SexualMinors, Is.Null);
+        Assert.That(moderationResult.Violence, Is.Null);
+        Assert.That(moderationResult.ViolenceGraphic, Is.Null);
     }
 
     [Test]
-    public void ModerationCategoriesWithViolenceWorks()
+    public void ModerationResultWithSelfHarmInstructionWorks()
     {
-        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(violence: true);
+        float selfHarmInstructionsScore = 0.85f;
+        ModerationCategory category = OpenAIModerationsModelFactory.ModerationCategory(true, selfHarmInstructionsScore);
+        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(selfHarmInstructions: category);
 
-        Assert.That(moderationCategories.Hate, Is.False);
-        Assert.That(moderationCategories.HateThreatening, Is.False);
-        Assert.That(moderationCategories.Harassment, Is.False);
-        Assert.That(moderationCategories.HarassmentThreatening, Is.False);
-        Assert.That(moderationCategories.SelfHarm, Is.False);
-        Assert.That(moderationCategories.SelfHarmIntent, Is.False);
-        Assert.That(moderationCategories.SelfHarmInstructions, Is.False);
-        Assert.That(moderationCategories.Sexual, Is.False);
-        Assert.That(moderationCategories.SexualMinors, Is.False);
-        Assert.That(moderationCategories.Violence, Is.True);
-        Assert.That(moderationCategories.ViolenceGraphic, Is.False);
+        Assert.That(moderationResult.SelfHarmInstructions.Flagged, Is.True);
+        Assert.That(moderationResult.SelfHarmInstructions.Score, Is.EqualTo(selfHarmInstructionsScore));
+
+        Assert.That(moderationResult.Flagged, Is.False);
+        Assert.That(moderationResult.Hate, Is.Null);
+        Assert.That(moderationResult.HateThreatening, Is.Null);
+        Assert.That(moderationResult.Harassment, Is.Null);
+        Assert.That(moderationResult.HarassmentThreatening, Is.Null);
+        Assert.That(moderationResult.SelfHarm, Is.Null);
+        Assert.That(moderationResult.SelfHarmIntent, Is.Null);
+        Assert.That(moderationResult.Sexual, Is.Null);
+        Assert.That(moderationResult.SexualMinors, Is.Null);
+        Assert.That(moderationResult.Violence, Is.Null);
+        Assert.That(moderationResult.ViolenceGraphic, Is.Null);
     }
 
     [Test]
-    public void ModerationCategoriesWithViolenceGraphicWorks()
+    public void ModerationResultWithSexualWorks()
     {
-        ModerationCategory moderationCategories = OpenAIModerationsModelFactory.ModerationCategories(violenceGraphic: true);
+        float sexualScore = 0.85f;
+        ModerationCategory category = OpenAIModerationsModelFactory.ModerationCategory(true, sexualScore);
+        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(sexual: category);
 
-        Assert.That(moderationCategories.Hate, Is.False);
-        Assert.That(moderationCategories.HateThreatening, Is.False);
-        Assert.That(moderationCategories.Harassment, Is.False);
-        Assert.That(moderationCategories.HarassmentThreatening, Is.False);
-        Assert.That(moderationCategories.SelfHarm, Is.False);
-        Assert.That(moderationCategories.SelfHarmIntent, Is.False);
-        Assert.That(moderationCategories.SelfHarmInstructions, Is.False);
-        Assert.That(moderationCategories.Sexual, Is.False);
-        Assert.That(moderationCategories.SexualMinors, Is.False);
-        Assert.That(moderationCategories.Violence, Is.False);
-        Assert.That(moderationCategories.ViolenceGraphic, Is.True);
+        Assert.That(moderationResult.Sexual.Flagged, Is.True);
+        Assert.That(moderationResult.Sexual.Score, Is.EqualTo(sexualScore));
+
+        Assert.That(moderationResult.Flagged, Is.False);
+        Assert.That(moderationResult.Hate, Is.Null);
+        Assert.That(moderationResult.HateThreatening, Is.Null);
+        Assert.That(moderationResult.Harassment, Is.Null);
+        Assert.That(moderationResult.HarassmentThreatening, Is.Null);
+        Assert.That(moderationResult.SelfHarm, Is.Null);
+        Assert.That(moderationResult.SelfHarmIntent, Is.Null);
+        Assert.That(moderationResult.SelfHarmInstructions, Is.Null);
+        Assert.That(moderationResult.SexualMinors, Is.Null);
+        Assert.That(moderationResult.Violence, Is.Null);
+        Assert.That(moderationResult.ViolenceGraphic, Is.Null);
     }
 
     [Test]
-    public void ModerationCategoryScoresWithNoPropertiesWorks()
+    public void ModerationResultWithSexualMinorsWorks()
     {
-        ModerationCategoryScores moderationCategoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores();
+        float sexualMinorsScore = 0.85f;
+        ModerationCategory category = OpenAIModerationsModelFactory.ModerationCategory(true, sexualMinorsScore);
+        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(sexualMinors: category);
 
-        Assert.That(moderationCategoryScores.Hate, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HateThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Harassment, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HarassmentThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarm, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmIntent, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmInstructions, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Sexual, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SexualMinors, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Violence, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.ViolenceGraphic, Is.EqualTo(0f));
+        Assert.That(moderationResult.SexualMinors.Flagged, Is.True);
+        Assert.That(moderationResult.SexualMinors.Score, Is.EqualTo(sexualMinorsScore));
+
+        Assert.That(moderationResult.Flagged, Is.False);
+        Assert.That(moderationResult.Hate, Is.Null);
+        Assert.That(moderationResult.HateThreatening, Is.Null);
+        Assert.That(moderationResult.Harassment, Is.Null);
+        Assert.That(moderationResult.HarassmentThreatening, Is.Null);
+        Assert.That(moderationResult.SelfHarm, Is.Null);
+        Assert.That(moderationResult.SelfHarmIntent, Is.Null);
+        Assert.That(moderationResult.SelfHarmInstructions, Is.Null);
+        Assert.That(moderationResult.Sexual, Is.Null);
+        Assert.That(moderationResult.Violence, Is.Null);
+        Assert.That(moderationResult.ViolenceGraphic, Is.Null);
     }
 
     [Test]
-    public void ModerationCategoryScoresWithHateWorks()
+    public void ModerationResultWithViolenceWorks()
     {
-        float hate = 0.85f;
-        ModerationCategoryScores moderationCategoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores(hate: hate);
+        float violenceScore = 0.85f;
+        ModerationCategory category = OpenAIModerationsModelFactory.ModerationCategory(true, violenceScore);
+        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(violence: category);
 
-        Assert.That(moderationCategoryScores.Hate, Is.EqualTo(hate));
-        Assert.That(moderationCategoryScores.HateThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Harassment, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HarassmentThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarm, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmIntent, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmInstructions, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Sexual, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SexualMinors, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Violence, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.ViolenceGraphic, Is.EqualTo(0f));
+        Assert.That(moderationResult.Violence.Flagged, Is.True);
+        Assert.That(moderationResult.Violence.Score, Is.EqualTo(violenceScore));
+
+        Assert.That(moderationResult.Flagged, Is.False);
+        Assert.That(moderationResult.Hate, Is.Null);
+        Assert.That(moderationResult.HateThreatening, Is.Null);
+        Assert.That(moderationResult.Harassment, Is.Null);
+        Assert.That(moderationResult.HarassmentThreatening, Is.Null);
+        Assert.That(moderationResult.SelfHarm, Is.Null);
+        Assert.That(moderationResult.SelfHarmIntent, Is.Null);
+        Assert.That(moderationResult.SelfHarmInstructions, Is.Null);
+        Assert.That(moderationResult.Sexual, Is.Null);
+        Assert.That(moderationResult.SexualMinors, Is.Null);
+        Assert.That(moderationResult.ViolenceGraphic, Is.Null);
     }
 
     [Test]
-    public void ModerationCategoryScoresWithHateThreateningWorks()
+    public void ModerationResultWithViolenceGraphicWorks()
     {
-        float hateThreatening = 0.85f;
-        ModerationCategoryScores moderationCategoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores(hateThreatening: hateThreatening);
+        float violenceGraphicScore = 0.85f;
+        ModerationCategory category = OpenAIModerationsModelFactory.ModerationCategory(true, violenceGraphicScore);
+        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(violenceGraphic: category);
 
-        Assert.That(moderationCategoryScores.Hate, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HateThreatening, Is.EqualTo(hateThreatening));
-        Assert.That(moderationCategoryScores.Harassment, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HarassmentThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarm, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmIntent, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmInstructions, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Sexual, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SexualMinors, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Violence, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.ViolenceGraphic, Is.EqualTo(0f));
-    }
+        Assert.That(moderationResult.ViolenceGraphic.Flagged, Is.True);
+        Assert.That(moderationResult.ViolenceGraphic.Score, Is.EqualTo(violenceGraphicScore));
 
-    [Test]
-    public void ModerationCategoryScoresWithHarassmentWorks()
-    {
-        float harassment = 0.85f;
-        ModerationCategoryScores moderationCategoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores(harassment: harassment);
-
-        Assert.That(moderationCategoryScores.Hate, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HateThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Harassment, Is.EqualTo(harassment));
-        Assert.That(moderationCategoryScores.HarassmentThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarm, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmIntent, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmInstructions, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Sexual, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SexualMinors, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Violence, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.ViolenceGraphic, Is.EqualTo(0f));
-    }
-
-    [Test]
-    public void ModerationCategoryScoresWithHarassmentThreateningWorks()
-    {
-        float harassmentThreatening = 0.85f;
-        ModerationCategoryScores moderationCategoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores(harassmentThreatening: harassmentThreatening);
-
-        Assert.That(moderationCategoryScores.Hate, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HateThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Harassment, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HarassmentThreatening, Is.EqualTo(harassmentThreatening));
-        Assert.That(moderationCategoryScores.SelfHarm, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmIntent, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmInstructions, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Sexual, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SexualMinors, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Violence, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.ViolenceGraphic, Is.EqualTo(0f));
-    }
-
-    [Test]
-    public void ModerationCategoryScoresWithSelfHarmWorks()
-    {
-        float selfHarm = 0.85f;
-        ModerationCategoryScores moderationCategoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores(selfHarm: selfHarm);
-
-        Assert.That(moderationCategoryScores.Hate, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HateThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Harassment, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HarassmentThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarm, Is.EqualTo(selfHarm));
-        Assert.That(moderationCategoryScores.SelfHarmIntent, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmInstructions, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Sexual, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SexualMinors, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Violence, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.ViolenceGraphic, Is.EqualTo(0f));
-    }
-
-    [Test]
-    public void ModerationCategoryScoresWithSelfHarmIntentWorks()
-    {
-        float selfHarmIntent = 0.85f;
-        ModerationCategoryScores moderationCategoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores(selfHarmIntent: selfHarmIntent);
-
-        Assert.That(moderationCategoryScores.Hate, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HateThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Harassment, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HarassmentThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarm, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmIntent, Is.EqualTo(selfHarmIntent));
-        Assert.That(moderationCategoryScores.SelfHarmInstructions, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Sexual, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SexualMinors, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Violence, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.ViolenceGraphic, Is.EqualTo(0f));
-    }
-
-    [Test]
-    public void ModerationCategoryScoresWithSelfHarmInstructionWorks()
-    {
-        float selfHarmInstructions = 0.85f;
-        ModerationCategoryScores moderationCategoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores(selfHarmInstructions: selfHarmInstructions);
-
-        Assert.That(moderationCategoryScores.Hate, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HateThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Harassment, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HarassmentThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarm, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmIntent, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmInstructions, Is.EqualTo(selfHarmInstructions));
-        Assert.That(moderationCategoryScores.Sexual, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SexualMinors, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Violence, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.ViolenceGraphic, Is.EqualTo(0f));
-    }
-
-    [Test]
-    public void ModerationCategoryScoresWithSexualWorks()
-    {
-        float sexual = 0.85f;
-        ModerationCategoryScores moderationCategoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores(sexual: sexual);
-
-        Assert.That(moderationCategoryScores.Hate, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HateThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Harassment, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HarassmentThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarm, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmIntent, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmInstructions, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Sexual, Is.EqualTo(sexual));
-        Assert.That(moderationCategoryScores.SexualMinors, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Violence, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.ViolenceGraphic, Is.EqualTo(0f));
-    }
-
-    [Test]
-    public void ModerationCategoryScoresWithSexualMinorsWorks()
-    {
-        float sexualMinors = 0.85f;
-        ModerationCategoryScores moderationCategoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores(sexualMinors: sexualMinors);
-
-        Assert.That(moderationCategoryScores.Hate, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HateThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Harassment, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HarassmentThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarm, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmIntent, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmInstructions, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Sexual, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SexualMinors, Is.EqualTo(sexualMinors));
-        Assert.That(moderationCategoryScores.Violence, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.ViolenceGraphic, Is.EqualTo(0f));
-    }
-
-    [Test]
-    public void ModerationCategoryScoresWithViolenceWorks()
-    {
-        float violence = 0.85f;
-        ModerationCategoryScores moderationCategoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores(violence: violence);
-
-        Assert.That(moderationCategoryScores.Hate, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HateThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Harassment, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HarassmentThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarm, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmIntent, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmInstructions, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Sexual, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SexualMinors, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Violence, Is.EqualTo(violence));
-        Assert.That(moderationCategoryScores.ViolenceGraphic, Is.EqualTo(0f));
-    }
-
-    [Test]
-    public void ModerationCategoryScoresWithViolenceGraphicWorks()
-    {
-        float violenceGraphic = 0.85f;
-        ModerationCategoryScores moderationCategoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores(violenceGraphic: violenceGraphic);
-
-        Assert.That(moderationCategoryScores.Hate, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HateThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Harassment, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.HarassmentThreatening, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarm, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmIntent, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SelfHarmInstructions, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Sexual, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.SexualMinors, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.Violence, Is.EqualTo(0f));
-        Assert.That(moderationCategoryScores.ViolenceGraphic, Is.EqualTo(violenceGraphic));
+        Assert.That(moderationResult.Flagged, Is.False);
+        Assert.That(moderationResult.Hate, Is.Null);
+        Assert.That(moderationResult.HateThreatening, Is.Null);
+        Assert.That(moderationResult.Harassment, Is.Null);
+        Assert.That(moderationResult.HarassmentThreatening, Is.Null);
+        Assert.That(moderationResult.SelfHarm, Is.Null);
+        Assert.That(moderationResult.SelfHarmIntent, Is.Null);
+        Assert.That(moderationResult.SelfHarmInstructions, Is.Null);
+        Assert.That(moderationResult.Sexual, Is.Null);
+        Assert.That(moderationResult.SexualMinors, Is.Null);
+        Assert.That(moderationResult.Violence, Is.Null);
     }
 
     [Test]
@@ -497,47 +353,5 @@ public partial class OpenAIModerationsModelFactoryTests
         Assert.That(moderationCollection.Id, Is.Null);
         Assert.That(moderationCollection.Model, Is.Null);
         Assert.That(moderationCollection.SequenceEqual(items), Is.True);
-    }
-
-    [Test]
-    public void ModerationResultWithNoPropertiesWorks()
-    {
-        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult();
-
-        Assert.That(moderationResult.Flagged, Is.False);
-        Assert.That(moderationResult.Categories, Is.Null);
-        Assert.That(moderationResult.CategoryScores, Is.Null);
-    }
-
-    [Test]
-    public void ModerationResultWithFlaggedWorks()
-    {
-        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(flagged: true);
-
-        Assert.That(moderationResult.Flagged, Is.True);
-        Assert.That(moderationResult.Categories, Is.Null);
-        Assert.That(moderationResult.CategoryScores, Is.Null);
-    }
-
-    [Test]
-    public void ModerationResultWithCategoriesWorks()
-    {
-        ModerationCategory categories = OpenAIModerationsModelFactory.ModerationCategories(hate: true);
-        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(categories: categories);
-
-        Assert.That(moderationResult.Flagged, Is.False);
-        Assert.That(moderationResult.Categories, Is.EqualTo(categories));
-        Assert.That(moderationResult.CategoryScores, Is.Null);
-    }
-
-    [Test]
-    public void ModerationResultWithCategoryScoresWorks()
-    {
-        ModerationCategoryScores categoryScores = OpenAIModerationsModelFactory.ModerationCategoryScores(hate: 0.85f);
-        ModerationResult moderationResult = OpenAIModerationsModelFactory.ModerationResult(categoryScores: categoryScores);
-
-        Assert.That(moderationResult.Flagged, Is.False);
-        Assert.That(moderationResult.Categories, Is.Null);
-        Assert.That(moderationResult.CategoryScores, Is.EqualTo(categoryScores));
     }
 }

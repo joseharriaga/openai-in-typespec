@@ -3,6 +3,8 @@ using System;
 
 namespace OpenAI.Moderations;
 
+// CUSTOM: 
+// - Removes the redundant classes `ModerationCategories` and `ModerationCategoryScores` and moves their properties into this type.
 [CodeGenModel("CreateModerationResponseResult")]
 [CodeGenSuppress("Categories")]
 [CodeGenSuppress("CategoryScores")]

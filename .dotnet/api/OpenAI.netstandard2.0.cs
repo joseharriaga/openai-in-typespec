@@ -2051,41 +2051,9 @@ namespace OpenAI.Models {
     }
 }
 namespace OpenAI.Moderations {
-    public class ModerationCategories : IJsonModel<ModerationCategories>, IPersistableModel<ModerationCategories> {
-        public bool Harassment { get; }
-        public bool HarassmentThreatening { get; }
-        public bool Hate { get; }
-        public bool HateThreatening { get; }
-        public bool SelfHarm { get; }
-        public bool SelfHarmInstructions { get; }
-        public bool SelfHarmIntent { get; }
-        public bool Sexual { get; }
-        public bool SexualMinors { get; }
-        public bool Violence { get; }
-        public bool ViolenceGraphic { get; }
-        ModerationCategories IJsonModel<ModerationCategories>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ModerationCategories>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ModerationCategories IPersistableModel<ModerationCategories>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ModerationCategories>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ModerationCategories>.Write(ModelReaderWriterOptions options);
-    }
-    public class ModerationCategoryScores : IJsonModel<ModerationCategoryScores>, IPersistableModel<ModerationCategoryScores> {
-        public float Harassment { get; }
-        public float HarassmentThreatening { get; }
-        public float Hate { get; }
-        public float HateThreatening { get; }
-        public float SelfHarm { get; }
-        public float SelfHarmInstructions { get; }
-        public float SelfHarmIntent { get; }
-        public float Sexual { get; }
-        public float SexualMinors { get; }
-        public float Violence { get; }
-        public float ViolenceGraphic { get; }
-        ModerationCategoryScores IJsonModel<ModerationCategoryScores>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ModerationCategoryScores>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ModerationCategoryScores IPersistableModel<ModerationCategoryScores>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ModerationCategoryScores>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ModerationCategoryScores>.Write(ModelReaderWriterOptions options);
+    public class ModerationCategory {
+        public bool Flagged { get; }
+        public float Score { get; }
     }
     public class ModerationClient {
         protected ModerationClient();
@@ -2112,9 +2080,18 @@ namespace OpenAI.Moderations {
         BinaryData IPersistableModel<ModerationCollection>.Write(ModelReaderWriterOptions options);
     }
     public class ModerationResult : IJsonModel<ModerationResult>, IPersistableModel<ModerationResult> {
-        public ModerationCategories Categories { get; }
-        public ModerationCategoryScores CategoryScores { get; }
         public bool Flagged { get; }
+        public ModerationCategory Harassment { get; }
+        public ModerationCategory HarassmentThreatening { get; }
+        public ModerationCategory Hate { get; }
+        public ModerationCategory HateThreatening { get; }
+        public ModerationCategory SelfHarm { get; }
+        public ModerationCategory SelfHarmInstructions { get; }
+        public ModerationCategory SelfHarmIntent { get; }
+        public ModerationCategory Sexual { get; }
+        public ModerationCategory SexualMinors { get; }
+        public ModerationCategory Violence { get; }
+        public ModerationCategory ViolenceGraphic { get; }
         ModerationResult IJsonModel<ModerationResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ModerationResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ModerationResult IPersistableModel<ModerationResult>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2122,10 +2099,9 @@ namespace OpenAI.Moderations {
         BinaryData IPersistableModel<ModerationResult>.Write(ModelReaderWriterOptions options);
     }
     public static class OpenAIModerationsModelFactory {
-        public static ModerationCategories ModerationCategories(bool hate = false, bool hateThreatening = false, bool harassment = false, bool harassmentThreatening = false, bool selfHarm = false, bool selfHarmIntent = false, bool selfHarmInstructions = false, bool sexual = false, bool sexualMinors = false, bool violence = false, bool violenceGraphic = false);
-        public static ModerationCategoryScores ModerationCategoryScores(float hate = 0, float hateThreatening = 0, float harassment = 0, float harassmentThreatening = 0, float selfHarm = 0, float selfHarmIntent = 0, float selfHarmInstructions = 0, float sexual = 0, float sexualMinors = 0, float violence = 0, float violenceGraphic = 0);
+        public static ModerationCategory ModerationCategory(bool flagged = false, float score = 0);
         public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> items = null);
-        public static ModerationResult ModerationResult(bool flagged = false, ModerationCategories categories = null, ModerationCategoryScores categoryScores = null);
+        public static ModerationResult ModerationResult(bool flagged = false, ModerationCategory hate = null, ModerationCategory hateThreatening = null, ModerationCategory harassment = null, ModerationCategory harassmentThreatening = null, ModerationCategory selfHarm = null, ModerationCategory selfHarmIntent = null, ModerationCategory selfHarmInstructions = null, ModerationCategory sexual = null, ModerationCategory sexualMinors = null, ModerationCategory violence = null, ModerationCategory violenceGraphic = null);
     }
 }
 namespace OpenAI.VectorStores {

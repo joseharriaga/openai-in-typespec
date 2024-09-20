@@ -8,9 +8,9 @@ public static partial class OpenAIModerationsModelFactory
 {
     /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationCategory"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Moderations.ModerationCategory"/> instance for mocking. </returns>
-    public static ModerationCategory ModerationCategory(bool isFlagged = default, float score = default)
+    public static ModerationCategory ModerationCategory(bool flagged = default, float score = default)
     {
-        return new ModerationCategory(isFlagged, score);
+        return new ModerationCategory(flagged, score);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationCollection"/>. </summary>

@@ -17,7 +17,7 @@ interface Messages {
   @summary("Create a message.")
   createMessage(
     @header accept: "application/json",
-
+    
     /** The ID of the [thread](/docs/api-reference/threads) to create a message for. */
     @path thread_id: string,
 

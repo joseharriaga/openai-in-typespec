@@ -24,6 +24,7 @@ interface FineTuning {
     """)
   createFineTuningJob(
     @header accept: "application/json",
+
     @body requestBody: CreateFineTuningJobRequest,
   ): FineTuningJob | ErrorResponse;
 
@@ -95,7 +96,7 @@ interface FineTuning {
   @summary("Get status updates for a fine-tuning job.")
   listFineTuningEvents(
     @header accept: "application/json",
-
+    
     /** The ID of the fine-tuning job to get events for. */
     @path fine_tuning_job_id: string,
 

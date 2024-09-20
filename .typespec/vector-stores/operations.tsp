@@ -52,6 +52,7 @@ interface VectorStores {
   @summary("Creates a vector store.")
   createVectorStore(
     @header accept: "application/json",
+
     @body requestBody: CreateVectorStoreRequest,
   ): VectorStoreObject | ErrorResponse;
 
@@ -231,7 +232,7 @@ interface VectorStores {
   @summary("Returns a list of vector store files in a batch.")
   listFilesInVectorStoreBatch(
     @header accept: "application/json",
-
+    
     /** The ID of the vector store that the file batch belongs to. */
     @path vector_store_id: string,
 

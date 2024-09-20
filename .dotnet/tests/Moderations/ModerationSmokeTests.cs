@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.ClientModel.Primitives;
 using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace OpenAI.Tests.Moderations;
 

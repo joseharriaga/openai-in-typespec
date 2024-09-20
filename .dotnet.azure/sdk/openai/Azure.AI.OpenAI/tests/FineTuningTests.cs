@@ -166,7 +166,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         int maxLoops = 10;
         do
         {
-            result = await client.GetJobEventsAsync(job.ID, null, 10, new()).FirstOrDefaultAsync();
+            result = await client.GetJobEventsAsync(job.ID, null, 10, new()).GetRawPagesAsync().FirstOrDefaultAsync();
             events = ValidateAndParse<ListResponse<FineTuningJobEvent>>(result);
 
             if (events.Data?.Count > 0)
@@ -355,18 +355,18 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     private IAsyncEnumerable<FineTuningJob> EnumerateJobsAsync(FineTuningClient client)
-        => EnumerateAsync<FineTuningJob>((after, limit, opt) => client.GetJobsAsync(after, limit, opt));
+        => EnumerateAsync<FineTuningJob>(client.GetJobsAsync);
 
     private IAsyncEnumerable<FineTuningCheckpoint> EnumerateCheckpoints(FineTuningClient client, string jobId)
         => EnumerateAsync<FineTuningCheckpoint>((after, limit, opt) => client.GetJobCheckpointsAsync(jobId, after, limit, opt));
 
-    private async IAsyncEnumerable<T> EnumerateAsync<T>(Func<string?, int?, RequestOptions, IAsyncEnumerable<ClientResult>> getAsyncEnumerable)
+    private async IAsyncEnumerable<T> EnumerateAsync<T>(Func<string?, int?, RequestOptions, AsyncCollectionResult> getAsyncEnumerable)
         where T : FineTuningModelBase
     {
         int numPerFetch = 10;
         RequestOptions reqOptions = new();
 
-        await foreach (ClientResult pageResult in getAsyncEnumerable(null, numPerFetch, reqOptions))
+        await foreach (ClientResult pageResult in getAsyncEnumerable(null, numPerFetch, reqOptions).GetRawPagesAsync())
         {
             ListResponse<T> items = ValidateAndParse<ListResponse<T>>(pageResult);
             if (items.Data?.Count > 0)

@@ -7,9 +7,9 @@ function Run-ModelsSubnamespaceCheck {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs" -Recurse
 
     $exclusions = @(
+        "ModelDeletionResult.cs",
+        "ModelDeletionResult.Serialization.cs",
         "GeneratorStubs.cs",
-        "InternalDeleteModelResponse.cs",
-        "InternalDeleteModelResponse.Serialization.cs",
         "InternalDeleteModelResponseObject.cs",
         "InternalListModelsResponseObject.cs",
         "InternalModelObject.cs",
@@ -80,6 +80,7 @@ function Run-TopLevelNamespaceCheck {
         "ClientPipelineExtensions.cs",
         "ClientUriBuilder.cs",
         "ErrorResult.cs",
+        "IEnumerableExtensions.cs",
         "IInternalListResponseOfT.cs",
         "InternalFunctionDefinition.cs",
         "InternalFunctionDefinition.Serialization.cs",

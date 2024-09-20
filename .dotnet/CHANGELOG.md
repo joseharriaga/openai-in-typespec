@@ -40,7 +40,7 @@
 - Removed the optional `purpose` parameter from `FileClient.GetFilesAsync` and `FileClient.GetFiles` methods, and added overloads where `purpose` is required. (commit_hash)
 - Renamed `ModerationClient`'s `ClassifyTextInput` methods to `ClassifyText`. (commit_hash)
 - Removed duplicated `Created` property from `GeneratedImageCollection`. (commit_hash)
-- Refactored `ModerationResult` by merging `ModerationCategories` and `ModerationCategoryScores` into individual `ModerationCategory` types, each of which includes `Flagged` and `Score` properties. (commit_hash)
+- Refactored `ModerationResult` by merging `ModerationCategories` and `ModerationCategoryScores` into individual `ModerationCategory` properties, each with `Flagged` and `Score` properties. (commit_hash)
 
 ### Bugs Fixed
 

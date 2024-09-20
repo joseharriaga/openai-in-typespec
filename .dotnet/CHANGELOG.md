@@ -24,7 +24,8 @@
 - Updated the `Embedding.Vector` property to the `Embedding.ToFloats()` method. (commit_hash)
 - Removed the optional parameter from the constructors of `VectorStoreCreationHelper`, `AssistantChatMessage`, and `ChatFunction`. (commit_hash)
 - Removed the optional `purpose` parameter from `FileClient.GetFilesAsync` and `FileClient.GetFiles` methods, and added overloads where `purpose` is required. (commit_hash)
-- Refactored `ModerationResult` by merging `ModerationCategories` and `ModerationCategoryScores` into individual `ModerationCategory` properties with `Flagged` and `Score`. (commit_hash)
+- Here’s the corrected sentence:
+- Refactored `ModerationResult` by merging `ModerationCategories` and `ModerationCategoryScores` into individual `ModerationCategory` types, each of which includes `Flagged` and `Score` properties. (commit_hash)
 
 ### Bugs Fixed
 

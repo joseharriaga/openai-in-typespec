@@ -20,20 +20,31 @@ tags:
 paths:
   /assistants:
     post:
-      tags:
-        - Assistants
       operationId: createAssistant
       summary: Create an assistant with a model and instructions.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/AssistantObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/AssistantObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Assistants
       requestBody:
         required: true
         content:
@@ -41,11 +52,16 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateAssistantRequest'
     get:
-      tags:
-        - Assistants
       operationId: listAssistants
       summary: Returns a list of assistants.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: limit
           in: query
           required: false
@@ -56,6 +72,7 @@ paths:
             type: integer
             format: int32
             default: 20
+          explode: false
         - name: order
           in: query
           required: false
@@ -68,6 +85,7 @@ paths:
               - asc
               - desc
             default: desc
+          explode: false
         - name: after
           in: query
           required: false
@@ -77,6 +95,7 @@ paths:
             subsequent call can include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
+          explode: false
         - name: before
           in: query
           required: false
@@ -86,22 +105,34 @@ paths:
             subsequent call can include before=obj_foo in order to fetch the previous page of the list.
           schema:
             type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListAssistantsResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /assistants/{assistant_id}:
-    get:
+                $ref: '#/components/schemas/ListAssistantsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Assistants
+  /assistants/{assistant_id}:
+    get:
       operationId: getAssistant
       summary: Retrieves an assistant.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: assistant_id
           in: path
           required: true
@@ -114,15 +145,26 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/AssistantObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
-    post:
+                $ref: '#/components/schemas/AssistantObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Assistants
+    post:
       operationId: modifyAssistant
       summary: Modifies an assistant.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: assistant_id
           in: path
           required: true
@@ -135,9 +177,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/AssistantObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/AssistantObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Assistants
       requestBody:
         required: true
         content:
@@ -145,11 +193,16 @@ paths:
             schema:
               $ref: '#/components/schemas/ModifyAssistantRequest'
     delete:
-      tags:
-        - Assistants
       operationId: deleteAssistant
       summary: Delete an assistant.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: assistant_id
           in: path
           required: true
@@ -162,16 +215,27 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/DeleteAssistantResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/DeleteAssistantResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Assistants
   /audio/speech:
     post:
-      tags:
-        - Audio
       operationId: createSpeech
       summary: Generates audio from the input text.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/octet-stream
       responses:
         '200':
           description: The request has succeeded.
@@ -186,6 +250,8 @@ paths:
               schema:
                 type: string
                 format: binary
+      tags:
+        - Audio
       requestBody:
         required: true
         content:
@@ -194,11 +260,16 @@ paths:
               $ref: '#/components/schemas/CreateSpeechRequest'
   /audio/transcriptions:
     post:
-      tags:
-        - Audio
       operationId: createTranscription
       summary: Transcribes audio into the input language.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
@@ -208,10 +279,17 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/CreateTranscriptionResponseVerboseJson'
                   - $ref: '#/components/schemas/CreateTranscriptionResponseJson'
-                  - $ref: '#/components/schemas/ErrorResponse'
             text/plain:
               schema:
                 type: string
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Audio
       requestBody:
         required: true
         content:
@@ -220,11 +298,16 @@ paths:
               $ref: '#/components/schemas/CreateTranscriptionRequestMultiPart'
   /audio/translations:
     post:
-      tags:
-        - Audio
       operationId: createTranslation
       summary: Translates audio into English..
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
@@ -234,10 +317,17 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/CreateTranslationResponseVerboseJson'
                   - $ref: '#/components/schemas/CreateTranslationResponseJson'
-                  - $ref: '#/components/schemas/ErrorResponse'
             text/plain:
               schema:
                 type: string
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Audio
       requestBody:
         required: true
         content:
@@ -246,20 +336,31 @@ paths:
               $ref: '#/components/schemas/CreateTranslationRequestMultiPart'
   /batches:
     post:
-      tags:
-        - Batch
       operationId: createBatch
       summary: Creates and executes a batch from an uploaded file of requests
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/Batch'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/Batch'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Batch
       requestBody:
         required: true
         content:
@@ -274,13 +375,16 @@ paths:
 
                     See [upload file](/docs/api-reference/files/create) for how to upload a file.
 
-                    Your input file must be formatted as a [JSONL file](/docs/api-reference/batch/requestInput), and must be uploaded with the purpose `batch`.
+                    Your input file must be formatted as a [JSONL file](/docs/api-reference/batch/requestInput),
+                    and must be uploaded with the purpose `batch`.
                 endpoint:
                   type: string
                   enum:
                     - /v1/chat/completions
                     - /v1/embeddings
-                  description: The endpoint to be used for all requests in the batch. Currently `/v1/chat/completions` and `/v1/embeddings` are supported.
+                  description: |-
+                    The endpoint to be used for all requests in the batch. Currently `/v1/chat/completions` and
+                    `/v1/embeddings` are supported.
                 completion_window:
                   type: string
                   enum:
@@ -297,41 +401,64 @@ paths:
                 - endpoint
                 - completion_window
     get:
-      tags:
-        - Batch
       operationId: listBatches
       summary: List your organization's batches.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: after
           in: query
           required: false
-          description: A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+          description: |-
+            A cursor for use in pagination. `after` is an object ID that defines your place in the list.
+            For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
+            subsequent call can include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
+          explode: false
         - name: limit
           in: query
           required: false
-          description: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+          description: |-
+            A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
+            default is 20.
           schema:
             type: integer
             format: int32
             default: 20
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListBatchesResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /batches/{batch_id}:
-    get:
+                $ref: '#/components/schemas/ListBatchesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Batch
+  /batches/{batch_id}:
+    get:
       operationId: retrieveBatch
       summary: Retrieves a batch.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: batch_id
           in: path
           required: true
@@ -344,16 +471,27 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/Batch'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /batches/{batch_id}/cancel:
-    post:
+                $ref: '#/components/schemas/Batch'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Batch
+  /batches/{batch_id}/cancel:
+    post:
       operationId: cancelBatch
       summary: Cancels an in-progress batch.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: batch_id
           in: path
           required: true
@@ -366,25 +504,42 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/Batch'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/Batch'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Batch
   /chat/completions:
     post:
-      tags:
-        - Chat
       operationId: createChatCompletion
       summary: Creates a model response for the given chat conversation.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/CreateChatCompletionResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/CreateChatCompletionResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Chat
       requestBody:
         required: true
         content:
@@ -393,20 +548,31 @@ paths:
               $ref: '#/components/schemas/CreateChatCompletionRequest'
   /completions:
     post:
-      tags:
-        - Completions
       operationId: createCompletion
       summary: Creates a completion for the provided prompt and parameters.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/CreateCompletionResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/CreateCompletionResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Completions
       requestBody:
         required: true
         content:
@@ -415,20 +581,31 @@ paths:
               $ref: '#/components/schemas/CreateCompletionRequest'
   /embeddings:
     post:
-      tags:
-        - Embeddings
       operationId: createEmbedding
       summary: Creates an embedding vector representing the input text.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/CreateEmbeddingResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/CreateEmbeddingResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Embeddings
       requestBody:
         required: true
         content:
@@ -437,8 +614,6 @@ paths:
               $ref: '#/components/schemas/CreateEmbeddingRequest'
   /files:
     post:
-      tags:
-        - Files
       operationId: createFile
       summary: |-
         Upload a file that can be used across various endpoints. The size of all the files uploaded by
@@ -449,16 +624,29 @@ paths:
         supported. The Fine-tuning API only supports `.jsonl` files.
 
         Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/OpenAIFile'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/OpenAIFile'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Files
       requestBody:
         required: true
         content:
@@ -466,33 +654,50 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateFileRequestMultiPart'
     get:
-      tags:
-        - Files
       operationId: listFiles
       summary: Returns a list of files that belong to the user's organization.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: purpose
           in: query
           required: false
           description: Only return files with the given purpose.
           schema:
             type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListFilesResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /files/{file_id}:
-    get:
+                $ref: '#/components/schemas/ListFilesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Files
+  /files/{file_id}:
+    get:
       operationId: retrieveFile
       summary: Returns information about a specific file.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: file_id
           in: path
           required: true
@@ -505,15 +710,26 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/OpenAIFile'
-                  - $ref: '#/components/schemas/ErrorResponse'
-    delete:
+                $ref: '#/components/schemas/OpenAIFile'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Files
+    delete:
       operationId: deleteFile
       summary: Delete a file
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: file_id
           in: path
           required: true
@@ -526,16 +742,27 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/DeleteFileResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /files/{file_id}/content:
-    get:
+                $ref: '#/components/schemas/DeleteFileResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Files
+  /files/{file_id}/content:
+    get:
       operationId: downloadFile
       summary: Returns the contents of the specified file.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: file_id
           in: path
           required: true
@@ -548,14 +775,18 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - type: string
-                    format: byte
-                  - $ref: '#/components/schemas/ErrorResponse'
+                type: string
+                format: byte
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Files
   /fine_tuning/jobs:
     post:
-      tags:
-        - Fine-tuning
       operationId: createFineTuningJob
       summary: |-
         Creates a fine-tuning job which begins the process of creating a new model from a given dataset.
@@ -563,16 +794,29 @@ paths:
         Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.
 
         [Learn more about fine-tuning](/docs/guides/fine-tuning)
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/FineTuningJob'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/FineTuningJob'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Fine-tuning
       requestBody:
         required: true
         content:
@@ -580,17 +824,23 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateFineTuningJobRequest'
     get:
-      tags:
-        - Fine-tuning
       operationId: listPaginatedFineTuningJobs
       summary: List your organization's fine-tuning jobs
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: after
           in: query
           required: false
           description: Identifier for the last job from the previous pagination request.
           schema:
             type: string
+          explode: false
         - name: limit
           in: query
           required: false
@@ -599,25 +849,37 @@ paths:
             type: integer
             format: int32
             default: 20
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListPaginatedFineTuningJobsResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs/{fine_tuning_job_id}:
-    get:
+                $ref: '#/components/schemas/ListPaginatedFineTuningJobsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Fine-tuning
+  /fine_tuning/jobs/{fine_tuning_job_id}:
+    get:
       operationId: retrieveFineTuningJob
       summary: |-
         Get info about a fine-tuning job.
 
         [Learn more about fine-tuning](/docs/guides/fine-tuning)
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: fine_tuning_job_id
           in: path
           required: true
@@ -630,16 +892,27 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/FineTuningJob'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs/{fine_tuning_job_id}/cancel:
-    post:
+                $ref: '#/components/schemas/FineTuningJob'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Fine-tuning
+  /fine_tuning/jobs/{fine_tuning_job_id}/cancel:
+    post:
       operationId: cancelFineTuningJob
       summary: Immediately cancel a fine-tune job.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: fine_tuning_job_id
           in: path
           required: true
@@ -652,16 +925,27 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/FineTuningJob'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs/{fine_tuning_job_id}/checkpoints:
-    get:
+                $ref: '#/components/schemas/FineTuningJob'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Fine-tuning
+  /fine_tuning/jobs/{fine_tuning_job_id}/checkpoints:
+    get:
       operationId: listFineTuningJobCheckpoints
       summary: List the checkpoints for a fine-tuning job.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: fine_tuning_job_id
           in: path
           required: true
@@ -674,6 +958,7 @@ paths:
           description: Identifier for the last checkpoint ID from the previous pagination request.
           schema:
             type: string
+          explode: false
         - name: limit
           in: query
           required: false
@@ -682,22 +967,34 @@ paths:
             type: integer
             format: int32
             default: 10
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListFineTuningJobCheckpointsResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /fine_tuning/jobs/{fine_tuning_job_id}/events:
-    get:
+                $ref: '#/components/schemas/ListFineTuningJobCheckpointsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Fine-tuning
+  /fine_tuning/jobs/{fine_tuning_job_id}/events:
+    get:
       operationId: listFineTuningEvents
       summary: Get status updates for a fine-tuning job.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: fine_tuning_job_id
           in: path
           required: true
@@ -710,6 +1007,7 @@ paths:
           description: Identifier for the last event from the previous pagination request.
           schema:
             type: string
+          explode: false
         - name: limit
           in: query
           required: false
@@ -718,31 +1016,49 @@ paths:
             type: integer
             format: int32
             default: 20
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListFineTuningJobEventsResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/ListFineTuningJobEventsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Fine-tuning
   /images/edits:
     post:
-      tags:
-        - Images
       operationId: createImageEdit
       summary: Creates an edited or extended image given an original image and a prompt.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ImagesResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/ImagesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Images
       requestBody:
         required: true
         content:
@@ -751,20 +1067,31 @@ paths:
               $ref: '#/components/schemas/CreateImageEditRequestMultiPart'
   /images/generations:
     post:
-      tags:
-        - Images
       operationId: createImage
       summary: Creates an image given a prompt
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ImagesResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/ImagesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Images
       requestBody:
         required: true
         content:
@@ -773,20 +1100,31 @@ paths:
               $ref: '#/components/schemas/CreateImageRequest'
   /images/variations:
     post:
-      tags:
-        - Images
       operationId: createImageVariation
       summary: Creates an edited or extended image given an original image and a prompt.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ImagesResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/ImagesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Images
       requestBody:
         required: true
         content:
@@ -795,31 +1133,47 @@ paths:
               $ref: '#/components/schemas/CreateImageVariationRequestMultiPart'
   /models:
     get:
-      tags:
-        - Models
       operationId: listModels
       summary: |-
         Lists the currently available models, and provides basic information about each one such as the
         owner and availability.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListModelsResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /models/{model}:
-    get:
+                $ref: '#/components/schemas/ListModelsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Models
+  /models/{model}:
+    get:
       operationId: retrieveModel
       summary: |-
         Retrieves a model instance, providing basic information about the model such as the owner and
         permissioning.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: model
           in: path
           required: true
@@ -832,15 +1186,26 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/Model'
-                  - $ref: '#/components/schemas/ErrorResponse'
-    delete:
+                $ref: '#/components/schemas/Model'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Models
+    delete:
       operationId: deleteModel
       summary: Delete a fine-tuned model. You must have the Owner role in your organization to delete a model.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: model
           in: path
           required: true
@@ -853,25 +1218,42 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/DeleteModelResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/DeleteModelResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Models
   /moderations:
     post:
-      tags:
-        - Moderations
       operationId: createModeration
       summary: Classifies if text is potentially harmful.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/CreateModerationResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/CreateModerationResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Moderations
       requestBody:
         required: true
         content:
@@ -880,20 +1262,31 @@ paths:
               $ref: '#/components/schemas/CreateModerationRequest'
   /threads:
     post:
-      tags:
-        - Assistants
       operationId: createThread
       summary: Create a thread.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ThreadObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/ThreadObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Assistants
       requestBody:
         required: true
         content:
@@ -902,20 +1295,31 @@ paths:
               $ref: '#/components/schemas/CreateThreadRequest'
   /threads/runs:
     post:
-      tags:
-        - Assistants
       operationId: createThreadAndRun
       summary: Create a thread and run it in one request.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/RunObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RunObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Assistants
       requestBody:
         required: true
         content:
@@ -924,11 +1328,16 @@ paths:
               $ref: '#/components/schemas/CreateThreadAndRunRequest'
   /threads/{thread_id}:
     get:
-      tags:
-        - Assistants
       operationId: getThread
       summary: Retrieves a thread.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -941,15 +1350,26 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ThreadObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
-    post:
+                $ref: '#/components/schemas/ThreadObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Assistants
+    post:
       operationId: modifyThread
       summary: Modifies a thread.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -962,9 +1382,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ThreadObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/ThreadObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Assistants
       requestBody:
         required: true
         content:
@@ -972,11 +1398,16 @@ paths:
             schema:
               $ref: '#/components/schemas/ModifyThreadRequest'
     delete:
-      tags:
-        - Assistants
       operationId: deleteThread
       summary: Delete a thread.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -989,16 +1420,27 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/DeleteThreadResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/messages:
-    post:
+                $ref: '#/components/schemas/DeleteThreadResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Assistants
+  /threads/{thread_id}/messages:
+    post:
       operationId: createMessage
       summary: Create a message.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1011,9 +1453,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/MessageObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/MessageObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Assistants
       requestBody:
         required: true
         content:
@@ -1021,11 +1469,16 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateMessageRequest'
     get:
-      tags:
-        - Assistants
       operationId: listMessages
       summary: Returns a list of messages for a given thread.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1042,6 +1495,7 @@ paths:
             type: integer
             format: int32
             default: 20
+          explode: false
         - name: order
           in: query
           required: false
@@ -1054,6 +1508,7 @@ paths:
               - asc
               - desc
             default: desc
+          explode: false
         - name: after
           in: query
           required: false
@@ -1063,6 +1518,7 @@ paths:
             subsequent call can include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
+          explode: false
         - name: before
           in: query
           required: false
@@ -1072,22 +1528,34 @@ paths:
             subsequent call can include before=obj_foo in order to fetch the previous page of the list.
           schema:
             type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListMessagesResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/messages/{message_id}:
-    get:
+                $ref: '#/components/schemas/ListMessagesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Assistants
+  /threads/{thread_id}/messages/{message_id}:
+    get:
       operationId: getMessage
       summary: Retrieve a message.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1106,15 +1574,26 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/MessageObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
-    post:
+                $ref: '#/components/schemas/MessageObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Assistants
+    post:
       operationId: modifyMessage
       summary: Modifies a message.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1133,9 +1612,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/MessageObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/MessageObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Assistants
       requestBody:
         required: true
         content:
@@ -1143,11 +1628,16 @@ paths:
             schema:
               $ref: '#/components/schemas/ModifyMessageRequest'
     delete:
-      tags:
-        - Assistants
       operationId: deleteMessage
       summary: Deletes a message.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1166,16 +1656,27 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/DeleteMessageResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs:
-    post:
+                $ref: '#/components/schemas/DeleteMessageResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Assistants
+  /threads/{thread_id}/runs:
+    post:
       operationId: createRun
       summary: Create a run.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1188,9 +1689,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/RunObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RunObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Assistants
       requestBody:
         required: true
         content:
@@ -1198,11 +1705,16 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateRunRequest'
     get:
-      tags:
-        - Assistants
       operationId: listRuns
       summary: Returns a list of runs belonging to a thread.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1219,6 +1731,7 @@ paths:
             type: integer
             format: int32
             default: 20
+          explode: false
         - name: order
           in: query
           required: false
@@ -1231,6 +1744,7 @@ paths:
               - asc
               - desc
             default: desc
+          explode: false
         - name: after
           in: query
           required: false
@@ -1240,6 +1754,7 @@ paths:
             subsequent call can include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
+          explode: false
         - name: before
           in: query
           required: false
@@ -1249,22 +1764,34 @@ paths:
             subsequent call can include before=obj_foo in order to fetch the previous page of the list.
           schema:
             type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListRunsResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs/{run_id}:
-    get:
+                $ref: '#/components/schemas/ListRunsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Assistants
+  /threads/{thread_id}/runs/{run_id}:
+    get:
       operationId: getRun
       summary: Retrieves a run.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1283,15 +1810,26 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/RunObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
-    post:
+                $ref: '#/components/schemas/RunObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Assistants
+    post:
       operationId: modifyRun
       summary: Modifies a run.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1310,9 +1848,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/RunObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RunObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Assistants
       requestBody:
         required: true
         content:
@@ -1321,11 +1865,16 @@ paths:
               $ref: '#/components/schemas/ModifyRunRequest'
   /threads/{thread_id}/runs/{run_id}/cancel:
     post:
-      tags:
-        - Assistants
       operationId: cancelRun
       summary: Cancels a run that is `in_progress`.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1344,16 +1893,27 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/RunObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs/{run_id}/steps:
-    get:
+                $ref: '#/components/schemas/RunObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Assistants
+  /threads/{thread_id}/runs/{run_id}/steps:
+    get:
       operationId: listRunSteps
       summary: Returns a list of run steps belonging to a run.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1376,6 +1936,7 @@ paths:
             type: integer
             format: int32
             default: 20
+          explode: false
         - name: order
           in: query
           required: false
@@ -1388,6 +1949,7 @@ paths:
               - asc
               - desc
             default: desc
+          explode: false
         - name: after
           in: query
           required: false
@@ -1397,6 +1959,7 @@ paths:
             subsequent call can include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
+          explode: false
         - name: before
           in: query
           required: false
@@ -1406,22 +1969,34 @@ paths:
             subsequent call can include before=obj_foo in order to fetch the previous page of the list.
           schema:
             type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListRunStepsResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs/{run_id}/steps/{step_id}:
-    get:
+                $ref: '#/components/schemas/ListRunStepsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Assistants
+  /threads/{thread_id}/runs/{run_id}/steps/{step_id}:
+    get:
       operationId: getRunStep
       summary: Retrieves a run step.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1446,19 +2021,30 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/RunStepObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /threads/{thread_id}/runs/{run_id}/submit_tool_outputs:
-    post:
+                $ref: '#/components/schemas/RunStepObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Assistants
+  /threads/{thread_id}/runs/{run_id}/submit_tool_outputs:
+    post:
       operationId: submitToolOutputsToRun
       summary: |-
         When a run has the `status: "requires_action"` and `required_action.type` is
         `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once
         they're all completed. All outputs must be submitted in a single request.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: thread_id
           in: path
           required: true
@@ -1477,9 +2063,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/RunObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RunObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Assistants
       requestBody:
         required: true
         content:
@@ -1488,8 +2080,6 @@ paths:
               $ref: '#/components/schemas/SubmitToolOutputsRunRequest'
   /uploads:
     post:
-      tags:
-        - Uploads
       operationId: createUpload
       summary: |-
         Creates an intermediate [Upload](/docs/api-reference/uploads/object) object that you can add [Parts](/docs/api-reference/uploads/part-object) to. Currently, an Upload can accept at most 8 GB in total and expires after an hour after you create it.
@@ -1500,16 +2090,29 @@ paths:
         - [Assistants](/docs/assistants/tools/file-search/supported-files)
 
         For guidance on the proper filename extensions for each purpose, please follow the documentation on [creating a File](/docs/api-reference/files/create).
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/Upload'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/Upload'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Uploads
       requestBody:
         required: true
         content:
@@ -1518,11 +2121,16 @@ paths:
               $ref: '#/components/schemas/CreateUploadRequest'
   /uploads/{upload_id}/cancel:
     post:
-      tags:
-        - Uploads
       operationId: cancelUpload
       summary: Cancels the Upload. No Parts may be added after an Upload is cancelled.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: upload_id
           in: path
           required: true
@@ -1534,13 +2142,17 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/Upload'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /uploads/{upload_id}/complete:
-    post:
+                $ref: '#/components/schemas/Upload'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Uploads
+  /uploads/{upload_id}/complete:
+    post:
       operationId: completeUpload
       summary: |-
         Completes the [Upload](/docs/api-reference/uploads/object). 
@@ -1551,6 +2163,13 @@ paths:
 
         The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: upload_id
           in: path
           required: true
@@ -1562,9 +2181,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/Upload'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/Upload'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Uploads
       requestBody:
         required: true
         content:
@@ -1573,8 +2198,6 @@ paths:
               $ref: '#/components/schemas/CompleteUploadRequest'
   /uploads/{upload_id}/parts:
     post:
-      tags:
-        - Uploads
       operationId: addUploadPart
       summary: |-
         Adds a [Part](/docs/api-reference/uploads/part-object) to an [Upload](/docs/api-reference/uploads/object) object. A Part represents a chunk of bytes from the file you are trying to upload. 
@@ -1583,6 +2206,13 @@ paths:
 
         It is possible to add multiple Parts in parallel. You can decide the intended order of the Parts when you [complete the Upload](/docs/api-reference/uploads/complete).
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: upload_id
           in: path
           required: true
@@ -1594,9 +2224,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/UploadPart'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/UploadPart'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Uploads
       requestBody:
         required: true
         content:
@@ -1605,11 +2241,16 @@ paths:
               $ref: '#/components/schemas/AddUploadPartRequestMultiPart'
   /vector_stores:
     get:
-      tags:
-        - Vector Stores
       operationId: listVectorStores
       summary: Returns a list of vector-stores.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: limit
           in: query
           required: false
@@ -1620,6 +2261,7 @@ paths:
             type: integer
             format: int32
             default: 20
+          explode: false
         - name: order
           in: query
           required: false
@@ -1632,6 +2274,7 @@ paths:
               - asc
               - desc
             default: desc
+          explode: false
         - name: after
           in: query
           required: false
@@ -1641,6 +2284,7 @@ paths:
             subsequent call can include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
+          explode: false
         - name: before
           in: query
           required: false
@@ -1650,30 +2294,48 @@ paths:
             subsequent call can include before=obj_foo in order to fetch the previous page of the list.
           schema:
             type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListVectorStoresResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-    post:
+                $ref: '#/components/schemas/ListVectorStoresResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Vector Stores
+    post:
       operationId: createVectorStore
       summary: Creates a vector store.
-      parameters: []
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/VectorStoreObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/VectorStoreObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Vector Stores
       requestBody:
         required: true
         content:
@@ -1682,11 +2344,16 @@ paths:
               $ref: '#/components/schemas/CreateVectorStoreRequest'
   /vector_stores/{vector_store_id}:
     get:
-      tags:
-        - Vector Stores
       operationId: getVectorStore
       summary: Retrieves a vector store.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: vector_store_id
           in: path
           required: true
@@ -1699,15 +2366,26 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/VectorStoreObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
-    post:
+                $ref: '#/components/schemas/VectorStoreObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Vector Stores
+    post:
       operationId: modifyVectorStore
       summary: Modifies a vector store.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: vector_store_id
           in: path
           required: true
@@ -1720,9 +2398,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/VectorStoreObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/VectorStoreObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Vector Stores
       requestBody:
         required: true
         content:
@@ -1730,11 +2414,16 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateVectorStoreRequest'
     delete:
-      tags:
-        - Vector Stores
       operationId: deleteVectorStore
       summary: Delete a vector store.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: vector_store_id
           in: path
           required: true
@@ -1747,16 +2436,27 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/DeleteVectorStoreResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /vector_stores/{vector_store_id}/file_batches:
-    post:
+                $ref: '#/components/schemas/DeleteVectorStoreResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Vector Stores
+  /vector_stores/{vector_store_id}/file_batches:
+    post:
       operationId: createVectorStoreFileBatch
       summary: Create a vector store file batch.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: vector_store_id
           in: path
           required: true
@@ -1769,9 +2469,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/VectorStoreFileBatchObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/VectorStoreFileBatchObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Vector Stores
       requestBody:
         required: true
         content:
@@ -1780,11 +2486,16 @@ paths:
               $ref: '#/components/schemas/CreateVectorStoreFileBatchRequest'
   /vector_stores/{vector_store_id}/file_batches/{batch_id}:
     get:
-      tags:
-        - Vector Stores
       operationId: getVectorStoreFileBatch
       summary: Retrieves a vector store file batch.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: vector_store_id
           in: path
           required: true
@@ -1803,16 +2514,27 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/VectorStoreFileBatchObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel:
-    post:
+                $ref: '#/components/schemas/VectorStoreFileBatchObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Vector Stores
+  /vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel:
+    post:
       operationId: cancelVectorStoreFileBatch
       summary: Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: vector_store_id
           in: path
           required: true
@@ -1831,16 +2553,27 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/VectorStoreFileBatchObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /vector_stores/{vector_store_id}/file_batches/{batch_id}/files:
-    get:
+                $ref: '#/components/schemas/VectorStoreFileBatchObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Vector Stores
+  /vector_stores/{vector_store_id}/file_batches/{batch_id}/files:
+    get:
       operationId: listFilesInVectorStoreBatch
       summary: Returns a list of vector store files in a batch.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: vector_store_id
           in: path
           required: true
@@ -1863,6 +2596,7 @@ paths:
             type: integer
             format: int32
             default: 20
+          explode: false
         - name: order
           in: query
           required: false
@@ -1875,6 +2609,7 @@ paths:
               - asc
               - desc
             default: desc
+          explode: false
         - name: after
           in: query
           required: false
@@ -1884,6 +2619,7 @@ paths:
             subsequent call can include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
+          explode: false
         - name: before
           in: query
           required: false
@@ -1893,28 +2629,41 @@ paths:
             subsequent call can include before=obj_foo in order to fetch the previous page of the list.
           schema:
             type: string
+          explode: false
         - name: filter
           in: query
           required: false
           description: Filter by file status. One of `in_progress`, `completed`, `failed`, `cancelled`.
           schema:
             $ref: '#/components/schemas/ListVectorStoreFilesFilter'
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListVectorStoreFilesResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-  /vector_stores/{vector_store_id}/files:
-    get:
+                $ref: '#/components/schemas/ListVectorStoreFilesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Vector Stores
+  /vector_stores/{vector_store_id}/files:
+    get:
       operationId: listVectorStoreFiles
       summary: Returns a list of vector store files.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: vector_store_id
           in: path
           required: true
@@ -1931,6 +2680,7 @@ paths:
             type: integer
             format: int32
             default: 20
+          explode: false
         - name: order
           in: query
           required: false
@@ -1943,6 +2693,7 @@ paths:
               - asc
               - desc
             default: desc
+          explode: false
         - name: after
           in: query
           required: false
@@ -1952,6 +2703,7 @@ paths:
             subsequent call can include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
+          explode: false
         - name: before
           in: query
           required: false
@@ -1961,27 +2713,40 @@ paths:
             subsequent call can include before=obj_foo in order to fetch the previous page of the list.
           schema:
             type: string
+          explode: false
         - name: filter
           in: query
           required: false
           description: Filter by file status. One of `in_progress`, `completed`, `failed`, `cancelled`.
           schema:
             $ref: '#/components/schemas/ListVectorStoreFilesFilter'
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/ListVectorStoreFilesResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
-    post:
+                $ref: '#/components/schemas/ListVectorStoreFilesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Vector Stores
+    post:
       operationId: createVectorStoreFile
       summary: Create a vector store file by attaching a [File](/docs/api-reference/files) to a [vector store](/docs/api-reference/vector-stores/object).
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: vector_store_id
           in: path
           required: true
@@ -1994,9 +2759,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/VectorStoreFileObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/VectorStoreFileObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Vector Stores
       requestBody:
         required: true
         content:
@@ -2005,11 +2776,16 @@ paths:
               $ref: '#/components/schemas/CreateVectorStoreFileRequest'
   /vector_stores/{vector_store_id}/files/{file_id}:
     get:
-      tags:
-        - Vector Stores
       operationId: getVectorStoreFile
       summary: Retrieves a vector store file.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: vector_store_id
           in: path
           required: true
@@ -2028,15 +2804,26 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/VectorStoreFileObject'
-                  - $ref: '#/components/schemas/ErrorResponse'
-    delete:
+                $ref: '#/components/schemas/VectorStoreFileObject'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Vector Stores
+    delete:
       operationId: deleteVectorStoreFile
       summary: Delete a vector store file. This will remove the file from the vector store but the file itself will not be deleted. To delete the file, use the [delete file](/docs/api-reference/files/delete) endpoint.
       parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/json
         - name: vector_store_id
           in: path
           required: true
@@ -2055,9 +2842,15 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: '#/components/schemas/DeleteVectorStoreFileResponse'
-                  - $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/DeleteVectorStoreFileResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Vector Stores
 security:
   - BearerAuth: []
 components:
@@ -2283,7 +3076,9 @@ components:
               description: |-
                 The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
 
-                Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/number-of-chunks-returned) for more information.
+                Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
+            ranking_options:
+              $ref: '#/components/schemas/FileSearchRankingOptions'
           description: Overrides for the file search tool.
       allOf:
         - $ref: '#/components/schemas/AssistantToolDefinition'
@@ -2323,9 +3118,9 @@ components:
       description: |-
         Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4 Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
-        Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which guarantees the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+        Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
 
-        Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
+        Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
 
         **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
       x-oaiExpandable: true
@@ -3527,6 +4322,14 @@ components:
           type: integer
           format: int32
           description: Total number of tokens used in the request (prompt + completion).
+        completion_tokens_details:
+          type: object
+          properties:
+            reasoning_tokens:
+              type: integer
+              format: int32
+              description: Tokens generated by the model for reasoning.
+          description: Breakdown of tokens used in a completion.
       description: Usage statistics for the completion request.
     CreateAssistantRequest:
       type: object
@@ -3707,9 +4510,13 @@ components:
             - type: string
             - type: string
               enum:
+                - o1-preview
+                - o1-preview-2024-09-12
+                - o1-mini
+                - o1-mini-2024-09-12
                 - gpt-4o
-                - gpt-4o-2024-05-13
                 - gpt-4o-2024-08-06
+                - gpt-4o-2024-05-13
                 - chatgpt-4o-latest
                 - gpt-4o-mini
                 - gpt-4o-mini-2024-07-18
@@ -3774,9 +4581,15 @@ components:
           format: int32
           nullable: true
           description: |-
-            The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
+            The maximum number of [tokens](/tokenizer) that can be generated in the chat completion. This value can be used to control [costs](https://openai.com/api/pricing/) for text generated via API.
 
-            The total length of input tokens and generated tokens is limited by the model's context length. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
+            This value is now deprecated in favor of `max_completion_tokens`, and is not compatible with [o1 series models](/docs/guides/reasoning).
+          deprecated: true
+        max_completion_tokens:
+          type: integer
+          format: int32
+          nullable: true
+          description: An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and [reasoning tokens](/docs/guides/reasoning).
         n:
           type: integer
           format: int32
@@ -3802,9 +4615,9 @@ components:
           description: |-
             An object specifying the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4o mini](/docs/models/gpt-4o-mini), [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
 
-            Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which guarantees the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+            Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
 
-            Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
+            Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
 
             **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
           x-oaiExpandable: true
@@ -3824,7 +4637,8 @@ components:
           nullable: true
           description: |-
             Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
-              - If set to 'auto', the system will utilize scale tier credits until they are exhausted.
+              - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted. 
+              - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
               - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
               - When not set, the default behavior is 'auto'.
 
@@ -4529,9 +5343,9 @@ components:
           type: string
           nullable: true
           minLength: 1
-          maxLength: 40
+          maxLength: 64
           description: |-
-            A string of up to 18 characters that will be added to your fine-tuned model name.
+            A string of up to 64 characters that will be added to your fine-tuned model name.
 
             For example, a `suffix` of "custom-model-name" would produce a model name like `ft:gpt-4o-mini:openai:custom-model-name:7p4lURel`.
           default: null
@@ -5856,6 +6670,27 @@ components:
         mapping:
           other: '#/components/schemas/OtherChunkingStrategyResponseParam'
           auto: '#/components/schemas/AutoChunkingStrategyResponseParam'
+    FileSearchRankingOptions:
+      type: object
+      required:
+        - score_threshold
+      properties:
+        ranker:
+          type: string
+          enum:
+            - auto
+            - default_2024_08_21
+          description: The ranker to use for the file search. If not specified will use the `auto` ranker.
+        score_threshold:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: The score threshold for the file search. All values must be a floating point number between 0 and 1.
+      description: |-
+        The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
+
+        See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
     FineTuneChatCompletionRequestAssistantMessage:
       type: object
       allOf:
@@ -7499,6 +8334,12 @@ components:
             - active
             - archived
           description: '`active` or `archived`'
+        app_use_case:
+          type: string
+          description: A description of your business, project, or use case. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
+        business_website:
+          type: string
+          description: Your business URL, or if you don't have one yet, a URL to your LinkedIn or other social media. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
       description: Represents an individual project.
     ProjectApiKey:
       type: object
@@ -7588,6 +8429,12 @@ components:
         name:
           type: string
           description: The friendly name of the project, this name appears in reports.
+        app_use_case:
+          type: string
+          description: A description of your business, project, or use case. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
+        business_website:
+          type: string
+          description: Your business URL, or if you don't have one yet, a URL to your LinkedIn or other social media. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
     ProjectListResponse:
       type: object
       required:
@@ -7747,6 +8594,12 @@ components:
         name:
           type: string
           description: The updated name of the project, this name appears in reports.
+        app_use_case:
+          type: string
+          description: A description of your business, project, or use case. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
+        business_website:
+          type: string
+          description: Your business URL, or if you don't have one yet, a URL to your LinkedIn or other social media. [Why we need this information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
     ProjectUser:
       type: object
       required:
@@ -8514,11 +9367,71 @@ components:
           description: The type of tool call. This is always going to be `file_search` for this type of tool call.
         file_search:
           type: object
-          additionalProperties: {}
+          properties:
+            ranking_options:
+              $ref: '#/components/schemas/RunStepDetailsToolCallsFileSearchRankingOptionsObject'
+            results:
+              type: array
+              items:
+                $ref: '#/components/schemas/RunStepDetailsToolCallsFileSearchResultObject'
+              description: The results of the file search.
           description: For now, this is always going to be an empty object.
           x-oaiTypeLabel: map
       allOf:
         - $ref: '#/components/schemas/RunStepDetailsToolCallsObjectToolCallsObject'
+    RunStepDetailsToolCallsFileSearchRankingOptionsObject:
+      type: object
+      required:
+        - ranker
+        - score_threshold
+      properties:
+        ranker:
+          type: string
+          enum:
+            - default_2024_08_21
+          description: The ranker used for the file search.
+        score_threshold:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: The score threshold for the file search. All values must be a floating point number between 0 and 1.
+      description: The ranking options for the file search.
+    RunStepDetailsToolCallsFileSearchResultObject:
+      type: object
+      required:
+        - file_id
+        - file_name
+        - score
+      properties:
+        file_id:
+          type: string
+          description: The ID of the file that result was found in.
+        file_name:
+          type: string
+          description: The name of the file that result was found in.
+        score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: The score of the result. All values must be a floating point number between 0 and 1.
+        content:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                  - text
+                description: The type of the content.
+              text:
+                type: string
+                description: The text content of the file.
+          description: The content of the result that was found. The content is only included if requested via the include query parameter.
+      description: A result instance of the file search.
+      x-oaiTypeLabel: map
     RunStepDetailsToolCallsFunctionObject:
       type: object
       required:

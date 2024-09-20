@@ -45,7 +45,7 @@ namespace Azure.AI.OpenAI.Tests
 
             ChatCompletionOptions options = new()
             {
-                MaxTokens = 2048,
+                MaxOutputTokenCount = 2048,
             };
 
             var response = await client.CompleteChatAsync(messages, options);
@@ -56,9 +56,9 @@ namespace Azure.AI.OpenAI.Tests
             Assert.That(response.Value.FinishReason, Is.EqualTo(ChatFinishReason.Stop));
             Assert.That(response.Value.Role, Is.EqualTo(ChatMessageRole.Assistant));
             Assert.That(response.Value.Usage, Is.Not.Null);
-            Assert.That(response.Value.Usage.InputTokens, Is.GreaterThan(10));
-            Assert.That(response.Value.Usage.OutputTokens, Is.GreaterThan(10));
-            Assert.That(response.Value.Usage.TotalTokens, Is.GreaterThan(20));
+            Assert.That(response.Value.Usage.InputTokenCount, Is.GreaterThan(10));
+            Assert.That(response.Value.Usage.OutputTokenCount, Is.GreaterThan(10));
+            Assert.That(response.Value.Usage.TotalTokenCount, Is.GreaterThan(20));
 
             Assert.That(response.Value.Content, Has.Count.EqualTo(1));
             ChatMessageContentPart choice = response.Value.Content[0];
@@ -115,7 +115,7 @@ namespace Azure.AI.OpenAI.Tests
 
             ChatCompletionOptions options = new()
             {
-                MaxTokens = 2048,
+                MaxOutputTokenCount = 2048,
             };
 
             AsyncCollectionResult<StreamingChatCompletionUpdate> response = client.CompleteChatStreamingAsync(messages, options);

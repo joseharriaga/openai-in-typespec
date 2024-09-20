@@ -17,6 +17,7 @@ interface Runs {
   @tag("Assistants")
   @summary("Create a thread and run it in one request.")
   createThreadAndRun(
+    @header accept: "application/json",
     @body requestBody: CreateThreadAndRunRequest,
   ): RunObject | ErrorResponse;
 
@@ -26,6 +27,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Create a run.")
   createRun(
+    @header accept: "application/json",
+
     /** The ID of the thread to run. */
     @path thread_id: string,
 
@@ -38,6 +41,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Returns a list of runs belonging to a thread.")
   listRuns(
+    @header accept: "application/json",
+
     /** The ID of the thread the run belongs to. */
     @path thread_id: string,
 
@@ -74,6 +79,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Retrieves a run.")
   getRun(
+    @header accept: "application/json",
+
     /** The ID of the [thread](/docs/api-reference/threads) that was run. */
     @path thread_id: string,
 
@@ -87,6 +94,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Modifies a run.")
   modifyRun(
+    @header accept: "application/json",
+
     /** The ID of the [thread](/docs/api-reference/threads) that was run. */
     @path thread_id: string,
 
@@ -102,6 +111,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Cancels a run that is `in_progress`.")
   cancelRun(
+    @header accept: "application/json",
+
     /** The ID of the thread to which this run belongs. */
     @path thread_id: string,
 
@@ -119,6 +130,8 @@ interface Runs {
     they're all completed. All outputs must be submitted in a single request.
     """)
   submitToolOutputsToRun(
+    @header accept: "application/json",
+
     /** The ID of the [thread](/docs/api-reference/threads) to which this run belongs. */
     @path thread_id: string,
 
@@ -134,6 +147,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Returns a list of run steps belonging to a run.")
   listRunSteps(
+    @header accept: "application/json",
+
     /** The ID of the thread the run and run steps belong to. */
     @path thread_id: string,
 
@@ -173,6 +188,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Retrieves a run step.")
   getRunStep(
+    @header accept: "application/json",
+
     /** The ID of the thread to which the run and run step belongs. */
     @path thread_id: string,
 

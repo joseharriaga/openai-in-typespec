@@ -23,6 +23,7 @@ interface FineTuning {
     [Learn more about fine-tuning](/docs/guides/fine-tuning)
     """)
   createFineTuningJob(
+    @header accept: "application/json",
     @body requestBody: CreateFineTuningJobRequest,
   ): FineTuningJob | ErrorResponse;
 
@@ -32,6 +33,8 @@ interface FineTuning {
   @tag("Fine-tuning")
   @summary("List your organization's fine-tuning jobs")
   listPaginatedFineTuningJobs(
+    @header accept: "application/json",
+
     /** Identifier for the last job from the previous pagination request. */
     @query after?: string,
 
@@ -49,6 +52,8 @@ interface FineTuning {
     [Learn more about fine-tuning](/docs/guides/fine-tuning)
     """)
   retrieveFineTuningJob(
+    @header accept: "application/json",
+
     /** The ID of the fine-tuning job. */
     @path fine_tuning_job_id: string,
   ): FineTuningJob | ErrorResponse;
@@ -59,6 +64,8 @@ interface FineTuning {
   @tag("Fine-tuning")
   @summary("Immediately cancel a fine-tune job.")
   cancelFineTuningJob(
+    @header accept: "application/json",
+
     /** The ID of the fine-tuning job to cancel. */
     @path fine_tuning_job_id: string,
   ): FineTuningJob | ErrorResponse;
@@ -69,6 +76,8 @@ interface FineTuning {
   @tag("Fine-tuning")
   @summary("List the checkpoints for a fine-tuning job.")
   listFineTuningJobCheckpoints(
+    @header accept: "application/json",
+
     /** The ID of the fine-tuning job to get checkpoints for. */
     @path fine_tuning_job_id: string,
 
@@ -85,6 +94,8 @@ interface FineTuning {
   @tag("Fine-tuning")
   @summary("Get status updates for a fine-tuning job.")
   listFineTuningEvents(
+    @header accept: "application/json",
+
     /** The ID of the fine-tuning job to get events for. */
     @path fine_tuning_job_id: string,
 

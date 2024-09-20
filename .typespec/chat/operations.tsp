@@ -17,6 +17,7 @@ interface Chat {
   @tag("Chat")
   @summary("Creates a model response for the given chat conversation.")
   createChatCompletion(
+    @header accept: "application/json",
     @body requestBody: CreateChatCompletionRequest,
   ): CreateChatCompletionResponse | ErrorResponse;
 }

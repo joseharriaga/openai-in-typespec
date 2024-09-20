@@ -16,6 +16,7 @@ interface Completions {
   @tag("Completions")
   @summary("Creates a completion for the provided prompt and parameters.")
   createCompletion(
+    @header accept: "application/json",
     @body requestBody: CreateCompletionRequest,
   ): CreateCompletionResponse | ErrorResponse;
 }

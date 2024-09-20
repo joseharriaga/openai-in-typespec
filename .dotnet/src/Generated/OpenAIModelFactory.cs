@@ -17,27 +17,84 @@ namespace OpenAI
 {
     internal static partial class OpenAIModelFactory
     {
-        public static TranscribedWord TranscribedWord(string word = null, TimeSpan startTime = default, TimeSpan endTime = default)
+        public static VectorStoreFileCounts VectorStoreFileCounts(int inProgress = default, int completed = default, int failed = default, int cancelled = default, int total = default)
         {
-            return new TranscribedWord(word, startTime, endTime, serializedAdditionalRawData: null);
+            return new VectorStoreFileCounts(
+                inProgress,
+                completed,
+                failed,
+                cancelled,
+                total,
+                serializedAdditionalRawData: null);
         }
 
-        public static TranscribedSegment TranscribedSegment(int id = default, int seekOffset = default, TimeSpan startTime = default, TimeSpan endTime = default, string text = null, IEnumerable<int> tokenIds = null, float temperature = default, float averageLogProbability = default, float compressionRatio = default, float noSpeechProbability = default)
+        public static VectorStoreFileAssociationError VectorStoreFileAssociationError(VectorStoreFileAssociationErrorCode code = default, string message = null)
         {
-            tokenIds ??= new List<int>();
+            return new VectorStoreFileAssociationError(code, message, serializedAdditionalRawData: null);
+        }
 
-            return new TranscribedSegment(
-                id,
-                seekOffset,
-                startTime,
-                endTime,
-                text,
-                tokenIds?.ToList(),
-                temperature,
-                averageLogProbability,
-                compressionRatio,
-                noSpeechProbability,
-                serializedAdditionalRawData: null);
+        public static RunError RunError(RunErrorCode code = default, string message = null)
+        {
+            return new RunError(code, message, serializedAdditionalRawData: null);
+        }
+
+        public static RunIncompleteDetails RunIncompleteDetails(RunIncompleteReason? reason = null)
+        {
+            return new RunIncompleteDetails(reason, serializedAdditionalRawData: null);
+        }
+
+        public static RunTokenUsage RunTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
+        {
+            return new RunTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
+        }
+
+        public static RunStepError RunStepError(RunStepErrorCode code = default, string message = null)
+        {
+            return new RunStepError(code, message, serializedAdditionalRawData: null);
+        }
+
+        public static RunStepTokenUsage RunStepTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
+        {
+            return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
+        }
+
+        public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
+        {
+            results ??= new List<ModerationResult>();
+
+            return new ModerationCollection(id, model, results?.ToList());
+        }
+
+        public static MessageFailureDetails MessageFailureDetails(MessageFailureReason reason = default)
+        {
+            return new MessageFailureDetails(reason, serializedAdditionalRawData: null);
+        }
+
+        public static GeneratedImageCollection GeneratedImageCollection(DateTimeOffset created = default, IEnumerable<GeneratedImage> data = null)
+        {
+            data ??= new List<GeneratedImage>();
+
+            return new GeneratedImageCollection(created, data?.ToList());
+        }
+
+        public static GeneratedImage GeneratedImage(BinaryData imageBytes = null, Uri imageUri = null, string revisedPrompt = null)
+        {
+            return new GeneratedImage(imageBytes, imageUri, revisedPrompt, serializedAdditionalRawData: null);
+        }
+
+        public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokens = default, int totalTokens = default)
+        {
+            return new EmbeddingTokenUsage(inputTokens, totalTokens, serializedAdditionalRawData: null);
+        }
+
+        public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = default, int inputTokenCount = default, int totalTokenCount = default, ChatOutputTokenUsageDetails outputTokenDetails = null)
+        {
+            return new ChatTokenUsage(outputTokenCount, inputTokenCount, totalTokenCount, outputTokenDetails, serializedAdditionalRawData: null);
+        }
+
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default)
+        {
+            return new ChatOutputTokenUsageDetails(reasoningTokenCount, serializedAdditionalRawData: null);
         }
 
         public static ToolChatMessage ToolChatMessage(IEnumerable<ChatMessageContentPart> content = null, string toolCallId = null)
@@ -71,79 +128,27 @@ namespace OpenAI
             return new ChatTokenTopLogProbabilityDetails(token, logProbability, utf8Bytes, serializedAdditionalRawData: null);
         }
 
-        public static ChatTokenUsage ChatTokenUsage(int outputTokens = default, int inputTokens = default, int totalTokens = default)
+        public static TranscribedWord TranscribedWord(string word = null, TimeSpan startTime = default, TimeSpan endTime = default)
         {
-            return new ChatTokenUsage(outputTokens, inputTokens, totalTokens, serializedAdditionalRawData: null);
+            return new TranscribedWord(word, startTime, endTime, serializedAdditionalRawData: null);
         }
 
-        public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokens = default, int totalTokens = default)
+        public static TranscribedSegment TranscribedSegment(int id = default, int seekOffset = default, TimeSpan startTime = default, TimeSpan endTime = default, string text = null, IEnumerable<int> tokenIds = null, float temperature = default, float averageLogProbability = default, float compressionRatio = default, float noSpeechProbability = default)
         {
-            return new EmbeddingTokenUsage(inputTokens, totalTokens, serializedAdditionalRawData: null);
-        }
+            tokenIds ??= new List<int>();
 
-        public static GeneratedImageCollection GeneratedImageCollection(DateTimeOffset created = default, IEnumerable<GeneratedImage> data = null)
-        {
-            data ??= new List<GeneratedImage>();
-
-            return new GeneratedImageCollection(created, data?.ToList());
-        }
-
-        public static GeneratedImage GeneratedImage(BinaryData imageBytes = null, Uri imageUri = null, string revisedPrompt = null)
-        {
-            return new GeneratedImage(imageBytes, imageUri, revisedPrompt, serializedAdditionalRawData: null);
-        }
-
-        public static MessageFailureDetails MessageFailureDetails(MessageFailureReason reason = default)
-        {
-            return new MessageFailureDetails(reason, serializedAdditionalRawData: null);
-        }
-
-        public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
-        {
-            results ??= new List<ModerationResult>();
-
-            return new ModerationCollection(id, model, results?.ToList());
-        }
-
-        public static RunError RunError(RunErrorCode code = default, string message = null)
-        {
-            return new RunError(code, message, serializedAdditionalRawData: null);
-        }
-
-        public static RunIncompleteDetails RunIncompleteDetails(RunIncompleteReason? reason = null)
-        {
-            return new RunIncompleteDetails(reason, serializedAdditionalRawData: null);
-        }
-
-        public static RunTokenUsage RunTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
-        {
-            return new RunTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
-        }
-
-        public static RunStepError RunStepError(RunStepErrorCode code = default, string message = null)
-        {
-            return new RunStepError(code, message, serializedAdditionalRawData: null);
-        }
-
-        public static RunStepTokenUsage RunStepTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
-        {
-            return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
-        }
-
-        public static VectorStoreFileCounts VectorStoreFileCounts(int inProgress = default, int completed = default, int failed = default, int cancelled = default, int total = default)
-        {
-            return new VectorStoreFileCounts(
-                inProgress,
-                completed,
-                failed,
-                cancelled,
-                total,
+            return new TranscribedSegment(
+                id,
+                seekOffset,
+                startTime,
+                endTime,
+                text,
+                tokenIds?.ToList(),
+                temperature,
+                averageLogProbability,
+                compressionRatio,
+                noSpeechProbability,
                 serializedAdditionalRawData: null);
-        }
-
-        public static VectorStoreFileAssociationError VectorStoreFileAssociationError(VectorStoreFileAssociationErrorCode code = default, string message = null)
-        {
-            return new VectorStoreFileAssociationError(code, message, serializedAdditionalRawData: null);
         }
 
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null)

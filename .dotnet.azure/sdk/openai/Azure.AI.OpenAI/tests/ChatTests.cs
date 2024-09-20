@@ -289,9 +289,9 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(response.Content, Is.Not.Null.Or.Empty);
         Assert.That(response.Content.Count, Is.EqualTo(1));
         Assert.That(response.Usage, Is.Not.Null);
-        Assert.That(response.Usage.InputTokens, Is.GreaterThan(10));
-        Assert.That(response.Usage.OutputTokens, Is.GreaterThan(10));
-        Assert.That(response.Usage.TotalTokens, Is.GreaterThan(20));
+        Assert.That(response.Usage.InputTokenCount, Is.GreaterThan(10));
+        Assert.That(response.Usage.OutputTokenCount, Is.GreaterThan(10));
+        Assert.That(response.Usage.TotalTokenCount, Is.GreaterThan(20));
         Assert.That(response.ContentTokenLogProbabilities, Is.Not.Null.Or.Empty);
         foreach (var logProb in response.ContentTokenLogProbabilities)
         {
@@ -488,7 +488,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         ];
         ChatCompletionOptions options = new()
         {
-            MaxTokens = 512,
+            MaxOutputTokenCount = 512,
             IncludeLogProbabilities = true,
             TopLogProbabilityCount = 1,
         };
@@ -617,6 +617,9 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
     #endregion
 
+    #region Tests for interim o1 model support regarding new max_completion_tokens
+
+    #endregion
     #region Helper methods
 
     private void ValidateUpdate(StreamingChatCompletionUpdate update, StringBuilder builder, ref bool foundPromptFilter, ref bool foundResponseFilter)
@@ -639,9 +642,9 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
             Assert.That(update.FinishReason, Is.Null.Or.EqualTo(ChatFinishReason.Stop));
             if (update.Usage != null)
             {
-                Assert.That(update.Usage.InputTokens, Is.GreaterThanOrEqualTo(0));
-                Assert.That(update.Usage.OutputTokens, Is.GreaterThanOrEqualTo(0));
-                Assert.That(update.Usage.TotalTokens, Is.GreaterThanOrEqualTo(0));
+                Assert.That(update.Usage.InputTokenCount, Is.GreaterThanOrEqualTo(0));
+                Assert.That(update.Usage.OutputTokenCount, Is.GreaterThanOrEqualTo(0));
+                Assert.That(update.Usage.TotalTokenCount, Is.GreaterThanOrEqualTo(0));
             }
 
             Assert.That(update.Model, Is.Not.Null);

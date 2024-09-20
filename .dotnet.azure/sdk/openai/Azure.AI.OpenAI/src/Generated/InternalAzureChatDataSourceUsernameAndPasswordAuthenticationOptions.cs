@@ -14,7 +14,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="username"/> or <paramref name="password"/> is null. </exception>
-        internal InternalAzureChatDataSourceUsernameAndPasswordAuthenticationOptions(string username, string password)
+        public InternalAzureChatDataSourceUsernameAndPasswordAuthenticationOptions(string username, string password)
         {
             Argument.AssertNotNull(username, nameof(username));
             Argument.AssertNotNull(password, nameof(password));

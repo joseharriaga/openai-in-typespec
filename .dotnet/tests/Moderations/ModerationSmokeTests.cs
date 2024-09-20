@@ -54,8 +54,8 @@ public partial class ModerationSmokeTests : SyncAsyncTestBase
 
         ModerationClient client = new ModerationClient("model", new ApiKeyCredential("sk-not-a-real-key"), options);
         ModerationResult moderation = IsAsync
-            ? await client.ClassifyTextInputAsync("Mock me!")
-            : client.ClassifyTextInput("Mock me!");
+            ? await client.ClassifyTextAsync("Mock me!")
+            : client.ClassifyText("Mock me!");
 
         Assert.That(moderation, Is.Not.Null);
         Assert.That(moderation.Flagged, Is.True);
@@ -108,8 +108,8 @@ public partial class ModerationSmokeTests : SyncAsyncTestBase
 
         ModerationClient client = new ModerationClient("model", new ApiKeyCredential("sk-not-a-real-key"), options);
         ModerationCollection moderations = IsAsync
-            ? await client.ClassifyTextInputsAsync(new List<string> { "Mock me 1!", "Mock me 2!" })
-            : client.ClassifyTextInputs(new List<string> { "Mock me 1!", "Mock me 2!" });
+            ? await client.ClassifyTextAsync(new List<string> { "Mock me 1!", "Mock me 2!" })
+            : client.ClassifyText(new List<string> { "Mock me 1!", "Mock me 2!" });
 
         Assert.That(moderations, Is.Not.Null);
         Assert.That(moderations.Count, Is.EqualTo(2));

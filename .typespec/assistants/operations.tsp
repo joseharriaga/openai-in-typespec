@@ -16,6 +16,7 @@ interface Assistants {
   @tag("Assistants")
   @summary("Create an assistant with a model and instructions.")
   createAssistant(
+    @header accept: "application/json",
     @body requestBody: CreateAssistantRequest,
   ): AssistantObject | ErrorResponse;
 
@@ -24,6 +25,8 @@ interface Assistants {
   @tag("Assistants")
   @summary("Returns a list of assistants.")
   listAssistants(
+    @header accept: "application/json",
+
     /**
      * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
      * default is 20.
@@ -57,6 +60,8 @@ interface Assistants {
   @tag("Assistants")
   @summary("Retrieves an assistant.")
   getAssistant(
+    @header accept: "application/json",
+
     /** The ID of the assistant to retrieve. */
     @path assistant_id: string,
   ): AssistantObject | ErrorResponse;
@@ -67,6 +72,8 @@ interface Assistants {
   @tag("Assistants")
   @summary("Modifies an assistant.")
   modifyAssistant(
+    @header accept: "application/json",
+
     /** The ID of the assistant to modify. */
     @path assistant_id: string,
 
@@ -79,6 +86,8 @@ interface Assistants {
   @tag("Assistants")
   @summary("Delete an assistant.")
   deleteAssistant(
+    @header accept: "application/json",
+
     /** The ID of the assistant to delete. */
     @path assistant_id: string,
   ): DeleteAssistantResponse | ErrorResponse;

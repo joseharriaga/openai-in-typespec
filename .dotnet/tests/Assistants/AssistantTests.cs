@@ -1591,173 +1591,154 @@ public partial class AssistantTests : SyncAsyncTestBase
         Assert.That(count, Is.GreaterThanOrEqualTo(10));
     }
 
-    //[Test]
-    //public async Task Pagination_CanRehydrateRunStepPageCollectionFromBytesAsync()
-    //{
-    //    AssertAsyncOnly();
+    [Test]
+    public async Task Pagination_CanRehydrateRunStepPageCollectionFromBytesAsync()
+    {
+        AssertAsyncOnly();
 
-    //    AssistantClient client = GetTestClient();
-    //    Assistant assistant = client.CreateAssistant("gpt-4o", new AssistantCreationOptions()
-    //    {
-    //        Tools = { new CodeInterpreterToolDefinition() },
-    //        Instructions = "You help the user with mathematical descriptions and visualizations.",
-    //    });
-    //    Validate(assistant);
+        AssistantClient client = GetTestClient();
+        Assistant assistant = client.CreateAssistant("gpt-4o", new AssistantCreationOptions()
+        {
+            Tools = { new CodeInterpreterToolDefinition() },
+            Instructions = "You help the user with mathematical descriptions and visualizations.",
+        });
+        Validate(assistant);
 
-    //    FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
-    //    OpenAIFileInfo equationFile = fileClient.UploadFile(
-    //        BinaryData.FromString("""
-    //        x,y
-    //        2,5
-    //        7,14,
-    //        8,22
-    //        """).ToStream(),
-    //        "text/csv",
-    //        FileUploadPurpose.Assistants);
-    //    Validate(equationFile);
+        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
+        OpenAIFileInfo equationFile = fileClient.UploadFile(
+            BinaryData.FromString("""
+            x,y
+            2,5
+            7,14,
+            8,22
+            """).ToStream(),
+            "text/csv",
+            FileUploadPurpose.Assistants);
+        Validate(equationFile);
 
-    //    AssistantThread thread = client.CreateThread(new ThreadCreationOptions()
-    //    {
-    //        InitialMessages =
-    //        {
-    //            "Describe the contents of any available tool resource file."
-    //            + " Graph a linear regression and provide the coefficient of correlation."
-    //            + " Explain any code executed to evaluate.",
-    //        },
-    //        ToolResources = new()
-    //        {
-    //            CodeInterpreter = new()
-    //            {
-    //                FileIds = { equationFile.Id },
-    //            }
-    //        }
-    //    });
-    //    Validate(thread);
+        AssistantThread thread = client.CreateThread(new ThreadCreationOptions()
+        {
+            InitialMessages =
+            {
+                "Describe the contents of any available tool resource file."
+                + " Graph a linear regression and provide the coefficient of correlation."
+                + " Explain any code executed to evaluate.",
+            },
+            ToolResources = new()
+            {
+                CodeInterpreter = new()
+                {
+                    FileIds = { equationFile.Id },
+                }
+            }
+        });
+        Validate(thread);
 
-    //    ThreadRun run = client.CreateRun(thread, assistant);
-    //    Validate(run);
+        ThreadRun run = client.CreateRun(thread, assistant);
+        Validate(run);
 
-    //    while (!run.Status.IsTerminal)
-    //    {
-    //        Thread.Sleep(1000);
-    //        run = client.GetRun(run);
-    //    }
-    //    Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
-    //    Assert.That(run.Usage?.TotalTokens, Is.GreaterThan(0));
+        while (!run.Status.IsTerminal)
+        {
+            Thread.Sleep(1000);
+            run = client.GetRun(run);
+        }
+        Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
+        Assert.That(run.Usage?.TotalTokens, Is.GreaterThan(0));
 
-    //    AsyncCollectionResult<RunStep> pages = client.GetRunStepsAsync(run);
-    //    IAsyncEnumerator<PageResult<RunStep>> pageEnumerator = ((IAsyncEnumerable<PageResult<RunStep>>)pages).GetAsyncEnumerator();
+        IReadOnlyList<string> runSteps;
+        IReadOnlyList<string> rehydratedRunSteps;
+        {
+            const int numPerPage = 2;
+            AsyncCollectionResult<RunStep> results = client.GetRunStepsAsync(run, new() { PageSizeLimit = numPerPage });
+            runSteps = await results
+                .Skip(numPerPage)
+                .Select(r => r.Id)
+                .ToListAsync();
 
-    //    // Simulate rehydration of the collection
-    //    BinaryData rehydrationBytes = (await pages.GetCurrentPageAsync()).PageToken.ToBytes();
-    //    ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
+            // Simulate rehydration of the collection
+            ContinuationToken rehydrationToken = results.GetContinuationToken(await results.GetRawPagesAsync().FirstOrDefaultAsync());
+            results = client.GetRunStepsAsync(rehydrationToken);
+            rehydratedRunSteps = await results
+                .Select(r => r.Id)
+                .ToListAsync();
+        }
 
-    //    AsyncCollectionResult<RunStep> rehydratedPages = client.GetRunStepsAsync(rehydrationToken);
-    //    IAsyncEnumerator<PageResult<RunStep>> rehydratedPageEnumerator = ((IAsyncEnumerable<PageResult<RunStep>>)rehydratedPages).GetAsyncEnumerator();
+        CollectionAssert.AreEqual(runSteps, rehydratedRunSteps);
+    }
 
-    //    int pageCount = 0;
+    [Test]
+    public void Pagination_CanRehydrateRunStepPageCollectionFromBytes()
+    {
+        AssertSyncOnly();
 
-    //    while (await pageEnumerator.MoveNextAsync() && await rehydratedPageEnumerator.MoveNextAsync())
-    //    {
-    //        PageResult<RunStep> page = pageEnumerator.Current;
-    //        PageResult<RunStep> rehydratedPage = rehydratedPageEnumerator.Current;
+        AssistantClient client = GetTestClient();
+        Assistant assistant = client.CreateAssistant("gpt-4o", new AssistantCreationOptions()
+        {
+            Tools = { new CodeInterpreterToolDefinition() },
+            Instructions = "You help the user with mathematical descriptions and visualizations.",
+        });
+        Validate(assistant);
 
-    //        Assert.AreEqual(page.Values.Count, rehydratedPage.Values.Count);
+        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
+        OpenAIFileInfo equationFile = fileClient.UploadFile(
+            BinaryData.FromString("""
+            x,y
+            2,5
+            7,14,
+            8,22
+            """).ToStream(),
+            "text/csv",
+            FileUploadPurpose.Assistants);
+        Validate(equationFile);
 
-    //        for (int i = 0; i < page.Values.Count; i++)
-    //        {
-    //            Assert.AreEqual(page.Values[0].Id, rehydratedPage.Values[0].Id);
-    //        }
+        AssistantThread thread = client.CreateThread(new ThreadCreationOptions()
+        {
+            InitialMessages =
+            {
+                "Describe the contents of any available tool resource file."
+                + " Graph a linear regression and provide the coefficient of correlation."
+                + " Explain any code executed to evaluate.",
+            },
+            ToolResources = new()
+            {
+                CodeInterpreter = new()
+                {
+                    FileIds = { equationFile.Id },
+                }
+            }
+        });
+        Validate(thread);
 
-    //        pageCount++;
-    //    }
+        ThreadRun run = client.CreateRun(thread, assistant);
+        Validate(run);
 
-    //    Assert.That(pageCount, Is.GreaterThanOrEqualTo(1));
-    //}
+        while (!run.Status.IsTerminal)
+        {
+            Thread.Sleep(1000);
+            run = client.GetRun(run);
+        }
+        Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
+        Assert.That(run.Usage?.TotalTokens, Is.GreaterThan(0));
 
-    //[Test]
-    //public void Pagination_CanRehydrateRunStepPageCollectionFromBytes()
-    //{
-    //    AssertSyncOnly();
+        IReadOnlyList<string> runSteps;
+        IReadOnlyList<string> rehydratedRunSteps;
+        {
+            const int numPerPage = 2;
+            CollectionResult<RunStep> results = client.GetRunSteps(run, new() { PageSizeLimit = numPerPage });
+            runSteps = results
+                .Skip(numPerPage)
+                .Select(r => r.Id)
+                .ToList();
 
-    //    AssistantClient client = GetTestClient();
-    //    Assistant assistant = client.CreateAssistant("gpt-4o", new AssistantCreationOptions()
-    //    {
-    //        Tools = { new CodeInterpreterToolDefinition() },
-    //        Instructions = "You help the user with mathematical descriptions and visualizations.",
-    //    });
-    //    Validate(assistant);
+            // Simulate rehydration of the collection
+            ContinuationToken rehydrationToken = results.GetContinuationToken(results.GetRawPages().FirstOrDefault());
+            rehydratedRunSteps = client.GetRunSteps(rehydrationToken)
+                .Select(r => r.Id)
+                .ToList();
+        }
 
-    //    FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
-    //    OpenAIFileInfo equationFile = fileClient.UploadFile(
-    //        BinaryData.FromString("""
-    //        x,y
-    //        2,5
-    //        7,14,
-    //        8,22
-    //        """).ToStream(),
-    //        "text/csv",
-    //        FileUploadPurpose.Assistants);
-    //    Validate(equationFile);
-
-    //    AssistantThread thread = client.CreateThread(new ThreadCreationOptions()
-    //    {
-    //        InitialMessages =
-    //        {
-    //            "Describe the contents of any available tool resource file."
-    //            + " Graph a linear regression and provide the coefficient of correlation."
-    //            + " Explain any code executed to evaluate.",
-    //        },
-    //        ToolResources = new()
-    //        {
-    //            CodeInterpreter = new()
-    //            {
-    //                FileIds = { equationFile.Id },
-    //            }
-    //        }
-    //    });
-    //    Validate(thread);
-
-    //    ThreadRun run = client.CreateRun(thread, assistant);
-    //    Validate(run);
-
-    //    while (!run.Status.IsTerminal)
-    //    {
-    //        Thread.Sleep(1000);
-    //        run = client.GetRun(run);
-    //    }
-    //    Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
-    //    Assert.That(run.Usage?.TotalTokens, Is.GreaterThan(0));
-
-    //    CollectionResult<RunStep> pages = client.GetRunSteps(run);
-    //    IEnumerator<PageResult<RunStep>> pageEnumerator = ((IEnumerable<PageResult<RunStep>>)pages).GetEnumerator();
-
-    //    // Simulate rehydration of the collection
-    //    BinaryData rehydrationBytes = pages.GetCurrentPage().PageToken.ToBytes();
-    //    ContinuationToken rehydrationToken = ContinuationToken.FromBytes(rehydrationBytes);
-
-    //    CollectionResult<RunStep> rehydratedPages = client.GetRunSteps(rehydrationToken);
-    //    IEnumerator<PageResult<RunStep>> rehydratedPageEnumerator = ((IEnumerable<PageResult<RunStep>>)rehydratedPages).GetEnumerator();
-
-    //    int pageCount = 0;
-
-    //    while (pageEnumerator.MoveNext() && rehydratedPageEnumerator.MoveNext())
-    //    {
-    //        PageResult<RunStep> page = pageEnumerator.Current;
-    //        PageResult<RunStep> rehydratedPage = rehydratedPageEnumerator.Current;
-
-    //        Assert.AreEqual(page.Values.Count, rehydratedPage.Values.Count);
-
-    //        for (int i = 0; i < page.Values.Count; i++)
-    //        {
-    //            Assert.AreEqual(page.Values[0].Id, rehydratedPage.Values[0].Id);
-    //        }
-
-    //        pageCount++;
-    //    }
-
-    //    Assert.That(pageCount, Is.GreaterThanOrEqualTo(1));
-    //}
+        CollectionAssert.AreEqual(runSteps, rehydratedRunSteps);
+    }
 
     [Test]
     public async Task MessagesWithRoles()

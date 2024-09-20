@@ -21,8 +21,6 @@ internal class AzureCollectionResult<TItem, TContinuation> : CollectionResult<TI
     private readonly Func<ClientResult, TContinuation?> _getContinuationToken;
     private readonly Func<ClientResult, IEnumerable<TItem>> _getValues;
 
-    private TContinuation? _continuation;
-
     /// <summary>
     /// Creates a new instance.
     /// </summary>
@@ -53,14 +51,16 @@ internal class AzureCollectionResult<TItem, TContinuation> : CollectionResult<TI
     /// <inheritdoc />
     public override IEnumerable<ClientResult> GetRawPages()
     {
+        TContinuation? continuation = null;
+
         do
         {
-            ClientResult page = SendRequest(_continuation);
-            _continuation = _getContinuationToken(page);
+            ClientResult page = SendRequest(continuation);
+            continuation = _getContinuationToken(page);
 
             yield return page;
         }
-        while (_continuation != null);
+        while (continuation != null);
     }
 
     /// <inheritdoc />

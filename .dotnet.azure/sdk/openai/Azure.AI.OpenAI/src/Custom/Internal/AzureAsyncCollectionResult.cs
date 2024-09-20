@@ -22,8 +22,6 @@ internal class AzureAsyncCollectionResult<TItem, TContinuation> : AsyncCollectio
     private readonly Func<ClientResult, IEnumerable<TItem>> _getValues;
     private readonly CancellationToken _cancellation;
 
-    private TContinuation? _continuation;
-
     /// <summary>
     /// Creates a new instance.
     /// </summary>
@@ -57,13 +55,14 @@ internal class AzureAsyncCollectionResult<TItem, TContinuation> : AsyncCollectio
     /// <inheritdoc />
     public override async IAsyncEnumerable<ClientResult> GetRawPagesAsync()
     {
+        TContinuation? continuation = null;
         do
         {
-            ClientResult page = await SendRequestAsync(_continuation).ConfigureAwait(false);
-            _continuation = _getContinuationToken(page);
+            ClientResult page = await SendRequestAsync(continuation).ConfigureAwait(false);
+            continuation = _getContinuationToken(page);
 
             yield return page;
-        } while (_continuation != null);
+        } while (continuation != null);
     }
 
     /// <inheritdoc />

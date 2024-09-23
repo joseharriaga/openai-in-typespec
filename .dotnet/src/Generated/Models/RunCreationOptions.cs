@@ -9,27 +9,27 @@ namespace OpenAI.Assistants
 {
     public partial class RunCreationOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal RunCreationOptions(string assistantId, string modelOverride, string instructionsOverride, string additionalInstructions, IList<MessageCreationOptions> internalMessages, IList<ToolDefinition> toolsOverride, IDictionary<string, string> metadata, float? temperature, float? nucleusSamplingFactor, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, ToolConstraint toolConstraint, bool? parallelToolCallsEnabled, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunCreationOptions(string assistantId, InternalCreateRunRequestModel? model, string instructions, string additionalInstructions, IList<MessageCreationOptions> additionalMessages, IList<ToolDefinition> tools, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, BinaryData toolChoice, bool? parallelToolCalls, BinaryData responseFormat, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             AssistantId = assistantId;
-            ModelOverride = modelOverride;
-            InstructionsOverride = instructionsOverride;
+            Model = model;
+            Instructions = instructions;
             AdditionalInstructions = additionalInstructions;
-            InternalMessages = internalMessages;
-            ToolsOverride = toolsOverride;
+            AdditionalMessages = additionalMessages;
+            Tools = tools;
             Metadata = metadata;
             Temperature = temperature;
-            NucleusSamplingFactor = nucleusSamplingFactor;
+            TopP = topP;
             Stream = stream;
             MaxPromptTokens = maxPromptTokens;
             MaxCompletionTokens = maxCompletionTokens;
             TruncationStrategy = truncationStrategy;
-            ToolConstraint = toolConstraint;
-            ParallelToolCallsEnabled = parallelToolCallsEnabled;
+            ToolChoice = toolChoice;
+            ParallelToolCalls = parallelToolCalls;
             ResponseFormat = responseFormat;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }
 }

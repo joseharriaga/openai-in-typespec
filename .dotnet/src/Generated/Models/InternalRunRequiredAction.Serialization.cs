@@ -7,41 +7,41 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalRunRequiredAction : IJsonModel<InternalRunRequiredAction>
     {
+        internal InternalRunRequiredAction()
+        {
+        }
+
         void IJsonModel<InternalRunRequiredAction>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRunRequiredAction>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRunRequiredAction>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRunRequiredAction)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Type.ToString());
+            writer.WritePropertyName("submit_tool_outputs"u8);
+            writer.WriteObjectValue(SubmitToolOutputs, options);
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                writer.WritePropertyName("type"u8);
-                writer.WriteObjectValue<object>(Type, options);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("submit_tool_outputs") != true)
-            {
-                writer.WritePropertyName("submit_tool_outputs"u8);
-                writer.WriteObjectValue(SubmitToolOutputs, options);
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -50,59 +50,55 @@ namespace OpenAI.Assistants
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalRunRequiredAction IJsonModel<InternalRunRequiredAction>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalRunRequiredAction IJsonModel<InternalRunRequiredAction>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalRunRequiredAction JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRunRequiredAction>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRunRequiredAction>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRunRequiredAction)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalRunRequiredAction(document.RootElement, options);
         }
 
-        internal static InternalRunRequiredAction DeserializeInternalRunRequiredAction(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalRunRequiredAction DeserializeInternalRunRequiredAction(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            object type = default;
+            InternalRunObjectRequiredActionType @type = default;
             InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    type = property.Value.GetObject();
+                    @type = new InternalRunObjectRequiredActionType(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("submit_tool_outputs"u8))
+                if (prop.NameEquals("submit_tool_outputs"u8))
                 {
-                    submitToolOutputs = InternalRunObjectRequiredActionSubmitToolOutputs.DeserializeInternalRunObjectRequiredActionSubmitToolOutputs(property.Value, options);
+                    submitToolOutputs = InternalRunObjectRequiredActionSubmitToolOutputs.DeserializeInternalRunObjectRequiredActionSubmitToolOutputs(prop.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalRunRequiredAction(type, submitToolOutputs, serializedAdditionalRawData);
+            return new InternalRunRequiredAction(@type, submitToolOutputs, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalRunRequiredAction>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRunRequiredAction>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalRunRequiredAction>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRunRequiredAction>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -112,15 +108,16 @@ namespace OpenAI.Assistants
             }
         }
 
-        InternalRunRequiredAction IPersistableModel<InternalRunRequiredAction>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRunRequiredAction>)this).GetFormatFromOptions(options) : options.Format;
+        InternalRunRequiredAction IPersistableModel<InternalRunRequiredAction>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalRunRequiredAction PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRunRequiredAction>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalRunRequiredAction(document.RootElement, options);
                     }
                 default:
@@ -130,15 +127,16 @@ namespace OpenAI.Assistants
 
         string IPersistableModel<InternalRunRequiredAction>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalRunRequiredAction FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalRunRequiredAction internalRunRequiredAction)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalRunRequiredAction(document.RootElement);
+            return BinaryContent.Create(internalRunRequiredAction, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalRunRequiredAction(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalRunRequiredAction(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

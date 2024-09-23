@@ -5,13 +5,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     public partial class MessageCreationAttachment
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        public MessageCreationAttachment(string fileId, IEnumerable<ToolDefinition> tools)
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        public MessageCreationAttachment(string fileId, IEnumerable<BinaryData> tools)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
             Argument.AssertNotNull(tools, nameof(tools));
@@ -20,17 +22,13 @@ namespace OpenAI.Assistants
             Tools = tools.ToList();
         }
 
-        internal MessageCreationAttachment(string fileId, IReadOnlyList<ToolDefinition> tools, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageCreationAttachment(string fileId, IList<BinaryData> tools, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             FileId = fileId;
             Tools = tools;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal MessageCreationAttachment()
-        {
-        }
-
-        public string FileId { get; }
+        public string FileId { get; set; }
     }
 }

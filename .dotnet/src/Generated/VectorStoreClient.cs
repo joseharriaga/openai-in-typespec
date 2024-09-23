@@ -6,310 +6,179 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading.Tasks;
+using OpenAI;
 
 namespace OpenAI.VectorStores
 {
-    // Data plane generated sub-client.
     public partial class VectorStoreClient
     {
+        private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly ClientPipeline _pipeline;
-        private readonly Uri _endpoint;
-
-        public virtual ClientPipeline Pipeline => _pipeline;
 
         protected VectorStoreClient()
         {
         }
 
-        internal PipelineMessage CreateGetVectorStoresRequest(int? limit, string order, string after, string before, RequestOptions options)
+        public ClientPipeline Pipeline { get; }
+
+        public virtual ClientResult ListVectorStores(int? limit, string order, string after, string before, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores", false);
-            if (limit != null)
-            {
-                uri.AppendQuery("limit", limit.Value, true);
-            }
-            if (order != null)
-            {
-                uri.AppendQuery("order", order, true);
-            }
-            if (after != null)
-            {
-                uri.AppendQuery("after", after, true);
-            }
-            if (before != null)
-            {
-                uri.AppendQuery("before", before, true);
-            }
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            using PipelineMessage message = CreateListVectorStoresRequest(limit, order, after, before, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateCreateVectorStoreRequest(BinaryContent content, RequestOptions options)
+        public virtual async Task<ClientResult> ListVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            message.Apply(options);
-            return message;
+            using PipelineMessage message = CreateListVectorStoresRequest(limit, order, after, before, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateGetVectorStoreRequest(string vectorStoreId, RequestOptions options)
+        public virtual ClientResult<InternalListVectorStoresResponse> ListVectorStores(int? limit, VectorStoreCollectionOrder? order, string after, string before)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores/", false);
-            uri.AppendPath(vectorStoreId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            ClientResult result = ListVectorStores(limit, order.ToString(), after, before, null);
+            return ClientResult.FromValue((InternalListVectorStoresResponse)result, result.GetRawResponse());
         }
 
-        internal PipelineMessage CreateModifyVectorStoreRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
+        public virtual async Task<ClientResult<InternalListVectorStoresResponse>> ListVectorStoresAsync(int? limit, VectorStoreCollectionOrder? order, string after, string before)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores/", false);
-            uri.AppendPath(vectorStoreId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            message.Apply(options);
-            return message;
+            ClientResult result = await ListVectorStoresAsync(limit, order.ToString(), after, before, null).ConfigureAwait(false);
+            return ClientResult.FromValue((InternalListVectorStoresResponse)result, result.GetRawResponse());
         }
 
-        internal PipelineMessage CreateDeleteVectorStoreRequest(string vectorStoreId, RequestOptions options)
+        public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "DELETE";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores/", false);
-            uri.AppendPath(vectorStoreId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateCreateVectorStoreRequest(content, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateGetVectorStoreFilesRequest(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+        public virtual async Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores/", false);
-            uri.AppendPath(vectorStoreId, true);
-            uri.AppendPath("/files", false);
-            if (limit != null)
-            {
-                uri.AppendQuery("limit", limit.Value, true);
-            }
-            if (order != null)
-            {
-                uri.AppendQuery("order", order, true);
-            }
-            if (after != null)
-            {
-                uri.AppendQuery("after", after, true);
-            }
-            if (before != null)
-            {
-                uri.AppendQuery("before", before, true);
-            }
-            if (filter != null)
-            {
-                uri.AppendQuery("filter", filter, true);
-            }
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateCreateVectorStoreRequest(content, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateCreateVectorStoreFileRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
+        public virtual ClientResult GetVectorStore(string vector_store_id, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores/", false);
-            uri.AppendPath(vectorStoreId, true);
-            uri.AppendPath("/files", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+
+            using PipelineMessage message = CreateGetVectorStoreRequest(vector_store_id, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateGetVectorStoreFileRequest(string vectorStoreId, string fileId, RequestOptions options)
+        public virtual async Task<ClientResult> GetVectorStoreAsync(string vector_store_id, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores/", false);
-            uri.AppendPath(vectorStoreId, true);
-            uri.AppendPath("/files/", false);
-            uri.AppendPath(fileId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+
+            using PipelineMessage message = CreateGetVectorStoreRequest(vector_store_id, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateDeleteVectorStoreFileRequest(string vectorStoreId, string fileId, RequestOptions options)
+        public virtual ClientResult ModifyVectorStore(string vector_store_id, BinaryContent content, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "DELETE";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores/", false);
-            uri.AppendPath(vectorStoreId, true);
-            uri.AppendPath("/files/", false);
-            uri.AppendPath(fileId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateModifyVectorStoreRequest(vector_store_id, content, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateCreateVectorStoreFileBatchRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
+        public virtual async Task<ClientResult> ModifyVectorStoreAsync(string vector_store_id, BinaryContent content, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores/", false);
-            uri.AppendPath(vectorStoreId, true);
-            uri.AppendPath("/file_batches", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateModifyVectorStoreRequest(vector_store_id, content, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateGetVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions options)
+        public virtual ClientResult DeleteVectorStore(string vector_store_id, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores/", false);
-            uri.AppendPath(vectorStoreId, true);
-            uri.AppendPath("/file_batches/", false);
-            uri.AppendPath(batchId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+
+            using PipelineMessage message = CreateDeleteVectorStoreRequest(vector_store_id, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateCancelVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions options)
+        public virtual async Task<ClientResult> DeleteVectorStoreAsync(string vector_store_id, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores/", false);
-            uri.AppendPath(vectorStoreId, true);
-            uri.AppendPath("/file_batches/", false);
-            uri.AppendPath(batchId, true);
-            uri.AppendPath("/cancel", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+
+            using PipelineMessage message = CreateDeleteVectorStoreRequest(vector_store_id, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateGetFilesInVectorStoreBatchesRequest(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+        public virtual ClientResult ListVectorStoreFiles(string vector_store_id, int? limit, string order, string after, string before, string filter, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/vector_stores/", false);
-            uri.AppendPath(vectorStoreId, true);
-            uri.AppendPath("/file_batches/", false);
-            uri.AppendPath(batchId, true);
-            uri.AppendPath("/files", false);
-            if (limit != null)
-            {
-                uri.AppendQuery("limit", limit.Value, true);
-            }
-            if (order != null)
-            {
-                uri.AppendQuery("order", order, true);
-            }
-            if (after != null)
-            {
-                uri.AppendQuery("after", after, true);
-            }
-            if (before != null)
-            {
-                uri.AppendQuery("before", before, true);
-            }
-            if (filter != null)
-            {
-                uri.AppendQuery("filter", filter, true);
-            }
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+
+            using PipelineMessage message = CreateListVectorStoreFilesRequest(vector_store_id, limit, order, after, before, filter, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        private static PipelineMessageClassifier _pipelineMessageClassifier200;
-        private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
+        public virtual async Task<ClientResult> ListVectorStoreFilesAsync(string vector_store_id, int? limit, string order, string after, string before, string filter, RequestOptions options)
+        {
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+
+            using PipelineMessage message = CreateListVectorStoreFilesRequest(vector_store_id, limit, order, after, before, filter, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+
+        public virtual ClientResult<InternalListVectorStoreFilesResponse> ListVectorStoreFiles(string vector_store_id, int? limit, VectorStoreFileAssociationCollectionOrder? order, string after, string before, VectorStoreFileStatusFilter? filter)
+        {
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+
+            ClientResult result = ListVectorStoreFiles(vector_store_id, limit, order.ToString(), after, before, filter.ToString(), null);
+            return ClientResult.FromValue((InternalListVectorStoreFilesResponse)result, result.GetRawResponse());
+        }
+
+        public virtual async Task<ClientResult<InternalListVectorStoreFilesResponse>> ListVectorStoreFilesAsync(string vector_store_id, int? limit, VectorStoreFileAssociationCollectionOrder? order, string after, string before, VectorStoreFileStatusFilter? filter)
+        {
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+
+            ClientResult result = await ListVectorStoreFilesAsync(vector_store_id, limit, order.ToString(), after, before, filter.ToString(), null).ConfigureAwait(false);
+            return ClientResult.FromValue((InternalListVectorStoreFilesResponse)result, result.GetRawResponse());
+        }
+
+        public virtual ClientResult ListFilesInVectorStoreBatch(string vector_store_id, string batch_id, int? limit, string order, string after, string before, string filter, RequestOptions options)
+        {
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+            Argument.AssertNotNull(batch_id, nameof(batch_id));
+
+            using PipelineMessage message = CreateListFilesInVectorStoreBatchRequest(vector_store_id, batch_id, limit, order, after, before, filter, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+
+        public virtual async Task<ClientResult> ListFilesInVectorStoreBatchAsync(string vector_store_id, string batch_id, int? limit, string order, string after, string before, string filter, RequestOptions options)
+        {
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+            Argument.AssertNotNull(batch_id, nameof(batch_id));
+
+            using PipelineMessage message = CreateListFilesInVectorStoreBatchRequest(vector_store_id, batch_id, limit, order, after, before, filter, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+
+        public virtual ClientResult<InternalListVectorStoreFilesResponse> ListFilesInVectorStoreBatch(string vector_store_id, string batch_id, int? limit, InternalListFilesInVectorStoreBatchRequestOrder? order, string after, string before, VectorStoreFileStatusFilter? filter)
+        {
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+            Argument.AssertNotNull(batch_id, nameof(batch_id));
+
+            ClientResult result = ListFilesInVectorStoreBatch(vector_store_id, batch_id, limit, order.ToString(), after, before, filter.ToString(), null);
+            return ClientResult.FromValue((InternalListVectorStoreFilesResponse)result, result.GetRawResponse());
+        }
+
+        public virtual async Task<ClientResult<InternalListVectorStoreFilesResponse>> ListFilesInVectorStoreBatchAsync(string vector_store_id, string batch_id, int? limit, InternalListFilesInVectorStoreBatchRequestOrder? order, string after, string before, VectorStoreFileStatusFilter? filter)
+        {
+            Argument.AssertNotNull(vector_store_id, nameof(vector_store_id));
+            Argument.AssertNotNull(batch_id, nameof(batch_id));
+
+            ClientResult result = await ListFilesInVectorStoreBatchAsync(vector_store_id, batch_id, limit, order.ToString(), after, before, filter.ToString(), null).ConfigureAwait(false);
+            return ClientResult.FromValue((InternalListVectorStoreFilesResponse)result, result.GetRawResponse());
+        }
     }
 }

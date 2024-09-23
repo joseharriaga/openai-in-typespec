@@ -9,17 +9,19 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalAssistantToolsFileSearchFileSearch
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         public InternalAssistantToolsFileSearchFileSearch()
         {
         }
 
-        internal InternalAssistantToolsFileSearchFileSearch(int? internalMaxNumResults, FileSearchRankingOptions rankingOptions, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalAssistantToolsFileSearchFileSearch(int? maxNumResults, FileSearchRankingOptions rankingOptions, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            InternalMaxNumResults = internalMaxNumResults;
+            MaxNumResults = maxNumResults;
             RankingOptions = rankingOptions;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
+
         public FileSearchRankingOptions RankingOptions { get; set; }
     }
 }

@@ -4,12 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalCreateThreadAndRunRequest
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         public InternalCreateThreadAndRunRequest(string assistantId)
         {
             Argument.AssertNotNull(assistantId, nameof(assistantId));
@@ -19,7 +21,7 @@ namespace OpenAI.Assistants
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        internal InternalCreateThreadAndRunRequest(string assistantId, ThreadCreationOptions thread, string model, string instructions, IList<ToolDefinition> tools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, ToolConstraint toolChoice, bool? parallelToolCalls, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateThreadAndRunRequest(string assistantId, ThreadCreationOptions thread, InternalCreateThreadAndRunRequestModel? model, string instructions, IList<ToolDefinition> tools, InternalCreateThreadAndRunRequestToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, BinaryData toolChoice, bool? parallelToolCalls, BinaryData responseFormat, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             AssistantId = assistantId;
             Thread = thread;
@@ -37,24 +39,31 @@ namespace OpenAI.Assistants
             ToolChoice = toolChoice;
             ParallelToolCalls = parallelToolCalls;
             ResponseFormat = responseFormat;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalCreateThreadAndRunRequest()
-        {
-        }
+        public string AssistantId { get; set; }
 
-        public string AssistantId { get; }
         public ThreadCreationOptions Thread { get; set; }
+
         public string Instructions { get; set; }
+
         public IList<ToolDefinition> Tools { get; set; }
+
         public IDictionary<string, string> Metadata { get; set; }
+
         public float? Temperature { get; set; }
+
         public float? TopP { get; set; }
+
         public bool? Stream { get; set; }
+
         public int? MaxPromptTokens { get; set; }
+
         public int? MaxCompletionTokens { get; set; }
+
         public RunTruncationStrategy TruncationStrategy { get; set; }
+
         public bool? ParallelToolCalls { get; set; }
     }
 }

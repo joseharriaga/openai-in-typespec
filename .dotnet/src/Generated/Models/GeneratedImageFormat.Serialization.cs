@@ -8,17 +8,23 @@ namespace OpenAI.Images
 {
     internal static partial class GeneratedImageFormatExtensions
     {
-        public static string ToSerialString(this GeneratedImageFormat value) => value switch
+        public static string ToSerialString(this Images.GeneratedImageFormat value) => value switch
         {
-            GeneratedImageFormat.Uri => "url",
-            GeneratedImageFormat.Bytes => "b64_json",
+            Images.GeneratedImageFormat.Uri => "url",
+            Images.GeneratedImageFormat.Bytes => "b64_json",
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown GeneratedImageFormat value.")
         };
 
-        public static GeneratedImageFormat ToGeneratedImageFormat(this string value)
+        public static Images.GeneratedImageFormat ToGeneratedImageFormat(this string value)
         {
-            if (StringComparer.OrdinalIgnoreCase.Equals(value, "url")) return GeneratedImageFormat.Uri;
-            if (StringComparer.OrdinalIgnoreCase.Equals(value, "b64_json")) return GeneratedImageFormat.Bytes;
+            if (StringComparer.OrdinalIgnoreCase.Equals(value, "url"))
+            {
+                return Images.GeneratedImageFormat.Uri;
+            }
+            if (StringComparer.OrdinalIgnoreCase.Equals(value, "b64_json"))
+            {
+                return Images.GeneratedImageFormat.Bytes;
+            }
             throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown GeneratedImageFormat value.");
         }
     }

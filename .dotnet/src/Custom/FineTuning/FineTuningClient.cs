@@ -28,7 +28,7 @@ namespace OpenAI.FineTuning;
 public partial class FineTuningClient
 {
     // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="FineTuningClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="FineTuningClient"/>. </summary>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="apiKey"/> is null. </exception>
     public FineTuningClient(string apiKey) : this(new ApiKeyCredential(apiKey), new OpenAIClientOptions())
@@ -36,7 +36,7 @@ public partial class FineTuningClient
     }
 
     // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="FineTuningClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="FineTuningClient"/>. </summary>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="apiKey"/> is null. </exception>
@@ -47,7 +47,7 @@ public partial class FineTuningClient
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="FineTuningClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="FineTuningClient"/>. </summary>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
     public FineTuningClient(ApiKeyCredential credential) : this(credential, new OpenAIClientOptions())
@@ -57,7 +57,7 @@ public partial class FineTuningClient
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="FineTuningClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="FineTuningClient"/>. </summary>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
@@ -74,7 +74,7 @@ public partial class FineTuningClient
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
     // - Made protected.
-    /// <summary> Initializes a new instance of <see cref="FineTuningClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="FineTuningClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline to send and receive REST requests and responses. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="pipeline"/> is null. </exception>

@@ -9,41 +9,37 @@ namespace OpenAI.Files
 {
     public partial class OpenAIFileInfo
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal OpenAIFileInfo(string id, int? sizeInBytes, DateTimeOffset createdAt, string filename, OpenAIFilePurpose purpose, OpenAIFileStatus status)
-        {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(filename, nameof(filename));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
+        internal OpenAIFileInfo(string id, int? bytes, DateTimeOffset createdAt, string filename, OpenAIFilePurpose purpose, OpenAIFileStatus status)
+        {
             Id = id;
-            SizeInBytes = sizeInBytes;
+            Bytes = bytes;
             CreatedAt = createdAt;
             Filename = filename;
             Purpose = purpose;
             Status = status;
         }
 
-        internal OpenAIFileInfo(string id, int? sizeInBytes, DateTimeOffset createdAt, string filename, InternalOpenAIFileObject @object, OpenAIFilePurpose purpose, OpenAIFileStatus status, string statusDetails, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal OpenAIFileInfo(string id, int? bytes, DateTimeOffset createdAt, string filename, InternalOpenAIFileObject @object, OpenAIFilePurpose purpose, OpenAIFileStatus status, string statusDetails, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            SizeInBytes = sizeInBytes;
+            Bytes = bytes;
             CreatedAt = createdAt;
             Filename = filename;
             Object = @object;
             Purpose = purpose;
             Status = status;
             StatusDetails = statusDetails;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal OpenAIFileInfo()
-        {
-        }
+        public string Id { get; set; }
 
-        public string Id { get; }
-        public DateTimeOffset CreatedAt { get; }
-        public string Filename { get; }
+        public DateTimeOffset CreatedAt { get; set; }
 
-        public OpenAIFilePurpose Purpose { get; }
+        public string Filename { get; set; }
+
+        public OpenAIFilePurpose Purpose { get; set; }
     }
 }

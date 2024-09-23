@@ -9,26 +9,20 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepFunctionToolCallDetails : RunStepToolCall
     {
-        internal InternalRunStepFunctionToolCallDetails(string id, InternalRunStepDetailsToolCallsFunctionObjectFunction internalFunction)
-        {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(internalFunction, nameof(internalFunction));
-
-            Type = "function";
-            Id = id;
-            _internalFunction = internalFunction;
-        }
-
-        internal InternalRunStepFunctionToolCallDetails(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string id, InternalRunStepDetailsToolCallsFunctionObjectFunction internalFunction) : base(type, serializedAdditionalRawData)
+        internal InternalRunStepFunctionToolCallDetails(string id, InternalRunStepDetailsToolCallsFunctionObjectFunction function) : base("function")
         {
             Id = id;
-            _internalFunction = internalFunction;
+            Function = function;
         }
 
-        internal InternalRunStepFunctionToolCallDetails()
+        internal InternalRunStepFunctionToolCallDetails(string id, InternalRunStepDetailsToolCallsFunctionObjectFunction function, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
+            Id = id;
+            Function = function;
         }
 
-        public string Id { get; }
+        public string Id { get; set; }
+
+        public InternalRunStepDetailsToolCallsFunctionObjectFunction Function { get; set; }
     }
 }

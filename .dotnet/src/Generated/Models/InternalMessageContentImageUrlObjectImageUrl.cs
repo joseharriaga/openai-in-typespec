@@ -4,12 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalMessageContentImageUrlObjectImageUrl
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         public InternalMessageContentImageUrlObjectImageUrl(Uri url)
         {
             Argument.AssertNotNull(url, nameof(url));
@@ -17,15 +19,11 @@ namespace OpenAI.Assistants
             Url = url;
         }
 
-        internal InternalMessageContentImageUrlObjectImageUrl(Uri url, string detail, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalMessageContentImageUrlObjectImageUrl(Uri url, InternalMessageContentImageUrlObjectImageUrlDetail? detail, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Url = url;
             Detail = detail;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        internal InternalMessageContentImageUrlObjectImageUrl()
-        {
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public Uri Url { get; set; }

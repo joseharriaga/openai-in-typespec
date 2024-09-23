@@ -5292,7 +5292,6 @@ components:
         file:
           type: string
           format: binary
-          description: The File object (not file name) to be uploaded.
         purpose:
           type: string
           enum:
@@ -5478,14 +5477,12 @@ components:
         image:
           type: string
           format: binary
-          description: The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not provided, image must have transparency, which will be used as the mask.
         prompt:
           type: string
           description: A text description of the desired image(s). The maximum length is 1000 characters.
         mask:
           type: string
           format: binary
-          description: An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where `image` should be edited. Must be a valid PNG file, less than 4MB, and have the same dimensions as `image`.
         model:
           anyOf:
             - type: string
@@ -6239,8 +6236,6 @@ components:
         file:
           type: string
           format: binary
-          description: 'The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.'
-          x-oaiTypeLabel: file
         model:
           anyOf:
             - type: string
@@ -6334,8 +6329,6 @@ components:
         file:
           type: string
           format: binary
-          description: 'The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.'
-          x-oaiTypeLabel: file
         model:
           anyOf:
             - type: string

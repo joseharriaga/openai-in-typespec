@@ -10,13 +10,10 @@ namespace OpenAI.Assistants
 {
     public partial class ThreadMessage
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, MessageRole role, IEnumerable<MessageContent> content, string assistantId, string runId, IEnumerable<MessageCreationAttachment> attachments, IReadOnlyDictionary<string, string> metadata)
-        {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(threadId, nameof(threadId));
-            Argument.AssertNotNull(content, nameof(content));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
+        internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, InternalMessageObjectRole role, IEnumerable<MessageContent> content, string assistantId, string runId, IEnumerable<InternalMessageObjectAttachment> attachments, IDictionary<string, string> metadata)
+        {
             Id = id;
             CreatedAt = createdAt;
             ThreadId = threadId;
@@ -32,7 +29,7 @@ namespace OpenAI.Assistants
             Metadata = metadata;
         }
 
-        internal ThreadMessage(string id, InternalMessageObjectObject @object, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, MessageRole role, IReadOnlyList<MessageContent> content, string assistantId, string runId, IReadOnlyList<MessageCreationAttachment> attachments, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ThreadMessage(string id, InternalMessageObjectObject @object, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, InternalMessageObjectRole role, IList<MessageContent> content, string assistantId, string runId, IList<InternalMessageObjectAttachment> attachments, IDictionary<string, string> metadata, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             Object = @object;
@@ -48,24 +45,29 @@ namespace OpenAI.Assistants
             RunId = runId;
             Attachments = attachments;
             Metadata = metadata;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal ThreadMessage()
-        {
-        }
+        public string Id { get; set; }
 
-        public string Id { get; }
+        public DateTimeOffset CreatedAt { get; set; }
 
-        public DateTimeOffset CreatedAt { get; }
-        public string ThreadId { get; }
-        public MessageStatus Status { get; }
-        public MessageFailureDetails IncompleteDetails { get; }
-        public DateTimeOffset? CompletedAt { get; }
-        public DateTimeOffset? IncompleteAt { get; }
-        public IReadOnlyList<MessageContent> Content { get; }
-        public string AssistantId { get; }
-        public string RunId { get; }
-        public IReadOnlyDictionary<string, string> Metadata { get; }
+        public string ThreadId { get; set; }
+
+        public MessageStatus Status { get; set; }
+
+        public MessageFailureDetails IncompleteDetails { get; set; }
+
+        public DateTimeOffset? CompletedAt { get; set; }
+
+        public DateTimeOffset? IncompleteAt { get; set; }
+
+        public IList<MessageContent> Content { get; }
+
+        public string AssistantId { get; set; }
+
+        public string RunId { get; set; }
+
+        public IDictionary<string, string> Metadata { get; set; }
     }
 }

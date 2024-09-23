@@ -6,123 +6,111 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading.Tasks;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
-    // Data plane generated sub-client.
     public partial class AssistantClient
     {
+        private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly ClientPipeline _pipeline;
-        private readonly Uri _endpoint;
-
-        public virtual ClientPipeline Pipeline => _pipeline;
 
         protected AssistantClient()
         {
         }
 
-        internal PipelineMessage CreateCreateAssistantRequest(BinaryContent content, RequestOptions options)
+        public ClientPipeline Pipeline { get; }
+
+        public virtual ClientResult CreateAssistant(BinaryContent content, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/assistants", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateCreateAssistantRequest(content, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateGetAssistantsRequest(int? limit, string order, string after, string before, RequestOptions options)
+        public virtual async Task<ClientResult> CreateAssistantAsync(BinaryContent content, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/assistants", false);
-            if (limit != null)
-            {
-                uri.AppendQuery("limit", limit.Value, true);
-            }
-            if (order != null)
-            {
-                uri.AppendQuery("order", order, true);
-            }
-            if (after != null)
-            {
-                uri.AppendQuery("after", after, true);
-            }
-            if (before != null)
-            {
-                uri.AppendQuery("before", before, true);
-            }
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateCreateAssistantRequest(content, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateGetAssistantRequest(string assistantId, RequestOptions options)
+        public virtual ClientResult ListAssistants(int? limit, string order, string after, string before, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/assistants/", false);
-            uri.AppendPath(assistantId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            using PipelineMessage message = CreateListAssistantsRequest(limit, order, after, before, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateModifyAssistantRequest(string assistantId, BinaryContent content, RequestOptions options)
+        public virtual async Task<ClientResult> ListAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/assistants/", false);
-            uri.AppendPath(assistantId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            message.Apply(options);
-            return message;
+            using PipelineMessage message = CreateListAssistantsRequest(limit, order, after, before, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateDeleteAssistantRequest(string assistantId, RequestOptions options)
+        public virtual ClientResult<InternalListAssistantsResponse> ListAssistants(int? limit, AssistantCollectionOrder? order, string after, string before)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "DELETE";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/assistants/", false);
-            uri.AppendPath(assistantId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            ClientResult result = ListAssistants(limit, order.ToString(), after, before, null);
+            return ClientResult.FromValue((InternalListAssistantsResponse)result, result.GetRawResponse());
         }
 
-        private static PipelineMessageClassifier _pipelineMessageClassifier200;
-        private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
+        public virtual async Task<ClientResult<InternalListAssistantsResponse>> ListAssistantsAsync(int? limit, AssistantCollectionOrder? order, string after, string before)
+        {
+            ClientResult result = await ListAssistantsAsync(limit, order.ToString(), after, before, null).ConfigureAwait(false);
+            return ClientResult.FromValue((InternalListAssistantsResponse)result, result.GetRawResponse());
+        }
+
+        public virtual ClientResult GetAssistant(string assistant_id, RequestOptions options)
+        {
+            Argument.AssertNotNull(assistant_id, nameof(assistant_id));
+
+            using PipelineMessage message = CreateGetAssistantRequest(assistant_id, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+
+        public virtual async Task<ClientResult> GetAssistantAsync(string assistant_id, RequestOptions options)
+        {
+            Argument.AssertNotNull(assistant_id, nameof(assistant_id));
+
+            using PipelineMessage message = CreateGetAssistantRequest(assistant_id, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+
+        public virtual ClientResult ModifyAssistant(string assistant_id, BinaryContent content, RequestOptions options)
+        {
+            Argument.AssertNotNull(assistant_id, nameof(assistant_id));
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateModifyAssistantRequest(assistant_id, content, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+
+        public virtual async Task<ClientResult> ModifyAssistantAsync(string assistant_id, BinaryContent content, RequestOptions options)
+        {
+            Argument.AssertNotNull(assistant_id, nameof(assistant_id));
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateModifyAssistantRequest(assistant_id, content, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+
+        public virtual ClientResult DeleteAssistant(string assistant_id, RequestOptions options)
+        {
+            Argument.AssertNotNull(assistant_id, nameof(assistant_id));
+
+            using PipelineMessage message = CreateDeleteAssistantRequest(assistant_id, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+
+        public virtual async Task<ClientResult> DeleteAssistantAsync(string assistant_id, RequestOptions options)
+        {
+            Argument.AssertNotNull(assistant_id, nameof(assistant_id));
+
+            using PipelineMessage message = CreateDeleteAssistantRequest(assistant_id, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
     }
 }

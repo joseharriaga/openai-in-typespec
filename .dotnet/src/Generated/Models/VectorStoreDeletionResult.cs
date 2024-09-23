@@ -9,26 +9,22 @@ namespace OpenAI.VectorStores
 {
     public partial class VectorStoreDeletionResult
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal VectorStoreDeletionResult(string vectorStoreId, bool deleted)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-            VectorStoreId = vectorStoreId;
+        internal VectorStoreDeletionResult(string id, bool deleted)
+        {
+            Id = id;
             Deleted = deleted;
         }
 
-        internal VectorStoreDeletionResult(string vectorStoreId, bool deleted, InternalDeleteVectorStoreResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStoreDeletionResult(string id, bool deleted, InternalDeleteVectorStoreResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            VectorStoreId = vectorStoreId;
+            Id = id;
             Deleted = deleted;
             Object = @object;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal VectorStoreDeletionResult()
-        {
-        }
-        public bool Deleted { get; }
+        public bool Deleted { get; set; }
     }
 }

@@ -9,31 +9,28 @@ namespace OpenAI.Chat
 {
     internal partial class InternalCreateChatCompletionStreamResponseChoice
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalCreateChatCompletionStreamResponseChoice(InternalChatCompletionStreamResponseDelta delta, ChatFinishReason? finishReason, int index)
-        {
-            Argument.AssertNotNull(delta, nameof(delta));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
+        internal InternalCreateChatCompletionStreamResponseChoice(InternalChatCompletionStreamResponseDelta delta, InternalCreateChatCompletionStreamResponseChoiceFinishReason? finishReason, int index)
+        {
             Delta = delta;
             FinishReason = finishReason;
             Index = index;
         }
 
-        internal InternalCreateChatCompletionStreamResponseChoice(InternalChatCompletionStreamResponseDelta delta, InternalCreateChatCompletionStreamResponseChoiceLogprobs logprobs, ChatFinishReason? finishReason, int index, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateChatCompletionStreamResponseChoice(InternalChatCompletionStreamResponseDelta delta, InternalCreateChatCompletionStreamResponseChoiceLogprobs logprobs, InternalCreateChatCompletionStreamResponseChoiceFinishReason? finishReason, int index, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Delta = delta;
             Logprobs = logprobs;
             FinishReason = finishReason;
             Index = index;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalCreateChatCompletionStreamResponseChoice()
-        {
-        }
+        public InternalChatCompletionStreamResponseDelta Delta { get; set; }
 
-        public InternalChatCompletionStreamResponseDelta Delta { get; }
-        public InternalCreateChatCompletionStreamResponseChoiceLogprobs Logprobs { get; }
-        public int Index { get; }
+        public InternalCreateChatCompletionStreamResponseChoiceLogprobs Logprobs { get; set; }
+
+        public int Index { get; set; }
     }
 }

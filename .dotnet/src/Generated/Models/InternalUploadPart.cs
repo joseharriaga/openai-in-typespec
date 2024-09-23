@@ -9,33 +9,30 @@ namespace OpenAI.Files
 {
     internal partial class InternalUploadPart
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalUploadPart(string id, DateTimeOffset createdAt, string uploadId)
         {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(uploadId, nameof(uploadId));
-
             Id = id;
             CreatedAt = createdAt;
             UploadId = uploadId;
         }
 
-        internal InternalUploadPart(string id, DateTimeOffset createdAt, string uploadId, InternalUploadPartObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalUploadPart(string id, DateTimeOffset createdAt, string uploadId, InternalUploadPartObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             CreatedAt = createdAt;
             UploadId = uploadId;
             Object = @object;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalUploadPart()
-        {
-        }
+        public string Id { get; set; }
 
-        public string Id { get; }
-        public DateTimeOffset CreatedAt { get; }
-        public string UploadId { get; }
-        public InternalUploadPartObject Object { get; } = InternalUploadPartObject.UploadPart;
+        public DateTimeOffset CreatedAt { get; set; }
+
+        public string UploadId { get; set; }
+
+        public InternalUploadPartObject Object { get; } = "upload.part";
     }
 }

@@ -4,19 +4,27 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
+using OpenAI;
 
 namespace OpenAI.Files
 {
     internal partial class InternalFileUploadOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalFileUploadOptions(Stream file, FileUploadPurpose purpose, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        public InternalFileUploadOptions(BinaryData @file, FileUploadPurpose purpose)
         {
-            File = file;
+            Argument.AssertNotNull(@file, nameof(@file));
+
+            File = @file;
             Purpose = purpose;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+        }
+
+        internal InternalFileUploadOptions(BinaryData @file, FileUploadPurpose purpose, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        {
+            File = @file;
+            Purpose = purpose;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }
 }

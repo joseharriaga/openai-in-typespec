@@ -7,113 +7,98 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject : IJsonModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>
     {
+        internal InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject()
+        {
+        }
+
         void IJsonModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("index") != true)
-            {
-                writer.WritePropertyName("index"u8);
-                writer.WriteNumberValue(Index);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("logs") != true && Optional.IsDefined(InternalLogs))
+            base.JsonModelWriteCore(writer, options);
+            writer.WritePropertyName("index"u8);
+            writer.WriteNumberValue(Index);
+            if (Optional.IsDefined(Logs))
             {
                 writer.WritePropertyName("logs"u8);
-                writer.WriteStringValue(InternalLogs);
+                writer.WriteStringValue(Logs);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
-            {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type);
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-            }
-            writer.WriteEndObject();
         }
 
-        InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject IJsonModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject IJsonModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject)JsonModelCreateCore(ref reader, options);
+
+        protected override RunStepUpdateCodeInterpreterOutput JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(document.RootElement, options);
         }
 
-        internal static InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject DeserializeInternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject DeserializeInternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             int index = default;
             string logs = default;
-            string type = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string @type = "logs";
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("index"u8))
+                if (prop.NameEquals("index"u8))
                 {
-                    index = property.Value.GetInt32();
+                    index = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("logs"u8))
+                if (prop.NameEquals("logs"u8))
                 {
-                    logs = property.Value.GetString();
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        logs = null;
+                        continue;
+                    }
+                    logs = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    type = property.Value.GetString();
+                    @type = prop.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(type, serializedAdditionalRawData, index, logs);
+            return new InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(index, logs, @type, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -123,15 +108,16 @@ namespace OpenAI.Assistants
             }
         }
 
-        InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>)this).GetFormatFromOptions(options) : options.Format;
+        InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject)PersistableModelCreateCore(data, options);
 
+        protected override RunStepUpdateCodeInterpreterOutput PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(document.RootElement, options);
                     }
                 default:
@@ -141,15 +127,16 @@ namespace OpenAI.Assistants
 
         string IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject internalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(document.RootElement);
+            return BinaryContent.Create(internalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject, ModelSerializationExtensions.WireOptions);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        public static explicit operator InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

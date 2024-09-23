@@ -40,7 +40,6 @@ model CreateTranscriptionRequest {
   // Tool customization: binary payloads are encoded bytes
   /** The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm. */
   @extension("x-oaiTypeLabel", "file")
-  @encode("binary")
   file: bytes;
 
   @doc("""
@@ -76,7 +75,6 @@ model CreateTranslationRequest {
   // Tool customization: binary payloads are encoded bytes
   /** The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm. */
   @extension("x-oaiTypeLabel", "file")
-  @encode("binary")
   file: bytes;
 
   @doc("""

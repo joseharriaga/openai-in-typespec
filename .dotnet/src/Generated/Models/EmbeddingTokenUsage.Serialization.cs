@@ -7,41 +7,41 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Embeddings
 {
     public partial class EmbeddingTokenUsage : IJsonModel<EmbeddingTokenUsage>
     {
+        internal EmbeddingTokenUsage()
+        {
+        }
+
         void IJsonModel<EmbeddingTokenUsage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<EmbeddingTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<EmbeddingTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(EmbeddingTokenUsage)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("prompt_tokens") != true)
+            writer.WritePropertyName("prompt_tokens"u8);
+            writer.WriteNumberValue(PromptTokens);
+            writer.WritePropertyName("total_tokens"u8);
+            writer.WriteNumberValue(TotalTokens);
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                writer.WritePropertyName("prompt_tokens"u8);
-                writer.WriteNumberValue(InputTokens);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("total_tokens") != true)
-            {
-                writer.WritePropertyName("total_tokens"u8);
-                writer.WriteNumberValue(TotalTokens);
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -50,59 +50,55 @@ namespace OpenAI.Embeddings
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        EmbeddingTokenUsage IJsonModel<EmbeddingTokenUsage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        EmbeddingTokenUsage IJsonModel<EmbeddingTokenUsage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual EmbeddingTokenUsage JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<EmbeddingTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<EmbeddingTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(EmbeddingTokenUsage)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeEmbeddingTokenUsage(document.RootElement, options);
         }
 
-        internal static EmbeddingTokenUsage DeserializeEmbeddingTokenUsage(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static EmbeddingTokenUsage DeserializeEmbeddingTokenUsage(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             int promptTokens = default;
             int totalTokens = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("prompt_tokens"u8))
+                if (prop.NameEquals("prompt_tokens"u8))
                 {
-                    promptTokens = property.Value.GetInt32();
+                    promptTokens = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("total_tokens"u8))
+                if (prop.NameEquals("total_tokens"u8))
                 {
-                    totalTokens = property.Value.GetInt32();
+                    totalTokens = prop.Value.GetInt32();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new EmbeddingTokenUsage(promptTokens, totalTokens, serializedAdditionalRawData);
+            return new EmbeddingTokenUsage(promptTokens, totalTokens, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<EmbeddingTokenUsage>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<EmbeddingTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<EmbeddingTokenUsage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<EmbeddingTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -112,15 +108,16 @@ namespace OpenAI.Embeddings
             }
         }
 
-        EmbeddingTokenUsage IPersistableModel<EmbeddingTokenUsage>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<EmbeddingTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
+        EmbeddingTokenUsage IPersistableModel<EmbeddingTokenUsage>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual EmbeddingTokenUsage PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<EmbeddingTokenUsage>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeEmbeddingTokenUsage(document.RootElement, options);
                     }
                 default:
@@ -130,15 +127,16 @@ namespace OpenAI.Embeddings
 
         string IPersistableModel<EmbeddingTokenUsage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static EmbeddingTokenUsage FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(EmbeddingTokenUsage embeddingTokenUsage)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeEmbeddingTokenUsage(document.RootElement);
+            return BinaryContent.Create(embeddingTokenUsage, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator EmbeddingTokenUsage(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeEmbeddingTokenUsage(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

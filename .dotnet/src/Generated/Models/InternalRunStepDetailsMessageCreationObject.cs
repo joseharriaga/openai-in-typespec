@@ -9,21 +9,16 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDetailsMessageCreationObject : RunStepDetails
     {
-        internal InternalRunStepDetailsMessageCreationObject(InternalRunStepDetailsMessageCreationObjectMessageCreation messageCreation)
+        internal InternalRunStepDetailsMessageCreationObject(InternalRunStepDetailsMessageCreationObjectMessageCreation messageCreation) : base("message_creation")
         {
-            Argument.AssertNotNull(messageCreation, nameof(messageCreation));
-
-            Type = "message_creation";
-            _messageCreation = messageCreation;
+            MessageCreation = messageCreation;
         }
 
-        internal InternalRunStepDetailsMessageCreationObject(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRunStepDetailsMessageCreationObjectMessageCreation messageCreation) : base(type, serializedAdditionalRawData)
+        internal InternalRunStepDetailsMessageCreationObject(InternalRunStepDetailsMessageCreationObjectMessageCreation messageCreation, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
-            _messageCreation = messageCreation;
+            MessageCreation = messageCreation;
         }
 
-        internal InternalRunStepDetailsMessageCreationObject()
-        {
-        }
+        public InternalRunStepDetailsMessageCreationObjectMessageCreation MessageCreation { get; set; }
     }
 }

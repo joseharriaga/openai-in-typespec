@@ -9,15 +9,16 @@ namespace OpenAI.Chat
 {
     public partial class ChatOutputTokenUsageDetails
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal ChatOutputTokenUsageDetails()
         {
         }
 
-        internal ChatOutputTokenUsageDetails(int reasoningTokenCount, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatOutputTokenUsageDetails(int? reasoningTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            ReasoningTokenCount = reasoningTokenCount;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            ReasoningTokens = reasoningTokens;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }
 }

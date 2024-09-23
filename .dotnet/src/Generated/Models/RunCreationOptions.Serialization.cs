@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
@@ -14,43 +15,45 @@ namespace OpenAI.Assistants
     {
         void IJsonModel<RunCreationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<RunCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(RunCreationOptions)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("assistant_id") != true)
+            writer.WritePropertyName("assistant_id"u8);
+            writer.WriteStringValue(AssistantId);
+            if (Optional.IsDefined(Model))
             {
-                writer.WritePropertyName("assistant_id"u8);
-                writer.WriteStringValue(AssistantId);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("model") != true && Optional.IsDefined(ModelOverride))
-            {
-                if (ModelOverride != null)
+                if (Model != null)
                 {
                     writer.WritePropertyName("model"u8);
-                    writer.WriteStringValue(ModelOverride);
+                    writer.WriteStringValue(Model.Value.ToString());
                 }
                 else
                 {
-                    writer.WriteNull("model");
+                    writer.WriteNull("model"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("instructions") != true && Optional.IsDefined(InstructionsOverride))
+            if (Optional.IsDefined(Instructions))
             {
-                if (InstructionsOverride != null)
+                if (Instructions != null)
                 {
                     writer.WritePropertyName("instructions"u8);
-                    writer.WriteStringValue(InstructionsOverride);
+                    writer.WriteStringValue(Instructions);
                 }
                 else
                 {
-                    writer.WriteNull("instructions");
+                    writer.WriteNull("instructions"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("additional_instructions") != true && Optional.IsDefined(AdditionalInstructions))
+            if (Optional.IsDefined(AdditionalInstructions))
             {
                 if (AdditionalInstructions != null)
                 {
@@ -59,16 +62,16 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("additional_instructions");
+                    writer.WriteNull("additionalInstructions"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("additional_messages") != true && Optional.IsCollectionDefined(InternalMessages))
+            if (Optional.IsCollectionDefined(AdditionalMessages))
             {
-                if (InternalMessages != null)
+                if (AdditionalMessages != null)
                 {
                     writer.WritePropertyName("additional_messages"u8);
                     writer.WriteStartArray();
-                    foreach (var item in InternalMessages)
+                    foreach (var item in AdditionalMessages)
                     {
                         writer.WriteObjectValue<MessageCreationOptions>(item, options);
                     }
@@ -76,16 +79,16 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("additional_messages");
+                    writer.WriteNull("additionalMessages"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("tools") != true && Optional.IsCollectionDefined(ToolsOverride))
+            if (Optional.IsCollectionDefined(Tools))
             {
-                if (ToolsOverride != null)
+                if (Tools != null)
                 {
                     writer.WritePropertyName("tools"u8);
                     writer.WriteStartArray();
-                    foreach (var item in ToolsOverride)
+                    foreach (var item in Tools)
                     {
                         writer.WriteObjectValue<ToolDefinition>(item, options);
                     }
@@ -93,10 +96,10 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("tools");
+                    writer.WriteNull("tools"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("metadata") != true && Optional.IsCollectionDefined(Metadata))
+            if (Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
                 {
@@ -105,16 +108,21 @@ namespace OpenAI.Assistants
                     foreach (var item in Metadata)
                     {
                         writer.WritePropertyName(item.Key);
+                        if (item.Value == null)
+                        {
+                            writer.WriteNullValue();
+                            continue;
+                        }
                         writer.WriteStringValue(item.Value);
                     }
                     writer.WriteEndObject();
                 }
                 else
                 {
-                    writer.WriteNull("metadata");
+                    writer.WriteNull("metadata"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("temperature") != true && Optional.IsDefined(Temperature))
+            if (Optional.IsDefined(Temperature))
             {
                 if (Temperature != null)
                 {
@@ -123,22 +131,22 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("temperature");
+                    writer.WriteNull("temperature"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("top_p") != true && Optional.IsDefined(NucleusSamplingFactor))
+            if (Optional.IsDefined(TopP))
             {
-                if (NucleusSamplingFactor != null)
+                if (TopP != null)
                 {
                     writer.WritePropertyName("top_p"u8);
-                    writer.WriteNumberValue(NucleusSamplingFactor.Value);
+                    writer.WriteNumberValue(TopP.Value);
                 }
                 else
                 {
-                    writer.WriteNull("top_p");
+                    writer.WriteNull("topP"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("stream") != true && Optional.IsDefined(Stream))
+            if (Optional.IsDefined(Stream))
             {
                 if (Stream != null)
                 {
@@ -147,10 +155,10 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("stream");
+                    writer.WriteNull("stream"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("max_prompt_tokens") != true && Optional.IsDefined(MaxPromptTokens))
+            if (Optional.IsDefined(MaxPromptTokens))
             {
                 if (MaxPromptTokens != null)
                 {
@@ -159,10 +167,10 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("max_prompt_tokens");
+                    writer.WriteNull("maxPromptTokens"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("max_completion_tokens") != true && Optional.IsDefined(MaxCompletionTokens))
+            if (Optional.IsDefined(MaxCompletionTokens))
             {
                 if (MaxCompletionTokens != null)
                 {
@@ -171,10 +179,10 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("max_completion_tokens");
+                    writer.WriteNull("maxCompletionTokens"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("truncation_strategy") != true && Optional.IsDefined(TruncationStrategy))
+            if (Optional.IsDefined(TruncationStrategy))
             {
                 if (TruncationStrategy != null)
                 {
@@ -183,49 +191,59 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("truncation_strategy");
+                    writer.WriteNull("truncationStrategy"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("tool_choice") != true && Optional.IsDefined(ToolConstraint))
+            if (Optional.IsDefined(ToolChoice))
             {
-                if (ToolConstraint != null)
+                if (ToolChoice != null)
                 {
                     writer.WritePropertyName("tool_choice"u8);
-                    SerializeToolConstraint(writer, options);
+#if NET6_0_OR_GREATER
+                    writer.WriteRawValue(ToolChoice);
+#else
+                    using (JsonDocument document = JsonDocument.Parse(ToolChoice))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
+#endif
                 }
                 else
                 {
-                    writer.WriteNull("tool_choice");
+                    writer.WriteNull("toolChoice"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("parallel_tool_calls") != true && Optional.IsDefined(ParallelToolCallsEnabled))
+            if (Optional.IsDefined(ParallelToolCalls))
             {
                 writer.WritePropertyName("parallel_tool_calls"u8);
-                writer.WriteBooleanValue(ParallelToolCallsEnabled.Value);
+                writer.WriteBooleanValue(ParallelToolCalls.Value);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("response_format") != true && Optional.IsDefined(ResponseFormat))
+            if (Optional.IsDefined(ResponseFormat))
             {
                 if (ResponseFormat != null)
                 {
                     writer.WritePropertyName("response_format"u8);
-                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
+#if NET6_0_OR_GREATER
+                    writer.WriteRawValue(ResponseFormat);
+#else
+                    using (JsonDocument document = JsonDocument.Parse(ResponseFormat))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
+#endif
                 }
                 else
                 {
-                    writer.WriteNull("response_format");
+                    writer.WriteNull("responseFormat"u8);
                 }
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -234,31 +252,29 @@ namespace OpenAI.Assistants
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        RunCreationOptions IJsonModel<RunCreationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        RunCreationOptions IJsonModel<RunCreationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual RunCreationOptions JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RunCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<RunCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(RunCreationOptions)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeRunCreationOptions(document.RootElement, options);
         }
 
-        internal static RunCreationOptions DeserializeRunCreationOptions(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static RunCreationOptions DeserializeRunCreationOptions(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             string assistantId = default;
-            string model = default;
+            InternalCreateRunRequestModel? model = default;
             string instructions = default;
             string additionalInstructions = default;
             IList<MessageCreationOptions> additionalMessages = default;
@@ -270,186 +286,191 @@ namespace OpenAI.Assistants
             int? maxPromptTokens = default;
             int? maxCompletionTokens = default;
             RunTruncationStrategy truncationStrategy = default;
-            ToolConstraint toolChoice = default;
+            BinaryData toolChoice = default;
             bool? parallelToolCalls = default;
-            AssistantResponseFormat responseFormat = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            BinaryData responseFormat = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("assistant_id"u8))
+                if (prop.NameEquals("assistant_id"u8))
                 {
-                    assistantId = property.Value.GetString();
+                    assistantId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("model"u8))
+                if (prop.NameEquals("model"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         model = null;
                         continue;
                     }
-                    model = property.Value.GetString();
+                    model = new InternalCreateRunRequestModel(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("instructions"u8))
+                if (prop.NameEquals("instructions"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         instructions = null;
                         continue;
                     }
-                    instructions = property.Value.GetString();
+                    instructions = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("additional_instructions"u8))
+                if (prop.NameEquals("additional_instructions"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         additionalInstructions = null;
                         continue;
                     }
-                    additionalInstructions = property.Value.GetString();
+                    additionalInstructions = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("additional_messages"u8))
+                if (prop.NameEquals("additional_messages"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
                     List<MessageCreationOptions> array = new List<MessageCreationOptions>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
                         array.Add(MessageCreationOptions.DeserializeMessageCreationOptions(item, options));
                     }
                     additionalMessages = array;
                     continue;
                 }
-                if (property.NameEquals("tools"u8))
+                if (prop.NameEquals("tools"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
                     List<ToolDefinition> array = new List<ToolDefinition>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
                         array.Add(ToolDefinition.DeserializeToolDefinition(item, options));
                     }
                     tools = array;
                     continue;
                 }
-                if (property.NameEquals("metadata"u8))
+                if (prop.NameEquals("metadata"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
                     Dictionary<string, string> dictionary = new Dictionary<string, string>();
-                    foreach (var property0 in property.Value.EnumerateObject())
+                    foreach (var prop0 in prop.Value.EnumerateObject())
                     {
-                        dictionary.Add(property0.Name, property0.Value.GetString());
+                        if (prop0.Value.ValueKind == JsonValueKind.Null)
+                        {
+                            dictionary.Add(prop0.Name, null);
+                        }
+                        else
+                        {
+                            dictionary.Add(prop0.Name, prop0.Value.GetString());
+                        }
                     }
                     metadata = dictionary;
                     continue;
                 }
-                if (property.NameEquals("temperature"u8))
+                if (prop.NameEquals("temperature"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         temperature = null;
                         continue;
                     }
-                    temperature = property.Value.GetSingle();
+                    temperature = prop.Value.GetSingle();
                     continue;
                 }
-                if (property.NameEquals("top_p"u8))
+                if (prop.NameEquals("top_p"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         topP = null;
                         continue;
                     }
-                    topP = property.Value.GetSingle();
+                    topP = prop.Value.GetSingle();
                     continue;
                 }
-                if (property.NameEquals("stream"u8))
+                if (prop.NameEquals("stream"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         stream = null;
                         continue;
                     }
-                    stream = property.Value.GetBoolean();
+                    stream = prop.Value.GetBoolean();
                     continue;
                 }
-                if (property.NameEquals("max_prompt_tokens"u8))
+                if (prop.NameEquals("max_prompt_tokens"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         maxPromptTokens = null;
                         continue;
                     }
-                    maxPromptTokens = property.Value.GetInt32();
+                    maxPromptTokens = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("max_completion_tokens"u8))
+                if (prop.NameEquals("max_completion_tokens"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         maxCompletionTokens = null;
                         continue;
                     }
-                    maxCompletionTokens = property.Value.GetInt32();
+                    maxCompletionTokens = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("truncation_strategy"u8))
+                if (prop.NameEquals("truncation_strategy"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         truncationStrategy = null;
                         continue;
                     }
-                    truncationStrategy = RunTruncationStrategy.DeserializeRunTruncationStrategy(property.Value, options);
+                    truncationStrategy = RunTruncationStrategy.DeserializeRunTruncationStrategy(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("tool_choice"u8))
+                if (prop.NameEquals("tool_choice"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         toolChoice = null;
                         continue;
                     }
-                    toolChoice = Assistants.ToolConstraint.DeserializeToolConstraint(property.Value, options);
+                    toolChoice = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (property.NameEquals("parallel_tool_calls"u8))
+                if (prop.NameEquals("parallel_tool_calls"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        parallelToolCalls = null;
                         continue;
                     }
-                    parallelToolCalls = property.Value.GetBoolean();
+                    parallelToolCalls = prop.Value.GetBoolean();
                     continue;
                 }
-                if (property.NameEquals("response_format"u8))
+                if (prop.NameEquals("response_format"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         responseFormat = null;
                         continue;
                     }
-                    responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(property.Value, options);
+                    responseFormat = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new RunCreationOptions(
                 assistantId,
                 model,
@@ -467,13 +488,14 @@ namespace OpenAI.Assistants
                 toolChoice,
                 parallelToolCalls,
                 responseFormat,
-                serializedAdditionalRawData);
+                additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<RunCreationOptions>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<RunCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<RunCreationOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<RunCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -483,15 +505,16 @@ namespace OpenAI.Assistants
             }
         }
 
-        RunCreationOptions IPersistableModel<RunCreationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<RunCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
+        RunCreationOptions IPersistableModel<RunCreationOptions>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual RunCreationOptions PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<RunCreationOptions>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeRunCreationOptions(document.RootElement, options);
                     }
                 default:
@@ -501,15 +524,16 @@ namespace OpenAI.Assistants
 
         string IPersistableModel<RunCreationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static RunCreationOptions FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(RunCreationOptions runCreationOptions)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeRunCreationOptions(document.RootElement);
+            return BinaryContent.Create(runCreationOptions, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator RunCreationOptions(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeRunCreationOptions(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

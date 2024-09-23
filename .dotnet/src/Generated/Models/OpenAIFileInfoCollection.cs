@@ -2,13 +2,20 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace OpenAI.Files
 {
-    public partial class OpenAIFileInfoCollection : ReadOnlyCollection<OpenAIFileInfo>
+    public partial class OpenAIFileInfoCollection
     {
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        internal OpenAIFileInfoCollection(IList<OpenAIFileInfo> data, InternalListFilesResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        {
+            Data = data;
+            Object = @object;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
     }
 }

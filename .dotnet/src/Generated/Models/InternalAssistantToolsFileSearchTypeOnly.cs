@@ -9,17 +9,18 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalAssistantToolsFileSearchTypeOnly
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         public InternalAssistantToolsFileSearchTypeOnly()
         {
         }
 
-        internal InternalAssistantToolsFileSearchTypeOnly(InternalAssistantToolsFileSearchTypeOnlyType type, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalAssistantToolsFileSearchTypeOnly(InternalAssistantToolsFileSearchTypeOnlyType @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = type;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            Type = @type;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public InternalAssistantToolsFileSearchTypeOnlyType Type { get; } = InternalAssistantToolsFileSearchTypeOnlyType.FileSearch;
+        public InternalAssistantToolsFileSearchTypeOnlyType Type { get; } = "file_search";
     }
 }

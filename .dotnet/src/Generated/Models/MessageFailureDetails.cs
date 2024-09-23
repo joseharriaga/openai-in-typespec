@@ -9,22 +9,19 @@ namespace OpenAI.Assistants
 {
     public partial class MessageFailureDetails
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal MessageFailureDetails(MessageFailureReason reason)
         {
             Reason = reason;
         }
 
-        internal MessageFailureDetails(MessageFailureReason reason, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageFailureDetails(MessageFailureReason reason, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Reason = reason;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal MessageFailureDetails()
-        {
-        }
-
-        public MessageFailureReason Reason { get; }
+        public MessageFailureReason Reason { get; set; }
     }
 }

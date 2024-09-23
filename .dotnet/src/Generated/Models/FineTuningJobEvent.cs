@@ -9,36 +9,34 @@ namespace OpenAI.FineTuning
 {
     internal partial class FineTuningJobEvent
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal FineTuningJobEvent(string id, DateTimeOffset createdAt, FineTuningJobEventLevel level, string message)
-        {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(message, nameof(message));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
+        internal FineTuningJobEvent(string id, DateTimeOffset createdAt, FineTuning.FineTuningJobEventLevel level, string message)
+        {
             Id = id;
             CreatedAt = createdAt;
             Level = level;
             Message = message;
         }
 
-        internal FineTuningJobEvent(string id, DateTimeOffset createdAt, FineTuningJobEventLevel level, string message, InternalFineTuningJobEventObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal FineTuningJobEvent(string id, DateTimeOffset createdAt, FineTuning.FineTuningJobEventLevel level, string message, InternalFineTuningJobEventObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             CreatedAt = createdAt;
             Level = level;
             Message = message;
             Object = @object;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal FineTuningJobEvent()
-        {
-        }
+        public string Id { get; set; }
 
-        public string Id { get; }
-        public DateTimeOffset CreatedAt { get; }
-        public FineTuningJobEventLevel Level { get; }
-        public string Message { get; }
-        public InternalFineTuningJobEventObject Object { get; } = InternalFineTuningJobEventObject.FineTuningJobEvent;
+        public DateTimeOffset CreatedAt { get; set; }
+
+        public FineTuning.FineTuningJobEventLevel Level { get; set; }
+
+        public string Message { get; set; }
+
+        public InternalFineTuningJobEventObject Object { get; } = "fine_tuning.job.event";
     }
 }

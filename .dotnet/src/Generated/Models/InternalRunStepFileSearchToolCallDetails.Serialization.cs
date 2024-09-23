@@ -7,113 +7,90 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepFileSearchToolCallDetails : IJsonModel<InternalRunStepFileSearchToolCallDetails>
     {
+        internal InternalRunStepFileSearchToolCallDetails()
+        {
+        }
+
         void IJsonModel<InternalRunStepFileSearchToolCallDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRunStepFileSearchToolCallDetails>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRunStepFileSearchToolCallDetails>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRunStepFileSearchToolCallDetails)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
-            {
-                writer.WritePropertyName("id"u8);
-                writer.WriteStringValue(Id);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("file_search") != true)
-            {
-                writer.WritePropertyName("file_search"u8);
-                writer.WriteObjectValue(FileSearch, options);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
-            {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type);
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-            }
-            writer.WriteEndObject();
+            base.JsonModelWriteCore(writer, options);
+            writer.WritePropertyName("id"u8);
+            writer.WriteStringValue(Id);
+            writer.WritePropertyName("file_search"u8);
+            writer.WriteObjectValue(FileSearch, options);
         }
 
-        InternalRunStepFileSearchToolCallDetails IJsonModel<InternalRunStepFileSearchToolCallDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalRunStepFileSearchToolCallDetails IJsonModel<InternalRunStepFileSearchToolCallDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepFileSearchToolCallDetails)JsonModelCreateCore(ref reader, options);
+
+        protected override RunStepToolCall JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRunStepFileSearchToolCallDetails>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRunStepFileSearchToolCallDetails>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRunStepFileSearchToolCallDetails)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalRunStepFileSearchToolCallDetails(document.RootElement, options);
         }
 
-        internal static InternalRunStepFileSearchToolCallDetails DeserializeInternalRunStepFileSearchToolCallDetails(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalRunStepFileSearchToolCallDetails DeserializeInternalRunStepFileSearchToolCallDetails(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             string id = default;
             InternalRunStepDetailsToolCallsFileSearchObjectFileSearch fileSearch = default;
-            string type = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string @type = "file_search";
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("id"u8))
+                if (prop.NameEquals("id"u8))
                 {
-                    id = property.Value.GetString();
+                    id = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("file_search"u8))
+                if (prop.NameEquals("file_search"u8))
                 {
-                    fileSearch = InternalRunStepDetailsToolCallsFileSearchObjectFileSearch.DeserializeInternalRunStepDetailsToolCallsFileSearchObjectFileSearch(property.Value, options);
+                    fileSearch = InternalRunStepDetailsToolCallsFileSearchObjectFileSearch.DeserializeInternalRunStepDetailsToolCallsFileSearchObjectFileSearch(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    type = property.Value.GetString();
+                    @type = prop.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalRunStepFileSearchToolCallDetails(type, serializedAdditionalRawData, id, fileSearch);
+            return new InternalRunStepFileSearchToolCallDetails(id, fileSearch, @type, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalRunStepFileSearchToolCallDetails>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRunStepFileSearchToolCallDetails>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalRunStepFileSearchToolCallDetails>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRunStepFileSearchToolCallDetails>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -123,15 +100,16 @@ namespace OpenAI.Assistants
             }
         }
 
-        InternalRunStepFileSearchToolCallDetails IPersistableModel<InternalRunStepFileSearchToolCallDetails>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRunStepFileSearchToolCallDetails>)this).GetFormatFromOptions(options) : options.Format;
+        InternalRunStepFileSearchToolCallDetails IPersistableModel<InternalRunStepFileSearchToolCallDetails>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalRunStepFileSearchToolCallDetails)PersistableModelCreateCore(data, options);
 
+        protected override RunStepToolCall PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRunStepFileSearchToolCallDetails>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalRunStepFileSearchToolCallDetails(document.RootElement, options);
                     }
                 default:
@@ -141,15 +119,16 @@ namespace OpenAI.Assistants
 
         string IPersistableModel<InternalRunStepFileSearchToolCallDetails>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new InternalRunStepFileSearchToolCallDetails FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalRunStepFileSearchToolCallDetails internalRunStepFileSearchToolCallDetails)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalRunStepFileSearchToolCallDetails(document.RootElement);
+            return BinaryContent.Create(internalRunStepFileSearchToolCallDetails, ModelSerializationExtensions.WireOptions);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        public static explicit operator InternalRunStepFileSearchToolCallDetails(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalRunStepFileSearchToolCallDetails(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

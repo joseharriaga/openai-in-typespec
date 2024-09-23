@@ -7,98 +7,95 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OpenAI;
 
 namespace OpenAI.Batch
 {
-    // Data plane generated sub-client.
     public partial class BatchClient
     {
+        private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly ClientPipeline _pipeline;
-        private readonly Uri _endpoint;
-
-        public virtual ClientPipeline Pipeline => _pipeline;
 
         protected BatchClient()
         {
         }
 
-        internal PipelineMessage CreateCreateBatchRequest(BinaryContent content, RequestOptions options)
+        public ClientPipeline Pipeline { get; }
+
+        public virtual ClientResult CreateBatch(BinaryContent content, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/batches", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateCreateBatchRequest(content, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateGetBatchesRequest(string after, int? limit, RequestOptions options)
+        public virtual async Task<ClientResult> CreateBatchAsync(BinaryContent content, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/batches", false);
-            if (after != null)
-            {
-                uri.AppendQuery("after", after, true);
-            }
-            if (limit != null)
-            {
-                uri.AppendQuery("limit", limit.Value, true);
-            }
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateCreateBatchRequest(content, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions options)
+        public virtual ClientResult<InternalBatchJob> CreateBatch(string input_file_id, InternalCreateBatchRequestEndpoint endpoint, InternalBatchCompletionTimeframe completion_window, IDictionary<string, string> metadata = default)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/batches/", false);
-            uri.AppendPath(batchId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(input_file_id, nameof(input_file_id));
+
+            InternalCreateBatchRequest spreadModel = new InternalCreateBatchRequest(null, endpoint, null, metadata, null);
+            ClientResult result = CreateBatch(spreadModel, null);
+            return ClientResult.FromValue((InternalBatchJob)result, result.GetRawResponse());
         }
 
-        internal PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions options)
+        public virtual async Task<ClientResult<InternalBatchJob>> CreateBatchAsync(string input_file_id, InternalCreateBatchRequestEndpoint endpoint, InternalBatchCompletionTimeframe completion_window, IDictionary<string, string> metadata = default)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/batches/", false);
-            uri.AppendPath(batchId, true);
-            uri.AppendPath("/cancel", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(input_file_id, nameof(input_file_id));
+
+            InternalCreateBatchRequest spreadModel = new InternalCreateBatchRequest(null, endpoint, null, metadata, null);
+            ClientResult result = await CreateBatchAsync(spreadModel, null).ConfigureAwait(false);
+            return ClientResult.FromValue((InternalBatchJob)result, result.GetRawResponse());
         }
 
-        private static PipelineMessageClassifier _pipelineMessageClassifier200;
-        private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
+        public virtual ClientResult ListBatches(string after, int? limit, RequestOptions options)
+        {
+            using PipelineMessage message = CreateListBatchesRequest(after, limit, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+
+        public virtual async Task<ClientResult> ListBatchesAsync(string after, int? limit, RequestOptions options)
+        {
+            using PipelineMessage message = CreateListBatchesRequest(after, limit, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+
+        public virtual ClientResult<InternalListBatchesResponse> ListBatches(string after, int? limit)
+        {
+            ClientResult result = ListBatches(after, limit, null);
+            return ClientResult.FromValue((InternalListBatchesResponse)result, result.GetRawResponse());
+        }
+
+        public virtual async Task<ClientResult<InternalListBatchesResponse>> ListBatchesAsync(string after, int? limit)
+        {
+            ClientResult result = await ListBatchesAsync(after, limit, null).ConfigureAwait(false);
+            return ClientResult.FromValue((InternalListBatchesResponse)result, result.GetRawResponse());
+        }
+
+        public virtual ClientResult CancelBatch(string batch_id, RequestOptions options)
+        {
+            Argument.AssertNotNull(batch_id, nameof(batch_id));
+
+            using PipelineMessage message = CreateCancelBatchRequest(batch_id, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+
+        public virtual async Task<ClientResult> CancelBatchAsync(string batch_id, RequestOptions options)
+        {
+            Argument.AssertNotNull(batch_id, nameof(batch_id));
+
+            using PipelineMessage message = CreateCancelBatchRequest(batch_id, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
     }
 }

@@ -6,8 +6,8 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Audio
 {
@@ -15,83 +15,59 @@ namespace OpenAI.Audio
     {
         void IJsonModel<AudioTranscriptionOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AudioTranscriptionOptions>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<AudioTranscriptionOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(AudioTranscriptionOptions)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("file") != true)
-            {
-                writer.WritePropertyName("file"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(File);
-#else
-                using (JsonDocument document = JsonDocument.Parse(File))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("model") != true)
-            {
-                writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("language") != true && Optional.IsDefined(Language))
+            writer.WritePropertyName("file"u8);
+            writer.WriteBase64StringValue(File.ToArray(), "D");
+            writer.WritePropertyName("model"u8);
+            writer.WriteStringValue(Model.ToString());
+            if (Optional.IsDefined(Language))
             {
                 writer.WritePropertyName("language"u8);
                 writer.WriteStringValue(Language);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("prompt") != true && Optional.IsDefined(Prompt))
+            if (Optional.IsDefined(Prompt))
             {
                 writer.WritePropertyName("prompt"u8);
                 writer.WriteStringValue(Prompt);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("response_format") != true && Optional.IsDefined(ResponseFormat))
+            if (Optional.IsDefined(ResponseFormat))
             {
                 writer.WritePropertyName("response_format"u8);
                 writer.WriteStringValue(ResponseFormat.Value.ToSerialString());
             }
-            if (SerializedAdditionalRawData?.ContainsKey("temperature") != true && Optional.IsDefined(Temperature))
+            if (Optional.IsDefined(Temperature))
             {
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("timestamp_granularities") != true && Optional.IsCollectionDefined(TimestampGranularities))
+            if (Optional.IsCollectionDefined(TimestampGranularities))
             {
                 writer.WritePropertyName("timestamp_granularities"u8);
                 writer.WriteStartArray();
                 foreach (var item in TimestampGranularities)
                 {
-                    if (item == null)
-                    {
-                        writer.WriteNullValue();
-                        continue;
-                    }
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
+                    writer.WriteStringValue(item.ToString());
                 }
                 writer.WriteEndArray();
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -100,187 +76,141 @@ namespace OpenAI.Audio
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        AudioTranscriptionOptions IJsonModel<AudioTranscriptionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AudioTranscriptionOptions IJsonModel<AudioTranscriptionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual AudioTranscriptionOptions JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AudioTranscriptionOptions>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<AudioTranscriptionOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(AudioTranscriptionOptions)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeAudioTranscriptionOptions(document.RootElement, options);
         }
 
-        internal static AudioTranscriptionOptions DeserializeAudioTranscriptionOptions(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AudioTranscriptionOptions DeserializeAudioTranscriptionOptions(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            BinaryData file = default;
+            BinaryData @file = default;
             InternalCreateTranscriptionRequestModel model = default;
             string language = default;
             string prompt = default;
-            AudioTranscriptionFormat? responseFormat = default;
+            Audio.AudioTranscriptionFormat? responseFormat = default;
             float? temperature = default;
-            IList<BinaryData> timestampGranularities = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IList<InternalCreateTranscriptionRequestTimestampGranularity> timestampGranularities = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("file"u8))
+                if (prop.NameEquals("file"u8))
                 {
-                    file = BinaryData.FromString(property.Value.GetRawText());
+                    @file = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
                     continue;
                 }
-                if (property.NameEquals("model"u8))
+                if (prop.NameEquals("model"u8))
                 {
-                    model = new InternalCreateTranscriptionRequestModel(property.Value.GetString());
+                    model = new InternalCreateTranscriptionRequestModel(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("language"u8))
+                if (prop.NameEquals("language"u8))
                 {
-                    language = property.Value.GetString();
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        language = null;
+                        continue;
+                    }
+                    language = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("prompt"u8))
+                if (prop.NameEquals("prompt"u8))
                 {
-                    prompt = property.Value.GetString();
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        prompt = null;
+                        continue;
+                    }
+                    prompt = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("response_format"u8))
+                if (prop.NameEquals("response_format"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        responseFormat = null;
+                        continue;
+                    }
+                    responseFormat = prop.Value.GetString().ToAudioTranscriptionFormat();
+                    continue;
+                }
+                if (prop.NameEquals("temperature"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        temperature = null;
+                        continue;
+                    }
+                    temperature = prop.Value.GetSingle();
+                    continue;
+                }
+                if (prop.NameEquals("timestamp_granularities"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    responseFormat = property.Value.GetString().ToAudioTranscriptionFormat();
-                    continue;
-                }
-                if (property.NameEquals("temperature"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    List<InternalCreateTranscriptionRequestTimestampGranularity> array = new List<InternalCreateTranscriptionRequestTimestampGranularity>();
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
-                        continue;
-                    }
-                    temperature = property.Value.GetSingle();
-                    continue;
-                }
-                if (property.NameEquals("timestamp_granularities"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    List<BinaryData> array = new List<BinaryData>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
+                        array.Add(new InternalCreateTranscriptionRequestTimestampGranularity(item.GetString()));
                     }
                     timestampGranularities = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new AudioTranscriptionOptions(
-                file,
+                @file,
                 model,
                 language,
                 prompt,
                 responseFormat,
                 temperature,
-                timestampGranularities ?? new ChangeTrackingList<BinaryData>(),
-                serializedAdditionalRawData);
+                timestampGranularities ?? new ChangeTrackingList<InternalCreateTranscriptionRequestTimestampGranularity>(),
+                additionalBinaryDataProperties);
         }
 
-        private BinaryData SerializeMultipart(ModelReaderWriterOptions options)
-        {
-            using MultipartFormDataBinaryContent content = ToMultipartBinaryBody();
-            using MemoryStream stream = new MemoryStream();
-            content.WriteTo(stream);
-            if (stream.Position > int.MaxValue)
-            {
-                return BinaryData.FromStream(stream);
-            }
-            else
-            {
-                return new BinaryData(stream.GetBuffer().AsMemory(0, (int)stream.Position));
-            }
-        }
+        BinaryData IPersistableModel<AudioTranscriptionOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
-        internal virtual MultipartFormDataBinaryContent ToMultipartBinaryBody()
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
-            MultipartFormDataBinaryContent content = new MultipartFormDataBinaryContent();
-            content.Add(File, "file", "file");
-            content.Add(Model.ToString(), "model");
-            if (Optional.IsDefined(Language))
-            {
-                content.Add(Language, "language");
-            }
-            if (Optional.IsDefined(Prompt))
-            {
-                content.Add(Prompt, "prompt");
-            }
-            if (Optional.IsDefined(ResponseFormat))
-            {
-                content.Add(ResponseFormat.Value.ToSerialString(), "response_format");
-            }
-            if (Optional.IsDefined(Temperature))
-            {
-                content.Add(Temperature.Value, "temperature");
-            }
-            if (Optional.IsCollectionDefined(TimestampGranularities))
-            {
-                foreach (BinaryData item in TimestampGranularities)
-                {
-                    content.Add(item, "timestamp_granularities", "timestamp_granularities");
-                }
-            }
-            return content;
-        }
-
-        BinaryData IPersistableModel<AudioTranscriptionOptions>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<AudioTranscriptionOptions>)this).GetFormatFromOptions(options) : options.Format;
-
+            string format = options.Format == "W" ? ((IPersistableModel<AudioTranscriptionOptions>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
-                case "MFD":
-                    return SerializeMultipart(options);
                 default:
                     throw new FormatException($"The model {nameof(AudioTranscriptionOptions)} does not support writing '{options.Format}' format.");
             }
         }
 
-        AudioTranscriptionOptions IPersistableModel<AudioTranscriptionOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<AudioTranscriptionOptions>)this).GetFormatFromOptions(options) : options.Format;
+        AudioTranscriptionOptions IPersistableModel<AudioTranscriptionOptions>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual AudioTranscriptionOptions PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<AudioTranscriptionOptions>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeAudioTranscriptionOptions(document.RootElement, options);
                     }
                 default:
@@ -288,17 +218,18 @@ namespace OpenAI.Audio
             }
         }
 
-        string IPersistableModel<AudioTranscriptionOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "MFD";
+        string IPersistableModel<AudioTranscriptionOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static AudioTranscriptionOptions FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(AudioTranscriptionOptions audioTranscriptionOptions)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAudioTranscriptionOptions(document.RootElement);
+            return BinaryContent.Create(audioTranscriptionOptions, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator AudioTranscriptionOptions(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeAudioTranscriptionOptions(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

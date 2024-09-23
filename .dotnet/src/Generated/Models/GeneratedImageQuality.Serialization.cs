@@ -8,17 +8,23 @@ namespace OpenAI.Images
 {
     internal static partial class GeneratedImageQualityExtensions
     {
-        public static string ToSerialString(this GeneratedImageQuality value) => value switch
+        public static string ToSerialString(this Images.GeneratedImageQuality value) => value switch
         {
-            GeneratedImageQuality.Standard => "standard",
-            GeneratedImageQuality.High => "hd",
+            Images.GeneratedImageQuality.Standard => "standard",
+            Images.GeneratedImageQuality.High => "hd",
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown GeneratedImageQuality value.")
         };
 
-        public static GeneratedImageQuality ToGeneratedImageQuality(this string value)
+        public static Images.GeneratedImageQuality ToGeneratedImageQuality(this string value)
         {
-            if (StringComparer.OrdinalIgnoreCase.Equals(value, "standard")) return GeneratedImageQuality.Standard;
-            if (StringComparer.OrdinalIgnoreCase.Equals(value, "hd")) return GeneratedImageQuality.High;
+            if (StringComparer.OrdinalIgnoreCase.Equals(value, "standard"))
+            {
+                return Images.GeneratedImageQuality.Standard;
+            }
+            if (StringComparer.OrdinalIgnoreCase.Equals(value, "hd"))
+            {
+                return Images.GeneratedImageQuality.High;
+            }
             throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown GeneratedImageQuality value.");
         }
     }

@@ -4,33 +4,29 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenAI.Chat
 {
     public partial class ChatTokenTopLogProbabilityDetails
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal ChatTokenTopLogProbabilityDetails(string token, float logProbability, ReadOnlyMemory<byte>? utf8Bytes)
-        {
-            Argument.AssertNotNull(token, nameof(token));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-            Token = token;
-            LogProbability = logProbability;
-            Utf8Bytes = utf8Bytes;
-        }
-
-        internal ChatTokenTopLogProbabilityDetails(string token, float logProbability, ReadOnlyMemory<byte>? utf8Bytes, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatTokenTopLogProbabilityDetails(string token, float logprob, IEnumerable<int> bytes)
         {
             Token = token;
-            LogProbability = logProbability;
-            Utf8Bytes = utf8Bytes;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            Logprob = logprob;
+            Bytes = bytes?.ToList();
         }
 
-        internal ChatTokenTopLogProbabilityDetails()
+        internal ChatTokenTopLogProbabilityDetails(string token, float logprob, IList<int> bytes, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
+            Token = token;
+            Logprob = logprob;
+            Bytes = bytes;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Token { get; }
+        public string Token { get; set; }
     }
 }

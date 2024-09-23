@@ -7,116 +7,105 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Batch
 {
     internal partial class InternalBatchJob : IJsonModel<InternalBatchJob>
     {
+        internal InternalBatchJob()
+        {
+        }
+
         void IJsonModel<InternalBatchJob>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalBatchJob>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalBatchJob>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalBatchJob)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
-            {
-                writer.WritePropertyName("id"u8);
-                writer.WriteStringValue(Id);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
-            {
-                writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(Object.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("endpoint") != true)
-            {
-                writer.WritePropertyName("endpoint"u8);
-                writer.WriteStringValue(Endpoint);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("errors") != true && Optional.IsDefined(Errors))
+            writer.WritePropertyName("id"u8);
+            writer.WriteStringValue(Id);
+            writer.WritePropertyName("object"u8);
+            writer.WriteStringValue(Object.ToString());
+            writer.WritePropertyName("endpoint"u8);
+            writer.WriteStringValue(Endpoint);
+            if (Optional.IsDefined(Errors))
             {
                 writer.WritePropertyName("errors"u8);
                 writer.WriteObjectValue(Errors, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("input_file_id") != true)
-            {
-                writer.WritePropertyName("input_file_id"u8);
-                writer.WriteStringValue(InputFileId);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("completion_window") != true)
-            {
-                writer.WritePropertyName("completion_window"u8);
-                writer.WriteStringValue(CompletionWindow);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("status") != true)
-            {
-                writer.WritePropertyName("status"u8);
-                writer.WriteStringValue(Status.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("output_file_id") != true && Optional.IsDefined(OutputFileId))
+            writer.WritePropertyName("input_file_id"u8);
+            writer.WriteStringValue(InputFileId);
+            writer.WritePropertyName("completion_window"u8);
+            writer.WriteStringValue(CompletionWindow);
+            writer.WritePropertyName("status"u8);
+            writer.WriteStringValue(Status.ToString());
+            if (Optional.IsDefined(OutputFileId))
             {
                 writer.WritePropertyName("output_file_id"u8);
                 writer.WriteStringValue(OutputFileId);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("error_file_id") != true && Optional.IsDefined(ErrorFileId))
+            if (Optional.IsDefined(ErrorFileId))
             {
                 writer.WritePropertyName("error_file_id"u8);
                 writer.WriteStringValue(ErrorFileId);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("created_at") != true)
-            {
-                writer.WritePropertyName("created_at"u8);
-                writer.WriteNumberValue(CreatedAt, "U");
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("in_progress_at") != true && Optional.IsDefined(InProgressAt))
+            writer.WritePropertyName("created_at"u8);
+            writer.WriteNumberValue(CreatedAt, "U");
+            if (Optional.IsDefined(InProgressAt))
             {
                 writer.WritePropertyName("in_progress_at"u8);
                 writer.WriteNumberValue(InProgressAt.Value, "U");
             }
-            if (SerializedAdditionalRawData?.ContainsKey("expires_at") != true && Optional.IsDefined(ExpiresAt))
+            if (Optional.IsDefined(ExpiresAt))
             {
                 writer.WritePropertyName("expires_at"u8);
                 writer.WriteNumberValue(ExpiresAt.Value, "U");
             }
-            if (SerializedAdditionalRawData?.ContainsKey("finalizing_at") != true && Optional.IsDefined(FinalizingAt))
+            if (Optional.IsDefined(FinalizingAt))
             {
                 writer.WritePropertyName("finalizing_at"u8);
                 writer.WriteNumberValue(FinalizingAt.Value, "U");
             }
-            if (SerializedAdditionalRawData?.ContainsKey("completed_at") != true && Optional.IsDefined(CompletedAt))
+            if (Optional.IsDefined(CompletedAt))
             {
                 writer.WritePropertyName("completed_at"u8);
                 writer.WriteNumberValue(CompletedAt.Value, "U");
             }
-            if (SerializedAdditionalRawData?.ContainsKey("failed_at") != true && Optional.IsDefined(FailedAt))
+            if (Optional.IsDefined(FailedAt))
             {
                 writer.WritePropertyName("failed_at"u8);
                 writer.WriteNumberValue(FailedAt.Value, "U");
             }
-            if (SerializedAdditionalRawData?.ContainsKey("expired_at") != true && Optional.IsDefined(ExpiredAt))
+            if (Optional.IsDefined(ExpiredAt))
             {
                 writer.WritePropertyName("expired_at"u8);
                 writer.WriteNumberValue(ExpiredAt.Value, "U");
             }
-            if (SerializedAdditionalRawData?.ContainsKey("cancelling_at") != true && Optional.IsDefined(CancellingAt))
+            if (Optional.IsDefined(CancellingAt))
             {
                 writer.WritePropertyName("cancelling_at"u8);
                 writer.WriteNumberValue(CancellingAt.Value, "U");
             }
-            if (SerializedAdditionalRawData?.ContainsKey("cancelled_at") != true && Optional.IsDefined(CancelledAt))
+            if (Optional.IsDefined(CancelledAt))
             {
                 writer.WritePropertyName("cancelled_at"u8);
                 writer.WriteNumberValue(CancelledAt.Value, "U");
             }
-            if (SerializedAdditionalRawData?.ContainsKey("request_counts") != true && Optional.IsDefined(RequestCounts))
+            if (Optional.IsDefined(RequestCounts))
             {
                 writer.WritePropertyName("request_counts"u8);
                 writer.WriteObjectValue(RequestCounts, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("metadata") != true && Optional.IsCollectionDefined(Metadata))
+            if (Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
                 {
@@ -125,26 +114,27 @@ namespace OpenAI.Batch
                     foreach (var item in Metadata)
                     {
                         writer.WritePropertyName(item.Key);
+                        if (item.Value == null)
+                        {
+                            writer.WriteNullValue();
+                            continue;
+                        }
                         writer.WriteStringValue(item.Value);
                     }
                     writer.WriteEndObject();
                 }
                 else
                 {
-                    writer.WriteNull("metadata");
+                    writer.WriteNull("metadata"u8);
                 }
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -153,25 +143,23 @@ namespace OpenAI.Batch
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalBatchJob IJsonModel<InternalBatchJob>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalBatchJob IJsonModel<InternalBatchJob>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalBatchJob JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalBatchJob>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalBatchJob>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalBatchJob)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalBatchJob(document.RootElement, options);
         }
 
-        internal static InternalBatchJob DeserializeInternalBatchJob(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalBatchJob DeserializeInternalBatchJob(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
@@ -195,167 +183,191 @@ namespace OpenAI.Batch
             DateTimeOffset? cancellingAt = default;
             DateTimeOffset? cancelledAt = default;
             InternalBatchRequestCounts requestCounts = default;
-            IReadOnlyDictionary<string, string> metadata = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, string> metadata = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("id"u8))
+                if (prop.NameEquals("id"u8))
                 {
-                    id = property.Value.GetString();
+                    id = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("object"u8))
+                if (prop.NameEquals("object"u8))
                 {
-                    @object = new InternalBatchObject(property.Value.GetString());
+                    @object = new InternalBatchObject(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("endpoint"u8))
+                if (prop.NameEquals("endpoint"u8))
                 {
-                    endpoint = property.Value.GetString();
+                    endpoint = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("errors"u8))
+                if (prop.NameEquals("errors"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        errors = null;
                         continue;
                     }
-                    errors = InternalBatchErrors.DeserializeInternalBatchErrors(property.Value, options);
+                    errors = InternalBatchErrors.DeserializeInternalBatchErrors(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("input_file_id"u8))
+                if (prop.NameEquals("input_file_id"u8))
                 {
-                    inputFileId = property.Value.GetString();
+                    inputFileId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("completion_window"u8))
+                if (prop.NameEquals("completion_window"u8))
                 {
-                    completionWindow = property.Value.GetString();
+                    completionWindow = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("status"u8))
+                if (prop.NameEquals("status"u8))
                 {
-                    status = new InternalBatchStatus(property.Value.GetString());
+                    status = new InternalBatchStatus(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("output_file_id"u8))
+                if (prop.NameEquals("output_file_id"u8))
                 {
-                    outputFileId = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("error_file_id"u8))
-                {
-                    errorFileId = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("created_at"u8))
-                {
-                    createdAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
-                    continue;
-                }
-                if (property.NameEquals("in_progress_at"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        outputFileId = null;
                         continue;
                     }
-                    inProgressAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    outputFileId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("expires_at"u8))
+                if (prop.NameEquals("error_file_id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        errorFileId = null;
                         continue;
                     }
-                    expiresAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    errorFileId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("finalizing_at"u8))
+                if (prop.NameEquals("created_at"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    createdAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
+                    continue;
+                }
+                if (prop.NameEquals("in_progress_at"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        inProgressAt = null;
                         continue;
                     }
-                    finalizingAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    inProgressAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("completed_at"u8))
+                if (prop.NameEquals("expires_at"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        expiresAt = null;
                         continue;
                     }
-                    completedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    expiresAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("failed_at"u8))
+                if (prop.NameEquals("finalizing_at"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        finalizingAt = null;
                         continue;
                     }
-                    failedAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    finalizingAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("expired_at"u8))
+                if (prop.NameEquals("completed_at"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        completedAt = null;
                         continue;
                     }
-                    expiredAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    completedAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("cancelling_at"u8))
+                if (prop.NameEquals("failed_at"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        failedAt = null;
                         continue;
                     }
-                    cancellingAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    failedAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("cancelled_at"u8))
+                if (prop.NameEquals("expired_at"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        expiredAt = null;
                         continue;
                     }
-                    cancelledAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    expiredAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("request_counts"u8))
+                if (prop.NameEquals("cancelling_at"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        cancellingAt = null;
                         continue;
                     }
-                    requestCounts = InternalBatchRequestCounts.DeserializeInternalBatchRequestCounts(property.Value, options);
+                    cancellingAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("metadata"u8))
+                if (prop.NameEquals("cancelled_at"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        cancelledAt = null;
+                        continue;
+                    }
+                    cancelledAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
+                    continue;
+                }
+                if (prop.NameEquals("request_counts"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        requestCounts = null;
+                        continue;
+                    }
+                    requestCounts = InternalBatchRequestCounts.DeserializeInternalBatchRequestCounts(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("metadata"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
                     Dictionary<string, string> dictionary = new Dictionary<string, string>();
-                    foreach (var property0 in property.Value.EnumerateObject())
+                    foreach (var prop0 in prop.Value.EnumerateObject())
                     {
-                        dictionary.Add(property0.Name, property0.Value.GetString());
+                        if (prop0.Value.ValueKind == JsonValueKind.Null)
+                        {
+                            dictionary.Add(prop0.Name, null);
+                        }
+                        else
+                        {
+                            dictionary.Add(prop0.Name, prop0.Value.GetString());
+                        }
                     }
                     metadata = dictionary;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new InternalBatchJob(
                 id,
                 @object,
@@ -377,13 +389,14 @@ namespace OpenAI.Batch
                 cancelledAt,
                 requestCounts,
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
-                serializedAdditionalRawData);
+                additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalBatchJob>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalBatchJob>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalBatchJob>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalBatchJob>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -393,15 +406,16 @@ namespace OpenAI.Batch
             }
         }
 
-        InternalBatchJob IPersistableModel<InternalBatchJob>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalBatchJob>)this).GetFormatFromOptions(options) : options.Format;
+        InternalBatchJob IPersistableModel<InternalBatchJob>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalBatchJob PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalBatchJob>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalBatchJob(document.RootElement, options);
                     }
                 default:
@@ -411,15 +425,16 @@ namespace OpenAI.Batch
 
         string IPersistableModel<InternalBatchJob>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalBatchJob FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalBatchJob internalBatchJob)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalBatchJob(document.RootElement);
+            return BinaryContent.Create(internalBatchJob, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalBatchJob(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalBatchJob(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -4,39 +4,36 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Audio
 {
     public partial class AudioTranslation
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal AudioTranslation(string language, TimeSpan? duration, string text)
-        {
-            Argument.AssertNotNull(language, nameof(language));
-            Argument.AssertNotNull(text, nameof(text));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
+        internal AudioTranslation(string language, TimeSpan duration, string text)
+        {
             Language = language;
             Duration = duration;
             Text = text;
             Segments = new ChangeTrackingList<TranscribedSegment>();
         }
 
-        internal AudioTranslation(InternalCreateTranslationResponseVerboseJsonTask task, string language, TimeSpan? duration, string text, IReadOnlyList<TranscribedSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AudioTranslation(InternalCreateTranslationResponseVerboseJsonTask task, string language, TimeSpan duration, string text, IList<TranscribedSegment> segments, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Task = task;
             Language = language;
             Duration = duration;
             Text = text;
             Segments = segments;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal AudioTranslation()
-        {
-        }
+        public string Language { get; set; }
 
-        public string Language { get; }
-        public string Text { get; }
-        public IReadOnlyList<TranscribedSegment> Segments { get; }
+        public string Text { get; set; }
+
+        public IList<TranscribedSegment> Segments { get; }
     }
 }

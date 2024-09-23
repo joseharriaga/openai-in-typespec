@@ -31,7 +31,7 @@ public partial class AssistantClient
     private readonly InternalAssistantThreadClient _threadSubClient;
 
     // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="AssistantClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="AssistantClient"/>. </summary>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="apiKey"/> is null. </exception>
     public AssistantClient(string apiKey) : this(new ApiKeyCredential(apiKey), new OpenAIClientOptions())
@@ -39,7 +39,7 @@ public partial class AssistantClient
     }
 
     // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="AssistantClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="AssistantClient"/>. </summary>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="apiKey"/> is null. </exception>
@@ -50,7 +50,7 @@ public partial class AssistantClient
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="AssistantClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="AssistantClient"/>. </summary>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
     public AssistantClient(ApiKeyCredential credential) : this(credential, new OpenAIClientOptions())
@@ -60,7 +60,7 @@ public partial class AssistantClient
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="AssistantClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="AssistantClient"/>. </summary>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
@@ -80,7 +80,7 @@ public partial class AssistantClient
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
     // - Made protected.
-    /// <summary> Initializes a new instance of <see cref="AssistantClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="AssistantClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline to send and receive REST requests and responses. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="pipeline"/> is null. </exception>

@@ -9,13 +9,17 @@ namespace OpenAI.Chat
 {
     public abstract partial class ChatMessage
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatMessage(ChatMessageRole role, IList<ChatMessageContentPart> content, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        private protected ChatMessage(string role)
         {
             Role = role;
-            Content = content;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+        }
+
+        internal ChatMessage(string role, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        {
+            Role = role;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }
 }

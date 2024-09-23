@@ -9,39 +9,37 @@ namespace OpenAI.VectorStores
 {
     public partial class VectorStoreFileAssociation
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal VectorStoreFileAssociation(string fileId, int size, DateTimeOffset createdAt, string vectorStoreId, VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError)
-        {
-            Argument.AssertNotNull(fileId, nameof(fileId));
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-            FileId = fileId;
-            Size = size;
+        internal VectorStoreFileAssociation(string id, int usageBytes, DateTimeOffset createdAt, string vectorStoreId, VectorStores.VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError)
+        {
+            Id = id;
+            UsageBytes = usageBytes;
             CreatedAt = createdAt;
             VectorStoreId = vectorStoreId;
             Status = status;
             LastError = lastError;
         }
 
-        internal VectorStoreFileAssociation(string fileId, InternalVectorStoreFileObjectObject @object, int size, DateTimeOffset createdAt, string vectorStoreId, VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError, FileChunkingStrategy chunkingStrategy, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStoreFileAssociation(string id, InternalVectorStoreFileObjectObject @object, int usageBytes, DateTimeOffset createdAt, string vectorStoreId, VectorStores.VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError, BinaryData chunkingStrategy, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            FileId = fileId;
+            Id = id;
             Object = @object;
-            Size = size;
+            UsageBytes = usageBytes;
             CreatedAt = createdAt;
             VectorStoreId = vectorStoreId;
             Status = status;
             LastError = lastError;
             ChunkingStrategy = chunkingStrategy;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal VectorStoreFileAssociation()
-        {
-        }
-        public DateTimeOffset CreatedAt { get; }
-        public string VectorStoreId { get; }
-        public VectorStoreFileAssociationStatus Status { get; }
-        public VectorStoreFileAssociationError LastError { get; }
+        public DateTimeOffset CreatedAt { get; set; }
+
+        public string VectorStoreId { get; set; }
+
+        public VectorStores.VectorStoreFileAssociationStatus Status { get; set; }
+
+        public VectorStoreFileAssociationError LastError { get; set; }
     }
 }

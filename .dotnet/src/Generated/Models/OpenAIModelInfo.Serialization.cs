@@ -7,51 +7,45 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Models
 {
     public partial class OpenAIModelInfo : IJsonModel<OpenAIModelInfo>
     {
+        internal OpenAIModelInfo()
+        {
+        }
+
         void IJsonModel<OpenAIModelInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<OpenAIModelInfo>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<OpenAIModelInfo>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(OpenAIModelInfo)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
+            writer.WritePropertyName("id"u8);
+            writer.WriteStringValue(Id);
+            writer.WritePropertyName("created"u8);
+            writer.WriteNumberValue(Created, "U");
+            writer.WritePropertyName("object"u8);
+            writer.WriteStringValue(object.ToString());
+            writer.WritePropertyName("owned_by"u8);
+            writer.WriteStringValue(OwnedBy);
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                writer.WritePropertyName("id"u8);
-                writer.WriteStringValue(Id);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("created") != true)
-            {
-                writer.WritePropertyName("created"u8);
-                writer.WriteNumberValue(CreatedAt, "U");
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
-            {
-                writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(Object.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("owned_by") != true)
-            {
-                writer.WritePropertyName("owned_by"u8);
-                writer.WriteStringValue(OwnedBy);
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -60,25 +54,23 @@ namespace OpenAI.Models
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        OpenAIModelInfo IJsonModel<OpenAIModelInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        OpenAIModelInfo IJsonModel<OpenAIModelInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual OpenAIModelInfo JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<OpenAIModelInfo>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<OpenAIModelInfo>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(OpenAIModelInfo)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeOpenAIModelInfo(document.RootElement, options);
         }
 
-        internal static OpenAIModelInfo DeserializeOpenAIModelInfo(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static OpenAIModelInfo DeserializeOpenAIModelInfo(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
@@ -87,44 +79,42 @@ namespace OpenAI.Models
             DateTimeOffset created = default;
             InternalModelObject @object = default;
             string ownedBy = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("id"u8))
+                if (prop.NameEquals("id"u8))
                 {
-                    id = property.Value.GetString();
+                    id = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("created"u8))
+                if (prop.NameEquals("created"u8))
                 {
-                    created = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    created = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("object"u8))
+                if (prop.NameEquals("object"u8))
                 {
-                    @object = new InternalModelObject(property.Value.GetString());
+                    @object = new InternalModelObject(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("owned_by"u8))
+                if (prop.NameEquals("owned_by"u8))
                 {
-                    ownedBy = property.Value.GetString();
+                    ownedBy = prop.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new OpenAIModelInfo(id, created, @object, ownedBy, serializedAdditionalRawData);
+            return new OpenAIModelInfo(id, created, @object, ownedBy, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<OpenAIModelInfo>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<OpenAIModelInfo>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<OpenAIModelInfo>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<OpenAIModelInfo>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -134,15 +124,16 @@ namespace OpenAI.Models
             }
         }
 
-        OpenAIModelInfo IPersistableModel<OpenAIModelInfo>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<OpenAIModelInfo>)this).GetFormatFromOptions(options) : options.Format;
+        OpenAIModelInfo IPersistableModel<OpenAIModelInfo>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual OpenAIModelInfo PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<OpenAIModelInfo>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeOpenAIModelInfo(document.RootElement, options);
                     }
                 default:
@@ -152,15 +143,16 @@ namespace OpenAI.Models
 
         string IPersistableModel<OpenAIModelInfo>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static OpenAIModelInfo FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(OpenAIModelInfo openAIModelInfo)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeOpenAIModelInfo(document.RootElement);
+            return BinaryContent.Create(openAIModelInfo, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator OpenAIModelInfo(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeOpenAIModelInfo(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

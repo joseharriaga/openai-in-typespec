@@ -7,46 +7,46 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalMessageContentTextObjectText : IJsonModel<InternalMessageContentTextObjectText>
     {
+        internal InternalMessageContentTextObjectText()
+        {
+        }
+
         void IJsonModel<InternalMessageContentTextObjectText>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalMessageContentTextObjectText>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalMessageContentTextObjectText>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalMessageContentTextObjectText)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("value") != true)
+            writer.WritePropertyName("value"u8);
+            writer.WriteStringValue(Value);
+            writer.WritePropertyName("annotations"u8);
+            writer.WriteStartArray();
+            foreach (var item in Annotations)
             {
-                writer.WritePropertyName("value"u8);
-                writer.WriteStringValue(Value);
+                writer.WriteObjectValue(item, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("annotations") != true)
+            writer.WriteEndArray();
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                writer.WritePropertyName("annotations"u8);
-                writer.WriteStartArray();
-                foreach (var item in Annotations)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    writer.WriteObjectValue(item, options);
-                }
-                writer.WriteEndArray();
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -55,64 +55,60 @@ namespace OpenAI.Assistants
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalMessageContentTextObjectText IJsonModel<InternalMessageContentTextObjectText>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalMessageContentTextObjectText IJsonModel<InternalMessageContentTextObjectText>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalMessageContentTextObjectText JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalMessageContentTextObjectText>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalMessageContentTextObjectText>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalMessageContentTextObjectText)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalMessageContentTextObjectText(document.RootElement, options);
         }
 
-        internal static InternalMessageContentTextObjectText DeserializeInternalMessageContentTextObjectText(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalMessageContentTextObjectText DeserializeInternalMessageContentTextObjectText(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             string value = default;
             IList<InternalMessageContentTextObjectAnnotation> annotations = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("value"u8))
+                if (prop.NameEquals("value"u8))
                 {
-                    value = property.Value.GetString();
+                    value = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("annotations"u8))
+                if (prop.NameEquals("annotations"u8))
                 {
                     List<InternalMessageContentTextObjectAnnotation> array = new List<InternalMessageContentTextObjectAnnotation>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
                         array.Add(InternalMessageContentTextObjectAnnotation.DeserializeInternalMessageContentTextObjectAnnotation(item, options));
                     }
                     annotations = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalMessageContentTextObjectText(value, annotations, serializedAdditionalRawData);
+            return new InternalMessageContentTextObjectText(value, annotations, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalMessageContentTextObjectText>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalMessageContentTextObjectText>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalMessageContentTextObjectText>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalMessageContentTextObjectText>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -122,15 +118,16 @@ namespace OpenAI.Assistants
             }
         }
 
-        InternalMessageContentTextObjectText IPersistableModel<InternalMessageContentTextObjectText>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalMessageContentTextObjectText>)this).GetFormatFromOptions(options) : options.Format;
+        InternalMessageContentTextObjectText IPersistableModel<InternalMessageContentTextObjectText>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalMessageContentTextObjectText PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalMessageContentTextObjectText>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalMessageContentTextObjectText(document.RootElement, options);
                     }
                 default:
@@ -140,15 +137,16 @@ namespace OpenAI.Assistants
 
         string IPersistableModel<InternalMessageContentTextObjectText>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalMessageContentTextObjectText FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalMessageContentTextObjectText internalMessageContentTextObjectText)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalMessageContentTextObjectText(document.RootElement);
+            return BinaryContent.Create(internalMessageContentTextObjectText, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalMessageContentTextObjectText(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalMessageContentTextObjectText(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

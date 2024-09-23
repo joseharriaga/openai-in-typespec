@@ -7,41 +7,44 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionRequestMessageContentPartImageImageUrl : IJsonModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>
     {
+        internal InternalChatCompletionRequestMessageContentPartImageImageUrl()
+        {
+        }
+
         void IJsonModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalChatCompletionRequestMessageContentPartImageImageUrl)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("url") != true)
-            {
-                writer.WritePropertyName("url"u8);
-                writer.WriteStringValue(Url);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("detail") != true && Optional.IsDefined(Detail))
+            writer.WritePropertyName("url"u8);
+            writer.WriteStringValue(Url.AbsoluteUri);
+            if (Optional.IsDefined(Detail))
             {
                 writer.WritePropertyName("detail"u8);
                 writer.WriteStringValue(Detail.Value.ToString());
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -50,63 +53,60 @@ namespace OpenAI.Chat
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalChatCompletionRequestMessageContentPartImageImageUrl IJsonModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalChatCompletionRequestMessageContentPartImageImageUrl IJsonModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalChatCompletionRequestMessageContentPartImageImageUrl JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalChatCompletionRequestMessageContentPartImageImageUrl)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalChatCompletionRequestMessageContentPartImageImageUrl(document.RootElement, options);
         }
 
-        internal static InternalChatCompletionRequestMessageContentPartImageImageUrl DeserializeInternalChatCompletionRequestMessageContentPartImageImageUrl(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalChatCompletionRequestMessageContentPartImageImageUrl DeserializeInternalChatCompletionRequestMessageContentPartImageImageUrl(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            string url = default;
+            Uri url = default;
             ChatImageDetailLevel? detail = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("url"u8))
+                if (prop.NameEquals("url"u8))
                 {
-                    url = property.Value.GetString();
+                    url = new Uri(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("detail"u8))
+                if (prop.NameEquals("detail"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        detail = null;
                         continue;
                     }
-                    detail = new ChatImageDetailLevel(property.Value.GetString());
+                    detail = new ChatImageDetailLevel(prop.Value.GetString());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalChatCompletionRequestMessageContentPartImageImageUrl(url, detail, serializedAdditionalRawData);
+            return new InternalChatCompletionRequestMessageContentPartImageImageUrl(url, detail, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -116,15 +116,16 @@ namespace OpenAI.Chat
             }
         }
 
-        InternalChatCompletionRequestMessageContentPartImageImageUrl IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>)this).GetFormatFromOptions(options) : options.Format;
+        InternalChatCompletionRequestMessageContentPartImageImageUrl IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalChatCompletionRequestMessageContentPartImageImageUrl PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalChatCompletionRequestMessageContentPartImageImageUrl(document.RootElement, options);
                     }
                 default:
@@ -134,15 +135,16 @@ namespace OpenAI.Chat
 
         string IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalChatCompletionRequestMessageContentPartImageImageUrl FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalChatCompletionRequestMessageContentPartImageImageUrl internalChatCompletionRequestMessageContentPartImageImageUrl)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalChatCompletionRequestMessageContentPartImageImageUrl(document.RootElement);
+            return BinaryContent.Create(internalChatCompletionRequestMessageContentPartImageImageUrl, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalChatCompletionRequestMessageContentPartImageImageUrl(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalChatCompletionRequestMessageContentPartImageImageUrl(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

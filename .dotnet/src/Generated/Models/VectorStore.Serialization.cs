@@ -7,61 +7,50 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.VectorStores
 {
     public partial class VectorStore : IJsonModel<VectorStore>
     {
+        internal VectorStore()
+        {
+        }
+
         void IJsonModel<VectorStore>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStore>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<VectorStore>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(VectorStore)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
-            {
-                writer.WritePropertyName("id"u8);
-                writer.WriteStringValue(Id);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
-            {
-                writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(Object.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("created_at") != true)
-            {
-                writer.WritePropertyName("created_at"u8);
-                writer.WriteNumberValue(CreatedAt, "U");
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("name") != true)
-            {
-                writer.WritePropertyName("name"u8);
-                writer.WriteStringValue(Name);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("usage_bytes") != true)
-            {
-                writer.WritePropertyName("usage_bytes"u8);
-                writer.WriteNumberValue(UsageBytes);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("file_counts") != true)
-            {
-                writer.WritePropertyName("file_counts"u8);
-                writer.WriteObjectValue(FileCounts, options);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("status") != true)
-            {
-                writer.WritePropertyName("status"u8);
-                writer.WriteStringValue(Status.ToSerialString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("expires_after") != true && Optional.IsDefined(ExpirationPolicy))
+            writer.WritePropertyName("id"u8);
+            writer.WriteStringValue(Id);
+            writer.WritePropertyName("object"u8);
+            writer.WriteStringValue(object.ToString());
+            writer.WritePropertyName("created_at"u8);
+            writer.WriteNumberValue(CreatedAt, "U");
+            writer.WritePropertyName("name"u8);
+            writer.WriteStringValue(Name);
+            writer.WritePropertyName("usage_bytes"u8);
+            writer.WriteNumberValue(UsageBytes);
+            writer.WritePropertyName("file_counts"u8);
+            writer.WriteObjectValue(FileCounts, options);
+            writer.WritePropertyName("status"u8);
+            writer.WriteStringValue(Status.ToSerialString());
+            if (Optional.IsDefined(ExpiresAfter))
             {
                 writer.WritePropertyName("expires_after"u8);
-                writer.WriteObjectValue<VectorStoreExpirationPolicy>(ExpirationPolicy, options);
+                writer.WriteObjectValue<VectorStoreExpirationPolicy>(ExpiresAfter, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("expires_at") != true && Optional.IsDefined(ExpiresAt))
+            if (Optional.IsDefined(ExpiresAt))
             {
                 if (ExpiresAt != null)
                 {
@@ -70,50 +59,45 @@ namespace OpenAI.VectorStores
                 }
                 else
                 {
-                    writer.WriteNull("expires_at");
+                    writer.WriteNull("expiresAt"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("last_active_at") != true)
+            if (LastActiveAt != null)
             {
-                if (LastActiveAt != null)
-                {
-                    writer.WritePropertyName("last_active_at"u8);
-                    writer.WriteNumberValue(LastActiveAt.Value, "U");
-                }
-                else
-                {
-                    writer.WriteNull("last_active_at");
-                }
+                writer.WritePropertyName("last_active_at"u8);
+                writer.WriteNumberValue(LastActiveAt.Value, "U");
             }
-            if (SerializedAdditionalRawData?.ContainsKey("metadata") != true)
+            else
             {
-                if (Metadata != null && Optional.IsCollectionDefined(Metadata))
+                writer.WriteNull("lastActiveAt"u8);
+            }
+            if (Metadata != null && Optional.IsCollectionDefined(Metadata))
+            {
+                writer.WritePropertyName("metadata"u8);
+                writer.WriteStartObject();
+                foreach (var item in Metadata)
                 {
-                    writer.WritePropertyName("metadata"u8);
-                    writer.WriteStartObject();
-                    foreach (var item in Metadata)
+                    writer.WritePropertyName(item.Key);
+                    if (item.Value == null)
                     {
-                        writer.WritePropertyName(item.Key);
-                        writer.WriteStringValue(item.Value);
-                    }
-                    writer.WriteEndObject();
-                }
-                else
-                {
-                    writer.WriteNull("metadata");
-                }
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
+                        writer.WriteNullValue();
                         continue;
                     }
+                    writer.WriteStringValue(item.Value);
+                }
+                writer.WriteEndObject();
+            }
+            else
+            {
+                writer.WriteNull("metadata"u8);
+            }
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            {
+                foreach (var item in _additionalBinaryDataProperties)
+                {
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -122,25 +106,23 @@ namespace OpenAI.VectorStores
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        VectorStore IJsonModel<VectorStore>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        VectorStore IJsonModel<VectorStore>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual VectorStore JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStore>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<VectorStore>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(VectorStore)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeVectorStore(document.RootElement, options);
         }
 
-        internal static VectorStore DeserializeVectorStore(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static VectorStore DeserializeVectorStore(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
@@ -151,101 +133,106 @@ namespace OpenAI.VectorStores
             string name = default;
             int usageBytes = default;
             VectorStoreFileCounts fileCounts = default;
-            VectorStoreStatus status = default;
+            VectorStores.VectorStoreStatus status = default;
             VectorStoreExpirationPolicy expiresAfter = default;
             DateTimeOffset? expiresAt = default;
             DateTimeOffset? lastActiveAt = default;
-            IReadOnlyDictionary<string, string> metadata = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, string> metadata = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("id"u8))
+                if (prop.NameEquals("id"u8))
                 {
-                    id = property.Value.GetString();
+                    id = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("object"u8))
+                if (prop.NameEquals("object"u8))
                 {
-                    @object = new InternalVectorStoreObjectObject(property.Value.GetString());
+                    @object = new InternalVectorStoreObjectObject(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("created_at"u8))
+                if (prop.NameEquals("created_at"u8))
                 {
-                    createdAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    createdAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("name"u8))
+                if (prop.NameEquals("name"u8))
                 {
-                    name = property.Value.GetString();
+                    name = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("usage_bytes"u8))
+                if (prop.NameEquals("usage_bytes"u8))
                 {
-                    usageBytes = property.Value.GetInt32();
+                    usageBytes = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("file_counts"u8))
+                if (prop.NameEquals("file_counts"u8))
                 {
-                    fileCounts = VectorStoreFileCounts.DeserializeVectorStoreFileCounts(property.Value, options);
+                    fileCounts = VectorStoreFileCounts.DeserializeVectorStoreFileCounts(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("status"u8))
+                if (prop.NameEquals("status"u8))
                 {
-                    status = property.Value.GetString().ToVectorStoreStatus();
+                    status = prop.Value.GetString().ToVectorStoreStatus();
                     continue;
                 }
-                if (property.NameEquals("expires_after"u8))
+                if (prop.NameEquals("expires_after"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        expiresAfter = null;
                         continue;
                     }
-                    expiresAfter = VectorStoreExpirationPolicy.DeserializeVectorStoreExpirationPolicy(property.Value, options);
+                    expiresAfter = VectorStoreExpirationPolicy.DeserializeVectorStoreExpirationPolicy(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("expires_at"u8))
+                if (prop.NameEquals("expires_at"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         expiresAt = null;
                         continue;
                     }
-                    expiresAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    expiresAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("last_active_at"u8))
+                if (prop.NameEquals("last_active_at"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         lastActiveAt = null;
                         continue;
                     }
-                    lastActiveAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    lastActiveAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("metadata"u8))
+                if (prop.NameEquals("metadata"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         metadata = new ChangeTrackingDictionary<string, string>();
                         continue;
                     }
                     Dictionary<string, string> dictionary = new Dictionary<string, string>();
-                    foreach (var property0 in property.Value.EnumerateObject())
+                    foreach (var prop0 in prop.Value.EnumerateObject())
                     {
-                        dictionary.Add(property0.Name, property0.Value.GetString());
+                        if (prop0.Value.ValueKind == JsonValueKind.Null)
+                        {
+                            dictionary.Add(prop0.Name, null);
+                        }
+                        else
+                        {
+                            dictionary.Add(prop0.Name, prop0.Value.GetString());
+                        }
                     }
                     metadata = dictionary;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new VectorStore(
                 id,
                 @object,
@@ -258,13 +245,14 @@ namespace OpenAI.VectorStores
                 expiresAt,
                 lastActiveAt,
                 metadata,
-                serializedAdditionalRawData);
+                additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<VectorStore>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStore>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<VectorStore>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<VectorStore>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -274,15 +262,16 @@ namespace OpenAI.VectorStores
             }
         }
 
-        VectorStore IPersistableModel<VectorStore>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<VectorStore>)this).GetFormatFromOptions(options) : options.Format;
+        VectorStore IPersistableModel<VectorStore>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual VectorStore PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<VectorStore>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeVectorStore(document.RootElement, options);
                     }
                 default:
@@ -292,15 +281,16 @@ namespace OpenAI.VectorStores
 
         string IPersistableModel<VectorStore>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static VectorStore FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(VectorStore vectorStore)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeVectorStore(document.RootElement);
+            return BinaryContent.Create(vectorStore, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator VectorStore(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeVectorStore(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

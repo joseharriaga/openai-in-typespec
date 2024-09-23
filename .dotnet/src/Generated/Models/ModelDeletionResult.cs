@@ -9,26 +9,22 @@ namespace OpenAI.Models
 {
     public partial class ModelDeletionResult
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal ModelDeletionResult(string modelId, bool deleted)
-        {
-            Argument.AssertNotNull(modelId, nameof(modelId));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-            ModelId = modelId;
+        internal ModelDeletionResult(string id, bool deleted)
+        {
+            Id = id;
             Deleted = deleted;
         }
 
-        internal ModelDeletionResult(string modelId, bool deleted, InternalDeleteModelResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ModelDeletionResult(string id, bool deleted, InternalDeleteModelResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            ModelId = modelId;
+            Id = id;
             Deleted = deleted;
             Object = @object;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal ModelDeletionResult()
-        {
-        }
-        public bool Deleted { get; }
+        public bool Deleted { get; set; }
     }
 }

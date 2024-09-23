@@ -7,43 +7,43 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Chat;
 
 namespace OpenAI
 {
     internal partial class InternalFunctionDefinition : IJsonModel<InternalFunctionDefinition>
     {
+        internal InternalFunctionDefinition()
+        {
+        }
+
         void IJsonModel<InternalFunctionDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalFunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalFunctionDefinition)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("description") != true && Optional.IsDefined(Description))
+            if (Optional.IsDefined(Description))
             {
                 writer.WritePropertyName("description"u8);
                 writer.WriteStringValue(Description);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("name") != true)
-            {
-                writer.WritePropertyName("name"u8);
-                writer.WriteStringValue(Name);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("parameters") != true && Optional.IsDefined(Parameters))
+            writer.WritePropertyName("name"u8);
+            writer.WriteStringValue(Name);
+            if (Optional.IsDefined(Parameters))
             {
                 writer.WritePropertyName("parameters"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(Parameters);
-#else
-                using (JsonDocument document = JsonDocument.Parse(Parameters))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteObjectValue(Parameters, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("strict") != true && Optional.IsDefined(Strict))
+            if (Optional.IsDefined(Strict))
             {
                 if (Strict != null)
                 {
@@ -52,20 +52,16 @@ namespace OpenAI
                 }
                 else
                 {
-                    writer.WriteNull("strict");
+                    writer.WriteNull("strict"u8);
                 }
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -74,80 +70,82 @@ namespace OpenAI
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalFunctionDefinition IJsonModel<InternalFunctionDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalFunctionDefinition IJsonModel<InternalFunctionDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalFunctionDefinition JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalFunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalFunctionDefinition)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalFunctionDefinition(document.RootElement, options);
         }
 
-        internal static InternalFunctionDefinition DeserializeInternalFunctionDefinition(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalFunctionDefinition DeserializeInternalFunctionDefinition(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             string description = default;
             string name = default;
-            BinaryData parameters = default;
+            InternalFunctionParameters parameters = default;
             bool? strict = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("description"u8))
+                if (prop.NameEquals("description"u8))
                 {
-                    description = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("name"u8))
-                {
-                    name = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("parameters"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        description = null;
                         continue;
                     }
-                    parameters = BinaryData.FromString(property.Value.GetRawText());
+                    description = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("strict"u8))
+                if (prop.NameEquals("name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    name = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("parameters"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        parameters = null;
+                        continue;
+                    }
+                    parameters = InternalFunctionParameters.DeserializeInternalFunctionParameters(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("strict"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         strict = null;
                         continue;
                     }
-                    strict = property.Value.GetBoolean();
+                    strict = prop.Value.GetBoolean();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalFunctionDefinition(description, name, parameters, strict, serializedAdditionalRawData);
+            return new InternalFunctionDefinition(description, name, parameters, strict, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalFunctionDefinition>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalFunctionDefinition>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalFunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -157,15 +155,16 @@ namespace OpenAI
             }
         }
 
-        InternalFunctionDefinition IPersistableModel<InternalFunctionDefinition>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
+        InternalFunctionDefinition IPersistableModel<InternalFunctionDefinition>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalFunctionDefinition PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalFunctionDefinition>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalFunctionDefinition(document.RootElement, options);
                     }
                 default:
@@ -175,15 +174,16 @@ namespace OpenAI
 
         string IPersistableModel<InternalFunctionDefinition>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalFunctionDefinition FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalFunctionDefinition internalFunctionDefinition)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalFunctionDefinition(document.RootElement);
+            return BinaryContent.Create(internalFunctionDefinition, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalFunctionDefinition(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalFunctionDefinition(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

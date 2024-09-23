@@ -7,65 +7,65 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
     internal partial class InternalCreateChatCompletionStreamResponseChoiceLogprobs : IJsonModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>
     {
+        internal InternalCreateChatCompletionStreamResponseChoiceLogprobs()
+        {
+        }
+
         void IJsonModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalCreateChatCompletionStreamResponseChoiceLogprobs)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("content") != true)
+            if (Content != null && Optional.IsCollectionDefined(Content))
             {
-                if (Content != null && Optional.IsCollectionDefined(Content))
+                writer.WritePropertyName("content"u8);
+                writer.WriteStartArray();
+                foreach (var item in Content)
                 {
-                    writer.WritePropertyName("content"u8);
-                    writer.WriteStartArray();
-                    foreach (var item in Content)
-                    {
-                        writer.WriteObjectValue(item, options);
-                    }
-                    writer.WriteEndArray();
+                    writer.WriteObjectValue(item, options);
                 }
-                else
-                {
-                    writer.WriteNull("content");
-                }
+                writer.WriteEndArray();
             }
-            if (SerializedAdditionalRawData?.ContainsKey("refusal") != true)
+            else
             {
-                if (Refusal != null && Optional.IsCollectionDefined(Refusal))
-                {
-                    writer.WritePropertyName("refusal"u8);
-                    writer.WriteStartArray();
-                    foreach (var item in Refusal)
-                    {
-                        writer.WriteObjectValue(item, options);
-                    }
-                    writer.WriteEndArray();
-                }
-                else
-                {
-                    writer.WriteNull("refusal");
-                }
+                writer.WriteNull("content"u8);
             }
-            if (SerializedAdditionalRawData != null)
+            if (Refusal != null && Optional.IsCollectionDefined(Refusal))
             {
-                foreach (var item in SerializedAdditionalRawData)
+                writer.WritePropertyName("refusal"u8);
+                writer.WriteStartArray();
+                foreach (var item in Refusal)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
+            }
+            else
+            {
+                writer.WriteNull("refusal"u8);
+            }
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            {
+                foreach (var item in _additionalBinaryDataProperties)
+                {
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -74,79 +74,75 @@ namespace OpenAI.Chat
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalCreateChatCompletionStreamResponseChoiceLogprobs IJsonModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalCreateChatCompletionStreamResponseChoiceLogprobs IJsonModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalCreateChatCompletionStreamResponseChoiceLogprobs JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalCreateChatCompletionStreamResponseChoiceLogprobs)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalCreateChatCompletionStreamResponseChoiceLogprobs(document.RootElement, options);
         }
 
-        internal static InternalCreateChatCompletionStreamResponseChoiceLogprobs DeserializeInternalCreateChatCompletionStreamResponseChoiceLogprobs(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalCreateChatCompletionStreamResponseChoiceLogprobs DeserializeInternalCreateChatCompletionStreamResponseChoiceLogprobs(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            IReadOnlyList<ChatTokenLogProbabilityDetails> content = default;
-            IReadOnlyList<ChatTokenLogProbabilityDetails> refusal = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IList<ChatTokenLogProbabilityDetails> content = default;
+            IList<ChatTokenLogProbabilityDetails> refusal = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("content"u8))
+                if (prop.NameEquals("content"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         content = new ChangeTrackingList<ChatTokenLogProbabilityDetails>();
                         continue;
                     }
                     List<ChatTokenLogProbabilityDetails> array = new List<ChatTokenLogProbabilityDetails>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
                         array.Add(ChatTokenLogProbabilityDetails.DeserializeChatTokenLogProbabilityDetails(item, options));
                     }
                     content = array;
                     continue;
                 }
-                if (property.NameEquals("refusal"u8))
+                if (prop.NameEquals("refusal"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         refusal = new ChangeTrackingList<ChatTokenLogProbabilityDetails>();
                         continue;
                     }
                     List<ChatTokenLogProbabilityDetails> array = new List<ChatTokenLogProbabilityDetails>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
                         array.Add(ChatTokenLogProbabilityDetails.DeserializeChatTokenLogProbabilityDetails(item, options));
                     }
                     refusal = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalCreateChatCompletionStreamResponseChoiceLogprobs(content, refusal, serializedAdditionalRawData);
+            return new InternalCreateChatCompletionStreamResponseChoiceLogprobs(content, refusal, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -156,15 +152,16 @@ namespace OpenAI.Chat
             }
         }
 
-        InternalCreateChatCompletionStreamResponseChoiceLogprobs IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
+        InternalCreateChatCompletionStreamResponseChoiceLogprobs IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalCreateChatCompletionStreamResponseChoiceLogprobs PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalCreateChatCompletionStreamResponseChoiceLogprobs(document.RootElement, options);
                     }
                 default:
@@ -174,15 +171,16 @@ namespace OpenAI.Chat
 
         string IPersistableModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalCreateChatCompletionStreamResponseChoiceLogprobs FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalCreateChatCompletionStreamResponseChoiceLogprobs internalCreateChatCompletionStreamResponseChoiceLogprobs)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalCreateChatCompletionStreamResponseChoiceLogprobs(document.RootElement);
+            return BinaryContent.Create(internalCreateChatCompletionStreamResponseChoiceLogprobs, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalCreateChatCompletionStreamResponseChoiceLogprobs(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalCreateChatCompletionStreamResponseChoiceLogprobs(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

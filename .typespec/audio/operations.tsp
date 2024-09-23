@@ -23,7 +23,7 @@ interface Audio {
       /** chunked */
       @header("Transfer-Encoding") transferEncoding?: string;
       @header contentType: "application/octet-stream";
-      @body @encode("binary") responseBody: bytes;
+      @body responseBody: bytes;
     };
 
   @route("transcriptions")

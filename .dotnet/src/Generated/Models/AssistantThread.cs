@@ -9,34 +9,30 @@ namespace OpenAI.Assistants
 {
     public partial class AssistantThread
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal AssistantThread(string id, DateTimeOffset createdAt, ToolResources toolResources, IReadOnlyDictionary<string, string> metadata)
-        {
-            Argument.AssertNotNull(id, nameof(id));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
+        internal AssistantThread(string id, DateTimeOffset createdAt, InternalThreadObjectToolResources toolResources, IDictionary<string, string> metadata)
+        {
             Id = id;
             CreatedAt = createdAt;
             ToolResources = toolResources;
             Metadata = metadata;
         }
 
-        internal AssistantThread(string id, InternalThreadObjectObject @object, DateTimeOffset createdAt, ToolResources toolResources, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AssistantThread(string id, InternalThreadObjectObject @object, DateTimeOffset createdAt, InternalThreadObjectToolResources toolResources, IDictionary<string, string> metadata, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             Object = @object;
             CreatedAt = createdAt;
             ToolResources = toolResources;
             Metadata = metadata;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal AssistantThread()
-        {
-        }
+        public string Id { get; set; }
 
-        public string Id { get; }
+        public DateTimeOffset CreatedAt { get; set; }
 
-        public DateTimeOffset CreatedAt { get; }
-        public IReadOnlyDictionary<string, string> Metadata { get; }
+        public IDictionary<string, string> Metadata { get; set; }
     }
 }

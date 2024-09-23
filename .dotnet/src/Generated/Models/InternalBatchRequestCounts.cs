@@ -9,7 +9,8 @@ namespace OpenAI.Batch
 {
     internal partial class InternalBatchRequestCounts
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalBatchRequestCounts(int total, int completed, int failed)
         {
             Total = total;
@@ -17,20 +18,18 @@ namespace OpenAI.Batch
             Failed = failed;
         }
 
-        internal InternalBatchRequestCounts(int total, int completed, int failed, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalBatchRequestCounts(int total, int completed, int failed, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Total = total;
             Completed = completed;
             Failed = failed;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalBatchRequestCounts()
-        {
-        }
+        public int Total { get; set; }
 
-        public int Total { get; }
-        public int Completed { get; }
-        public int Failed { get; }
+        public int Completed { get; set; }
+
+        public int Failed { get; set; }
     }
 }

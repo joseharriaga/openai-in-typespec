@@ -9,22 +9,19 @@ namespace OpenAI.Chat
 {
     public partial class StreamingChatToolCallUpdate
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal StreamingChatToolCallUpdate(int index, string id, ChatToolCallKind kind, InternalChatCompletionMessageToolCallChunkFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal StreamingChatToolCallUpdate(int index, string id, InternalChatCompletionMessageToolCallChunkType? @type, InternalChatCompletionMessageToolCallChunkFunction function, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Index = index;
             Id = id;
-            Kind = kind;
+            Type = @type;
             Function = function;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal StreamingChatToolCallUpdate()
-        {
-        }
+        public int Index { get; set; }
 
-        public int Index { get; }
-        public string Id { get; }
+        public string Id { get; set; }
     }
 }

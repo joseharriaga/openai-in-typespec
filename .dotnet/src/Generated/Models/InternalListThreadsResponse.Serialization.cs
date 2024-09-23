@@ -7,61 +7,52 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalListThreadsResponse : IJsonModel<InternalListThreadsResponse>
     {
+        internal InternalListThreadsResponse()
+        {
+        }
+
         void IJsonModel<InternalListThreadsResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalListThreadsResponse>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalListThreadsResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalListThreadsResponse)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
+            writer.WritePropertyName("object"u8);
+            writer.WriteStringValue(Object.ToString());
+            writer.WritePropertyName("data"u8);
+            writer.WriteStartArray();
+            foreach (var item in Data)
             {
-                writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(Object.ToString());
+                writer.WriteObjectValue(item, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("data") != true)
+            writer.WriteEndArray();
+            writer.WritePropertyName("first_id"u8);
+            writer.WriteStringValue(FirstId);
+            writer.WritePropertyName("last_id"u8);
+            writer.WriteStringValue(LastId);
+            writer.WritePropertyName("has_more"u8);
+            writer.WriteBooleanValue(HasMore);
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                writer.WritePropertyName("data"u8);
-                writer.WriteStartArray();
-                foreach (var item in Data)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    writer.WriteObjectValue(item, options);
-                }
-                writer.WriteEndArray();
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("first_id") != true)
-            {
-                writer.WritePropertyName("first_id"u8);
-                writer.WriteStringValue(FirstId);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("last_id") != true)
-            {
-                writer.WritePropertyName("last_id"u8);
-                writer.WriteStringValue(LastId);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("has_more") != true)
-            {
-                writer.WritePropertyName("has_more"u8);
-                writer.WriteBooleanValue(HasMore);
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -70,88 +61,84 @@ namespace OpenAI.Assistants
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalListThreadsResponse IJsonModel<InternalListThreadsResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalListThreadsResponse IJsonModel<InternalListThreadsResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalListThreadsResponse JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalListThreadsResponse>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalListThreadsResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalListThreadsResponse)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalListThreadsResponse(document.RootElement, options);
         }
 
-        internal static InternalListThreadsResponse DeserializeInternalListThreadsResponse(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalListThreadsResponse DeserializeInternalListThreadsResponse(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             InternalListThreadsResponseObject @object = default;
-            IReadOnlyList<AssistantThread> data = default;
+            IList<AssistantThread> data = default;
             string firstId = default;
             string lastId = default;
             bool hasMore = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("object"u8))
+                if (prop.NameEquals("object"u8))
                 {
-                    @object = new InternalListThreadsResponseObject(property.Value.GetString());
+                    @object = new InternalListThreadsResponseObject(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("data"u8))
+                if (prop.NameEquals("data"u8))
                 {
                     List<AssistantThread> array = new List<AssistantThread>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
                         array.Add(AssistantThread.DeserializeAssistantThread(item, options));
                     }
                     data = array;
                     continue;
                 }
-                if (property.NameEquals("first_id"u8))
+                if (prop.NameEquals("first_id"u8))
                 {
-                    firstId = property.Value.GetString();
+                    firstId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("last_id"u8))
+                if (prop.NameEquals("last_id"u8))
                 {
-                    lastId = property.Value.GetString();
+                    lastId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("has_more"u8))
+                if (prop.NameEquals("has_more"u8))
                 {
-                    hasMore = property.Value.GetBoolean();
+                    hasMore = prop.Value.GetBoolean();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new InternalListThreadsResponse(
                 @object,
                 data,
                 firstId,
                 lastId,
                 hasMore,
-                serializedAdditionalRawData);
+                additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalListThreadsResponse>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalListThreadsResponse>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalListThreadsResponse>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalListThreadsResponse>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -161,15 +148,16 @@ namespace OpenAI.Assistants
             }
         }
 
-        InternalListThreadsResponse IPersistableModel<InternalListThreadsResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalListThreadsResponse>)this).GetFormatFromOptions(options) : options.Format;
+        InternalListThreadsResponse IPersistableModel<InternalListThreadsResponse>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalListThreadsResponse PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalListThreadsResponse>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalListThreadsResponse(document.RootElement, options);
                     }
                 default:
@@ -179,15 +167,16 @@ namespace OpenAI.Assistants
 
         string IPersistableModel<InternalListThreadsResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalListThreadsResponse FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalListThreadsResponse internalListThreadsResponse)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalListThreadsResponse(document.RootElement);
+            return BinaryContent.Create(internalListThreadsResponse, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalListThreadsResponse(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalListThreadsResponse(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -4,17 +4,16 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Audio
 {
     public partial class AudioTranscription
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal AudioTranscription(string language, TimeSpan? duration, string text)
-        {
-            Argument.AssertNotNull(language, nameof(language));
-            Argument.AssertNotNull(text, nameof(text));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
+        internal AudioTranscription(string language, TimeSpan duration, string text)
+        {
             Language = language;
             Duration = duration;
             Text = text;
@@ -22,7 +21,7 @@ namespace OpenAI.Audio
             Segments = new ChangeTrackingList<TranscribedSegment>();
         }
 
-        internal AudioTranscription(InternalCreateTranscriptionResponseVerboseJsonTask task, string language, TimeSpan? duration, string text, IReadOnlyList<TranscribedWord> words, IReadOnlyList<TranscribedSegment> segments, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AudioTranscription(InternalCreateTranscriptionResponseVerboseJsonTask task, string language, TimeSpan duration, string text, IList<TranscribedWord> words, IList<TranscribedSegment> segments, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Task = task;
             Language = language;
@@ -30,16 +29,15 @@ namespace OpenAI.Audio
             Text = text;
             Words = words;
             Segments = segments;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal AudioTranscription()
-        {
-        }
+        public string Language { get; set; }
 
-        public string Language { get; }
-        public string Text { get; }
-        public IReadOnlyList<TranscribedWord> Words { get; }
-        public IReadOnlyList<TranscribedSegment> Segments { get; }
+        public string Text { get; set; }
+
+        public IList<TranscribedWord> Words { get; }
+
+        public IList<TranscribedSegment> Segments { get; }
     }
 }

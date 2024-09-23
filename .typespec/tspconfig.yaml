@@ -1,12 +1,13 @@
 emit:
   - "@typespec/openapi3"
-  - "@azure-tools/typespec-csharp"
+  - "@typespec/http-client-csharp"
 options:
   "@typespec/openapi3":
     output-file: "{project-root}/../.openapi3/openapi3-openai.yaml"
-  "@azure-tools/typespec-csharp":
-    emitter-output-dir: "{project-root}/../.dotnet/src"
+  "@typespec/http-client-csharp":
+    emitter-output-dir: "{project-root}/../.dotnet"
     unreferenced-types-handling: keepAll
     disable-xml-docs: true
     enable-internal-raw-data: true
+    save-inputs: true
     generate-model-factory: false

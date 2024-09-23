@@ -7,67 +7,64 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.FineTuning
 {
-    internal partial struct FineTuningJobHyperparameters : IJsonModel<FineTuningJobHyperparameters>, IJsonModel<object>
+    internal readonly partial struct FineTuningJobHyperparameters : IJsonModel<FineTuningJobHyperparameters>, IJsonModel<object>
     {
+        public FineTuningJobHyperparameters()
+        {
+        }
+
         void IJsonModel<FineTuningJobHyperparameters>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(FineTuningJobHyperparameters)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("n_epochs") != true)
-            {
-                writer.WritePropertyName("n_epochs"u8);
+            writer.WritePropertyName("n_epochs"u8);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(NEpochs);
+            writer.WriteRawValue(NEpochs);
 #else
-                using (JsonDocument document = JsonDocument.Parse(NEpochs))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("batch_size") != true)
+            using (JsonDocument document = JsonDocument.Parse(NEpochs))
             {
-                writer.WritePropertyName("batch_size"u8);
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
+            writer.WritePropertyName("batch_size"u8);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(BatchSize);
+            writer.WriteRawValue(BatchSize);
 #else
-                using (JsonDocument document = JsonDocument.Parse(BatchSize))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("learning_rate_multiplier") != true)
+            using (JsonDocument document = JsonDocument.Parse(BatchSize))
             {
-                writer.WritePropertyName("learning_rate_multiplier"u8);
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
+            writer.WritePropertyName("learning_rate_multiplier"u8);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(LearningRateMultiplier);
+            writer.WriteRawValue(LearningRateMultiplier);
 #else
-                using (JsonDocument document = JsonDocument.Parse(LearningRateMultiplier))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
-            }
-            if (SerializedAdditionalRawData != null)
+            using (JsonDocument document = JsonDocument.Parse(LearningRateMultiplier))
             {
-                foreach (var item in SerializedAdditionalRawData)
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            {
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -76,65 +73,61 @@ namespace OpenAI.FineTuning
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        FineTuningJobHyperparameters IJsonModel<FineTuningJobHyperparameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        FineTuningJobHyperparameters IJsonModel<FineTuningJobHyperparameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual FineTuningJobHyperparameters JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(FineTuningJobHyperparameters)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeFineTuningJobHyperparameters(document.RootElement, options);
         }
 
-        void IJsonModel<object>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options) => ((IJsonModel<FineTuningJobHyperparameters>)this).Write(writer, options);
-
-        object IJsonModel<object>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => ((IJsonModel<FineTuningJobHyperparameters>)this).Create(ref reader, options);
-
-        internal static FineTuningJobHyperparameters DeserializeFineTuningJobHyperparameters(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static FineTuningJobHyperparameters DeserializeFineTuningJobHyperparameters(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
             BinaryData nEpochs = default;
             BinaryData batchSize = default;
             BinaryData learningRateMultiplier = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("n_epochs"u8))
+                if (prop.NameEquals("n_epochs"u8))
                 {
-                    nEpochs = BinaryData.FromString(property.Value.GetRawText());
+                    nEpochs = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (property.NameEquals("batch_size"u8))
+                if (prop.NameEquals("batch_size"u8))
                 {
-                    batchSize = BinaryData.FromString(property.Value.GetRawText());
+                    batchSize = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (property.NameEquals("learning_rate_multiplier"u8))
+                if (prop.NameEquals("learning_rate_multiplier"u8))
                 {
-                    learningRateMultiplier = BinaryData.FromString(property.Value.GetRawText());
+                    learningRateMultiplier = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new FineTuningJobHyperparameters(nEpochs, batchSize, learningRateMultiplier, serializedAdditionalRawData);
+            return new FineTuningJobHyperparameters(nEpochs, batchSize, learningRateMultiplier, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<FineTuningJobHyperparameters>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<FineTuningJobHyperparameters>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -144,15 +137,16 @@ namespace OpenAI.FineTuning
             }
         }
 
-        FineTuningJobHyperparameters IPersistableModel<FineTuningJobHyperparameters>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options) : options.Format;
+        FineTuningJobHyperparameters IPersistableModel<FineTuningJobHyperparameters>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual FineTuningJobHyperparameters PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeFineTuningJobHyperparameters(document.RootElement, options);
                     }
                 default:
@@ -162,21 +156,26 @@ namespace OpenAI.FineTuning
 
         string IPersistableModel<FineTuningJobHyperparameters>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        BinaryData IPersistableModel<object>.Write(ModelReaderWriterOptions options) => ((IPersistableModel<FineTuningJobHyperparameters>)this).Write(options);
+        public static implicit operator BinaryContent(FineTuningJobHyperparameters fineTuningJobHyperparameters)
+        {
+            return BinaryContent.Create(fineTuningJobHyperparameters, ModelSerializationExtensions.WireOptions);
+        }
 
-        object IPersistableModel<object>.Create(BinaryData data, ModelReaderWriterOptions options) => ((IPersistableModel<FineTuningJobHyperparameters>)this).Create(data, options);
+        public static explicit operator FineTuningJobHyperparameters(ClientResult result)
+        {
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeFineTuningJobHyperparameters(document.RootElement, ModelSerializationExtensions.WireOptions);
+        }
+
+        void IJsonModel<object>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options) => ((IJsonModel<FineTuningJobHyperparameters>)this).Write(writer, options);
+
+        object IJsonModel<object>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => ((IJsonModel<FineTuningJobHyperparameters>)this).Create(ref reader, options);
+
+        BinaryData IPersistableModel<object>.Write(ModelReaderWriterOptions options) => ((IPersistableModel<FineTuningJobHyperparameters>)this).Write(options);
 
         string IPersistableModel<object>.GetFormatFromOptions(ModelReaderWriterOptions options) => ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options);
 
-        internal static FineTuningJobHyperparameters FromResponse(PipelineResponse response)
-        {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeFineTuningJobHyperparameters(document.RootElement);
-        }
-
-        internal BinaryContent ToBinaryContent()
-        {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
-        }
+        object IPersistableModel<object>.Create(BinaryData data, ModelReaderWriterOptions options) => ((IPersistableModel<FineTuningJobHyperparameters>)this).Create(data, options);
     }
 }

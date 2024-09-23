@@ -4,47 +4,54 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenAI.Chat
 {
     public partial class ChatCompletionOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatCompletionOptions(IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, float? frequencyPenalty, IDictionary<int, int> logitBiases, bool? includeLogProbabilities, int? topLogProbabilityCount, int? deprecatedMaxTokens, int? maxOutputTokenCount, int? n, float? presencePenalty, ChatResponseFormat responseFormat, long? seed, InternalCreateChatCompletionRequestServiceTier? serviceTier, IList<string> stopSequences, bool? stream, InternalChatCompletionStreamOptions streamOptions, float? temperature, float? topP, IList<ChatTool> tools, ChatToolChoice toolChoice, bool? parallelToolCallsEnabled, string endUserId, ChatFunctionChoice functionChoice, IList<ChatFunction> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatCompletionOptions(IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, float? frequencyPenalty, IDictionary<string, int> logitBias, bool? logprobs, int? topLogprobs, int? maxTokens, int? maxCompletionTokens, int? n, float? presencePenalty, ChatResponseFormat responseFormat, long? seed, InternalCreateChatCompletionRequestServiceTier? serviceTier, BinaryData stop, bool? stream, InternalChatCompletionStreamOptions streamOptions, float? temperature, float? topP, IList<ChatTool> tools, BinaryData toolChoice, bool? parallelToolCalls, string user, BinaryData functionCall, IList<ChatFunction> functions, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Messages = messages;
             Model = model;
             FrequencyPenalty = frequencyPenalty;
-            LogitBiases = logitBiases;
-            IncludeLogProbabilities = includeLogProbabilities;
-            TopLogProbabilityCount = topLogProbabilityCount;
-            _deprecatedMaxTokens = deprecatedMaxTokens;
-            MaxOutputTokenCount = maxOutputTokenCount;
+            LogitBias = logitBias;
+            Logprobs = logprobs;
+            TopLogprobs = topLogprobs;
+            MaxTokens = maxTokens;
+            MaxCompletionTokens = maxCompletionTokens;
             N = n;
             PresencePenalty = presencePenalty;
             ResponseFormat = responseFormat;
             Seed = seed;
-            _serviceTier = serviceTier;
-            StopSequences = stopSequences;
+            ServiceTier = serviceTier;
+            Stop = stop;
             Stream = stream;
             StreamOptions = streamOptions;
             Temperature = temperature;
             TopP = topP;
             Tools = tools;
             ToolChoice = toolChoice;
-            ParallelToolCallsEnabled = parallelToolCallsEnabled;
-            EndUserId = endUserId;
-            FunctionChoice = functionChoice;
+            ParallelToolCalls = parallelToolCalls;
+            User = user;
+            FunctionCall = functionCall;
             Functions = functions;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
+
         public float? FrequencyPenalty { get; set; }
+
         public float? PresencePenalty { get; set; }
+
         public ChatResponseFormat ResponseFormat { get; set; }
+
+        public InternalCreateChatCompletionRequestServiceTier? ServiceTier { get; set; }
+
         public float? Temperature { get; set; }
+
         public float? TopP { get; set; }
+
         public IList<ChatTool> Tools { get; }
     }
 }

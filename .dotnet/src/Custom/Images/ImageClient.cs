@@ -26,7 +26,7 @@ public partial class ImageClient
     private readonly string _model;
 
     // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="ImageClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ImageClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> or <paramref name="apiKey"/> is null. </exception>
@@ -36,7 +36,7 @@ public partial class ImageClient
     }
 
     // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="ImageClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ImageClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
@@ -50,7 +50,7 @@ public partial class ImageClient
     // - Added `model` parameter.
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="ImageClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ImageClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> or <paramref name="credential"/> is null. </exception>
@@ -63,7 +63,7 @@ public partial class ImageClient
     // - Added `model` parameter.
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="ImageClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ImageClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
@@ -85,7 +85,7 @@ public partial class ImageClient
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
     // - Made protected.
-    /// <summary> Initializes a new instance of <see cref="ImageClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ImageClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline to send and receive REST requests and responses. </param>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="options"> The options to configure the client. </param>

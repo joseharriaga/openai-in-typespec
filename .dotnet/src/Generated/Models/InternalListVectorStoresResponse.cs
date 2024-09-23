@@ -10,38 +10,34 @@ namespace OpenAI.VectorStores
 {
     internal partial class InternalListVectorStoresResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalListVectorStoresResponse(IEnumerable<VectorStore> data, string firstId, string lastId, bool hasMore)
         {
-            Argument.AssertNotNull(data, nameof(data));
-            Argument.AssertNotNull(firstId, nameof(firstId));
-            Argument.AssertNotNull(lastId, nameof(lastId));
-
             Data = data.ToList();
             FirstId = firstId;
             LastId = lastId;
             HasMore = hasMore;
         }
 
-        internal InternalListVectorStoresResponse(InternalListVectorStoresResponseObject @object, IReadOnlyList<VectorStore> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListVectorStoresResponse(InternalListVectorStoresResponseObject @object, IList<VectorStore> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Object = @object;
             Data = data;
             FirstId = firstId;
             LastId = lastId;
             HasMore = hasMore;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalListVectorStoresResponse()
-        {
-        }
+        public InternalListVectorStoresResponseObject Object { get; } = "list";
 
-        public InternalListVectorStoresResponseObject Object { get; } = InternalListVectorStoresResponseObject.List;
+        public IList<VectorStore> Data { get; }
 
-        public IReadOnlyList<VectorStore> Data { get; }
-        public string FirstId { get; }
-        public string LastId { get; }
-        public bool HasMore { get; }
+        public string FirstId { get; set; }
+
+        public string LastId { get; set; }
+
+        public bool HasMore { get; set; }
     }
 }

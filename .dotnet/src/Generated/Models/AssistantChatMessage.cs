@@ -9,13 +9,16 @@ namespace OpenAI.Chat
 {
     public partial class AssistantChatMessage : ChatMessage
     {
-        internal AssistantChatMessage(ChatMessageRole role, IList<ChatMessageContentPart> content, IDictionary<string, BinaryData> serializedAdditionalRawData, string refusal, string participantName, IList<ChatToolCall> toolCalls, ChatFunctionCall functionCall) : base(role, content, serializedAdditionalRawData)
+        internal AssistantChatMessage(BinaryData content, string refusal, string name, IList<ChatToolCall> toolCalls, ChatFunctionCall functionCall, string role, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, additionalBinaryDataProperties)
         {
+            Content = content;
             Refusal = refusal;
-            ParticipantName = participantName;
+            Name = name;
             ToolCalls = toolCalls;
             FunctionCall = functionCall;
         }
+
+        public BinaryData Content { get; set; }
 
         public string Refusal { get; set; }
     }

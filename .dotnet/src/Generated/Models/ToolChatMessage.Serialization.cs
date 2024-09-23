@@ -7,67 +7,97 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
     public partial class ToolChatMessage : IJsonModel<ToolChatMessage>
     {
-        ToolChatMessage IJsonModel<ToolChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        internal ToolChatMessage()
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
+        }
+
+        void IJsonModel<ToolChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
+            if (format != "J")
+            {
+                throw new FormatException($"The model {nameof(ToolChatMessage)} does not support writing '{format}' format.");
+            }
+            base.JsonModelWriteCore(writer, options);
+            writer.WritePropertyName("content"u8);
+#if NET6_0_OR_GREATER
+            writer.WriteRawValue(Content);
+#else
+            using (JsonDocument document = JsonDocument.Parse(Content))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
+            writer.WritePropertyName("tool_call_id"u8);
+            writer.WriteStringValue(ToolCallId);
+        }
+
+        ToolChatMessage IJsonModel<ToolChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ToolChatMessage)JsonModelCreateCore(ref reader, options);
+
+        protected override ChatMessage JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ToolChatMessage)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeToolChatMessage(document.RootElement, options);
         }
 
-        internal static ToolChatMessage DeserializeToolChatMessage(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ToolChatMessage DeserializeToolChatMessage(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
+            BinaryData content = default;
             string toolCallId = default;
-            ChatMessageRole role = default;
-            IList<ChatMessageContentPart> content = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string role = "tool";
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("tool_call_id"u8))
+                if (prop.NameEquals("content"u8))
                 {
-                    toolCallId = property.Value.GetString();
+                    content = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (property.NameEquals("role"u8))
+                if (prop.NameEquals("tool_call_id"u8))
                 {
-                    role = property.Value.GetString().ToChatMessageRole();
+                    toolCallId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("content"u8))
+                if (prop.NameEquals("role"u8))
                 {
-                    DeserializeContentValue(property, ref content);
+                    role = prop.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new ToolChatMessage(role, content ?? new ChangeTrackingList<ChatMessageContentPart>(), serializedAdditionalRawData, toolCallId);
+            return new ToolChatMessage(content, toolCallId, role, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<ToolChatMessage>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<ToolChatMessage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -77,15 +107,16 @@ namespace OpenAI.Chat
             }
         }
 
-        ToolChatMessage IPersistableModel<ToolChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
+        ToolChatMessage IPersistableModel<ToolChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options) => (ToolChatMessage)PersistableModelCreateCore(data, options);
 
+        protected override ChatMessage PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeToolChatMessage(document.RootElement, options);
                     }
                 default:
@@ -95,15 +126,16 @@ namespace OpenAI.Chat
 
         string IPersistableModel<ToolChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new ToolChatMessage FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(ToolChatMessage toolChatMessage)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeToolChatMessage(document.RootElement);
+            return BinaryContent.Create(toolChatMessage, ModelSerializationExtensions.WireOptions);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        public static explicit operator ToolChatMessage(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeToolChatMessage(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

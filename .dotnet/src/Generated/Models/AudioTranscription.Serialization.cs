@@ -7,41 +7,39 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Audio
 {
     public partial class AudioTranscription : IJsonModel<AudioTranscription>
     {
+        internal AudioTranscription()
+        {
+        }
+
         void IJsonModel<AudioTranscription>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AudioTranscription>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<AudioTranscription>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(AudioTranscription)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("task") != true)
-            {
-                writer.WritePropertyName("task"u8);
-                writer.WriteStringValue(Task.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("language") != true)
-            {
-                writer.WritePropertyName("language"u8);
-                writer.WriteStringValue(Language);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("duration") != true)
-            {
-                writer.WritePropertyName("duration"u8);
-                writer.WriteNumberValue(Convert.ToDouble(Duration.Value.ToString("s\\.FFF")));
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("text") != true)
-            {
-                writer.WritePropertyName("text"u8);
-                writer.WriteStringValue(Text);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("words") != true && Optional.IsCollectionDefined(Words))
+            writer.WritePropertyName("task"u8);
+            writer.WriteStringValue(Task.ToString());
+            writer.WritePropertyName("language"u8);
+            writer.WriteStringValue(Language);
+            writer.WritePropertyName("duration"u8);
+            writer.WriteNumberValue(Convert.ToDouble(Duration.ToString("s\\.FFF")));
+            writer.WritePropertyName("text"u8);
+            writer.WriteStringValue(Text);
+            if (Optional.IsCollectionDefined(Words))
             {
                 writer.WritePropertyName("words"u8);
                 writer.WriteStartArray();
@@ -51,7 +49,7 @@ namespace OpenAI.Audio
                 }
                 writer.WriteEndArray();
             }
-            if (SerializedAdditionalRawData?.ContainsKey("segments") != true && Optional.IsCollectionDefined(Segments))
+            if (Optional.IsCollectionDefined(Segments))
             {
                 writer.WritePropertyName("segments"u8);
                 writer.WriteStartArray();
@@ -61,17 +59,13 @@ namespace OpenAI.Audio
                 }
                 writer.WriteEndArray();
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -80,94 +74,89 @@ namespace OpenAI.Audio
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        AudioTranscription IJsonModel<AudioTranscription>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AudioTranscription IJsonModel<AudioTranscription>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual AudioTranscription JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AudioTranscription>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<AudioTranscription>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(AudioTranscription)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeAudioTranscription(document.RootElement, options);
         }
 
-        internal static AudioTranscription DeserializeAudioTranscription(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AudioTranscription DeserializeAudioTranscription(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             InternalCreateTranscriptionResponseVerboseJsonTask task = default;
             string language = default;
-            TimeSpan? duration = default;
+            TimeSpan duration = default;
             string text = default;
-            IReadOnlyList<TranscribedWord> words = default;
-            IReadOnlyList<TranscribedSegment> segments = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IList<TranscribedWord> words = default;
+            IList<TranscribedSegment> segments = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("task"u8))
+                if (prop.NameEquals("task"u8))
                 {
-                    task = new InternalCreateTranscriptionResponseVerboseJsonTask(property.Value.GetString());
+                    task = new InternalCreateTranscriptionResponseVerboseJsonTask(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("language"u8))
+                if (prop.NameEquals("language"u8))
                 {
-                    language = property.Value.GetString();
+                    language = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("duration"u8))
+                if (prop.NameEquals("duration"u8))
                 {
-                    duration = TimeSpan.FromSeconds(property.Value.GetDouble());
+                    duration = TimeSpan.FromSeconds(prop.Value.GetDouble());
                     continue;
                 }
-                if (property.NameEquals("text"u8))
+                if (prop.NameEquals("text"u8))
                 {
-                    text = property.Value.GetString();
+                    text = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("words"u8))
+                if (prop.NameEquals("words"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
                     List<TranscribedWord> array = new List<TranscribedWord>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
                         array.Add(TranscribedWord.DeserializeTranscribedWord(item, options));
                     }
                     words = array;
                     continue;
                 }
-                if (property.NameEquals("segments"u8))
+                if (prop.NameEquals("segments"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
                     List<TranscribedSegment> array = new List<TranscribedSegment>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
                         array.Add(TranscribedSegment.DeserializeTranscribedSegment(item, options));
                     }
                     segments = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new AudioTranscription(
                 task,
                 language,
@@ -175,13 +164,14 @@ namespace OpenAI.Audio
                 text,
                 words ?? new ChangeTrackingList<TranscribedWord>(),
                 segments ?? new ChangeTrackingList<TranscribedSegment>(),
-                serializedAdditionalRawData);
+                additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<AudioTranscription>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<AudioTranscription>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<AudioTranscription>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<AudioTranscription>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -191,15 +181,16 @@ namespace OpenAI.Audio
             }
         }
 
-        AudioTranscription IPersistableModel<AudioTranscription>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<AudioTranscription>)this).GetFormatFromOptions(options) : options.Format;
+        AudioTranscription IPersistableModel<AudioTranscription>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual AudioTranscription PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<AudioTranscription>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeAudioTranscription(document.RootElement, options);
                     }
                 default:
@@ -209,9 +200,16 @@ namespace OpenAI.Audio
 
         string IPersistableModel<AudioTranscription>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static implicit operator BinaryContent(AudioTranscription audioTranscription)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create(audioTranscription, ModelSerializationExtensions.WireOptions);
+        }
+
+        public static explicit operator AudioTranscription(ClientResult result)
+        {
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeAudioTranscription(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

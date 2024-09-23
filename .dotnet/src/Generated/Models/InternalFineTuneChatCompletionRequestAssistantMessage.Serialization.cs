@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 using OpenAI.Chat;
 
 namespace OpenAI.FineTuning
@@ -15,73 +16,26 @@ namespace OpenAI.FineTuning
     {
         void IJsonModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalFineTuneChatCompletionRequestAssistantMessage)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("refusal") != true && Optional.IsDefined(Refusal))
+            base.JsonModelWriteCore(writer, options);
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                if (Refusal != null)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    writer.WritePropertyName("refusal"u8);
-                    writer.WriteStringValue(Refusal);
-                }
-                else
-                {
-                    writer.WriteNull("refusal");
-                }
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("name") != true && Optional.IsDefined(ParticipantName))
-            {
-                writer.WritePropertyName("name"u8);
-                writer.WriteStringValue(ParticipantName);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("tool_calls") != true && Optional.IsCollectionDefined(ToolCalls))
-            {
-                writer.WritePropertyName("tool_calls"u8);
-                writer.WriteStartArray();
-                foreach (var item in ToolCalls)
-                {
-                    writer.WriteObjectValue<ChatToolCall>(item, options);
-                }
-                writer.WriteEndArray();
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("function_call") != true && Optional.IsDefined(FunctionCall))
-            {
-                if (FunctionCall != null)
-                {
-                    writer.WritePropertyName("function_call"u8);
-                    writer.WriteObjectValue<ChatFunctionCall>(FunctionCall, options);
-                }
-                else
-                {
-                    writer.WriteNull("function_call");
-                }
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("role") != true)
-            {
-                writer.WritePropertyName("role"u8);
-                writer.WriteStringValue(Role.ToSerialString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("content") != true && Optional.IsCollectionDefined(Content))
-            {
-                writer.WritePropertyName("content"u8);
-                SerializeContentValue(writer, options);
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -90,109 +44,117 @@ namespace OpenAI.FineTuning
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalFineTuneChatCompletionRequestAssistantMessage IJsonModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalFineTuneChatCompletionRequestAssistantMessage IJsonModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalFineTuneChatCompletionRequestAssistantMessage)JsonModelCreateCore(ref reader, options);
+
+        protected override ChatMessage JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalFineTuneChatCompletionRequestAssistantMessage)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalFineTuneChatCompletionRequestAssistantMessage(document.RootElement, options);
         }
 
-        internal static InternalFineTuneChatCompletionRequestAssistantMessage DeserializeInternalFineTuneChatCompletionRequestAssistantMessage(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalFineTuneChatCompletionRequestAssistantMessage DeserializeInternalFineTuneChatCompletionRequestAssistantMessage(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
+            BinaryData content = default;
             string refusal = default;
             string name = default;
             IList<ChatToolCall> toolCalls = default;
             ChatFunctionCall functionCall = default;
-            ChatMessageRole role = default;
-            IList<ChatMessageContentPart> content = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string role = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            IDictionary<string, BinaryData> additionalBinaryDataProperties0 = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("refusal"u8))
+                if (prop.NameEquals("content"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        content = null;
+                        continue;
+                    }
+                    content = BinaryData.FromString(prop.Value.GetRawText());
+                    continue;
+                }
+                if (prop.NameEquals("refusal"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         refusal = null;
                         continue;
                     }
-                    refusal = property.Value.GetString();
+                    refusal = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("name"u8))
+                if (prop.NameEquals("name"u8))
                 {
-                    name = property.Value.GetString();
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        name = null;
+                        continue;
+                    }
+                    name = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("tool_calls"u8))
+                if (prop.NameEquals("tool_calls"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
                     List<ChatToolCall> array = new List<ChatToolCall>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
                         array.Add(ChatToolCall.DeserializeChatToolCall(item, options));
                     }
                     toolCalls = array;
                     continue;
                 }
-                if (property.NameEquals("function_call"u8))
+                if (prop.NameEquals("function_call"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         functionCall = null;
                         continue;
                     }
-                    functionCall = ChatFunctionCall.DeserializeChatFunctionCall(property.Value, options);
+                    functionCall = ChatFunctionCall.DeserializeChatFunctionCall(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("role"u8))
+                if (prop.NameEquals("role"u8))
                 {
-                    role = property.Value.GetString().ToChatMessageRole();
+                    role = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("content"u8))
+                if (options.Format != "W")
                 {
-                    DeserializeContentValue(property, ref content);
-                    continue;
-                }
-                if (true)
-                {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties0.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new InternalFineTuneChatCompletionRequestAssistantMessage(
-                role,
-                content ?? new ChangeTrackingList<ChatMessageContentPart>(),
-                serializedAdditionalRawData,
+                content,
                 refusal,
                 name,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
-                functionCall);
+                functionCall,
+                role,
+                additionalBinaryDataProperties,
+                additionalBinaryDataProperties0);
         }
 
-        BinaryData IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -202,15 +164,16 @@ namespace OpenAI.FineTuning
             }
         }
 
-        InternalFineTuneChatCompletionRequestAssistantMessage IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
+        InternalFineTuneChatCompletionRequestAssistantMessage IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalFineTuneChatCompletionRequestAssistantMessage)PersistableModelCreateCore(data, options);
 
+        protected override ChatMessage PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalFineTuneChatCompletionRequestAssistantMessage(document.RootElement, options);
                     }
                 default:
@@ -220,15 +183,16 @@ namespace OpenAI.FineTuning
 
         string IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new InternalFineTuneChatCompletionRequestAssistantMessage FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalFineTuneChatCompletionRequestAssistantMessage internalFineTuneChatCompletionRequestAssistantMessage)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalFineTuneChatCompletionRequestAssistantMessage(document.RootElement);
+            return BinaryContent.Create(internalFineTuneChatCompletionRequestAssistantMessage, ModelSerializationExtensions.WireOptions);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        public static explicit operator InternalFineTuneChatCompletionRequestAssistantMessage(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalFineTuneChatCompletionRequestAssistantMessage(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -9,7 +9,8 @@ namespace OpenAI.Chat
 {
     internal partial class InternalCreateChatCompletionStreamResponseUsage
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalCreateChatCompletionStreamResponseUsage(int completionTokens, int promptTokens, int totalTokens)
         {
             CompletionTokens = completionTokens;
@@ -17,20 +18,18 @@ namespace OpenAI.Chat
             TotalTokens = totalTokens;
         }
 
-        internal InternalCreateChatCompletionStreamResponseUsage(int completionTokens, int promptTokens, int totalTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateChatCompletionStreamResponseUsage(int completionTokens, int promptTokens, int totalTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             CompletionTokens = completionTokens;
             PromptTokens = promptTokens;
             TotalTokens = totalTokens;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalCreateChatCompletionStreamResponseUsage()
-        {
-        }
+        public int CompletionTokens { get; set; }
 
-        public int CompletionTokens { get; }
-        public int PromptTokens { get; }
-        public int TotalTokens { get; }
+        public int PromptTokens { get; set; }
+
+        public int TotalTokens { get; set; }
     }
 }

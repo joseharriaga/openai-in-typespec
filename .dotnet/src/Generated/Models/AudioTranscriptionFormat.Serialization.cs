@@ -8,23 +8,38 @@ namespace OpenAI.Audio
 {
     internal static partial class AudioTranscriptionFormatExtensions
     {
-        public static string ToSerialString(this AudioTranscriptionFormat value) => value switch
+        public static string ToSerialString(this Audio.AudioTranscriptionFormat value) => value switch
         {
-            AudioTranscriptionFormat.Simple => "json",
-            AudioTranscriptionFormat.Text => "text",
-            AudioTranscriptionFormat.Srt => "srt",
-            AudioTranscriptionFormat.Verbose => "verbose_json",
-            AudioTranscriptionFormat.Vtt => "vtt",
+            Audio.AudioTranscriptionFormat.Simple => "json",
+            Audio.AudioTranscriptionFormat.Text => "text",
+            Audio.AudioTranscriptionFormat.Srt => "srt",
+            Audio.AudioTranscriptionFormat.Verbose => "verbose_json",
+            Audio.AudioTranscriptionFormat.Vtt => "vtt",
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown AudioTranscriptionFormat value.")
         };
 
-        public static AudioTranscriptionFormat ToAudioTranscriptionFormat(this string value)
+        public static Audio.AudioTranscriptionFormat ToAudioTranscriptionFormat(this string value)
         {
-            if (StringComparer.OrdinalIgnoreCase.Equals(value, "json")) return AudioTranscriptionFormat.Simple;
-            if (StringComparer.OrdinalIgnoreCase.Equals(value, "text")) return AudioTranscriptionFormat.Text;
-            if (StringComparer.OrdinalIgnoreCase.Equals(value, "srt")) return AudioTranscriptionFormat.Srt;
-            if (StringComparer.OrdinalIgnoreCase.Equals(value, "verbose_json")) return AudioTranscriptionFormat.Verbose;
-            if (StringComparer.OrdinalIgnoreCase.Equals(value, "vtt")) return AudioTranscriptionFormat.Vtt;
+            if (StringComparer.OrdinalIgnoreCase.Equals(value, "json"))
+            {
+                return Audio.AudioTranscriptionFormat.Simple;
+            }
+            if (StringComparer.OrdinalIgnoreCase.Equals(value, "text"))
+            {
+                return Audio.AudioTranscriptionFormat.Text;
+            }
+            if (StringComparer.OrdinalIgnoreCase.Equals(value, "srt"))
+            {
+                return Audio.AudioTranscriptionFormat.Srt;
+            }
+            if (StringComparer.OrdinalIgnoreCase.Equals(value, "verbose_json"))
+            {
+                return Audio.AudioTranscriptionFormat.Verbose;
+            }
+            if (StringComparer.OrdinalIgnoreCase.Equals(value, "vtt"))
+            {
+                return Audio.AudioTranscriptionFormat.Vtt;
+            }
             throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown AudioTranscriptionFormat value.");
         }
     }

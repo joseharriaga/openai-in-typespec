@@ -5,20 +5,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI;
 
 namespace OpenAI.FineTuning
 {
     internal partial class FineTuningJob
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal FineTuningJob(string id, DateTimeOffset createdAt, FineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, FineTuningJobHyperparameters hyperparameters, string model, string organizationId, IEnumerable<string> resultFiles, FineTuningJobStatus status, int? trainedTokens, string trainingFile, string validationFile, int seed)
         {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(model, nameof(model));
-            Argument.AssertNotNull(organizationId, nameof(organizationId));
-            Argument.AssertNotNull(resultFiles, nameof(resultFiles));
-            Argument.AssertNotNull(trainingFile, nameof(trainingFile));
-
             Id = id;
             CreatedAt = createdAt;
             Error = error;
@@ -36,7 +32,7 @@ namespace OpenAI.FineTuning
             Seed = seed;
         }
 
-        internal FineTuningJob(string userProvidedSuffix, string id, DateTimeOffset createdAt, FineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, FineTuningJobHyperparameters hyperparameters, string model, InternalFineTuningJobObject @object, string organizationId, IReadOnlyList<string> resultFiles, FineTuningJobStatus status, int? trainedTokens, string trainingFile, string validationFile, IReadOnlyList<InternalFineTuningIntegration> integrations, int seed, DateTimeOffset? estimatedFinish, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal FineTuningJob(string userProvidedSuffix, string id, DateTimeOffset createdAt, FineTuningJobError error, string fineTunedModel, DateTimeOffset? finishedAt, FineTuningJobHyperparameters hyperparameters, string model, InternalFineTuningJobObject @object, string organizationId, IList<string> resultFiles, FineTuningJobStatus status, int? trainedTokens, string trainingFile, string validationFile, IList<InternalFineTuningIntegration> integrations, int seed, DateTimeOffset? estimatedFinish, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             UserProvidedSuffix = userProvidedSuffix;
             Id = id;
@@ -56,31 +52,43 @@ namespace OpenAI.FineTuning
             Integrations = integrations;
             Seed = seed;
             EstimatedFinish = estimatedFinish;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal FineTuningJob()
-        {
-        }
+        public string UserProvidedSuffix { get; set; }
 
-        public string UserProvidedSuffix { get; }
-        public string Id { get; }
-        public DateTimeOffset CreatedAt { get; }
-        public FineTuningJobError Error { get; }
-        public string FineTunedModel { get; }
-        public DateTimeOffset? FinishedAt { get; }
-        public FineTuningJobHyperparameters Hyperparameters { get; }
-        public string Model { get; }
-        public InternalFineTuningJobObject Object { get; } = InternalFineTuningJobObject.FineTuningJob;
+        public string Id { get; set; }
 
-        public string OrganizationId { get; }
-        public IReadOnlyList<string> ResultFiles { get; }
-        public FineTuningJobStatus Status { get; }
-        public int? TrainedTokens { get; }
-        public string TrainingFile { get; }
-        public string ValidationFile { get; }
-        public IReadOnlyList<InternalFineTuningIntegration> Integrations { get; }
-        public int Seed { get; }
-        public DateTimeOffset? EstimatedFinish { get; }
+        public DateTimeOffset CreatedAt { get; set; }
+
+        public FineTuningJobError Error { get; set; }
+
+        public string FineTunedModel { get; set; }
+
+        public DateTimeOffset? FinishedAt { get; set; }
+
+        public FineTuningJobHyperparameters Hyperparameters { get; set; }
+
+        public string Model { get; set; }
+
+        public InternalFineTuningJobObject Object { get; } = "fine_tuning.job";
+
+        public string OrganizationId { get; set; }
+
+        public IList<string> ResultFiles { get; }
+
+        public FineTuningJobStatus Status { get; set; }
+
+        public int? TrainedTokens { get; set; }
+
+        public string TrainingFile { get; set; }
+
+        public string ValidationFile { get; set; }
+
+        public IList<InternalFineTuningIntegration> Integrations { get; set; }
+
+        public int Seed { get; set; }
+
+        public DateTimeOffset? EstimatedFinish { get; set; }
     }
 }

@@ -4,38 +4,35 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     public partial class RunStepFileSearchResult
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal RunStepFileSearchResult(string fileId, string fileName, float score)
         {
-            Argument.AssertNotNull(fileId, nameof(fileId));
-            Argument.AssertNotNull(fileName, nameof(fileName));
-
             FileId = fileId;
             FileName = fileName;
             Score = score;
             Content = new ChangeTrackingList<InternalRunStepDetailsToolCallsFileSearchResultObjectContent>();
         }
 
-        internal RunStepFileSearchResult(string fileId, string fileName, float score, IReadOnlyList<InternalRunStepDetailsToolCallsFileSearchResultObjectContent> content, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunStepFileSearchResult(string fileId, string fileName, float score, IList<InternalRunStepDetailsToolCallsFileSearchResultObjectContent> content, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             FileId = fileId;
             FileName = fileName;
             Score = score;
             Content = content;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal RunStepFileSearchResult()
-        {
-        }
+        public string FileId { get; set; }
 
-        public string FileId { get; }
-        public string FileName { get; }
-        public float Score { get; }
+        public string FileName { get; set; }
+
+        public float Score { get; set; }
     }
 }

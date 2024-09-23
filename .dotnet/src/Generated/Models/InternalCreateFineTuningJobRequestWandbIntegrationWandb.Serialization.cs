@@ -7,26 +7,33 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.FineTuning
 {
     internal partial class InternalCreateFineTuningJobRequestWandbIntegrationWandb : IJsonModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>
     {
+        internal InternalCreateFineTuningJobRequestWandbIntegrationWandb()
+        {
+        }
+
         void IJsonModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalCreateFineTuningJobRequestWandbIntegrationWandb)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("project") != true)
-            {
-                writer.WritePropertyName("project"u8);
-                writer.WriteStringValue(Project);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("name") != true && Optional.IsDefined(Name))
+            writer.WritePropertyName("project"u8);
+            writer.WriteStringValue(Project);
+            if (Optional.IsDefined(Name))
             {
                 if (Name != null)
                 {
@@ -35,10 +42,10 @@ namespace OpenAI.FineTuning
                 }
                 else
                 {
-                    writer.WriteNull("name");
+                    writer.WriteNull("name"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("entity") != true && Optional.IsDefined(Entity))
+            if (Optional.IsDefined(Entity))
             {
                 if (Entity != null)
                 {
@@ -47,30 +54,31 @@ namespace OpenAI.FineTuning
                 }
                 else
                 {
-                    writer.WriteNull("entity");
+                    writer.WriteNull("entity"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("tags") != true && Optional.IsCollectionDefined(Tags))
+            if (Optional.IsCollectionDefined(Tags))
             {
                 writer.WritePropertyName("tags"u8);
                 writer.WriteStartArray();
                 foreach (var item in Tags)
                 {
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
                     writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -79,25 +87,23 @@ namespace OpenAI.FineTuning
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalCreateFineTuningJobRequestWandbIntegrationWandb IJsonModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalCreateFineTuningJobRequestWandbIntegrationWandb IJsonModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalCreateFineTuningJobRequestWandbIntegrationWandb JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalCreateFineTuningJobRequestWandbIntegrationWandb)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalCreateFineTuningJobRequestWandbIntegrationWandb(document.RootElement, options);
         }
 
-        internal static InternalCreateFineTuningJobRequestWandbIntegrationWandb DeserializeInternalCreateFineTuningJobRequestWandbIntegrationWandb(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalCreateFineTuningJobRequestWandbIntegrationWandb DeserializeInternalCreateFineTuningJobRequestWandbIntegrationWandb(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
@@ -106,63 +112,68 @@ namespace OpenAI.FineTuning
             string name = default;
             string entity = default;
             IList<string> tags = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("project"u8))
+                if (prop.NameEquals("project"u8))
                 {
-                    project = property.Value.GetString();
+                    project = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("name"u8))
+                if (prop.NameEquals("name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         name = null;
                         continue;
                     }
-                    name = property.Value.GetString();
+                    name = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("entity"u8))
+                if (prop.NameEquals("entity"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         entity = null;
                         continue;
                     }
-                    entity = property.Value.GetString();
+                    entity = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("tags"u8))
+                if (prop.NameEquals("tags"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
                     List<string> array = new List<string>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(item.GetString());
+                        if (item.ValueKind == JsonValueKind.Null)
+                        {
+                            array.Add(null);
+                        }
+                        else
+                        {
+                            array.Add(item.GetString());
+                        }
                     }
                     tags = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalCreateFineTuningJobRequestWandbIntegrationWandb(project, name, entity, tags ?? new ChangeTrackingList<string>(), serializedAdditionalRawData);
+            return new InternalCreateFineTuningJobRequestWandbIntegrationWandb(project, name, entity, tags ?? new ChangeTrackingList<string>(), additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -172,15 +183,16 @@ namespace OpenAI.FineTuning
             }
         }
 
-        InternalCreateFineTuningJobRequestWandbIntegrationWandb IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>)this).GetFormatFromOptions(options) : options.Format;
+        InternalCreateFineTuningJobRequestWandbIntegrationWandb IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalCreateFineTuningJobRequestWandbIntegrationWandb PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalCreateFineTuningJobRequestWandbIntegrationWandb(document.RootElement, options);
                     }
                 default:
@@ -190,15 +202,16 @@ namespace OpenAI.FineTuning
 
         string IPersistableModel<InternalCreateFineTuningJobRequestWandbIntegrationWandb>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalCreateFineTuningJobRequestWandbIntegrationWandb FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalCreateFineTuningJobRequestWandbIntegrationWandb internalCreateFineTuningJobRequestWandbIntegrationWandb)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalCreateFineTuningJobRequestWandbIntegrationWandb(document.RootElement);
+            return BinaryContent.Create(internalCreateFineTuningJobRequestWandbIntegrationWandb, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalCreateFineTuningJobRequestWandbIntegrationWandb(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalCreateFineTuningJobRequestWandbIntegrationWandb(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

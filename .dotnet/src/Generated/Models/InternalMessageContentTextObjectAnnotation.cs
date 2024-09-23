@@ -9,15 +9,17 @@ namespace OpenAI.Assistants
 {
     internal abstract partial class InternalMessageContentTextObjectAnnotation
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        protected InternalMessageContentTextObjectAnnotation()
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        private protected InternalMessageContentTextObjectAnnotation(string @type)
         {
+            Type = @type;
         }
 
-        internal InternalMessageContentTextObjectAnnotation(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalMessageContentTextObjectAnnotation(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = type;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            Type = @type;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         internal string Type { get; set; }

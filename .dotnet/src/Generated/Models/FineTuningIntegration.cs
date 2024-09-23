@@ -9,15 +9,17 @@ namespace OpenAI.FineTuning
 {
     internal abstract partial class FineTuningIntegration
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        protected FineTuningIntegration()
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        private protected FineTuningIntegration(string @type)
         {
+            Type = @type;
         }
 
-        internal FineTuningIntegration(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal FineTuningIntegration(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = type;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            Type = @type;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         internal string Type { get; set; }

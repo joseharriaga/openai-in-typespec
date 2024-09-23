@@ -6,261 +6,219 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading.Tasks;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
-    // Data plane generated sub-client.
-    internal partial class InternalAssistantRunClient
+    public partial class InternalAssistantRunClient
     {
+        private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly ClientPipeline _pipeline;
-        private readonly Uri _endpoint;
-
-        public virtual ClientPipeline Pipeline => _pipeline;
 
         protected InternalAssistantRunClient()
         {
         }
 
-        public virtual async Task<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+        public ClientPipeline Pipeline { get; }
 
-            using PipelineMessage message = CreateGetRunsRequest(threadId, limit, order, after, before, options);
-            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        public virtual ClientResult CreateThreadAndRun(BinaryContent content, RequestOptions options)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateCreateThreadAndRunRequest(content, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual ClientResult GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+        public virtual async Task<ClientResult> CreateThreadAndRunAsync(BinaryContent content, RequestOptions options)
         {
-            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+            Argument.AssertNotNull(content, nameof(content));
 
-            using PipelineMessage message = CreateGetRunsRequest(threadId, limit, order, after, before, options);
-            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+            using PipelineMessage message = CreateCreateThreadAndRunRequest(content, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual async Task<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
+        public virtual ClientResult CreateRun(string thread_id, BinaryContent content, RequestOptions options)
         {
-            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-            Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(content, nameof(content));
 
-            using PipelineMessage message = CreateGetRunStepsRequest(threadId, runId, limit, order, after, before, options);
-            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+            using PipelineMessage message = CreateCreateRunRequest(thread_id, content, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual ClientResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
+        public virtual async Task<ClientResult> CreateRunAsync(string thread_id, BinaryContent content, RequestOptions options)
         {
-            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-            Argument.AssertNotNullOrEmpty(runId, nameof(runId));
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(content, nameof(content));
 
-            using PipelineMessage message = CreateGetRunStepsRequest(threadId, runId, limit, order, after, before, options);
-            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+            using PipelineMessage message = CreateCreateRunRequest(thread_id, content, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateCreateThreadAndRunRequest(BinaryContent content, RequestOptions options)
+        public virtual ClientResult ListRuns(string thread_id, int? limit, string order, string after, string before, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/threads/runs", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+
+            using PipelineMessage message = CreateListRunsRequest(thread_id, limit, order, after, before, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, RequestOptions options)
+        public virtual async Task<ClientResult> ListRunsAsync(string thread_id, int? limit, string order, string after, string before, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/threads/", false);
-            uri.AppendPath(threadId, true);
-            uri.AppendPath("/runs", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+
+            using PipelineMessage message = CreateListRunsRequest(thread_id, limit, order, after, before, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateGetRunsRequest(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+        public virtual ClientResult<InternalListRunsResponse> ListRuns(string thread_id, int? limit, RunCollectionOrder? order, string after, string before)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/threads/", false);
-            uri.AppendPath(threadId, true);
-            uri.AppendPath("/runs", false);
-            if (limit != null)
-            {
-                uri.AppendQuery("limit", limit.Value, true);
-            }
-            if (order != null)
-            {
-                uri.AppendQuery("order", order, true);
-            }
-            if (after != null)
-            {
-                uri.AppendQuery("after", after, true);
-            }
-            if (before != null)
-            {
-                uri.AppendQuery("before", before, true);
-            }
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+
+            ClientResult result = ListRuns(thread_id, limit, order.ToString(), after, before, null);
+            return ClientResult.FromValue((InternalListRunsResponse)result, result.GetRawResponse());
         }
 
-        internal PipelineMessage CreateGetRunRequest(string threadId, string runId, RequestOptions options)
+        public virtual async Task<ClientResult<InternalListRunsResponse>> ListRunsAsync(string thread_id, int? limit, RunCollectionOrder? order, string after, string before)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/threads/", false);
-            uri.AppendPath(threadId, true);
-            uri.AppendPath("/runs/", false);
-            uri.AppendPath(runId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+
+            ClientResult result = await ListRunsAsync(thread_id, limit, order.ToString(), after, before, null).ConfigureAwait(false);
+            return ClientResult.FromValue((InternalListRunsResponse)result, result.GetRawResponse());
         }
 
-        internal PipelineMessage CreateModifyRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
+        public virtual ClientResult GetRun(string thread_id, string run_id, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/threads/", false);
-            uri.AppendPath(threadId, true);
-            uri.AppendPath("/runs/", false);
-            uri.AppendPath(runId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+
+            using PipelineMessage message = CreateGetRunRequest(thread_id, run_id, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateCancelRunRequest(string threadId, string runId, RequestOptions options)
+        public virtual async Task<ClientResult> GetRunAsync(string thread_id, string run_id, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/threads/", false);
-            uri.AppendPath(threadId, true);
-            uri.AppendPath("/runs/", false);
-            uri.AppendPath(runId, true);
-            uri.AppendPath("/cancel", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+
+            using PipelineMessage message = CreateGetRunRequest(thread_id, run_id, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateSubmitToolOutputsToRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
+        public virtual ClientResult ModifyRun(string thread_id, string run_id, BinaryContent content, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "POST";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/threads/", false);
-            uri.AppendPath(threadId, true);
-            uri.AppendPath("/runs/", false);
-            uri.AppendPath(runId, true);
-            uri.AppendPath("/submit_tool_outputs", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateModifyRunRequest(thread_id, run_id, content, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateGetRunStepsRequest(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
+        public virtual async Task<ClientResult> ModifyRunAsync(string thread_id, string run_id, BinaryContent content, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/threads/", false);
-            uri.AppendPath(threadId, true);
-            uri.AppendPath("/runs/", false);
-            uri.AppendPath(runId, true);
-            uri.AppendPath("/steps", false);
-            if (limit != null)
-            {
-                uri.AppendQuery("limit", limit.Value, true);
-            }
-            if (order != null)
-            {
-                uri.AppendQuery("order", order, true);
-            }
-            if (after != null)
-            {
-                uri.AppendQuery("after", after, true);
-            }
-            if (before != null)
-            {
-                uri.AppendQuery("before", before, true);
-            }
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateModifyRunRequest(thread_id, run_id, content, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateGetRunStepRequest(string threadId, string runId, string stepId, RequestOptions options)
+        public virtual ClientResult CancelRun(string thread_id, string run_id, RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/threads/", false);
-            uri.AppendPath(threadId, true);
-            uri.AppendPath("/runs/", false);
-            uri.AppendPath(runId, true);
-            uri.AppendPath("/steps/", false);
-            uri.AppendPath(stepId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+
+            using PipelineMessage message = CreateCancelRunRequest(thread_id, run_id, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        private static PipelineMessageClassifier _pipelineMessageClassifier200;
-        private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
+        public virtual async Task<ClientResult> CancelRunAsync(string thread_id, string run_id, RequestOptions options)
+        {
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+
+            using PipelineMessage message = CreateCancelRunRequest(thread_id, run_id, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+
+        public virtual ClientResult SubmitToolOutputsToRun(string thread_id, string run_id, BinaryContent content, RequestOptions options)
+        {
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateSubmitToolOutputsToRunRequest(thread_id, run_id, content, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+
+        public virtual async Task<ClientResult> SubmitToolOutputsToRunAsync(string thread_id, string run_id, BinaryContent content, RequestOptions options)
+        {
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+            Argument.AssertNotNull(content, nameof(content));
+
+            using PipelineMessage message = CreateSubmitToolOutputsToRunRequest(thread_id, run_id, content, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+
+        public virtual ClientResult ListRunSteps(string thread_id, string run_id, int? limit, string order, string after, string before, RequestOptions options)
+        {
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+
+            using PipelineMessage message = CreateListRunStepsRequest(thread_id, run_id, limit, order, after, before, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+
+        public virtual async Task<ClientResult> ListRunStepsAsync(string thread_id, string run_id, int? limit, string order, string after, string before, RequestOptions options)
+        {
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+
+            using PipelineMessage message = CreateListRunStepsRequest(thread_id, run_id, limit, order, after, before, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+
+        public virtual ClientResult<InternalListRunStepsResponse> ListRunSteps(string thread_id, string run_id, int? limit, RunStepCollectionOrder? order, string after, string before)
+        {
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+
+            ClientResult result = ListRunSteps(thread_id, run_id, limit, order.ToString(), after, before, null);
+            return ClientResult.FromValue((InternalListRunStepsResponse)result, result.GetRawResponse());
+        }
+
+        public virtual async Task<ClientResult<InternalListRunStepsResponse>> ListRunStepsAsync(string thread_id, string run_id, int? limit, RunStepCollectionOrder? order, string after, string before)
+        {
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+
+            ClientResult result = await ListRunStepsAsync(thread_id, run_id, limit, order.ToString(), after, before, null).ConfigureAwait(false);
+            return ClientResult.FromValue((InternalListRunStepsResponse)result, result.GetRawResponse());
+        }
+
+        public virtual ClientResult GetRunStep(string thread_id, string run_id, string step_id, RequestOptions options)
+        {
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+            Argument.AssertNotNull(step_id, nameof(step_id));
+
+            using PipelineMessage message = CreateGetRunStepRequest(thread_id, run_id, step_id, options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+        }
+
+        public virtual async Task<ClientResult> GetRunStepAsync(string thread_id, string run_id, string step_id, RequestOptions options)
+        {
+            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(run_id, nameof(run_id));
+            Argument.AssertNotNull(step_id, nameof(step_id));
+
+            using PipelineMessage message = CreateGetRunStepRequest(thread_id, run_id, step_id, options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
     }
 }

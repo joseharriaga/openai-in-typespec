@@ -6,8 +6,8 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Images
 {
@@ -15,26 +15,21 @@ namespace OpenAI.Images
     {
         void IJsonModel<ImageVariationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ImageVariationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ImageVariationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ImageVariationOptions)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("image") != true)
-            {
-                writer.WritePropertyName("image"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(Image);
-#else
-                using (JsonDocument document = JsonDocument.Parse(Image))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("model") != true && Optional.IsDefined(Model))
+            writer.WritePropertyName("image"u8);
+            writer.WriteBase64StringValue(Image.ToArray(), "D");
+            if (Optional.IsDefined(Model))
             {
                 if (Model != null)
                 {
@@ -43,10 +38,10 @@ namespace OpenAI.Images
                 }
                 else
                 {
-                    writer.WriteNull("model");
+                    writer.WriteNull("model"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("n") != true && Optional.IsDefined(N))
+            if (Optional.IsDefined(N))
             {
                 if (N != null)
                 {
@@ -55,22 +50,22 @@ namespace OpenAI.Images
                 }
                 else
                 {
-                    writer.WriteNull("n");
+                    writer.WriteNull("n"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("response_format") != true && Optional.IsDefined(ResponseFormat))
+            if (Optional.IsDefined(ResponseFormat))
             {
                 if (ResponseFormat != null)
                 {
                     writer.WritePropertyName("response_format"u8);
-                    writer.WriteStringValue(ResponseFormat.Value.ToSerialString());
+                    writer.WriteStringValue(ResponseFormat.Value.ToString());
                 }
                 else
                 {
-                    writer.WriteNull("response_format");
+                    writer.WriteNull("responseFormat"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("size") != true && Optional.IsDefined(Size))
+            if (Optional.IsDefined(Size))
             {
                 if (Size != null)
                 {
@@ -79,25 +74,21 @@ namespace OpenAI.Images
                 }
                 else
                 {
-                    writer.WriteNull("size");
+                    writer.WriteNull("size"u8);
                 }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("user") != true && Optional.IsDefined(EndUserId))
+            if (Optional.IsDefined(User))
             {
                 writer.WritePropertyName("user"u8);
-                writer.WriteStringValue(EndUserId);
+                writer.WriteStringValue(User);
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -106,96 +97,96 @@ namespace OpenAI.Images
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        ImageVariationOptions IJsonModel<ImageVariationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ImageVariationOptions IJsonModel<ImageVariationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual ImageVariationOptions JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ImageVariationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ImageVariationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ImageVariationOptions)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeImageVariationOptions(document.RootElement, options);
         }
 
-        internal static ImageVariationOptions DeserializeImageVariationOptions(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ImageVariationOptions DeserializeImageVariationOptions(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             BinaryData image = default;
             InternalCreateImageVariationRequestModel? model = default;
-            long? n = default;
-            GeneratedImageFormat? responseFormat = default;
-            GeneratedImageSize? size = default;
+            int? n = default;
+            InternalCreateImageVariationRequestResponseFormat? responseFormat = default;
+            InternalCreateImageVariationRequestSize? size = default;
             string user = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("image"u8))
+                if (prop.NameEquals("image"u8))
                 {
-                    image = BinaryData.FromString(property.Value.GetRawText());
+                    image = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
                     continue;
                 }
-                if (property.NameEquals("model"u8))
+                if (prop.NameEquals("model"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         model = null;
                         continue;
                     }
-                    model = new InternalCreateImageVariationRequestModel(property.Value.GetString());
+                    model = new InternalCreateImageVariationRequestModel(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("n"u8))
+                if (prop.NameEquals("n"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         n = null;
                         continue;
                     }
-                    n = property.Value.GetInt64();
+                    n = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("response_format"u8))
+                if (prop.NameEquals("response_format"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         responseFormat = null;
                         continue;
                     }
-                    responseFormat = property.Value.GetString().ToGeneratedImageFormat();
+                    responseFormat = new InternalCreateImageVariationRequestResponseFormat(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("size"u8))
+                if (prop.NameEquals("size"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         size = null;
                         continue;
                     }
-                    size = new GeneratedImageSize(property.Value.GetString());
+                    size = new InternalCreateImageVariationRequestSize(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("user"u8))
+                if (prop.NameEquals("user"u8))
                 {
-                    user = property.Value.GetString();
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        user = null;
+                        continue;
+                    }
+                    user = prop.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new ImageVariationOptions(
                 image,
                 model,
@@ -203,87 +194,33 @@ namespace OpenAI.Images
                 responseFormat,
                 size,
                 user,
-                serializedAdditionalRawData);
+                additionalBinaryDataProperties);
         }
 
-        private BinaryData SerializeMultipart(ModelReaderWriterOptions options)
-        {
-            using MultipartFormDataBinaryContent content = ToMultipartBinaryBody();
-            using MemoryStream stream = new MemoryStream();
-            content.WriteTo(stream);
-            if (stream.Position > int.MaxValue)
-            {
-                return BinaryData.FromStream(stream);
-            }
-            else
-            {
-                return new BinaryData(stream.GetBuffer().AsMemory(0, (int)stream.Position));
-            }
-        }
+        BinaryData IPersistableModel<ImageVariationOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
-        internal virtual MultipartFormDataBinaryContent ToMultipartBinaryBody()
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
-            MultipartFormDataBinaryContent content = new MultipartFormDataBinaryContent();
-            content.Add(Image, "image", "image");
-            if (Optional.IsDefined(Model))
-            {
-                if (Model != null)
-                {
-                    content.Add(Model.Value.ToString(), "model");
-                }
-            }
-            if (Optional.IsDefined(N))
-            {
-                if (N != null)
-                {
-                    content.Add(N.Value, "n");
-                }
-            }
-            if (Optional.IsDefined(ResponseFormat))
-            {
-                if (ResponseFormat != null)
-                {
-                    content.Add(ResponseFormat.Value.ToSerialString(), "response_format");
-                }
-            }
-            if (Optional.IsDefined(Size))
-            {
-                if (Size != null)
-                {
-                    content.Add(Size.Value.ToString(), "size");
-                }
-            }
-            if (Optional.IsDefined(EndUserId))
-            {
-                content.Add(EndUserId, "user");
-            }
-            return content;
-        }
-
-        BinaryData IPersistableModel<ImageVariationOptions>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ImageVariationOptions>)this).GetFormatFromOptions(options) : options.Format;
-
+            string format = options.Format == "W" ? ((IPersistableModel<ImageVariationOptions>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
-                case "MFD":
-                    return SerializeMultipart(options);
                 default:
                     throw new FormatException($"The model {nameof(ImageVariationOptions)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ImageVariationOptions IPersistableModel<ImageVariationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ImageVariationOptions>)this).GetFormatFromOptions(options) : options.Format;
+        ImageVariationOptions IPersistableModel<ImageVariationOptions>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual ImageVariationOptions PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ImageVariationOptions>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeImageVariationOptions(document.RootElement, options);
                     }
                 default:
@@ -291,17 +228,18 @@ namespace OpenAI.Images
             }
         }
 
-        string IPersistableModel<ImageVariationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "MFD";
+        string IPersistableModel<ImageVariationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static ImageVariationOptions FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(ImageVariationOptions imageVariationOptions)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeImageVariationOptions(document.RootElement);
+            return BinaryContent.Create(imageVariationOptions, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator ImageVariationOptions(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeImageVariationOptions(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

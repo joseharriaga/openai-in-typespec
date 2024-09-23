@@ -4,28 +4,25 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalRequestMessageTextContent : MessageContent
     {
-        public InternalRequestMessageTextContent(string internalText)
+        public InternalRequestMessageTextContent(string text)
         {
-            Argument.AssertNotNull(internalText, nameof(internalText));
+            Argument.AssertNotNull(text, nameof(text));
 
-            InternalText = internalText;
+            Text = text;
         }
 
-        internal InternalRequestMessageTextContent(IDictionary<string, BinaryData> serializedAdditionalRawData, InternalMessageRequestContentTextObjectType type, string internalText) : base(serializedAdditionalRawData)
+        internal InternalRequestMessageTextContent(InternalMessageRequestContentTextObjectType @type, string text, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
         {
-            Type = type;
-            InternalText = internalText;
+            Type = @type;
+            Text = text;
         }
 
-        internal InternalRequestMessageTextContent()
-        {
-        }
-
-        public InternalMessageRequestContentTextObjectType Type { get; } = InternalMessageRequestContentTextObjectType.Text;
+        public InternalMessageRequestContentTextObjectType Type { get; } = "text";
     }
 }

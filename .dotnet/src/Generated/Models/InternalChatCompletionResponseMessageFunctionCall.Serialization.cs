@@ -7,41 +7,41 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionResponseMessageFunctionCall : IJsonModel<InternalChatCompletionResponseMessageFunctionCall>
     {
+        internal InternalChatCompletionResponseMessageFunctionCall()
+        {
+        }
+
         void IJsonModel<InternalChatCompletionResponseMessageFunctionCall>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalChatCompletionResponseMessageFunctionCall)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("arguments") != true)
+            writer.WritePropertyName("arguments"u8);
+            writer.WriteStringValue(Arguments);
+            writer.WritePropertyName("name"u8);
+            writer.WriteStringValue(Name);
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                writer.WritePropertyName("arguments"u8);
-                writer.WriteStringValue(Arguments);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("name") != true)
-            {
-                writer.WritePropertyName("name"u8);
-                writer.WriteStringValue(Name);
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -50,59 +50,55 @@ namespace OpenAI.Chat
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalChatCompletionResponseMessageFunctionCall IJsonModel<InternalChatCompletionResponseMessageFunctionCall>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalChatCompletionResponseMessageFunctionCall IJsonModel<InternalChatCompletionResponseMessageFunctionCall>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalChatCompletionResponseMessageFunctionCall JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalChatCompletionResponseMessageFunctionCall)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalChatCompletionResponseMessageFunctionCall(document.RootElement, options);
         }
 
-        internal static InternalChatCompletionResponseMessageFunctionCall DeserializeInternalChatCompletionResponseMessageFunctionCall(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalChatCompletionResponseMessageFunctionCall DeserializeInternalChatCompletionResponseMessageFunctionCall(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             string arguments = default;
             string name = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("arguments"u8))
+                if (prop.NameEquals("arguments"u8))
                 {
-                    arguments = property.Value.GetString();
+                    arguments = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("name"u8))
+                if (prop.NameEquals("name"u8))
                 {
-                    name = property.Value.GetString();
+                    name = prop.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalChatCompletionResponseMessageFunctionCall(arguments, name, serializedAdditionalRawData);
+            return new InternalChatCompletionResponseMessageFunctionCall(arguments, name, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -112,15 +108,16 @@ namespace OpenAI.Chat
             }
         }
 
-        InternalChatCompletionResponseMessageFunctionCall IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>)this).GetFormatFromOptions(options) : options.Format;
+        InternalChatCompletionResponseMessageFunctionCall IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalChatCompletionResponseMessageFunctionCall PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalChatCompletionResponseMessageFunctionCall(document.RootElement, options);
                     }
                 default:
@@ -130,15 +127,16 @@ namespace OpenAI.Chat
 
         string IPersistableModel<InternalChatCompletionResponseMessageFunctionCall>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalChatCompletionResponseMessageFunctionCall FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalChatCompletionResponseMessageFunctionCall internalChatCompletionResponseMessageFunctionCall)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalChatCompletionResponseMessageFunctionCall(document.RootElement);
+            return BinaryContent.Create(internalChatCompletionResponseMessageFunctionCall, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalChatCompletionResponseMessageFunctionCall(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalChatCompletionResponseMessageFunctionCall(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

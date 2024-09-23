@@ -4,36 +4,43 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     public partial class AssistantModificationOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         public AssistantModificationOptions()
         {
-            DefaultTools = new ChangeTrackingList<ToolDefinition>();
+            Tools = new ChangeTrackingList<ToolDefinition>();
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        internal AssistantModificationOptions(string model, string name, string description, string instructions, IList<ToolDefinition> defaultTools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? nucleusSamplingFactor, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AssistantModificationOptions(string model, string name, string description, string instructions, IList<ToolDefinition> tools, InternalModifyAssistantRequestToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, BinaryData responseFormat, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Model = model;
             Name = name;
             Description = description;
             Instructions = instructions;
-            DefaultTools = defaultTools;
+            Tools = tools;
             ToolResources = toolResources;
             Metadata = metadata;
             Temperature = temperature;
-            NucleusSamplingFactor = nucleusSamplingFactor;
+            TopP = topP;
             ResponseFormat = responseFormat;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
+
         public string Name { get; set; }
+
         public string Description { get; set; }
+
         public string Instructions { get; set; }
+
         public IDictionary<string, string> Metadata { get; set; }
+
         public float? Temperature { get; set; }
     }
 }

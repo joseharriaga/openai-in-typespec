@@ -62,7 +62,7 @@ public abstract class RecordedClientTestBase : ClientTestBase
     {
         _options = new TestRecordingOptions();
         Mode = mode ?? GetDefaultRecordedTestMode();
-        AutomaticRecord = automaticRecord ?? (!IsRunningInCI && GetDefaultAutomaticRecordEnabled());
+        AutomaticRecord = automaticRecord ?? GetDefaultAutomaticRecordEnabled();
     }
 
     /// <inheritdoc />
@@ -352,7 +352,7 @@ public abstract class RecordedClientTestBase : ClientTestBase
     /// file is missing.
     /// </summary>
     /// <returns>True or false.</returns>
-    protected virtual bool GetDefaultAutomaticRecordEnabled() => true;
+    protected virtual bool GetDefaultAutomaticRecordEnabled() => !IsRunningInCI;
 
     /// <summary>
     /// Gets the name of recording JSON file that contains the recording. This will be based on a sanitized version

@@ -42,23 +42,12 @@ internal partial class AzureBatchClient : BatchClient
 
     public override AsyncCollectionResult GetBatchesAsync(string after, int? limit, RequestOptions options)
     {
-        return new AzureAsyncCollectionResult<object, BatchCollectionPageToken>(
-            Pipeline,
-            options,
-            continuation => CreateGetBatchesRequest(continuation?.After ?? after, limit, options),
-            page => BatchCollectionPageToken.FromResponse(page, limit),
-            page => throw new NotImplementedException("Parsing has not yet been implemented"),
-            options?.CancellationToken ?? default);
+        return new AsyncBatchCollectionResult(this, Pipeline, options, limit, after);
     }
 
     public override CollectionResult GetBatches(string after, int? limit, RequestOptions options)
     {
-        return new AzureCollectionResult<object, BatchCollectionPageToken>(
-            Pipeline,
-            options,
-            continuation => CreateGetBatchesRequest(continuation?.After ?? after, limit, options),
-            page => BatchCollectionPageToken.FromResponse(page, limit),
-            page => throw new NotImplementedException("Parsing has not yet been implemented"));
+        return new BatchCollectionResult(this, Pipeline, options, limit, after);
     }
 
     internal override async Task<ClientResult> GetBatchAsync(string batchId, RequestOptions options)

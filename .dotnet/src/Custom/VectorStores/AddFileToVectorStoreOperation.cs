@@ -73,7 +73,7 @@ public partial class AddFileToVectorStoreOperation : OperationResult
         PipelineResponse response = result.GetRawResponse();
         VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
 
-        return client.CreateAddFileToVectorStoreOperation(FromValue(value, response));
+        return client.CreateAddFileToVectorStoreOperation(ClientResult.FromValue(value, response));
     }
 
     /// <summary>
@@ -98,7 +98,7 @@ public partial class AddFileToVectorStoreOperation : OperationResult
         PipelineResponse response = result.GetRawResponse();
         VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
 
-        return client.CreateAddFileToVectorStoreOperation(FromValue(value, response));
+        return client.CreateAddFileToVectorStoreOperation(ClientResult.FromValue(value, response));
     }
 
     /// <inheritdoc/>

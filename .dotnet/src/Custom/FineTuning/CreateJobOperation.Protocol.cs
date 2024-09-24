@@ -140,9 +140,9 @@ public class CreateJobOperation : OperationResult
 
     private static bool GetHasCompleted(string? status)
     {
-        return status == InternalFineTuningJobStatus.Succeeded ||
-            status == InternalFineTuningJobStatus.Failed ||
-            status == InternalFineTuningJobStatus.Cancelled;
+        return status == FineTuningJobStatus.Succeeded ||
+            status == FineTuningJobStatus.Failed ||
+            status == FineTuningJobStatus.Cancelled;
     }
 
     // Generated protocol methods

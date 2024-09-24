@@ -175,56 +175,6 @@ public partial class FineTuningClient
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
-    internal virtual PipelineMessage CreateCreateFineTuningJobRequest(BinaryContent content, RequestOptions options)
-    {
-        var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = PipelineMessageClassifier200;
-        var request = message.Request;
-        request.Method = "POST";
-        var uri = new ClientUriBuilder();
-        uri.Reset(_endpoint);
-        uri.AppendPath("/fine_tuning/jobs", false);
-        request.Uri = uri.ToUri();
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("Content-Type", "application/json");
-        request.Content = content;
-        message.Apply(options);
-        return message;
-    }
-
-    internal virtual PipelineMessage CreateGetPaginatedFineTuningJobsRequest(string after, int? limit, RequestOptions options)
-    {
-        Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
-
-        using PipelineMessage message = CreateCancelFineTuningJobRequest(jobId, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
-    }
-
-    // CUSTOM:
-    // - Renamed.
-    // - Edited doc comment.
-    /// <summary>
-    /// [Protocol Method] Get status updates for a fine-tuning job.
-    /// </summary>
-    /// <param name="jobId"> The ID of the fine-tuning job to get events for. </param>
-    /// <param name="after"> Identifier for the last event from the previous pagination request. </param>
-    /// <param name="limit"> Number of events to retrieve. </param>
-    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="jobId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> The response returned from the service. </returns>
-    public virtual AsyncCollectionResult GetJobEventsAsync(string jobId, string after, int? limit, RequestOptions options)
-    {
-            uri.AppendQuery("after", after, true);
-    }
-    public virtual IEnumerable<ClientResult> GetJobEvents(string jobId, string after, int? limit, RequestOptions options)
-    {
-        Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
-
-        return new FineTuningJobEventCollectionResult(this, _pipeline, options, jobId, limit, after);
-    }
-
     /// <summary>
     /// [Protocol Method] List the checkpoints for a fine-tuning job.
     /// </summary>
@@ -260,5 +210,60 @@ public partial class FineTuningClient
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
         return new FineTuningJobCheckpointCollectionResult(this, _pipeline, options, jobId, limit, after);
+    }
+
+    internal virtual PipelineMessage CreateCreateFineTuningJobRequest(BinaryContent content, RequestOptions options)
+    {
+        var message = _pipeline.CreateMessage();
+        message.ResponseClassifier = PipelineMessageClassifier200;
+        var request = message.Request;
+        request.Method = "POST";
+        var uri = new ClientUriBuilder();
+        uri.Reset(_endpoint);
+        uri.AppendPath("/fine_tuning/jobs", false);
+        request.Uri = uri.ToUri();
+        request.Headers.Set("Accept", "application/json");
+        request.Headers.Set("Content-Type", "application/json");
+        request.Content = content;
+        message.Apply(options);
+        return message;
+    }
+    internal virtual PipelineMessage CreateGetPaginatedFineTuningJobsRequest(string after, int? limit, RequestOptions options)
+    {
+        var message = _pipeline.CreateMessage();
+        message.ResponseClassifier = PipelineMessageClassifier200;
+        var request = message.Request;
+        request.Method = "GET";
+        var uri = new ClientUriBuilder();
+        uri.Reset(_endpoint);
+        uri.AppendPath("/fine_tuning/jobs", false);
+        if (after != null)
+        {
+            uri.AppendQuery("after", after, true);
+        }
+        if (limit != null)
+        {
+            uri.AppendQuery("limit", limit.Value, true);
+        }
+        request.Uri = uri.ToUri();
+        request.Headers.Set("Accept", "application/json");
+        message.Apply(options);
+        return message;
+    }
+
+    internal virtual PipelineMessage CreateRetrieveFineTuningJobRequest(string fineTuningJobId, RequestOptions options)
+    {
+        var message = _pipeline.CreateMessage();
+        message.ResponseClassifier = PipelineMessageClassifier200;
+        var request = message.Request;
+        request.Method = "GET";
+        var uri = new ClientUriBuilder();
+        uri.Reset(_endpoint);
+        uri.AppendPath("/fine_tuning/jobs/", false);
+        uri.AppendPath(fineTuningJobId, true);
+        request.Uri = uri.ToUri();
+        request.Headers.Set("Accept", "application/json");
+        message.Apply(options);
+        return message;
     }
 }

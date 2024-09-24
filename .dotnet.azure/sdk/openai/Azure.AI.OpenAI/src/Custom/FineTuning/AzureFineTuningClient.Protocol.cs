@@ -4,8 +4,6 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
-using System.Text.Json;
-using Azure.AI.OpenAI.Utility;
 
 namespace Azure.AI.OpenAI.FineTuning;
 
@@ -31,14 +29,12 @@ internal partial class AzureFineTuningClient : FineTuningClient
 
     public override AsyncCollectionResult GetJobsAsync(string after, int? limit, RequestOptions options)
     {
-        AzureFineTuningJobsPageEnumerator enumerator = new AzureFineTuningJobsPageEnumerator(Pipeline, _endpoint, after, limit, _apiVersion, options);
-        return PageCollectionHelpers.CreateAsync(enumerator);
+        return new AsyncFineTuningJobCollectionResult(this, Pipeline, options, limit, after);
     }
 
-    public override IEnumerable<ClientResult> GetJobs(string after, int? limit, RequestOptions options)
+    public override CollectionResult GetJobs(string after, int? limit, RequestOptions options)
     {
-        AzureFineTuningJobsPageEnumerator enumerator = new AzureFineTuningJobsPageEnumerator(Pipeline, _endpoint, after, limit, _apiVersion, options);
-        return PageCollectionHelpers.Create(enumerator);
+        return new FineTuningJobCollectionResult(this, Pipeline, options, limit, after);
     }
 
     internal override PipelineMessage CreateCreateFineTuningJobRequest(BinaryContent content, RequestOptions options)

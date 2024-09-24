@@ -76,7 +76,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
-        return client.CreateBatchFileJobOperation(FromValue(job, response));
+        return client.CreateBatchFileJobOperation(ClientResult.FromValue(job, response));
     }
 
     /// <summary>
@@ -101,7 +101,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob job = VectorStoreBatchFileJob.FromResponse(response);
 
-        return client.CreateBatchFileJobOperation(FromValue(job, response));
+        return client.CreateBatchFileJobOperation(ClientResult.FromValue(job, response));
     }
 
     /// <inheritdoc/>
@@ -212,116 +212,5 @@ public partial class CreateBatchFileJobOperation : OperationResult
         PipelineResponse response = result.GetRawResponse();
         VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
         return ClientResult.FromValue(value, response);
-    }
-
-    /// <summary>
-    /// Gets a page collection of file associations associated with a vector store batch file job, representing the files
-    /// that were scheduled for ingestion into the vector store.
-    /// </summary>
-    /// <param name="options"> Options describing the collection to return. </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFilesInBatchAsync(
-        VectorStoreFileAssociationCollectionOptions? options = default,
-        CancellationToken cancellationToken = default)
-    {
-        return GetFilesInBatchAsync(options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions()) is not AsyncPageCollection<VectorStoreFileAssociation> pages
-            ? throw new NotSupportedException("Failed to cast protocol method return type to AsyncPageCollection<VectorStoreFileAssociation>.")
-            : pages;
-    }
-
-    /// <summary>
-    /// Rehydrates a page collection of file associations from a page token.
-    /// </summary>
-    /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="AsyncPageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="AsyncPageCollection{T}.GetAllValuesAsync(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="AsyncPageCollection{T}.GetCurrentPageAsync"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual AsyncPageCollection<VectorStoreFileAssociation> GetFilesInBatchAsync(
-        ContinuationToken firstPageToken,
-        CancellationToken cancellationToken = default)
-    {
-        Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
-
-        VectorStoreFileBatchesPageToken pageToken = VectorStoreFileBatchesPageToken.FromToken(firstPageToken);
-
-        if (_vectorStoreId != pageToken.VectorStoreId)
-        {
-            throw new ArgumentException(
-                "Invalid page token. 'VectorStoreId' value does not match page token value.",
-                nameof(VectorStoreId));
-        }
-
-        if (_batchId != pageToken.BatchId)
-        {
-            throw new ArgumentException(
-                "Invalid page token. 'BatchId' value does not match page token value.",
-                nameof(BatchId));
-        }
-
-        return GetFilesInBatchAsync(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions()) is not AsyncPageCollection<VectorStoreFileAssociation> pages
-            ? throw new NotSupportedException("Failed to cast protocol method return type to PageCollection<VectorStoreFileAssociation>.")
-            : pages;
-    }
-
-    /// <summary>
-    /// Gets a page collection of file associations associated with a vector store batch file job, representing the files
-    /// that were scheduled for ingestion into the vector store.
-    /// </summary>
-    /// <param name="options"> Options describing the collection to return. </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual PageCollection<VectorStoreFileAssociation> GetFilesInBatch(
-        VectorStoreFileAssociationCollectionOptions? options = default,
-        CancellationToken cancellationToken = default)
-    {
-        return GetFilesInBatch(options?.PageSize, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions()) is not PageCollection<VectorStoreFileAssociation> pages
-            ? throw new NotSupportedException("Failed to cast protocol method return type to AsyncPageCollection<VectorStoreFileAssociation>.")
-            : pages;
-    }
-
-    /// <summary>
-    /// Rehydrates a page collection of file associations from a page token.
-    /// that were scheduled for ingestion into the vector store.
-    /// </summary>
-    /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <remarks> <see cref="PageCollection{T}"/> holds pages of values. To obtain a collection of values, call
-    /// <see cref="PageCollection{T}.GetAllValues(System.Threading.CancellationToken)"/>. To obtain the current
-    /// page of values, call <see cref="PageCollection{T}.GetCurrentPage"/>.</remarks>
-    /// <returns> A collection of pages of <see cref="VectorStoreFileAssociation"/>. </returns>
-    public virtual PageCollection<VectorStoreFileAssociation> GetFilesInBatch(
-        ContinuationToken firstPageToken,
-        CancellationToken cancellationToken = default)
-    {
-        Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
-
-        VectorStoreFileBatchesPageToken pageToken = VectorStoreFileBatchesPageToken.FromToken(firstPageToken);
-
-        if (VectorStoreId != pageToken.VectorStoreId)
-        {
-            throw new ArgumentException(
-                "Invalid page token. 'VectorStoreId' value does not match page token value.",
-                nameof(VectorStoreId));
-        }
-
-        if (BatchId != pageToken.BatchId)
-        {
-            throw new ArgumentException(
-                "Invalid page token. 'BatchId' value does not match page token value.",
-                nameof(BatchId));
-        }
-
-        return GetFilesInBatch(pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Filter, cancellationToken.ToRequestOptions()) is not PageCollection<VectorStoreFileAssociation> pages
-            ? throw new NotSupportedException("Failed to cast protocol method return type to PageCollection<VectorStoreFileAssociation>.")
-            : pages;
     }
 }

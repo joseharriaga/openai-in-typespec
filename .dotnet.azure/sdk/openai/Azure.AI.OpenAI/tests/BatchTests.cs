@@ -56,15 +56,13 @@ public class BatchTests : AoaiTestBase<BatchClient>
             }
         }.ToBinaryContent();
 
-        ClientResult response = await batchClient.CreateBatchAsync(requestContent);
-        BatchObject batchObj = ExtractAndValidateBatchObj(response);
+        CreateBatchOperation operation = await batchClient.CreateBatchAsync(requestContent, true);
 
         // Poll until we've completed, failed, or were canceled
-        while ("completed" != batchObj.Status)
-        {
-            response = await batchClient.GetBatchAsync(batchObj.Id, new());
-            batchObj = ExtractAndValidateBatchObj(response);
-        }
+        operation.WaitForCompletion();
+
+        ClientResult response = operation.GetBatch(null);
+        BatchObject batchObj = ExtractAndValidateBatchObj(response);
 
         Assert.That(batchObj.OutputFileID, Is.Not.Null.Or.Empty);
         BinaryData outputData = await ops.DownloadAndValidateResultAsync(batchObj.OutputFileID!);

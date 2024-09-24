@@ -54,14 +54,15 @@ public partial class FineTuningClient
     {
     }
 
-    // CUSTOM:
-    // - Used a custom pipeline.
-    // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="FineTuningClient">. </summary>
-    /// <param name="credential"> The API key to authenticate with the service. </param>
-    /// <param name="options"> The options to configure the client. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
-    public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options)
+    internal Uri Endpoint => _endpoint;
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="FineTuningClient"/> that will use an API key when authenticating.
+    /// </summary>
+    /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
+    /// <param name="options"> Additional options to customize the client. </param>
+    /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
+    public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options = null)
     {
         Argument.AssertNotNull(credential, nameof(credential));
         options ??= new OpenAIClientOptions();
@@ -85,5 +86,10 @@ public partial class FineTuningClient
 
         _pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
+    }
+
+    internal virtual CreateJobOperation CreateCreateJobOperation(string jobId, string status, PipelineResponse response)
+    {
+        return new CreateJobOperation(_pipeline, _endpoint, jobId, status, response);
     }
 }

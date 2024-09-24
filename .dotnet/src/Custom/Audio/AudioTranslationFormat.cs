@@ -2,6 +2,7 @@ using System.ComponentModel;
 
 namespace OpenAI.Audio;
 
+// CUSTOM: Renamed.
 /// <summary> The format of the translation. </summary>
 [CodeGenModel("CreateTranslationRequestResponseFormat")]
 public readonly partial struct AudioTranslationFormat

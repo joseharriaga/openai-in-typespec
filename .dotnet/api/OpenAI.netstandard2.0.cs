@@ -2045,9 +2045,21 @@ namespace OpenAI.Images {
         string IPersistableModel<GeneratedImageCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<GeneratedImageCollection>.Write(ModelReaderWriterOptions options);
     }
-    public enum GeneratedImageFormat {
-        Bytes = 0,
-        Uri = 1
+    public readonly partial struct GeneratedImageFormat : IEquatable<GeneratedImageFormat> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public GeneratedImageFormat(string value);
+        public static GeneratedImageFormat Bytes { get; }
+        public static GeneratedImageFormat Uri { get; }
+        public readonly bool Equals(GeneratedImageFormat other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(GeneratedImageFormat left, GeneratedImageFormat right);
+        public static implicit operator GeneratedImageFormat(string value);
+        public static bool operator !=(GeneratedImageFormat left, GeneratedImageFormat right);
+        public override readonly string ToString();
     }
     public readonly partial struct GeneratedImageQuality : IEquatable<GeneratedImageQuality> {
         private readonly object _dummy;

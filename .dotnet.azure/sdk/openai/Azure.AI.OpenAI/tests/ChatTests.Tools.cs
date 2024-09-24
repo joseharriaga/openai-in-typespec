@@ -284,7 +284,7 @@ namespace Azure.AI.OpenAI.Tests
                             ChatToolCall.CreateFunctionToolCall(
                                 toolId,
                                 toolName,
-                                toolArgs.ToString()
+                                BinaryData.FromString(toolArgs.ToString())
                             )
                         ]
                     )

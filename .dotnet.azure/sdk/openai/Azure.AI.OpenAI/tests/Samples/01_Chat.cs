@@ -255,7 +255,7 @@ public partial class AzureOpenAISamples
                 {
                     functionNamesByIndex[toolCallUpdate.Index] = toolCallUpdate.FunctionName;
                 }
-                if (!string.IsNullOrEmpty(toolCallUpdate.FunctionArgumentsUpdate))
+                if (!string.IsNullOrEmpty(toolCallUpdate.FunctionArgumentsUpdate.ToString()))
                 {
                     StringBuilder argumentsBuilder
                         = functionArgumentBuildersByIndex.TryGetValue(toolCallUpdate.Index, out StringBuilder existingBuilder)
@@ -273,7 +273,7 @@ public partial class AzureOpenAISamples
             toolCalls.Add(ChatToolCall.CreateFunctionToolCall(
                 indexToIdPair.Value,
                 functionNamesByIndex[indexToIdPair.Key],
-                functionArgumentBuildersByIndex[indexToIdPair.Key].ToString()));
+                BinaryData.FromString(functionArgumentBuildersByIndex[indexToIdPair.Key].ToString())));
         }
 
         var assistantChatMessage = new AssistantChatMessage(toolCalls);

@@ -166,17 +166,17 @@ public static partial class OpenAIChatModelFactory
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatFunctionCallUpdate"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.StreamingChatFunctionCallUpdate"/> instance for mocking. </returns>
     [Obsolete($"This class is obsolete. Please use {nameof(StreamingChatToolCallUpdate)} instead.")]
-    public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null)
+    public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = null, BinaryData functionArgumentsUpdate = null)
     {
         return new StreamingChatFunctionCallUpdate(
-            functionArgumentsUpdate,
             functionName,
+            functionArgumentsUpdate,
             serializedAdditionalRawData: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatToolCallUpdate"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.StreamingChatToolCallUpdate"/> instance for mocking. </returns>
-    public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = default, string id = null, ChatToolCallKind kind = default, string functionName = null, string functionArgumentsUpdate = null)
+    public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = default, string id = null, ChatToolCallKind kind = default, string functionName = null, BinaryData functionArgumentsUpdate = null)
     {
         InternalChatCompletionMessageToolCallChunkFunction function = new InternalChatCompletionMessageToolCallChunkFunction(
             functionName,

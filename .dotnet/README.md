@@ -26,6 +26,7 @@ It is generated from our [OpenAPI specification](https://github.com/openai/opena
 - [How to work with Azure OpenAI](#how-to-work-with-azure-openai)
 - [Advanced scenarios](#advanced-scenarios)
   - [Using protocol methods](#using-protocol-methods)
+  - [Mock a client for testing](#mock-a-client-for-testing)
   - [Automatically retrying errors](#automatically-retrying-errors)
   - [Observability](#observability)
 
@@ -794,6 +795,52 @@ string message = outputAsJson.RootElement
 ```
 
 Notice how you can then call the resulting `ClientResult`'s `GetRawResponse` method and retrieve the response body as `BinaryData` via the `PipelineResponse`'s `Content` property.
+
+### Mock a client for testing
+
+The OpenAI .NET library has been designed to support mocking, providing key features such as:
+- Client methods made virtual to allow overriding.
+- Model Factories to assist in instantiating models that lack public constructors.
+
+To illustrate how mocking works, suppose you want to validate the behavior of the following method using the [Moq](https://github.com/devlooped/moq) library. Given the path to an audio file, it classifies whether it's a safe audio or not based on the presence of the substring "silly":
+
+```csharp
+public bool IsAudioUnsafe(AudioClient client, string audioFilePath)
+{
+    AudioTranscription transcription = client.TranscribeAudio(audioFilePath);
+    return transcription.Text.Contains("silly");
+}
+```
+
+Create mocks of `AudioClient` and `ClientResult<AudioTranscription>`, set up methods and properties that will be invoked, then test the behavior of the `IsAudioUnsafe` method. Since the `AudioTranscription` class does not provide public constructors, it must be instantiated by the `OpenAIAudioModelFactory` static class:
+
+```csharp
+// Instantiate mocks and the AudioTranscription object.
+
+Mock<AudioClient> mockClient = new();
+Mock<ClientResult<AudioTranscription>> mockResult = new(null, Mock.Of<PipelineResponse>());
+AudioTranscription transcription = OpenAIAudioModelFactory.AudioTranscription(text: "This is a silly transcription.");
+
+// Set up mocks' properties and methods.
+
+mockResult
+    .SetupGet(result => result.Value)
+    .Returns(transcription);
+
+mockClient.Setup(client => client.TranscribeAudio(
+        It.IsAny<string>(),
+        It.IsAny<AudioTranscriptionOptions>()))
+    .Returns(mockResult.Object);
+
+// Perform validation.
+
+AudioClient client = mockClient.Object;
+bool isAudioUnsafe = IsAudioUnsafe(client, "<audioFilePath>");
+
+Assert.That(isAudioUnsafe, Is.True);
+```
+
+With the exception of the `Assistants` and `VectorStores` namespaces, every namespace is the OpenAI .NET library is equipped with a specialized Model Factory to support mocking.
 
 ### Automatically retrying errors
 

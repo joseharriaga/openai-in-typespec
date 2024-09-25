@@ -207,7 +207,9 @@ public class VectorStoresTests : SyncAsyncTestBase
     public async Task CanAssociateFiles()
     {
         VectorStoreClient client = GetTestClient();
-        CreateVectorStoreOperation createOperation = client.CreateVectorStore(waitUntilCompleted: true);
+        CreateVectorStoreOperation createOperation = IsAsync
+            ? await client.CreateVectorStoreAsync(waitUntilCompleted: true)
+            : client.CreateVectorStore(waitUntilCompleted: true);
         VectorStore vectorStore = createOperation.Value;
         Validate(vectorStore);
 

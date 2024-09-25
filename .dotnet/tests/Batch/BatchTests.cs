@@ -159,18 +159,6 @@ public class BatchTests : SyncAsyncTestBase
         status = statusElement.GetString();
 
         Assert.That(status, Is.EqualTo("validating"));
-
-        //var newBatchDynamic = batchResult.GetRawResponse().Content.ToDynamicFromJson();
-
-        //Assert.That(newBatchDynamic?.createdAt, Is.GreaterThan(new DateTimeOffset(2024, 01, 01, 0, 0, 0, TimeSpan.Zero)));
-        //Assert.That(newBatchDynamic.status, Is.EqualTo("validating"));
-        //Assert.That(newBatchDynamic.metadata["testMetadataKey"], Is.EqualTo("test metadata value"));
-        //batchResult = await client.GetBatchAsync(newBatchDynamic.id, options: null);
-        //newBatchDynamic = batchResult.GetRawResponse().Content.ToObjectFromJson<dynamic>();
-        //Assert.That(newBatchDynamic.endpoint, Is.EqualTo("/v1/chat/completions"));
-        //batchResult = await client.CancelBatchAsync(newBatchDynamic.id, options: null);
-        //newBatchDynamic = batchResult.GetRawResponse().Content.ToObjectFromJson<dynamic>();
-        //Assert.That(newBatchDynamic.status, Is.EqualTo("cancelling"));
     }
 
     [Test]

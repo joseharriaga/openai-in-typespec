@@ -110,8 +110,8 @@ public class VectorStoresTests : SyncAsyncTestBase
             creationOptions.FileIds.Add(file.Id);
         }
         createOperation = IsAsync
-            ? await client.CreateVectorStoreAsync(waitUntilCompleted: false, creationOptions)
-            : client.CreateVectorStore(waitUntilCompleted: false, creationOptions);
+            ? await client.CreateVectorStoreAsync(waitUntilCompleted: true, creationOptions)
+            : client.CreateVectorStore(waitUntilCompleted: true, creationOptions);
 
         Validate(vectorStore);
         Assert.Multiple(() =>
@@ -443,21 +443,21 @@ public class VectorStoresTests : SyncAsyncTestBase
 
         IReadOnlyList<OpenAIFile> testFiles = GetNewTestFiles(5);
 
-        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(vectorStore, testFiles, waitUntilCompleted: false);
-        Validate(batchOperation);
+        CreateBatchFileJobOperation batchFileJobOperation = client.CreateBatchFileJob(vectorStore, testFiles, waitUntilCompleted: false);
+        Validate(batchFileJobOperation);
 
         Assert.Multiple(() =>
         {
-            Assert.That(batchOperation.BatchId, Is.Not.Null);
-            Assert.That(batchOperation.VectorStoreId, Is.EqualTo(vectorStore.Id));
-            Assert.That(batchOperation.Status, Is.EqualTo(VectorStoreBatchFileJobStatus.InProgress));
+            Assert.That(batchFileJobOperation.BatchId, Is.Not.Null);
+            Assert.That(batchFileJobOperation.VectorStoreId, Is.EqualTo(vectorStore.Id));
+            Assert.That(batchFileJobOperation.Status, Is.EqualTo(VectorStoreBatchFileJobStatus.InProgress));
         });
 
-        batchOperation.WaitForCompletion();
+        batchFileJobOperation.WaitForCompletion();
 
         if (IsAsync)
         {
-            await foreach (VectorStoreFileAssociation association in client.GetFileAssociationsAsync(batchOperation.BatchId))
+            await foreach (VectorStoreFileAssociation association in client.GetFileAssociationsAsync(batchFileJobOperation.VectorStoreId))
             {
                 Assert.Multiple(() =>
                 {
@@ -472,7 +472,7 @@ public class VectorStoresTests : SyncAsyncTestBase
         }
         else
         {
-            foreach (VectorStoreFileAssociation association in client.GetFileAssociations(batchOperation.BatchId))
+            foreach (VectorStoreFileAssociation association in client.GetFileAssociations(batchFileJobOperation.VectorStoreId))
             {
                 Assert.Multiple(() =>
                 {

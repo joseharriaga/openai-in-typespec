@@ -10,7 +10,8 @@ namespace OpenAI.FineTuning;
 
 internal class FineTuningJobEventCollectionResult : CollectionResult
 {
-    private readonly FineTuningClient _fineTuningClient;
+    private readonly FineTuningClient? _fineTuningClient;
+    private readonly CreateJobOperation? _operation;
     private readonly ClientPipeline _pipeline;
     private readonly RequestOptions? _options;
 
@@ -24,6 +25,21 @@ internal class FineTuningJobEventCollectionResult : CollectionResult
         string jobId, int? limit, string after)
     {
         _fineTuningClient = fineTuningClient;
+        _operation = null;
+        _pipeline = pipeline;
+        _options = options;
+
+        _jobId = jobId;
+        _limit = limit;
+        _after = after;
+    }
+
+    public FineTuningJobEventCollectionResult(CreateJobOperation fineTuningOperation,
+        ClientPipeline pipeline, RequestOptions? options,
+        string jobId, int? limit, string after)
+    {
+        _fineTuningClient = null;
+        _operation = fineTuningOperation;
         _pipeline = pipeline;
         _options = options;
 
@@ -86,7 +102,15 @@ internal class FineTuningJobEventCollectionResult : CollectionResult
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
-        using PipelineMessage message = _fineTuningClient.CreateGetFineTuningEventsRequest(jobId, after, limit, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        if (_fineTuningClient != null)
+        {
+            using PipelineMessage message = _fineTuningClient.CreateGetFineTuningEventsRequest(jobId, after, limit, options);
+            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        }
+        else // operation != null
+        {
+            using PipelineMessage message = _operation!.CreateGetFineTuningEventsRequest(jobId, after, limit, options);
+            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        }
     }
 }

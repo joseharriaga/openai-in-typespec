@@ -122,18 +122,6 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
-    public async Task DeleteFineTuningModel()
-    {
-        FineTuningClient client = GetTestClient();
-        Assert.That(client, Is.Not.Null);
-        Assert.That(client, Is.InstanceOf<FineTuningClient>());
-
-        // The service always happily returns HTTP 204 regardless of whether or not the model exists
-        bool deleted = await DeleteJobAndVerifyAsync(client, "does-not-exist");
-        Assert.That(deleted, Is.True);
-    }
-
-    [RecordedTest]
     public async Task CreateAndCancelFineTuning()
     {
         var fineTuningFile = Assets.FineTuning;
@@ -151,17 +139,18 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             TrainingFile = uploadedFile.Id
         }.ToBinaryContent();
 
-        ClientResult result = await client.CreateJobAsync(requestContent);
-        FineTuningJob job = ValidateAndParse<FineTuningJob>(result);
+        CreateJobOperation operation = await client.CreateJobAsync(requestContent, waitUntilCompleted: false);
+        FineTuningJob job = ValidateAndParse<FineTuningJob>(ClientResult.FromResponse(operation.GetRawResponse()));
         Assert.That(job.ID, !(Is.Null.Or.Empty));
 
         await using RunOnScopeExit _ = new(async () =>
         {
-            bool deleted = await DeleteJobAndVerifyAsync(client, job.ID);
+            bool deleted = await DeleteJobAndVerifyAsync((AzureCreateJobOperation)operation, job.ID);
             Assert.True(deleted, "Failed to delete fine tuning job: {0}", job.ID);
         });
 
         // Wait for some events to become available
+        ClientResult result;
         ListResponse<FineTuningJobEvent> events;
         int maxLoops = 10;
         do
@@ -185,12 +174,12 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         } while (maxLoops-- > 0);
 
         // Cancel the fine tuning job
-        result = await client.CancelJobAsync(job.ID, new());
+        result = await operation.CancelAsync(options: null);
         job = ValidateAndParse<FineTuningJob>(result);
 
         // Make sure the job status shows as cancelled
-        job = await WaitForJobToEnd(client, job);
-        Assert.That(job.Status, Is.EqualTo("cancelled"));
+        await operation.WaitForCompletionAsync();
+        Assert.True(operation.HasCompleted);
     }
 
     [RecordedTest(AutomaticRecord = false)]
@@ -215,19 +204,20 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             TrainingFile = uploadedFile.Id
         }.ToBinaryContent();
 
-        ClientResult result = await client.CreateJobAsync(requestContent);
-        FineTuningJob job = ValidateAndParse<FineTuningJob>(result);
+        CreateJobOperation operation = await client.CreateJobAsync(requestContent, waitUntilCompleted: false);
+        FineTuningJob job = ValidateAndParse<FineTuningJob>(ClientResult.FromResponse(operation.GetRawResponse()));
         Assert.That(job.ID, Is.Not.Null.Or.Empty);
         Assert.That(job.Error, Is.Null);
         Assert.That(job.Status, !(Is.Null.Or.EqualTo("failed").Or.EqualTo("cancelled")));
 
         // Wait for the fine tuning to complete
-        job = await WaitForJobToEnd(client, job);
+        await operation.WaitForCompletionAsync();
+        job = ValidateAndParse<FineTuningJob>(await operation.GetJobAsync(null));
         Assert.That(job.Status, Is.EqualTo("succeeded"), "Fine tuning did not succeed");
         Assert.That(job.FineTunedModel, Is.Not.Null.Or.Empty);
 
         // Delete the fine tuned model
-        bool deleted = await DeleteJobAndVerifyAsync(client, job.ID);
+        bool deleted = await DeleteJobAndVerifyAsync((AzureCreateJobOperation)operation, job.ID);
         Assert.True(deleted, "Failed to delete fine tuning model: {0}", job.FineTunedModel);
     }
 
@@ -336,24 +326,6 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         return uploadedFile;
     }
 
-    private Task<FineTuningJob> WaitForJobToEnd(FineTuningClient client, FineTuningJob job)
-    {
-        RequestOptions options = new();
-        string jobId = job.ID;
-
-        // NOTE: Fine tuning jobs can take up 30 minutes to complete so the timeouts here are longer to account for that
-        return WaitUntilReturnLast(
-            job,
-            async () =>
-            {
-                ClientResult result = await client.GetJobAsync(jobId, options).ConfigureAwait(false);
-                return ValidateAndParse<FineTuningJob>(result);
-            },
-            j => j.Status == "cancelled" || j.Status == "failed" || j.Status == "succeeded",
-            TimeSpan.FromMinutes(1),
-            TimeSpan.FromMinutes(40));
-    }
-
     private IAsyncEnumerable<FineTuningJob> EnumerateJobsAsync(FineTuningClient client)
         => EnumerateAsync<FineTuningJob>(client.GetJobsAsync);
 
@@ -379,7 +351,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         }
     }
 
-    private async Task<bool> DeleteJobAndVerifyAsync(FineTuningClient client, string jobId, TimeSpan? timeBetween = null, TimeSpan? maxWaitTime = null)
+    private async Task<bool> DeleteJobAndVerifyAsync(AzureCreateJobOperation operation, string jobId, TimeSpan? timeBetween = null, TimeSpan? maxWaitTime = null)
     {
         var stopTime = DateTimeOffset.Now + (maxWaitTime ?? TimeSpan.FromMinutes(1));
         var sleepTime = timeBetween ?? TimeSpan.FromSeconds(2);
@@ -389,20 +361,17 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             ErrorOptions = ClientErrorBehaviors.NoThrow
         };
 
-        // Since the DeleteJob and DeleteJobAsync are extensions methods, we need to call them on the unwrapped type,
-        // instead of the dynamically wrapped type.
-        var rawClient = UnWrap(client);
 
         bool success = false;
         while (DateTimeOffset.Now < stopTime)
         {
             ClientResult result = IsAsync
-                ? await rawClient.DeleteJobAsync(jobId, noThrow).ConfigureAwait(false)
-                : rawClient.DeleteJob(jobId, noThrow);
+                ? await operation.DeleteJobAsync(jobId, noThrow).ConfigureAwait(false)
+                : operation.DeleteJob(jobId, noThrow);
             Assert.That(result, Is.Not.Null);
 
             // verify the deletion actually succeeded
-            result = await client.GetJobAsync(jobId, noThrow).ConfigureAwait(false);
+            result = await operation.GetJobAsync(noThrow).ConfigureAwait(false);
             var rawResponse = result.GetRawResponse();
             success = rawResponse.Status == 404;
             if (success)

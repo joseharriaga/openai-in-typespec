@@ -27,6 +27,22 @@ public partial class VectorStoreClient
         => ModifyVectorStore(vectorStore?.Id, options);
 
     /// <summary>
+    /// Gets an up-to-date instance of an existing vector store.
+    /// </summary>
+    /// <param name="vectorStore"> The existing vector store instance to get an updated instance of. </param>
+    /// <returns> The refreshed vector store instance. </returns>
+    public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(VectorStore vectorStore)
+        => GetVectorStoreAsync(vectorStore?.Id);
+
+    /// <summary>
+    /// Gets an up-to-date instance of an existing vector store.
+    /// </summary>
+    /// <param name="vectorStore"> The existing vector store instance to get an updated instance of. </param>
+    /// <returns> The refreshed vector store instance. </returns>
+    public virtual ClientResult<VectorStore> GetVectorStore(VectorStore vectorStore)
+        => GetVectorStore(vectorStore?.Id);
+
+    /// <summary>
     /// Deletes a vector store.
     /// </summary>
     /// <param name="vectorStore"> The vector store to delete. </param>
@@ -45,30 +61,24 @@ public partial class VectorStoreClient
     /// <summary>
     /// Associates an uploaded file with a vector store, beginning ingestion of the file into the vector store.
     /// </summary>
-    /// <param name="waitUntilCompleted"> Value indicating whether the method
-    /// should return after the operation has been started and is still running
-    /// on the service, or wait until the operation has completed to return.
-    /// </param>
     /// <param name="vectorStore"> The vector store to associate the file with. </param>
     /// <param name="file"> The file to associate with the vector store. </param>
-    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
-    /// the vector store file addition to complete. </returns>
-    public async virtual Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(VectorStore vectorStore, OpenAIFileInfo file, bool waitUntilCompleted)
-        => await AddFileToVectorStoreAsync(waitUntilCompleted, vectorStore?.Id, file?.Id).ConfigureAwait(false);
+    /// <returns>
+    /// A <see cref="VectorStoreFileAssociation"/> instance that represents the new association.
+    /// </returns>
+    public virtual Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(VectorStore vectorStore, OpenAIFileInfo file, bool waitUntilCompleted)
+        => AddFileToVectorStoreAsync(vectorStore?.Id, file?.Id, waitUntilCompleted);
 
     /// <summary>
     /// Associates an uploaded file with a vector store, beginning ingestion of the file into the vector store.
     /// </summary>
-    /// <param name="waitUntilCompleted"> Value indicating whether the method
-    /// should return after the operation has been started and is still running
-    /// on the service, or wait until the operation has completed to return.
-    /// </param>
     /// <param name="vectorStore"> The vector store to associate the file with. </param>
     /// <param name="file"> The file to associate with the vector store. </param>
-    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
-    /// the vector store file addition to complete. </returns>
+    /// <returns>
+    /// A <see cref="VectorStoreFileAssociation"/> instance that represents the new association.
+    /// </returns>
     public virtual AddFileToVectorStoreOperation AddFileToVectorStore(VectorStore vectorStore, OpenAIFileInfo file, bool waitUntilCompleted)
-        => AddFileToVectorStore(waitUntilCompleted, vectorStore?.Id, file?.Id);
+        => AddFileToVectorStore(vectorStore?.Id, file?.Id, waitUntilCompleted);
 
     /// <summary>
     /// Gets a page collection holding <see cref="VectorStoreFileAssociation"/> instances that represent file inclusions in the
@@ -151,28 +161,75 @@ public partial class VectorStoreClient
     /// <summary>
     /// Begins a batch job to associate multiple jobs with a vector store, beginning the ingestion process.
     /// </summary>
-    /// <param name="waitUntilCompleted"> Value indicating whether the method
-    /// should return after the operation has been started and is still running
-    /// on the service, or wait until the operation has completed to return.
-    /// </param>
     /// <param name="vectorStore"> The vector store to associate files with. </param>
     /// <param name="files"> The files to associate with the vector store. </param>
-    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
-    /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
+    /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the batch operation. </returns>
     public virtual Task<CreateBatchFileJobOperation> CreateBatchFileJobAsync(VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files, bool waitUntilCompleted)
         => CreateBatchFileJobAsync(vectorStore?.Id, files?.Select(file => file.Id), waitUntilCompleted);
 
     /// <summary>
     /// Begins a batch job to associate multiple jobs with a vector store, beginning the ingestion process.
     /// </summary>
-    /// <param name="waitUntilCompleted"> Value indicating whether the method
-    /// should return after the operation has been started and is still running
-    /// on the service, or wait until the operation has completed to return.
-    /// </param>
     /// <param name="vectorStore"> The vector store to associate files with. </param>
     /// <param name="files"> The files to associate with the vector store. </param>
-    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
-    /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
+    /// <returns> A <see cref="VectorStoreBatchFileJob"/> instance representing the batch operation. </returns>
     public virtual CreateBatchFileJobOperation CreateBatchFileJob(VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files, bool waitUntilCompleted)
         => CreateBatchFileJob(vectorStore?.Id, files?.Select(file => file.Id), waitUntilCompleted);
+
+    /// <summary>
+    /// Gets an updated instance of an existing <see cref="VectorStoreBatchFileJob"/>, refreshing its status.
+    /// </summary>
+    /// <param name="batchJob"> The job to refresh. </param>
+    /// <returns> The refreshed instance of <see cref="VectorStoreBatchFileJob"/>. </returns>
+    public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(VectorStoreBatchFileJob batchJob)
+        => GetBatchFileJobAsync(batchJob?.VectorStoreId, batchJob?.BatchId);
+
+    /// <summary>
+    /// Gets an updated instance of an existing <see cref="VectorStoreBatchFileJob"/>, refreshing its status.
+    /// </summary>
+    /// <param name="batchJob"> The job to refresh. </param>
+    /// <returns> The refreshed instance of <see cref="VectorStoreBatchFileJob"/>. </returns>
+    public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(VectorStoreBatchFileJob batchJob)
+        => GetBatchFileJob(batchJob?.VectorStoreId, batchJob?.BatchId);
+
+    /// <summary>
+    /// Cancels an in-progress <see cref="VectorStoreBatchFileJob"/>.
+    /// </summary>
+    /// <param name="batchJob"> The <see cref="VectorStoreBatchFileJob"/> that should be canceled. </param>
+    /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
+    public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(VectorStoreBatchFileJob batchJob)
+        => CancelBatchFileJobAsync(batchJob?.VectorStoreId, batchJob?.BatchId);
+
+    /// <summary>
+    /// Cancels an in-progress <see cref="VectorStoreBatchFileJob"/>.
+    /// </summary>
+    /// <param name="batchJob"> The <see cref="VectorStoreBatchFileJob"/> that should be canceled. </param>
+    /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
+    public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(VectorStoreBatchFileJob batchJob)
+        => CancelBatchFileJob(batchJob?.VectorStoreId, batchJob?.BatchId);
+
+    /// <summary>
+    /// Gets a page collection holding file associations associated with a vector store batch file job, representing the files
+    /// that were scheduled for ingestion into the vector store.
+    /// </summary>
+    /// <param name="batchJob"> The vector store batch file job to retrieve file associations from. </param>
+    /// <param name="options"> Options describing the collection to return. </param>
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
+    public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
+        VectorStoreBatchFileJob batchJob,
+        VectorStoreFileAssociationCollectionOptions options = default)
+            => GetFileAssociationsAsync(batchJob?.VectorStoreId, batchJob?.BatchId, options);
+
+    /// <summary>
+    /// Gets a page collection holding file associations associated with a vector store batch file job, representing the files
+    /// that were scheduled for ingestion into the vector store.
+    /// </summary>
+    /// <param name="batchJob"> The vector store batch file job to retrieve file associations from. </param>
+    /// <param name="options"> Options describing the collection to return. </param>
+    /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
+    public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(
+        VectorStoreBatchFileJob batchJob,
+        VectorStoreFileAssociationCollectionOptions options = default)
+            => GetFileAssociations(batchJob?.VectorStoreId, batchJob?.BatchId, options);
+
 }

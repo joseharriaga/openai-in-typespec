@@ -11,7 +11,8 @@ namespace OpenAI.FineTuning;
 
 internal class AsyncFineTuningJobEventCollectionResult : AsyncCollectionResult
 {
-    private readonly FineTuningClient _fineTuningClient;
+    private readonly FineTuningClient? _fineTuningClient;
+    private readonly CreateJobOperation? _operation;
     private readonly ClientPipeline _pipeline;
     private readonly RequestOptions? _options;
 
@@ -25,6 +26,21 @@ internal class AsyncFineTuningJobEventCollectionResult : AsyncCollectionResult
         string jobId, int? limit, string after)
     {
         _fineTuningClient = fineTuningClient;
+        _operation = null;
+        _pipeline = pipeline;
+        _options = options;
+
+        _jobId = jobId;
+        _limit = limit;
+        _after = after;
+    }
+
+    public AsyncFineTuningJobEventCollectionResult(CreateJobOperation fineTuningOperation,
+        ClientPipeline pipeline, RequestOptions? options,
+        string jobId, int? limit, string after)
+    {
+        _fineTuningClient = null;
+        _operation = fineTuningOperation;
         _pipeline = pipeline;
         _options = options;
 
@@ -78,8 +94,15 @@ internal class AsyncFineTuningJobEventCollectionResult : AsyncCollectionResult
     internal virtual async Task<ClientResult> GetJobEventsAsync(string jobId, string? after, int? limit, RequestOptions? options)
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
-
-        using PipelineMessage message = _fineTuningClient.CreateGetFineTuningEventsRequest(jobId, after, limit, options);
-        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        if (_fineTuningClient != null)
+        {
+            using PipelineMessage message = _fineTuningClient.CreateGetFineTuningEventsRequest(jobId, after, limit, options);
+            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
+        else // operation != null
+        {
+            using PipelineMessage message = _operation!.CreateGetFineTuningEventsRequest(jobId, after, limit, options);
+            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        }
     }
 }

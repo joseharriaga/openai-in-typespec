@@ -2,6 +2,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -97,6 +98,48 @@ public partial class FineTuningClient
 
         CreateJobOperation operation = this.CreateCreateJobOperation(jobId, status, response);
         return operation.WaitUntil(waitUntilCompleted, options);
+    }
+
+    // CUSTOM:
+    // - Renamed.
+    // - Edited doc comment.
+    /// <summary>
+    /// [Protocol Method] Get status updates for a fine-tuning job.
+    /// </summary>
+    /// <param name="jobId"> The ID of the fine-tuning job to get events for. </param>
+    /// <param name="after"> Identifier for the last event from the previous pagination request. </param>
+    /// <param name="limit"> Number of events to retrieve. </param>
+    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="jobId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+    /// <returns> The response returned from the service. </returns>
+    public virtual AsyncCollectionResult GetJobEventsAsync(string jobId, string after, int? limit, RequestOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
+
+        return new AsyncFineTuningJobEventCollectionResult(this, _pipeline, options, jobId, limit, after);
+    }
+
+    // CUSTOM:
+    // - Renamed.
+    // - Edited doc comment.
+    /// <summary>
+    /// [Protocol Method] Get status updates for a fine-tuning job.
+    /// </summary>
+    /// <param name="jobId"> The ID of the fine-tuning job to get events for. </param>
+    /// <param name="after"> Identifier for the last event from the previous pagination request. </param>
+    /// <param name="limit"> Number of events to retrieve. </param>
+    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="jobId"/> is null. </exception>
+    /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
+    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+    /// <returns> The response returned from the service. </returns>
+    public virtual CollectionResult GetJobEvents(string jobId, string after, int? limit, RequestOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
+
+        return new FineTuningJobEventCollectionResult(this, _pipeline, options, jobId, limit, after);
     }
 
     // CUSTOM:

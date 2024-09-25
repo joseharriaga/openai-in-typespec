@@ -100,26 +100,28 @@ internal class FineTuningTests : SyncAsyncTestBase
         }
     }
 
-    [Test]
-    public void BasicFineTuningJobOperationsWork()
-    {
-        // Upload training file first
-        FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
-        string filename = "toy_chat.jsonl";
-        BinaryData fileContent = BinaryData.FromString("""
-            {"messages": [{"role": "user", "content": "I lost my book today."}, {"role": "assistant", "content": "You can read everything on ebooks these days!"}]}
-            {"messages": [{"role": "system", "content": "You are a happy assistant that puts a positive spin on everything."}, {"role": "assistant", "content": "You're great!"}]}
-            """);
-        OpenAIFile uploadedFile = fileClient.UploadFile(fileContent, filename, FileUploadPurpose.FineTune);
-        Assert.That(uploadedFile?.Filename, Is.EqualTo(filename));
+    // We need to add this test back once we have access to the test resources
+    //
+    //[Test]
+    //public void BasicFineTuningJobOperationsWork()
+    //{
+    //    // Upload training file first
+    //    FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
+    //    string filename = "toy_chat.jsonl";
+    //    BinaryData fileContent = BinaryData.FromString("""
+    //        {"messages": [{"role": "user", "content": "I lost my book today."}, {"role": "assistant", "content": "You can read everything on ebooks these days!"}]}
+    //        {"messages": [{"role": "system", "content": "You are a happy assistant that puts a positive spin on everything."}, {"role": "assistant", "content": "You're great!"}]}
+    //        """);
+    //    OpenAIFile uploadedFile = fileClient.UploadFile(fileContent, filename, FileUploadPurpose.FineTune);
+    //    Assert.That(uploadedFile?.Filename, Is.EqualTo(filename));
 
-        // Submit fine-tuning job
-        FineTuningClient client = GetTestClient<FineTuningClient>(TestScenario.FineTuning);
+    //    // Submit fine-tuning job
+    //    FineTuningClient client = GetTestClient<FineTuningClient>(TestScenario.FineTuning);
 
-        string json = $"{{\"training_file\":\"{uploadedFile.Id}\",\"model\":\"gpt-3.5-turbo\"}}";
-        BinaryData input = BinaryData.FromString(json);
-        using BinaryContent content = BinaryContent.Create(input);
+    //    string json = $"{{\"training_file\":\"{uploadedFile.Id}\",\"model\":\"gpt-3.5-turbo\"}}";
+    //    BinaryData input = BinaryData.FromString(json);
+    //    using BinaryContent content = BinaryContent.Create(input);
 
-        CreateJobOperation operation = client.CreateJob(content, waitUntilCompleted: false);
-    }
+    //    CreateJobOperation operation = client.CreateJob(content, waitUntilCompleted: false);
+    //}
 }

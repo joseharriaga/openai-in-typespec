@@ -7,11 +7,11 @@ using System.Collections.Generic;
 
 namespace OpenAI.Embeddings
 {
-    public partial class Embedding
+    public partial class OpenAIEmbedding
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
 
-        internal Embedding()
+        internal OpenAIEmbedding()
         {
         }
 

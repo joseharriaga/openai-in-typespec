@@ -142,7 +142,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         FileClient fileClient = GetTestClientFrom<FileClient>(client);
 
         // upload training data
-        OpenAIFileInfo uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
+        OpenAIFile uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
 
         // Create the fine tuning job
         using var requestContent = new FineTuningOptions()
@@ -203,7 +203,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         FileClient fileClient = GetTestClientFrom<FileClient>(client);
 
         // upload training data
-        OpenAIFileInfo uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
+        OpenAIFile uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
 #pragma warning disable CS0618
         Assert.That(uploadedFile.Status, Is.EqualTo(OpenAIFileStatus.Processed));
 #pragma warning restore CS0618
@@ -318,9 +318,9 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         return model!;
     }
 
-    private async Task<OpenAIFileInfo> UploadAndWaitForCompleteOrFail(FileClient fileClient, string path)
+    private async Task<OpenAIFile> UploadAndWaitForCompleteOrFail(FileClient fileClient, string path)
     {
-        OpenAIFileInfo uploadedFile = await fileClient.UploadFileAsync(path, FileUploadPurpose.FineTune);
+        OpenAIFile uploadedFile = await fileClient.UploadFileAsync(path, FileUploadPurpose.FineTune);
         Validate(uploadedFile);
 
 #pragma warning disable CS0618

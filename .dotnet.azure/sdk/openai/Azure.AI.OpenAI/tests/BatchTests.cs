@@ -163,7 +163,7 @@ public class BatchTests : AoaiTestBase<BatchClient>
 
             using var content = BinaryContent.Create(data);
 
-            OpenAIFileInfo file = await _fileClient.UploadFileAsync(data, BatchFileName, FileUploadPurpose.Batch);
+            OpenAIFile file = await _fileClient.UploadFileAsync(data, BatchFileName, FileUploadPurpose.Batch);
             _uploadId = file.Id;
             Assert.That(_uploadId, Is.Not.Null.Or.Empty);
             return _uploadId;

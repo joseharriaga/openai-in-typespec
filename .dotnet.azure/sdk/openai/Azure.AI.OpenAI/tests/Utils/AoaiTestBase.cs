@@ -566,7 +566,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
             case nameof(AssistantThread):
                 _threadIdsToDelete.Add(id);
                 break;
-            case nameof(OpenAIFileInfo):
+            case nameof(OpenAIFile):
                 _fileIdsToDelete.Add(id);
                 break;
             case nameof(ThreadRun):
@@ -619,7 +619,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
             {
                 Assistant assistant => assistant.Id,
                 AssistantThread thread => thread.Id,
-                OpenAIFileInfo file => file.Id,
+                OpenAIFile file => file.Id,
                 ThreadRun run => run.Id,
                 VectorStore store => store.Id,
                 _ => throw new NotImplementedException(),

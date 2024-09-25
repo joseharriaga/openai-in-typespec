@@ -5,23 +5,23 @@ using System.Text.Json;
 
 namespace OpenAI.Files;
 
-[CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Files.OpenAIFileInfoCollection>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
-public partial class OpenAIFileInfoCollection : IJsonModel<OpenAIFileInfoCollection>
+[CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Files.OpenAIFileCollection>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
+public partial class OpenAIFileCollection : IJsonModel<OpenAIFileCollection>
 {
     // CUSTOM:
     // - Serialized the Items property.
     // - Recovered the serialization of SerializedAdditionalRawData. See https://github.com/Azure/autorest.csharp/issues/4636.
-    void IJsonModel<OpenAIFileInfoCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => CustomSerializationHelpers.SerializeInstance(this, SerializeOpenAIFileInfoCollection, writer, options);
+    void IJsonModel<OpenAIFileCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeOpenAIFileCollection, writer, options);
 
-    internal static void SerializeOpenAIFileInfoCollection(OpenAIFileInfoCollection instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    internal static void SerializeOpenAIFileCollection(OpenAIFileCollection instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
         writer.WritePropertyName("data"u8);
         writer.WriteStartArray();
         foreach (var item in instance.Items)
         {
-            writer.WriteObjectValue<OpenAIFileInfo>(item, options);
+            writer.WriteObjectValue<OpenAIFile>(item, options);
         }
         writer.WriteEndArray();
         writer.WritePropertyName("object"u8);
@@ -31,7 +31,7 @@ public partial class OpenAIFileInfoCollection : IJsonModel<OpenAIFileInfoCollect
     }
 
     // CUSTOM: Recovered the deserialization of SerializedAdditionalRawData. See https://github.com/Azure/autorest.csharp/issues/4636.
-    internal static OpenAIFileInfoCollection DeserializeOpenAIFileInfoCollection(JsonElement element, ModelReaderWriterOptions options = null)
+    internal static OpenAIFileCollection DeserializeOpenAIFileCollection(JsonElement element, ModelReaderWriterOptions options = null)
     {
         options ??= ModelSerializationExtensions.WireOptions;
 
@@ -39,7 +39,7 @@ public partial class OpenAIFileInfoCollection : IJsonModel<OpenAIFileInfoCollect
         {
             return null;
         }
-        IReadOnlyList<OpenAIFileInfo> data = default;
+        IReadOnlyList<OpenAIFile> data = default;
         InternalListFilesResponseObject @object = default;
         IDictionary<string, BinaryData> serializedAdditionalRawData = default;
         Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -47,10 +47,10 @@ public partial class OpenAIFileInfoCollection : IJsonModel<OpenAIFileInfoCollect
         {
             if (property.NameEquals("data"u8))
             {
-                List<OpenAIFileInfo> array = new List<OpenAIFileInfo>();
+                List<OpenAIFile> array = new List<OpenAIFile>();
                 foreach (var item in property.Value.EnumerateArray())
                 {
-                    array.Add(OpenAIFileInfo.DeserializeOpenAIFileInfo(item, options));
+                    array.Add(OpenAIFile.DeserializeOpenAIFile(item, options));
                 }
                 data = array;
                 continue;
@@ -66,7 +66,7 @@ public partial class OpenAIFileInfoCollection : IJsonModel<OpenAIFileInfoCollect
             }
         }
         serializedAdditionalRawData = rawDataDictionary;
-        return new OpenAIFileInfoCollection(data, @object, serializedAdditionalRawData);
+        return new OpenAIFileCollection(data, @object, serializedAdditionalRawData);
     }
 
 }

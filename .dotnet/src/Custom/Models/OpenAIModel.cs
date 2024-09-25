@@ -6,7 +6,7 @@ namespace OpenAI.Models;
 /// Represents information about a single available model entry.
 /// </summary>
 [CodeGenModel("Model")]
-public partial class OpenAIModelInfo
+public partial class OpenAIModel
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
     /// <summary> The object type, which is always "model". </summary>

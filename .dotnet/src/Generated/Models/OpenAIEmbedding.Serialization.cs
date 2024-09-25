@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.Embeddings
 {
-    public partial class Embedding : IJsonModel<Embedding>
+    public partial class OpenAIEmbedding : IJsonModel<OpenAIEmbedding>
     {
-        void IJsonModel<Embedding>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<OpenAIEmbedding>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Embedding>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<OpenAIEmbedding>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(Embedding)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(OpenAIEmbedding)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -65,19 +65,19 @@ namespace OpenAI.Embeddings
             writer.WriteEndObject();
         }
 
-        Embedding IJsonModel<Embedding>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        OpenAIEmbedding IJsonModel<OpenAIEmbedding>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Embedding>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<OpenAIEmbedding>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(Embedding)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(OpenAIEmbedding)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeEmbedding(document.RootElement, options);
+            return DeserializeOpenAIEmbedding(document.RootElement, options);
         }
 
-        internal static Embedding DeserializeEmbedding(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static OpenAIEmbedding DeserializeOpenAIEmbedding(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -114,44 +114,44 @@ namespace OpenAI.Embeddings
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new Embedding(index, embedding, @object, serializedAdditionalRawData);
+            return new OpenAIEmbedding(index, embedding, @object, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<Embedding>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<OpenAIEmbedding>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Embedding>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<OpenAIEmbedding>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(Embedding)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(OpenAIEmbedding)} does not support writing '{options.Format}' format.");
             }
         }
 
-        Embedding IPersistableModel<Embedding>.Create(BinaryData data, ModelReaderWriterOptions options)
+        OpenAIEmbedding IPersistableModel<OpenAIEmbedding>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<Embedding>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<OpenAIEmbedding>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeEmbedding(document.RootElement, options);
+                        return DeserializeOpenAIEmbedding(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(Embedding)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(OpenAIEmbedding)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<Embedding>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<OpenAIEmbedding>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static Embedding FromResponse(PipelineResponse response)
+        internal static OpenAIEmbedding FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeEmbedding(document.RootElement);
+            return DeserializeOpenAIEmbedding(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

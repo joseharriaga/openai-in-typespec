@@ -2591,7 +2591,6 @@ namespace OpenAI.VectorStores {
         public string BeforeId { get; set; }
         public VectorStoreFileStatusFilter? Filter { get; set; }
         public VectorStoreFileAssociationCollectionOrder? Order { get; set; }
-        public int? PageSize { get; set; }
         public int? PageSizeLimit { get; set; }
     }
     public readonly partial struct VectorStoreFileAssociationCollectionOrder : IEquatable<VectorStoreFileAssociationCollectionOrder> {

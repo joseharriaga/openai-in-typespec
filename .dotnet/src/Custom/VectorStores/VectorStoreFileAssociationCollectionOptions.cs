@@ -21,11 +21,6 @@ public class VectorStoreFileAssociationCollectionOptions
     public VectorStoreFileAssociationCollectionOrder? Order { get; set; }
 
     /// <summary>
-    /// The number of values to return in a page result.
-    /// </summary>
-    public int? PageSize { get; set; }
-
-    /// <summary>
     ///     The <see cref="VectorStoreFileAssociation.Id"/> used to retrieve the page of <see cref="VectorStoreFileAssociation"/> objects that come
     ///     after this one.
     /// </summary>

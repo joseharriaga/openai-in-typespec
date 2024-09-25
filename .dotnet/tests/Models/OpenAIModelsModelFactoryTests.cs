@@ -14,7 +14,7 @@ public class OpenAIModelsModelFactoryTests
     [Test]
     public void ModelDeletionResultWithNoPropertiesWorks()
     {
-        ModelDeletionResult modelDeletionResult = OpenAIModelModelFactory.ModelDeletionResult();
+        ModelDeletionResult modelDeletionResult = OpenAIModelsModelFactory.ModelDeletionResult();
 
         Assert.That(modelDeletionResult.ModelId, Is.Null);
         Assert.That(modelDeletionResult.Deleted, Is.EqualTo(false));
@@ -24,7 +24,7 @@ public class OpenAIModelsModelFactoryTests
     public void ModelDeletionResultWithModelIdWorks()
     {
         string modelId = "modelId";
-        ModelDeletionResult modelDeletionResult = OpenAIModelModelFactory.ModelDeletionResult(modelId: modelId);
+        ModelDeletionResult modelDeletionResult = OpenAIModelsModelFactory.ModelDeletionResult(modelId: modelId);
 
         Assert.That(modelDeletionResult.ModelId, Is.EqualTo(modelId));
         Assert.That(modelDeletionResult.Deleted, Is.EqualTo(false));
@@ -34,7 +34,7 @@ public class OpenAIModelsModelFactoryTests
     public void ModelDeletionResultWithDeletedWorks()
     {
         bool deleted = true;
-        ModelDeletionResult modelDeletionResult = OpenAIModelModelFactory.ModelDeletionResult(deleted: deleted);
+        ModelDeletionResult modelDeletionResult = OpenAIModelsModelFactory.ModelDeletionResult(deleted: deleted);
 
         Assert.That(modelDeletionResult.ModelId, Is.Null);
         Assert.That(modelDeletionResult.Deleted, Is.EqualTo(deleted));
@@ -43,7 +43,7 @@ public class OpenAIModelsModelFactoryTests
     [Test]
     public void OpenAIModelWithNoPropertiesWorks()
     {
-        OpenAIModel openAIModel = OpenAIModelModelFactory.OpenAIModel();
+        OpenAIModel openAIModel = OpenAIModelsModelFactory.OpenAIModel();
 
         Assert.That(openAIModel.Id, Is.Null);
         Assert.That(openAIModel.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
@@ -54,7 +54,7 @@ public class OpenAIModelsModelFactoryTests
     public void OpenAIModelWithIdWorks()
     {
         string id = "modelId";
-        OpenAIModel openAIModel = OpenAIModelModelFactory.OpenAIModel(id: id);
+        OpenAIModel openAIModel = OpenAIModelsModelFactory.OpenAIModel(id: id);
 
         Assert.That(openAIModel.Id, Is.EqualTo(id));
         Assert.That(openAIModel.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
@@ -65,7 +65,7 @@ public class OpenAIModelsModelFactoryTests
     public void OpenAIModelWithCreatedAtWorks()
     {
         DateTimeOffset createdAt = DateTimeOffset.UtcNow;
-        OpenAIModel openAIModel = OpenAIModelModelFactory.OpenAIModel(createdAt: createdAt);
+        OpenAIModel openAIModel = OpenAIModelsModelFactory.OpenAIModel(createdAt: createdAt);
 
         Assert.That(openAIModel.Id, Is.Null);
         Assert.That(openAIModel.CreatedAt, Is.EqualTo(createdAt));
@@ -76,7 +76,7 @@ public class OpenAIModelsModelFactoryTests
     public void OpenAIModelWithOwnedByWorks()
     {
         string ownedBy = "The people";
-        OpenAIModel openAIModel = OpenAIModelModelFactory.OpenAIModel(ownedBy: ownedBy);
+        OpenAIModel openAIModel = OpenAIModelsModelFactory.OpenAIModel(ownedBy: ownedBy);
 
         Assert.That(openAIModel.Id, Is.Null);
         Assert.That(openAIModel.CreatedAt, Is.EqualTo(default(DateTimeOffset)));
@@ -86,7 +86,7 @@ public class OpenAIModelsModelFactoryTests
     [Test]
     public void OpenAIModelCollectionWithNoPropertiesWorks()
     {
-        OpenAIModelCollection openAIModelCollection = OpenAIModelModelFactory.OpenAIModelCollection();
+        OpenAIModelCollection openAIModelCollection = OpenAIModelsModelFactory.OpenAIModelCollection();
 
         Assert.That(openAIModelCollection.Count, Is.EqualTo(0));
     }
@@ -95,10 +95,10 @@ public class OpenAIModelsModelFactoryTests
     public void OpenAIModelCollectionWithItemsWorks()
     {
         IEnumerable<OpenAIModel> items = [
-            OpenAIModelModelFactory.OpenAIModel(id: "firstModel"),
-            OpenAIModelModelFactory.OpenAIModel(id: "secondModel")
+            OpenAIModelsModelFactory.OpenAIModel(id: "firstModel"),
+            OpenAIModelsModelFactory.OpenAIModel(id: "secondModel")
         ];
-        OpenAIModelCollection openAIModelCollection = OpenAIModelModelFactory.OpenAIModelCollection(items: items);
+        OpenAIModelCollection openAIModelCollection = OpenAIModelsModelFactory.OpenAIModelCollection(items: items);
 
         Assert.That(openAIModelCollection.SequenceEqual(items), Is.True);
     }

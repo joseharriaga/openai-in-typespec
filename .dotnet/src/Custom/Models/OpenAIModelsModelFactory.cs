@@ -5,7 +5,7 @@ using System.Linq;
 namespace OpenAI.Models;
 
 /// <summary> Model factory for models. </summary>
-public static partial class OpenAIModelModelFactory
+public static partial class OpenAIModelsModelFactory
 {
     /// <summary> Initializes a new instance of <see cref="OpenAI.Models.ModelDeletionResult"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Models.ModelDeletionResult"/> instance for mocking. </returns>

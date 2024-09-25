@@ -2169,7 +2169,7 @@ namespace OpenAI.Models {
         string IPersistableModel<OpenAIModelCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<OpenAIModelCollection>.Write(ModelReaderWriterOptions options);
     }
-    public static class OpenAIModelModelFactory {
+    public static class OpenAIModelsModelFactory {
         public static ModelDeletionResult ModelDeletionResult(string modelId = null, bool deleted = false);
         public static OpenAIModel OpenAIModel(string id = null, DateTimeOffset createdAt = default, string ownedBy = null);
         public static OpenAIModelCollection OpenAIModelCollection(IEnumerable<OpenAIModel> items = null);

@@ -51,10 +51,6 @@ public class BatchTests : SyncAsyncTestBase
                 Assert.That(createdAt, Is.GreaterThan(unixTime2024));
             }
             pageCount++;
-
-            //var dynamicResult = result.GetRawResponse().Content.ToDynamicFromJson();
-            //Assert.That(dynamicResult.data.Count, Is.GreaterThan(0));
-            //Assert.That(dynamicResult.data[0].createdAt, Is.GreaterThan(new DateTimeOffset(2024, 01, 01, 0, 0, 0, TimeSpan.Zero)));
         }
 
         Assert.GreaterOrEqual(pageCount, 1);
@@ -87,10 +83,6 @@ public class BatchTests : SyncAsyncTestBase
                 Assert.That(createdAt, Is.GreaterThan(unixTime2024));
             }
             pageCount++;
-
-            //var dynamicResult = result.GetRawResponse().Content.ToDynamicFromJson();
-            //Assert.That(dynamicResult.data.Count, Is.GreaterThan(0));
-            //Assert.That(dynamicResult.data[0].createdAt, Is.GreaterThan(new DateTimeOffset(2024, 01, 01, 0, 0, 0, TimeSpan.Zero)));
         }
 
         Assert.GreaterOrEqual(pageCount, 1);
@@ -202,7 +194,7 @@ public class BatchTests : SyncAsyncTestBase
         static bool Validate(CreateBatchOperation operation)
         {
             BinaryData response = operation.GetRawResponse().Content;
-            JsonDocument jsonDocument = JsonDocument.Parse(response);
+            using JsonDocument jsonDocument = JsonDocument.Parse(response);
 
             JsonElement idElement = jsonDocument.RootElement.GetProperty("id");
             JsonElement createdAtElement = jsonDocument.RootElement.GetProperty("created_at");
@@ -228,11 +220,16 @@ public class BatchTests : SyncAsyncTestBase
         Assert.IsTrue(Validate(batchOperation));
         Assert.IsTrue(Validate(rehydratedOperation));
 
-        Task.WaitAll(
-            IsAsync ? batchOperation.WaitForCompletionAsync().AsTask() : Task.Run(() => batchOperation.WaitForCompletion()),
-            IsAsync ? rehydratedOperation.WaitForCompletionAsync().AsTask() : Task.Run(() => rehydratedOperation.WaitForCompletion()));
+        // We don't test wait for completion live because this is documented to
+        // sometimes take 24 hours.
 
-        Assert.IsTrue(batchOperation.HasCompleted);
-        Assert.IsTrue(rehydratedOperation.HasCompleted);
+        Assert.AreEqual(batchOperation.HasCompleted, rehydratedOperation.HasCompleted);
+
+        using JsonDocument originalOperationJson = JsonDocument.Parse(batchOperation.GetRawResponse().Content);
+        using JsonDocument rehydratedOperationJson = JsonDocument.Parse(rehydratedOperation.GetRawResponse().Content);
+
+        Assert.AreEqual(originalOperationJson.RootElement.GetProperty("id").GetString(), rehydratedOperationJson.RootElement.GetProperty("id").GetString());
+        Assert.AreEqual(originalOperationJson.RootElement.GetProperty("created_at").GetInt64(), rehydratedOperationJson.RootElement.GetProperty("created_at").GetInt64());
+        Assert.AreEqual(originalOperationJson.RootElement.GetProperty("status").GetString(), rehydratedOperationJson.RootElement.GetProperty("status").GetString());
     }
 }

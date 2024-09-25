@@ -253,7 +253,6 @@ public class CreateJobOperation : OperationResult
         return new FineTuningJobEventCollectionResult(this, _pipeline, options, jobId, limit, after);
     }
 
-
     /// <summary>
     /// [Protocol Method] List the checkpoints for a fine-tuning job.
     /// </summary>

@@ -103,48 +103,6 @@ public partial class FineTuningClient
     // - Renamed.
     // - Edited doc comment.
     /// <summary>
-    /// [Protocol Method] Get status updates for a fine-tuning job.
-    /// </summary>
-    /// <param name="jobId"> The ID of the fine-tuning job to get events for. </param>
-    /// <param name="after"> Identifier for the last event from the previous pagination request. </param>
-    /// <param name="limit"> Number of events to retrieve. </param>
-    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="jobId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> The response returned from the service. </returns>
-    public virtual AsyncCollectionResult GetJobEventsAsync(string jobId, string after, int? limit, RequestOptions options)
-    {
-        Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
-
-        return new AsyncFineTuningJobEventCollectionResult(this, _pipeline, options, jobId, limit, after);
-    }
-
-    // CUSTOM:
-    // - Renamed.
-    // - Edited doc comment.
-    /// <summary>
-    /// [Protocol Method] Get status updates for a fine-tuning job.
-    /// </summary>
-    /// <param name="jobId"> The ID of the fine-tuning job to get events for. </param>
-    /// <param name="after"> Identifier for the last event from the previous pagination request. </param>
-    /// <param name="limit"> Number of events to retrieve. </param>
-    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="jobId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> The response returned from the service. </returns>
-    public virtual CollectionResult GetJobEvents(string jobId, string after, int? limit, RequestOptions options)
-    {
-        Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
-
-        return new FineTuningJobEventCollectionResult(this, _pipeline, options, jobId, limit, after);
-    }
-
-    // CUSTOM:
-    // - Renamed.
-    // - Edited doc comment.
-    /// <summary>
     /// [Protocol Method] List your organization's fine-tuning jobs
     /// </summary>
     /// <param name="after"> Identifier for the last job from the previous pagination request. </param>
@@ -187,7 +145,7 @@ public partial class FineTuningClient
     /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    internal virtual async Task<ClientResult> GetJobAsync(string fineTuningJobId, RequestOptions options)
+    public virtual async Task<ClientResult> GetJobAsync(string fineTuningJobId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
 
@@ -209,49 +167,12 @@ public partial class FineTuningClient
     /// <exception cref="ArgumentException"> <paramref name="fineTuningJobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    internal virtual ClientResult GetJob(string fineTuningJobId, RequestOptions options)
+    public virtual ClientResult GetJob(string fineTuningJobId, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
 
         using PipelineMessage message = CreateRetrieveFineTuningJobRequest(fineTuningJobId, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
-    }
-
-    /// <summary>
-    /// [Protocol Method] List the checkpoints for a fine-tuning job.
-    /// </summary>
-    /// <param name="jobId"> The ID of the fine-tuning job to get checkpoints for. </param>
-    /// <param name="after"> Identifier for the last checkpoint ID from the previous pagination request. </param>
-    /// <param name="limit"> Number of checkpoints to retrieve. </param>
-    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="jobId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> The response returned from the service. </returns>
-    public virtual AsyncCollectionResult GetJobCheckpointsAsync(string jobId, string after, int? limit, RequestOptions options)
-    {
-        Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
-
-        return new AsyncFineTuningJobCheckpointCollectionResult(this, _pipeline, options, jobId, limit, after);
-
-    }
-
-    /// <summary>
-    /// [Protocol Method] List the checkpoints for a fine-tuning job.
-    /// </summary>
-    /// <param name="jobId"> The ID of the fine-tuning job to get checkpoints for. </param>
-    /// <param name="after"> Identifier for the last checkpoint ID from the previous pagination request. </param>
-    /// <param name="limit"> Number of checkpoints to retrieve. </param>
-    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="jobId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
-    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
-    /// <returns> The response returned from the service. </returns>
-    public virtual CollectionResult GetJobCheckpoints(string jobId, string after, int? limit, RequestOptions options)
-    {
-        Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
-
-        return new FineTuningJobCheckpointCollectionResult(this, _pipeline, options, jobId, limit, after);
     }
 
     internal virtual PipelineMessage CreateCreateFineTuningJobRequest(BinaryContent content, RequestOptions options)

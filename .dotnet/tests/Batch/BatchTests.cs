@@ -184,7 +184,7 @@ public class BatchTests : SyncAsyncTestBase
         testFileStream.Position = 0;
 
         FileClient fileClient = GetTestClient<FileClient>(TestScenario.Files);
-        OpenAIFileInfo inputFile = await fileClient.UploadFileAsync(testFileStream, "test-batch-file", FileUploadPurpose.Batch);
+        OpenAIFile inputFile = await fileClient.UploadFileAsync(testFileStream, "test-batch-file", FileUploadPurpose.Batch);
         Assert.That(inputFile.Id, Is.Not.Null.And.Not.Empty);
 
         BatchClient client = GetTestClient();
@@ -198,6 +198,7 @@ public class BatchTests : SyncAsyncTestBase
                 testMetadataKey = "test metadata value",
             },
         }));
+
         CreateBatchOperation batchOperation = IsAsync
             ? await client.CreateBatchAsync(content, waitUntilCompleted: false)
             : client.CreateBatch(content, waitUntilCompleted: false);
@@ -246,6 +247,4 @@ public class BatchTests : SyncAsyncTestBase
         Assert.IsTrue(batchOperation.HasCompleted);
         Assert.IsTrue(rehydratedOperation.HasCompleted);
     }
-
-    private static BatchClient GetTestClient() => GetTestClient<BatchClient>(TestScenario.Batch);
 }

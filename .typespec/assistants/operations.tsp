@@ -17,7 +17,6 @@ interface Assistants {
   @summary("Create an assistant with a model and instructions.")
   createAssistant(
     @header accept: "application/json",
-    
     @body requestBody: CreateAssistantRequest,
   ): AssistantObject | ErrorResponse;
 

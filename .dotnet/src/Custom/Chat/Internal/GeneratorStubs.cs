@@ -104,3 +104,15 @@ internal partial class InternalCreateChatCompletionStreamResponseUsage { }
 
 [CodeGenModel("FunctionParameters")]
 internal partial class InternalFunctionParameters { }
+
+[CodeGenModel("ClientOnlyChatCompletionToolChoiceOptionPredefined")]
+internal partial class InternalClientOnlyChatCompletionToolChoiceOptionPredefined {}
+
+[CodeGenModel("ClientOnlyChatCompletionToolChoiceOptionNamed")]
+internal partial class InternalClientOnlyChatCompletionToolChoiceOptionNamed {}
+
+[CodeGenModel("ClientOnlyChatCompletionToolChoiceOptionNamedType")]
+internal readonly partial struct InternalClientOnlyChatCompletionToolChoiceOptionNamedType { }
+
+[CodeGenModel("ClientOnlyChatCompletionToolChoiceOptionPredefinedValue1")]
+internal readonly partial struct InternalClientOnlyChatCompletionToolChoiceOptionPredefinedValue { }

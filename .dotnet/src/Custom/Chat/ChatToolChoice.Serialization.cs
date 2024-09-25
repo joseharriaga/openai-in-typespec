@@ -1,4 +1,5 @@
 using System;
+using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -6,28 +7,10 @@ using System.Text.Json;
 namespace OpenAI.Chat;
 
 [CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Chat.ChatToolChoice>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
-public partial class ChatToolChoice : IJsonModel<ChatToolChoice>
+public abstract partial class ChatToolChoice : IJsonModel<ChatToolChoice>
 {
     void IJsonModel<ChatToolChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => CustomSerializationHelpers.SerializeInstance(this, SerializeChatToolChoice, writer, options);
-
-    internal static void SerializeChatToolChoice(ChatToolChoice instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        if (instance._predefined)
-        {
-            writer.WriteStringValue(instance._predefinedValue);
-        }
-        else
-        {
-            writer.WriteStartObject();
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(instance._type.ToString());
-            writer.WritePropertyName("function"u8);
-            writer.WriteObjectValue(instance._function, options);
-            writer.WriteSerializedAdditionalRawData(instance.SerializedAdditionalRawData, options);
-            writer.WriteEndObject();
-        }
-    }
+        => CustomSerializationHelpers.SerializeInstance(this, WriteCore, writer, options);
 
     internal static ChatToolChoice DeserializeChatToolChoice(JsonElement element, ModelReaderWriterOptions options = null)
     {
@@ -37,45 +20,16 @@ public partial class ChatToolChoice : IJsonModel<ChatToolChoice>
         {
             return null;
         }
-        else if (element.ValueKind == JsonValueKind.String)
+        if (element.ValueKind == JsonValueKind.String)
         {
-            return new ChatToolChoice(
-                predefined: true,
-                predefinedValue: element.ToString(),
-                type: null,
-                function: null,
-                serializedAdditionalRawData: null);
+            return new InternalClientOnlyChatCompletionToolChoiceOptionPredefined(element.GetString());
         }
-        else
-        {
-            InternalChatCompletionNamedToolChoiceType type = default;
-            InternalChatCompletionNamedToolChoiceFunction function = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
-            {
-                if (property.NameEquals("type"u8))
-                {
-                    type = new InternalChatCompletionNamedToolChoiceType(property.Value.GetString());
-                    continue;
-                }
-                if (property.NameEquals("function"u8))
-                {
-                    function = InternalChatCompletionNamedToolChoiceFunction.DeserializeInternalChatCompletionNamedToolChoiceFunction(property.Value, options);
-                    continue;
-                }
-                if (true)
-                {
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
-                }
-            }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new ChatToolChoice(
-                predefined: false,
-                predefinedValue: null,
-                type: InternalChatCompletionNamedToolChoiceType.Function,
-                function: new InternalChatCompletionNamedToolChoiceFunction(function.Name),
-                serializedAdditionalRawData: rawDataDictionary);
-        }
+        return InternalClientOnlyChatCompletionToolChoiceOptionNamed
+            .DeserializeInternalClientOnlyChatCompletionToolChoiceOptionNamed(element, options);
     }
+
+    internal static void WriteCore(ChatToolChoice instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => instance.WriteCore(writer, options);
+
+    internal abstract void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
 }

@@ -8,9 +8,6 @@ using OpenAI;
 @@access(ChatCompletionFunctionChoice, Access.public);
 @@usage(ChatCompletionFunctionChoice, Usage.input);
 
-@@access(ChatCompletionToolChoice, Access.public);
-@@usage(ChatCompletionToolChoice, Usage.input);
-
 @@access(ChatMessageContentPart, Access.public);
 @@usage(ChatMessageContentPart, Usage.input | Usage.output);
 
@@ -25,3 +22,12 @@ using OpenAI;
 
 @@access(ChatResponseFormatJsonSchema, Access.public);
 @@usage(ChatResponseFormatJsonSchema, Usage.input);
+
+@@access(ClientOnlyChatCompletionToolChoiceOption, Access.public);
+@@usage(ClientOnlyChatCompletionToolChoiceOption, Usage.input);
+
+@@access(ClientOnlyChatCompletionToolChoiceOptionPredefined, Access.public);
+@@usage(ClientOnlyChatCompletionToolChoiceOptionPredefined, Usage.input);
+
+@@access(ClientOnlyChatCompletionToolChoiceOptionNamed, Access.public);
+@@usage(ClientOnlyChatCompletionToolChoiceOptionNamed, Usage.input);

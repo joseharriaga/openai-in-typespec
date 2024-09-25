@@ -1,6 +1,7 @@
 import "../common";
 
 using TypeSpec.OpenAPI;
+using TypeSpec.Http;
 
 namespace OpenAI;
 
@@ -24,6 +25,19 @@ model ChatResponseFormatJsonSchema extends ChatResponseFormat {
 
 model ChatCompletionFunctionChoice {}
 
-model ChatCompletionToolChoice {}
-
 model ChatMessageContentPart {}
+
+@discriminator("placeholder_discriminator")
+model ClientOnlyChatCompletionToolChoiceOption {
+  placeholder_discriminator: string;
+}
+model ClientOnlyChatCompletionToolChoiceOptionPredefined
+  extends ClientOnlyChatCompletionToolChoiceOption {
+  placeholder_discriminator: "predefined";
+  value: string | "none" | "auto" | "required";
+}
+model ClientOnlyChatCompletionToolChoiceOptionNamed
+  extends ClientOnlyChatCompletionToolChoiceOption {
+  placeholder_discriminator: "named";
+  ...ChatCompletionNamedToolChoice;
+}

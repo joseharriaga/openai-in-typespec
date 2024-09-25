@@ -159,10 +159,26 @@ public class ChatSmokeTests : SyncAsyncTestBase
         }
 
         BinaryData serializedChoice = ModelReaderWriter.Write(choice);
-        using JsonDocument choiceAsJson = JsonDocument.Parse(serializedChoice);
-        Assert.That(choiceAsJson.RootElement, Is.Not.Null);
-        Assert.That(choiceAsJson.RootElement.ValueKind, Is.EqualTo(JsonValueKind.String));
-        Assert.That(choiceAsJson.RootElement.ToString(), Is.EqualTo("auto"));
+        using (JsonDocument choiceAsJson = JsonDocument.Parse(serializedChoice))
+        {
+            Assert.That(choiceAsJson.RootElement, Is.Not.Null);
+            Assert.That(choiceAsJson.RootElement.ValueKind, Is.EqualTo(JsonValueKind.String));
+            Assert.That(choiceAsJson.RootElement.ToString(), Is.EqualTo("auto"));
+        }
+
+        choice = fromRawJson ? ModelReaderWriter.Read<ChatToolChoice>(BinaryData.FromString("""
+            {
+              "type": "function",
+              "function": {
+                "name": "test_function"
+              }
+            }
+            """))
+            : ChatToolChoice.CreateFunctionChoice("test_function");
+        serializedChoice = ModelReaderWriter.Write(choice);
+        Assert.That(serializedChoice.ToString(), Is.EqualTo("""
+            {"type":"function","function":{"name":"test_function"}}
+            """));
     }
 
     [Test]
@@ -220,6 +236,14 @@ public class ChatSmokeTests : SyncAsyncTestBase
             Assert.That(additionalPropertyProperty, Is.Not.Null);
             Assert.That(additionalPropertyProperty.ValueKind, Is.EqualTo(JsonValueKind.True));
         }
+    }
+
+    [Test]
+    public void SerializeChatResponseFormats()
+    {
+        ChatResponseFormat textFormat = ChatResponseFormat.CreateTextFormat();
+        BinaryData serializedTextFormat = ModelReaderWriter.Write(textFormat);
+        ChatResponseFormat deserializedTextFormat = ModelReaderWriter.Read<ChatResponseFormat>(serializedTextFormat);
     }
 
 #pragma warning disable CS0618

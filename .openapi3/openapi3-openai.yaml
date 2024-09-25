@@ -4195,8 +4195,6 @@ components:
           description: The type of the tool. Currently, only `function` is supported.
         function:
           $ref: '#/components/schemas/FunctionObject'
-    ChatCompletionToolChoice:
-      type: object
     ChatCompletionToolChoiceOption:
       anyOf:
         - type: string
@@ -4290,6 +4288,64 @@ components:
         - $ref: '#/components/schemas/StaticChunkingStrategyRequestParam'
       description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
       x-oaiExpandable: true
+    ClientOnlyChatCompletionToolChoiceOption:
+      type: object
+      required:
+        - placeholder_discriminator
+      properties:
+        placeholder_discriminator:
+          type: string
+      discriminator:
+        propertyName: placeholder_discriminator
+        mapping:
+          predefined: '#/components/schemas/ClientOnlyChatCompletionToolChoiceOptionPredefined'
+          named: '#/components/schemas/ClientOnlyChatCompletionToolChoiceOptionNamed'
+    ClientOnlyChatCompletionToolChoiceOptionNamed:
+      type: object
+      required:
+        - placeholder_discriminator
+        - type
+        - function
+      properties:
+        placeholder_discriminator:
+          type: string
+          enum:
+            - named
+        type:
+          type: string
+          enum:
+            - function
+          description: The type of the tool. Currently, only `function` is supported.
+        function:
+          type: object
+          properties:
+            name:
+              type: string
+              description: The name of the function to call.
+          required:
+            - name
+      allOf:
+        - $ref: '#/components/schemas/ClientOnlyChatCompletionToolChoiceOption'
+    ClientOnlyChatCompletionToolChoiceOptionPredefined:
+      type: object
+      required:
+        - placeholder_discriminator
+        - value
+      properties:
+        placeholder_discriminator:
+          type: string
+          enum:
+            - predefined
+        value:
+          anyOf:
+            - type: string
+            - type: string
+              enum:
+                - none
+                - auto
+                - required
+      allOf:
+        - $ref: '#/components/schemas/ClientOnlyChatCompletionToolChoiceOption'
     CompleteUploadRequest:
       type: object
       required:

@@ -1,5 +1,7 @@
 using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace OpenAI.Chat;
 
@@ -24,74 +26,31 @@ namespace OpenAI.Chat;
 ///         </item>
 ///     </list>
 /// </summary>
-[CodeGenModel("ChatCompletionToolChoice")]
-[CodeGenSuppress("ChatToolChoice", typeof(IDictionary<string, BinaryData>))]
-public partial class ChatToolChoice
+[CodeGenModel("ClientOnlyChatCompletionToolChoiceOption")]
+public abstract partial class ChatToolChoice
 {
-    private readonly bool _predefined;
-    private readonly string _predefinedValue;
-    private readonly InternalChatCompletionNamedToolChoiceType? _type;
-    private readonly InternalChatCompletionNamedToolChoiceFunction _function;
-
-    private const string AutoValue = "auto";
-    private const string NoneValue = "none";
-    private const string RequiredValue = "required";
-
-    // CUSTOM: Made internal.
-    internal ChatToolChoice()
-    {
-    }
-
-    // CUSTOM: Added to support deserialization.
-    internal ChatToolChoice(bool predefined, string predefinedValue, InternalChatCompletionNamedToolChoiceType? type, InternalChatCompletionNamedToolChoiceFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
-    {
-        _predefined = predefined;
-        _predefinedValue = predefinedValue;
-        _type = type;
-        _function = function;
-        SerializedAdditionalRawData = serializedAdditionalRawData;
-    }
-
     /// <summary>
     ///     Creates a new <see cref="ChatToolChoice"/> indicating that the model can freely pick between generating a
     ///     message or calling one or more tools.
     /// </summary>
     public static ChatToolChoice CreateAutoChoice()
-    {
-        return new ChatToolChoice(
-            predefined: true,
-            predefinedValue: AutoValue,
-            type: null,
-            function: null,
-            serializedAdditionalRawData: null);
-    }
+        => new InternalClientOnlyChatCompletionToolChoiceOptionPredefined(
+            InternalClientOnlyChatCompletionToolChoiceOptionPredefinedValue.Auto);
 
     /// <summary>
     ///     Creates a new <see cref="ChatToolChoice"/> indicating that the model must not call any tools and that
     ///     instead it must generate a message.
     /// </summary>
     public static ChatToolChoice CreateNoneChoice()
-    {
-        return new ChatToolChoice(
-            predefined: true,
-            predefinedValue: NoneValue,
-            type: null,
-            function: null,
-            serializedAdditionalRawData: null);
-    }
+        => new InternalClientOnlyChatCompletionToolChoiceOptionPredefined(
+            InternalClientOnlyChatCompletionToolChoiceOptionPredefinedValue.None);
 
     /// <summary>
     ///     Creates a new <see cref="ChatToolChoice"/> indicating that the model must call one or more tools.
     /// </summary>
     public static ChatToolChoice CreateRequiredChoice()
-    {
-        return new ChatToolChoice(
-            predefined: true,
-            predefinedValue: RequiredValue,
-            type: null,
-            function: null,
-            serializedAdditionalRawData: null);
-    }
+        => new InternalClientOnlyChatCompletionToolChoiceOptionPredefined(
+            InternalClientOnlyChatCompletionToolChoiceOptionPredefinedValue.Required);
 
     /// <summary>
     ///     Creates a new <see cref="ChatToolChoice"/> indicating that the model must call the specified function.
@@ -101,12 +60,15 @@ public partial class ChatToolChoice
     public static ChatToolChoice CreateFunctionChoice(string functionName)
     {
         Argument.AssertNotNullOrEmpty(functionName, nameof(functionName));
-
-        return new ChatToolChoice(
-            predefined: false,
-            predefinedValue: null,
-            type: InternalChatCompletionNamedToolChoiceType.Function,
-            function: new InternalChatCompletionNamedToolChoiceFunction(functionName),
-            serializedAdditionalRawData: null);
+        return new InternalClientOnlyChatCompletionToolChoiceOptionNamed(
+            new InternalChatCompletionNamedToolChoiceFunction(functionName));
     }
+
+    internal ChatToolChoice(IDictionary<string, BinaryData> serializedAdditionalRawData)
+    {
+        SerializedAdditionalRawData = serializedAdditionalRawData;
+    }
+
+    internal ChatToolChoice()
+    { }
 }

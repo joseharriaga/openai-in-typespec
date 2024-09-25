@@ -18,7 +18,6 @@ interface Runs {
   @summary("Create a thread and run it in one request.")
   createThreadAndRun(
     @header accept: "application/json",
-
     @body requestBody: CreateThreadAndRunRequest,
   ): RunObject | ErrorResponse;
 
@@ -190,7 +189,7 @@ interface Runs {
   @summary("Retrieves a run step.")
   getRunStep(
     @header accept: "application/json",
-    
+
     /** The ID of the thread to which the run and run step belongs. */
     @path thread_id: string,
 

@@ -7,8 +7,16 @@ using System.Collections.Generic;
 
 namespace OpenAI.Chat
 {
-    public partial class ChatToolChoice
+    public abstract partial class ChatToolChoice
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+
+        internal ChatToolChoice(string placeholderDiscriminator, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        {
+            PlaceholderDiscriminator = placeholderDiscriminator;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
+        }
+
+        internal string PlaceholderDiscriminator { get; set; }
     }
 }

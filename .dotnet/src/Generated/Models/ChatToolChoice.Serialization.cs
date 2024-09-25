@@ -9,6 +9,7 @@ using System.Text.Json;
 
 namespace OpenAI.Chat
 {
+    [PersistableModelProxy(typeof(InternalUnknownClientOnlyChatCompletionToolChoiceOption))]
     public partial class ChatToolChoice : IJsonModel<ChatToolChoice>
     {
         ChatToolChoice IJsonModel<ChatToolChoice>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)

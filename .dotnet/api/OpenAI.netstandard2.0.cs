@@ -1622,7 +1622,7 @@ namespace OpenAI.Chat {
         public static bool operator !=(ChatToolCallKind left, ChatToolCallKind right);
         public override readonly string ToString();
     }
-    public class ChatToolChoice : IJsonModel<ChatToolChoice>, IPersistableModel<ChatToolChoice> {
+    public abstract class ChatToolChoice : IJsonModel<ChatToolChoice>, IPersistableModel<ChatToolChoice> {
         public static ChatToolChoice CreateAutoChoice();
         public static ChatToolChoice CreateFunctionChoice(string functionName);
         public static ChatToolChoice CreateNoneChoice();

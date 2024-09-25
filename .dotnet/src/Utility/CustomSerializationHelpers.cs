@@ -113,16 +113,22 @@ internal static partial class CustomSerializationHelpers
 
     internal static void WriteSerializedAdditionalRawData(this Utf8JsonWriter writer, IDictionary<string, BinaryData> dictionary, ModelReaderWriterOptions options)
     {
-        if (true && dictionary != null)
+        if (dictionary != null)
         {
             foreach (var item in dictionary)
             {
+                if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                {
+                    continue;
+                }
                 writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-                writer.WriteRawValue(item.Value);
+            writer.WriteRawValue(item.Value);
 #else
-                using JsonDocument document = JsonDocument.Parse(item.Value);
-                JsonSerializer.Serialize(writer, document.RootElement);
+                using (JsonDocument document = JsonDocument.Parse(item.Value))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
 #endif
             }
         }

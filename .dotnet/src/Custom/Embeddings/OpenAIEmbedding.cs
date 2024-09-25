@@ -11,8 +11,8 @@ namespace OpenAI.Embeddings;
 /// Represents an embedding vector returned by embedding endpoint.
 /// </summary>
 [CodeGenModel("Embedding")]
-[CodeGenSuppress("Embedding", typeof(int), typeof(BinaryData))]
-public partial class Embedding
+[CodeGenSuppress("OpenAIEmbedding", typeof(int), typeof(BinaryData))]
+public partial class OpenAIEmbedding
 {
     // CUSTOM: Made private. The value of the embedding is publicly exposed as ReadOnlyMemory<float> instead of BinaryData.
     /// <summary>
@@ -57,6 +57,7 @@ public partial class Embedding
     /// </list>
     /// </para>
     /// </summary>
+    [CodeGenMember("Embedding")]
     private BinaryData EmbeddingProperty { get; }
 
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
@@ -64,7 +65,7 @@ public partial class Embedding
     private InternalEmbeddingObject Object { get; } = InternalEmbeddingObject.Embedding;
 
     // CUSTOM: Added logic to handle additional custom properties.
-    /// <summary> Initializes a new instance of <see cref="Embedding"/>. </summary>
+    /// <summary> Initializes a new instance of <see cref="OpenAIEmbedding"/>. </summary>
     /// <param name="index"> The index of the embedding in the list of embeddings. </param>
     /// <param name="embeddingProperty">
     /// The embedding vector, which is a list of floats. The length of vector depends on the model as
@@ -72,7 +73,7 @@ public partial class Embedding
     /// </param>
     /// <param name="object"> The object type, which is always "embedding". </param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-    internal Embedding(int index, BinaryData embeddingProperty, InternalEmbeddingObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    internal OpenAIEmbedding(int index, BinaryData embeddingProperty, InternalEmbeddingObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
     {
         Index = index;
         EmbeddingProperty = embeddingProperty;
@@ -84,10 +85,10 @@ public partial class Embedding
     }
 
     // CUSTOM: Entirely custom constructor used by the Model Factory.
-    /// <summary> Initializes a new instance of <see cref="Embedding"/>. </summary>
+    /// <summary> Initializes a new instance of <see cref="OpenAIEmbedding"/>. </summary>
     /// <param name="index"> The index of the embedding in the list of embeddings. </param>
     /// <param name="vector"> The embedding vector, which is a list of floats. </param>
-    internal Embedding(int index, ReadOnlyMemory<float> vector)
+    internal OpenAIEmbedding(int index, ReadOnlyMemory<float> vector)
     {
         Index = index;
         _vector = vector;

@@ -15,10 +15,10 @@ function Run-ModelsSubnamespaceCheck {
         "InternalModelObject.cs",
         "ModelClient.cs",
         "ModelClient.Protocol.cs",
-        "OpenAIModelInfo.cs",
-        "OpenAIModelInfo.Serialization.cs",
-        "OpenAIModelInfoCollection.cs",
-        "OpenAIModelInfoCollection.Serialization.cs",
+        "OpenAIModel.cs",
+        "OpenAIModel.Serialization.cs",
+        "OpenAIModelCollection.cs",
+        "OpenAIModelCollection.Serialization.cs",
         "OpenAIModelsModelFactory.cs"
     )
 

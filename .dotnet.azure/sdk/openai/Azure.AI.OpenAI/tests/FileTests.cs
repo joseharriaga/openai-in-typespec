@@ -21,7 +21,7 @@ public class FileTests : AoaiTestBase<FileClient>
     public async Task CanUploadAndDeleteFiles()
     {
         FileClient client = GetTestClient();
-        OpenAIFileInfo file = await client.UploadFileAsync(
+        OpenAIFile file = await client.UploadFileAsync(
             BinaryData.FromString("hello, world!"),
             "test_file_delete_me.txt",
             FileUploadPurpose.Assistants);
@@ -35,7 +35,7 @@ public class FileTests : AoaiTestBase<FileClient>
     public async Task CanListFiles()
     {
         FileClient client = GetTestClient();
-        OpenAIFileInfoCollection files = await client.GetFilesAsync();
+        OpenAIFileCollection files = await client.GetFilesAsync();
         Assert.That(files, Has.Count.GreaterThan(0));
     }
 }

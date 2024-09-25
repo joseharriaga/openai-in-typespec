@@ -43,9 +43,9 @@ namespace OpenAI
             return new RunIncompleteDetails(reason, serializedAdditionalRawData: null);
         }
 
-        public static RunTokenUsage RunTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
+        public static RunTokenUsage RunTokenUsage(int outputTokenCount = default, int inputTokenCount = default, int totalTokenCount = default)
         {
-            return new RunTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
+            return new RunTokenUsage(outputTokenCount, inputTokenCount, totalTokenCount, serializedAdditionalRawData: null);
         }
 
         public static RunStepError RunStepError(RunStepErrorCode code = default, string message = null)
@@ -82,9 +82,9 @@ namespace OpenAI
             return new GeneratedImage(imageBytes, imageUri, revisedPrompt, serializedAdditionalRawData: null);
         }
 
-        public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokens = default, int totalTokens = default)
+        public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokenCount = default, int totalTokenCount = default)
         {
-            return new EmbeddingTokenUsage(inputTokens, totalTokens, serializedAdditionalRawData: null);
+            return new EmbeddingTokenUsage(inputTokenCount, totalTokenCount, serializedAdditionalRawData: null);
         }
 
         public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = default, int inputTokenCount = default, int totalTokenCount = default, ChatOutputTokenUsageDetails outputTokenDetails = null)

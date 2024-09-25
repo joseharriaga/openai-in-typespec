@@ -8,16 +8,16 @@ using System.Text.Json;
 
 namespace OpenAI.Models;
 
-[CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Models.OpenAIModelInfoCollection>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
-public partial class OpenAIModelInfoCollection : IJsonModel<OpenAIModelInfoCollection>
+[CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Models.OpenAIModelCollection>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
+public partial class OpenAIModelCollection : IJsonModel<OpenAIModelCollection>
 {
     // CUSTOM:
     // - Serialized the Items property.
     // - Recovered the serialization of SerializedAdditionalRawData. See https://github.com/Azure/autorest.csharp/issues/4636.
-    void IJsonModel<OpenAIModelInfoCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => CustomSerializationHelpers.SerializeInstance(this, SerializeOpenAIModelInfoCollection, writer, options);
+    void IJsonModel<OpenAIModelCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeOpenAIModelCollection, writer, options);
 
-    internal static void SerializeOpenAIModelInfoCollection(OpenAIModelInfoCollection instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    internal static void SerializeOpenAIModelCollection(OpenAIModelCollection instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
         writer.WritePropertyName("object"u8);
@@ -26,7 +26,7 @@ public partial class OpenAIModelInfoCollection : IJsonModel<OpenAIModelInfoColle
         writer.WriteStartArray();
         foreach (var item in instance.Items)
         {
-            writer.WriteObjectValue<OpenAIModelInfo>(item, options);
+            writer.WriteObjectValue<OpenAIModel>(item, options);
         }
         writer.WriteEndArray();
         writer.WriteSerializedAdditionalRawData(instance.SerializedAdditionalRawData, options);
@@ -34,7 +34,7 @@ public partial class OpenAIModelInfoCollection : IJsonModel<OpenAIModelInfoColle
     }
 
     // CUSTOM: Recovered the deserialization of SerializedAdditionalRawData. See https://github.com/Azure/autorest.csharp/issues/4636.
-    internal static OpenAIModelInfoCollection DeserializeOpenAIModelInfoCollection(JsonElement element, ModelReaderWriterOptions options = null)
+    internal static OpenAIModelCollection DeserializeOpenAIModelCollection(JsonElement element, ModelReaderWriterOptions options = null)
     {
         options ??= ModelSerializationExtensions.WireOptions;
 
@@ -43,7 +43,7 @@ public partial class OpenAIModelInfoCollection : IJsonModel<OpenAIModelInfoColle
             return null;
         }
         InternalListModelsResponseObject @object = default;
-        IReadOnlyList<OpenAIModelInfo> data = default;
+        IReadOnlyList<OpenAIModel> data = default;
         IDictionary<string, BinaryData> serializedAdditionalRawData = default;
         Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
         foreach (var property in element.EnumerateObject())
@@ -55,10 +55,10 @@ public partial class OpenAIModelInfoCollection : IJsonModel<OpenAIModelInfoColle
             }
             if (property.NameEquals("data"u8))
             {
-                List<OpenAIModelInfo> array = new List<OpenAIModelInfo>();
+                List<OpenAIModel> array = new List<OpenAIModel>();
                 foreach (var item in property.Value.EnumerateArray())
                 {
-                    array.Add(OpenAIModelInfo.DeserializeOpenAIModelInfo(item, options));
+                    array.Add(OpenAIModel.DeserializeOpenAIModel(item, options));
                 }
                 data = array;
                 continue;
@@ -69,6 +69,6 @@ public partial class OpenAIModelInfoCollection : IJsonModel<OpenAIModelInfoColle
             }
         }
         serializedAdditionalRawData = rawDataDictionary;
-        return new OpenAIModelInfoCollection(@object, data, serializedAdditionalRawData);
+        return new OpenAIModelCollection(@object, data, serializedAdditionalRawData);
     }
 }

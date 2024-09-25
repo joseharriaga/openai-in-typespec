@@ -3,7 +3,7 @@ using System;
 namespace OpenAI.Files;
 
 [CodeGenModel("OpenAIFile")]
-public partial class OpenAIFileInfo
+public partial class OpenAIFile
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
     /// <summary> The object type, which is always "file". </summary>

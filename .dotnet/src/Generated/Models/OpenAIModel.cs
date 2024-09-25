@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 namespace OpenAI.Models
 {
-    public partial class OpenAIModelInfo
+    public partial class OpenAIModel
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal OpenAIModelInfo(string id, DateTimeOffset createdAt, string ownedBy)
+        internal OpenAIModel(string id, DateTimeOffset createdAt, string ownedBy)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(ownedBy, nameof(ownedBy));
@@ -20,7 +20,7 @@ namespace OpenAI.Models
             OwnedBy = ownedBy;
         }
 
-        internal OpenAIModelInfo(string id, DateTimeOffset createdAt, InternalModelObject @object, string ownedBy, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal OpenAIModel(string id, DateTimeOffset createdAt, InternalModelObject @object, string ownedBy, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -29,7 +29,7 @@ namespace OpenAI.Models
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal OpenAIModelInfo()
+        internal OpenAIModel()
         {
         }
 

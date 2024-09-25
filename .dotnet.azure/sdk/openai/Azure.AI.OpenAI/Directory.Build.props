@@ -11,10 +11,4 @@
     <ExternalAzureCoreLibrary>../../external/Azure.Core.Slim/netstandard2.0/Azure.Core.Slim.dll</ExternalAzureCoreLibrary>
     -->
   </PropertyGroup>
-
-  <!-- Work around strong name signing shenanigans -->
-  <ItemGroup>
-    <InternalsVisibleTo Include="Azure.AI.OpenAI.Tests" />
-    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
-  </ItemGroup>
 </Project>

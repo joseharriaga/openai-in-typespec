@@ -10,9 +10,9 @@ namespace OpenAI.Models;
 /// </summary>
 [CodeGenModel("ListModelsResponse")]
 [CodeGenSuppress("Data")]
-[CodeGenSuppress(nameof(OpenAIModelInfoCollection))]
-[CodeGenSuppress(nameof(OpenAIModelInfoCollection), typeof(InternalListModelsResponseObject), typeof(IReadOnlyList<OpenAIModelInfo>))]
-public partial class OpenAIModelInfoCollection : ReadOnlyCollection<OpenAIModelInfo>
+[CodeGenSuppress(nameof(OpenAIModelCollection))]
+[CodeGenSuppress(nameof(OpenAIModelCollection), typeof(InternalListModelsResponseObject), typeof(IReadOnlyList<OpenAIModel>))]
+public partial class OpenAIModelCollection : ReadOnlyCollection<OpenAIModel>
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
     /// <summary> Gets the object. </summary>
@@ -51,28 +51,28 @@ public partial class OpenAIModelInfoCollection : ReadOnlyCollection<OpenAIModelI
     /// </summary>
     private IDictionary<string, BinaryData> SerializedAdditionalRawData;
 
-    /// <summary> Initializes a new instance of <see cref="OpenAIModelInfoCollection"/>. </summary>
+    /// <summary> Initializes a new instance of <see cref="OpenAIModelCollection"/>. </summary>
     /// <param name="data"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="data"/> is null. </exception>
-    internal OpenAIModelInfoCollection(IEnumerable<OpenAIModelInfo> data)
+    internal OpenAIModelCollection(IEnumerable<OpenAIModel> data)
         : base([.. data])
     {
         Argument.AssertNotNull(data, nameof(data));
     }
 
-    /// <summary> Initializes a new instance of <see cref="OpenAIModelInfoCollection"/>. </summary>
+    /// <summary> Initializes a new instance of <see cref="OpenAIModelCollection"/>. </summary>
     /// <param name="object"></param>
     /// <param name="data"></param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-    internal OpenAIModelInfoCollection(InternalListModelsResponseObject @object, IReadOnlyList<OpenAIModelInfo> data, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    internal OpenAIModelCollection(InternalListModelsResponseObject @object, IReadOnlyList<OpenAIModel> data, IDictionary<string, BinaryData> serializedAdditionalRawData)
         : base([.. data])
     {
         Object = @object;
         SerializedAdditionalRawData = serializedAdditionalRawData;
     }
 
-    /// <summary> Initializes a new instance of <see cref="OpenAIModelInfoCollection"/> for deserialization. </summary>
-    internal OpenAIModelInfoCollection()
+    /// <summary> Initializes a new instance of <see cref="OpenAIModelCollection"/> for deserialization. </summary>
+    internal OpenAIModelCollection()
         : base([])
     {
     }

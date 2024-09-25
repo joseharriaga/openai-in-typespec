@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace OpenAI.Embeddings
 {
-    public partial class EmbeddingCollection : ReadOnlyCollection<Embedding>
+    public partial class OpenAIEmbeddingCollection : ReadOnlyCollection<OpenAIEmbedding>
     {
         public string Model { get; }
 

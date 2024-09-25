@@ -43,7 +43,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         Assert.That(deletionResult.VectorStoreId, Is.EqualTo(operation.VectorStoreId));
         Assert.That(deletionResult.Deleted, Is.True);
 
-        IReadOnlyList<OpenAIFileInfo> testFiles = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 5);
+        IReadOnlyList<OpenAIFile> testFiles = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 5);
 
         operation = await client.CreateVectorStoreAsync(false, new VectorStoreCreationOptions()
         {
@@ -152,9 +152,9 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         VectorStore vectorStore = operation.Value;
         Validate(vectorStore);
 
-        IReadOnlyList<OpenAIFileInfo> files = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 3);
+        IReadOnlyList<OpenAIFile> files = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 3);
 
-        foreach (OpenAIFileInfo file in files)
+        foreach (OpenAIFile file in files)
         {
             AddFileToVectorStoreOperation addFileOperation = await client.AddFileToVectorStoreAsync(vectorStore, file, false);
             VectorStoreFileAssociation association = addFileOperation.Value;
@@ -196,7 +196,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         VectorStore vectorStore = operation.Value;
         Validate(vectorStore);
 
-        IReadOnlyList<OpenAIFileInfo> testFiles = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 3);
+        IReadOnlyList<OpenAIFile> testFiles = await GetNewTestFilesAsync(client.GetConfigOrThrow(), 3);
 
         CreateBatchFileJobOperation batchOperation = await client.CreateBatchFileJobAsync(vectorStore, testFiles, false);
         VectorStoreBatchFileJob batchJob = batchOperation.Value;
@@ -226,7 +226,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         }
     }
 
-    private async Task<IReadOnlyList<OpenAIFileInfo>> GetNewTestFilesAsync(IConfiguration config, int count)
+    private async Task<IReadOnlyList<OpenAIFile>> GetNewTestFilesAsync(IConfiguration config, int count)
     {
         AzureOpenAIClient azureClient = GetTestTopLevelClient(config, new()
         {
@@ -235,10 +235,10 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
         });
         FileClient client = GetTestClient<FileClient>(azureClient, config);
 
-        List<OpenAIFileInfo> files = [];
+        List<OpenAIFile> files = [];
         for (int i = 0; i < count; i++)
         {
-            OpenAIFileInfo file = await client.UploadFileAsync(
+            OpenAIFile file = await client.UploadFileAsync(
                 BinaryData.FromString("This is a test file").ToStream(),
                 $"test_file_{i.ToString().PadLeft(3, '0')}.txt",
                 FileUploadPurpose.Assistants)

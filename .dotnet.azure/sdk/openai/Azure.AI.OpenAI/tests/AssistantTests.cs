@@ -188,11 +188,11 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
 
         Print(" >>> Beginning call ... ");
 
-        ThreadCreationOptions thrdOpt = new()
+        ThreadCreationOptions thirdOpt = new()
         {
             InitialMessages = { new(MessageRole.User, ["What should I wear outside right now?"]), },
         };
-        AsyncCollectionResult<StreamingUpdate> asyncResults = client.CreateThreadAndRunStreamingAsync(assistant, thrdOpt);
+        AsyncCollectionResult<StreamingUpdate> asyncResults = client.CreateThreadAndRunStreamingAsync(assistant, thirdOpt);
 
         Print(" >>> Starting enumeration ...");
 
@@ -397,7 +397,7 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
             () => client.GetRunAsync(run),
             r => r.Status.IsTerminal);
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
-        Assert.That(run.Usage?.TotalTokens, Is.GreaterThan(0));
+        Assert.That(run.Usage?.TotalTokenCount, Is.GreaterThan(0));
 
         List<RunStep> runSteps = await client.GetRunStepsAsync(run).ToListAsync();
         Assert.That(runSteps.Count(), Is.GreaterThan(1));
@@ -510,7 +510,7 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
         string modelName = client.DeploymentOrThrow();
         FileClient fileClient = GetTestClientFrom<FileClient>(client);
 
-        OpenAIFileInfo testFile = await fileClient.UploadFileAsync(
+        OpenAIFile testFile = await fileClient.UploadFileAsync(
             BinaryData.FromString("""
                 This file describes the favorite foods of several people.
 

@@ -117,7 +117,7 @@ public partial class VectorStoreClient
     /// <returns> A <see cref="VectorStoreFileAssociation"/> instance. </returns>
     public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(
         VectorStore vectorStore,
-        OpenAIFileInfo file)
+        OpenAIFile file)
             => GetFileAssociationAsync(vectorStore?.Id, file?.Id);
 
     /// <summary>
@@ -129,7 +129,7 @@ public partial class VectorStoreClient
     /// <returns> A <see cref="VectorStoreFileAssociation"/> instance. </returns>
     public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(
         VectorStore vectorStore,
-        OpenAIFileInfo file)
+        OpenAIFile file)
             => GetFileAssociation(vectorStore?.Id, file?.Id);
 
     /// <summary>
@@ -137,12 +137,12 @@ public partial class VectorStoreClient
     /// store.
     /// </summary>
     /// <remarks>
-    /// This does not delete the file. To delete the file, use <see cref="FileClient.DeleteFile(OpenAIFileInfo)"/>.
+    /// This does not delete the file. To delete the file, use <see cref="FileClient.DeleteFile(OpenAIFile)"/>.
     /// </remarks>
     /// <param name="vectorStore"> The vector store that the file should be removed from. </param>
     /// <param name="file"> The file to remove from the vector store. </param>
     /// <returns> A <see cref="FileFromStoreRemovalResult"/> instance. </returns>
-    public virtual Task<ClientResult<FileFromStoreRemovalResult>> RemoveFileFromStoreAsync(VectorStore vectorStore, OpenAIFileInfo file)
+    public virtual Task<ClientResult<FileFromStoreRemovalResult>> RemoveFileFromStoreAsync(VectorStore vectorStore, OpenAIFile file)
         => RemoveFileFromStoreAsync(vectorStore?.Id, file?.Id);
 
     /// <summary>
@@ -150,12 +150,12 @@ public partial class VectorStoreClient
     /// store.
     /// </summary>
     /// <remarks>
-    /// This does not delete the file. To delete the file, use <see cref="FileClient.DeleteFile(OpenAIFileInfo)"/>.
+    /// This does not delete the file. To delete the file, use <see cref="FileClient.DeleteFile(OpenAIFile)"/>.
     /// </remarks>
     /// <param name="vectorStore"> The vector store that the file should be removed from. </param>
     /// <param name="file"> The file to remove from the vector store. </param>
     /// <returns> A <see cref="FileFromStoreRemovalResult"/> instance. </returns>
-    public virtual ClientResult<FileFromStoreRemovalResult> RemoveFileFromStore(VectorStore vectorStore, OpenAIFileInfo file)
+    public virtual ClientResult<FileFromStoreRemovalResult> RemoveFileFromStore(VectorStore vectorStore, OpenAIFile file)
         => RemoveFileFromStore(vectorStore?.Id, file?.Id);
 
     /// <summary>

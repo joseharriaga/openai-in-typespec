@@ -347,7 +347,7 @@ public class ModerationsMockTests : SyncAsyncTestBase
         """);
         ModerationClient client = new ModerationClient("model", s_fakeCredential, clientOptions);
 
-        ModerationCollection resultCollection = IsAsync
+        ModerationResultCollection resultCollection = IsAsync
             ? await client.ClassifyTextAsync(["input"])
             : client.ClassifyText(["input"]);
         ModerationResult moderation = resultCollection.Single();
@@ -374,7 +374,7 @@ public class ModerationsMockTests : SyncAsyncTestBase
         """);
         ModerationClient client = new ModerationClient("model", s_fakeCredential, clientOptions);
 
-        ModerationCollection resultCollection = IsAsync
+        ModerationResultCollection resultCollection = IsAsync
             ? await client.ClassifyTextAsync(["input"])
             : client.ClassifyText(["input"]);
         ModerationResult moderation = resultCollection.Single();
@@ -401,7 +401,7 @@ public class ModerationsMockTests : SyncAsyncTestBase
         """);
         ModerationClient client = new ModerationClient("model", s_fakeCredential, clientOptions);
 
-        ModerationCollection resultCollection = IsAsync
+        ModerationResultCollection resultCollection = IsAsync
             ? await client.ClassifyTextAsync(["input"])
             : client.ClassifyText(["input"]);
         ModerationResult moderation = resultCollection.Single();
@@ -428,7 +428,7 @@ public class ModerationsMockTests : SyncAsyncTestBase
         """);
         ModerationClient client = new ModerationClient("model", s_fakeCredential, clientOptions);
 
-        ModerationCollection resultCollection = IsAsync
+        ModerationResultCollection resultCollection = IsAsync
             ? await client.ClassifyTextAsync(["input"])
             : client.ClassifyText(["input"]);
         ModerationResult moderation = resultCollection.Single();
@@ -455,7 +455,7 @@ public class ModerationsMockTests : SyncAsyncTestBase
         """);
         ModerationClient client = new ModerationClient("model", s_fakeCredential, clientOptions);
 
-        ModerationCollection resultCollection = IsAsync
+        ModerationResultCollection resultCollection = IsAsync
             ? await client.ClassifyTextAsync(["input"])
             : client.ClassifyText(["input"]);
         ModerationResult moderation = resultCollection.Single();
@@ -482,7 +482,7 @@ public class ModerationsMockTests : SyncAsyncTestBase
         """);
         ModerationClient client = new ModerationClient("model", s_fakeCredential, clientOptions);
 
-        ModerationCollection resultCollection = IsAsync
+        ModerationResultCollection resultCollection = IsAsync
             ? await client.ClassifyTextAsync(["input"])
             : client.ClassifyText(["input"]);
         ModerationResult moderation = resultCollection.Single();
@@ -509,7 +509,7 @@ public class ModerationsMockTests : SyncAsyncTestBase
         """);
         ModerationClient client = new ModerationClient("model", s_fakeCredential, clientOptions);
 
-        ModerationCollection resultCollection = IsAsync
+        ModerationResultCollection resultCollection = IsAsync
             ? await client.ClassifyTextAsync(["input"])
             : client.ClassifyText(["input"]);
         ModerationResult moderation = resultCollection.Single();
@@ -536,7 +536,7 @@ public class ModerationsMockTests : SyncAsyncTestBase
         """);
         ModerationClient client = new ModerationClient("model", s_fakeCredential, clientOptions);
 
-        ModerationCollection resultCollection = IsAsync
+        ModerationResultCollection resultCollection = IsAsync
             ? await client.ClassifyTextAsync(["input"])
             : client.ClassifyText(["input"]);
         ModerationResult moderation = resultCollection.Single();
@@ -563,7 +563,7 @@ public class ModerationsMockTests : SyncAsyncTestBase
         """);
         ModerationClient client = new ModerationClient("model", s_fakeCredential, clientOptions);
 
-        ModerationCollection resultCollection = IsAsync
+        ModerationResultCollection resultCollection = IsAsync
             ? await client.ClassifyTextAsync(["input"])
             : client.ClassifyText(["input"]);
         ModerationResult moderation = resultCollection.Single();
@@ -590,7 +590,7 @@ public class ModerationsMockTests : SyncAsyncTestBase
         """);
         ModerationClient client = new ModerationClient("model", s_fakeCredential, clientOptions);
 
-        ModerationCollection resultCollection = IsAsync
+        ModerationResultCollection resultCollection = IsAsync
             ? await client.ClassifyTextAsync(["input"])
             : client.ClassifyText(["input"]);
         ModerationResult moderation = resultCollection.Single();
@@ -617,7 +617,7 @@ public class ModerationsMockTests : SyncAsyncTestBase
         """);
         ModerationClient client = new ModerationClient("model", s_fakeCredential, clientOptions);
 
-        ModerationCollection resultCollection = IsAsync
+        ModerationResultCollection resultCollection = IsAsync
             ? await client.ClassifyTextAsync(["input"])
             : client.ClassifyText(["input"]);
         ModerationResult moderation = resultCollection.Single();

@@ -9,16 +9,16 @@ using System.Text.Json;
 
 namespace OpenAI.Moderations;
 
-[CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Moderations.ModerationCollection>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
-public partial class ModerationCollection : IJsonModel<ModerationCollection>
+[CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Moderations.ModerationResultCollection>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
+public partial class ModerationResultCollection : IJsonModel<ModerationResultCollection>
 {
     // CUSTOM:
     // - Serialized the Items property.
     // - Recovered the deserialization of SerializedAdditionalRawData. See https://github.com/Azure/autorest.csharp/issues/4636.
-    void IJsonModel<ModerationCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => CustomSerializationHelpers.SerializeInstance(this, SerializeModerationCollection, writer, options);
+    void IJsonModel<ModerationResultCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        => CustomSerializationHelpers.SerializeInstance(this, SerializeModerationResultCollection, writer, options);
 
-    internal static void SerializeModerationCollection(ModerationCollection instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    internal static void SerializeModerationResultCollection(ModerationResultCollection instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
         writer.WritePropertyName("id"u8);
@@ -37,7 +37,7 @@ public partial class ModerationCollection : IJsonModel<ModerationCollection>
     }
 
     // CUSTOM: Recovered the deserialization of SerializedAdditionalRawData. See https://github.com/Azure/autorest.csharp/issues/4636.
-    internal static ModerationCollection DeserializeModerationCollection(JsonElement element, ModelReaderWriterOptions options = null)
+    internal static ModerationResultCollection DeserializeModerationResultCollection(JsonElement element, ModelReaderWriterOptions options = null)
     {
         options ??= ModelSerializationExtensions.WireOptions;
 
@@ -78,6 +78,6 @@ public partial class ModerationCollection : IJsonModel<ModerationCollection>
             }
         }
         serializedAdditionalRawData = rawDataDictionary;
-        return new ModerationCollection(id, model, results, serializedAdditionalRawData);
+        return new ModerationResultCollection(id, model, results, serializedAdditionalRawData);
     }
 }

@@ -13,13 +13,13 @@ public static partial class OpenAIModerationsModelFactory
         return new ModerationCategory(flagged, score);
     }
 
-    /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationCollection"/>. </summary>
-    /// <returns> A new <see cref="OpenAI.Moderations.ModerationCollection"/> instance for mocking. </returns>
-    public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> items = null)
+    /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationResultCollection"/>. </summary>
+    /// <returns> A new <see cref="OpenAI.Moderations.ModerationResultCollection"/> instance for mocking. </returns>
+    public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> items = null)
     {
         items ??= new List<ModerationResult>();
 
-        return new ModerationCollection(
+        return new ModerationResultCollection(
             id,
             model,
             items.ToList(),

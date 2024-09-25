@@ -2190,21 +2190,12 @@ namespace OpenAI.Moderations {
         public virtual ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ClassifyText(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<ModerationCollection> ClassifyText(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ModerationResultCollection> ClassifyText(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
         public virtual ClientResult<ModerationResult> ClassifyText(string input, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ClassifyTextAsync(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<ModerationCollection>> ClassifyTextAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ModerationResultCollection>> ClassifyTextAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<ModerationResult>> ClassifyTextAsync(string input, CancellationToken cancellationToken = default);
-    }
-    public class ModerationCollection : ObjectModel.ReadOnlyCollection<ModerationResult>, IJsonModel<ModerationCollection>, IPersistableModel<ModerationCollection> {
-        public string Id { get; }
-        public string Model { get; }
-        ModerationCollection IJsonModel<ModerationCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ModerationCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ModerationCollection IPersistableModel<ModerationCollection>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ModerationCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ModerationCollection>.Write(ModelReaderWriterOptions options);
     }
     public class ModerationResult : IJsonModel<ModerationResult>, IPersistableModel<ModerationResult> {
         public bool Flagged { get; }
@@ -2225,10 +2216,19 @@ namespace OpenAI.Moderations {
         string IPersistableModel<ModerationResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ModerationResult>.Write(ModelReaderWriterOptions options);
     }
+    public class ModerationResultCollection : ObjectModel.ReadOnlyCollection<ModerationResult>, IJsonModel<ModerationResultCollection>, IPersistableModel<ModerationResultCollection> {
+        public string Id { get; }
+        public string Model { get; }
+        ModerationResultCollection IJsonModel<ModerationResultCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ModerationResultCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ModerationResultCollection IPersistableModel<ModerationResultCollection>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ModerationResultCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ModerationResultCollection>.Write(ModelReaderWriterOptions options);
+    }
     public static class OpenAIModerationsModelFactory {
         public static ModerationCategory ModerationCategory(bool flagged = false, float score = 0);
-        public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> items = null);
         public static ModerationResult ModerationResult(bool flagged = false, ModerationCategory hate = null, ModerationCategory hateThreatening = null, ModerationCategory harassment = null, ModerationCategory harassmentThreatening = null, ModerationCategory selfHarm = null, ModerationCategory selfHarmIntent = null, ModerationCategory selfHarmInstructions = null, ModerationCategory sexual = null, ModerationCategory sexualMinors = null, ModerationCategory violence = null, ModerationCategory violenceGraphic = null);
+        public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> items = null);
     }
 }
 namespace OpenAI.VectorStores {

@@ -58,11 +58,11 @@ namespace OpenAI
             return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
         }
 
-        public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
+        public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
         {
             results ??= new List<ModerationResult>();
 
-            return new ModerationCollection(id, model, results?.ToList());
+            return new ModerationResultCollection(id, model, results?.ToList());
         }
 
         public static MessageFailureDetails MessageFailureDetails(MessageFailureReason reason = default)

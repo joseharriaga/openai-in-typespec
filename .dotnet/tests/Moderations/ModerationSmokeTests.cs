@@ -106,7 +106,7 @@ public partial class ModerationSmokeTests : SyncAsyncTestBase
         };
 
         ModerationClient client = new ModerationClient("model", new ApiKeyCredential("sk-not-a-real-key"), options);
-        ModerationCollection moderations = IsAsync
+        ModerationResultCollection moderations = IsAsync
             ? await client.ClassifyTextAsync(new List<string> { "Mock me 1!", "Mock me 2!" })
             : client.ClassifyText(new List<string> { "Mock me 1!", "Mock me 2!" });
 
@@ -173,7 +173,7 @@ public partial class ModerationSmokeTests : SyncAsyncTestBase
     }
 
     [Test]
-    public void SerializeModerationCollection()
+    public void SerializeModerationResultCollection()
     {
         BinaryData data = BinaryData.FromString($$"""
         {
@@ -201,7 +201,7 @@ public partial class ModerationSmokeTests : SyncAsyncTestBase
         """);
 
         // Deserialize the raw JSON and then serialize it back to confirm nothing was lost.
-        ModerationCollection moderations = ModelReaderWriter.Read<ModerationCollection>(data);
+        ModerationResultCollection moderations = ModelReaderWriter.Read<ModerationResultCollection>(data);
         Assert.That(moderations[0], Is.Not.Null);
         Assert.That(moderations[0].Flagged, Is.False);
 

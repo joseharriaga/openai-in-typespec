@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace OpenAI.Moderations
 {
-    public partial class ModerationCollection : ReadOnlyCollection<ModerationResult>
+    public partial class ModerationResultCollection : ReadOnlyCollection<ModerationResult>
     {
         public string Id { get; }
         public string Model { get; }

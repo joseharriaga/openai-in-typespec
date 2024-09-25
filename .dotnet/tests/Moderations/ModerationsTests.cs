@@ -44,7 +44,7 @@ public class ModerationsTests : SyncAsyncTestBase
                 "I am killing all my houseplants!"
             ];
 
-        ModerationCollection moderations = IsAsync
+        ModerationResultCollection moderations = IsAsync
             ? await client.ClassifyTextAsync(inputs)
             : client.ClassifyText(inputs);
         Assert.That(moderations, Is.Not.Null);

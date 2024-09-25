@@ -311,9 +311,9 @@ public partial class OpenAIModerationsModelFactoryTests
     }
 
     [Test]
-    public void ModerationCollectionWithNoPropertiesWorks()
+    public void ModerationResultCollectionWithNoPropertiesWorks()
     {
-        ModerationCollection moderationCollection = OpenAIModerationsModelFactory.ModerationCollection();
+        ModerationResultCollection moderationCollection = OpenAIModerationsModelFactory.ModerationResultCollection();
 
         Assert.That(moderationCollection.Id, Is.Null);
         Assert.That(moderationCollection.Model, Is.Null);
@@ -321,10 +321,10 @@ public partial class OpenAIModerationsModelFactoryTests
     }
 
     [Test]
-    public void ModerationCollectionWithIdWorks()
+    public void ModerationResultCollectionWithIdWorks()
     {
         string id = "moderationId";
-        ModerationCollection moderationCollection = OpenAIModerationsModelFactory.ModerationCollection(id: id);
+        ModerationResultCollection moderationCollection = OpenAIModerationsModelFactory.ModerationResultCollection(id: id);
 
         Assert.That(moderationCollection.Id, Is.EqualTo(id));
         Assert.That(moderationCollection.Model, Is.Null);
@@ -332,10 +332,10 @@ public partial class OpenAIModerationsModelFactoryTests
     }
 
     [Test]
-    public void ModerationCollectionWithModelWorks()
+    public void ModerationResultCollectionWithModelWorks()
     {
         string model = "supermodel";
-        ModerationCollection moderationCollection = OpenAIModerationsModelFactory.ModerationCollection(model: model);
+        ModerationResultCollection moderationCollection = OpenAIModerationsModelFactory.ModerationResultCollection(model: model);
 
         Assert.That(moderationCollection.Id, Is.Null);
         Assert.That(moderationCollection.Model, Is.EqualTo(model));
@@ -343,13 +343,13 @@ public partial class OpenAIModerationsModelFactoryTests
     }
 
     [Test]
-    public void ModerationCollectionWithItemsWorks()
+    public void ModerationResultCollectionWithItemsWorks()
     {
         IEnumerable<ModerationResult> items = [
             OpenAIModerationsModelFactory.ModerationResult(flagged: true),
             OpenAIModerationsModelFactory.ModerationResult(flagged: false)
         ];
-        ModerationCollection moderationCollection = OpenAIModerationsModelFactory.ModerationCollection(items: items);
+        ModerationResultCollection moderationCollection = OpenAIModerationsModelFactory.ModerationResultCollection(items: items);
 
         Assert.That(moderationCollection.Id, Is.Null);
         Assert.That(moderationCollection.Model, Is.Null);

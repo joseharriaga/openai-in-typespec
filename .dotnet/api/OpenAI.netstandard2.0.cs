@@ -6,7 +6,7 @@ namespace OpenAI {
         protected internal OpenAIClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public OpenAIClient(string apiKey, OpenAIClientOptions options);
         public OpenAIClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual AssistantClient GetAssistantClient();
         public virtual AudioClient GetAudioClient(string model);
         public virtual BatchClient GetBatchClient();
@@ -53,7 +53,7 @@ namespace OpenAI.Assistants {
         protected internal AssistantClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public AssistantClient(string apiKey, OpenAIClientOptions options);
         public AssistantClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual ClientResult<ThreadRun> CancelRun(ThreadRun run);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CancelRun(string threadId, string runId, RequestOptions options);
@@ -1114,7 +1114,7 @@ namespace OpenAI.Audio {
         public AudioClient(string model, ApiKeyCredential credential);
         public AudioClient(string model, string apiKey, OpenAIClientOptions options);
         public AudioClient(string model, string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GenerateSpeech(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<BinaryData> GenerateSpeech(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null, CancellationToken cancellationToken = default);
@@ -1306,7 +1306,7 @@ namespace OpenAI.Batch {
         protected internal BatchClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public BatchClient(string apiKey, OpenAIClientOptions options);
         public BatchClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual ClientResult CancelBatch(string batchId, RequestOptions options);
         public virtual Task<ClientResult> CancelBatchAsync(string batchId, RequestOptions options);
         public virtual ClientResult CreateBatch(BinaryContent content, RequestOptions options = null);
@@ -1343,7 +1343,7 @@ namespace OpenAI.Chat {
         public ChatClient(string model, ApiKeyCredential credential);
         public ChatClient(string model, string apiKey, OpenAIClientOptions options);
         public ChatClient(string model, string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual ClientResult<ChatCompletion> CompleteChat(params ChatMessage[] messages);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CompleteChat(BinaryContent content, RequestOptions options = null);
@@ -1754,7 +1754,7 @@ namespace OpenAI.Embeddings {
         public EmbeddingClient(string model, ApiKeyCredential credential);
         public EmbeddingClient(string model, string apiKey, OpenAIClientOptions options);
         public EmbeddingClient(string model, string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual ClientResult<OpenAIEmbedding> GenerateEmbedding(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<OpenAIEmbedding>> GenerateEmbeddingAsync(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -1816,7 +1816,7 @@ namespace OpenAI.Files {
         protected internal FileClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public FileClient(string apiKey, OpenAIClientOptions options);
         public FileClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual ClientResult AddUploadPart(string uploadId, BinaryContent content, string contentType, RequestOptions options = null);
         public virtual Task<ClientResult> AddUploadPartAsync(string uploadId, BinaryContent content, string contentType, RequestOptions options = null);
         public virtual ClientResult CancelUpload(string uploadId, RequestOptions options = null);
@@ -1965,7 +1965,7 @@ namespace OpenAI.FineTuning {
         protected internal FineTuningClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public FineTuningClient(string apiKey, OpenAIClientOptions options);
         public FineTuningClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual ClientResult CancelJob(string jobId, RequestOptions options);
         public virtual Task<ClientResult> CancelJobAsync(string jobId, RequestOptions options);
         public virtual ClientResult CreateJob(BinaryContent content, RequestOptions options = null);
@@ -2036,7 +2036,7 @@ namespace OpenAI.Images {
         public ImageClient(string model, ApiKeyCredential credential);
         public ImageClient(string model, string apiKey, OpenAIClientOptions options);
         public ImageClient(string model, string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual ClientResult<GeneratedImage> GenerateImage(string prompt, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageAsync(string prompt, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, ImageEditOptions options = null, CancellationToken cancellationToken = default);
@@ -2123,7 +2123,7 @@ namespace OpenAI.Models {
         protected internal ModelClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public ModelClient(string apiKey, OpenAIClientOptions options);
         public ModelClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteModel(string model, RequestOptions options);
         public virtual ClientResult<ModelDeletionResult> DeleteModel(string model, CancellationToken cancellationToken = default);
@@ -2187,7 +2187,7 @@ namespace OpenAI.Moderations {
         public ModerationClient(string model, ApiKeyCredential credential);
         public ModerationClient(string model, string apiKey, OpenAIClientOptions options);
         public ModerationClient(string model, string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ClassifyText(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ModerationResultCollection> ClassifyText(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
@@ -2315,7 +2315,7 @@ namespace OpenAI.VectorStores {
         protected internal VectorStoreClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public VectorStoreClient(string apiKey, OpenAIClientOptions options);
         public VectorStoreClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(VectorStore vectorStore, OpenAIFile file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult AddFileToVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);

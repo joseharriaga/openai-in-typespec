@@ -112,6 +112,7 @@ public class VectorStoresTests : SyncAsyncTestBase
         createOperation = IsAsync
             ? await client.CreateVectorStoreAsync(waitUntilCompleted: true, creationOptions)
             : client.CreateVectorStore(waitUntilCompleted: true, creationOptions);
+        vectorStore = createOperation.Value;
 
         Validate(vectorStore);
         Assert.Multiple(() =>

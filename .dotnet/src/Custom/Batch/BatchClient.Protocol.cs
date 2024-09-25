@@ -156,7 +156,7 @@ public partial class BatchClient
         if (after != null)
         {
             uri.AppendQuery("after", after, true);
-    }
+        }
         if (limit != null)
         {
             uri.AppendQuery("limit", limit.Value, true);

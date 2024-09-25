@@ -2,7 +2,6 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -271,6 +270,7 @@ public partial class FineTuningClient
         message.Apply(options);
         return message;
     }
+
     internal virtual PipelineMessage CreateGetPaginatedFineTuningJobsRequest(string after, int? limit, RequestOptions options)
     {
         var message = _pipeline.CreateMessage();

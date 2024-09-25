@@ -3,6 +3,7 @@ using OpenAI.Assistants;
 using OpenAI.Files;
 using System;
 using System.ClientModel;
+using System.IO;
 
 namespace OpenAI.Examples;
 
@@ -17,7 +18,7 @@ public partial class AssistantExamples
         AssistantClient assistantClient = openAIClient.GetAssistantClient();
 
         OpenAIFile pictureOfAppleFile = fileClient.UploadFile(
-            "picture-of-apple.jpg",
+            Path.Combine("Assets", "picture-of-apple.png"),
             FileUploadPurpose.Vision);
         Uri linkToPictureOfOrange = new("https://platform.openai.com/fictitious-files/picture-of-orange.png");
 

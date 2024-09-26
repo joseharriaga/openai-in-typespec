@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 namespace OpenAI.Moderations
 {
-    public partial class ModerationCategories
+    internal partial class InternalModerationCategories
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal ModerationCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic)
+        internal InternalModerationCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -25,7 +25,7 @@ namespace OpenAI.Moderations
             ViolenceGraphic = violenceGraphic;
         }
 
-        internal ModerationCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalModerationCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -41,7 +41,7 @@ namespace OpenAI.Moderations
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal ModerationCategories()
+        internal InternalModerationCategories()
         {
         }
 

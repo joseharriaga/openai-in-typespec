@@ -6,9 +6,9 @@ namespace OpenAI.Moderations;
 
 [CodeGenModel("CreateModerationResponse")]
 [CodeGenSuppress("Results")]
-[CodeGenSuppress(nameof(ModerationCollection))]
-[CodeGenSuppress(nameof(ModerationCollection), typeof(string), typeof(string), typeof(IReadOnlyList<ModerationResult>))]
-public partial class ModerationCollection : ReadOnlyCollection<ModerationResult>
+[CodeGenSuppress(nameof(ModerationResultCollection))]
+[CodeGenSuppress(nameof(ModerationResultCollection), typeof(string), typeof(string), typeof(IReadOnlyList<ModerationResult>))]
+public partial class ModerationResultCollection : ReadOnlyCollection<ModerationResult>
 {
     // CUSTOM: Recovered this field. See https://github.com/Azure/autorest.csharp/issues/4636.
     /// <summary>
@@ -43,12 +43,12 @@ public partial class ModerationCollection : ReadOnlyCollection<ModerationResult>
     /// </summary>
     private IDictionary<string, BinaryData> SerializedAdditionalRawData;
 
-    /// <summary> Initializes a new instance of <see cref="ModerationCollection"/>. </summary>
+    /// <summary> Initializes a new instance of <see cref="ModerationResultCollection"/>. </summary>
     /// <param name="id"> The unique identifier for the moderation request. </param>
     /// <param name="model"> The model used to generate the moderation results. </param>
     /// <param name="results"> A list of moderation objects. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="model"/> or <paramref name="results"/> is null. </exception>
-    internal ModerationCollection(string id, string model, IEnumerable<ModerationResult> results)
+    internal ModerationResultCollection(string id, string model, IEnumerable<ModerationResult> results)
         : base([.. results])
     {
         Argument.AssertNotNull(id, nameof(id));
@@ -59,12 +59,12 @@ public partial class ModerationCollection : ReadOnlyCollection<ModerationResult>
         Model = model;
     }
 
-    /// <summary> Initializes a new instance of <see cref="ModerationCollection"/>. </summary>
+    /// <summary> Initializes a new instance of <see cref="ModerationResultCollection"/>. </summary>
     /// <param name="id"> The unique identifier for the moderation request. </param>
     /// <param name="model"> The model used to generate the moderation results. </param>
     /// <param name="results"> A list of moderation objects. </param>
     /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-    internal ModerationCollection(string id, string model, IReadOnlyList<ModerationResult> results, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    internal ModerationResultCollection(string id, string model, IReadOnlyList<ModerationResult> results, IDictionary<string, BinaryData> serializedAdditionalRawData)
         : base([.. results])
     {
         Id = id;
@@ -72,8 +72,8 @@ public partial class ModerationCollection : ReadOnlyCollection<ModerationResult>
         SerializedAdditionalRawData = serializedAdditionalRawData;
     }
 
-    /// <summary> Initializes a new instance of <see cref="ModerationCollection"/> for deserialization. </summary>
-    internal ModerationCollection()
+    /// <summary> Initializes a new instance of <see cref="ModerationResultCollection"/> for deserialization. </summary>
+    internal ModerationResultCollection()
         : base([])
     {
     }

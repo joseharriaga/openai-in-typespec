@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 namespace OpenAI.Moderations
 {
-    public partial class ModerationCategoryScores
+    internal partial class InternalModerationCategoryScores
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal ModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic)
+        internal InternalModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -25,7 +25,7 @@ namespace OpenAI.Moderations
             ViolenceGraphic = violenceGraphic;
         }
 
-        internal ModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -41,7 +41,7 @@ namespace OpenAI.Moderations
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal ModerationCategoryScores()
+        internal InternalModerationCategoryScores()
         {
         }
 

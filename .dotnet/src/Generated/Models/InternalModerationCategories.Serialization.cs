@@ -10,71 +10,71 @@ using System.Text.Json;
 
 namespace OpenAI.Moderations
 {
-    public partial class ModerationCategoryScores : IJsonModel<ModerationCategoryScores>
+    internal partial class InternalModerationCategories : IJsonModel<InternalModerationCategories>
     {
-        void IJsonModel<ModerationCategoryScores>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalModerationCategories>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ModerationCategoryScores>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalModerationCategories>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ModerationCategoryScores)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalModerationCategories)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
             if (SerializedAdditionalRawData?.ContainsKey("hate") != true)
             {
                 writer.WritePropertyName("hate"u8);
-                writer.WriteNumberValue(Hate);
+                writer.WriteBooleanValue(Hate);
             }
             if (SerializedAdditionalRawData?.ContainsKey("hate/threatening") != true)
             {
                 writer.WritePropertyName("hate/threatening"u8);
-                writer.WriteNumberValue(HateThreatening);
+                writer.WriteBooleanValue(HateThreatening);
             }
             if (SerializedAdditionalRawData?.ContainsKey("harassment") != true)
             {
                 writer.WritePropertyName("harassment"u8);
-                writer.WriteNumberValue(Harassment);
+                writer.WriteBooleanValue(Harassment);
             }
             if (SerializedAdditionalRawData?.ContainsKey("harassment/threatening") != true)
             {
                 writer.WritePropertyName("harassment/threatening"u8);
-                writer.WriteNumberValue(HarassmentThreatening);
+                writer.WriteBooleanValue(HarassmentThreatening);
             }
             if (SerializedAdditionalRawData?.ContainsKey("self-harm") != true)
             {
                 writer.WritePropertyName("self-harm"u8);
-                writer.WriteNumberValue(SelfHarm);
+                writer.WriteBooleanValue(SelfHarm);
             }
             if (SerializedAdditionalRawData?.ContainsKey("self-harm/intent") != true)
             {
                 writer.WritePropertyName("self-harm/intent"u8);
-                writer.WriteNumberValue(SelfHarmIntent);
+                writer.WriteBooleanValue(SelfHarmIntent);
             }
             if (SerializedAdditionalRawData?.ContainsKey("self-harm/instructions") != true)
             {
                 writer.WritePropertyName("self-harm/instructions"u8);
-                writer.WriteNumberValue(SelfHarmInstructions);
+                writer.WriteBooleanValue(SelfHarmInstructions);
             }
             if (SerializedAdditionalRawData?.ContainsKey("sexual") != true)
             {
                 writer.WritePropertyName("sexual"u8);
-                writer.WriteNumberValue(Sexual);
+                writer.WriteBooleanValue(Sexual);
             }
             if (SerializedAdditionalRawData?.ContainsKey("sexual/minors") != true)
             {
                 writer.WritePropertyName("sexual/minors"u8);
-                writer.WriteNumberValue(SexualMinors);
+                writer.WriteBooleanValue(SexualMinors);
             }
             if (SerializedAdditionalRawData?.ContainsKey("violence") != true)
             {
                 writer.WritePropertyName("violence"u8);
-                writer.WriteNumberValue(Violence);
+                writer.WriteBooleanValue(Violence);
             }
             if (SerializedAdditionalRawData?.ContainsKey("violence/graphic") != true)
             {
                 writer.WritePropertyName("violence/graphic"u8);
-                writer.WriteNumberValue(ViolenceGraphic);
+                writer.WriteBooleanValue(ViolenceGraphic);
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -98,19 +98,19 @@ namespace OpenAI.Moderations
             writer.WriteEndObject();
         }
 
-        ModerationCategoryScores IJsonModel<ModerationCategoryScores>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalModerationCategories IJsonModel<InternalModerationCategories>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ModerationCategoryScores>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalModerationCategories>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ModerationCategoryScores)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalModerationCategories)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeModerationCategoryScores(document.RootElement, options);
+            return DeserializeInternalModerationCategories(document.RootElement, options);
         }
 
-        internal static ModerationCategoryScores DeserializeModerationCategoryScores(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalModerationCategories DeserializeInternalModerationCategories(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -118,74 +118,74 @@ namespace OpenAI.Moderations
             {
                 return null;
             }
-            float hate = default;
-            float hateThreatening = default;
-            float harassment = default;
-            float harassmentThreatening = default;
-            float selfHarm = default;
-            float selfHarmIntent = default;
-            float selfHarmInstructions = default;
-            float sexual = default;
-            float sexualMinors = default;
-            float violence = default;
-            float violenceGraphic = default;
+            bool hate = default;
+            bool hateThreatening = default;
+            bool harassment = default;
+            bool harassmentThreatening = default;
+            bool selfHarm = default;
+            bool selfHarmIntent = default;
+            bool selfHarmInstructions = default;
+            bool sexual = default;
+            bool sexualMinors = default;
+            bool violence = default;
+            bool violenceGraphic = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("hate"u8))
                 {
-                    hate = property.Value.GetSingle();
+                    hate = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("hate/threatening"u8))
                 {
-                    hateThreatening = property.Value.GetSingle();
+                    hateThreatening = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("harassment"u8))
                 {
-                    harassment = property.Value.GetSingle();
+                    harassment = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("harassment/threatening"u8))
                 {
-                    harassmentThreatening = property.Value.GetSingle();
+                    harassmentThreatening = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("self-harm"u8))
                 {
-                    selfHarm = property.Value.GetSingle();
+                    selfHarm = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("self-harm/intent"u8))
                 {
-                    selfHarmIntent = property.Value.GetSingle();
+                    selfHarmIntent = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("self-harm/instructions"u8))
                 {
-                    selfHarmInstructions = property.Value.GetSingle();
+                    selfHarmInstructions = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("sexual"u8))
                 {
-                    sexual = property.Value.GetSingle();
+                    sexual = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("sexual/minors"u8))
                 {
-                    sexualMinors = property.Value.GetSingle();
+                    sexualMinors = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("violence"u8))
                 {
-                    violence = property.Value.GetSingle();
+                    violence = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("violence/graphic"u8))
                 {
-                    violenceGraphic = property.Value.GetSingle();
+                    violenceGraphic = property.Value.GetBoolean();
                     continue;
                 }
                 if (true)
@@ -195,7 +195,7 @@ namespace OpenAI.Moderations
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ModerationCategoryScores(
+            return new InternalModerationCategories(
                 hate,
                 hateThreatening,
                 harassment,
@@ -210,41 +210,41 @@ namespace OpenAI.Moderations
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<ModerationCategoryScores>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalModerationCategories>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ModerationCategoryScores>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalModerationCategories>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ModerationCategoryScores)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalModerationCategories)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ModerationCategoryScores IPersistableModel<ModerationCategoryScores>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalModerationCategories IPersistableModel<InternalModerationCategories>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ModerationCategoryScores>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalModerationCategories>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeModerationCategoryScores(document.RootElement, options);
+                        return DeserializeInternalModerationCategories(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ModerationCategoryScores)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalModerationCategories)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ModerationCategoryScores>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalModerationCategories>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static ModerationCategoryScores FromResponse(PipelineResponse response)
+        internal static InternalModerationCategories FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeModerationCategoryScores(document.RootElement);
+            return DeserializeInternalModerationCategories(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

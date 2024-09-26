@@ -53,55 +53,16 @@ namespace OpenAI
             return new RunStepError(code, message, serializedAdditionalRawData: null);
         }
 
-        public static RunStepTokenUsage RunStepTokenUsage(int completionTokens = default, int promptTokens = default, int totalTokens = default)
+        public static RunStepTokenUsage RunStepTokenUsage(int outputTokenCount = default, int inputTokenCount = default, int totalTokenCount = default)
         {
-            return new RunStepTokenUsage(completionTokens, promptTokens, totalTokens, serializedAdditionalRawData: null);
+            return new RunStepTokenUsage(outputTokenCount, inputTokenCount, totalTokenCount, serializedAdditionalRawData: null);
         }
 
-        public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
+        public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
         {
             results ??= new List<ModerationResult>();
 
-            return new ModerationCollection(id, model, results?.ToList());
-        }
-
-        public static ModerationResult ModerationResult(bool flagged = default, ModerationCategories categories = null, ModerationCategoryScores categoryScores = null)
-        {
-            return new ModerationResult(flagged, categories, categoryScores, serializedAdditionalRawData: null);
-        }
-
-        public static ModerationCategories ModerationCategories(bool hate = default, bool hateThreatening = default, bool harassment = default, bool harassmentThreatening = default, bool selfHarm = default, bool selfHarmIntent = default, bool selfHarmInstructions = default, bool sexual = default, bool sexualMinors = default, bool violence = default, bool violenceGraphic = default)
-        {
-            return new ModerationCategories(
-                hate,
-                hateThreatening,
-                harassment,
-                harassmentThreatening,
-                selfHarm,
-                selfHarmIntent,
-                selfHarmInstructions,
-                sexual,
-                sexualMinors,
-                violence,
-                violenceGraphic,
-                serializedAdditionalRawData: null);
-        }
-
-        public static ModerationCategoryScores ModerationCategoryScores(float hate = default, float hateThreatening = default, float harassment = default, float harassmentThreatening = default, float selfHarm = default, float selfHarmIntent = default, float selfHarmInstructions = default, float sexual = default, float sexualMinors = default, float violence = default, float violenceGraphic = default)
-        {
-            return new ModerationCategoryScores(
-                hate,
-                hateThreatening,
-                harassment,
-                harassmentThreatening,
-                selfHarm,
-                selfHarmIntent,
-                selfHarmInstructions,
-                sexual,
-                sexualMinors,
-                violence,
-                violenceGraphic,
-                serializedAdditionalRawData: null);
+            return new ModerationResultCollection(id, model, results?.ToList());
         }
 
         public static MessageFailureDetails MessageFailureDetails(MessageFailureReason reason = default)

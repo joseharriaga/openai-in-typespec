@@ -1988,10 +1988,10 @@ namespace OpenAI.FineTuning {
         public virtual Task<ClientResult> CancelAsync(RequestOptions? options);
         public virtual ClientResult GetJob(RequestOptions? options);
         public virtual Task<ClientResult> GetJobAsync(RequestOptions? options);
-        public virtual ClientResult GetJobCheckpoints(string? after, int? limit, RequestOptions? options);
-        public virtual Task<ClientResult> GetJobCheckpointsAsync(string? after, int? limit, RequestOptions? options);
-        public virtual CollectionResult GetJobEvents(string jobId, string after, int? limit, RequestOptions options);
-        public virtual AsyncCollectionResult GetJobEventsAsync(string after, int? limit, RequestOptions options);
+        public virtual CollectionResult GetJobCheckpoints(string? after, int? limit, RequestOptions? options);
+        public virtual AsyncCollectionResult GetJobCheckpointsAsync(string? after, int? limit, RequestOptions? options);
+        public virtual CollectionResult GetJobEvents(string? after, int? limit, RequestOptions options);
+        public virtual AsyncCollectionResult GetJobEventsAsync(string? after, int? limit, RequestOptions options);
         public static FineTuningJobOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
         public static FineTuningJobOperation Rehydrate(FineTuningClient client, string fineTuningJobId, CancellationToken cancellationToken = default);
         public static Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);

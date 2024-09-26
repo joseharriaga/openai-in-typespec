@@ -39,7 +39,7 @@ internal class FineTuningTests : SyncAsyncTestBase
         }
         else
         {
-            ex = Assert.Throws<ClientResultException>(() => client.CreateJob(BinaryContent.Create(data), waitUntilCompleted: false));
+            ex = Assert.Throws<ClientResultException>(() => client.CreateFineTuningJob(BinaryContent.Create(data), waitUntilCompleted: false));
         }
 
         Assert.That(ex.Status, Is.EqualTo(400));

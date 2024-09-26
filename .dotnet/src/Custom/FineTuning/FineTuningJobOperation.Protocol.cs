@@ -304,7 +304,47 @@ public class FineTuningJobOperation : OperationResult
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual async Task<ClientResult> GetJobCheckpointsAsync(string? after, int? limit, RequestOptions? options)
+    public virtual AsyncCollectionResult GetJobCheckpointsAsync(string? after, int? limit, RequestOptions? options)
+    {
+        return new AsyncFineTuningJobCheckpointCollectionResult(this, options, limit, after);
+    }
+
+    /// <summary>
+    /// [Protocol Method] List the checkpoints for a fine-tuning job.
+    /// </summary>
+    /// <param name="after"> Identifier for the last checkpoint ID from the previous pagination request. </param>
+    /// <param name="limit"> Number of checkpoints to retrieve. </param>
+    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+    /// <returns> The response returned from the service. </returns>
+    public virtual CollectionResult GetJobCheckpoints(string? after, int? limit, RequestOptions? options)
+    {
+        return new FineTuningJobCheckpointCollectionResult(this, options, limit, after);
+    }
+
+    /// <summary>
+    /// [Protocol Method] List the checkpoints for a fine-tuning job.
+    /// </summary>
+    /// <param name="after"> Identifier for the last checkpoint ID from the previous pagination request. </param>
+    /// <param name="limit"> Number of checkpoints to retrieve. </param>
+    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+    /// <returns> The response returned from the service. </returns>
+    internal virtual ClientResult GetJobPageCheckpoints(string? after, int? limit, RequestOptions? options)
+    {
+        using PipelineMessage message = CreateGetFineTuningJobCheckpointsRequest(_jobId, after, limit, options);
+        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+    }
+
+    /// <summary>
+    /// [Protocol Method] List the checkpoints for a fine-tuning job.
+    /// </summary>
+    /// <param name="after"> Identifier for the last checkpoint ID from the previous pagination request. </param>
+    /// <param name="limit"> Number of checkpoints to retrieve. </param>
+    /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
+    /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
+    /// <returns> The response returned from the service. </returns>
+    internal virtual async Task<ClientResult> GetJobCheckpointsPageAsync(string? after, int? limit, RequestOptions? options)
     {
         using PipelineMessage message = CreateGetFineTuningJobCheckpointsRequest(_jobId, after, limit, options);
         return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
@@ -318,7 +358,7 @@ public class FineTuningJobOperation : OperationResult
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual ClientResult GetJobCheckpoints(string? after, int? limit, RequestOptions? options)
+    internal virtual ClientResult GetJobCheckpointsPage(string? after, int? limit, RequestOptions? options)
     {
         using PipelineMessage message = CreateGetFineTuningJobCheckpointsRequest(_jobId, after, limit, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));

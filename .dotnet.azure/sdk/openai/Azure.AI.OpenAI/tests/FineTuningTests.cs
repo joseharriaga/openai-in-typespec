@@ -63,8 +63,10 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         Assert.That(job, Is.Not.Null);
         Assert.That(job!.Status, Is.EqualTo("succeeded"));
 
+        FineTuningJobOperation fineTuningJobOperation = FineTuningJobOperation.Rehydrate(client, job.ID);
+
         int count = 25;
-        await foreach (FineTuningCheckpoint checkpoint in EnumerateCheckpoints(client, job.ID))
+        await foreach (FineTuningCheckpoint checkpoint in EnumerateCheckpoints(fineTuningJobOperation))
         {
             if (count-- <= 0)
             {
@@ -331,8 +333,8 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     private IAsyncEnumerable<FineTuningJob> EnumerateJobsAsync(FineTuningClient client)
         => EnumerateAsync<FineTuningJob>(client.GetJobsAsync);
 
-    private IAsyncEnumerable<FineTuningCheckpoint> EnumerateCheckpoints(FineTuningClient client, string jobId)
-        => EnumerateAsync<FineTuningCheckpoint>((after, limit, opt) => client.GetJobCheckpointsAsync(jobId, after, limit, opt));
+    private IAsyncEnumerable<FineTuningCheckpoint> EnumerateCheckpoints(FineTuningJobOperation operation)
+        => EnumerateAsync<FineTuningCheckpoint>((after, limit, opt) => operation.GetJobCheckpointsAsync(after, limit, opt));
 
     private async IAsyncEnumerable<T> EnumerateAsync<T>(Func<string?, int?, RequestOptions, AsyncCollectionResult> getAsyncEnumerable)
         where T : FineTuningModelBase

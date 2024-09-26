@@ -1301,7 +1301,7 @@ namespace OpenAI.Audio {
 namespace OpenAI.Batch {
     public class BatchClient {
         protected BatchClient();
-        public BatchClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
+        public BatchClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public BatchClient(ApiKeyCredential credential);
         protected internal BatchClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public BatchClient(string apiKey, OpenAIClientOptions options);
@@ -1968,7 +1968,7 @@ namespace OpenAI.Files {
 namespace OpenAI.FineTuning {
     public class FineTuningClient {
         protected FineTuningClient();
-        public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
+        public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public FineTuningClient(ApiKeyCredential credential);
         protected internal FineTuningClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public FineTuningClient(string apiKey, OpenAIClientOptions options);
@@ -2410,7 +2410,7 @@ namespace OpenAI.VectorStores {
     }
     public class VectorStoreClient {
         protected VectorStoreClient();
-        public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
+        public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public VectorStoreClient(ApiKeyCredential credential);
         protected internal VectorStoreClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public VectorStoreClient(string apiKey, OpenAIClientOptions options);

@@ -61,7 +61,7 @@ public partial class BatchClient
     /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
     /// <param name="options"> Additional options to customize the client. </param>
     /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
-    public BatchClient(ApiKeyCredential credential, OpenAIClientOptions options = null)
+    public BatchClient(ApiKeyCredential credential, OpenAIClientOptions options)
     {
         Argument.AssertNotNull(credential, nameof(credential));
         options ??= new OpenAIClientOptions();

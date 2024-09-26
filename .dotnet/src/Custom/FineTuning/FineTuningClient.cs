@@ -54,15 +54,13 @@ public partial class FineTuningClient
     {
     }
 
-    internal Uri Endpoint => _endpoint;
-
     /// <summary>
     /// Initializes a new instance of <see cref="FineTuningClient"/> that will use an API key when authenticating.
     /// </summary>
     /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
     /// <param name="options"> Additional options to customize the client. </param>
     /// <exception cref="ArgumentNullException"> The provided <paramref name="credential"/> was null. </exception>
-    public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options = null)
+    public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options)
     {
         Argument.AssertNotNull(credential, nameof(credential));
         options ??= new OpenAIClientOptions();

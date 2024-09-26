@@ -42,7 +42,7 @@ public partial class FineTuningClient
     /// <returns> A <see cref="FineTuningJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the fine tuning job, or 
     /// cancel the operation. </returns>
-    public virtual async Task<FineTuningJobOperation> CreateJobAsync(
+    public virtual async Task<FineTuningJobOperation> CreateFineTuningJobAsync(
         BinaryContent content,
         bool waitUntilCompleted,
         RequestOptions options = null)
@@ -81,7 +81,7 @@ public partial class FineTuningClient
     /// <returns> A <see cref="FineTuningJobOperation"/> that can be used to wait for 
     /// the operation to complete, get information about the fine tuning job, or 
     /// cancel the operation. </returns>
-    public virtual FineTuningJobOperation CreateJob(
+    public virtual FineTuningJobOperation CreateFineTuningJob(
         BinaryContent content,
         bool waitUntilCompleted,
         RequestOptions options = null)

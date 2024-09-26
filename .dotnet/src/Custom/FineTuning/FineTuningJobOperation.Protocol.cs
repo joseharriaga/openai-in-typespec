@@ -31,7 +31,7 @@ public class FineTuningJobOperation : OperationResult
         _jobId = jobId;
 
         HasCompleted = GetHasCompleted(status);
-        RehydrationToken = new CreateJobOperationToken(jobId);
+        RehydrationToken = new FineTuningJobOperationToken(jobId);
     }
 
     public string JobId => _jobId;
@@ -55,7 +55,7 @@ public class FineTuningJobOperation : OperationResult
         Argument.AssertNotNull(client, nameof(client));
         Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));
 
-        CreateJobOperationToken token = CreateJobOperationToken.FromToken(rehydrationToken);
+        FineTuningJobOperationToken token = FineTuningJobOperationToken.FromToken(rehydrationToken);
 
         ClientResult result = await client.GetJobAsync(token.JobId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result.GetRawResponse();
@@ -82,7 +82,7 @@ public class FineTuningJobOperation : OperationResult
         Argument.AssertNotNull(client, nameof(client));
         Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));
 
-        CreateJobOperationToken token = CreateJobOperationToken.FromToken(rehydrationToken);
+        FineTuningJobOperationToken token = FineTuningJobOperationToken.FromToken(rehydrationToken);
 
         ClientResult result = client.GetJob(token.JobId, cancellationToken.ToRequestOptions());
         PipelineResponse response = result.GetRawResponse();

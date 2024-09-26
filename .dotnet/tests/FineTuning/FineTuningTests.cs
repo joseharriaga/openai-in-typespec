@@ -35,7 +35,7 @@ internal class FineTuningTests : SyncAsyncTestBase
 
         if (IsAsync)
         {
-            ex = Assert.ThrowsAsync<ClientResultException>(async () => await client.CreateJobAsync(BinaryContent.Create(data), waitUntilCompleted: false));
+            ex = Assert.ThrowsAsync<ClientResultException>(async () => await client.CreateFineTuningJobAsync(BinaryContent.Create(data), waitUntilCompleted: false));
         }
         else
         {

@@ -1966,7 +1966,22 @@ namespace OpenAI.Files {
     }
 }
 namespace OpenAI.FineTuning {
-    public class CreateJobOperation : OperationResult {
+    public class FineTuningClient {
+        protected FineTuningClient();
+        public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
+        public FineTuningClient(ApiKeyCredential credential);
+        protected internal FineTuningClient(ClientPipeline pipeline, OpenAIClientOptions options);
+        public FineTuningClient(string apiKey, OpenAIClientOptions options);
+        public FineTuningClient(string apiKey);
+        public virtual ClientPipeline Pipeline { get; }
+        public virtual FineTuningJobOperation CreateFineTuningJob(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
+        public virtual Task<FineTuningJobOperation> CreateFineTuningJobAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
+        public virtual ClientResult GetJob(string fineTuningJobId, RequestOptions options);
+        public virtual Task<ClientResult> GetJobAsync(string fineTuningJobId, RequestOptions options);
+        public virtual CollectionResult GetJobs(string after, int? limit, RequestOptions options);
+        public virtual AsyncCollectionResult GetJobsAsync(string after, int? limit, RequestOptions options);
+    }
+    public class FineTuningJobOperation : OperationResult {
         public string JobId { get; }
         public override ContinuationToken? RehydrationToken { get; protected set; }
         public virtual ClientResult Cancel(RequestOptions? options);
@@ -1976,26 +1991,13 @@ namespace OpenAI.FineTuning {
         public virtual ClientResult GetJobCheckpoints(string? after, int? limit, RequestOptions? options);
         public virtual Task<ClientResult> GetJobCheckpointsAsync(string? after, int? limit, RequestOptions? options);
         public virtual CollectionResult GetJobEvents(string jobId, string after, int? limit, RequestOptions options);
-        public virtual AsyncCollectionResult GetJobEventsAsync(string jobId, string after, int? limit, RequestOptions options);
-        public static CreateJobOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
-        public static Task<CreateJobOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult GetJobEventsAsync(string after, int? limit, RequestOptions options);
+        public static FineTuningJobOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static FineTuningJobOperation Rehydrate(FineTuningClient client, string fineTuningJobId, CancellationToken cancellationToken = default);
+        public static Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, string fineTuningJobId, CancellationToken cancellationToken = default);
         public override ClientResult UpdateStatus(RequestOptions? options = null);
         public override ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null);
-    }
-    public class FineTuningClient {
-        protected FineTuningClient();
-        public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options = null);
-        public FineTuningClient(ApiKeyCredential credential);
-        protected internal FineTuningClient(ClientPipeline pipeline, OpenAIClientOptions options);
-        public FineTuningClient(string apiKey, OpenAIClientOptions options);
-        public FineTuningClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
-        public virtual CreateJobOperation CreateJob(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
-        public virtual Task<CreateJobOperation> CreateJobAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
-        public virtual ClientResult GetJob(string fineTuningJobId, RequestOptions options);
-        public virtual Task<ClientResult> GetJobAsync(string fineTuningJobId, RequestOptions options);
-        public virtual CollectionResult GetJobs(string after, int? limit, RequestOptions options);
-        public virtual AsyncCollectionResult GetJobsAsync(string after, int? limit, RequestOptions options);
     }
 }
 namespace OpenAI.Images {

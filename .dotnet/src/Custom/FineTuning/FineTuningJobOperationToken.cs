@@ -8,9 +8,9 @@ using System.Text.Json;
 
 namespace OpenAI.FineTuning;
 
-internal class CreateJobOperationToken : ContinuationToken
+internal class FineTuningJobOperationToken : ContinuationToken
 {
-    public CreateJobOperationToken(string jobId)
+    public FineTuningJobOperationToken(string jobId)
     {
         JobId = jobId;
     }
@@ -34,9 +34,9 @@ internal class CreateJobOperationToken : ContinuationToken
         return BinaryData.FromStream(stream);
     }
 
-    public static CreateJobOperationToken FromToken(ContinuationToken continuationToken)
+    public static FineTuningJobOperationToken FromToken(ContinuationToken continuationToken)
     {
-        if (continuationToken is CreateJobOperationToken token)
+        if (continuationToken is FineTuningJobOperationToken token)
         {
             return token;
         }

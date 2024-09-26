@@ -79,11 +79,11 @@ public class EmbeddingsTests : SyncAsyncTestBase
         }
         else if (embeddingsInputKind == EmbeddingsInputKind.UsingIntegers)
         {
-            List<List<int>> prompts =
+            List<ReadOnlyMemory<int>> prompts =
             [
-                [104, 101, 108, 108, 111],
-                [119, 111, 114, 108, 100],
-                [84, 69, 83, 84]
+                new[] {104, 101, 108, 108, 111 },
+                new[] {119, 111, 114, 108, 100 },
+                new[] {84, 69, 83, 84 }
             ];
 
             embeddings = IsAsync
@@ -162,8 +162,8 @@ public class EmbeddingsTests : SyncAsyncTestBase
             else if (embeddingsInputKind == EmbeddingsInputKind.UsingIntegers)
             {
                 _ = IsAsync
-                    ? await client.GenerateEmbeddingsAsync([[1]], options)
-                    : client.GenerateEmbeddings([[1]], options);
+                    ? await client.GenerateEmbeddingsAsync([new[] { 1 }], options)
+                    : client.GenerateEmbeddings([new[] { 1 }], options);
             }
         }
         catch (Exception ex)

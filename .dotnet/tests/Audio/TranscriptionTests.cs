@@ -117,8 +117,8 @@ public partial class TranscriptionTests : SyncAsyncTestBase
             }
             Assert.That(segments[i].EndTime, Is.GreaterThan(segments[i].StartTime));
             Assert.That(string.IsNullOrEmpty(segments[i].Text), Is.False);
-            Assert.That(segments[i].TokenIds, Is.Not.Null.And.Not.Empty);
-            foreach (int tokenId in segments[i].TokenIds)
+            Assert.That(segments[i].TokenIds.Span.Length, Is.GreaterThan(0));
+            foreach (int tokenId in segments[i].TokenIds.ToArray())
             {
                 Assert.That(tokenId, Is.GreaterThanOrEqualTo(0));
             }

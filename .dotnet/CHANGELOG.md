@@ -16,6 +16,8 @@
 - Renamed properties `InputTokens` to `InputTokenCount` and `TotalTokens` to `TotalTokenCount` in the `EmbeddingTokenUsage` type. (commit_id)
 - Renamed properties `MaxPromptTokens` to `MaxInputTokenCount` and `MaxCompletionTokens` to `MaxOutputTokenCount` in the `ThreadRun`, `RunCreationOptions`, and `RunIncompleteReason` types. (commit_id)
 - Removed the `virtual` keyword from the `Pipeline` property across all clients. (commit_id)
+- Updated the `TokenIds` property type in the `TranscribedSegment` type from `IReadOnlyList<int>` to `ReadOnlyMemory<int>`. (commit_id)
+- Updated the `inputs` parameter type in the `GenerateEmbeddings` and `GenerateEmbeddingsAsync` methods of `EmbeddingClient` from `IEnumerable<IEnumerable<int>>` to `IEnumerable<ReadOnlyMemory<int>>`. (commit_id)
 
 ### Bugs Fixed
 

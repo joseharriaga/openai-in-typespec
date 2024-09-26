@@ -88,8 +88,8 @@ public partial class FineTuningClient
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
-    internal virtual CreateJobOperation CreateCreateJobOperation(string jobId, string status, PipelineResponse response)
+    internal virtual FineTuningJobOperation CreateCreateJobOperation(string jobId, string status, PipelineResponse response)
     {
-        return new CreateJobOperation(_pipeline, _endpoint, jobId, status, response);
+        return new FineTuningJobOperation(_pipeline, _endpoint, jobId, status, response);
     }
 }

@@ -100,8 +100,10 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
 
         HashSet<string> ids = new();
 
+        FineTuningJobOperation fineTuningJobOperation = FineTuningJobOperation.Rehydrate(client, job.ID);
+
         int count = 25;
-        var asyncEnum = EnumerateAsync<FineTuningJobEvent>((after, limit, opt) => client.GetJobEventsAsync(job.ID, after, limit, opt));
+        var asyncEnum = EnumerateAsync<FineTuningJobEvent>((after, limit, opt) => fineTuningJobOperation.GetJobEventsAsync(after, limit, opt));
         await foreach (FineTuningJobEvent evt in asyncEnum)
         {
             if (count-- <= 0)
@@ -139,13 +141,13 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             TrainingFile = uploadedFile.Id
         }.ToBinaryContent();
 
-        CreateJobOperation operation = await client.CreateJobAsync(requestContent, waitUntilCompleted: false);
+        FineTuningJobOperation operation = await client.CreateJobAsync(requestContent, waitUntilCompleted: false);
         FineTuningJob job = ValidateAndParse<FineTuningJob>(ClientResult.FromResponse(operation.GetRawResponse()));
         Assert.That(job.ID, !(Is.Null.Or.Empty));
 
         await using RunOnScopeExit _ = new(async () =>
         {
-            bool deleted = await DeleteJobAndVerifyAsync((AzureCreateJobOperation)operation, job.ID);
+            bool deleted = await DeleteJobAndVerifyAsync((AzureFineTuningJobOperation)operation, job.ID);
             Assert.True(deleted, "Failed to delete fine tuning job: {0}", job.ID);
         });
 
@@ -204,7 +206,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             TrainingFile = uploadedFile.Id
         }.ToBinaryContent();
 
-        CreateJobOperation operation = await client.CreateJobAsync(requestContent, waitUntilCompleted: false);
+        FineTuningJobOperation operation = await client.CreateJobAsync(requestContent, waitUntilCompleted: false);
         FineTuningJob job = ValidateAndParse<FineTuningJob>(ClientResult.FromResponse(operation.GetRawResponse()));
         Assert.That(job.ID, Is.Not.Null.Or.Empty);
         Assert.That(job.Error, Is.Null);
@@ -217,7 +219,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         Assert.That(job.FineTunedModel, Is.Not.Null.Or.Empty);
 
         // Delete the fine tuned model
-        bool deleted = await DeleteJobAndVerifyAsync((AzureCreateJobOperation)operation, job.ID);
+        bool deleted = await DeleteJobAndVerifyAsync((AzureFineTuningJobOperation)operation, job.ID);
         Assert.True(deleted, "Failed to delete fine tuning model: {0}", job.FineTunedModel);
     }
 
@@ -351,7 +353,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         }
     }
 
-    private async Task<bool> DeleteJobAndVerifyAsync(AzureCreateJobOperation operation, string jobId, TimeSpan? timeBetween = null, TimeSpan? maxWaitTime = null)
+    private async Task<bool> DeleteJobAndVerifyAsync(AzureFineTuningJobOperation operation, string jobId, TimeSpan? timeBetween = null, TimeSpan? maxWaitTime = null)
     {
         var stopTime = DateTimeOffset.Now + (maxWaitTime ?? TimeSpan.FromMinutes(1));
         var sleepTime = timeBetween ?? TimeSpan.FromSeconds(2);

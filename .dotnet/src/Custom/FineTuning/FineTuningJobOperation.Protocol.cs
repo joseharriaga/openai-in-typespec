@@ -12,14 +12,14 @@ namespace OpenAI.FineTuning;
 /// <summary>
 /// A long-running operation for creating a new model from a given dataset.
 /// </summary>
-public class CreateJobOperation : OperationResult
+public class FineTuningJobOperation : OperationResult
 {
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;
 
     private readonly string _jobId;
 
-    internal CreateJobOperation(
+    internal FineTuningJobOperation(
         ClientPipeline pipeline,
         Uri endpoint,
         string jobId,
@@ -40,7 +40,7 @@ public class CreateJobOperation : OperationResult
     public override ContinuationToken? RehydrationToken { get; protected set; }
 
     /// <summary>
-    /// Recreates a <see cref="CreateJobOperation"/> from a rehydration token.
+    /// Recreates a <see cref="FineTuningJobOperation"/> from a rehydration token.
     /// </summary>
     /// <param name="client"> The <see cref="FineTuningClient"/> used to obtain the 
     /// operation status from the service. </param>
@@ -50,7 +50,7 @@ public class CreateJobOperation : OperationResult
     /// request. </param>
     /// <returns> The rehydrated operation. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="rehydrationToken"/> is null. </exception>
-    public static async Task<CreateJobOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
+    public static async Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(client, nameof(client));
         Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));
@@ -67,7 +67,7 @@ public class CreateJobOperation : OperationResult
     }
 
     /// <summary>
-    /// Recreates a <see cref="CreateJobOperation"/> from a rehydration token.
+    /// Recreates a <see cref="FineTuningJobOperation"/> from a rehydration token.
     /// </summary>
     /// <param name="client"> The <see cref="FineTuningClient"/> used to obtain the 
     /// operation status from the service. </param>
@@ -77,7 +77,7 @@ public class CreateJobOperation : OperationResult
     /// request. </param>
     /// <returns> The rehydrated operation. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="rehydrationToken"/> is null. </exception>
-    public static CreateJobOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
+    public static FineTuningJobOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(client, nameof(client));
         Argument.AssertNotNull(rehydrationToken, nameof(rehydrationToken));
@@ -91,6 +91,54 @@ public class CreateJobOperation : OperationResult
         string status = doc.RootElement.GetProperty("status"u8).GetString()!;
 
         return client.CreateCreateJobOperation(token.JobId, status, response);
+    }
+
+    /// <summary>
+    /// Recreates a <see cref="FineTuningJobOperation"/> from a rehydration token.
+    /// </summary>
+    /// <param name="client"> The <see cref="FineTuningClient"/> used to obtain the 
+    /// operation status from the service. </param>
+    /// <param name="fineTuningJobId"> The id of the fine tuning job to rehydrate.</param>
+    /// <param name="cancellationToken"> A token that can be used to cancel the 
+    /// request. </param>
+    /// <returns> The rehydrated operation. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="fineTuningJobId"/> is null. </exception>
+    public static async Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, string fineTuningJobId, CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(client, nameof(client));
+        Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
+
+        ClientResult result = await client.GetJobAsync(fineTuningJobId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        PipelineResponse response = result.GetRawResponse();
+
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        string status = doc.RootElement.GetProperty("status"u8).GetString()!;
+
+        return client.CreateCreateJobOperation(fineTuningJobId, status, response);
+    }
+
+    /// <summary>
+    /// Recreates a <see cref="FineTuningJobOperation"/> from a rehydration token.
+    /// </summary>
+    /// <param name="client"> The <see cref="FineTuningClient"/> used to obtain the 
+    /// operation status from the service. </param>
+    /// <param name="fineTuningJobId"> The id of the fine tuning job to rehydrate.</param>
+    /// <param name="cancellationToken"> A token that can be used to cancel the 
+    /// request. </param>
+    /// <returns> The rehydrated operation. </returns>
+    /// <exception cref="ArgumentNullException"> <paramref name="client"/> or <paramref name="fineTuningJobId"/> is null. </exception>
+    public static FineTuningJobOperation Rehydrate(FineTuningClient client, string fineTuningJobId, CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(client, nameof(client));
+        Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
+
+        ClientResult result = client.GetJob(fineTuningJobId, cancellationToken.ToRequestOptions());
+        PipelineResponse response = result.GetRawResponse();
+
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        string status = doc.RootElement.GetProperty("status"u8).GetString()!;
+
+        return client.CreateCreateJobOperation(fineTuningJobId, status, response);
     }
 
     /// <inheritdoc/>
@@ -113,14 +161,14 @@ public class CreateJobOperation : OperationResult
         return result;
     }
 
-    internal async Task<CreateJobOperation> WaitUntilAsync(bool waitUntilCompleted, RequestOptions? options)
+    internal async Task<FineTuningJobOperation> WaitUntilAsync(bool waitUntilCompleted, RequestOptions? options)
     {
         if (!waitUntilCompleted) return this;
         await WaitForCompletionAsync(options?.CancellationToken ?? default).ConfigureAwait(false);
         return this;
     }
 
-    internal CreateJobOperation WaitUntil(bool waitUntilCompleted, RequestOptions? options)
+    internal FineTuningJobOperation WaitUntil(bool waitUntilCompleted, RequestOptions? options)
     {
         if (!waitUntilCompleted) return this;
         WaitForCompletion(options?.CancellationToken ?? default);
@@ -217,19 +265,14 @@ public class CreateJobOperation : OperationResult
     /// <summary>
     /// [Protocol Method] Get status updates for a fine-tuning job.
     /// </summary>
-    /// <param name="jobId"> The ID of the fine-tuning job to get events for. </param>
     /// <param name="after"> Identifier for the last event from the previous pagination request. </param>
     /// <param name="limit"> Number of events to retrieve. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="jobId"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual AsyncCollectionResult GetJobEventsAsync(string jobId, string after, int? limit, RequestOptions options)
+    public virtual AsyncCollectionResult GetJobEventsAsync(string after, int? limit, RequestOptions options)
     {
-        Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
-
-        return new AsyncFineTuningJobEventCollectionResult(this, _pipeline, options, jobId, limit, after);
+        return new AsyncFineTuningJobEventCollectionResult(this, options, limit, after);
     }
 
     // CUSTOM:
@@ -250,7 +293,7 @@ public class CreateJobOperation : OperationResult
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 
-        return new FineTuningJobEventCollectionResult(this, _pipeline, options, jobId, limit, after);
+        return new FineTuningJobEventCollectionResult(this, options, limit, after);
     }
 
     /// <summary>
@@ -279,6 +322,19 @@ public class CreateJobOperation : OperationResult
     {
         using PipelineMessage message = CreateGetFineTuningJobCheckpointsRequest(_jobId, after, limit, options);
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+    }
+
+    internal virtual async Task<ClientResult> GetJobEventsPageAsync(string? after, int? limit, RequestOptions? options)
+    {
+        using PipelineMessage message = CreateGetFineTuningEventsRequest(_jobId, after, limit, options);
+        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+    }
+
+    internal virtual ClientResult GetJobEventsPage(string? after, int? limit, RequestOptions? options)
+    {
+            using PipelineMessage message = CreateGetFineTuningEventsRequest(_jobId, after, limit, options);
+            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        
     }
 
     internal virtual PipelineMessage CreateRetrieveFineTuningJobRequest(string fineTuningJobId, RequestOptions? options)
@@ -339,7 +395,7 @@ public class CreateJobOperation : OperationResult
         return message;
     }
 
-    internal virtual PipelineMessage CreateGetFineTuningEventsRequest(string fineTuningJobId, string? after, int? limit, RequestOptions? options)
+    internal virtual PipelineMessage CreateGetFineTuningEventsRequest(string jobId, string? after, int? limit, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
@@ -348,7 +404,7 @@ public class CreateJobOperation : OperationResult
         var uri = new ClientUriBuilder();
         uri.Reset(_endpoint);
         uri.AppendPath("/fine_tuning/jobs/", false);
-        uri.AppendPath(fineTuningJobId, true);
+        uri.AppendPath(jobId, true);
         uri.AppendPath("/events", false);
         if (after != null)
         {

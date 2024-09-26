@@ -122,6 +122,6 @@ internal class FineTuningTests : SyncAsyncTestBase
     //    BinaryData input = BinaryData.FromString(json);
     //    using BinaryContent content = BinaryContent.Create(input);
 
-    //    CreateJobOperation operation = client.CreateJob(content, waitUntilCompleted: false);
+    //    FineTuningJobOperation operation = client.CreateJob(content, waitUntilCompleted: false);
     //}
 }

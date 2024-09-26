@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace OpenAI.Chat
 {
-    internal partial class InternalUnknownChatMessage : IJsonModel<ChatMessage>
+    internal partial class InternalUnknownChatCompletionRequestMessage : IJsonModel<ChatMessage>
     {
         ChatMessage IJsonModel<ChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -24,7 +24,7 @@ namespace OpenAI.Chat
             return DeserializeChatMessage(document.RootElement, options);
         }
 
-        internal static InternalUnknownChatMessage DeserializeInternalUnknownChatMessage(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalUnknownChatCompletionRequestMessage DeserializeInternalUnknownChatCompletionRequestMessage(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -55,7 +55,7 @@ namespace OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalUnknownChatMessage(role, content ?? new ChangeTrackingList<ChatMessageContentPart>(), serializedAdditionalRawData);
+            return new InternalUnknownChatCompletionRequestMessage(role, content ?? new ChangeTrackingList<ChatMessageContentPart>(), serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<ChatMessage>.Write(ModelReaderWriterOptions options)
@@ -89,10 +89,10 @@ namespace OpenAI.Chat
 
         string IPersistableModel<ChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new InternalUnknownChatMessage FromResponse(PipelineResponse response)
+        internal static new InternalUnknownChatCompletionRequestMessage FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalUnknownChatMessage(document.RootElement);
+            return DeserializeInternalUnknownChatCompletionRequestMessage(document.RootElement);
         }
 
         internal override BinaryContent ToBinaryContent()

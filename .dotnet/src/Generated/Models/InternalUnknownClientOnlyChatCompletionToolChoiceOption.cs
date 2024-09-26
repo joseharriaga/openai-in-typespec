@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalUnknownClientOnlyChatCompletionToolChoiceOption : ChatToolChoice
     {
-        internal InternalUnknownClientOnlyChatCompletionToolChoiceOption(string placeholderDiscriminator, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(placeholderDiscriminator, serializedAdditionalRawData)
+        internal InternalUnknownClientOnlyChatCompletionToolChoiceOption(InternalClientOnlyChatCompletionToolChoiceOptionPlaceholderDiscriminator placeholderDiscriminator, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(placeholderDiscriminator, serializedAdditionalRawData)
         {
         }
 

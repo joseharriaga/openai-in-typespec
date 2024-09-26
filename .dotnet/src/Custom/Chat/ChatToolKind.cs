@@ -1,6 +1,6 @@
 ﻿namespace OpenAI.Chat;
 
-[CodeGenModel("ChatCompletionToolType")]
+[CodeGenModel("ChatToolKind")]
 public readonly partial struct ChatToolKind
 {
 }

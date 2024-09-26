@@ -7,29 +7,8 @@ using System.Collections.Generic;
 
 namespace OpenAI.Chat
 {
-    internal partial class InternalChatCompletionRequestMessageContentPartImage
+    internal partial class InternalChatCompletionRequestMessageContentPartImage : ChatMessageContentPart
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        public InternalChatCompletionRequestMessageContentPartImage(InternalChatCompletionRequestMessageContentPartImageImageUrl imageUrl)
-        {
-            Argument.AssertNotNull(imageUrl, nameof(imageUrl));
-
-            ImageUrl = imageUrl;
-        }
-
-        internal InternalChatCompletionRequestMessageContentPartImage(InternalChatCompletionRequestMessageContentPartImageType type, InternalChatCompletionRequestMessageContentPartImageImageUrl imageUrl, IDictionary<string, BinaryData> serializedAdditionalRawData)
-        {
-            Type = type;
-            ImageUrl = imageUrl;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        internal InternalChatCompletionRequestMessageContentPartImage()
-        {
-        }
-
-        public InternalChatCompletionRequestMessageContentPartImageType Type { get; } = InternalChatCompletionRequestMessageContentPartImageType.ImageUrl;
-
-        public InternalChatCompletionRequestMessageContentPartImageImageUrl ImageUrl { get; }
+        public InternalChatCompletionRequestMessageContentPartImageImageUrl ImageUrl { get; set; }
     }
 }

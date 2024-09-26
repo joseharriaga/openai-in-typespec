@@ -10,23 +10,23 @@ using System.Text.Json;
 
 namespace OpenAI.Chat
 {
-    internal partial class InternalChatCompletionMessageToolCallChunkFunction : IJsonModel<InternalChatCompletionMessageToolCallChunkFunction>
+    internal partial class InternalChatCompletionMessageFunctionToolCallFunction : IJsonModel<InternalChatCompletionMessageFunctionToolCallFunction>
     {
-        void IJsonModel<InternalChatCompletionMessageToolCallChunkFunction>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalChatCompletionMessageFunctionToolCallFunction>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionMessageToolCallChunkFunction>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionMessageFunctionToolCallFunction>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalChatCompletionMessageToolCallChunkFunction)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalChatCompletionMessageFunctionToolCallFunction)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("name") != true && Optional.IsDefined(Name))
+            if (SerializedAdditionalRawData?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(Name);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("arguments") != true && Optional.IsDefined(Arguments))
+            if (SerializedAdditionalRawData?.ContainsKey("arguments") != true)
             {
                 writer.WritePropertyName("arguments"u8);
                 writer.WriteStringValue(Arguments);
@@ -53,19 +53,19 @@ namespace OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        InternalChatCompletionMessageToolCallChunkFunction IJsonModel<InternalChatCompletionMessageToolCallChunkFunction>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalChatCompletionMessageFunctionToolCallFunction IJsonModel<InternalChatCompletionMessageFunctionToolCallFunction>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionMessageToolCallChunkFunction>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionMessageFunctionToolCallFunction>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalChatCompletionMessageToolCallChunkFunction)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalChatCompletionMessageFunctionToolCallFunction)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalChatCompletionMessageToolCallChunkFunction(document.RootElement, options);
+            return DeserializeInternalChatCompletionMessageFunctionToolCallFunction(document.RootElement, options);
         }
 
-        internal static InternalChatCompletionMessageToolCallChunkFunction DeserializeInternalChatCompletionMessageToolCallChunkFunction(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalChatCompletionMessageFunctionToolCallFunction DeserializeInternalChatCompletionMessageFunctionToolCallFunction(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -96,44 +96,44 @@ namespace OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalChatCompletionMessageToolCallChunkFunction(name, arguments, serializedAdditionalRawData);
+            return new InternalChatCompletionMessageFunctionToolCallFunction(name, arguments, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<InternalChatCompletionMessageToolCallChunkFunction>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalChatCompletionMessageFunctionToolCallFunction>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionMessageToolCallChunkFunction>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionMessageFunctionToolCallFunction>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalChatCompletionMessageToolCallChunkFunction)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalChatCompletionMessageFunctionToolCallFunction)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalChatCompletionMessageToolCallChunkFunction IPersistableModel<InternalChatCompletionMessageToolCallChunkFunction>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalChatCompletionMessageFunctionToolCallFunction IPersistableModel<InternalChatCompletionMessageFunctionToolCallFunction>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionMessageToolCallChunkFunction>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionMessageFunctionToolCallFunction>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalChatCompletionMessageToolCallChunkFunction(document.RootElement, options);
+                        return DeserializeInternalChatCompletionMessageFunctionToolCallFunction(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalChatCompletionMessageToolCallChunkFunction)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalChatCompletionMessageFunctionToolCallFunction)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalChatCompletionMessageToolCallChunkFunction>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalChatCompletionMessageFunctionToolCallFunction>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalChatCompletionMessageToolCallChunkFunction FromResponse(PipelineResponse response)
+        internal static InternalChatCompletionMessageFunctionToolCallFunction FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalChatCompletionMessageToolCallChunkFunction(document.RootElement);
+            return DeserializeInternalChatCompletionMessageFunctionToolCallFunction(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

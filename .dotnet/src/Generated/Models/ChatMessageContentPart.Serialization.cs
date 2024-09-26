@@ -9,6 +9,7 @@ using System.Text.Json;
 
 namespace OpenAI.Chat
 {
+    [PersistableModelProxy(typeof(InternalUnknownChatCompletionRequestMessageContentPart))]
     public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
     {
         ChatMessageContentPart IJsonModel<ChatMessageContentPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
@@ -21,6 +22,26 @@ namespace OpenAI.Chat
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeChatMessageContentPart(document.RootElement, options);
+        }
+
+        internal static ChatMessageContentPart DeserializeChatMessageContentPart(JsonElement element, ModelReaderWriterOptions options = null)
+        {
+            options ??= ModelSerializationExtensions.WireOptions;
+
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+            if (element.TryGetProperty("type", out JsonElement discriminator))
+            {
+                switch (discriminator.GetString())
+                {
+                    case "image_url": return InternalChatCompletionRequestMessageContentPartImage.DeserializeInternalChatCompletionRequestMessageContentPartImage(element, options);
+                    case "refusal": return InternalChatCompletionRequestMessageContentPartRefusal.DeserializeInternalChatCompletionRequestMessageContentPartRefusal(element, options);
+                    case "text": return InternalChatCompletionRequestMessageContentPartText.DeserializeInternalChatCompletionRequestMessageContentPartText(element, options);
+                }
+            }
+            return InternalUnknownChatCompletionRequestMessageContentPart.DeserializeInternalUnknownChatCompletionRequestMessageContentPart(element, options);
         }
 
         BinaryData IPersistableModel<ChatMessageContentPart>.Write(ModelReaderWriterOptions options)

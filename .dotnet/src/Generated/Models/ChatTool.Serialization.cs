@@ -5,54 +5,13 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace OpenAI.Chat
 {
+    [PersistableModelProxy(typeof(InternalUnknownChatCompletionTool))]
     public partial class ChatTool : IJsonModel<ChatTool>
     {
-        void IJsonModel<ChatTool>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatTool>)this).GetFormatFromOptions(options) : options.Format;
-            if (format != "J")
-            {
-                throw new FormatException($"The model {nameof(ChatTool)} does not support writing '{format}' format.");
-            }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
-            {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Kind.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("function") != true)
-            {
-                writer.WritePropertyName("function"u8);
-                writer.WriteObjectValue<InternalFunctionDefinition>(Function, options);
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-            }
-            writer.WriteEndObject();
-        }
-
         ChatTool IJsonModel<ChatTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
             var format = options.Format == "W" ? ((IPersistableModel<ChatTool>)this).GetFormatFromOptions(options) : options.Format;
@@ -73,30 +32,14 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            ChatToolKind type = default;
-            InternalFunctionDefinition function = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            if (element.TryGetProperty("type", out JsonElement discriminator))
             {
-                if (property.NameEquals("type"u8))
+                switch (discriminator.GetString())
                 {
-                    type = new ChatToolKind(property.Value.GetString());
-                    continue;
-                }
-                if (property.NameEquals("function"u8))
-                {
-                    function = InternalFunctionDefinition.DeserializeInternalFunctionDefinition(property.Value, options);
-                    continue;
-                }
-                if (true)
-                {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    case "function": return InternalChatCompletionFunctionTool.DeserializeInternalChatCompletionFunctionTool(element, options);
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new ChatTool(type, function, serializedAdditionalRawData);
+            return InternalUnknownChatCompletionTool.DeserializeInternalUnknownChatCompletionTool(element, options);
         }
 
         BinaryData IPersistableModel<ChatTool>.Write(ModelReaderWriterOptions options)

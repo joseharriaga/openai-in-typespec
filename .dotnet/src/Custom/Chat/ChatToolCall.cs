@@ -13,22 +13,20 @@ namespace OpenAI.Chat;
 ///     </list>
 /// </summary>
 [CodeGenModel("ChatCompletionMessageToolCall")]
-[CodeGenSuppress("ChatToolCall", typeof(string), typeof(InternalChatCompletionMessageToolCallFunction))]
-public partial class ChatToolCall
+[CodeGenSuppress("ChatToolCall", typeof(string), typeof(InternalChatCompletionMessageFunctionToolCallFunction))]
+public abstract partial class ChatToolCall
 {
-    // CUSTOM: Made internal.
-    [CodeGenMember("Function")]
-    internal InternalChatCompletionMessageToolCallFunction Function { get; set; }
-
     // CUSTOM: Renamed.
     /// <summary> The kind of tool call. </summary>
     [CodeGenMember("Type")]
-    public ChatToolCallKind Kind { get; } = ChatToolCallKind.Function;
+    public ChatToolCallKind Kind { get; }
+
+    public string Id { get; private protected set; }
 
     // CUSTOM: Spread.
     /// <summary> The name of the function that model is calling. </summary>
     /// <remarks> Present when <see cref="Kind"/> is <see cref="ChatToolCallKind.Function"/>. </remarks>
-    public string FunctionName => Function?.Name;
+    public string FunctionName { get; private protected set; }
 
     // CUSTOM: Spread.
     /// <summary> 
@@ -37,7 +35,7 @@ public partial class ChatToolCall
     ///     function schema. Validate the arguments in your code before calling your function.
     /// </summary>
     /// <remarks> Present when <see cref="Kind"/> is <see cref="ChatToolCallKind.Function"/>. </remarks>
-    public string FunctionArguments => Function?.Arguments;
+    public string FunctionArguments { get; private protected set; }
 
     /// <summary> Creates a new <see cref="ChatToolCall"/> representing a function call made by the model. </summary>
     /// <param name="toolCallId"> The ID of the tool call. </param>
@@ -55,12 +53,8 @@ public partial class ChatToolCall
         Argument.AssertNotNullOrEmpty(functionName, nameof(functionName));
         Argument.AssertNotNullOrEmpty(functionArguments, nameof(functionArguments));
 
-        InternalChatCompletionMessageToolCallFunction function = new(functionName, functionArguments);
+        InternalChatCompletionMessageFunctionToolCallFunction function = new(functionName, functionArguments);
 
-        return new(
-            id: toolCallId,
-            kind: ChatToolCallKind.Function,
-            function: function,
-            serializedAdditionalRawData: null);
+        return new InternalChatCompletionMessageFunctionToolCall(toolCallId, function);
     }
 }

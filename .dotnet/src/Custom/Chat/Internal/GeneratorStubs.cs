@@ -1,13 +1,10 @@
 namespace OpenAI.Chat;
 
+[CodeGenModel("UnknownChatCompletionRequestMessage")]
+internal partial class InternalUnknownChatCompletionRequestMessage { }
+
 [CodeGenModel("ChatCompletionFunctionCallOption")]
 internal partial class InternalChatCompletionFunctionCallOption { }
-
-[CodeGenModel("ChatCompletionMessageToolCallFunction")]
-internal partial class InternalChatCompletionMessageToolCallFunction { }
-
-[CodeGenModel("ChatCompletionMessageToolCallChunkFunction")]
-internal partial class InternalChatCompletionMessageToolCallChunkFunction { }
 
 [CodeGenModel("ChatCompletionMessageToolCallChunkType")]
 internal readonly partial struct InternalChatCompletionMessageToolCallChunkType { }
@@ -105,6 +102,9 @@ internal partial class InternalCreateChatCompletionStreamResponseUsage { }
 [CodeGenModel("FunctionParameters")]
 internal partial class InternalFunctionParameters { }
 
+[CodeGenModel("ClientOnlyChatCompletionToolChoiceOptionPlaceholderDiscriminator")]
+internal readonly partial struct InternalClientOnlyChatCompletionToolChoiceOptionPlaceholderDiscriminator { }
+
 [CodeGenModel("ClientOnlyChatCompletionToolChoiceOptionPredefined")]
 internal partial class InternalClientOnlyChatCompletionToolChoiceOptionPredefined {}
 
@@ -116,3 +116,19 @@ internal readonly partial struct InternalClientOnlyChatCompletionToolChoiceOptio
 
 [CodeGenModel("ClientOnlyChatCompletionToolChoiceOptionPredefinedValue1")]
 internal readonly partial struct InternalClientOnlyChatCompletionToolChoiceOptionPredefinedValue { }
+
+[CodeGenModel("ChatCompletionFunctionTool")]
+internal partial class InternalChatCompletionFunctionTool { }
+
+[CodeGenModel("ChatCompletionMessageFunctionToolCall")]
+internal partial class InternalChatCompletionMessageFunctionToolCall { }
+
+[CodeGenModel("ChatCompletionMessageFunctionToolCallFunction")]
+internal partial class InternalChatCompletionMessageFunctionToolCallFunction { }
+
+[CodeGenModel("ChatCompletionMessageFunctionToolCallChunk")]
+internal partial class InternalChatCompletionMessageFunctionToolCallChunk { }
+
+[CodeGenModel("ChatCompletionMessageFunctionToolCallChunkFunction")]
+internal partial class InternalChatCompletionMessageFunctionToolCallChunkFunction { }
+

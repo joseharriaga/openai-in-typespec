@@ -24,7 +24,7 @@ namespace OpenAI.Chat
             if (SerializedAdditionalRawData?.ContainsKey("placeholder_discriminator") != true)
             {
                 writer.WritePropertyName("placeholder_discriminator"u8);
-                writer.WriteStringValue(PlaceholderDiscriminator);
+                writer.WriteStringValue(PlaceholderDiscriminator.ToString());
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -68,14 +68,14 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            string placeholderDiscriminator = "Unknown";
+            InternalClientOnlyChatCompletionToolChoiceOptionPlaceholderDiscriminator placeholderDiscriminator = "Unknown";
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("placeholder_discriminator"u8))
                 {
-                    placeholderDiscriminator = property.Value.GetString();
+                    placeholderDiscriminator = new InternalClientOnlyChatCompletionToolChoiceOptionPlaceholderDiscriminator(property.Value.GetString());
                     continue;
                 }
                 if (true)

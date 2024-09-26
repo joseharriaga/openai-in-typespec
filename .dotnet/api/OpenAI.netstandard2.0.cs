@@ -1489,14 +1489,14 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatMessage>.Write(ModelReaderWriterOptions options);
     }
-    public class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>, IPersistableModel<ChatMessageContentPart> {
-        public BinaryData ImageBytes { get; }
-        public string ImageBytesMediaType { get; }
-        public ChatImageDetailLevel? ImageDetailLevel { get; }
-        public Uri ImageUri { get; }
+    public abstract class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>, IPersistableModel<ChatMessageContentPart> {
+        public BinaryData ImageBytes { get; private protected set; }
+        public string ImageBytesMediaType { get; private protected set; }
+        public ChatImageDetailLevel? ImageDetailLevel { get; private protected set; }
+        public Uri ImageUri { get; private protected set; }
         public ChatMessageContentPartKind Kind { get; }
-        public string Refusal { get; }
-        public string Text { get; }
+        public string Refusal { get; private protected set; }
+        public string Text { get; private protected set; }
         public static ChatMessageContentPart CreateImagePart(BinaryData imageBytes, string imageBytesMediaType, ChatImageDetailLevel? imageDetailLevel = null);
         public static ChatMessageContentPart CreateImagePart(Uri imageUri, ChatImageDetailLevel? imageDetailLevel = null);
         public static ChatMessageContentPart CreateRefusalPart(string refusal);
@@ -1582,11 +1582,11 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatTokenUsage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatTokenUsage>.Write(ModelReaderWriterOptions options);
     }
-    public class ChatTool : IJsonModel<ChatTool>, IPersistableModel<ChatTool> {
-        public string FunctionDescription { get; }
-        public string FunctionName { get; }
-        public BinaryData FunctionParameters { get; }
-        public bool? FunctionSchemaIsStrict { get; }
+    public abstract class ChatTool : IJsonModel<ChatTool>, IPersistableModel<ChatTool> {
+        public string FunctionDescription { get; private protected set; }
+        public string FunctionName { get; private protected set; }
+        public BinaryData FunctionParameters { get; private protected set; }
+        public bool? FunctionSchemaIsStrict { get; private protected set; }
         public ChatToolKind Kind { get; }
         public static ChatTool CreateFunctionTool(string functionName, string functionDescription = null, BinaryData functionParameters = null, bool? functionSchemaIsStrict = null);
         ChatTool IJsonModel<ChatTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -1595,10 +1595,10 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatTool>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatTool>.Write(ModelReaderWriterOptions options);
     }
-    public class ChatToolCall : IJsonModel<ChatToolCall>, IPersistableModel<ChatToolCall> {
-        public string FunctionArguments { get; }
-        public string FunctionName { get; }
-        public string Id { get; set; }
+    public abstract class ChatToolCall : IJsonModel<ChatToolCall>, IPersistableModel<ChatToolCall> {
+        public string FunctionArguments { get; private protected set; }
+        public string FunctionName { get; private protected set; }
+        public string Id { get; private protected set; }
         public ChatToolCallKind Kind { get; }
         public static ChatToolCall CreateFunctionToolCall(string toolCallId, string functionName, string functionArguments);
         ChatToolCall IJsonModel<ChatToolCall>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -1700,11 +1700,11 @@ namespace OpenAI.Chat {
         string IPersistableModel<StreamingChatFunctionCallUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<StreamingChatFunctionCallUpdate>.Write(ModelReaderWriterOptions options);
     }
-    public class StreamingChatToolCallUpdate : IJsonModel<StreamingChatToolCallUpdate>, IPersistableModel<StreamingChatToolCallUpdate> {
-        public string FunctionArgumentsUpdate { get; }
-        public string FunctionName { get; }
-        public string Id { get; }
-        public int Index { get; }
+    public abstract class StreamingChatToolCallUpdate : IJsonModel<StreamingChatToolCallUpdate>, IPersistableModel<StreamingChatToolCallUpdate> {
+        public string FunctionArgumentsUpdate { get; private protected set; }
+        public string FunctionName { get; private protected set; }
+        public string Id { get; private protected set; }
+        public int Index { get; private protected set; }
         public ChatToolCallKind Kind { get; }
         StreamingChatToolCallUpdate IJsonModel<StreamingChatToolCallUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<StreamingChatToolCallUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);

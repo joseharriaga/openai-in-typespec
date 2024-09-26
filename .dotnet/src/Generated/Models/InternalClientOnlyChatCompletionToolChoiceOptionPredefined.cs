@@ -11,11 +11,11 @@ namespace OpenAI.Chat
     {
         public InternalClientOnlyChatCompletionToolChoiceOptionPredefined(InternalClientOnlyChatCompletionToolChoiceOptionPredefinedValue value)
         {
-            PlaceholderDiscriminator = "predefined";
+            PlaceholderDiscriminator = InternalClientOnlyChatCompletionToolChoiceOptionPlaceholderDiscriminator.Predefined;
             Value = value;
         }
 
-        internal InternalClientOnlyChatCompletionToolChoiceOptionPredefined(string placeholderDiscriminator, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalClientOnlyChatCompletionToolChoiceOptionPredefinedValue value) : base(placeholderDiscriminator, serializedAdditionalRawData)
+        internal InternalClientOnlyChatCompletionToolChoiceOptionPredefined(InternalClientOnlyChatCompletionToolChoiceOptionPlaceholderDiscriminator placeholderDiscriminator, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalClientOnlyChatCompletionToolChoiceOptionPredefinedValue value) : base(placeholderDiscriminator, serializedAdditionalRawData)
         {
             Value = value;
         }

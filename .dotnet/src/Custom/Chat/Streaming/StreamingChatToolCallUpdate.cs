@@ -21,29 +21,18 @@ using System.Text.Json;
 /// </remarks>
 [CodeGenModel("ChatCompletionMessageToolCallChunk")]
 [CodeGenSuppress("StreamingChatToolCallUpdate", typeof(int))]
-public partial class StreamingChatToolCallUpdate
+public abstract partial class StreamingChatToolCallUpdate
 {
-    [CodeGenMember("Function")]
-    internal InternalChatCompletionMessageToolCallChunkFunction Function { get; }
-
-    internal StreamingChatToolCallUpdate(int index, string id, InternalChatCompletionMessageToolCallChunkFunction function)
-    {
-        Argument.AssertNotNull(id, nameof(id));
-        Argument.AssertNotNull(function, nameof(function));
-
-        Kind = ChatToolCallKind.Function;
-
-        Index = index;
-        Id = id;
-        Function = function;
-    }
-
     // CUSTOM:
     // - Renamed.
     // - Changed type from string.
     /// <summary> The kind of tool.Currently, only<see cref="ChatToolCallKind.Function"/> is supported. </summary>
     [CodeGenMember("Type")]
-    public ChatToolCallKind Kind { get; } = ChatToolCallKind.Function;
+    public ChatToolCallKind Kind { get; }
+
+    public int Index { get; private protected set; }
+
+    public string Id { get; private protected set; }
 
     /// <summary>
     /// The name of the function requested by the tool call.
@@ -58,7 +47,7 @@ public partial class StreamingChatToolCallUpdate
     /// parallel tool calls when streaming.
     /// </para>
     /// </remarks>
-    public string FunctionName => Function?.Name;
+    public string FunctionName { get; private protected set; }
 
     /// <summary>
     /// The next new segment of the function arguments for the function tool called by a streaming tool call.
@@ -72,5 +61,5 @@ public partial class StreamingChatToolCallUpdate
     /// not defined by your function schema. Validate the arguments in your code before calling
     /// your function.
     /// </remarks>
-    public string FunctionArgumentsUpdate => Function?.Arguments;
+    public string FunctionArgumentsUpdate { get; private protected set; }
 }

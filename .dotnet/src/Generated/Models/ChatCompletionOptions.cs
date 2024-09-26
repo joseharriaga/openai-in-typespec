@@ -45,6 +45,5 @@ namespace OpenAI.Chat
         public ChatResponseFormat ResponseFormat { get; set; }
         public float? Temperature { get; set; }
         public float? TopP { get; set; }
-        public IList<ChatTool> Tools { get; }
     }
 }

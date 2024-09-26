@@ -7,14 +7,14 @@ using System.Collections.Generic;
 
 namespace OpenAI.Chat
 {
-    internal partial class InternalChatCompletionMessageToolCallChunkFunction
+    internal partial class InternalChatCompletionMessageFunctionToolCallChunkFunction
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalChatCompletionMessageToolCallChunkFunction()
+        internal InternalChatCompletionMessageFunctionToolCallChunkFunction()
         {
         }
 
-        internal InternalChatCompletionMessageToolCallChunkFunction(string name, string arguments, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalChatCompletionMessageFunctionToolCallChunkFunction(string name, string arguments, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Name = name;
             Arguments = arguments;

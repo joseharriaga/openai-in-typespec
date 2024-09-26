@@ -11,12 +11,12 @@ namespace OpenAI.Chat
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
 
-        internal ChatToolChoice(string placeholderDiscriminator, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatToolChoice(InternalClientOnlyChatCompletionToolChoiceOptionPlaceholderDiscriminator placeholderDiscriminator, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             PlaceholderDiscriminator = placeholderDiscriminator;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal string PlaceholderDiscriminator { get; set; }
+        internal InternalClientOnlyChatCompletionToolChoiceOptionPlaceholderDiscriminator PlaceholderDiscriminator { get; set; }
     }
 }

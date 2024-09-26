@@ -12,29 +12,16 @@ namespace OpenAI.Chat;
 ///     </list>
 /// </summary>
 [CodeGenModel("ChatCompletionTool")]
-public partial class ChatTool
+public abstract partial class ChatTool
 {
-    // CUSTOM: Made internal.
-    [CodeGenMember("Function")]
-    internal InternalFunctionDefinition Function { get; }
-
-    // CUSTOM: Made internal.
-    internal ChatTool(InternalFunctionDefinition function)
-    {
-        Argument.AssertNotNull(function, nameof(function));
-
-        Function = function;
-    }
-
-    // CUSTOM: Renamed.
-    /// <summary> The kind of tool. </summary>
-    [CodeGenMember("Type")]
-    public ChatToolKind Kind { get; } = ChatToolKind.Function;
+    // CUSTOM: Made public after rename from 'type'.
+    [CodeGenMember("Kind")]
+    public ChatToolKind Kind { get; }
 
     // CUSTOM: Spread.
     /// <summary> The name of the function. </summary>
     /// <remarks> Present when <see cref="Kind"/> is <see cref="ChatToolKind.Function"/>. </remarks>
-    public string FunctionName => Function?.Name;
+    public string FunctionName { get; private protected set; }
 
     // CUSTOM: Spread.
     /// <summary>
@@ -42,7 +29,7 @@ public partial class ChatTool
     ///     function.
     /// </summary>
     /// <remarks> Present when <see cref="Kind"/> is <see cref="ChatToolKind.Function"/>. </remarks>
-    public string FunctionDescription => Function?.Description;
+    public string FunctionDescription { get; private protected set; }
 
     // CUSTOM: Spread.
     /// <summary>
@@ -53,7 +40,7 @@ public partial class ChatTool
     ///     <see href="https://json-schema.org/understanding-json-schema">JSON schema reference documentation</see>.
     /// </summary>
     /// <remarks> Present when <see cref="Kind"/> is <see cref="ChatToolKind.Function"/>. </remarks>
-    public BinaryData FunctionParameters => Function?.Parameters;
+    public BinaryData FunctionParameters { get; private protected set; }
 
     // CUSTOM: Spread.
     /// <summary>
@@ -68,7 +55,7 @@ public partial class ChatTool
     ///     </para>
     /// </summary>
     /// <remarks> Present when <see cref="Kind"/> is <see cref="ChatToolKind.Function"/>. </remarks>
-    public bool? FunctionSchemaIsStrict => Function?.Strict;
+    public bool? FunctionSchemaIsStrict { get; private protected set; }
 
     /// <summary> Creates a new <see cref="ChatTool"/> representing a function that the model may call. </summary>
     /// <param name="functionName"> The name of the function. </param>
@@ -128,9 +115,6 @@ public partial class ChatTool
             Strict = functionSchemaIsStrict,
         };
 
-        return new(
-            kind: ChatToolKind.Function,
-            function: function,
-            serializedAdditionalRawData: null);
+        return new InternalChatCompletionFunctionTool(function);
     }
 }

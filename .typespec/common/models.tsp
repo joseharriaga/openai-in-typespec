@@ -16,6 +16,7 @@ model Error {
   type: string;
 }
 
+// Tool customization: apply error decorator
 @error
 model ErrorResponse {
   error: Error;

@@ -159,4 +159,8 @@ public partial class ChatCompletionOptions
     // CUSTOM: Added the Obsolete attribute.
     [Obsolete($"This property is obsolete. Please use {nameof(Tools)} instead.")]
     public IList<ChatFunction> Functions { get; }
+
+    // CUSTOM: Apply base, abstract type
+    [CodeGenMember("Tools")]
+    public IList<ChatTool> Tools { get; }
 }

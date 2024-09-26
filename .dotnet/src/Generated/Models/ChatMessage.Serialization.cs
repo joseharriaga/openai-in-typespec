@@ -10,7 +10,7 @@ using OpenAI.FineTuning;
 
 namespace OpenAI.Chat
 {
-    [PersistableModelProxy(typeof(InternalUnknownChatMessage))]
+    [PersistableModelProxy(typeof(InternalUnknownChatCompletionRequestMessage))]
     public partial class ChatMessage : IJsonModel<ChatMessage>
     {
         ChatMessage IJsonModel<ChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
@@ -45,7 +45,7 @@ namespace OpenAI.Chat
                     case "user": return UserChatMessage.DeserializeUserChatMessage(element, options);
                 }
             }
-            return InternalUnknownChatMessage.DeserializeInternalUnknownChatMessage(element, options);
+            return InternalUnknownChatCompletionRequestMessage.DeserializeInternalUnknownChatCompletionRequestMessage(element, options);
         }
 
         BinaryData IPersistableModel<ChatMessage>.Write(ModelReaderWriterOptions options)

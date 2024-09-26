@@ -7,22 +7,17 @@ using System.Collections.Generic;
 
 namespace OpenAI.Chat
 {
-    public partial class ChatToolCall
+    public abstract partial class ChatToolCall
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-
-        internal ChatToolCall(string id, ChatToolCallKind kind, InternalChatCompletionMessageToolCallFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        protected ChatToolCall()
         {
-            Id = id;
+        }
+
+        internal ChatToolCall(ChatToolCallKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        {
             Kind = kind;
-            Function = function;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
-
-        internal ChatToolCall()
-        {
-        }
-
-        public string Id { get; set; }
     }
 }

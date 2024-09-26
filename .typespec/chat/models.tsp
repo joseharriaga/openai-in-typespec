@@ -268,7 +268,8 @@ model CreateChatCompletionResponse {
   usage?: CompletionUsage;
 }
 
-model ChatCompletionTool {
+// Tool customization: apply discriminated type base and rename from 'ChatCompletionTool' for clarity
+model ChatCompletionFunctionTool extends ChatCompletionTool {
   @doc("""
     The type of the tool. Currently, only `function` is supported.
     """)
@@ -305,7 +306,9 @@ union ChatCompletionToolChoiceOption {
   ChatCompletionNamedToolChoice,
 }
 
-model ChatCompletionRequestMessageContentPartText {
+// Tool customization: apply discriminated type base
+model ChatCompletionRequestMessageContentPartText
+  extends ChatCompletionRequestMessageContentPart {
   /** The type of the content part. */
   type: "text";
 
@@ -313,7 +316,9 @@ model ChatCompletionRequestMessageContentPartText {
   text: string;
 }
 
-model ChatCompletionRequestMessageContentPartImage {
+// Tool customization: apply discriminated type base
+model ChatCompletionRequestMessageContentPartImage
+  extends ChatCompletionRequestMessageContentPart {
   /** The type of the content part. */
   type: "image_url";
 
@@ -327,7 +332,9 @@ model ChatCompletionRequestMessageContentPartImage {
   };
 }
 
-model ChatCompletionRequestMessageContentPartRefusal {
+// Tool customization: apply discriminated type base
+model ChatCompletionRequestMessageContentPartRefusal
+  extends ChatCompletionRequestMessageContentPart {
   /** The type of the content part. */
   type: "refusal";
 
@@ -335,7 +342,9 @@ model ChatCompletionRequestMessageContentPartRefusal {
   refusal: string;
 }
 
-model ChatCompletionMessageToolCall {
+// Tool customization: apply discriminated type base and rename from 'ChatCompletionMessageToolCall' for clarity
+model ChatCompletionMessageFunctionToolCall
+  extends ChatCompletionMessageToolCall {
   /** The ID of the tool call. */
   id: string;
 
@@ -637,16 +646,19 @@ model ChatCompletionStreamResponseDelta {
   refusal?: string | null;
 }
 
-model ChatCompletionMessageToolCallChunk {
+// Tool customization: apply discriminated type base and rename from 'ChatCompletionMessageToolCallChunk' for clarity
+model ChatCompletionMessageFunctionToolCallChunk
+  extends ChatCompletionMessageToolCallChunk {
   index: int32;
 
   /** The ID of the tool call. */
   id?: string;
 
+  // Tool customization: make induced discriminator required
   @doc("""
     The type of the tool. Currently, only `function` is supported.
     """)
-  type?: "function";
+  type: "function";
 
   function?: {
     /** The name of the function to call. */

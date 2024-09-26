@@ -25,11 +25,9 @@ model ChatResponseFormatJsonSchema extends ChatResponseFormat {
 
 model ChatCompletionFunctionChoice {}
 
-model ChatMessageContentPart {}
-
 @discriminator("placeholder_discriminator")
 model ClientOnlyChatCompletionToolChoiceOption {
-  placeholder_discriminator: string;
+  placeholder_discriminator: string | "predefined" | "named";
 }
 model ClientOnlyChatCompletionToolChoiceOptionPredefined
   extends ClientOnlyChatCompletionToolChoiceOption {
@@ -40,4 +38,29 @@ model ClientOnlyChatCompletionToolChoiceOptionNamed
   extends ClientOnlyChatCompletionToolChoiceOption {
   placeholder_discriminator: "named";
   ...ChatCompletionNamedToolChoice;
+}
+
+@discriminator("type")
+model ChatCompletionRequestMessageContentPart {
+  type: string | "text" | "image_url" | "refusal";
+}
+
+@discriminator("type")
+model ChatCompletionMessageToolCall {
+  type: string | "function";
+}
+
+union ChatCompletionToolType {
+  string,
+  function: "function",
+}
+
+@discriminator("type")
+model ChatCompletionTool {
+  type: ChatCompletionToolType;
+}
+
+@discriminator("type")
+model ChatCompletionMessageToolCallChunk {
+  type: string | "function";
 }

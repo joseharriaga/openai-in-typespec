@@ -13,11 +13,11 @@ namespace OpenAI.Chat
         {
             Argument.AssertNotNull(function, nameof(function));
 
-            PlaceholderDiscriminator = "named";
+            PlaceholderDiscriminator = InternalClientOnlyChatCompletionToolChoiceOptionPlaceholderDiscriminator.Named;
             Function = function;
         }
 
-        internal InternalClientOnlyChatCompletionToolChoiceOptionNamed(string placeholderDiscriminator, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalClientOnlyChatCompletionToolChoiceOptionNamedType type, InternalChatCompletionNamedToolChoiceFunction function) : base(placeholderDiscriminator, serializedAdditionalRawData)
+        internal InternalClientOnlyChatCompletionToolChoiceOptionNamed(InternalClientOnlyChatCompletionToolChoiceOptionPlaceholderDiscriminator placeholderDiscriminator, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalClientOnlyChatCompletionToolChoiceOptionNamedType type, InternalChatCompletionNamedToolChoiceFunction function) : base(placeholderDiscriminator, serializedAdditionalRawData)
         {
             Type = type;
             Function = function;

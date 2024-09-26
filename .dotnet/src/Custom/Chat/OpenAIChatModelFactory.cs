@@ -178,16 +178,16 @@ public static partial class OpenAIChatModelFactory
     /// <returns> A new <see cref="OpenAI.Chat.StreamingChatToolCallUpdate"/> instance for mocking. </returns>
     public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = default, string id = null, ChatToolCallKind kind = default, string functionName = null, string functionArgumentsUpdate = null)
     {
-        InternalChatCompletionMessageToolCallChunkFunction function = new InternalChatCompletionMessageToolCallChunkFunction(
+        InternalChatCompletionMessageFunctionToolCallChunkFunction function = new InternalChatCompletionMessageFunctionToolCallChunkFunction(
             functionName,
             functionArgumentsUpdate,
             serializedAdditionalRawData: null);
 
-        return new StreamingChatToolCallUpdate(
+        return new InternalChatCompletionMessageFunctionToolCallChunk(
+            kind,
+            serializedAdditionalRawData: null,
             index,
             id,
-            kind,
-            function,
-            serializedAdditionalRawData: null);
+            function);
     }
 }

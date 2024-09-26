@@ -32,6 +32,5 @@ namespace OpenAI.Chat
         {
         }
         public string Refusal { get; }
-        public IReadOnlyList<ChatToolCall> ToolCalls { get; }
     }
 }

@@ -6,12 +6,12 @@ using System.Text.Json;
 namespace OpenAI.Chat;
 
 [CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Chat.ChatMessage>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
-internal partial class InternalUnknownChatMessage : IJsonModel<ChatMessage>
+internal partial class InternalUnknownChatCompletionRequestMessage : IJsonModel<ChatMessage>
 {
     void IJsonModel<ChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        => CustomSerializationHelpers.SerializeInstance<ChatMessage, InternalUnknownChatMessage>(this, WriteCore, writer, options);
+        => CustomSerializationHelpers.SerializeInstance<ChatMessage, InternalUnknownChatCompletionRequestMessage>(this, WriteCore, writer, options);
 
-    internal static void WriteCore(InternalUnknownChatMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    internal static void WriteCore(InternalUnknownChatCompletionRequestMessage instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         instance.WriteCore(writer, options);
     }
@@ -26,7 +26,7 @@ internal partial class InternalUnknownChatMessage : IJsonModel<ChatMessage>
         writer.WriteEndObject();
     }
 
-    internal static InternalUnknownChatMessage DeserializeUnknownChatMessage(JsonElement element, ModelReaderWriterOptions options = null)
+    internal static InternalUnknownChatCompletionRequestMessage DeserializeUnknownChatMessage(JsonElement element, ModelReaderWriterOptions options = null)
     {
         options ??= ModelSerializationExtensions.WireOptions;
 
@@ -65,6 +65,6 @@ internal partial class InternalUnknownChatMessage : IJsonModel<ChatMessage>
             }
         }
         serializedAdditionalRawData = rawDataDictionary;
-        return new InternalUnknownChatMessage(role.Value, content ?? new ChangeTrackingList<ChatMessageContentPart>(), serializedAdditionalRawData);
+        return new InternalUnknownChatCompletionRequestMessage(role.Value, content ?? new ChangeTrackingList<ChatMessageContentPart>(), serializedAdditionalRawData);
     }
 }

@@ -8,8 +8,8 @@ using OpenAI;
 @@access(ChatCompletionFunctionChoice, Access.public);
 @@usage(ChatCompletionFunctionChoice, Usage.input);
 
-@@access(ChatMessageContentPart, Access.public);
-@@usage(ChatMessageContentPart, Usage.input | Usage.output);
+@@access(ChatCompletionRequestMessageContentPart, Access.public);
+@@usage(ChatCompletionRequestMessageContentPart, Usage.input | Usage.output);
 
 @@access(ChatCompletionRole, Access.public);
 @@usage(ChatCompletionRole, Usage.input | Usage.output);
@@ -31,3 +31,30 @@ using OpenAI;
 
 @@access(ClientOnlyChatCompletionToolChoiceOptionNamed, Access.public);
 @@usage(ClientOnlyChatCompletionToolChoiceOptionNamed, Usage.input);
+
+@@clientName(ChatCompletionToolType, "ChatToolKind", "csharp");
+@@clientName(ChatCompletionTool.type, "kind", "csharp");
+@@clientName(ChatCompletionFunctionTool.type, "kind", "csharp");
+
+@@clientName(ChatCompletionRequestMessageContentPart.type, "kind", "csharp");
+@@clientName(ChatCompletionRequestMessageContentPartText.type,
+  "kind",
+  "csharp"
+);
+@@clientName(ChatCompletionRequestMessageContentPartImage.type,
+  "kind",
+  "csharp"
+);
+@@clientName(ChatCompletionRequestMessageContentPartRefusal.type,
+  "kind",
+  "csharp"
+);
+
+@@clientName(ChatCompletionMessageToolCall.type, "kind", "csharp");
+@@clientName(ChatCompletionMessageFunctionToolCall.type, "kind", "csharp");
+
+@@clientName(ChatCompletionMessageToolCall.type, "kind", "csharp");
+@@clientName(ChatCompletionMessageFunctionToolCall.type, "kind", "csharp");
+
+@@clientName(ChatCompletionMessageToolCallChunk.type, "kind", "csharp");
+@@clientName(ChatCompletionMessageFunctionToolCallChunk.type, "kind", "csharp");

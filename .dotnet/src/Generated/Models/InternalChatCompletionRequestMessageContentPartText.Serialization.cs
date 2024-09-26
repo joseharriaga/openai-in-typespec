@@ -12,47 +12,6 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionRequestMessageContentPartText : IJsonModel<InternalChatCompletionRequestMessageContentPartText>
     {
-        void IJsonModel<InternalChatCompletionRequestMessageContentPartText>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartText>)this).GetFormatFromOptions(options) : options.Format;
-            if (format != "J")
-            {
-                throw new FormatException($"The model {nameof(InternalChatCompletionRequestMessageContentPartText)} does not support writing '{format}' format.");
-            }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
-            {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("text") != true)
-            {
-                writer.WritePropertyName("text"u8);
-                writer.WriteStringValue(Text);
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-            }
-            writer.WriteEndObject();
-        }
-
         InternalChatCompletionRequestMessageContentPartText IJsonModel<InternalChatCompletionRequestMessageContentPartText>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
             var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartText>)this).GetFormatFromOptions(options) : options.Format;
@@ -73,20 +32,20 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            InternalChatCompletionRequestMessageContentPartTextType type = default;
             string text = default;
+            ChatMessageContentPartKind type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("type"u8))
-                {
-                    type = new InternalChatCompletionRequestMessageContentPartTextType(property.Value.GetString());
-                    continue;
-                }
                 if (property.NameEquals("text"u8))
                 {
                     text = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("type"u8))
+                {
+                    type = new ChatMessageContentPartKind(property.Value.GetString());
                     continue;
                 }
                 if (true)
@@ -96,7 +55,7 @@ namespace OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalChatCompletionRequestMessageContentPartText(type, text, serializedAdditionalRawData);
+            return new InternalChatCompletionRequestMessageContentPartText(type, serializedAdditionalRawData, text);
         }
 
         BinaryData IPersistableModel<InternalChatCompletionRequestMessageContentPartText>.Write(ModelReaderWriterOptions options)
@@ -130,13 +89,13 @@ namespace OpenAI.Chat
 
         string IPersistableModel<InternalChatCompletionRequestMessageContentPartText>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalChatCompletionRequestMessageContentPartText FromResponse(PipelineResponse response)
+        internal static new InternalChatCompletionRequestMessageContentPartText FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
             return DeserializeInternalChatCompletionRequestMessageContentPartText(document.RootElement);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        internal override BinaryContent ToBinaryContent()
         {
             return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }

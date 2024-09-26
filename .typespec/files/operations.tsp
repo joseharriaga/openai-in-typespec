@@ -26,9 +26,7 @@ interface Files {
     """)
   createFile(
     @header accept: "application/json",
-
     @header contentType: "multipart/form-data",
-
     @body requestBody: CreateFileRequest,
   ): OpenAIFile | ErrorResponse;
 
@@ -77,7 +75,7 @@ interface Files {
   // the file content as bytes.
   downloadFile(
     @header accept: "application/json",
-    
+
     /** The ID of the file to use for this request. */
     @path file_id: string,
   ): bytes | ErrorResponse;

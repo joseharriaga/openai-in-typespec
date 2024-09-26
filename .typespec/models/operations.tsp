@@ -19,7 +19,7 @@ interface Models {
     owner and availability.
     """)
   listModels(
-    @header accept: "application/json"
+    @header accept: "application/json",
   ): ListModelsResponse | ErrorResponse;
 
   @route("{model}")
@@ -32,6 +32,7 @@ interface Models {
     """)
   retrieveModel(
     @header accept: "application/json",
+
     /** The ID of the model to use for this request. */
     @path `model`: string,
   ): Model | ErrorResponse;
@@ -45,6 +46,7 @@ interface Models {
     """)
   deleteModel(
     @header accept: "application/json",
+
     /** The model to delete */
     @path `model`: string,
   ): DeleteModelResponse | ErrorResponse;

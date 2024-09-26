@@ -22,7 +22,7 @@ namespace OpenAI.Chat;
 ///     </list>
 /// </summary>
 [CodeGenModel("ChatResponseFormat")]
-public abstract partial class ChatResponseFormat
+public partial class ChatResponseFormat
 {
     /// <summary> Creates a new <see cref="ChatResponseFormat"/> requesting plain text. </summary>
     public static ChatResponseFormat CreateTextFormat() => new InternalChatResponseFormatText();

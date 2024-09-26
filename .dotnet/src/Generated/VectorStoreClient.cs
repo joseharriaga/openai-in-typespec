@@ -22,13 +22,6 @@ namespace OpenAI.VectorStores
         {
         }
 
-        internal VectorStoreClient(ClientPipeline pipeline, ApiKeyCredential keyCredential, Uri endpoint)
-        {
-            _pipeline = pipeline;
-            _keyCredential = keyCredential;
-            _endpoint = endpoint;
-        }
-
         public virtual async Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));

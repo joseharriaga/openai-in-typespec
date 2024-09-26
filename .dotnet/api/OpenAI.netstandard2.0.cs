@@ -1306,7 +1306,7 @@ namespace OpenAI.Batch {
         protected internal BatchClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public BatchClient(string apiKey, OpenAIClientOptions options);
         public BatchClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual CreateBatchOperation CreateBatch(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
         public virtual Task<CreateBatchOperation> CreateBatchAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
         public virtual CollectionResult GetBatches(string after, int? limit, RequestOptions options);
@@ -1471,8 +1471,9 @@ namespace OpenAI.Chat {
         public static bool operator !=(ChatImageDetailLevel left, ChatImageDetailLevel right);
         public override readonly string ToString();
     }
-    public abstract class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
+    public class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
         public IList<ChatMessageContentPart> Content { get; }
+        public int Foo { get; }
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
         public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall);
         public static AssistantChatMessage CreateAssistantMessage(params ChatMessageContentPart[] contentParts);
@@ -1548,7 +1549,8 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatOutputTokenUsageDetails>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatOutputTokenUsageDetails>.Write(ModelReaderWriterOptions options);
     }
-    public abstract class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
+    public class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
+        protected ChatResponseFormat();
         public static ChatResponseFormat CreateJsonObjectFormat();
         public static ChatResponseFormat CreateJsonSchemaFormat(string jsonSchemaFormatName, BinaryData jsonSchema, string jsonSchemaFormatDescription = null, bool? jsonSchemaIsStrict = null);
         public static ChatResponseFormat CreateTextFormat();
@@ -1973,7 +1975,7 @@ namespace OpenAI.FineTuning {
         protected internal FineTuningClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public FineTuningClient(string apiKey, OpenAIClientOptions options);
         public FineTuningClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual FineTuningJobOperation CreateFineTuningJob(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
         public virtual Task<FineTuningJobOperation> CreateFineTuningJobAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
         public virtual ClientResult GetJob(string fineTuningJobId, RequestOptions options);
@@ -2391,7 +2393,7 @@ namespace OpenAI.VectorStores {
         protected internal VectorStoreClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public VectorStoreClient(string apiKey, OpenAIClientOptions options);
         public VectorStoreClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual AddFileToVectorStoreOperation AddFileToVectorStore(VectorStore vectorStore, OpenAIFile file, bool waitUntilCompleted);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AddFileToVectorStoreOperation AddFileToVectorStore(string vectorStoreId, BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);

@@ -10,6 +10,3 @@ options:
     disable-xml-docs: true
     enable-internal-raw-data: true
     generate-model-factory: false
-    suppress-abstract-base-class:
-    - ChatMessage
-    - ChatResponseFormat

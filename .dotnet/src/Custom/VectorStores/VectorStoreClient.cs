@@ -12,6 +12,7 @@ namespace OpenAI.VectorStores;
 /// <summary>
 /// The service client for OpenAI vector store operations.
 /// </summary>
+[Experimental("OPENAI001")]
 [CodeGenClient("VectorStores")]
 [CodeGenSuppress("VectorStoreClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateVectorStoreAsync", typeof(VectorStoreCreationOptions))]
@@ -40,7 +41,6 @@ namespace OpenAI.VectorStores;
 [CodeGenSuppress("CancelVectorStoreFileBatch", typeof(string), typeof(string))]
 [CodeGenSuppress("GetFilesInVectorStoreBatchesAsync", typeof(string), typeof(string), typeof(int?), typeof(InternalListFilesInVectorStoreBatchRequestOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
 [CodeGenSuppress("GetFilesInVectorStoreBatches", typeof(string), typeof(string), typeof(int?), typeof(InternalListFilesInVectorStoreBatchRequestOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
-[Experimental("OPENAI001")]
 public partial class VectorStoreClient
 {
     // CUSTOM: Remove virtual keyword.

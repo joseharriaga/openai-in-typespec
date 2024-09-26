@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace OpenAI.Batch;
 /// A long-running operation for executing a batch from an uploaded file of 
 /// requests.
 /// </summary>
+[Experimental("OPENAI001")]
 public class CreateBatchOperation : OperationResult
 {
     private readonly ClientPipeline _pipeline;

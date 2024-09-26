@@ -270,7 +270,7 @@ public class FineTuningJobOperation : OperationResult
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual AsyncCollectionResult GetJobEventsAsync(string after, int? limit, RequestOptions options)
+    public virtual AsyncCollectionResult GetJobEventsAsync(string? after, int? limit, RequestOptions options)
     {
         return new AsyncFineTuningJobEventCollectionResult(this, options, limit, after);
     }
@@ -289,7 +289,7 @@ public class FineTuningJobOperation : OperationResult
     /// <exception cref="ArgumentException"> <paramref name="jobId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual CollectionResult GetJobEvents(string jobId, string after, int? limit, RequestOptions options)
+    public virtual CollectionResult GetJobEvents(string jobId, string? after, int? limit, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(jobId, nameof(jobId));
 

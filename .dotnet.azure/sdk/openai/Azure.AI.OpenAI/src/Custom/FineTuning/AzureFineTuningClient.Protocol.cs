@@ -9,7 +9,7 @@ namespace Azure.AI.OpenAI.FineTuning;
 
 internal partial class AzureFineTuningClient : FineTuningClient
 {
-    public override async Task<FineTuningJobOperation> CreateJobAsync(
+    public override async Task<FineTuningJobOperation> CreateFineTuningJobAsync(
         BinaryContent content,
         bool waitUntilCompleted,
         RequestOptions options = null)
@@ -25,6 +25,24 @@ internal partial class AzureFineTuningClient : FineTuningClient
 
         AzureFineTuningJobOperation operation = new(Pipeline, _endpoint, jobId, status, response, _apiVersion);
         return await operation.WaitUntilAsync(waitUntilCompleted, options).ConfigureAwait(false);
+    }
+
+    public override FineTuningJobOperation CreateFineTuningJob(
+        BinaryContent content,
+        bool waitUntilCompleted,
+        RequestOptions options = null)
+    {
+        Argument.AssertNotNull(content, nameof(content));
+
+        using PipelineMessage message = CreateCreateFineTuningJobRequest(content, options);
+        PipelineResponse response = Pipeline.ProcessMessage(message, options);
+
+        using JsonDocument doc = JsonDocument.Parse(response.Content);
+        string jobId = doc.RootElement.GetProperty("id"u8).GetString();
+        string status = doc.RootElement.GetProperty("status"u8).GetString();
+
+        AzureFineTuningJobOperation operation = new(Pipeline, _endpoint, jobId, status, response, _apiVersion);
+        return operation.WaitUntil(waitUntilCompleted, options);
     }
 
     public override AsyncCollectionResult GetJobsAsync(string after, int? limit, RequestOptions options)

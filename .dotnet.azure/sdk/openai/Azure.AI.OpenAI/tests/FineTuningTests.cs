@@ -141,7 +141,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             TrainingFile = uploadedFile.Id
         }.ToBinaryContent();
 
-        FineTuningJobOperation operation = await client.CreateJobAsync(requestContent, waitUntilCompleted: false);
+        FineTuningJobOperation operation = await client.CreateFineTuningJobAsync(requestContent, waitUntilCompleted: false);
         FineTuningJob job = ValidateAndParse<FineTuningJob>(ClientResult.FromResponse(operation.GetRawResponse()));
         Assert.That(job.ID, !(Is.Null.Or.Empty));
 
@@ -157,7 +157,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         int maxLoops = 10;
         do
         {
-            result = await client.GetJobEventsAsync(job.ID, null, 10, new()).GetRawPagesAsync().FirstOrDefaultAsync();
+            result = await operation.GetJobEventsAsync(null, 10, new()).GetRawPagesAsync().FirstOrDefaultAsync();
             events = ValidateAndParse<ListResponse<FineTuningJobEvent>>(result);
 
             if (events.Data?.Count > 0)
@@ -206,7 +206,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             TrainingFile = uploadedFile.Id
         }.ToBinaryContent();
 
-        FineTuningJobOperation operation = await client.CreateJobAsync(requestContent, waitUntilCompleted: false);
+        FineTuningJobOperation operation = await client.CreateFineTuningJobAsync(requestContent, waitUntilCompleted: false);
         FineTuningJob job = ValidateAndParse<FineTuningJob>(ClientResult.FromResponse(operation.GetRawResponse()));
         Assert.That(job.ID, Is.Not.Null.Or.Empty);
         Assert.That(job.Error, Is.Null);

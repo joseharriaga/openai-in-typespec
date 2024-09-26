@@ -16,12 +16,12 @@ internal class AsyncFineTuningJobEventCollectionResult : AsyncCollectionResult
 
     // Initial values
     private readonly int? _limit;
-    private readonly string _after;
+    private readonly string? _after;
 
     public AsyncFineTuningJobEventCollectionResult(
         FineTuningJobOperation fineTuningJobOperation,
         RequestOptions? options,
-        int? limit, string after)
+        int? limit, string? after)
     {
         _operation = fineTuningJobOperation;
         _options = options;

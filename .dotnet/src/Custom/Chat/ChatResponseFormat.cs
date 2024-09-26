@@ -103,4 +103,8 @@ public partial class ChatResponseFormat
 
         return new InternalChatResponseFormatJsonSchema(internalSchema);
     }
+
+    // CUSTOM: Made internal.
+    internal ChatResponseFormat()
+    { }
 }

@@ -600,8 +600,8 @@ namespace OpenAI.Assistants {
         public IList<ThreadInitializationMessage> AdditionalMessages { get; }
         public bool? AllowParallelToolCalls { get; set; }
         public string InstructionsOverride { get; set; }
-        public int? MaxCompletionTokens { get; set; }
-        public int? MaxPromptTokens { get; set; }
+        public int? MaxInputTokenCount { get; set; }
+        public int? MaxOutputTokenCount { get; set; }
         public IDictionary<string, string> Metadata { get; }
         public string ModelOverride { get; set; }
         public float? NucleusSamplingFactor { get; set; }
@@ -654,8 +654,8 @@ namespace OpenAI.Assistants {
         private readonly object _dummy;
         private readonly int _dummyPrimitive;
         public RunIncompleteReason(string value);
-        public static RunIncompleteReason MaxCompletionTokens { get; }
-        public static RunIncompleteReason MaxPromptTokens { get; }
+        public static RunIncompleteReason MaxInputTokenCount { get; }
+        public static RunIncompleteReason MaxOutputTokenCount { get; }
         public readonly bool Equals(RunIncompleteReason other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
@@ -826,9 +826,9 @@ namespace OpenAI.Assistants {
         public override readonly string ToString();
     }
     public class RunStepTokenUsage : IJsonModel<RunStepTokenUsage>, IPersistableModel<RunStepTokenUsage> {
-        public int CompletionTokens { get; }
-        public int PromptTokens { get; }
-        public int TotalTokens { get; }
+        public int InputTokenCount { get; }
+        public int OutputTokenCount { get; }
+        public int TotalTokenCount { get; }
         RunStepTokenUsage IJsonModel<RunStepTokenUsage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<RunStepTokenUsage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         RunStepTokenUsage IPersistableModel<RunStepTokenUsage>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1022,8 +1022,8 @@ namespace OpenAI.Assistants {
         public RunIncompleteDetails IncompleteDetails { get; }
         public string Instructions { get; }
         public RunError LastError { get; }
-        public int? MaxCompletionTokens { get; }
-        public int? MaxPromptTokens { get; }
+        public int? MaxInputTokenCount { get; }
+        public int? MaxOutputTokenCount { get; }
         public IReadOnlyDictionary<string, string> Metadata { get; }
         public string Model { get; }
         public float? NucleusSamplingFactor { get; }
@@ -1660,10 +1660,10 @@ namespace OpenAI.Chat {
     }
     public static class OpenAIChatModelFactory {
         public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, IEnumerable<ChatMessageContentPart> content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokens = 0);
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0);
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
-        public static ChatTokenUsage ChatTokenUsage(int outputTokens = 0, int inputTokens = 0, int totalTokens = 0, ChatOutputTokenUsageDetails outputTokenDetails = null);
+        public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null);
         public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string id = null, IEnumerable<ChatMessageContentPart> contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
         [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null);
@@ -1803,7 +1803,7 @@ namespace OpenAI.Embeddings {
         BinaryData IPersistableModel<OpenAIEmbeddingCollection>.Write(ModelReaderWriterOptions options);
     }
     public static class OpenAIEmbeddingsModelFactory {
-        public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokens = 0, int totalTokens = 0);
+        public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokenCount = 0, int totalTokenCount = 0);
         public static OpenAIEmbedding OpenAIEmbedding(int index = 0, IEnumerable<float> vector = null);
         public static OpenAIEmbeddingCollection OpenAIEmbeddingCollection(IEnumerable<OpenAIEmbedding> items = null, string model = null, EmbeddingTokenUsage usage = null);
     }

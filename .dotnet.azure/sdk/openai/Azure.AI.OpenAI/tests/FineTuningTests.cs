@@ -23,7 +23,7 @@ namespace Azure.AI.OpenAI.Tests;
 
 public class FineTuningTests : AoaiTestBase<FineTuningClient>
 {
-    public FineTuningTests(bool isAsync) : base(isAsync, RecordedTestMode.Record)
+    public FineTuningTests(bool isAsync) : base(isAsync)
     { }
 
     [Test]
@@ -105,7 +105,8 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
 
         HashSet<string> ids = new();
 
-        FineTuningJobOperation fineTuningJobOperation = await FineTuningJobOperation.RehydrateAsync(client, job.ID);
+        //TODO fix unwrapping so you don't have to unwrap here.
+        FineTuningJobOperation fineTuningJobOperation = await FineTuningJobOperation.RehydrateAsync(UnWrap(client), job.ID);
 
         int count = 25;
         var asyncEnum = EnumerateAsync<FineTuningJobEvent>((after, limit, opt) => fineTuningJobOperation.GetJobEventsAsync(after, limit, opt));

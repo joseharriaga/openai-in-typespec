@@ -32,6 +32,7 @@
 - Changed `OpenAIFileStatus` from an extensible enum to an enum. (commit_hash)
 - Renamed `OpenAIFilePurpose` to `FilePurpose`. (commit_hash)
 - Renamed `OpenAIFileStatus` to `FileStatus`. (commit_hash)
+- Removed constructors that take string API key and options. (commit_hash)
 
 ### Bugs Fixed
 

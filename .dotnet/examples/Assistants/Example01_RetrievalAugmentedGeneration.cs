@@ -142,7 +142,7 @@ public partial class AssistantExamples
 
         // Optionally, delete any persistent resources you no longer need.
         _ = assistantClient.DeleteThread(threadRun.ThreadId);
-        _ = assistantClient.DeleteAssistant(assistant);
+        _ = assistantClient.DeleteAssistant(assistant.Id);
         _ = fileClient.DeleteFile(salesFile.Id);
     }
 }

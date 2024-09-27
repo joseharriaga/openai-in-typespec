@@ -53,6 +53,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
+    [Ignore("Disable pending resolution of test framework interception overriding Rehydrateoverrides")]
     public async Task CheckpointsFineTuning()
     {
         string fineTunedModel = GetFineTunedModel();
@@ -337,7 +338,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         uploadedFile = await WaitUntilReturnLast(
             uploadedFile,
             () => fileClient.GetFileAsync(uploadedFile.Id),
-            f => f.Status == OpenAIFileStatus.Processed || f.Status == OpenAIFileStatus.Error,
+            f => f.Status == FileStatus.Processed || f.Status == FileStatus.Error,
             TimeSpan.FromSeconds(5),
             TimeSpan.FromMinutes(5))
             .ConfigureAwait(false);

@@ -71,7 +71,7 @@ public partial class TranscriptionTests : SyncAsyncTestBase
         {
             ResponseFormat = AudioTranscriptionFormat.Verbose,
             Temperature = 0.4f,
-            Granularities = granularityFlags,
+            TimestampGranularities = granularityFlags,
         };
 
         ClientResult<AudioTranscription> transcriptionResult = IsAsync

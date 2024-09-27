@@ -59,11 +59,11 @@ namespace OpenAI.Audio
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("timestamp_granularities") != true && Optional.IsCollectionDefined(TimestampGranularities))
+            if (SerializedAdditionalRawData?.ContainsKey("timestamp_granularities") != true && Optional.IsCollectionDefined(InternalTimestampGranularities))
             {
                 writer.WritePropertyName("timestamp_granularities"u8);
                 writer.WriteStartArray();
-                foreach (var item in TimestampGranularities)
+                foreach (var item in InternalTimestampGranularities)
                 {
                     if (item == null)
                     {
@@ -247,9 +247,9 @@ namespace OpenAI.Audio
             {
                 content.Add(Temperature.Value, "temperature");
             }
-            if (Optional.IsCollectionDefined(TimestampGranularities))
+            if (Optional.IsCollectionDefined(InternalTimestampGranularities))
             {
-                foreach (BinaryData item in TimestampGranularities)
+                foreach (BinaryData item in InternalTimestampGranularities)
                 {
                     content.Add(item, "timestamp_granularities", "timestamp_granularities");
                 }

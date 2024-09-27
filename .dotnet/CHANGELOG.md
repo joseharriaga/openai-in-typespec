@@ -16,6 +16,7 @@
 - Renamed properties `InputTokens` to `InputTokenCount` and `TotalTokens` to `TotalTokenCount` in the `EmbeddingTokenUsage` type. (commit_id)
 - Renamed properties `MaxPromptTokens` to `MaxInputTokenCount` and `MaxCompletionTokens` to `MaxOutputTokenCount` in the `ThreadRun`, `RunCreationOptions`, and `RunIncompleteReason` types. (commit_id)
 - Removed the `virtual` keyword from the `Pipeline` property across all clients. (commit_id)
+- Renamed the `Granularities` property of `AudioTranscriptionOptions` to `TimestampGranularities`. (commit_id)
 
 ### Bugs Fixed
 

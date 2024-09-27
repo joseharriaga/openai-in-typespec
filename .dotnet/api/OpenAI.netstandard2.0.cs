@@ -1502,22 +1502,10 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatMessageContentPart>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatMessageContentPart>.Write(ModelReaderWriterOptions options);
     }
-    public readonly partial struct ChatMessageContentPartKind : IEquatable<ChatMessageContentPartKind> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public ChatMessageContentPartKind(string value);
-        public static ChatMessageContentPartKind Image { get; }
-        public static ChatMessageContentPartKind Refusal { get; }
-        public static ChatMessageContentPartKind Text { get; }
-        public readonly bool Equals(ChatMessageContentPartKind other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(ChatMessageContentPartKind left, ChatMessageContentPartKind right);
-        public static implicit operator ChatMessageContentPartKind(string value);
-        public static bool operator !=(ChatMessageContentPartKind left, ChatMessageContentPartKind right);
-        public override readonly string ToString();
+    public enum ChatMessageContentPartKind {
+        Text = 0,
+        Refusal = 1,
+        Image = 2
     }
     public enum ChatMessageRole {
         System = 0,
@@ -1601,20 +1589,8 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatToolCall>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatToolCall>.Write(ModelReaderWriterOptions options);
     }
-    public readonly partial struct ChatToolCallKind : IEquatable<ChatToolCallKind> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public ChatToolCallKind(string value);
-        public static ChatToolCallKind Function { get; }
-        public readonly bool Equals(ChatToolCallKind other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(ChatToolCallKind left, ChatToolCallKind right);
-        public static implicit operator ChatToolCallKind(string value);
-        public static bool operator !=(ChatToolCallKind left, ChatToolCallKind right);
-        public override readonly string ToString();
+    public enum ChatToolCallKind {
+        Function = 0
     }
     public class ChatToolChoice : IJsonModel<ChatToolChoice>, IPersistableModel<ChatToolChoice> {
         public static ChatToolChoice CreateAutoChoice();
@@ -1627,20 +1603,8 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatToolChoice>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatToolChoice>.Write(ModelReaderWriterOptions options);
     }
-    public readonly partial struct ChatToolKind : IEquatable<ChatToolKind> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public ChatToolKind(string value);
-        public static ChatToolKind Function { get; }
-        public readonly bool Equals(ChatToolKind other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(ChatToolKind left, ChatToolKind right);
-        public static implicit operator ChatToolKind(string value);
-        public static bool operator !=(ChatToolKind left, ChatToolKind right);
-        public override readonly string ToString();
+    public enum ChatToolKind {
+        Function = 0
     }
     [Obsolete("This class is obsolete. Please use ToolChatMessage instead.")]
     public class FunctionChatMessage : ChatMessage, IJsonModel<FunctionChatMessage>, IPersistableModel<FunctionChatMessage> {
@@ -1661,7 +1625,7 @@ namespace OpenAI.Chat {
         public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string id = null, IEnumerable<ChatMessageContentPart> contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
         [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null);
-        public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = 0, string id = null, ChatToolCallKind kind = default, string functionName = null, string functionArgumentsUpdate = null);
+        public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = 0, string id = null, ChatToolCallKind kind = ChatToolCallKind.Function, string functionName = null, string functionArgumentsUpdate = null);
     }
     public class StreamingChatCompletionUpdate : IJsonModel<StreamingChatCompletionUpdate>, IPersistableModel<StreamingChatCompletionUpdate> {
         public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities { get; }
@@ -1837,11 +1801,11 @@ namespace OpenAI.Files {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFileAsync(string fileId, RequestOptions options);
         public virtual Task<ClientResult<OpenAIFile>> GetFileAsync(string fileId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<OpenAIFileCollection> GetFiles(OpenAIFilePurpose purpose, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFileCollection> GetFiles(FilePurpose purpose, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetFiles(string purpose, RequestOptions options);
         public virtual ClientResult<OpenAIFileCollection> GetFiles(CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<OpenAIFileCollection>> GetFilesAsync(OpenAIFilePurpose purpose, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<OpenAIFileCollection>> GetFilesAsync(FilePurpose purpose, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFilesAsync(string purpose, RequestOptions options);
         public virtual Task<ClientResult<OpenAIFileCollection>> GetFilesAsync(CancellationToken cancellationToken = default);
@@ -1865,6 +1829,21 @@ namespace OpenAI.Files {
         string IPersistableModel<FileDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<FileDeletionResult>.Write(ModelReaderWriterOptions options);
     }
+    public enum FilePurpose {
+        Assistants = 0,
+        AssistantsOutput = 1,
+        Batch = 2,
+        BatchOutput = 3,
+        FineTune = 4,
+        FineTuneResults = 5,
+        Vision = 6
+    }
+    [Obsolete("This struct is obsolete. If this is a fine-tuning training file, it may take some time to process after it has been uploaded. While the file is processing, you can still create a fine-tuning job but it will not start until the file processing has completed.")]
+    public enum FileStatus {
+        Uploaded = 0,
+        Processed = 1,
+        Error = 2
+    }
     public readonly partial struct FileUploadPurpose : IEquatable<FileUploadPurpose> {
         private readonly object _dummy;
         private readonly int _dummyPrimitive;
@@ -1887,10 +1866,10 @@ namespace OpenAI.Files {
         public DateTimeOffset CreatedAt { get; }
         public string Filename { get; }
         public string Id { get; }
-        public OpenAIFilePurpose Purpose { get; }
+        public FilePurpose Purpose { get; }
         public int? SizeInBytes { get; }
         [Obsolete("This property is obsolete. If this is a fine-tuning training file, it may take some time to process after it has been uploaded. While the file is processing, you can still create a fine-tuning job but it will not start until the file processing has completed.")]
-        public OpenAIFileStatus Status { get; }
+        public FileStatus Status { get; }
         [Obsolete("This property is obsolete. For details on why a fine-tuning training file failed validation, see the `error` field on the fine-tuning job.")]
         public string StatusDetails { get; }
         OpenAIFile IJsonModel<OpenAIFile>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -1906,49 +1885,10 @@ namespace OpenAI.Files {
         string IPersistableModel<OpenAIFileCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<OpenAIFileCollection>.Write(ModelReaderWriterOptions options);
     }
-    public readonly partial struct OpenAIFilePurpose : IEquatable<OpenAIFilePurpose> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public OpenAIFilePurpose(string value);
-        public static OpenAIFilePurpose Assistants { get; }
-        public static OpenAIFilePurpose AssistantsOutput { get; }
-        public static OpenAIFilePurpose Batch { get; }
-        public static OpenAIFilePurpose BatchOutput { get; }
-        public static OpenAIFilePurpose FineTune { get; }
-        public static OpenAIFilePurpose FineTuneResults { get; }
-        public static OpenAIFilePurpose Vision { get; }
-        public readonly bool Equals(OpenAIFilePurpose other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(OpenAIFilePurpose left, OpenAIFilePurpose right);
-        public static implicit operator OpenAIFilePurpose(string value);
-        public static bool operator !=(OpenAIFilePurpose left, OpenAIFilePurpose right);
-        public override readonly string ToString();
-    }
     public static class OpenAIFilesModelFactory {
         public static FileDeletionResult FileDeletionResult(string fileId = null, bool deleted = false);
         public static OpenAIFileCollection OpenAIFileCollection(IEnumerable<OpenAIFile> items = null);
-        public static OpenAIFile OpenAIFileInfo(string id = null, int? sizeInBytes = null, DateTimeOffset createdAt = default, string filename = null, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null);
-    }
-    [Obsolete("This struct is obsolete. If this is a fine-tuning training file, it may take some time to process after it has been uploaded. While the file is processing, you can still create a fine-tuning job but it will not start until the file processing has completed.")]
-    public readonly partial struct OpenAIFileStatus : IEquatable<OpenAIFileStatus> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public OpenAIFileStatus(string value);
-        public static OpenAIFileStatus Error { get; }
-        public static OpenAIFileStatus Processed { get; }
-        public static OpenAIFileStatus Uploaded { get; }
-        public readonly bool Equals(OpenAIFileStatus other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(OpenAIFileStatus left, OpenAIFileStatus right);
-        public static implicit operator OpenAIFileStatus(string value);
-        public static bool operator !=(OpenAIFileStatus left, OpenAIFileStatus right);
-        public override readonly string ToString();
+        public static OpenAIFile OpenAIFileInfo(string id = null, int? sizeInBytes = null, DateTimeOffset createdAt = default, string filename = null, FilePurpose purpose = FilePurpose.Assistants, FileStatus status = FileStatus.Uploaded, string statusDetails = null);
     }
 }
 namespace OpenAI.FineTuning {

@@ -1,6 +1,19 @@
 namespace OpenAI.Files;
 
 [CodeGenModel("OpenAIFilePurpose")]
-public readonly partial struct OpenAIFilePurpose
+public enum FilePurpose
 {
+    Assistants,
+
+    AssistantsOutput,
+
+    Batch,
+
+    BatchOutput,
+
+    FineTune,
+
+    FineTuneResults,
+
+    Vision,
 }

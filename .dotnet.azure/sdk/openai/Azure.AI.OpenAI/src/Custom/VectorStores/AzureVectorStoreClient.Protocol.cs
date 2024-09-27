@@ -183,7 +183,17 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return operation.WaitUntil(waitUntilCompleted, options);
     }
 
-    private new PipelineMessage CreateGetVectorStoreRequest(string vectorStoreId, RequestOptions options)
+    internal override PipelineMessage CreateGetVectorStoresRequest(int? limit, string order, string after, string before, RequestOptions options)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+            .WithAssistantsHeader()
+            .WithOptions(options)
+            .WithMethod("GET")
+            .WithAccept("application/json")
+            .WithCommonListParameters(limit, order, after, before)
+            .WithPath("vector_stores")
+            .Build();
+
+    internal override PipelineMessage CreateGetVectorStoreRequest(string vectorStoreId, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithMethod("GET")
             .WithPath("vector_stores", vectorStoreId)
@@ -191,7 +201,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
             .WithOptions(options)
             .Build();
 
-    private new PipelineMessage CreateModifyVectorStoreRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
+    internal override PipelineMessage CreateModifyVectorStoreRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithMethod("POST")
             .WithPath("vector_stores", vectorStoreId)
@@ -200,7 +210,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
             .WithOptions(options)
             .Build();
 
-    private new PipelineMessage CreateDeleteVectorStoreRequest(string vectorStoreId, RequestOptions options)
+    internal override PipelineMessage CreateDeleteVectorStoreRequest(string vectorStoreId, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithMethod("DELETE")
             .WithPath("vector_stores", vectorStoreId)
@@ -208,7 +218,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
             .WithOptions(options)
             .Build();
 
-    private new PipelineMessage CreateGetVectorStoreFilesRequest(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    internal override PipelineMessage CreateGetVectorStoreFilesRequest(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithAssistantsHeader()
             .WithOptions(options)
@@ -219,7 +229,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
             .WithPath("vector_stores", vectorStoreId, "files")
             .Build();
 
-    private new PipelineMessage CreateCreateVectorStoreFileRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
+    internal override PipelineMessage CreateCreateVectorStoreFileRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithMethod("POST")
             .WithPath("vector_stores", vectorStoreId, "files")
@@ -228,7 +238,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
             .WithOptions(options)
             .Build();
 
-    private new PipelineMessage CreateDeleteVectorStoreFileRequest(string vectorStoreId, string fileId, RequestOptions options)
+    internal override PipelineMessage CreateDeleteVectorStoreFileRequest(string vectorStoreId, string fileId, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithMethod("DELETE")
             .WithPath("vector_stores", vectorStoreId, "files", fileId)
@@ -270,7 +280,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
             .WithOptions(options)
             .Build();
 
-    private new PipelineMessage CreateGetFilesInVectorStoreBatchesRequest(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    internal override PipelineMessage CreateGetFilesInVectorStoreBatchesRequest(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithAssistantsHeader()
             .WithOptions(options)

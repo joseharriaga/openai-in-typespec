@@ -44,7 +44,7 @@ public partial class CreateVectorStoreOperation : OperationResult
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
-    internal PipelineMessage CreateGetVectorStoreRequest(string vectorStoreId, RequestOptions? options)
+    internal virtual PipelineMessage CreateGetVectorStoreRequest(string vectorStoreId, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;

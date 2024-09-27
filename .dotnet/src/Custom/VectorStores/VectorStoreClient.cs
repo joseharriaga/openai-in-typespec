@@ -569,24 +569,6 @@ public partial class VectorStoreClient
         return CreateBatchFileJob(vectorStoreId, content, waitUntilCompleted, options);
     }
 
-    internal virtual PipelineMessage CreateCreateVectorStoreFileBatchRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
-    {
-        var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = PipelineMessageClassifier200;
-        var request = message.Request;
-        request.Method = "POST";
-        var uri = new ClientUriBuilder();
-        uri.Reset(_endpoint);
-        uri.AppendPath("/vector_stores/", false);
-        uri.AppendPath(vectorStoreId, true);
-        uri.AppendPath("/file_batches", false);
-        request.Uri = uri.ToUri();
-        request.Headers.Set("Accept", "application/json");
-        request.Headers.Set("Content-Type", "application/json");
-        request.Content = content;
-        message.Apply(options);
-        return message;
-    }
     /// <summary>
     /// Gets a page collection of file associations associated with a vector store batch file job, representing the files
     /// that were scheduled for ingestion into the vector store.

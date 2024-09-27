@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Azure.AI.OpenAI.VectorStores;
 
 [Experimental("OPENAI001")]
-internal class AzureCreateVectorStoreOperation : CreateVectorStoreOperation
+internal partial class AzureCreateVectorStoreOperation : CreateVectorStoreOperation
 {
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;

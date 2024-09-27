@@ -47,8 +47,8 @@ public class VectorStoresTests : SyncAsyncTestBase
         Validate(vectorStore);
 
         VectorStoreDeletionResult deletionResult = IsAsync
-            ? await client.DeleteVectorStoreAsync(vectorStore)
-            : client.DeleteVectorStore(vectorStore);
+            ? await client.DeleteVectorStoreAsync(vectorStore.Id)
+            : client.DeleteVectorStore(vectorStore.Id);
         Assert.That(deletionResult.VectorStoreId, Is.EqualTo(vectorStore.Id));
         Assert.That(deletionResult.Deleted, Is.True);
         _vectorStoresToDelete.RemoveAt(_vectorStoresToDelete.Count - 1);
@@ -219,8 +219,8 @@ public class VectorStoresTests : SyncAsyncTestBase
         foreach (OpenAIFile file in files)
         {
             AddFileToVectorStoreOperation addOperation = IsAsync
-                ? await client.AddFileToVectorStoreAsync(vectorStore, file, waitUntilCompleted: false)
-                : client.AddFileToVectorStore(vectorStore, file, waitUntilCompleted: false);
+                ? await client.AddFileToVectorStoreAsync(vectorStore.Id, file.Id, waitUntilCompleted: false)
+                : client.AddFileToVectorStore(vectorStore.Id, file.Id, waitUntilCompleted: false);
             VectorStoreFileAssociation association = addOperation.Value;
             Validate(association);
             Assert.Multiple(() =>
@@ -234,8 +234,8 @@ public class VectorStoresTests : SyncAsyncTestBase
         }
 
         FileFromStoreRemovalResult removalResult = IsAsync
-            ? await client.RemoveFileFromStoreAsync(vectorStore, files[0])
-            : client.RemoveFileFromStore(vectorStore, files[0]);
+            ? await client.RemoveFileFromStoreAsync(vectorStore.Id, files[0].Id)
+            : client.RemoveFileFromStore(vectorStore.Id, files[0].Id);
         Assert.That(removalResult.FileId, Is.EqualTo(files[0].Id));
         Assert.True(removalResult.Removed);
         _associationsToRemove.RemoveAt(0);
@@ -247,7 +247,7 @@ public class VectorStoresTests : SyncAsyncTestBase
 
         if (IsAsync)
         {
-            await foreach (VectorStoreFileAssociation association in client.GetFileAssociationsAsync(vectorStore))
+            await foreach (VectorStoreFileAssociation association in client.GetFileAssociationsAsync(vectorStore.Id))
             {
                 count++;
                 Assert.That(association.FileId, Is.Not.EqualTo(files[0].Id));
@@ -256,7 +256,7 @@ public class VectorStoresTests : SyncAsyncTestBase
         }
         else
         {
-            foreach (VectorStoreFileAssociation association in client.GetFileAssociations(vectorStore))
+            foreach (VectorStoreFileAssociation association in client.GetFileAssociations(vectorStore.Id))
             {
                 count++;
                 Assert.That(association.FileId, Is.Not.EqualTo(files[0].Id));
@@ -280,7 +280,7 @@ public class VectorStoresTests : SyncAsyncTestBase
 
         foreach (OpenAIFile file in files)
         {
-            AddFileToVectorStoreOperation addOperation = await client.AddFileToVectorStoreAsync(vectorStore, file, waitUntilCompleted: false);
+            AddFileToVectorStoreOperation addOperation = await client.AddFileToVectorStoreAsync(vectorStore.Id, file.Id, waitUntilCompleted: false);
             VectorStoreFileAssociation association = addOperation.Value;
             Validate(association);
             Assert.Multiple(() =>
@@ -293,7 +293,7 @@ public class VectorStoresTests : SyncAsyncTestBase
             });
         }
 
-        FileFromStoreRemovalResult removalResult = await client.RemoveFileFromStoreAsync(vectorStore, files[0]);
+        FileFromStoreRemovalResult removalResult = await client.RemoveFileFromStoreAsync(vectorStore.Id, files[0].Id);
         Assert.That(removalResult.FileId, Is.EqualTo(files[0].Id));
         Assert.True(removalResult.Removed);
         _associationsToRemove.RemoveAt(0);
@@ -305,7 +305,7 @@ public class VectorStoresTests : SyncAsyncTestBase
 
         // Use enumerators instead of enumerables to faciliate advancing the collections
         // at the same time.
-        AsyncCollectionResult<VectorStoreFileAssociation> fileAssociations = client.GetFileAssociationsAsync(vectorStore, new VectorStoreFileAssociationCollectionOptions() { PageSizeLimit = 2 });
+        AsyncCollectionResult<VectorStoreFileAssociation> fileAssociations = client.GetFileAssociationsAsync(vectorStore.Id, new VectorStoreFileAssociationCollectionOptions() { PageSizeLimit = 2 });
         IAsyncEnumerable<ClientResult> pages = fileAssociations.GetRawPagesAsync();
         IAsyncEnumerator<ClientResult> pageEnumerator = pages.GetAsyncEnumerator();
         await pageEnumerator.MoveNextAsync();
@@ -362,7 +362,7 @@ public class VectorStoresTests : SyncAsyncTestBase
 
         foreach (OpenAIFile file in files)
         {
-            AddFileToVectorStoreOperation addOperation = client.AddFileToVectorStore(vectorStore, file, waitUntilCompleted: false);
+            AddFileToVectorStoreOperation addOperation = client.AddFileToVectorStore(vectorStore.Id, file.Id, waitUntilCompleted: false);
             VectorStoreFileAssociation association = addOperation.Value;
             Validate(association);
             Assert.Multiple(() =>
@@ -375,7 +375,7 @@ public class VectorStoresTests : SyncAsyncTestBase
             });
         }
 
-        FileFromStoreRemovalResult removalResult = client.RemoveFileFromStore(vectorStore, files[0]);
+        FileFromStoreRemovalResult removalResult = client.RemoveFileFromStore(vectorStore.Id, files[0].Id);
         Assert.That(removalResult.FileId, Is.EqualTo(files[0].Id));
         Assert.True(removalResult.Removed);
         _associationsToRemove.RemoveAt(0);
@@ -383,7 +383,7 @@ public class VectorStoresTests : SyncAsyncTestBase
         // Errata: removals aren't immediately reflected when requesting the list
         Thread.Sleep(2000);
 
-        CollectionResult<VectorStoreFileAssociation> fileAssociations = client.GetFileAssociations(vectorStore, new VectorStoreFileAssociationCollectionOptions() { PageSizeLimit = 2 });
+        CollectionResult<VectorStoreFileAssociation> fileAssociations = client.GetFileAssociations(vectorStore.Id, new VectorStoreFileAssociationCollectionOptions() { PageSizeLimit = 2 });
         IEnumerable<ClientResult> pages = fileAssociations.GetRawPages();
         IEnumerator<ClientResult> pageEnumerator = pages.GetEnumerator();
         pageEnumerator.MoveNext();
@@ -444,7 +444,7 @@ public class VectorStoresTests : SyncAsyncTestBase
 
         IReadOnlyList<OpenAIFile> testFiles = GetNewTestFiles(5);
 
-        CreateBatchFileJobOperation batchFileJobOperation = client.CreateBatchFileJob(vectorStore, testFiles, waitUntilCompleted: false);
+        CreateBatchFileJobOperation batchFileJobOperation = client.CreateBatchFileJob(vectorStore.Id, testFiles?.Select(file => file.Id), waitUntilCompleted: false);
         Validate(batchFileJobOperation);
 
         Assert.Multiple(() =>
@@ -498,7 +498,7 @@ public class VectorStoresTests : SyncAsyncTestBase
 
         IReadOnlyList<OpenAIFile> testFiles = GetNewTestFiles(5);
 
-        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(vectorStore, testFiles, waitUntilCompleted: false);
+        CreateBatchFileJobOperation batchOperation = client.CreateBatchFileJob(vectorStore.Id, testFiles?.Select(file => file.Id), waitUntilCompleted: false);
         Validate(batchOperation);
 
         // Simulate rehydration of the operation
@@ -569,7 +569,7 @@ public class VectorStoresTests : SyncAsyncTestBase
 
         if (IsAsync)
         {
-            AsyncCollectionResult<VectorStoreFileAssociation> associations = client.GetFileAssociationsAsync(vectorStore);
+            AsyncCollectionResult<VectorStoreFileAssociation> associations = client.GetFileAssociationsAsync(vectorStore.Id);
 
             await foreach (VectorStoreFileAssociation association in associations)
             {
@@ -593,7 +593,7 @@ public class VectorStoresTests : SyncAsyncTestBase
         }
         else
         {
-            CollectionResult<VectorStoreFileAssociation> associations = client.GetFileAssociations(vectorStore);
+            CollectionResult<VectorStoreFileAssociation> associations = client.GetFileAssociations(vectorStore.Id);
 
             foreach (VectorStoreFileAssociation association in associations)
             {

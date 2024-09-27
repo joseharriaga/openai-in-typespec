@@ -143,7 +143,7 @@ public partial class AssistantExamples
 
         // Optionally, delete any persistent resources you no longer need.
         _ = await assistantClient.DeleteThreadAsync(threadRun.ThreadId);
-        _ = await assistantClient.DeleteAssistantAsync(assistant);
+        _ = await assistantClient.DeleteAssistantAsync(assistant.Id);
         _ = await fileClient.DeleteFileAsync(salesFile.Id);
     }
 }

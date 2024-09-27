@@ -65,7 +65,7 @@ public class AudioTests(bool isAsync) : AoaiTestBase<AudioClient>(isAsync)
                 "verbose_json" => AudioTranscriptionFormat.Verbose,
                 "srt" => AudioTranscriptionFormat.Srt,
                 "vtt" => AudioTranscriptionFormat.Vtt,
-                _ => null
+                _ => (AudioTranscriptionFormat?)null
             }
         };
 
@@ -150,7 +150,7 @@ public class AudioTests(bool isAsync) : AoaiTestBase<AudioClient>(isAsync)
                 "verbose_json" => AudioTranslationFormat.Verbose,
                 "srt" => AudioTranslationFormat.Srt,
                 "vtt" => AudioTranslationFormat.Vtt,
-                _ => null
+                _ => (AudioTranslationFormat?)null
             }
         };
 

@@ -61,6 +61,7 @@ public partial class TranslationTests : SyncAsyncTestBase
     [TestCase("verbose_json")]
     [TestCase("srt")]
     [TestCase("vtt")]
+    [TestCase(null)]
     public async Task TranslationFormatsWork(string responseFormat)
     {
         AudioClient client = GetTestClient<AudioClient>(TestScenario.Audio_Whisper);
@@ -75,7 +76,7 @@ public partial class TranslationTests : SyncAsyncTestBase
                 "verbose_json" => AudioTranslationFormat.Verbose,
                 "srt" => AudioTranslationFormat.Srt,
                 "vtt" => AudioTranslationFormat.Vtt,
-                _ => throw new ArgumentException("Invalid response format")
+                _ => (AudioTranslationFormat?)null
             }
         };
 

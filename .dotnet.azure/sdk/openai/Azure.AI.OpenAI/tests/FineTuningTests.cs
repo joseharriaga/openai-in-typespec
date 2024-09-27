@@ -23,7 +23,7 @@ namespace Azure.AI.OpenAI.Tests;
 
 public class FineTuningTests : AoaiTestBase<FineTuningClient>
 {
-    public FineTuningTests(bool isAsync) : base(isAsync)
+    public FineTuningTests(bool isAsync) : base(isAsync, RecordedTestMode.Record)
     { }
 
     [Test]
@@ -53,7 +53,6 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
-    [Ignore("Disable pending resolution of test framework interception overriding Rehydrateoverrides")]
     public async Task CheckpointsFineTuning()
     {
         string fineTunedModel = GetFineTunedModel();
@@ -91,7 +90,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
-    [Ignore("Disable pending resolution of test framework interception overriding Rehydrateoverrides")]
+    //[Ignore("Disable pending resolution of test framework interception overriding Rehydrateoverrides")]
     public async Task EventsFineTuning()
     {
         string fineTunedModel = GetFineTunedModel();
@@ -129,7 +128,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
-    [Ignore("Disabling pending resolution of AOAI quota issues and re-recording")]
+    //[Ignore("Disabling pending resolution of AOAI quota issues and re-recording")]
     public async Task CreateAndCancelFineTuning()
     {
         var fineTuningFile = Assets.FineTuning;
@@ -192,7 +191,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
 
     [RecordedTest(AutomaticRecord = false)]
     [Category("LongRunning")] // CAUTION: This test can take up 30 *minutes* to run in live mode
-    [Ignore("Disabled pending investigation of 404")]
+    //[Ignore("Disabled pending investigation of 404")]
     public async Task CreateAndDeleteFineTuning()
     {
         var fineTuningFile = Assets.FineTuning;

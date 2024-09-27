@@ -74,7 +74,7 @@ public partial class AssistantChatMessage : ChatMessage
     /// (deprecated in favor of <c>tool_calls</c>) that was made by the model.
     /// </summary>
     /// <param name="functionCall"> The <c>function_call</c> made by the model. </param>
-    [Obsolete($"This constructor is obsolete. Please use the constructor that takes a {nameof(IEnumerable<ChatToolCall>)} parameter instead.")]
+    [Obsolete($"This constructor is obsolete. Please use the constructor that takes an IEnumerable<ChatToolCall> parameter instead.")]
     public AssistantChatMessage(ChatFunctionCall functionCall)
         : base(ChatMessageRole.Assistant)
     {

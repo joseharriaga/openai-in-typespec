@@ -211,7 +211,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
 
         Assert.That(batchJob.Status, Is.EqualTo(VectorStoreBatchFileJobStatus.Completed));
 
-        AsyncCollectionResult<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(batchJob.VectorStoreId);
+        AsyncCollectionResult<VectorStoreFileAssociation> response = client.GetFileAssociationsAsync(batchJob.VectorStoreId, batchJob.BatchId);
         await foreach (VectorStoreFileAssociation association in response)
         {
             Assert.Multiple(() =>

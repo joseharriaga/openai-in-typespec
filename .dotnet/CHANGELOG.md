@@ -25,6 +25,13 @@
 - Removed method overloads in `AssistantClient` and `VectorStoreClient` that take complex parameters in favor of methods that take simple string IDs. (commit_hash)
 - Updated the `TokenIds` property type in the `TranscribedSegment` type from `IReadOnlyList<int>` to `ReadOnlyMemory<int>`. (commit_hash)
 - Updated the `inputs` parameter type in the `GenerateEmbeddings` and `GenerateEmbeddingsAsync` methods of `EmbeddingClient` from `IEnumerable<IEnumerable<int>>` to `IEnumerable<ReadOnlyMemory<int>>`. (commit_hash)
+- Changed `ChatMessageContentPartKind` from an extensible enum to an enum. (commit_hash)
+- Changed `ChatToolCallKind` from an extensible enum to an enum. (commit_hash)
+- Changed `ChatToolKind` from an extensible enum to an enum. (commit_hash)
+- Changed `OpenAIFilePurpose` from an extensible enum to an enum. (commit_hash)
+- Changed `OpenAIFileStatus` from an extensible enum to an enum. (commit_hash)
+- Renamed `OpenAIFilePurpose` to `FilePurpose`. (commit_hash)
+- Renamed `OpenAIFileStatus` to `FileStatus`. (commit_hash)
 
 ### Bugs Fixed
 

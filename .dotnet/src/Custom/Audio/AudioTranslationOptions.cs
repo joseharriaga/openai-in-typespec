@@ -35,16 +35,7 @@ public partial class AudioTranslationOptions
 
         if (ResponseFormat is not null)
         {
-            string value = ResponseFormat switch
-            {
-                AudioTranslationFormat.Simple => "json",
-                AudioTranslationFormat.Verbose => "verbose_json",
-                AudioTranslationFormat.Srt => "srt",
-                AudioTranslationFormat.Vtt => "vtt",
-                _ => throw new ArgumentException(nameof(ResponseFormat))
-            };
-
-            content.Add(value, "response_format");
+            content.Add(ResponseFormat.ToString(), "response_format");
         }
 
         return content;

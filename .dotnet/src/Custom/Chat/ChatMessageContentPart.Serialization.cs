@@ -45,7 +45,7 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
         }
 
         writer.WritePropertyName("content"u8);
-        if (instances.Count == 1 && !string.IsNullOrEmpty(instances[0].Text))
+        if (instances.Count == 1 && instances[0].Text != null)
         {
             writer.WriteStringValue(instances[0].Text);
         }

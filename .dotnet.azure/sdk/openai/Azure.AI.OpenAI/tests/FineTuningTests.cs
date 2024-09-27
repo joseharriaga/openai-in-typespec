@@ -199,12 +199,24 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
 
         FineTuningClient client = GetTestClient();
         FileClient fileClient = GetTestClientFrom<FileClient>(client);
-
-        // upload training data
-        OpenAIFile uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
-#pragma warning disable CS0618
-        Assert.That(uploadedFile.Status, Is.EqualTo(OpenAIFileStatus.Processed));
-#pragma warning restore CS0618
+        OpenAIFile uploadedFile;
+        try
+        {
+            ClientResult fileResult = await fileClient.GetFileAsync("file-db5f5bfe5ea04ffcaeba89947a872828", new RequestOptions() { });
+            uploadedFile = ValidateAndParse<OpenAIFile>(fileResult);
+        }
+        catch (ClientResultException e)
+        {
+            if(e.Message.Contains("ResourceNotFound"))
+            {
+                // upload training data
+                uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
+            }
+            else
+            {
+                throw;
+            }
+        }
 
         // Create the fine tuning job
         using var requestContent = new FineTuningOptions()

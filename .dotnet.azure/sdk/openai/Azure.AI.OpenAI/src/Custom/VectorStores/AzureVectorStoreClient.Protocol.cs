@@ -270,7 +270,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
             .WithOptions(options)
             .Build();
 
-    private new PipelineMessage CreateGetFilesInVectorStoreBatchesRequest(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    internal override PipelineMessage CreateGetFilesInVectorStoreBatchesRequest(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithAssistantsHeader()
             .WithOptions(options)

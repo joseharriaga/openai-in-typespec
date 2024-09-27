@@ -197,7 +197,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         OpenAIFile uploadedFile;
         try
         {
-            ClientResult fileResult = await fileClient.GetFileAsync("file-db5f5bfe5ea04ffcaeba89947a872828----", new RequestOptions() { });
+            ClientResult fileResult = await fileClient.GetFileAsync("file-db5f5bfe5ea04ffcaeba89947a872828", new RequestOptions() { });
             uploadedFile = ValidateAndParse<OpenAIFile>(fileResult);
         }
         catch (ClientResultException e)

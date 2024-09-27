@@ -13,6 +13,7 @@ namespace OpenAI.Tests.Audio;
 [TestFixture(true)]
 [TestFixture(false)]
 [Parallelizable(ParallelScope.All)]
+[Category("Audio")]
 [Category("Smoke")]
 public partial class TranslationMockTests : SyncAsyncTestBase
 {
@@ -106,7 +107,7 @@ public partial class TranslationMockTests : SyncAsyncTestBase
         Assert.That(segment.StartTime, Is.EqualTo(TimeSpan.FromSeconds(2.5)));
         Assert.That(segment.EndTime, Is.EqualTo(TimeSpan.FromSeconds(7.5)));
         Assert.That(segment.Text, Is.EqualTo("The quick brown fox got lost."));
-        Assert.That(segment.TokenIds.SequenceEqual([255, 305, 678]));
+        Assert.That(segment.TokenIds.Span.SequenceEqual([255, 305, 678]));
         Assert.That(segment.Temperature, Is.EqualTo(0.8f));
         Assert.That(segment.AverageLogProbability, Is.EqualTo(-0.3f));
         Assert.That(segment.CompressionRatio, Is.EqualTo(1.5f));

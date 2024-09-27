@@ -74,6 +74,20 @@ public partial class OpenAIClient
 
     private readonly OpenAIClientOptions _options;
 
+    // CUSTOM: Remove virtual keyword.
+    /// <summary>
+    /// The HTTP pipeline for sending and receiving REST requests and responses.
+    /// </summary>
+    public ClientPipeline Pipeline => _pipeline;
+
+    // CUSTOM: Added as a convenience.
+    /// <summary> Initializes a new instance of <see cref="OpenAIClient">. </summary>
+    /// <param name="apiKey"> The API key to authenticate with the service. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="apiKey"/> is null. </exception>
+    public OpenAIClient(string apiKey) : this(new ApiKeyCredential(apiKey), new OpenAIClientOptions())
+    {
+    }
+
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.

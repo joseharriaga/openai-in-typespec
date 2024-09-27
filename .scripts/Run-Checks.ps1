@@ -7,18 +7,18 @@ function Run-ModelsSubnamespaceCheck {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs" -Recurse
 
     $exclusions = @(
+        "ModelDeletionResult.cs",
+        "ModelDeletionResult.Serialization.cs",
         "GeneratorStubs.cs",
-        "InternalDeleteModelResponse.cs",
-        "InternalDeleteModelResponse.Serialization.cs",
         "InternalDeleteModelResponseObject.cs",
         "InternalListModelsResponseObject.cs",
         "InternalModelObject.cs",
         "ModelClient.cs",
         "ModelClient.Protocol.cs",
-        "OpenAIModelInfo.cs",
-        "OpenAIModelInfo.Serialization.cs",
-        "OpenAIModelInfoCollection.cs",
-        "OpenAIModelInfoCollection.Serialization.cs",
+        "OpenAIModel.cs",
+        "OpenAIModel.Serialization.cs",
+        "OpenAIModelCollection.cs",
+        "OpenAIModelCollection.Serialization.cs",
         "OpenAIModelsModelFactory.cs"
     )
 
@@ -80,6 +80,7 @@ function Run-TopLevelNamespaceCheck {
         "ClientPipelineExtensions.cs",
         "ClientUriBuilder.cs",
         "ErrorResult.cs",
+        "IEnumerableExtensions.cs",
         "IInternalListResponseOfT.cs",
         "InternalFunctionDefinition.cs",
         "InternalFunctionDefinition.Serialization.cs",

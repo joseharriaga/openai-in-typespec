@@ -1,17 +1,18 @@
-﻿using System.ClientModel;
-using System.Linq;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using OpenAI.Models;
 using OpenAI.Tests.Utility;
+using System.ClientModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OpenAI.Tests.Models;
 
 [TestFixture(true)]
 [TestFixture(false)]
 [Parallelizable(ParallelScope.All)]
+[Category("Models")]
 [Category("Smoke")]
-public partial class ModelsMockTests : SyncAsyncTestBase
+public class ModelsMockTests : SyncAsyncTestBase
 {
     private static readonly ApiKeyCredential s_fakeCredential = new ApiKeyCredential("key");
 
@@ -30,7 +31,7 @@ public partial class ModelsMockTests : SyncAsyncTestBase
         """);
         ModelClient client = new ModelClient(s_fakeCredential, clientOptions);
 
-        OpenAIModelInfo modelInfo = IsAsync
+        OpenAIModel modelInfo = IsAsync
             ? await client.GetModelAsync("model_name")
             : client.GetModel("model_name");
 
@@ -51,10 +52,10 @@ public partial class ModelsMockTests : SyncAsyncTestBase
         """);
         ModelClient client = new ModelClient(s_fakeCredential, clientOptions);
 
-        OpenAIModelInfoCollection modelInfoCollection = IsAsync
+        OpenAIModelCollection modelInfoCollection = IsAsync
             ? await client.GetModelsAsync()
             : client.GetModels();
-        OpenAIModelInfo modelInfo = modelInfoCollection.Single();
+        OpenAIModel modelInfo = modelInfoCollection.Single();
 
         Assert.That(modelInfo.CreatedAt.ToUnixTimeSeconds(), Is.EqualTo(1704096000));
     }

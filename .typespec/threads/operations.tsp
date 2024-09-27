@@ -17,7 +17,6 @@ interface Threads {
   @summary("Create a thread.")
   createThread(
     @header accept: "application/json",
-
     @body requestBody: CreateThreadRequest,
   ): ThreadObject | ErrorResponse;
 
@@ -54,7 +53,7 @@ interface Threads {
   @summary("Delete a thread.")
   deleteThread(
     @header accept: "application/json",
-    
+
     /** The ID of the thread to delete. */
     @path thread_id: string,
   ): DeleteThreadResponse | ErrorResponse;

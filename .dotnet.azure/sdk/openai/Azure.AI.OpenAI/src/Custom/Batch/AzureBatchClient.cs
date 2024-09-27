@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.ClientModel;
 using System.ClientModel.Primitives;
-using OpenAI.Batch;
 
 namespace Azure.AI.OpenAI.Batch;
 
@@ -33,4 +33,9 @@ internal partial class AzureBatchClient : BatchClient
 
     protected AzureBatchClient()
     { }
+
+    internal override CreateBatchOperation CreateCreateBatchOperation(string batchId, string status, PipelineResponse response)
+    {
+        return new AzureCreateBatchOperation(Pipeline, _endpoint, batchId, status, response, _deploymentName, _apiVersion);
+    }
 }

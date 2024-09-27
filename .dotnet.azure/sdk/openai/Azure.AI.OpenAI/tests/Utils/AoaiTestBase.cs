@@ -52,17 +52,17 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
 
     public AzureTestEnvironment TestEnvironment { get; }
 
-    protected AoaiTestBase(bool isAsync) : this(isAsync, null)
+    protected AoaiTestBase(bool isAsync) : this(isAsync, null, null)
     { }
 
-    protected AoaiTestBase(bool isAsync, RecordedTestMode? mode = null)
-        : base(isAsync, mode)
+    protected AoaiTestBase(bool isAsync, RecordedTestMode? mode = null, bool? automaticRecord = null)
+        : base(isAsync, mode, automaticRecord)
     {
         TestConfig = new TestConfig(() => Mode);
         Assets = new Assets();
         TestEnvironment = new AzureTestEnvironment(Mode);
 
-        // Remove some of the default sanitizers to customize their behaviour
+        // Remove some of the default sanitizers to customize their behavior
         RecordingOptions.SanitizersToRemove.AddRange(
         [
             "AZSDK2003", // Location header (we use a less restrictive sanitizer)
@@ -238,7 +238,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
 
     /// <inheritdoc />
     protected override bool GetDefaultAutomaticRecordEnabled()
-        => AzureTestEnvironment.DefaultAutomaticRecordEnabled;
+        => !IsRunningInCI && AzureTestEnvironment.DefaultAutomaticRecordEnabled;
 
     /// <inheritdoc />
     protected override ProxyServiceOptions CreateProxyServiceOptions()
@@ -566,7 +566,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
             case nameof(AssistantThread):
                 _threadIdsToDelete.Add(id);
                 break;
-            case nameof(OpenAIFileInfo):
+            case nameof(OpenAIFile):
                 _fileIdsToDelete.Add(id);
                 break;
             case nameof(ThreadRun):
@@ -619,7 +619,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
             {
                 Assistant assistant => assistant.Id,
                 AssistantThread thread => thread.Id,
-                OpenAIFileInfo file => file.Id,
+                OpenAIFile file => file.Id,
                 ThreadRun run => run.Id,
                 VectorStore store => store.Id,
                 _ => throw new NotImplementedException(),
@@ -713,7 +713,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
         using Stream stream = response.Content.ToStream();
         Assert.That(stream, Is.Not.Null);
 
-        TModel? model = JsonHelpers.Deserialize<TModel>(stream, options ?? JsonOptions.OpenAIJsonOptions);
+        TModel? model = JsonSerializer.Deserialize<TModel>(stream, options ?? JsonOptions.OpenAIJsonOptions);
         Assert.That(model, Is.Not.Null);
         return model!;
     }

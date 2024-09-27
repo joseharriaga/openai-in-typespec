@@ -44,7 +44,7 @@ public partial class AssistantExamples
 
         #region Upload a mock file for use with file search
         FileClient fileClient = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
-        OpenAIFileInfo favoriteNumberFile = fileClient.UploadFile(
+        OpenAIFile favoriteNumberFile = fileClient.UploadFile(
             BinaryData.FromString("""
                 This file contains the favorite numbers for individuals.
 
@@ -87,7 +87,7 @@ public partial class AssistantExamples
             }
         });
 
-        ThreadRun run = client.CreateRun(thread, assistant);
+        ThreadRun run = client.CreateRun(thread.Id, assistant.Id);
         #endregion
 
         #region Complete the run, calling functions as needed
@@ -135,10 +135,8 @@ public partial class AssistantExamples
         // With the run complete, list the messages and display their content
         if (run.Status == RunStatus.Completed)
         {
-            PageCollection<ThreadMessage> messagePages
+            CollectionResult<ThreadMessage> messages
                 = client.GetMessages(run.ThreadId, new MessageCollectionOptions() { Order = MessageCollectionOrder.Ascending });
-            IEnumerable<ThreadMessage> messages = messagePages.GetAllValues();
-
             foreach (ThreadMessage message in messages)
             {
                 Console.WriteLine($"[{message.Role.ToString().ToUpper()}]: ");
@@ -170,12 +168,14 @@ public partial class AssistantExamples
             #endregion
 
             #region List run steps for details about tool calls
-            PageCollection<RunStep> runSteps = client.GetRunSteps(
-                run, new RunStepCollectionOptions()
+            CollectionResult<RunStep> runSteps = client.GetRunSteps(
+                run.ThreadId, 
+                run.Id, 
+                new RunStepCollectionOptions()
                 {
                     Order = RunStepCollectionOrder.Ascending
                 });
-            foreach (RunStep step in runSteps.GetAllValues())
+            foreach (RunStep step in runSteps)
             {
                 Console.WriteLine($"Run step: {step.Status}");
                 foreach (RunStepToolCall toolCall in step.Details.ToolCalls)
@@ -196,8 +196,8 @@ public partial class AssistantExamples
         #endregion
 
         #region Clean up any temporary resources that are no longer needed
-        _ = client.DeleteThread(thread);
-        _ = client.DeleteAssistant(assistant);
+        _ = client.DeleteThread(thread.Id);
+        _ = client.DeleteAssistant(assistant.Id);
         _ = fileClient.DeleteFile(favoriteNumberFile.Id);
         #endregion
     }

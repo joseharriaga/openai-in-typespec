@@ -56,15 +56,13 @@ public class BatchTests : AoaiTestBase<BatchClient>
             }
         }.ToBinaryContent();
 
-        ClientResult response = await batchClient.CreateBatchAsync(requestContent);
-        BatchObject batchObj = ExtractAndValidateBatchObj(response);
+        CreateBatchOperation operation = await batchClient.CreateBatchAsync(requestContent, true);
 
         // Poll until we've completed, failed, or were canceled
-        while ("completed" != batchObj.Status)
-        {
-            response = await batchClient.GetBatchAsync(batchObj.Id, new());
-            batchObj = ExtractAndValidateBatchObj(response);
-        }
+        operation.WaitForCompletion();
+
+        ClientResult response = operation.GetBatch(null);
+        BatchObject batchObj = ExtractAndValidateBatchObj(response);
 
         Assert.That(batchObj.OutputFileID, Is.Not.Null.Or.Empty);
         BinaryData outputData = await ops.DownloadAndValidateResultAsync(batchObj.OutputFileID!);
@@ -157,13 +155,13 @@ public class BatchTests : AoaiTestBase<BatchClient>
             }
 
             using MemoryStream stream = new MemoryStream();
-            JsonHelpers.Serialize(stream, _operations, JsonOptions.OpenAIJsonOptions);
+            JsonSerializer.Serialize(stream, _operations, JsonOptions.OpenAIJsonOptions);
             stream.Seek(0, SeekOrigin.Begin);
             var data = BinaryData.FromStream(stream);
 
             using var content = BinaryContent.Create(data);
 
-            OpenAIFileInfo file = await _fileClient.UploadFileAsync(data, BatchFileName, FileUploadPurpose.Batch);
+            OpenAIFile file = await _fileClient.UploadFileAsync(data, BatchFileName, FileUploadPurpose.Batch);
             _uploadId = file.Id;
             Assert.That(_uploadId, Is.Not.Null.Or.Empty);
             return _uploadId;

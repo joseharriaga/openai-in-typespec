@@ -23,10 +23,6 @@ public partial class MessageFailureDetails { }
 public readonly partial struct MessageFailureReason { }
 
 [Experimental("OPENAI001")]
-[CodeGenModel("RunCompletionUsage")]
-public partial class RunTokenUsage { }
-
-[Experimental("OPENAI001")]
 [CodeGenModel("RunObjectLastError")]
 public partial class RunError { }
 
@@ -37,10 +33,6 @@ public readonly partial struct RunErrorCode { }
 [Experimental("OPENAI001")]
 [CodeGenModel("RunObjectIncompleteDetails")]
 public partial class RunIncompleteDetails { }
-
-[Experimental("OPENAI001")]
-[CodeGenModel("RunObjectIncompleteDetailsReason")]
-public readonly partial struct RunIncompleteReason { }
 
 [Experimental("OPENAI001")]
 [CodeGenModel("RunStepObjectType")]
@@ -57,10 +49,6 @@ public partial class RunStepError { }
 [Experimental("OPENAI001")]
 [CodeGenModel("RunStepObjectLastErrorCode")]
 public readonly partial struct RunStepErrorCode { }
-
-[Experimental("OPENAI001")]
-[CodeGenModel("RunStepCompletionUsage")]
-public partial class RunStepTokenUsage { }
 
 [Experimental("OPENAI001")]
 [CodeGenModel("RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject")]

@@ -6,24 +6,24 @@ namespace OpenAI.Embeddings;
 /// <summary> Model factory for models. </summary>
 public static partial class OpenAIEmbeddingsModelFactory
 {
-    /// <summary> Initializes a new instance of <see cref="OpenAI.Embeddings.Embedding"/>. </summary>
+    /// <summary> Initializes a new instance of <see cref="OpenAI.Embeddings.OpenAIEmbedding"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Embeddings.Embeddings"/> instance for mocking. </returns>
-    public static Embedding Embedding(int index = default, IEnumerable<float> vector = null)
+    public static OpenAIEmbedding OpenAIEmbedding(int index = default, IEnumerable<float> vector = null)
     {
         vector ??= new List<float>();
 
-        return new Embedding(
+        return new OpenAIEmbedding(
             index,
             vector.ToArray());
     }
 
-    /// <summary> Initializes a new instance of <see cref="OpenAI.Embeddings.EmbeddingCollection"/>. </summary>
-    /// <returns> A new <see cref="OpenAI.Embeddings.EmbeddingCollection"/> instance for mocking. </returns>
-    public static EmbeddingCollection EmbeddingCollection(IEnumerable<Embedding> items = null, string model = null, EmbeddingTokenUsage usage = null)
+    /// <summary> Initializes a new instance of <see cref="OpenAI.Embeddings.OpenAIEmbeddingCollection"/>. </summary>
+    /// <returns> A new <see cref="OpenAI.Embeddings.OpenAIEmbeddingCollection"/> instance for mocking. </returns>
+    public static OpenAIEmbeddingCollection OpenAIEmbeddingCollection(IEnumerable<OpenAIEmbedding> items = null, string model = null, EmbeddingTokenUsage usage = null)
     {
-        items ??= new List<Embedding>();
+        items ??= new List<OpenAIEmbedding>();
 
-        return new EmbeddingCollection(
+        return new OpenAIEmbeddingCollection(
             items.ToList(),
             model,
             InternalCreateEmbeddingResponseObject.List,
@@ -33,11 +33,11 @@ public static partial class OpenAIEmbeddingsModelFactory
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Embeddings.EmbeddingTokenUsage"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Embeddings.EmbeddingTokenUsage"/> instance for mocking. </returns>
-    public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokens = default, int totalTokens = default)
+    public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokenCount = default, int totalTokenCount = default)
     {
         return new EmbeddingTokenUsage(
-            inputTokens,
-            totalTokens,
+            inputTokenCount,
+            totalTokenCount,
             serializedAdditionalRawData: null);
     }
 }

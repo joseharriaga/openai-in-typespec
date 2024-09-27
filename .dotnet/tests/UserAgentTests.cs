@@ -7,7 +7,7 @@ using System.IO;
 
 namespace OpenAI.Tests.Miscellaneous;
 
-public partial class UserAgentTests
+public class UserAgentTests
 {
     [Test]
     public void DefaultUserAgentStringWorks() => UserAgentStringWorks(useApplicationId: false);
@@ -30,7 +30,7 @@ public partial class UserAgentTests
         } : new();
         options.AddPolicy(policy, PipelinePosition.BeforeTransport);
 
-        ChatClient client = new("no-real-model-needed", Environment.GetEnvironmentVariable("OPENAI_API_KEY"), options);
+        ChatClient client = new("no-real-model-needed", new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")), options);
         RequestOptions noThrowOptions = new() { ErrorOptions = ClientErrorBehaviors.NoThrow, };
         using BinaryContent emptyContent = BinaryContent.Create(new MemoryStream());
         _ = client.CompleteChat(emptyContent, noThrowOptions);

@@ -3,7 +3,6 @@ using OpenAI.Assistants;
 using OpenAI.Files;
 using System;
 using System.ClientModel;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
@@ -15,6 +14,7 @@ public partial class AssistantExamples
     public void Example01_RetrievalAugmentedGeneration()
     {
         // Assistants is a beta API and subject to change; acknowledge its experimental status by suppressing the matching warning.
+        #pragma warning disable OPENAI001
         OpenAIClient openAIClient = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
         FileClient fileClient = openAIClient.GetFileClient();
         AssistantClient assistantClient = openAIClient.GetAssistantClient();
@@ -49,7 +49,7 @@ public partial class AssistantExamples
             }
             """).ToStream();
 
-        OpenAIFileInfo salesFile = fileClient.UploadFile(
+        OpenAIFile salesFile = fileClient.UploadFile(
             document,
             "monthly_sales.json",
             FileUploadPurpose.Assistants);
@@ -97,9 +97,8 @@ public partial class AssistantExamples
         } while (!threadRun.Status.IsTerminal);
 
         // Finally, we'll print out the full history for the thread that includes the augmented generation
-        PageCollection<ThreadMessage> messagePages
+        CollectionResult<ThreadMessage> messages
             = assistantClient.GetMessages(threadRun.ThreadId, new MessageCollectionOptions() { Order = MessageCollectionOrder.Ascending });
-        IEnumerable<ThreadMessage> messages = messagePages.GetAllValues();
 
         foreach (ThreadMessage message in messages)
         {
@@ -130,7 +129,7 @@ public partial class AssistantExamples
                 }
                 if (!string.IsNullOrEmpty(contentItem.ImageFileId))
                 {
-                    OpenAIFileInfo imageInfo = fileClient.GetFile(contentItem.ImageFileId);
+                    OpenAIFile imageInfo = fileClient.GetFile(contentItem.ImageFileId);
                     BinaryData imageBytes = fileClient.DownloadFile(contentItem.ImageFileId);
                     using FileStream stream = File.OpenWrite($"{imageInfo.Filename}.png");
                     imageBytes.ToStream().CopyTo(stream);
@@ -143,7 +142,7 @@ public partial class AssistantExamples
 
         // Optionally, delete any persistent resources you no longer need.
         _ = assistantClient.DeleteThread(threadRun.ThreadId);
-        _ = assistantClient.DeleteAssistant(assistant);
+        _ = assistantClient.DeleteAssistant(assistant.Id);
         _ = fileClient.DeleteFile(salesFile.Id);
     }
 }

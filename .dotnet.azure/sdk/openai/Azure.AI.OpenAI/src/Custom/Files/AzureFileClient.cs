@@ -33,7 +33,7 @@ internal partial class AzureFileClient : FileClient
     { }
 
     /// <inheritdoc />
-    public override ClientResult<OpenAIFileInfo> UploadFile(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default)
+    public override ClientResult<OpenAIFile> UploadFile(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default)
     {
         if (purpose != FileUploadPurpose.FineTune)
         {
@@ -46,11 +46,11 @@ internal partial class AzureFileClient : FileClient
 
         using MultipartFormDataBinaryContent content = CreateMultiPartContentWithMimeType(file, filename, purpose);
         ClientResult clientResult = UploadFile(content, content.ContentType, new() { CancellationToken = cancellationToken });
-        return ClientResult.FromValue(OpenAIFileInfo.FromResponse(clientResult.GetRawResponse()), clientResult.GetRawResponse());
+        return ClientResult.FromValue(OpenAIFile.FromResponse(clientResult.GetRawResponse()), clientResult.GetRawResponse());
     }
 
     /// <inheritdoc />
-    public override async Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default)
+    public override async Task<ClientResult<OpenAIFile>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default)
     {
         if (purpose != FileUploadPurpose.FineTune)
         {
@@ -65,7 +65,7 @@ internal partial class AzureFileClient : FileClient
         using MultipartFormDataBinaryContent content = CreateMultiPartContentWithMimeType(file, filename, purpose);
         ClientResult result = await UploadFileAsync(content, content.ContentType, new() { CancellationToken = cancellationToken })
             .ConfigureAwait(continueOnCapturedContext: false);
-        return ClientResult.FromValue(OpenAIFileInfo.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue(OpenAIFile.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
     private MultipartFormDataBinaryContent CreateMultiPartContentWithMimeType(Stream file, string filename, FileUploadPurpose purpose)

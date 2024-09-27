@@ -77,7 +77,7 @@ public partial class CreateBatchFileJobOperation : OperationResult
         return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
     }
 
-    internal PipelineMessage CreateGetVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions? options)
+    internal virtual PipelineMessage CreateGetVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions? options)
     {
         var message = _pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
@@ -108,45 +108,6 @@ public partial class CreateBatchFileJobOperation : OperationResult
         uri.AppendPath("/file_batches/", false);
         uri.AppendPath(batchId, true);
         uri.AppendPath("/cancel", false);
-        request.Uri = uri.ToUri();
-        request.Headers.Set("Accept", "application/json");
-        message.Apply(options);
-        return message;
-    }
-
-    internal PipelineMessage CreateGetFilesInVectorStoreBatchesRequest(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions? options)
-    {
-        var message = _pipeline.CreateMessage();
-        message.ResponseClassifier = PipelineMessageClassifier200;
-        var request = message.Request;
-        request.Method = "GET";
-        var uri = new ClientUriBuilder();
-        uri.Reset(_endpoint);
-        uri.AppendPath("/vector_stores/", false);
-        uri.AppendPath(vectorStoreId, true);
-        uri.AppendPath("/file_batches/", false);
-        uri.AppendPath(batchId, true);
-        uri.AppendPath("/files", false);
-        if (limit != null)
-        {
-            uri.AppendQuery("limit", limit.Value, true);
-        }
-        if (order != null)
-        {
-            uri.AppendQuery("order", order, true);
-        }
-        if (after != null)
-        {
-            uri.AppendQuery("after", after, true);
-        }
-        if (before != null)
-        {
-            uri.AppendQuery("before", before, true);
-        }
-        if (filter != null)
-        {
-            uri.AppendQuery("filter", filter, true);
-        }
         request.Uri = uri.ToUri();
         request.Headers.Set("Accept", "application/json");
         message.Apply(options);

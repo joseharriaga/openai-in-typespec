@@ -55,6 +55,20 @@ internal partial class AzureFineTuningClient : FineTuningClient
         return new FineTuningJobCollectionResult(this, Pipeline, options, limit, after);
     }
 
+    public override async Task<ClientResult> GetJobAsync(string fineTuningJobId, RequestOptions options)
+    {
+        using PipelineMessage message = CreateRetrieveFineTuningJobRequest(fineTuningJobId, options);
+        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+    }
+
+    public override ClientResult GetJob(string fineTuningJobId, RequestOptions options)
+    {
+        Argument.AssertNotNullOrEmpty(fineTuningJobId, nameof(fineTuningJobId));
+
+        using PipelineMessage message = CreateRetrieveFineTuningJobRequest(fineTuningJobId, options);
+        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+    }
+
     internal override PipelineMessage CreateCreateFineTuningJobRequest(BinaryContent content, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithMethod("POST")

@@ -31,3 +31,21 @@ using AzureOpenAI;
 
 @@access(AzureOpenAIDalleErrorResponse, Access.public);
 @@usage(AzureOpenAIDalleErrorResponse, Usage.output);
+
+@@clientName(AzureContentFilterSeverityResult.filtered, "IsFiltered", "csharp");
+@@clientName(AzureContentFilterBlocklistIdResult.filtered,
+  "IsFiltered",
+  "csharp"
+);
+@@clientName(AzureContentFilterBlocklistResult.filtered,
+  "IsFiltered",
+  "csharp"
+);
+@@clientName(AzureContentFilterDetectionResult.filtered,
+  "IsFiltered",
+  "csharp"
+);
+@@clientName(AzureContentFilterDetectionResult.detected,
+  "IsDetected",
+  "csharp"
+);

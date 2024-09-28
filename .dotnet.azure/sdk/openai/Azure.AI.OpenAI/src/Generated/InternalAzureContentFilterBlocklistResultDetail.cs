@@ -42,24 +42,24 @@ namespace Azure.AI.OpenAI
         /// </summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterBlocklistResultDetail"/>. </summary>
-        /// <param name="filtered"> A value indicating whether the blocklist produced a filtering action. </param>
+        /// <param name="isFiltered"> A value indicating whether the blocklist produced a filtering action. </param>
         /// <param name="id"> The ID of the custom blocklist evaluated. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        internal InternalAzureContentFilterBlocklistResultDetail(bool filtered, string id)
+        internal InternalAzureContentFilterBlocklistResultDetail(bool isFiltered, string id)
         {
             Argument.AssertNotNull(id, nameof(id));
 
-            Filtered = filtered;
+            IsFiltered = isFiltered;
             Id = id;
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureContentFilterBlocklistResultDetail"/>. </summary>
-        /// <param name="filtered"> A value indicating whether the blocklist produced a filtering action. </param>
+        /// <param name="isFiltered"> A value indicating whether the blocklist produced a filtering action. </param>
         /// <param name="id"> The ID of the custom blocklist evaluated. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalAzureContentFilterBlocklistResultDetail(bool filtered, string id, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalAzureContentFilterBlocklistResultDetail(bool isFiltered, string id, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Filtered = filtered;
+            IsFiltered = isFiltered;
             Id = id;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -68,9 +68,6 @@ namespace Azure.AI.OpenAI
         internal InternalAzureContentFilterBlocklistResultDetail()
         {
         }
-
-        /// <summary> A value indicating whether the blocklist produced a filtering action. </summary>
-        internal bool Filtered { get; set; }
         /// <summary> The ID of the custom blocklist evaluated. </summary>
         internal string Id { get; set; }
     }

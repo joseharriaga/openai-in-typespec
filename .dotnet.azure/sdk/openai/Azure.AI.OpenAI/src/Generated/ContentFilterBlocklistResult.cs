@@ -42,20 +42,20 @@ namespace Azure.AI.OpenAI
         /// </summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="ContentFilterBlocklistResult"/>. </summary>
-        /// <param name="filtered"> A value indicating whether any of the detailed blocklists resulted in a filtering action. </param>
-        internal ContentFilterBlocklistResult(bool filtered)
+        /// <param name="isFiltered"> A value indicating whether any of the detailed blocklists resulted in a filtering action. </param>
+        internal ContentFilterBlocklistResult(bool isFiltered)
         {
-            Filtered = filtered;
+            IsFiltered = isFiltered;
             InternalDetails = new ChangeTrackingList<InternalAzureContentFilterBlocklistResultDetail>();
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterBlocklistResult"/>. </summary>
-        /// <param name="filtered"> A value indicating whether any of the detailed blocklists resulted in a filtering action. </param>
+        /// <param name="isFiltered"> A value indicating whether any of the detailed blocklists resulted in a filtering action. </param>
         /// <param name="internalDetails"> The pairs of individual blocklist IDs and whether they resulted in a filtering action. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ContentFilterBlocklistResult(bool filtered, IReadOnlyList<InternalAzureContentFilterBlocklistResultDetail> internalDetails, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ContentFilterBlocklistResult(bool isFiltered, IReadOnlyList<InternalAzureContentFilterBlocklistResultDetail> internalDetails, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Filtered = filtered;
+            IsFiltered = isFiltered;
             InternalDetails = internalDetails;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -66,6 +66,6 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> A value indicating whether any of the detailed blocklists resulted in a filtering action. </summary>
-        public bool Filtered { get; }
+        public bool IsFiltered { get; }
     }
 }

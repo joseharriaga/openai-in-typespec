@@ -70,13 +70,13 @@ namespace Azure.AI.OpenAI.Tests
             var promptFilter = response.Value.GetRequestContentFilterResult();
             Assert.That(promptFilter, Is.Not.Null);
             //Assert.That(promptFilter.Hate, Is.Not.Null);
-            //Assert.That(promptFilter.Hate.Filtered, Is.False);
+            //Assert.That(promptFilter.Hate.IsFiltered, Is.False);
             //Assert.That(promptFilter.Hate.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
 
             var responseFilter = response.Value.GetResponseContentFilterResult();
             Assert.That(responseFilter, Is.Not.Null);
             Assert.That(responseFilter.Hate, Is.Not.Null);
-            Assert.That(responseFilter.Hate.Filtered, Is.False);
+            Assert.That(responseFilter.Hate.IsFiltered, Is.False);
             Assert.That(responseFilter.Hate.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
         }
 

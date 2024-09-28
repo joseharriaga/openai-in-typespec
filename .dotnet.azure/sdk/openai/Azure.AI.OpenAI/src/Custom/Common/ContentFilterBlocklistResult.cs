@@ -21,7 +21,7 @@ public partial class ContentFilterBlocklistResult
                 _filteredByBlocklistId = [];
                 foreach (InternalAzureContentFilterBlocklistResultDetail internalDetail in InternalDetails ?? [])
                 {
-                    _filteredByBlocklistId[internalDetail.Id] = internalDetail.Filtered;
+                    _filteredByBlocklistId[internalDetail.Id] = internalDetail.IsFiltered;
                 }
             }
             return _filteredByBlocklistId;

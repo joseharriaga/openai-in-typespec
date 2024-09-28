@@ -52,7 +52,7 @@ public static partial class AzureChatExtensions
     }
 
     [Experimental("AOAI001")]
-    public static ChatMessageContext GetAzureMessageContext(this ChatCompletion chatCompletion)
+    public static ChatMessageContext GetMessageContext(this ChatCompletion chatCompletion)
     {
         return AdditionalPropertyHelpers.GetAdditionalProperty<ChatMessageContext>(
             chatCompletion.Choices?[0]?.Message?.SerializedAdditionalRawData,
@@ -60,7 +60,7 @@ public static partial class AzureChatExtensions
     }
 
     [Experimental("AOAI001")]
-    public static ChatMessageContext GetAzureMessageContext(this StreamingChatCompletionUpdate chatUpdate)
+    public static ChatMessageContext GetMessageContext(this StreamingChatCompletionUpdate chatUpdate)
     {
         if (chatUpdate.Choices?.Count > 0)
         {

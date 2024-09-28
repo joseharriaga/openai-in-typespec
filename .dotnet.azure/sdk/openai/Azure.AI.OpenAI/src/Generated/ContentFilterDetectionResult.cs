@@ -45,22 +45,22 @@ namespace Azure.AI.OpenAI
         /// </summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="ContentFilterDetectionResult"/>. </summary>
-        /// <param name="filtered"> Whether the content detection resulted in a content filtering action. </param>
-        /// <param name="detected"> Whether the labeled content category was detected in the content. </param>
-        internal ContentFilterDetectionResult(bool filtered, bool detected)
+        /// <param name="isFiltered"> Whether the content detection resulted in a content filtering action. </param>
+        /// <param name="isDetected"> Whether the labeled content category was detected in the content. </param>
+        internal ContentFilterDetectionResult(bool isFiltered, bool isDetected)
         {
-            Filtered = filtered;
-            Detected = detected;
+            IsFiltered = isFiltered;
+            IsDetected = isDetected;
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterDetectionResult"/>. </summary>
-        /// <param name="filtered"> Whether the content detection resulted in a content filtering action. </param>
-        /// <param name="detected"> Whether the labeled content category was detected in the content. </param>
+        /// <param name="isFiltered"> Whether the content detection resulted in a content filtering action. </param>
+        /// <param name="isDetected"> Whether the labeled content category was detected in the content. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ContentFilterDetectionResult(bool filtered, bool detected, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ContentFilterDetectionResult(bool isFiltered, bool isDetected, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Filtered = filtered;
-            Detected = detected;
+            IsFiltered = isFiltered;
+            IsDetected = isDetected;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -70,8 +70,8 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Whether the content detection resulted in a content filtering action. </summary>
-        public bool Filtered { get; }
+        public bool IsFiltered { get; }
         /// <summary> Whether the labeled content category was detected in the content. </summary>
-        public bool Detected { get; }
+        public bool IsDetected { get; }
     }
 }

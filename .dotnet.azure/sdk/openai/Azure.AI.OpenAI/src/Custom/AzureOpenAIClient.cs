@@ -61,22 +61,6 @@ public partial class AzureOpenAIClient : OpenAIClient
     }
 
     /// <summary>
-    /// Creates a new instance of <see cref="AzureOpenAIClient"/> that will connect to a specified Azure OpenAI
-    /// service resource endpoint using an API key.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// For token-based authentication, including the use of managed identity, please use the alternate constructor:
-    /// <see cref="AzureOpenAIClient(Uri,TokenCredential,AzureOpenAIClientOptions)"/>
-    /// </para>
-    /// </remarks>
-    /// <param name="endpoint"> The Azure OpenAI resource endpoint to use. This should not include model deployment or operation information. For example: <c>https://my-resource.openai.azure.com</c>. </param>
-    /// <param name="credential"> The API key to authenticate with the service. </param>
-    public AzureOpenAIClient(Uri endpoint, AzureKeyCredential credential) : this(endpoint, credential, new AzureOpenAIClientOptions())
-    {
-    }
-
-    /// <summary>
     /// Creates a new instance of <see cref="AzureOpenAIClient"/> that will connect to an Azure OpenAI service resource
     /// using token authentication, including for tokens issued via managed identity.
     /// </summary>
@@ -105,24 +89,6 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// <param name="options"> The options to configure the client. </param>
     public AzureOpenAIClient(Uri endpoint, ApiKeyCredential credential, AzureOpenAIClientOptions options)
         : this(CreatePipeline(credential, options), endpoint, options)
-    {
-    }
-
-    /// <summary>
-    /// Creates a new instance of <see cref="AzureOpenAIClient"/> that will connect to a specified Azure OpenAI
-    /// service resource endpoint using an API key.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// For token-based authentication, including the use of managed identity, please use the alternate constructor:
-    /// <see cref="AzureOpenAIClient(Uri,TokenCredential,AzureOpenAIClientOptions)"/>
-    /// </para>
-    /// </remarks>
-    /// <param name="endpoint"> The Azure OpenAI resource endpoint to use. This should not include model deployment or operation information. For example: <c>https://my-resource.openai.azure.com</c>. </param>
-    /// <param name="credential"> The API key to authenticate with the service. </param>
-    /// <param name="options"> The options to configure the client. </param>
-    public AzureOpenAIClient(Uri endpoint, AzureKeyCredential credential, AzureOpenAIClientOptions options)
-        : this(CreatePipeline(new ApiKeyCredential(credential?.Key), options), endpoint, options)
     {
     }
 

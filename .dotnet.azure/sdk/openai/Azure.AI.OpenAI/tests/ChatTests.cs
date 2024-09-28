@@ -67,7 +67,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
     [Category("Smoke")]
     public void DataSourceSerializationWorks()
     {
-        AzureAISearchChatDataSource source = new()
+        AzureSearchChatDataSource source = new()
         {
             Endpoint = new Uri("https://some-search-resource.azure.com"),
             Authentication = DataSourceAuthentication.FromApiKey("test-api-key"),
@@ -111,7 +111,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(sourcesFromOptions[0], Is.InstanceOf<ElasticsearchChatDataSource>());
         Assert.That(((ElasticsearchChatDataSource)sourcesFromOptions[0]).IndexName, Is.EqualTo("my-index-name"));
 
-        options.AddDataSource(new AzureCosmosDBChatDataSource()
+        options.AddDataSource(new CosmosChatDataSource()
         {
             Authentication = DataSourceAuthentication.FromApiKey("api-key"),
             ContainerName = "my-container-name",
@@ -125,7 +125,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         });
         sourcesFromOptions = options.GetDataSources();
         Assert.That(sourcesFromOptions, Has.Count.EqualTo(2));
-        Assert.That(sourcesFromOptions[1], Is.InstanceOf<AzureCosmosDBChatDataSource>());
+        Assert.That(sourcesFromOptions[1], Is.InstanceOf<CosmosChatDataSource>());
     }
 
     [RecordedTest]
@@ -334,20 +334,20 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         ChatCompletion chatCompletion = chatCompletionResult;
         RequestContentFilterResult promptFilterResult = chatCompletion.GetRequestContentFilterResult();
         Assert.That(promptFilterResult, Is.Not.Null);
-        Assert.That(promptFilterResult.Sexual?.Filtered, Is.False);
+        Assert.That(promptFilterResult.Sexual?.IsFiltered, Is.False);
         Assert.That(promptFilterResult.Sexual?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
         ResponseContentFilterResult responseFilterResult = chatCompletion.GetResponseContentFilterResult();
         Assert.That(responseFilterResult, Is.Not.Null);
         Assert.That(responseFilterResult.Hate?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
         if (responseFilterResult.ProtectedMaterialCode is not null)
         {
-            Assert.That(responseFilterResult.ProtectedMaterialCode.Detected, Is.False);
-            Assert.That(responseFilterResult.ProtectedMaterialCode.Filtered, Is.False);
+            Assert.That(responseFilterResult.ProtectedMaterialCode.IsDetected, Is.False);
+            Assert.That(responseFilterResult.ProtectedMaterialCode.IsFiltered, Is.False);
         }
         if (responseFilterResult.ProtectedMaterialText is not null)
         {
-            Assert.That(responseFilterResult.ProtectedMaterialText.Detected, Is.False);
-            Assert.That(responseFilterResult.ProtectedMaterialText.Filtered, Is.False);
+            Assert.That(responseFilterResult.ProtectedMaterialText.IsDetected, Is.False);
+            Assert.That(responseFilterResult.ProtectedMaterialText.IsFiltered, Is.False);
         }
     }
 
@@ -358,7 +358,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(searchConfig, Is.Not.Null);
         string searchIndex = searchConfig.GetValueOrThrow<string>("index");
 
-        AzureAISearchChatDataSource source = new()
+        AzureSearchChatDataSource source = new()
         {
             Endpoint = searchConfig.Endpoint,
             Authentication = DataSourceAuthentication.FromApiKey(searchConfig.Key),
@@ -385,7 +385,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(content.Kind, Is.EqualTo(ChatMessageContentPartKind.Text));
         Assert.That(content.Text, Is.Not.Null.Or.Empty);
 
-        ChatMessageContext context = chatCompletion.GetAzureMessageContext();
+        ChatMessageContext context = chatCompletion.GetMessageContext();
         Assert.IsNotNull(context);
         Assert.That(context.Intent, Is.Not.Null.Or.Empty);
         Assert.That(context.Citations, Has.Count.GreaterThan(0));
@@ -520,7 +520,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(searchConfig, Is.Not.Null);
         string searchIndex = searchConfig.GetValueOrThrow<string>("index");
 
-        AzureAISearchChatDataSource source = new()
+        AzureSearchChatDataSource source = new()
         {
             Endpoint = searchConfig.Endpoint,
             Authentication = DataSourceAuthentication.FromApiKey(searchConfig.Key),
@@ -543,7 +543,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         {
             ValidateUpdate(update, builder, ref foundPromptFilter, ref foundResponseFilter);
 
-            ChatMessageContext context = update.GetAzureMessageContext();
+            ChatMessageContext context = update.GetMessageContext();
             if (context != null)
             {
                 contexts.Add(context);
@@ -630,7 +630,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
             RequestContentFilterResult promptFilter = update.GetRequestContentFilterResult();
             if (promptFilter?.SelfHarm != null)
             {
-                Assert.That(promptFilter.SelfHarm.Filtered, Is.False);
+                Assert.That(promptFilter.SelfHarm.IsFiltered, Is.False);
                 Assert.That(promptFilter.SelfHarm.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
                 foundPromptFilter = true;
             }
@@ -671,7 +671,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
                 ResponseContentFilterResult responseFilter = update.GetResponseContentFilterResult();
                 if (responseFilter?.Violence != null)
                 {
-                    Assert.That(responseFilter.Violence.Filtered, Is.False);
+                    Assert.That(responseFilter.Violence.IsFiltered, Is.False);
                     Assert.That(responseFilter.Violence.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
                     foundResponseFilter = true;
                 }

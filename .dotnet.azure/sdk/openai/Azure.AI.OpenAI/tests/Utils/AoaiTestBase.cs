@@ -278,11 +278,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
             current != null && current.FullName != TestEnvironment.RepoRoot.FullName;
             current = current?.Parent)
         {
-#if !AZURE_OPENAI_GA
             string file = Path.Combine(current!.FullName, "assets.json");
-#else
-            string file = Path.Combine(current!.FullName, ".ga", "assets.json");
-#endif
             if (File.Exists(file))
             {
                 assetsFile = file;

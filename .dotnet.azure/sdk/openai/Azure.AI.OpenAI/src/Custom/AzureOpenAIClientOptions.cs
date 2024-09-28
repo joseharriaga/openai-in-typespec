@@ -52,6 +52,9 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
     {
         Version = version switch
         {
+#if !AZURE_OPENAI_GA
+            ServiceVersion.V2024_08_01_Preview => "2024-08-01-preview",
+#endif
             ServiceVersion.V2024_06_01 => "2024-06-01",
             _ => throw new NotSupportedException()
         };
@@ -61,6 +64,9 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
     /// <summary> The version of the service to use. </summary>
     public enum ServiceVersion
     {
+#if !AZURE_OPENAI_GA
+        V2024_08_01_Preview = 8,
+#endif
         V2024_06_01 = 9,
     }
 
@@ -92,5 +98,9 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
         }
     }
 
+#if !AZURE_OPENAI_GA
+    private const ServiceVersion LatestVersion = ServiceVersion.V2024_08_01_Preview;
+#else
     private const ServiceVersion LatestVersion = ServiceVersion.V2024_06_01;
+#endif
 }

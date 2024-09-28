@@ -45,21 +45,21 @@ namespace Azure.AI.OpenAI
         /// </summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="ContentFilterSeverityResult"/>. </summary>
-        /// <param name="isFiltered"> Whether the content severity resulted in a content filtering action. </param>
+        /// <param name="filtered"> Whether the content severity resulted in a content filtering action. </param>
         /// <param name="severity"> The labeled severity of the content. </param>
-        internal ContentFilterSeverityResult(bool isFiltered, ContentFilterSeverity severity)
+        internal ContentFilterSeverityResult(bool filtered, ContentFilterSeverity severity)
         {
-            IsFiltered = isFiltered;
+            Filtered = filtered;
             Severity = severity;
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterSeverityResult"/>. </summary>
-        /// <param name="isFiltered"> Whether the content severity resulted in a content filtering action. </param>
+        /// <param name="filtered"> Whether the content severity resulted in a content filtering action. </param>
         /// <param name="severity"> The labeled severity of the content. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ContentFilterSeverityResult(bool isFiltered, ContentFilterSeverity severity, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ContentFilterSeverityResult(bool filtered, ContentFilterSeverity severity, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            IsFiltered = isFiltered;
+            Filtered = filtered;
             Severity = severity;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
@@ -70,6 +70,6 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Whether the content severity resulted in a content filtering action. </summary>
-        public bool IsFiltered { get; }
+        public bool Filtered { get; }
     }
 }

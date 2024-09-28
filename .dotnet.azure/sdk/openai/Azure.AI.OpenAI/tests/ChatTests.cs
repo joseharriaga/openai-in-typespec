@@ -334,20 +334,20 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         ChatCompletion chatCompletion = chatCompletionResult;
         RequestContentFilterResult promptFilterResult = chatCompletion.GetRequestContentFilterResult();
         Assert.That(promptFilterResult, Is.Not.Null);
-        Assert.That(promptFilterResult.Sexual?.IsFiltered, Is.False);
+        Assert.That(promptFilterResult.Sexual?.Filtered, Is.False);
         Assert.That(promptFilterResult.Sexual?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
         ResponseContentFilterResult responseFilterResult = chatCompletion.GetResponseContentFilterResult();
         Assert.That(responseFilterResult, Is.Not.Null);
         Assert.That(responseFilterResult.Hate?.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
         if (responseFilterResult.ProtectedMaterialCode is not null)
         {
-            Assert.That(responseFilterResult.ProtectedMaterialCode.IsDetected, Is.False);
-            Assert.That(responseFilterResult.ProtectedMaterialCode.IsFiltered, Is.False);
+            Assert.That(responseFilterResult.ProtectedMaterialCode.Detected, Is.False);
+            Assert.That(responseFilterResult.ProtectedMaterialCode.Filtered, Is.False);
         }
         if (responseFilterResult.ProtectedMaterialText is not null)
         {
-            Assert.That(responseFilterResult.ProtectedMaterialText.IsDetected, Is.False);
-            Assert.That(responseFilterResult.ProtectedMaterialText.IsFiltered, Is.False);
+            Assert.That(responseFilterResult.ProtectedMaterialText.Detected, Is.False);
+            Assert.That(responseFilterResult.ProtectedMaterialText.Filtered, Is.False);
         }
     }
 
@@ -630,7 +630,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
             RequestContentFilterResult promptFilter = update.GetRequestContentFilterResult();
             if (promptFilter?.SelfHarm != null)
             {
-                Assert.That(promptFilter.SelfHarm.IsFiltered, Is.False);
+                Assert.That(promptFilter.SelfHarm.Filtered, Is.False);
                 Assert.That(promptFilter.SelfHarm.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
                 foundPromptFilter = true;
             }
@@ -671,7 +671,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
                 ResponseContentFilterResult responseFilter = update.GetResponseContentFilterResult();
                 if (responseFilter?.Violence != null)
                 {
-                    Assert.That(responseFilter.Violence.IsFiltered, Is.False);
+                    Assert.That(responseFilter.Violence.Filtered, Is.False);
                     Assert.That(responseFilter.Violence.Severity, Is.EqualTo(ContentFilterSeverity.Safe));
                     foundResponseFilter = true;
                 }

@@ -135,5 +135,3 @@ namespace Azure.AI.OpenAI.Chat
     }
 }
 
-
-

@@ -24,7 +24,7 @@ namespace Azure.AI.OpenAI
             if (SerializedAdditionalRawData?.ContainsKey("filtered") != true)
             {
                 writer.WritePropertyName("filtered"u8);
-                writer.WriteBooleanValue(IsFiltered);
+                writer.WriteBooleanValue(Filtered);
             }
             if (SerializedAdditionalRawData?.ContainsKey("severity") != true)
             {

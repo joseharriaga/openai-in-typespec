@@ -44,5 +44,3 @@ namespace Azure.AI.OpenAI
     }
 }
 
-
-

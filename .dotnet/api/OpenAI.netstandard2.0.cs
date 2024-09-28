@@ -19,7 +19,7 @@ namespace OpenAI {
         public virtual VectorStoreClient GetVectorStoreClient();
     }
     public class OpenAIClientOptions : ClientPipelineOptions {
-        public string ApplicationId { get; set; }
+        public string CustomApplicationId { get; set; }
         public Uri Endpoint { get; set; }
         public string OrganizationId { get; set; }
         public string ProjectId { get; set; }
@@ -1427,9 +1427,9 @@ namespace OpenAI.Chat {
     }
     [Obsolete("This class is obsolete. Please use ChatToolChoice instead.")]
     public class ChatFunctionChoice : IJsonModel<ChatFunctionChoice>, IPersistableModel<ChatFunctionChoice> {
-        public ChatFunctionChoice(ChatFunction chatFunction);
-        public static ChatFunctionChoice Auto { get; }
-        public static ChatFunctionChoice None { get; }
+        public static ChatFunctionChoice CreateAutoChoice();
+        public static ChatFunctionChoice CreateNamedChoice(string functionName);
+        public static ChatFunctionChoice CreateNoneChoice();
         ChatFunctionChoice IJsonModel<ChatFunctionChoice>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatFunctionChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatFunctionChoice IPersistableModel<ChatFunctionChoice>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1657,9 +1657,9 @@ namespace OpenAI.Chat {
     public class StreamingChatToolCallUpdate : IJsonModel<StreamingChatToolCallUpdate>, IPersistableModel<StreamingChatToolCallUpdate> {
         public string FunctionArgumentsUpdate { get; }
         public string FunctionName { get; }
-        public string Id { get; }
         public int Index { get; }
         public ChatToolCallKind Kind { get; }
+        public string ToolCallId { get; }
         StreamingChatToolCallUpdate IJsonModel<StreamingChatToolCallUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<StreamingChatToolCallUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         StreamingChatToolCallUpdate IPersistableModel<StreamingChatToolCallUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1815,8 +1815,8 @@ namespace OpenAI.Files {
         public virtual Task<ClientResult<OpenAIFile>> UploadFileAsync(string filePath, FileUploadPurpose purpose);
     }
     public class FileDeletionResult : IJsonModel<FileDeletionResult>, IPersistableModel<FileDeletionResult> {
-        public bool Deleted { get; }
         public string FileId { get; }
+        public bool IsDeleted { get; }
         FileDeletionResult IJsonModel<FileDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<FileDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         FileDeletionResult IPersistableModel<FileDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2150,7 +2150,7 @@ namespace OpenAI.Models {
 }
 namespace OpenAI.Moderations {
     public class ModerationCategory {
-        public bool Flagged { get; }
+        public bool IsFlagged { get; }
         public float Score { get; }
     }
     public class ModerationClient {
@@ -2170,11 +2170,11 @@ namespace OpenAI.Moderations {
         public virtual Task<ClientResult<ModerationResult>> ClassifyTextAsync(string input, CancellationToken cancellationToken = default);
     }
     public class ModerationResult : IJsonModel<ModerationResult>, IPersistableModel<ModerationResult> {
-        public bool Flagged { get; }
         public ModerationCategory Harassment { get; }
         public ModerationCategory HarassmentThreatening { get; }
         public ModerationCategory Hate { get; }
         public ModerationCategory HateThreatening { get; }
+        public bool IsFlagged { get; }
         public ModerationCategory SelfHarm { get; }
         public ModerationCategory SelfHarmInstructions { get; }
         public ModerationCategory SelfHarmIntent { get; }

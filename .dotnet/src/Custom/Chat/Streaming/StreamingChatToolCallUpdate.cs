@@ -34,7 +34,7 @@ public partial class StreamingChatToolCallUpdate
         Kind = ChatToolCallKind.Function;
 
         Index = index;
-        Id = id;
+        ToolCallId = id;
         Function = function;
     }
 
@@ -45,8 +45,17 @@ public partial class StreamingChatToolCallUpdate
     [CodeGenMember("Type")]
     public ChatToolCallKind Kind { get; } = ChatToolCallKind.Function;
 
+    // CUSTOM: Renamed.
     /// <summary>
-    /// The name of the function requested by the tool call.
+    /// The unique identifier of the tool call being streamed, as used with e.g.
+    /// <see cref="ChatToolCall.CreateFunctionToolCall(string, string, string)"/> or
+    /// <see cref="ToolChatMessage.ToolChatMessage(string, string)"/>.
+    /// </summary>
+    [CodeGenMember("Id")]
+    public string ToolCallId { get; }
+
+    /// <summary>
+    /// The name of the the tool that the streaming tool call requests invocation of.
     /// </summary>
     /// <remarks>
     /// <para>

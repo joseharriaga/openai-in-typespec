@@ -288,7 +288,7 @@ public partial class OpenAIClient
 
     private static PipelinePolicy CreateAddCustomHeadersPolicy(OpenAIClientOptions options = null)
     {
-        TelemetryDetails telemetryDetails = new(typeof(OpenAIClientOptions).Assembly, options?.ApplicationId);
+        TelemetryDetails telemetryDetails = new(typeof(OpenAIClientOptions).Assembly, options?.CustomApplicationId);
         return new GenericActionPipelinePolicy((message) =>
         {
             if (message?.Request?.Headers?.TryGetValue(KnownHeaderNames.UserAgent, out string _) == false)

@@ -870,7 +870,7 @@ public partial class OpenAIChatModelFactoryTests
         StreamingChatToolCallUpdate streamingChatToolCallUpdate = OpenAIChatModelFactory.StreamingChatToolCallUpdate();
 
         Assert.That(streamingChatToolCallUpdate.Index, Is.EqualTo(0));
-        Assert.That(streamingChatToolCallUpdate.Id, Is.Null);
+        Assert.That(streamingChatToolCallUpdate.ToolCallId, Is.Null);
         Assert.That(streamingChatToolCallUpdate.Kind, Is.EqualTo(default(ChatToolCallKind)));
         Assert.That(streamingChatToolCallUpdate.FunctionName, Is.Null);
         Assert.That(streamingChatToolCallUpdate.FunctionArgumentsUpdate, Is.Null);
@@ -883,7 +883,7 @@ public partial class OpenAIChatModelFactoryTests
         StreamingChatToolCallUpdate streamingChatToolCallUpdate = OpenAIChatModelFactory.StreamingChatToolCallUpdate(index: index);
 
         Assert.That(streamingChatToolCallUpdate.Index, Is.EqualTo(index));
-        Assert.That(streamingChatToolCallUpdate.Id, Is.Null);
+        Assert.That(streamingChatToolCallUpdate.ToolCallId, Is.Null);
         Assert.That(streamingChatToolCallUpdate.Kind, Is.EqualTo(default(ChatToolCallKind)));
         Assert.That(streamingChatToolCallUpdate.FunctionName, Is.Null);
         Assert.That(streamingChatToolCallUpdate.FunctionArgumentsUpdate, Is.Null);
@@ -896,7 +896,7 @@ public partial class OpenAIChatModelFactoryTests
         StreamingChatToolCallUpdate streamingChatToolCallUpdate = OpenAIChatModelFactory.StreamingChatToolCallUpdate(id: id);
 
         Assert.That(streamingChatToolCallUpdate.Index, Is.EqualTo(0));
-        Assert.That(streamingChatToolCallUpdate.Id, Is.EqualTo(id));
+        Assert.That(streamingChatToolCallUpdate.ToolCallId, Is.EqualTo(id));
         Assert.That(streamingChatToolCallUpdate.Kind, Is.EqualTo(default(ChatToolCallKind)));
         Assert.That(streamingChatToolCallUpdate.FunctionName, Is.Null);
         Assert.That(streamingChatToolCallUpdate.FunctionArgumentsUpdate, Is.Null);
@@ -909,7 +909,7 @@ public partial class OpenAIChatModelFactoryTests
         StreamingChatToolCallUpdate streamingChatToolCallUpdate = OpenAIChatModelFactory.StreamingChatToolCallUpdate(kind: kind);
 
         Assert.That(streamingChatToolCallUpdate.Index, Is.EqualTo(0));
-        Assert.That(streamingChatToolCallUpdate.Id, Is.Null);
+        Assert.That(streamingChatToolCallUpdate.ToolCallId, Is.Null);
         Assert.That(streamingChatToolCallUpdate.Kind, Is.EqualTo(kind));
         Assert.That(streamingChatToolCallUpdate.FunctionName, Is.Null);
         Assert.That(streamingChatToolCallUpdate.FunctionArgumentsUpdate, Is.Null);
@@ -922,7 +922,7 @@ public partial class OpenAIChatModelFactoryTests
         StreamingChatToolCallUpdate streamingChatToolCallUpdate = OpenAIChatModelFactory.StreamingChatToolCallUpdate(functionName: functionName);
 
         Assert.That(streamingChatToolCallUpdate.Index, Is.EqualTo(0));
-        Assert.That(streamingChatToolCallUpdate.Id, Is.Null);
+        Assert.That(streamingChatToolCallUpdate.ToolCallId, Is.Null);
         Assert.That(streamingChatToolCallUpdate.Kind, Is.EqualTo(default(ChatToolCallKind)));
         Assert.That(streamingChatToolCallUpdate.FunctionName, Is.EqualTo(functionName));
         Assert.That(streamingChatToolCallUpdate.FunctionArgumentsUpdate, Is.Null);
@@ -935,7 +935,7 @@ public partial class OpenAIChatModelFactoryTests
         StreamingChatToolCallUpdate streamingChatToolCallUpdate = OpenAIChatModelFactory.StreamingChatToolCallUpdate(functionArgumentsUpdate: functionArgumentsUpdate);
 
         Assert.That(streamingChatToolCallUpdate.Index, Is.EqualTo(0));
-        Assert.That(streamingChatToolCallUpdate.Id, Is.Null);
+        Assert.That(streamingChatToolCallUpdate.ToolCallId, Is.Null);
         Assert.That(streamingChatToolCallUpdate.Kind, Is.EqualTo(default(ChatToolCallKind)));
         Assert.That(streamingChatToolCallUpdate.FunctionName, Is.Null);
         Assert.That(streamingChatToolCallUpdate.FunctionArgumentsUpdate, Is.EqualTo(functionArgumentsUpdate));

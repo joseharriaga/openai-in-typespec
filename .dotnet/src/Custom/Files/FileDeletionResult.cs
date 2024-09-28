@@ -4,6 +4,10 @@
 public partial class FileDeletionResult
 {
     // CUSTOM: Renamed.
+    [CodeGenMember("Deleted")]
+    public bool IsDeleted { get; }
+
+    // CUSTOM: Renamed.
     [CodeGenMember("Id")]
     public string FileId { get; }
 

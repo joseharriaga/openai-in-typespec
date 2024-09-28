@@ -241,7 +241,7 @@ public class ChatSmokeTests : SyncAsyncTestBase
         else
         {
             // We construct a new instance. Later, we serialize it and confirm it was constructed correctly.
-            choice = ChatFunctionChoice.Auto;
+            choice = ChatFunctionChoice.CreateAutoChoice();
         }
 
         BinaryData serializedChoice = ModelReaderWriter.Write(choice);
@@ -277,7 +277,7 @@ public class ChatSmokeTests : SyncAsyncTestBase
         {
             // We construct a new instance. Later, we serialize it and confirm it was constructed correctly.
 
-            choice = new ChatFunctionChoice(new ChatFunction(functionName));
+            choice = ChatFunctionChoice.CreateNamedChoice(functionName);
         }
 
         BinaryData serializedChoice = ModelReaderWriter.Write(choice);

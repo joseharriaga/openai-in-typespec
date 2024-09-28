@@ -28,8 +28,8 @@ public class ModerationsTests : SyncAsyncTestBase
             ? await client.ClassifyTextAsync(input)
             : client.ClassifyText(input);
         Assert.That(moderation, Is.Not.Null);
-        Assert.That(moderation.Flagged, Is.True);
-        Assert.That(moderation.Violence.Flagged, Is.True);
+        Assert.That(moderation.IsFlagged, Is.True);
+        Assert.That(moderation.Violence.IsFlagged, Is.True);
         Assert.That(moderation.Violence.Score, Is.GreaterThan(0.5));
     }
 
@@ -53,11 +53,11 @@ public class ModerationsTests : SyncAsyncTestBase
         Assert.That(moderations.Id, Is.Not.Null.Or.Empty);
 
         Assert.That(moderations[0], Is.Not.Null);
-        Assert.That(moderations[0].Flagged, Is.False);
+        Assert.That(moderations[0].IsFlagged, Is.False);
 
         Assert.That(moderations[1], Is.Not.Null);
-        Assert.That(moderations[1].Flagged, Is.True);
-        Assert.That(moderations[1].Violence.Flagged, Is.True);
+        Assert.That(moderations[1].IsFlagged, Is.True);
+        Assert.That(moderations[1].Violence.IsFlagged, Is.True);
         Assert.That(moderations[1].Violence.Score, Is.GreaterThan(0.5));
     }
 }

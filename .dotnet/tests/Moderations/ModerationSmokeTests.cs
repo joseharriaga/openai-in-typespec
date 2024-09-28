@@ -57,8 +57,8 @@ public partial class ModerationSmokeTests : SyncAsyncTestBase
             : client.ClassifyText("Mock me!");
 
         Assert.That(moderation, Is.Not.Null);
-        Assert.That(moderation.Flagged, Is.True);
-        Assert.That(moderation.Violence.Flagged, Is.True);
+        Assert.That(moderation.IsFlagged, Is.True);
+        Assert.That(moderation.Violence.IsFlagged, Is.True);
         Assert.That(moderation.Violence.Score, Is.EqualTo(0.5f));
     }
 
@@ -114,11 +114,11 @@ public partial class ModerationSmokeTests : SyncAsyncTestBase
         Assert.That(moderations.Count, Is.EqualTo(2));
 
         Assert.That(moderations[0], Is.Not.Null);
-        Assert.That(moderations[0].Flagged, Is.False);
+        Assert.That(moderations[0].IsFlagged, Is.False);
 
         Assert.That(moderations[1], Is.Not.Null);
-        Assert.That(moderations[1].Flagged, Is.True);
-        Assert.That(moderations[1].Violence.Flagged, Is.True);
+        Assert.That(moderations[1].IsFlagged, Is.True);
+        Assert.That(moderations[1].Violence.IsFlagged, Is.True);
         Assert.That(moderations[1].Violence.Score, Is.EqualTo(0.5f));
     }
 
@@ -139,8 +139,8 @@ public partial class ModerationSmokeTests : SyncAsyncTestBase
 
         // Deserialize the raw JSON and then serialize it back to confirm nothing was lost.
         ModerationResult moderationResult = ModelReaderWriter.Read<ModerationResult>(data);
-        Assert.That(moderationResult.Flagged, Is.EqualTo(true));
-        Assert.That(moderationResult.Violence.Flagged, Is.EqualTo(true));
+        Assert.That(moderationResult.IsFlagged, Is.EqualTo(true));
+        Assert.That(moderationResult.Violence.IsFlagged, Is.EqualTo(true));
         Assert.That(moderationResult.Violence.Score, Is.EqualTo(0.5f));
 
         BinaryData serializedPart = ModelReaderWriter.Write(moderationResult);
@@ -203,11 +203,11 @@ public partial class ModerationSmokeTests : SyncAsyncTestBase
         // Deserialize the raw JSON and then serialize it back to confirm nothing was lost.
         ModerationResultCollection moderations = ModelReaderWriter.Read<ModerationResultCollection>(data);
         Assert.That(moderations[0], Is.Not.Null);
-        Assert.That(moderations[0].Flagged, Is.False);
+        Assert.That(moderations[0].IsFlagged, Is.False);
 
         Assert.That(moderations[1], Is.Not.Null);
-        Assert.That(moderations[1].Flagged, Is.True);
-        Assert.That(moderations[1].Violence.Flagged, Is.True);
+        Assert.That(moderations[1].IsFlagged, Is.True);
+        Assert.That(moderations[1].Violence.IsFlagged, Is.True);
         Assert.That(moderations[1].Violence.Score, Is.EqualTo(0.5f));
 
         BinaryData serializedPart = ModelReaderWriter.Write(moderations);

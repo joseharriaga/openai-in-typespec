@@ -4,10 +4,10 @@ public partial class ModerationCategory
 {
     internal ModerationCategory(bool flagged, float score)
     {
-        Flagged = flagged;
+        IsFlagged = flagged;
         Score = score;
     }
 
-    public bool Flagged { get; }
+    public bool IsFlagged { get; }
     public float Score { get; }
 }

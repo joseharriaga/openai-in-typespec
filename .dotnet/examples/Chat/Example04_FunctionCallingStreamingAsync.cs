@@ -54,9 +54,9 @@ public partial class ChatExamples
                 foreach (StreamingChatToolCallUpdate toolCallUpdate in chatUpdate.ToolCallUpdates)
                 {
                     // Keep track of which tool call ID belongs to this update index.
-                    if (toolCallUpdate.Id is not null)
+                    if (toolCallUpdate.ToolCallId is not null)
                     {
-                        indexToToolCallId[toolCallUpdate.Index] = toolCallUpdate.Id;
+                        indexToToolCallId[toolCallUpdate.Index] = toolCallUpdate.ToolCallId;
                     }
 
                     // Keep track of which function name belongs to this update index.

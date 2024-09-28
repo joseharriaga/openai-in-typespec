@@ -34,7 +34,7 @@ namespace OpenAI.Files
             if (SerializedAdditionalRawData?.ContainsKey("deleted") != true)
             {
                 writer.WritePropertyName("deleted"u8);
-                writer.WriteBooleanValue(Deleted);
+                writer.WriteBooleanValue(IsDeleted);
             }
             if (SerializedAdditionalRawData != null)
             {

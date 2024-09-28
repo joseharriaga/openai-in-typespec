@@ -53,13 +53,13 @@ namespace Azure.AI.OpenAI
         internal ContentFilterProtectedMaterialCitationResult(string license, Uri url, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             License = license;
-            URL = url;
+            Uri = url;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> The name or identifier of the license associated with the detection. </summary>
         public string License { get; }
         /// <summary> The URL associated with the license. </summary>
-        public Uri URL { get; }
+        public Uri Uri { get; }
     }
 }

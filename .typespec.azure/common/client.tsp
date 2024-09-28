@@ -49,3 +49,7 @@ using AzureOpenAI;
   "IsDetected",
   "csharp"
 );
+@@clientName(AzureContentFilterResultForChoice.protected_material_code.citation.URL,
+  "Uri",
+  "csharp"
+);

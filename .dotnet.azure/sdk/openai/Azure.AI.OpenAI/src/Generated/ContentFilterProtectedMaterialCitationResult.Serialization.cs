@@ -26,10 +26,10 @@ namespace Azure.AI.OpenAI
                 writer.WritePropertyName("license"u8);
                 writer.WriteStringValue(License);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("URL") != true && Optional.IsDefined(URL))
+            if (SerializedAdditionalRawData?.ContainsKey("URL") != true && Optional.IsDefined(Uri))
             {
                 writer.WritePropertyName("URL"u8);
-                writer.WriteStringValue(URL.AbsoluteUri);
+                writer.WriteStringValue(Uri.AbsoluteUri);
             }
             if (SerializedAdditionalRawData != null)
             {

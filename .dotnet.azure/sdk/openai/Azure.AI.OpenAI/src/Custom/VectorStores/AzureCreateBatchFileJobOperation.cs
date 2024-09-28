@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Azure.AI.OpenAI.VectorStores;
 
 [Experimental("OPENAI001")]
-public partial class AzureCreateBatchFileJobOperation : CreateBatchFileJobOperation
+internal partial class AzureCreateBatchFileJobOperation : CreateBatchFileJobOperation
 {
     private readonly ClientPipeline _pipeline;
     private readonly Uri _endpoint;

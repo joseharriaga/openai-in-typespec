@@ -2,7 +2,7 @@
 using System.ClientModel.Primitives;
 
 namespace Azure.AI.OpenAI.VectorStores;
-public partial class AzureCreateBatchFileJobOperation
+internal partial class AzureCreateBatchFileJobOperation
 {
     internal override PipelineMessage CreateGetVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, _apiVersion)

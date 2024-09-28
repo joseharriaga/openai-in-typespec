@@ -1,4 +1,9 @@
-﻿using System.ClientModel.Primitives;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+#if !AZURE_OPENAI_GA
+
+using System.ClientModel.Primitives;
 using System.ClientModel;
 using System.Diagnostics.CodeAnalysis;
 
@@ -21,3 +26,5 @@ internal partial class AzureAddFileToVectorStoreOperation : AddFileToVectorStore
         _apiVersion = apiVersion;
     }
 }
+
+#endif

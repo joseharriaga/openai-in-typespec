@@ -1,4 +1,9 @@
-﻿using System.ClientModel.Primitives;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+#if !AZURE_OPENAI_GA
+
+using System.ClientModel.Primitives;
 
 namespace Azure.AI.OpenAI.VectorStores;
 internal partial class AzureAddFileToVectorStoreOperation : AddFileToVectorStoreOperation
@@ -11,3 +16,5 @@ internal partial class AzureAddFileToVectorStoreOperation : AddFileToVectorStore
             .WithOptions(options)
             .Build();
 }
+
+#endif

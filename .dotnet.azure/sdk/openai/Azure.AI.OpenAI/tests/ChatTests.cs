@@ -98,6 +98,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(serialized?.parameters?.embedding_dependency?.type?.ToString(), Is.EqualTo("endpoint"));
 
         ChatCompletionOptions options = new();
+#if !AZURE_OPENAI_GA
         options.AddDataSource(new ElasticsearchChatDataSource()
         {
             Authentication = DataSourceAuthentication.FromAccessToken("foo-token"),
@@ -110,6 +111,19 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(sourcesFromOptions, Has.Count.EqualTo(1));
         Assert.That(sourcesFromOptions[0], Is.InstanceOf<ElasticsearchChatDataSource>());
         Assert.That(((ElasticsearchChatDataSource)sourcesFromOptions[0]).IndexName, Is.EqualTo("my-index-name"));
+#else
+        options.AddDataSource(new AzureSearchChatDataSource()
+        {
+            Endpoint = new("https://test-endpoint.test"),
+            Authentication = DataSourceAuthentication.FromApiKey("foo-api-key"),
+            IndexName = "my-index-name",
+        });
+
+        IReadOnlyList<ChatDataSource> sourcesFromOptions = options.GetDataSources();
+        Assert.That(sourcesFromOptions, Has.Count.EqualTo(1));
+        Assert.That(sourcesFromOptions[0], Is.InstanceOf<AzureSearchChatDataSource>());
+        Assert.That(((AzureSearchChatDataSource)sourcesFromOptions[0]).IndexName, Is.EqualTo("my-index-name"));
+#endif
 
         options.AddDataSource(new CosmosChatDataSource()
         {
@@ -249,7 +263,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(observed429Delay!.Value.TotalMilliseconds, Is.LessThan(3 * expectedDelayMilliseconds + 2 * observed200Delay!.Value.TotalMilliseconds));
     }
 
-    #endregion
+#endregion
 
     #region Regular chat completions tests
 

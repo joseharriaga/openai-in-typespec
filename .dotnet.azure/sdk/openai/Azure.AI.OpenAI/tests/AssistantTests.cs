@@ -22,6 +22,7 @@ namespace Azure.AI.OpenAI.Tests;
 
 public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsync)
 {
+#if !AZURE_OPENAI_GA
     [Test]
     [Category("Smoke")]
     public void CanCreateClient() => Assert.That(GetTestClient(), Is.InstanceOf<AssistantClient>());
@@ -705,4 +706,14 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
           "additionalProperties": false
         }
         """);
+
+#else
+    [Test]
+    [SyncOnly]
+    public void VersionUnsupportedAssistantClientThrows()
+    {
+        Assert.Throws<InvalidOperationException>(() => GetTestClient());
+    }
+#endif
 }
+

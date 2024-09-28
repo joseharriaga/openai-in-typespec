@@ -18,16 +18,19 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using Azure.AI.OpenAI.Assistants;
 using Azure.AI.OpenAI.Audio;
-using Azure.AI.OpenAI.Batch;
 using Azure.AI.OpenAI.Chat;
 using Azure.AI.OpenAI.Embeddings;
+using Azure.AI.OpenAI.Images;
+using Azure.Core;
+
+#if !AZURE_OPENAI_GA
+using Azure.AI.OpenAI.Assistants;
+using Azure.AI.OpenAI.Batch;
 using Azure.AI.OpenAI.Files;
 using Azure.AI.OpenAI.FineTuning;
-using Azure.AI.OpenAI.Images;
 using Azure.AI.OpenAI.VectorStores;
-using Azure.Core;
+#endif
 
 #pragma warning disable AZC0007
 
@@ -143,7 +146,11 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// <returns> A new <see cref="AssistantClient"/> instance. </returns>
     [Experimental("OPENAI001")]
     public override AssistantClient GetAssistantClient()
+#if !AZURE_OPENAI_GA
         => new AzureAssistantClient(Pipeline, _endpoint, _options);
+#else
+        => throw new InvalidOperationException($"The preview Assistants feature area is not available in this GA release of the Azure OpenAI Service. To use this capability, please use a preview version of the library.");
+#endif
 
     /// <summary>
     /// Gets a new <see cref="AudioClient"/> instance configured for audio operation use with the Azure OpenAI service.
@@ -160,7 +167,11 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// <returns> A new <see cref="BatchClient"/> instance. </returns>
     [Experimental("OPENAI001")]
     public BatchClient GetBatchClient(string deploymentName)
+#if !AZURE_OPENAI_GA
         => new AzureBatchClient(Pipeline, deploymentName, _endpoint, _options);
+#else
+        => throw new InvalidOperationException($"The preview Batch feature area is not available in this GA release of the Azure OpenAI Service. To use this capability, please use a preview version of the library.");
+#endif
 
     /// <remarks>
     /// This method is unsupported for Azure OpenAI. Please use the alternate <see cref="GetBatchClient(string)"/>
@@ -191,7 +202,11 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// </summary>
     /// <returns> A new <see cref="FileClient"/> instance. </returns>
     public override FileClient GetFileClient()
+#if !AZURE_OPENAI_GA
         => new AzureFileClient(Pipeline, _endpoint, _options);
+#else
+        => throw new InvalidOperationException($"FileClient is not supported in this GA version of the library. To use Files and related capabilities, please use a preview version of the library.");
+#endif
 
     /// <summary>
     /// Gets a new <see cref="FineTuningClient"/> instance configured for fine-tuning operation use with the Azure OpenAI service.
@@ -199,7 +214,11 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// <returns> A new <see cref="FineTuningClient"/> instance. </returns>
     [Experimental("OPENAI001")]
     public override FineTuningClient GetFineTuningClient()
+#if !AZURE_OPENAI_GA
         => new AzureFineTuningClient(Pipeline, _endpoint, _options);
+#else
+        => throw new InvalidOperationException($"Fine-tuning is not yet supported in the GA version of the library. Please use a preview version.");
+#endif
 
     /// <summary>
     /// Gets a new <see cref="ImageClient"/> instance configured for image operation use with the Azure OpenAI service.
@@ -233,7 +252,11 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// <returns> A new <see cref="VectorStoreClient"/> instance. </returns>
     [Experimental("OPENAI001")]
     public override VectorStoreClient GetVectorStoreClient()
-        => new AzureVectorStoreClient(Pipeline, _endpoint, _options);
+#if !AZURE_OPENAI_GA
+    => new AzureVectorStoreClient(Pipeline, _endpoint, _options);
+#else
+        => throw new InvalidOperationException($"VectorStoreClient is not supported with this GA version of the library. Please use a preview version of the library for this functionality.");
+#endif
 
     private static ClientPipeline CreatePipeline(PipelinePolicy authenticationPolicy, AzureOpenAIClientOptions options)
         => ClientPipeline.Create(

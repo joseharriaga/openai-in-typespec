@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+#if !AZURE_OPENAI_GA
+
 #nullable enable
 
 using System.ClientModel;
@@ -59,3 +61,5 @@ internal static class AzureFineTuningClientExtensions
         return azureClient;
     }
 }
+
+#endif

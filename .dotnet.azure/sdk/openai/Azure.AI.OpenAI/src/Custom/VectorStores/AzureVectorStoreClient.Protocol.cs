@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+#if !AZURE_OPENAI_GA
+
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using Azure.AI.OpenAI.Utility;
@@ -291,3 +293,5 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
             .WithPath("vector_stores", vectorStoreId, "file_batches", batchId, "files")
             .Build();
 }
+
+#endif

@@ -13,6 +13,11 @@ public partial class DataSourceAuthentication
 {
     public static DataSourceAuthentication FromApiKey(string apiKey)
         => new InternalAzureChatDataSourceApiKeyAuthenticationOptions(apiKey);
+    public static DataSourceAuthentication FromSystemManagedIdentity()
+        => new InternalAzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions();
+    public static DataSourceAuthentication FromUserManagedIdentity(ResourceIdentifier identityResource)
+        => new InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions(identityResource);
+#if !AZURE_OPENAI_GA
     public static DataSourceAuthentication FromUsernameAndPassword(string username, string password)
         => new InternalAzureChatDataSourceUsernameAndPasswordAuthenticationOptions(username, password);
     public static DataSourceAuthentication FromAccessToken(string accessToken)
@@ -23,8 +28,5 @@ public partial class DataSourceAuthentication
         => new InternalAzureChatDataSourceKeyAndKeyIdAuthenticationOptions(key, keyId);
     public static DataSourceAuthentication FromEncodedApiKey(string encodedApiKey)
         => new InternalAzureChatDataSourceEncodedApiKeyAuthenticationOptions(encodedApiKey);
-    public static DataSourceAuthentication FromSystemManagedIdentity()
-        => new InternalAzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions();
-    public static DataSourceAuthentication FromUserManagedIdentity(ResourceIdentifier identityResource)
-        => new InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions(identityResource);
+#endif
 }

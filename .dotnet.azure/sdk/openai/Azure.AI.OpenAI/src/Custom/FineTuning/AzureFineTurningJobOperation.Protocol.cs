@@ -2,6 +2,8 @@
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
 
+#if !AZURE_OPENAI_GA
+
 #nullable enable
 
 namespace Azure.AI.OpenAI.FineTuning;
@@ -164,3 +166,5 @@ internal class AzureFineTuningJobOperation : FineTuningJobOperation
         .WithOptions(options)
         .Build();
 }
+
+#endif

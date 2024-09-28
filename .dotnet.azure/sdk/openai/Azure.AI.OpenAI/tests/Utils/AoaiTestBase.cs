@@ -278,7 +278,11 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
             current != null && current.FullName != TestEnvironment.RepoRoot.FullName;
             current = current?.Parent)
         {
+#if !AZURE_OPENAI_GA
             string file = Path.Combine(current!.FullName, "assets.json");
+#else
+            string file = Path.Combine(current!.FullName, ".ga", "assets.json");
+#endif
             if (File.Exists(file))
             {
                 assetsFile = file;
@@ -293,7 +297,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
         };
     }
 
-    #endregion
+#endregion
 
     /// <summary>
     /// Polls until a condition has been met with a maximum wait time. The function will always return the last value even
@@ -635,10 +639,18 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
             ShouldOutputRequests = false,
             ShouldOutputResponses = false,
         });
+        RequestOptions requestOptions = new() { ErrorOptions = ClientErrorBehaviors.NoThrow, };
+
+#if !AZURE_OPENAI_GA
+        FileClient fileClient = topLevelCleanupClient.GetFileClient();
+        foreach (string fileId in _fileIdsToDelete)
+        {
+            Console.WriteLine($"Cleanup: {fileId} -> {fileClient.DeleteFile(fileId, requestOptions)?.GetRawResponse().Status}");
+        }
+        _fileIdsToDelete.Clear();
+
         AssistantClient client = topLevelCleanupClient.GetAssistantClient();
         VectorStoreClient vectorStoreClient = topLevelCleanupClient.GetVectorStoreClient();
-        FileClient fileClient = topLevelCleanupClient.GetFileClient();
-        RequestOptions requestOptions = new() { ErrorOptions = ClientErrorBehaviors.NoThrow, };
         foreach ((string threadId, string messageId) in _threadIdsWithMessageIdsToDelete)
         {
             Console.WriteLine($"Cleanup: {messageId} -> {client.DeleteMessage(threadId, messageId, requestOptions)?.GetRawResponse().Status}");
@@ -659,16 +671,12 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
         {
             Console.WriteLine($"Cleanup: {vectorStoreId} => {vectorStoreClient.DeleteVectorStore(vectorStoreId, requestOptions)?.GetRawResponse().Status}");
         }
-        foreach (string fileId in _fileIdsToDelete)
-        {
-            Console.WriteLine($"Cleanup: {fileId} -> {fileClient.DeleteFile(fileId, requestOptions)?.GetRawResponse().Status}");
-        }
         _threadIdsWithMessageIdsToDelete.Clear();
         _assistantIdsToDelete.Clear();
         _threadIdsToDelete.Clear();
         _vectorStoreFileAssociationsToRemove.Clear();
         _vectorStoreIdsToDelete.Clear();
-        _fileIdsToDelete.Clear();
+#endif
 
         // If we are in recording mode, update the recorded playback configuration as well
         if (Mode == RecordedTestMode.Record

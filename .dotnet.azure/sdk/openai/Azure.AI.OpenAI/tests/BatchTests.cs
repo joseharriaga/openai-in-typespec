@@ -28,6 +28,7 @@ public class BatchTests : AoaiTestBase<BatchClient>
     public BatchTests(bool isAsync) : base(isAsync)
     { }
 
+#if !AZURE_OPENAI_GA
     [Test]
     [Category("Smoke")]
     public void CanCreateClient() => Assert.That(GetTestClient(), Is.InstanceOf<BatchClient>());
@@ -81,6 +82,14 @@ public class BatchTests : AoaiTestBase<BatchClient>
         }
 
     }
+#else
+    [Test]
+    [SyncOnly]
+    public void UnsupportedVersionBatchClientThrows()
+    {
+        Assert.Throws<InvalidOperationException>(() => GetTestClient());
+    }
+#endif
 
     #region helper methods
 

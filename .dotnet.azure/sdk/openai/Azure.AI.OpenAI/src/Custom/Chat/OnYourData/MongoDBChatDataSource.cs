@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
+
 [CodeGenModel("MongoDBChatDataSource")]
 [Experimental("AOAI001")]
 public partial class MongoDBChatDataSource : ChatDataSource
@@ -14,6 +15,7 @@ public partial class MongoDBChatDataSource : ChatDataSource
     [CodeGenMember("Parameters")]
     internal InternalMongoDBChatDataSourceParameters InternalParameters { get; }
 
+#if !AZURE_OPENAI_GA
     /// <inheritdoc cref="InternalMongoDBChatDataSourceParameters.Authentication"/>
     required public DataSourceAuthentication Authentication
     {
@@ -105,6 +107,14 @@ public partial class MongoDBChatDataSource : ChatDataSource
     {
         InternalParameters = new();
     }
+
+#else
+    public MongoDBChatDataSource()
+    {
+        throw new InvalidOperationException($"MongoDB data sources are not supported in this GA version. Please use a preview library and service version for this integration.");
+    }
+
+#endif
 
     // CUSTOM: Made internal.
     /// <summary> Initializes a new instance of <see cref="MongoDBChatDataSource"/>. </summary>

@@ -4,7 +4,7 @@
 
 ### Breaking Changes
 
-- Renamed `OpenAIClientOption`'s `ApplicationId` to `CustomApplicationId` (commit_hash)
+- Renamed `OpenAIClientOptions`'s `ApplicationId` to `CustomApplicationId` (commit_hash)
 - Renamed `StreamingChatToolCallUpdate`'s `Id` to `ToolCallId` (commit_hash)
 - Renamed `Deleted` in `FileDeletionResult` to `IsDeleted` (commit_hash)
 - Renamed `Flagged` in `ModerationCategory` and `ModerationResult` to `IsFlagged` (commit_hash)

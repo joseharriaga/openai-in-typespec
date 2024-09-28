@@ -24,8 +24,10 @@ public abstract partial class DataSourceVectorizer
         => new InternalAzureChatDataSourceEndpointVectorizationSource(endpoint, authentication);
     public static DataSourceVectorizer FromDeploymentName(string deploymentName)
         => new InternalAzureChatDataSourceDeploymentNameVectorizationSource(deploymentName);
+#if !AZURE_OPENAI_GA
     public static DataSourceVectorizer FromModelId(string modelId)
         => new InternalAzureChatDataSourceModelIdVectorizationSource(modelId);
     public static DataSourceVectorizer FromIntegratedResource()
         => new InternalAzureChatDataSourceIntegratedVectorizationSource();
+#endif
 }

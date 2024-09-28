@@ -10,24 +10,26 @@ namespace OpenAI.Files
     public partial class FileDeletionResult
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal FileDeletionResult(string fileId, bool isDeleted)
+        internal FileDeletionResult(string fileId, bool deleted)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
 
             FileId = fileId;
-            IsDeleted = isDeleted;
+            Deleted = deleted;
         }
 
-        internal FileDeletionResult(string fileId, InternalDeleteFileResponseObject @object, bool isDeleted, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal FileDeletionResult(string fileId, InternalDeleteFileResponseObject @object, bool deleted, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             FileId = fileId;
             Object = @object;
-            IsDeleted = isDeleted;
+            Deleted = deleted;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal FileDeletionResult()
         {
         }
+
+        public bool Deleted { get; }
     }
 }

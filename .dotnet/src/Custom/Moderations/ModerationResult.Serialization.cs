@@ -22,23 +22,23 @@ namespace OpenAI.Moderations
             if (SerializedAdditionalRawData?.ContainsKey("flagged") != true)
             {
                 writer.WritePropertyName("flagged"u8);
-                writer.WriteBooleanValue(IsFlagged);
+                writer.WriteBooleanValue(Flagged);
             }
             if (SerializedAdditionalRawData?.ContainsKey("categories") != true)
             {
                 writer.WritePropertyName("categories"u8);
                 InternalModerationCategories internalCategories = new InternalModerationCategories(
-                    hate: Hate.IsFlagged,
-                    hateThreatening: HateThreatening.IsFlagged,
-                    harassment: Harassment.IsFlagged,
-                    harassmentThreatening: HarassmentThreatening.IsFlagged,
-                    selfHarm: SelfHarm.IsFlagged,
-                    selfHarmIntent: SelfHarmIntent.IsFlagged,
-                    selfHarmInstructions: SelfHarmInstructions.IsFlagged,
-                    sexual: Sexual.IsFlagged,
-                    sexualMinors: SexualMinors.IsFlagged,
-                    violence: Violence.IsFlagged,
-                    violenceGraphic: ViolenceGraphic.IsFlagged);
+                    hate: Hate.Flagged,
+                    hateThreatening: HateThreatening.Flagged,
+                    harassment: Harassment.Flagged,
+                    harassmentThreatening: HarassmentThreatening.Flagged,
+                    selfHarm: SelfHarm.Flagged,
+                    selfHarmIntent: SelfHarmIntent.Flagged,
+                    selfHarmInstructions: SelfHarmInstructions.Flagged,
+                    sexual: Sexual.Flagged,
+                    sexualMinors: SexualMinors.Flagged,
+                    violence: Violence.Flagged,
+                    violenceGraphic: ViolenceGraphic.Flagged);
                 writer.WriteObjectValue(internalCategories, options);
             }
             if (SerializedAdditionalRawData?.ContainsKey("category_scores") != true)

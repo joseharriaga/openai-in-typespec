@@ -16,7 +16,7 @@ public partial class ModerationResult
     
     internal ModerationResult(bool flagged, ModerationCategory hate, ModerationCategory hateThreatening, ModerationCategory harassment, ModerationCategory harassmentThreatening, ModerationCategory selfHarm, ModerationCategory selfHarmIntent, ModerationCategory selfHarmInstructions, ModerationCategory sexual, ModerationCategory sexualMinors, ModerationCategory violence, ModerationCategory violenceGraphic)
     {
-        IsFlagged = flagged;
+        Flagged = flagged;
         Hate = hate;
         HateThreatening = hateThreatening;
         Harassment = harassment;
@@ -32,7 +32,7 @@ public partial class ModerationResult
 
     internal ModerationResult(bool flagged, ModerationCategory hate, ModerationCategory hateThreatening, ModerationCategory harassment, ModerationCategory harassmentThreatening, ModerationCategory selfHarm, ModerationCategory selfHarmIntent, ModerationCategory selfHarmInstructions, ModerationCategory sexual, ModerationCategory sexualMinors, ModerationCategory violence, ModerationCategory violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
     {
-        IsFlagged = flagged;
+        Flagged = flagged;
         Hate = hate;
         HateThreatening = hateThreatening;
         Harassment = harassment;
@@ -50,10 +50,6 @@ public partial class ModerationResult
     internal ModerationResult()
     {
     }
-
-    // CUSTOM: Renamed.
-    [CodeGenMember("Flagged")]
-    public bool IsFlagged { get; }
 
     public ModerationCategory Hate { get; }
 

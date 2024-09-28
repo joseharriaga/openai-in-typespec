@@ -658,17 +658,17 @@ public class ModerationsMockTests : SyncAsyncTestBase
         (bool flagged, float score) violence = default,
         (bool flagged, float score) violenceGraphic = default)
     {
-        Assert.That(moderation.Hate.IsFlagged, Is.EqualTo(hate.flagged));
-        Assert.That(moderation.HateThreatening.IsFlagged, Is.EqualTo(hateThreatening.flagged));
-        Assert.That(moderation.Harassment.IsFlagged, Is.EqualTo(harassment.flagged));
-        Assert.That(moderation.HarassmentThreatening.IsFlagged, Is.EqualTo(harassmentThreatening.flagged));
-        Assert.That(moderation.SelfHarm.IsFlagged, Is.EqualTo(selfHarm.flagged));
-        Assert.That(moderation.SelfHarmIntent.IsFlagged, Is.EqualTo(selfHarmIntent.flagged));
-        Assert.That(moderation.SelfHarmInstructions.IsFlagged, Is.EqualTo(selfHarmInstructions.flagged));
-        Assert.That(moderation.Sexual.IsFlagged, Is.EqualTo(sexual.flagged));
-        Assert.That(moderation.SexualMinors.IsFlagged, Is.EqualTo(sexualMinors.flagged));
-        Assert.That(moderation.Violence.IsFlagged, Is.EqualTo(violence.flagged));
-        Assert.That(moderation.ViolenceGraphic.IsFlagged, Is.EqualTo(violenceGraphic.flagged));
+        Assert.That(moderation.Hate.Flagged, Is.EqualTo(hate.flagged));
+        Assert.That(moderation.HateThreatening.Flagged, Is.EqualTo(hateThreatening.flagged));
+        Assert.That(moderation.Harassment.Flagged, Is.EqualTo(harassment.flagged));
+        Assert.That(moderation.HarassmentThreatening.Flagged, Is.EqualTo(harassmentThreatening.flagged));
+        Assert.That(moderation.SelfHarm.Flagged, Is.EqualTo(selfHarm.flagged));
+        Assert.That(moderation.SelfHarmIntent.Flagged, Is.EqualTo(selfHarmIntent.flagged));
+        Assert.That(moderation.SelfHarmInstructions.Flagged, Is.EqualTo(selfHarmInstructions.flagged));
+        Assert.That(moderation.Sexual.Flagged, Is.EqualTo(sexual.flagged));
+        Assert.That(moderation.SexualMinors.Flagged, Is.EqualTo(sexualMinors.flagged));
+        Assert.That(moderation.Violence.Flagged, Is.EqualTo(violence.flagged));
+        Assert.That(moderation.ViolenceGraphic.Flagged, Is.EqualTo(violenceGraphic.flagged));
 
         Assert.That(moderation.Hate.Score, Is.EqualTo(hate.score));
         Assert.That(moderation.HateThreatening.Score, Is.EqualTo(hateThreatening.score));

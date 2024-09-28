@@ -1815,8 +1815,8 @@ namespace OpenAI.Files {
         public virtual Task<ClientResult<OpenAIFile>> UploadFileAsync(string filePath, FileUploadPurpose purpose);
     }
     public class FileDeletionResult : IJsonModel<FileDeletionResult>, IPersistableModel<FileDeletionResult> {
+        public bool Deleted { get; }
         public string FileId { get; }
-        public bool IsDeleted { get; }
         FileDeletionResult IJsonModel<FileDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<FileDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         FileDeletionResult IPersistableModel<FileDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2150,7 +2150,7 @@ namespace OpenAI.Models {
 }
 namespace OpenAI.Moderations {
     public class ModerationCategory {
-        public bool IsFlagged { get; }
+        public bool Flagged { get; }
         public float Score { get; }
     }
     public class ModerationClient {
@@ -2170,11 +2170,11 @@ namespace OpenAI.Moderations {
         public virtual Task<ClientResult<ModerationResult>> ClassifyTextAsync(string input, CancellationToken cancellationToken = default);
     }
     public class ModerationResult : IJsonModel<ModerationResult>, IPersistableModel<ModerationResult> {
+        public bool Flagged { get; }
         public ModerationCategory Harassment { get; }
         public ModerationCategory HarassmentThreatening { get; }
         public ModerationCategory Hate { get; }
         public ModerationCategory HateThreatening { get; }
-        public bool IsFlagged { get; }
         public ModerationCategory SelfHarm { get; }
         public ModerationCategory SelfHarmInstructions { get; }
         public ModerationCategory SelfHarmIntent { get; }

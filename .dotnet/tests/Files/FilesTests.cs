@@ -227,7 +227,7 @@ public class FilesTests : SyncAsyncTestBase
         }
 
         Assert.That(result.FileId, Is.EqualTo(uploadedFile.Id));
-        Assert.That(result.IsDeleted, Is.True);
+        Assert.That(result.Deleted, Is.True);
     }
 
     [Test]

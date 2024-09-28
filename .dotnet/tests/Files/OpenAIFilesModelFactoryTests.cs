@@ -18,7 +18,7 @@ public class OpenAIFilesModelFactoryTests
         FileDeletionResult fileDeletionResult = OpenAIFilesModelFactory.FileDeletionResult();
 
         Assert.That(fileDeletionResult.FileId, Is.Null);
-        Assert.That(fileDeletionResult.IsDeleted, Is.EqualTo(false));
+        Assert.That(fileDeletionResult.Deleted, Is.EqualTo(false));
     }
 
     [Test]
@@ -28,7 +28,7 @@ public class OpenAIFilesModelFactoryTests
         FileDeletionResult fileDeletionResult = OpenAIFilesModelFactory.FileDeletionResult(fileId: fileId);
 
         Assert.That(fileDeletionResult.FileId, Is.EqualTo(fileId));
-        Assert.That(fileDeletionResult.IsDeleted, Is.EqualTo(false));
+        Assert.That(fileDeletionResult.Deleted, Is.EqualTo(false));
     }
 
     [Test]
@@ -38,7 +38,7 @@ public class OpenAIFilesModelFactoryTests
         FileDeletionResult fileDeletionResult = OpenAIFilesModelFactory.FileDeletionResult(deleted: deleted);
 
         Assert.That(fileDeletionResult.FileId, Is.Null);
-        Assert.That(fileDeletionResult.IsDeleted, Is.EqualTo(deleted));
+        Assert.That(fileDeletionResult.Deleted, Is.EqualTo(deleted));
     }
 
     [Test]

@@ -247,9 +247,9 @@ public partial class AzureOpenAISamples
             }
             foreach (StreamingChatToolCallUpdate toolCallUpdate in streamingChatUpdate.ToolCallUpdates)
             {
-                if (!string.IsNullOrEmpty(toolCallUpdate.Id))
+                if (!string.IsNullOrEmpty(toolCallUpdate.ToolCallId))
                 {
-                    toolCallIdsByIndex[toolCallUpdate.Index] = toolCallUpdate.Id;
+                    toolCallIdsByIndex[toolCallUpdate.Index] = toolCallUpdate.ToolCallId;
                 }
                 if (!string.IsNullOrEmpty(toolCallUpdate.FunctionName))
                 {

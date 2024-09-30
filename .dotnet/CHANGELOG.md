@@ -4,7 +4,7 @@
 
 ### Breaking Changes
 
-- Renamed `OpenAIClientOptions`'s `ApplicationId` to `CustomApplicationId` (commit_hash)
+- Renamed `OpenAIClientOptions`'s `ApplicationId` to `UserAgentApplicationId` (commit_hash)
 - Renamed `StreamingChatToolCallUpdate`'s `Id` to `ToolCallId` (commit_hash)
 - Replaced `Auto` and `None` in the deprecated `ChatFunctionChoice` with `CreateAutoChoice()` and `CreateNoneChoice()` (commit_hash)
 - Replaced the deprecated `ChatFunctionChoice(ChatFunction)` constructor with `CreateNamedChoice(string functionName)` (commit_hash)

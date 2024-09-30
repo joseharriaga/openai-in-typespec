@@ -34,16 +34,16 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
         Assert.DoesNotThrow(() =>
             options = new AzureOpenAIClientOptions()
             {
-                ApplicationId = "init does not throw",
+                UserAgentApplicationId = "init does not throw",
             });
         Assert.DoesNotThrow(() =>
-            options.ApplicationId = "set before freeze OK");
+            options.UserAgentApplicationId = "set before freeze OK");
         AzureOpenAIClient azureClient = new(
             new Uri("https://www.microsoft.com/placeholder"),
             new ApiKeyCredential("placeholder"),
             options);
         Assert.Throws<InvalidOperationException>(() =>
-            options.ApplicationId = "set after freeze throws");
+            options.UserAgentApplicationId = "set after freeze throws");
     }
 
     [RecordedTest]

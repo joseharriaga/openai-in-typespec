@@ -26,7 +26,7 @@ public class UserAgentTests
 
         OpenAIClientOptions options = useApplicationId ? new()
         {
-            CustomApplicationId = "test-application-id",
+            UserAgentApplicationId = "test-application-id",
         } : new();
         options.AddPolicy(policy, PipelinePosition.BeforeTransport);
 

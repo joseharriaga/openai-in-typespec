@@ -1,5 +1,17 @@
 # Release History
 
+## 2.0.0-beta.14 (Unreleased)
+
+### Features Added
+
+### Breaking Changes
+
+- Implemented `ChatMessageContent` to encapsulate the representation of content parts in `ChatMessage`, `ChatCompletion`, and `StreamingChatCompletionUpdate`. (commit_hash)
+
+### Bugs Fixed
+
+### Other Changes
+
 ## 2.0.0-beta.13 (2024-09-27)
 
 ### Breaking Changes

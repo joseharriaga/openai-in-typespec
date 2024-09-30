@@ -397,8 +397,8 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
             case nameof(EmbeddingClient):
                 clientObject = topLevelClient.GetEmbeddingClient(getDeployment());
                 break;
-            case nameof(FileClient):
-                clientObject = topLevelClient.GetFileClient();
+            case nameof(OpenAIFileClient):
+                clientObject = topLevelClient.GetOpenAIFileClient();
                 break;
             case nameof(FineTuningClient):
                 clientObject = topLevelClient.GetFineTuningClient();
@@ -637,7 +637,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
         });
         AssistantClient client = topLevelCleanupClient.GetAssistantClient();
         VectorStoreClient vectorStoreClient = topLevelCleanupClient.GetVectorStoreClient();
-        FileClient fileClient = topLevelCleanupClient.GetFileClient();
+        OpenAIFileClient fileClient = topLevelCleanupClient.GetOpenAIFileClient();
         RequestOptions requestOptions = new() { ErrorOptions = ClientErrorBehaviors.NoThrow, };
         foreach ((string threadId, string messageId) in _threadIdsWithMessageIdsToDelete)
         {

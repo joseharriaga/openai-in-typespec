@@ -11,11 +11,11 @@ namespace OpenAI {
         public virtual BatchClient GetBatchClient();
         public virtual ChatClient GetChatClient(string model);
         public virtual EmbeddingClient GetEmbeddingClient(string model);
-        public virtual FileClient GetFileClient();
         public virtual FineTuningClient GetFineTuningClient();
         public virtual ImageClient GetImageClient(string model);
-        public virtual ModelClient GetModelClient();
         public virtual ModerationClient GetModerationClient(string model);
+        public virtual OpenAIFileClient GetOpenAIFileClient();
+        public virtual OpenAIModelClient GetOpenAIModelClient();
         public virtual VectorStoreClient GetVectorStoreClient();
     }
     public class OpenAIClientOptions : ClientPipelineOptions {
@@ -1767,58 +1767,6 @@ namespace OpenAI.Embeddings {
     }
 }
 namespace OpenAI.Files {
-    public class FileClient {
-        protected FileClient();
-        public FileClient(ApiKeyCredential credential, OpenAIClientOptions options);
-        public FileClient(ApiKeyCredential credential);
-        protected internal FileClient(ClientPipeline pipeline, OpenAIClientOptions options);
-        public FileClient(string apiKey);
-        public ClientPipeline Pipeline { get; }
-        public virtual ClientResult AddUploadPart(string uploadId, BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult> AddUploadPartAsync(string uploadId, BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual ClientResult CancelUpload(string uploadId, RequestOptions options = null);
-        public virtual Task<ClientResult> CancelUploadAsync(string uploadId, RequestOptions options = null);
-        public virtual ClientResult CompleteUpload(string uploadId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult> CompleteUploadAsync(string uploadId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult CreateUpload(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult> CreateUploadAsync(BinaryContent content, RequestOptions options = null);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult DeleteFile(string fileId, RequestOptions options);
-        public virtual ClientResult<FileDeletionResult> DeleteFile(string fileId, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> DeleteFileAsync(string fileId, RequestOptions options);
-        public virtual Task<ClientResult<FileDeletionResult>> DeleteFileAsync(string fileId, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult DownloadFile(string fileId, RequestOptions options);
-        public virtual ClientResult<BinaryData> DownloadFile(string fileId, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> DownloadFileAsync(string fileId, RequestOptions options);
-        public virtual Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetFile(string fileId, RequestOptions options);
-        public virtual ClientResult<OpenAIFile> GetFile(string fileId, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetFileAsync(string fileId, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIFile>> GetFileAsync(string fileId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<OpenAIFileCollection> GetFiles(FilePurpose purpose, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetFiles(string purpose, RequestOptions options);
-        public virtual ClientResult<OpenAIFileCollection> GetFiles(CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<OpenAIFileCollection>> GetFilesAsync(FilePurpose purpose, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetFilesAsync(string purpose, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIFileCollection>> GetFilesAsync(CancellationToken cancellationToken = default);
-        public virtual ClientResult<OpenAIFile> UploadFile(BinaryData file, string filename, FileUploadPurpose purpose);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult UploadFile(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual ClientResult<OpenAIFile> UploadFile(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
-        public virtual ClientResult<OpenAIFile> UploadFile(string filePath, FileUploadPurpose purpose);
-        public virtual Task<ClientResult<OpenAIFile>> UploadFileAsync(BinaryData file, string filename, FileUploadPurpose purpose);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> UploadFileAsync(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult<OpenAIFile>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<OpenAIFile>> UploadFileAsync(string filePath, FileUploadPurpose purpose);
-    }
     public class FileDeletionResult : IJsonModel<FileDeletionResult>, IPersistableModel<FileDeletionResult> {
         public bool Deleted { get; }
         public string FileId { get; }
@@ -1876,6 +1824,58 @@ namespace OpenAI.Files {
         OpenAIFile IPersistableModel<OpenAIFile>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<OpenAIFile>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<OpenAIFile>.Write(ModelReaderWriterOptions options);
+    }
+    public class OpenAIFileClient {
+        protected OpenAIFileClient();
+        public OpenAIFileClient(ApiKeyCredential credential, OpenAIClientOptions options);
+        public OpenAIFileClient(ApiKeyCredential credential);
+        protected internal OpenAIFileClient(ClientPipeline pipeline, OpenAIClientOptions options);
+        public OpenAIFileClient(string apiKey);
+        public ClientPipeline Pipeline { get; }
+        public virtual ClientResult AddUploadPart(string uploadId, BinaryContent content, string contentType, RequestOptions options = null);
+        public virtual Task<ClientResult> AddUploadPartAsync(string uploadId, BinaryContent content, string contentType, RequestOptions options = null);
+        public virtual ClientResult CancelUpload(string uploadId, RequestOptions options = null);
+        public virtual Task<ClientResult> CancelUploadAsync(string uploadId, RequestOptions options = null);
+        public virtual ClientResult CompleteUpload(string uploadId, BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult> CompleteUploadAsync(string uploadId, BinaryContent content, RequestOptions options = null);
+        public virtual ClientResult CreateUpload(BinaryContent content, RequestOptions options = null);
+        public virtual Task<ClientResult> CreateUploadAsync(BinaryContent content, RequestOptions options = null);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult DeleteFile(string fileId, RequestOptions options);
+        public virtual ClientResult<FileDeletionResult> DeleteFile(string fileId, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> DeleteFileAsync(string fileId, RequestOptions options);
+        public virtual Task<ClientResult<FileDeletionResult>> DeleteFileAsync(string fileId, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult DownloadFile(string fileId, RequestOptions options);
+        public virtual ClientResult<BinaryData> DownloadFile(string fileId, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> DownloadFileAsync(string fileId, RequestOptions options);
+        public virtual Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult GetFile(string fileId, RequestOptions options);
+        public virtual ClientResult<OpenAIFile> GetFile(string fileId, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> GetFileAsync(string fileId, RequestOptions options);
+        public virtual Task<ClientResult<OpenAIFile>> GetFileAsync(string fileId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFileCollection> GetFiles(FilePurpose purpose, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult GetFiles(string purpose, RequestOptions options);
+        public virtual ClientResult<OpenAIFileCollection> GetFiles(CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<OpenAIFileCollection>> GetFilesAsync(FilePurpose purpose, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> GetFilesAsync(string purpose, RequestOptions options);
+        public virtual Task<ClientResult<OpenAIFileCollection>> GetFilesAsync(CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFile> UploadFile(BinaryData file, string filename, FileUploadPurpose purpose);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult UploadFile(BinaryContent content, string contentType, RequestOptions options = null);
+        public virtual ClientResult<OpenAIFile> UploadFile(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFile> UploadFile(string filePath, FileUploadPurpose purpose);
+        public virtual Task<ClientResult<OpenAIFile>> UploadFileAsync(BinaryData file, string filename, FileUploadPurpose purpose);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> UploadFileAsync(BinaryContent content, string contentType, RequestOptions options = null);
+        public virtual Task<ClientResult<OpenAIFile>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<OpenAIFile>> UploadFileAsync(string filePath, FileUploadPurpose purpose);
     }
     public class OpenAIFileCollection : ObjectModel.ReadOnlyCollection<OpenAIFile>, IJsonModel<OpenAIFileCollection>, IPersistableModel<OpenAIFileCollection> {
         OpenAIFileCollection IJsonModel<OpenAIFileCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -2095,12 +2095,31 @@ namespace OpenAI.Images {
     }
 }
 namespace OpenAI.Models {
-    public class ModelClient {
-        protected ModelClient();
-        public ModelClient(ApiKeyCredential credential, OpenAIClientOptions options);
-        public ModelClient(ApiKeyCredential credential);
-        protected internal ModelClient(ClientPipeline pipeline, OpenAIClientOptions options);
-        public ModelClient(string apiKey);
+    public class ModelDeletionResult : IJsonModel<ModelDeletionResult>, IPersistableModel<ModelDeletionResult> {
+        public bool Deleted { get; }
+        public string ModelId { get; }
+        ModelDeletionResult IJsonModel<ModelDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ModelDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ModelDeletionResult IPersistableModel<ModelDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ModelDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ModelDeletionResult>.Write(ModelReaderWriterOptions options);
+    }
+    public class OpenAIModel : IJsonModel<OpenAIModel>, IPersistableModel<OpenAIModel> {
+        public DateTimeOffset CreatedAt { get; }
+        public string Id { get; }
+        public string OwnedBy { get; }
+        OpenAIModel IJsonModel<OpenAIModel>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<OpenAIModel>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        OpenAIModel IPersistableModel<OpenAIModel>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<OpenAIModel>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<OpenAIModel>.Write(ModelReaderWriterOptions options);
+    }
+    public class OpenAIModelClient {
+        protected OpenAIModelClient();
+        public OpenAIModelClient(ApiKeyCredential credential, OpenAIClientOptions options);
+        public OpenAIModelClient(ApiKeyCredential credential);
+        protected internal OpenAIModelClient(ClientPipeline pipeline, OpenAIClientOptions options);
+        public OpenAIModelClient(string apiKey);
         public ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteModel(string model, RequestOptions options);
@@ -2120,25 +2139,6 @@ namespace OpenAI.Models {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetModelsAsync(RequestOptions options);
         public virtual Task<ClientResult<OpenAIModelCollection>> GetModelsAsync(CancellationToken cancellationToken = default);
-    }
-    public class ModelDeletionResult : IJsonModel<ModelDeletionResult>, IPersistableModel<ModelDeletionResult> {
-        public bool Deleted { get; }
-        public string ModelId { get; }
-        ModelDeletionResult IJsonModel<ModelDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ModelDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ModelDeletionResult IPersistableModel<ModelDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ModelDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ModelDeletionResult>.Write(ModelReaderWriterOptions options);
-    }
-    public class OpenAIModel : IJsonModel<OpenAIModel>, IPersistableModel<OpenAIModel> {
-        public DateTimeOffset CreatedAt { get; }
-        public string Id { get; }
-        public string OwnedBy { get; }
-        OpenAIModel IJsonModel<OpenAIModel>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<OpenAIModel>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        OpenAIModel IPersistableModel<OpenAIModel>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<OpenAIModel>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<OpenAIModel>.Write(ModelReaderWriterOptions options);
     }
     public class OpenAIModelCollection : ObjectModel.ReadOnlyCollection<OpenAIModel>, IJsonModel<OpenAIModelCollection>, IPersistableModel<OpenAIModelCollection> {
         OpenAIModelCollection IJsonModel<OpenAIModelCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);

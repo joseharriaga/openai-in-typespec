@@ -13,7 +13,7 @@ namespace Azure.AI.OpenAI.Files;
 /// <remarks>
 /// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
 /// </remarks>
-internal partial class AzureFileClient : FileClient
+internal partial class AzureFileClient : OpenAIFileClient
 {
     private readonly Uri _endpoint;
     private readonly string _apiVersion;

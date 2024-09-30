@@ -233,7 +233,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             ShouldOutputRequests = false,
             ShouldOutputResponses = false,
         });
-        FileClient client = GetTestClient<FileClient>(azureClient, config);
+        OpenAIFileClient client = GetTestClient<OpenAIFileClient>(azureClient, config);
 
         List<OpenAIFile> files = [];
         for (int i = 0; i < count; i++)

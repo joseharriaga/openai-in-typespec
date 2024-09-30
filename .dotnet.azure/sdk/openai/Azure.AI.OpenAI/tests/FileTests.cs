@@ -8,19 +8,19 @@ using OpenAI.TestFramework;
 
 namespace Azure.AI.OpenAI.Tests;
 
-public class FileTests : AoaiTestBase<FileClient>
+public class FileTests : AoaiTestBase<OpenAIFileClient>
 {
     public FileTests(bool isAsync) : base(isAsync)
     { }
 
     [Test]
     [Category("Smoke")]
-    public void CanCreateClient() => Assert.That(GetTestClient(), Is.InstanceOf<FileClient>());
+    public void CanCreateClient() => Assert.That(GetTestClient(), Is.InstanceOf<OpenAIFileClient>());
 
     [RecordedTest]
     public async Task CanUploadAndDeleteFiles()
     {
-        FileClient client = GetTestClient();
+        OpenAIFileClient client = GetTestClient();
         OpenAIFile file = await client.UploadFileAsync(
             BinaryData.FromString("hello, world!"),
             "test_file_delete_me.txt",
@@ -34,7 +34,7 @@ public class FileTests : AoaiTestBase<FileClient>
     [RecordedTest]
     public async Task CanListFiles()
     {
-        FileClient client = GetTestClient();
+        OpenAIFileClient client = GetTestClient();
         OpenAIFileCollection files = await client.GetFilesAsync();
         Assert.That(files, Has.Count.GreaterThan(0));
     }

@@ -190,7 +190,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// Gets a new <see cref="FileClient"/> instance configured for file operation use with the Azure OpenAI service.
     /// </summary>
     /// <returns> A new <see cref="FileClient"/> instance. </returns>
-    public override FileClient GetFileClient()
+    public override OpenAIFileClient GetOpenAIFileClient()
         => new AzureFileClient(Pipeline, _endpoint, _options);
 
     /// <summary>
@@ -213,7 +213,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// Model management operations are not supported with Azure OpenAI.
     /// </remarks>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override ModelClient GetModelClient()
+    public override OpenAIModelClient GetOpenAIModelClient()
         => throw new NotSupportedException($"Azure OpenAI does not support the OpenAI model management API. Please "
             + "use the Azure AI Services Account Management API to interact with Azure OpenAI model deployments.");
 

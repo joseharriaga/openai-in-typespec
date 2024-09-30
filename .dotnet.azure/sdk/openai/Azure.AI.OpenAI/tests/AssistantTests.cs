@@ -508,7 +508,7 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
         // First, we need to upload a simple test file.
         AssistantClient client = GetTestClient();
         string modelName = client.DeploymentOrThrow();
-        FileClient fileClient = GetTestClientFrom<FileClient>(client);
+        OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(client);
 
         OpenAIFile testFile = await fileClient.UploadFileAsync(
             BinaryData.FromString("""

@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace Azure.AI.OpenAI.Files;
 
-internal partial class AzureFileClient : FileClient
+internal partial class AzureFileClient : OpenAIFileClient
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override ClientResult DeleteFile(string fileId, RequestOptions options)

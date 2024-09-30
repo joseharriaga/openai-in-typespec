@@ -139,7 +139,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         var fineTuningFile = Assets.FineTuning;
 
         FineTuningClient client = GetTestClient();
-        FileClient fileClient = GetTestClientFrom<FileClient>(client);
+        OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(client);
 
         // upload training data
         OpenAIFile uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
@@ -202,7 +202,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         var fineTuningFile = Assets.FineTuning;
 
         FineTuningClient client = GetTestClient();
-        FileClient fileClient = GetTestClientFrom<FileClient>(client);
+        OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(client);
         OpenAIFile uploadedFile;
         try
         {
@@ -333,7 +333,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         return model!;
     }
 
-    private async Task<OpenAIFile> UploadAndWaitForCompleteOrFail(FileClient fileClient, string path)
+    private async Task<OpenAIFile> UploadAndWaitForCompleteOrFail(OpenAIFileClient fileClient, string path)
     {
         OpenAIFile uploadedFile = await fileClient.UploadFileAsync(path, FileUploadPurpose.FineTune);
         Validate(uploadedFile);

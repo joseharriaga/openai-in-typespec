@@ -204,13 +204,13 @@ public partial class AzureOpenAIClient : OpenAIClient
         => new AzureEmbeddingClient(Pipeline, deploymentName, _endpoint, _options);
 
     /// <summary>
-    /// Gets a new <see cref="FileClient"/> instance configured for file operation use with the Azure OpenAI service.
+    /// Gets a new <see cref="OpenAIFileClient"/> instance configured for file operation use with the Azure OpenAI service.
     /// </summary>
-    /// <returns> A new <see cref="FileClient"/> instance. </returns>
+    /// <returns> A new <see cref="OpenAIFileClient"/> instance. </returns>
 #if AZURE_OPENAI_GA
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
-    public override FileClient GetFileClient()
+    public override OpenAIFileClient GetOpenAIFileClient()
 #if !AZURE_OPENAI_GA
         => new AzureFileClient(Pipeline, _endpoint, _options);
 #else
@@ -244,7 +244,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// Model management operations are not supported with Azure OpenAI.
     /// </remarks>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override ModelClient GetModelClient()
+    public override OpenAIModelClient GetOpenAIModelClient()
         => throw new NotSupportedException($"Azure OpenAI does not support the OpenAI model management API. Please "
             + "use the Azure AI Services Account Management API to interact with Azure OpenAI model deployments.");
 

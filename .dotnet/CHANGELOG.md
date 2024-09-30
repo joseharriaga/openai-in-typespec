@@ -11,6 +11,8 @@
 - Renamed `StreamingChatCompletionUpdate`'s `Id` to `CompletionId` (commit_hash)
 - Replaced `Auto` and `None` in the deprecated `ChatFunctionChoice` with `CreateAutoChoice()` and `CreateNoneChoice()` (commit_hash)
 - Replaced the deprecated `ChatFunctionChoice(ChatFunction)` constructor with `CreateNamedChoice(string functionName)` (commit_hash)
+- Renamed `FileClient` to `OpenAIFileClient` and the corresponding `GetFileClient()` method in `OpenAIClient` to `GetOpenAIFileClient()`. (commit_hash)
+- Renamed `ModelClient` to `OpenAIModelClient` and the corresponding `GetModelClient()` method in `OpenAIClient` to `GetOpenAIModelClient()`. (commit_hash)
 
 ## 2.0.0-beta.13 (2024-09-27)
 

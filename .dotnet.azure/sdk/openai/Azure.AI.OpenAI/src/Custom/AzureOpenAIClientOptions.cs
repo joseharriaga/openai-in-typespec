@@ -67,7 +67,7 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
         V2024_06_01 = 0,
 #if !AZURE_OPENAI_GA
         V2024_08_01_Preview = 1,
-#endif,
+#endif
     }
 
     internal class RetryWithDelaysPolicy : ClientRetryPolicy

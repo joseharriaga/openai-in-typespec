@@ -18,7 +18,8 @@ public partial class ChatExamples
         using Stream imageStream = File.OpenRead(imageFilePath);
         BinaryData imageBytes = BinaryData.FromStream(imageStream);
 
-        List<ChatMessage> messages = [
+        List<ChatMessage> messages =
+        [
             new UserChatMessage(
                 ChatMessageContentPart.CreateTextPart("Please describe the following image."),
                 ChatMessageContentPart.CreateImagePart(imageBytes, "image/png")),

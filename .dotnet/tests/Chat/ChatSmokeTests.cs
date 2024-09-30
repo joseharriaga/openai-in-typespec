@@ -523,7 +523,7 @@ public class ChatSmokeTests : SyncAsyncTestBase
         Assert.That(reserialized, Does.Contain("from the message refusal"));
 
         AssistantChatMessage manufacturedMessage = new([
-            ChatToolCall.CreateFunctionToolCall("fake_tool_call_id", "fake_function_name", "{}")
+            ChatToolCall.CreateFunctionToolCall("fake_tool_call_id", "fake_function_name", BinaryData.FromBytes("{}"u8.ToArray()))
         ]);
         manufacturedMessage.Refusal = "No!";
         string serialized = ModelReaderWriter.Write(manufacturedMessage).ToString();
@@ -665,7 +665,7 @@ public class ChatSmokeTests : SyncAsyncTestBase
         {
             // We construct a new instance. Later, we serialize it and confirm it was constructed correctly.
             message = new AssistantChatMessage([
-                ChatToolCall.CreateFunctionToolCall(toolCallId, toolCallFunctionName, "{}")
+                ChatToolCall.CreateFunctionToolCall(toolCallId, toolCallFunctionName, BinaryData.FromBytes("{}"u8.ToArray()))
             ]);
         }
 

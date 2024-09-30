@@ -132,8 +132,8 @@ public partial class OpenAIChatModelFactoryTests
     public void ChatCompletionWithToolCallsWorks()
     {
         IEnumerable<ChatToolCall> toolCalls = [
-            ChatToolCall.CreateFunctionToolCall("id1", "get_recipe", "{}"),
-            ChatToolCall.CreateFunctionToolCall("id2", "get_location", "{}")
+            ChatToolCall.CreateFunctionToolCall("id1", "get_recipe", BinaryData.FromBytes("{}"u8.ToArray())),
+            ChatToolCall.CreateFunctionToolCall("id2", "get_location", BinaryData.FromBytes("{}"u8.ToArray()))
         ];
         ChatCompletion chatCompletion = OpenAIChatModelFactory.ChatCompletion(toolCalls: toolCalls);
 
@@ -181,7 +181,7 @@ public partial class OpenAIChatModelFactoryTests
     public void ChatCompletionWithFunctionCallWorks()
     {
 #pragma warning disable CS0618
-        ChatFunctionCall functionCall = new ChatFunctionCall("get_recipe", string.Empty);
+        ChatFunctionCall functionCall = new ChatFunctionCall("get_recipe", BinaryData.FromBytes("{}"u8.ToArray()));
 #pragma warning restore CS0618
         ChatCompletion chatCompletion = OpenAIChatModelFactory.ChatCompletion(functionCall: functionCall);
 
@@ -855,7 +855,7 @@ public partial class OpenAIChatModelFactoryTests
     [Test]
     public void StreamingChatFunctionCallUpdateWithFunctionArgumentsUpdateWorks()
     {
-        string functionArgumentsUpdate = "arguments_update";
+        BinaryData functionArgumentsUpdate = BinaryData.FromBytes("arguments_update"u8.ToArray());
 #pragma warning disable CS0618
         StreamingChatFunctionCallUpdate streamingChatFunctionCallUpdate = OpenAIChatModelFactory.StreamingChatFunctionCallUpdate(functionArgumentsUpdate: functionArgumentsUpdate);
 #pragma warning restore CS0618
@@ -931,7 +931,7 @@ public partial class OpenAIChatModelFactoryTests
     [Test]
     public void StreamingChatToolCallUpdateWithFunctionArgumentsUpdateWorks()
     {
-        string functionArgumentsUpdate = "arguments_update";
+        BinaryData functionArgumentsUpdate = BinaryData.FromBytes("arguments_update"u8.ToArray());
         StreamingChatToolCallUpdate streamingChatToolCallUpdate = OpenAIChatModelFactory.StreamingChatToolCallUpdate(functionArgumentsUpdate: functionArgumentsUpdate);
 
         Assert.That(streamingChatToolCallUpdate.Index, Is.EqualTo(0));

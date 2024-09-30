@@ -40,6 +40,7 @@ function Prune-Generated-Files {
       "*OpenAI*Error*",
       "*Context*",
       "*RetrievedDoc*",
+      "*ChatDocument*",
       "*Citation*"
   )
   $patternsToDelete = @(

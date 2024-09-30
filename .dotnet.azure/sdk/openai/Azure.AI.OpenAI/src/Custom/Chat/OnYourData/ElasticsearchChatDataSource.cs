@@ -8,7 +8,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("ElasticsearchChatDataSource")]
-public partial class ElasticsearchChatDataSource : AzureChatDataSource
+[Experimental("AOAI001")]
+public partial class ElasticsearchChatDataSource : ChatDataSource
 {
     [CodeGenMember("Parameters")]
     internal InternalElasticsearchChatDataSourceParameters InternalParameters { get; }
@@ -63,17 +64,17 @@ public partial class ElasticsearchChatDataSource : AzureChatDataSource
     }
 
     /// <inheritdoc cref="InternalElasticsearchChatDataSourceParameters.AllowPartialResult"/>
-    public bool? AllowPartialResult
+    public bool? AllowPartialResults
     {
         get => InternalParameters.AllowPartialResult;
         set => InternalParameters.AllowPartialResult = value;
     }
 
-    /// <inheritdoc cref="InternalElasticsearchChatDataSourceParameters.OutputContextFlags"/>
-    public DataSourceOutputContexts? OutputContextFlags
+    /// <inheritdoc cref="InternalElasticsearchChatDataSourceParameters.OutputContexts"/>
+    public DataSourceOutputContexts? OutputContexts
     {
-        get => InternalParameters.OutputContextFlags;
-        set => InternalParameters.OutputContextFlags = value;
+        get => InternalParameters.OutputContexts;
+        set => InternalParameters.OutputContexts = value;
     }
 
     /// <inheritdoc cref="InternalElasticsearchChatDataSourceParameters.FieldMappings"/>

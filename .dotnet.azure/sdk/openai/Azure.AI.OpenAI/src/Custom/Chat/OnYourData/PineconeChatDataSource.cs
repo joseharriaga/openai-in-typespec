@@ -8,7 +8,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace Azure.AI.OpenAI.Chat;
 
 [CodeGenModel("PineconeChatDataSource")]
-public partial class PineconeChatDataSource : AzureChatDataSource
+[Experimental("AOAI001")]
+public partial class PineconeChatDataSource : ChatDataSource
 {
     [CodeGenMember("Parameters")]
     internal InternalPineconeChatDataSourceParameters InternalParameters { get; }
@@ -77,17 +78,17 @@ public partial class PineconeChatDataSource : AzureChatDataSource
     }
 
     /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.AllowPartialResult"/>
-    public bool? AllowPartialResult
+    public bool? AllowPartialResults
     {
         get => InternalParameters.AllowPartialResult;
         set => InternalParameters.AllowPartialResult = value;
     }
 
-    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.OutputContextFlags"/>
-    public DataSourceOutputContexts? OutputContextFlags
+    /// <inheritdoc cref="InternalPineconeChatDataSourceParameters.OutputContexts"/>
+    public DataSourceOutputContexts? OutputContexts
     {
-        get => InternalParameters.OutputContextFlags;
-        set => InternalParameters.OutputContextFlags = value;
+        get => InternalParameters.OutputContexts;
+        set => InternalParameters.OutputContexts = value;
     }
 
     public PineconeChatDataSource() : base(type: "pinecone", serializedAdditionalRawData: null)

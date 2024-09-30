@@ -41,6 +41,17 @@ function Remove-ObsoleteAttribute {
     }
 }
 
+function Remove-ChatMessageContentSerialization {
+    $root = Split-Path $PSScriptRoot -Parent
+    $filePath = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Models\ChatMessageContent.Serialization.cs"
+    $file = Get-ChildItem -Path $filePath
+
+    Write-Output "Removing $($file.FullName)"
+
+    Remove-Item $file
+}
+
 Remove-MultipartFormDataBinaryContent
 Partialize-ClientPipelineExtensions
 Remove-ObsoleteAttribute
+Remove-ChatMessageContentSerialization

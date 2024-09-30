@@ -38,19 +38,19 @@ public partial class ChatExamples
             Dictionary<int, string> indexToFunctionName = [];
             Dictionary<int, StringBuilder> indexToFunctionArguments = [];
             StringBuilder contentBuilder = new();
-            CollectionResult<StreamingChatCompletionUpdate> chatUpdates
+            CollectionResult<StreamingChatCompletionUpdate> completionUpdates
                 = client.CompleteChatStreaming(messages, options);
 
-            foreach (StreamingChatCompletionUpdate chatUpdate in chatUpdates)
+            foreach (StreamingChatCompletionUpdate completionUpdate in completionUpdates)
             {
                 // Accumulate the text content as new updates arrive.
-                foreach (ChatMessageContentPart contentPart in chatUpdate.ContentUpdate)
+                foreach (ChatMessageContentPart contentPart in completionUpdate.ContentUpdate)
                 {
                     contentBuilder.Append(contentPart.Text);
                 }
 
                 // Build the tool calls as new updates arrive.
-                foreach (StreamingChatToolCallUpdate toolCallUpdate in chatUpdate.ToolCallUpdates)
+                foreach (StreamingChatToolCallUpdate toolCallUpdate in completionUpdate.ToolCallUpdates)
                 {
                     // Keep track of which tool call ID belongs to this update index.
                     if (toolCallUpdate.ToolCallId is not null)
@@ -77,7 +77,7 @@ public partial class ChatExamples
                     }
                 }
 
-                switch (chatUpdate.FinishReason)
+                switch (completionUpdate.FinishReason)
                 {
                     case ChatFinishReason.Stop:
                         {
@@ -176,12 +176,6 @@ public partial class ChatExamples
         {
             switch (message)
             {
-                case SystemChatMessage systemMessage:
-                    Console.WriteLine($"[SYSTEM]:");
-                    Console.WriteLine($"{systemMessage.Content[0].Text}");
-                    Console.WriteLine();
-                    break;
-
                 case UserChatMessage userMessage:
                     Console.WriteLine($"[USER]:");
                     Console.WriteLine($"{userMessage.Content[0].Text}");

@@ -4214,6 +4214,8 @@ components:
 
         `none` is the default when no tools are present. `auto` is the default if tools are present.
       x-oaiExpandable: true
+    ChatMessageContent:
+      type: object
     ChatMessageContentPart:
       type: object
     ChatResponseFormat:

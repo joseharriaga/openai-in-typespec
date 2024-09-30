@@ -82,7 +82,7 @@ public partial class OpenAIChatModelFactoryTests
     [Test]
     public void ChatCompletionWithContentWorks()
     {
-        IEnumerable<ChatMessageContentPart> content = [
+        ChatMessageContent content = [
             ChatMessageContentPart.CreateTextPart("first part"),
             ChatMessageContentPart.CreateTextPart("second part")
         ];
@@ -542,7 +542,7 @@ public partial class OpenAIChatModelFactoryTests
     [Test]
     public void StreamingChatCompletionUpdateWithContentUpdateWorks()
     {
-        IEnumerable<ChatMessageContentPart> contentUpdate = [
+        ChatMessageContent contentUpdate = [
             ChatMessageContentPart.CreateTextPart("first part"),
             ChatMessageContentPart.CreateTextPart("second part")
         ];

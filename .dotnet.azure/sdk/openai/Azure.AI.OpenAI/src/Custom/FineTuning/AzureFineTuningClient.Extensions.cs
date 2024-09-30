@@ -13,6 +13,7 @@ namespace Azure.AI.OpenAI.FineTuning;
 /// <summary>
 /// Extension methods for Azure fine tuning clients.
 /// </summary>
+[Experimental("AOAI001")]
 internal static class AzureFineTuningClientExtensions
 {
     /// <summary>

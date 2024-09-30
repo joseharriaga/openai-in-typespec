@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.VectorStores;
 [Experimental("OPENAI001")]
-public partial class AzureAddFileToVectorStoreOperation : AddFileToVectorStoreOperation
+internal partial class AzureAddFileToVectorStoreOperation : AddFileToVectorStoreOperation
 {
     private readonly string _apiVersion;
     private readonly ClientPipeline _pipeline;

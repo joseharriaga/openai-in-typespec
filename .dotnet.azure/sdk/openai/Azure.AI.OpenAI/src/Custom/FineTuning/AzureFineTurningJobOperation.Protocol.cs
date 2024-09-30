@@ -10,7 +10,7 @@ namespace Azure.AI.OpenAI.FineTuning;
 /// A long-running operation for creating a new model from a given dataset.
 /// </summary>
 [Experimental("OPENAI001")]
-public class AzureFineTuningJobOperation : FineTuningJobOperation
+internal class AzureFineTuningJobOperation : FineTuningJobOperation
 {
     private readonly PipelineMessageClassifier _deleteJobClassifier;
     private readonly ClientPipeline _pipeline;

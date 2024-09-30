@@ -1,9 +1,10 @@
 # Release History
 
-## 2.0.0 (Unreleased)
+## 2.0.0-beta.14 (Unreleased)
 
 ### Breaking Changes
 
+- Implemented `ChatMessageContent` to encapsulate the representation of content parts in `ChatMessage`, `ChatCompletion`, and `StreamingChatCompletionUpdate`. (commit_hash)
 - Renamed `OpenAIClientOptions`'s `ApplicationId` to `UserAgentApplicationId` (commit_hash)
 - Renamed `StreamingChatToolCallUpdate`'s `Id` to `ToolCallId` (commit_hash)
 - Replaced `Auto` and `None` in the deprecated `ChatFunctionChoice` with `CreateAutoChoice()` and `CreateNoneChoice()` (commit_hash)

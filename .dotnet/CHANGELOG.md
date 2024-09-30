@@ -7,6 +7,7 @@
 ### Breaking Changes
 
 - Implemented `ChatMessageContent` to encapsulate the representation of content parts in `ChatMessage`, `ChatCompletion`, and `StreamingChatCompletionUpdate`. (commit_hash)
+- Changed the representation of function arguments to `BinaryData` in `ChatToolCall`, `StreamingChatToolCallUpdate`, `ChatFunctionCall`, and `StreamingChatFunctionCallUpdate`. (commit_hash)
 
 ### Bugs Fixed
 

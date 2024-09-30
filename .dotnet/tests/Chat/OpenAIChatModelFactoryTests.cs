@@ -520,7 +520,7 @@ public partial class OpenAIChatModelFactoryTests
     public void StreamingChatCompletionUpdateWithIdWorks()
     {
         string id = "chat_completion_id";
-        StreamingChatCompletionUpdate streamingChatCompletionUpdate = OpenAIChatModelFactory.StreamingChatCompletionUpdate(id: id);
+        StreamingChatCompletionUpdate streamingChatCompletionUpdate = OpenAIChatModelFactory.StreamingChatCompletionUpdate(completionId: id);
 
         Assert.That(streamingChatCompletionUpdate.CompletionId, Is.EqualTo(id));
         Assert.That(streamingChatCompletionUpdate.ContentUpdate, Is.Not.Null.And.Empty);
@@ -594,8 +594,8 @@ public partial class OpenAIChatModelFactoryTests
     public void StreamingChatCompletionUpdateWithToolCallUpdatesWorks()
     {
         IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = [
-            OpenAIChatModelFactory.StreamingChatToolCallUpdate(id: "id1"),
-            OpenAIChatModelFactory.StreamingChatToolCallUpdate(id: "id2")
+            OpenAIChatModelFactory.StreamingChatToolCallUpdate(toolCallId: "id1"),
+            OpenAIChatModelFactory.StreamingChatToolCallUpdate(toolCallId: "id2")
         ];
         StreamingChatCompletionUpdate streamingChatCompletionUpdate = OpenAIChatModelFactory.StreamingChatCompletionUpdate(toolCallUpdates: toolCallUpdates);
 
@@ -893,7 +893,7 @@ public partial class OpenAIChatModelFactoryTests
     public void StreamingChatToolCallUpdateWithIdWorks()
     {
         string id = "tool_call_id";
-        StreamingChatToolCallUpdate streamingChatToolCallUpdate = OpenAIChatModelFactory.StreamingChatToolCallUpdate(id: id);
+        StreamingChatToolCallUpdate streamingChatToolCallUpdate = OpenAIChatModelFactory.StreamingChatToolCallUpdate(toolCallId: id);
 
         Assert.That(streamingChatToolCallUpdate.Index, Is.EqualTo(0));
         Assert.That(streamingChatToolCallUpdate.ToolCallId, Is.EqualTo(id));

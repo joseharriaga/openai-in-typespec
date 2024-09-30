@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
+[Experimental("AOAI001")]
 public static partial class AzureChatExtensions
 {
     [Experimental("AOAI001")]

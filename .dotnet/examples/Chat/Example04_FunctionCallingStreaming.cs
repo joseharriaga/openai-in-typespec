@@ -3,7 +3,6 @@ using OpenAI.Chat;
 using System;
 using System.Buffers;
 using System.ClientModel;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -139,7 +138,8 @@ public partial class ChatExamples
         ChatClient client = new("gpt-4-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
         #region
-        List<ChatMessage> messages = [
+        List<ChatMessage> messages =
+        [
             new UserChatMessage("What's the weather like today?"),
         ];
 

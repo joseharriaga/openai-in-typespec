@@ -19,7 +19,8 @@ public partial class ChatExamples
         ChatClient client = new("gpt-4-turbo", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
         #region
-        List<ChatMessage> messages = [
+        List<ChatMessage> messages =
+        [
             new UserChatMessage("What's the weather like today?"),
         ];
 

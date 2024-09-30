@@ -1,29 +1,29 @@
-﻿using Microsoft.VisualBasic;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace OpenAI.Chat;
 
 [CodeGenModel("ChatMessageContent")]
 public partial class ChatMessageContent : Collection<ChatMessageContentPart>
 {
-    public ChatMessageContent() 
-        : base(new ChangeTrackingList<ChatMessageContentPart>())
+    public ChatMessageContent()
+        : this([])
     {
     }
 
-    public ChatMessageContent(string text) 
-        : base([ChatMessageContentPart.CreateTextPart(text)])
+    public ChatMessageContent(string content)
+        : this([ChatMessageContentPart.CreateTextPart(content)])
     {
     }
 
-    public ChatMessageContent(IList<ChatMessageContentPart> parts)
-        : base(new ChangeTrackingList<ChatMessageContentPart>(parts))
+    public ChatMessageContent(IEnumerable<ChatMessageContentPart> contentParts)
+        : base(new ChangeTrackingList<ChatMessageContentPart>((IList<ChatMessageContentPart>)contentParts.ToList()))
     {
     }
 
-    public ChatMessageContent(params ChatMessageContentPart[] parts) 
-        : base(parts)
+    public ChatMessageContent(params ChatMessageContentPart[] contentParts)
+        : base(new ChangeTrackingList<ChatMessageContentPart>((IList<ChatMessageContentPart>)[.. contentParts]))
     {
     }
 

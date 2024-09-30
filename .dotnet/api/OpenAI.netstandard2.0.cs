@@ -1480,9 +1480,9 @@ namespace OpenAI.Chat {
     }
     public class ChatMessageContent : ObjectModel.Collection<ChatMessageContentPart> {
         public ChatMessageContent();
-        public ChatMessageContent(params ChatMessageContentPart[] parts);
-        public ChatMessageContent(IList<ChatMessageContentPart> parts);
-        public ChatMessageContent(string text);
+        public ChatMessageContent(params ChatMessageContentPart[] contentParts);
+        public ChatMessageContent(IEnumerable<ChatMessageContentPart> contentParts);
+        public ChatMessageContent(string content);
     }
     public class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>, IPersistableModel<ChatMessageContentPart> {
         public BinaryData ImageBytes { get; }
@@ -1694,8 +1694,8 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<ToolChatMessage>.Write(ModelReaderWriterOptions options);
     }
     public class UserChatMessage : ChatMessage, IJsonModel<UserChatMessage>, IPersistableModel<UserChatMessage> {
-        public UserChatMessage(params ChatMessageContentPart[] content);
-        public UserChatMessage(IEnumerable<ChatMessageContentPart> content);
+        public UserChatMessage(params ChatMessageContentPart[] contentParts);
+        public UserChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public UserChatMessage(string content);
         public string ParticipantName { get; set; }
         UserChatMessage IJsonModel<UserChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);

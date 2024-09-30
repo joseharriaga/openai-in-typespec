@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Images;
 
+[Experimental("AOAI001")]
 public static class AzureImageExtensions
 {
     [Experimental("AOAI001")]

@@ -30,17 +30,19 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
     }
     private AzureOpenAIAudience? _authorizationAudience;
 
-    /// <inheritdoc cref="OpenAIClientOptions.ApplicationId"/>
-    public string ApplicationId
+    /// <summary>
+    /// An optional application ID to use as part of the request User-Agent header.
+    /// </summary>
+    public string UserAgentApplicationId
     {
-        get => _applicationId;
+        get => _userAgentApplicationId;
         set
         {
             AssertNotFrozen();
-            _applicationId = value;
+            _userAgentApplicationId = value;
         }
     }
-    private string _applicationId;
+    private string _userAgentApplicationId;
 
     /// <summary>
     /// Initializes a new instance of <see cref="AzureOpenAIClientOptions"/>
@@ -64,10 +66,10 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
     /// <summary> The version of the service to use. </summary>
     public enum ServiceVersion
     {
+        V2024_06_01 = 0,
 #if !AZURE_OPENAI_GA
-        V2024_08_01_Preview = 8,
+        V2024_08_01_Preview = 1,
 #endif
-        V2024_06_01 = 9,
     }
 
     internal class RetryWithDelaysPolicy : ClientRetryPolicy

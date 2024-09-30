@@ -651,7 +651,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         }
         else
         {
-            Assert.That(update.Id, Is.Not.Null.Or.Empty);
+            Assert.That(update.CompletionId, Is.Not.Null.Or.Empty);
             Assert.That(update.CreatedAt, Is.GreaterThan(new DateTimeOffset(2024, 01, 01, 00, 00, 00, TimeSpan.Zero)));
             Assert.That(update.FinishReason, Is.Null.Or.EqualTo(ChatFinishReason.Stop));
             if (update.Usage != null)

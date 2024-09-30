@@ -144,6 +144,9 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// Gets a new <see cref="AssistantClient"/> instance configured for assistant operation use with the Azure OpenAI service.
     /// </summary>
     /// <returns> A new <see cref="AssistantClient"/> instance. </returns>
+#if AZURE_OPENAI_GA
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     [Experimental("OPENAI001")]
     public override AssistantClient GetAssistantClient()
 #if !AZURE_OPENAI_GA
@@ -165,6 +168,9 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// </summary>
     /// <param name="deploymentName"> The model deployment name to use for the new client's audio operations. </param>
     /// <returns> A new <see cref="BatchClient"/> instance. </returns>
+#if AZURE_OPENAI_GA
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     [Experimental("OPENAI001")]
     public BatchClient GetBatchClient(string deploymentName)
 #if !AZURE_OPENAI_GA
@@ -201,6 +207,9 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// Gets a new <see cref="FileClient"/> instance configured for file operation use with the Azure OpenAI service.
     /// </summary>
     /// <returns> A new <see cref="FileClient"/> instance. </returns>
+#if AZURE_OPENAI_GA
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     public override FileClient GetFileClient()
 #if !AZURE_OPENAI_GA
         => new AzureFileClient(Pipeline, _endpoint, _options);
@@ -212,6 +221,9 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// Gets a new <see cref="FineTuningClient"/> instance configured for fine-tuning operation use with the Azure OpenAI service.
     /// </summary>
     /// <returns> A new <see cref="FineTuningClient"/> instance. </returns>
+#if AZURE_OPENAI_GA
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     [Experimental("OPENAI001")]
     public override FineTuningClient GetFineTuningClient()
 #if !AZURE_OPENAI_GA
@@ -250,6 +262,9 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// Azure OpenAI service.
     /// </summary>
     /// <returns> A new <see cref="VectorStoreClient"/> instance. </returns>
+#if AZURE_OPENAI_GA
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     [Experimental("OPENAI001")]
     public override VectorStoreClient GetVectorStoreClient()
 #if !AZURE_OPENAI_GA
@@ -288,7 +303,7 @@ public partial class AzureOpenAIClient : OpenAIClient
 
     private static PipelinePolicy CreateAddUserAgentHeaderPolicy(AzureOpenAIClientOptions options = null)
     {
-        Core.TelemetryDetails telemetryDetails = new(typeof(AzureOpenAIClient).Assembly, options?.ApplicationId);
+        Core.TelemetryDetails telemetryDetails = new(typeof(AzureOpenAIClient).Assembly, options?.UserAgentApplicationId);
         return new GenericActionPipelinePolicy(
             requestAction: request =>
             {

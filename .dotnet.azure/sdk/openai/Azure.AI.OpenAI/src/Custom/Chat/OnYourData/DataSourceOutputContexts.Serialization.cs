@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
+[Experimental("AOAI001")]
 internal static partial class DataSourceOutputContextsExtensions
 {
     [Experimental("AOAI001")]

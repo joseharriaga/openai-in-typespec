@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -8,11 +11,11 @@ namespace Azure.AI.OpenAI.Chat;
 [Experimental("AOAI001")]
 public partial class ChatRetrievedDocument
 {
-    [CodeGenMember("Filepath")]
     /// <summary> The file path for the citation. </summary>
+    [CodeGenMember("Filepath")]
     public string FilePath { get; }
 
-    [CodeGenMember("Url")]
     /// <summary> The location of the citation. </summary>
+    [CodeGenMember("Url")]
     public Uri Uri { get; }
 }

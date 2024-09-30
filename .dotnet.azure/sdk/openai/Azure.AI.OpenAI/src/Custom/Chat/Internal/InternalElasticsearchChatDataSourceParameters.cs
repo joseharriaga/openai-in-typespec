@@ -25,6 +25,7 @@ internal partial class InternalElasticsearchChatDataSourceParameters
         }
     }
 
+#if !AZURE_OPENAI_GA
     /// <summary>
     /// The authentication options to use with the Elasticsearch data source.
     /// </summary>
@@ -35,6 +36,8 @@ internal partial class InternalElasticsearchChatDataSourceParameters
     /// <item><see cref="DataSourceAuthentication.FromKeyAndKeyId(string,string)"/></item>
     /// </list>
     /// </remarks>
+#else
+#endif
     [CodeGenMember("Authentication")]
     public DataSourceAuthentication Authentication { get; set; }
 
@@ -61,6 +64,8 @@ internal partial class InternalElasticsearchChatDataSourceParameters
     /// </remarks>
     [CodeGenMember("QueryType")]
     public DataSourceQueryType? QueryType { get; set; }
+
+#if !AZURE_OPENAI_GA
     /// <summary>
     /// The vectorization dependency used for embeddings.
     /// </summary>
@@ -72,6 +77,18 @@ internal partial class InternalElasticsearchChatDataSourceParameters
     /// <item><see cref="DataSourceVectorizer.FromModelId(string)"/></item>
     /// </list>
     /// </remarks>
+#else
+    /// <summary>
+    /// The vectorization dependency used for embeddings.
+    /// </summary>
+    /// <remarks>
+    /// Supported vectorization dependencies for Elasticsearch data sources include:
+    /// <list type="bullet">
+    /// <item><see cref="DataSourceVectorizer.FromEndpoint(Uri, DataSourceAuthentication)"/></item>
+    /// <item><see cref="DataSourceVectorizer.FromDeploymentName(string)"/></item>
+    /// </list>
+    /// </remarks>
+#endif
     [CodeGenMember("EmbeddingDependency")]
     public DataSourceVectorizer VectorizationSource { get; set; }
 }

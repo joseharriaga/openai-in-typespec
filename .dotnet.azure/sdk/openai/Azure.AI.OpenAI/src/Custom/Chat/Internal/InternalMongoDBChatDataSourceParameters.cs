@@ -39,6 +39,7 @@ internal partial class InternalMongoDBChatDataSourceParameters
     [CodeGenMember("FieldsMapping")]
     public DataSourceFieldMappings FieldMappings { get; set; }
 
+#if !AZURE_OPENAI_GA
     /// <summary>
     /// The authentication options to use with the MongoDB data source.
     /// </summary>
@@ -48,6 +49,8 @@ internal partial class InternalMongoDBChatDataSourceParameters
     /// <item><see cref="DataSourceAuthentication.FromUsernameAndPassword(string,string)"/></item>
     /// </list>
     /// </remarks>
+#else
+#endif
     [CodeGenMember("Authentication")]
     public DataSourceAuthentication Authentication { get; set; }
 

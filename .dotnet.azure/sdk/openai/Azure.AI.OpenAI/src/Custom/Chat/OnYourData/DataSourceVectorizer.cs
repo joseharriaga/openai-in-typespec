@@ -9,6 +9,7 @@ namespace Azure.AI.OpenAI.Chat;
 [Experimental("AOAI001")]
 public abstract partial class DataSourceVectorizer
 {
+#if !AZURE_OPENAI_GA
     /// <summary>
     /// Creates a new data source embedding dependency reference from an authenticated endpoint.
     /// </summary>
@@ -20,6 +21,18 @@ public abstract partial class DataSourceVectorizer
     /// <param name="endpoint"> The endpoint to use for vectorization. </param>
     /// <param name="authentication"> The authentication mechanism to use with the endpoint. </param>
     /// <returns></returns>
+#else
+    /// <summary>
+    /// Creates a new data source embedding dependency reference from an authenticated endpoint.
+    /// </summary>
+    /// <remarks>
+    /// Vectorization endpoint authentication only supports api-key-based authentication, as
+    /// created via <see cref="DataSourceAuthentication.FromApiKey(string)"/>.
+    /// </remarks>
+    /// <param name="endpoint"> The endpoint to use for vectorization. </param>
+    /// <param name="authentication"> The authentication mechanism to use with the endpoint. </param>
+    /// <returns></returns>
+#endif
     public static DataSourceVectorizer FromEndpoint(Uri endpoint, DataSourceAuthentication authentication)
         => new InternalAzureChatDataSourceEndpointVectorizationSource(endpoint, authentication);
     public static DataSourceVectorizer FromDeploymentName(string deploymentName)

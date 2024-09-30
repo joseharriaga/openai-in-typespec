@@ -15,7 +15,7 @@ public partial class ChatExamples
         CollectionResult<StreamingChatCompletionUpdate> updates
             = client.CompleteChatStreaming("Say 'this is a test.'");
 
-        Console.WriteLine($"[ASSISTANT]:");
+        Console.Write($"[ASSISTANT]: ");
         foreach (StreamingChatCompletionUpdate update in updates)
         {
             foreach (ChatMessageContentPart updatePart in update.ContentUpdate)

@@ -12,7 +12,7 @@ public static partial class OpenAIChatModelFactory
     public static ChatCompletion ChatCompletion(
         string id = null,
         ChatFinishReason finishReason = default,
-        IEnumerable<ChatMessageContentPart> content = null,
+        ChatMessageContent content = null,
         string refusal = null,
         IEnumerable<ChatToolCall> toolCalls = null,
         ChatMessageRole role = default,
@@ -24,13 +24,13 @@ public static partial class OpenAIChatModelFactory
         string systemFingerprint = null,
         ChatTokenUsage usage = null)
     {
-        content ??= new List<ChatMessageContentPart>();
+        content ??= new ChatMessageContent();
         toolCalls ??= new List<ChatToolCall>();
         contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
         InternalChatCompletionResponseMessage message = new InternalChatCompletionResponseMessage(
-            content.ToList(),
+            content,
             refusal,
             toolCalls.ToList(),
             role,
@@ -111,7 +111,7 @@ public static partial class OpenAIChatModelFactory
     /// <returns> A new <see cref="OpenAI.Chat.StreamingChatCompletionUpdate"/> instance for mocking. </returns>
     public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(
         string id = null,
-        IEnumerable<ChatMessageContentPart> contentUpdate = null,
+        ChatMessageContent contentUpdate = null,
         StreamingChatFunctionCallUpdate functionCallUpdate = null,
         IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null,
         ChatMessageRole? role = null,
@@ -124,13 +124,13 @@ public static partial class OpenAIChatModelFactory
         string systemFingerprint = null,
         ChatTokenUsage usage = null)
     {
-        contentUpdate ??= new List<ChatMessageContentPart>();
+        contentUpdate ??= new ChatMessageContent();
         toolCallUpdates ??= new List<StreamingChatToolCallUpdate>();
         contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
         InternalChatCompletionStreamResponseDelta delta = new InternalChatCompletionStreamResponseDelta(
-            contentUpdate.ToList(),
+            contentUpdate,
             functionCallUpdate,
             toolCallUpdates.ToList(),
             role,

@@ -1348,7 +1348,7 @@ namespace OpenAI.Chat {
         public virtual AsyncCollectionResult<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
     }
     public class ChatCompletion : IJsonModel<ChatCompletion>, IPersistableModel<ChatCompletion> {
-        public IReadOnlyList<ChatMessageContentPart> Content { get; }
+        public ChatMessageContent Content { get; }
         public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities { get; }
         public DateTimeOffset CreatedAt { get; }
         public ChatFinishReason FinishReason { get; }
@@ -1367,7 +1367,6 @@ namespace OpenAI.Chat {
         ChatCompletion IPersistableModel<ChatCompletion>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatCompletion>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatCompletion>.Write(ModelReaderWriterOptions options);
-        public override string ToString();
     }
     public class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>, IPersistableModel<ChatCompletionOptions> {
         public bool? AllowParallelToolCalls { get; set; }
@@ -1478,6 +1477,17 @@ namespace OpenAI.Chat {
         ChatMessage IPersistableModel<ChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatMessage>.Write(ModelReaderWriterOptions options);
+    }
+    public class ChatMessageContent : ObjectModel.Collection<ChatMessageContentPart>, IJsonModel<ChatMessageContent>, IPersistableModel<ChatMessageContent> {
+        public ChatMessageContent();
+        public ChatMessageContent(params ChatMessageContentPart[] parts);
+        public ChatMessageContent(IList<ChatMessageContentPart> parts);
+        public ChatMessageContent(string text);
+        ChatMessageContent IJsonModel<ChatMessageContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ChatMessageContent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ChatMessageContent IPersistableModel<ChatMessageContent>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ChatMessageContent>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ChatMessageContent>.Write(ModelReaderWriterOptions options);
     }
     public class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>, IPersistableModel<ChatMessageContentPart> {
         public BinaryData ImageBytes { get; }
@@ -1613,19 +1623,19 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<FunctionChatMessage>.Write(ModelReaderWriterOptions options);
     }
     public static class OpenAIChatModelFactory {
-        public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, IEnumerable<ChatMessageContentPart> content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, ChatMessageContent content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
         public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0);
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
         public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null);
-        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string id = null, IEnumerable<ChatMessageContentPart> contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string id = null, ChatMessageContent contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
         [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null);
         public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = 0, string id = null, ChatToolCallKind kind = ChatToolCallKind.Function, string functionName = null, string functionArgumentsUpdate = null);
     }
     public class StreamingChatCompletionUpdate : IJsonModel<StreamingChatCompletionUpdate>, IPersistableModel<StreamingChatCompletionUpdate> {
         public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities { get; }
-        public IReadOnlyList<ChatMessageContentPart> ContentUpdate { get; }
+        public ChatMessageContent ContentUpdate { get; }
         public DateTimeOffset CreatedAt { get; }
         public ChatFinishReason? FinishReason { get; }
         [Obsolete("This property is obsolete. Please use ToolCallUpdates instead.")]

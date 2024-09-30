@@ -64,10 +64,10 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
     /// <summary> The version of the service to use. </summary>
     public enum ServiceVersion
     {
+        V2024_06_01 = 0,
 #if !AZURE_OPENAI_GA
-        V2024_08_01_Preview = 8,
-#endif
-        V2024_06_01 = 9,
+        V2024_08_01_Preview = 1,
+#endif,
     }
 
     internal class RetryWithDelaysPolicy : ClientRetryPolicy

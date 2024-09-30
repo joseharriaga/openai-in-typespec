@@ -1478,16 +1478,11 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatMessage>.Write(ModelReaderWriterOptions options);
     }
-    public class ChatMessageContent : ObjectModel.Collection<ChatMessageContentPart>, IJsonModel<ChatMessageContent>, IPersistableModel<ChatMessageContent> {
+    public class ChatMessageContent : ObjectModel.Collection<ChatMessageContentPart> {
         public ChatMessageContent();
         public ChatMessageContent(params ChatMessageContentPart[] parts);
         public ChatMessageContent(IList<ChatMessageContentPart> parts);
         public ChatMessageContent(string text);
-        ChatMessageContent IJsonModel<ChatMessageContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ChatMessageContent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ChatMessageContent IPersistableModel<ChatMessageContent>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ChatMessageContent>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ChatMessageContent>.Write(ModelReaderWriterOptions options);
     }
     public class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>, IPersistableModel<ChatMessageContentPart> {
         public BinaryData ImageBytes { get; }

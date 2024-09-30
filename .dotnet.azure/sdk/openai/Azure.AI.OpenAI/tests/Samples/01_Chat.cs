@@ -188,9 +188,9 @@ public partial class AzureOpenAISamples
         public void Append(StreamingChatToolCallUpdate toolCallUpdate)
         {
             // Keep track of which tool call ID belongs to this update index.
-            if (toolCallUpdate.Id != null)
+            if (toolCallUpdate.ToolCallId != null)
             {
-                _indexToToolCallId[toolCallUpdate.Index] = toolCallUpdate.Id;
+                _indexToToolCallId[toolCallUpdate.Index] = toolCallUpdate.ToolCallId;
             }
 
             // Keep track of which function name belongs to this update index.

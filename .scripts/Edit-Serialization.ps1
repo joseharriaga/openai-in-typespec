@@ -94,5 +94,166 @@ function Edit-InternalChatCompletionStreamResponseDeltaSerialization {
     Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
 }
 
+function Edit-AssistantChatMessageSerialization {
+    $filename = "AssistantChatMessage.Serialization.cs"
+
+    # content serialization
+    # no-op
+
+    # content deserialization
+    $inputRegex = @(
+        "return new AssistantChatMessage\("
+        "    role,"
+        "    content,"
+        "    serializedAdditionalRawData,"
+        "    refusal,"
+        "    name,"
+        "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
+        "    functionCall\);"
+    )
+    $outputString = @(
+        "// CUSTOM: Initialize Content collection property."
+        "return new AssistantChatMessage("
+        "    role,"
+        "    content ?? new ChatMessageContent(),"
+        "    serializedAdditionalRawData,"
+        "    refusal,"
+        "    name,"
+        "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
+        "    functionCall);"
+    )
+    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
+}
+
+function Edit-FunctionChatMessageSerialization {
+    $filename = "FunctionChatMessage.Serialization.cs"
+
+    # content serialization
+    # no-op
+
+    # content deserialization
+    $inputRegex = @(
+        "return new FunctionChatMessage\(role, content, serializedAdditionalRawData, name\);"
+    )
+    $outputString = @(
+        "// CUSTOM: Initialize Content collection property."
+        "return new FunctionChatMessage(role, content ?? new ChatMessageContent(), serializedAdditionalRawData, name);"
+    )
+    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
+}
+
+function Edit-SystemChatMessageSerialization {
+    $filename = "SystemChatMessage.Serialization.cs"
+
+    # content serialization
+    # no-op
+
+    # content deserialization
+    $inputRegex = @(
+        "return new SystemChatMessage\(role, content, serializedAdditionalRawData, name\);"
+    )
+    $outputString = @(
+        "// CUSTOM: Initialize Content collection property."
+        "return new SystemChatMessage(role, content ?? new ChatMessageContent(), serializedAdditionalRawData, name);"
+    )
+    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
+}
+
+function Edit-ToolChatMessageSerialization {
+    $filename = "ToolChatMessage.Serialization.cs"
+
+    # content serialization
+    # no-op
+
+    # content deserialization
+    $inputRegex = @(
+        "return new ToolChatMessage\(role, content, serializedAdditionalRawData, toolCallId\);"
+    )
+    $outputString = @(
+        "// CUSTOM: Initialize Content collection property."
+        "return new ToolChatMessage(role, content ?? new ChatMessageContent(), serializedAdditionalRawData, toolCallId);"
+    )
+    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
+}
+
+function Edit-UserChatMessageSerialization {
+    $filename = "UserChatMessage.Serialization.cs"
+
+    # content serialization
+    # no-op
+
+    # content deserialization
+    $inputRegex = @(
+        "return new UserChatMessage\(role, content, serializedAdditionalRawData, name\);"
+    )
+    $outputString = @(
+        "// CUSTOM: Initialize Content collection property."
+        "return new UserChatMessage(role, content ?? new ChatMessageContent(), serializedAdditionalRawData, name);"
+    )
+    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
+}
+
+function Edit-InternalUnknownChatMessageSerialization {
+    $filename = "InternalUnknownChatMessage.Serialization.cs"
+
+    # content serialization
+    # no-op
+
+    # content deserialization
+    $inputRegex = @(
+        "return new InternalUnknownChatMessage\(role, content, serializedAdditionalRawData\);"
+    )
+    $outputString = @(
+        "// CUSTOM: Initialize Content collection property."
+        "return new InternalUnknownChatMessage(role, content ?? new ChatMessageContent(), serializedAdditionalRawData);"
+    )
+    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
+}
+
+function Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization {
+    $filename = "InternalFineTuneChatCompletionRequestAssistantMessage.Serialization.cs"
+
+    # content serialization
+    $inputRegex = @(
+        "if \(SerializedAdditionalRawData\?\.ContainsKey\(`"content`"\) != true && true && Optional\.IsDefined\(Content\)\)"
+    )
+    $outputString = @(
+        "// CUSTOM: Check inner collection is defined."
+        "if (SerializedAdditionalRawData?.ContainsKey(`"content`") != true && true && Optional.IsDefined(Content) && Content.IsInnerCollectionDefined())"
+    )
+    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
+
+    # content deserialization
+    $inputRegex = @(
+        "return new InternalFineTuneChatCompletionRequestAssistantMessage\("
+        "    role,"
+        "    content,"
+        "    serializedAdditionalRawData,"
+        "    refusal,"
+        "    name,"
+        "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
+        "    functionCall\);"
+    )
+    $outputString = @(
+        "// CUSTOM: Initialize Content collection property."
+        "return new InternalFineTuneChatCompletionRequestAssistantMessage("
+        "    role,"
+        "    content ?? new ChatMessageContent(),"
+        "    serializedAdditionalRawData,"
+        "    refusal,"
+        "    name,"
+        "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
+        "    functionCall);"
+    )
+    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
+}
+
 Edit-InternalChatCompletionResponseMessageSerialization
 Edit-InternalChatCompletionStreamResponseDeltaSerialization
+Edit-AssistantChatMessageSerialization
+Edit-FunctionChatMessageSerialization
+Edit-SystemChatMessageSerialization
+Edit-ToolChatMessageSerialization
+Edit-UserChatMessageSerialization
+Edit-InternalUnknownChatMessageSerialization
+Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization

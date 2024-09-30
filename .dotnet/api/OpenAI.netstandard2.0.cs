@@ -1453,7 +1453,7 @@ namespace OpenAI.Chat {
         public override readonly string ToString();
     }
     public class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
-        public IList<ChatMessageContentPart> Content { get; }
+        public ChatMessageContent Content { get; }
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
         public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall);
         public static AssistantChatMessage CreateAssistantMessage(params ChatMessageContentPart[] contentParts);
@@ -1471,7 +1471,7 @@ namespace OpenAI.Chat {
         public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts);
         public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static UserChatMessage CreateUserMessage(string content);
-        public static implicit operator ChatMessage(string userMessage);
+        public static implicit operator ChatMessage(string content);
         ChatMessage IJsonModel<ChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatMessage IPersistableModel<ChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);

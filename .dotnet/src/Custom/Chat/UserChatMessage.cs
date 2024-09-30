@@ -9,7 +9,7 @@ namespace OpenAI.Chat;
 /// in either direct <c>assistant</c> message responses or in calls to supplied <c>tools</c> or <c>functions</c>.
 /// </summary>
 [CodeGenModel("ChatCompletionRequestUserMessage")]
-[CodeGenSuppress("UserChatMessage", typeof(ReadOnlyMemory<ChatMessageContentPart>))]
+[CodeGenSuppress("UserChatMessage", typeof(ChatMessageContent))]
 public partial class UserChatMessage : ChatMessage
 {
     /// <summary>

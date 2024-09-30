@@ -15,9 +15,9 @@ try {
   Invoke { npm exec --no -- tsp format **/*tsp }
   Invoke { npm exec --no -- tsp compile . }
   Invoke { .$PSScriptRoot\Update-ClientModel.ps1 }
-  Invoke { .$PSScriptRoot\Edit-Serialization.ps1 }
   Invoke { .$PSScriptRoot\Edit-Deserialization.ps1 }
   Invoke { .$PSScriptRoot\Remove-Abstract.ps1 }
+  Invoke { .$PSScriptRoot\Edit-Serialization.ps1 }
   Invoke { .$PSScriptRoot\Run-Checks.ps1 }
 }
 finally {

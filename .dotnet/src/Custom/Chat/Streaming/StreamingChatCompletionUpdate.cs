@@ -21,6 +21,10 @@ public partial class StreamingChatCompletionUpdate
     [CodeGenMember("Object")]
     internal InternalCreateChatCompletionStreamResponseObject Object { get; } = InternalCreateChatCompletionStreamResponseObject.ChatCompletionChunk;
 
+    // CUSTOM: Renamed for clarity.
+    [CodeGenMember("Id")]
+    public string CompletionId { get; }
+
     // CUSTOM: Made internal.
     [CodeGenMember("ServiceTier")]
     internal InternalCreateChatCompletionStreamResponseServiceTier? ServiceTier { get; }

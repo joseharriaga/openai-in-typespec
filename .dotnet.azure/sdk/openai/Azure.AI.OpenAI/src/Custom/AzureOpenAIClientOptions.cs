@@ -30,17 +30,19 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
     }
     private AzureOpenAIAudience? _authorizationAudience;
 
-    /// <inheritdoc cref="OpenAIClientOptions.ApplicationId"/>
-    public string ApplicationId
+    /// <summary>
+    /// An optional application ID to use as part of the request User-Agent header.
+    /// </summary>
+    public string UserAgentApplicationId
     {
-        get => _applicationId;
+        get => _userAgentApplicationId;
         set
         {
             AssertNotFrozen();
-            _applicationId = value;
+            _userAgentApplicationId = value;
         }
     }
-    private string _applicationId;
+    private string _userAgentApplicationId;
 
     /// <summary>
     /// Initializes a new instance of <see cref="AzureOpenAIClientOptions"/>

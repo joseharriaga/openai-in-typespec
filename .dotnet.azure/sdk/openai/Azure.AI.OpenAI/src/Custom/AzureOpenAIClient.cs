@@ -303,7 +303,7 @@ public partial class AzureOpenAIClient : OpenAIClient
 
     private static PipelinePolicy CreateAddUserAgentHeaderPolicy(AzureOpenAIClientOptions options = null)
     {
-        Core.TelemetryDetails telemetryDetails = new(typeof(AzureOpenAIClient).Assembly, options?.ApplicationId);
+        Core.TelemetryDetails telemetryDetails = new(typeof(AzureOpenAIClient).Assembly, options?.UserAgentApplicationId);
         return new GenericActionPipelinePolicy(
             requestAction: request =>
             {

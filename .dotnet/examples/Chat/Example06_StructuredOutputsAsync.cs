@@ -14,7 +14,8 @@ public partial class ChatExamples
     {
         ChatClient client = new("gpt-4o-mini", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-        List<ChatMessage> messages = [
+        List<ChatMessage> messages =
+        [
             new UserChatMessage("How can I solve 8x + 7 = -23?"),
         ];
 

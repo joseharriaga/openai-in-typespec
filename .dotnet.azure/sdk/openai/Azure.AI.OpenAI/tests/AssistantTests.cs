@@ -716,4 +716,3 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
     }
 #endif
 }
-

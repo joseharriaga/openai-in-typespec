@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
+
 [CodeGenModel("MongoDBChatDataSource")]
 [Experimental("AOAI001")]
 #if AZURE_OPENAI_GA

@@ -15,6 +15,7 @@ import "./images";
 import "./messages";
 import "./models";
 import "./moderations";
+import "./realtime";
 import "./runs";
 import "./threads";
 import "./vector-stores";

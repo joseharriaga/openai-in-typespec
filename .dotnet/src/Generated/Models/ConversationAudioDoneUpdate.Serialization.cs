@@ -21,11 +21,6 @@ namespace OpenAI.RealtimeConversation
             }
 
             writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
-            {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type);
-            }
             if (SerializedAdditionalRawData?.ContainsKey("response_id") != true)
             {
                 writer.WritePropertyName("response_id"u8);
@@ -105,22 +100,16 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string type = default;
             string responseId = default;
             string itemId = default;
             int outputIndex = default;
             int contentIndex = default;
-            ConversationUpdateKind type0 = default;
+            ConversationUpdateKind type = default;
             string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("type"u8))
-                {
-                    type = property.Value.GetString();
-                    continue;
-                }
                 if (property.NameEquals("response_id"u8))
                 {
                     responseId = property.Value.GetString();
@@ -143,7 +132,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (property.NameEquals("type"u8))
                 {
-                    type0 = property.Value.GetString().ToConversationUpdateKind();
+                    type = property.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
                 if (property.NameEquals("event_id"u8))
@@ -164,10 +153,9 @@ namespace OpenAI.RealtimeConversation
             }
             serializedAdditionalRawData = rawDataDictionary;
             return new ConversationAudioDoneUpdate(
-                type0,
+                type,
                 eventId,
                 serializedAdditionalRawData,
-                type,
                 responseId,
                 itemId,
                 outputIndex,

@@ -167,4 +167,23 @@ public class ConversationSmokeTests : ConversationTestFixtureBase
         Assert.That(serializedNode["turn_detection"]?["type"]?.GetValue<string>(), Is.EqualTo("server_vad"));
         Assert.That(serializedNode["turn_detection"]?["threshold"]?.GetValue<float>(), Is.EqualTo(0.42f));
     }
+
+    [Test]
+    public void ResponseMessageDeserializationWorks()
+    {
+        BinaryData messageData = BinaryData.FromString("""
+            {
+              "type": "response.audio.done",
+              "event_id": "event_ADfTaUV1cgTmnyktUnglV",
+              "response_id": "resp_ADfTYGCIHtEs0ORkI5xXc",
+              "item_id": "item_ADfTYSDe9pItxY8yiXmOx",
+              "output_index": 0,
+              "content_index": 0
+            }
+            """);
+        ConversationUpdate update = ModelReaderWriter.Read<ConversationUpdate>(messageData);
+        BinaryData reserializedUpdate = ModelReaderWriter.Write(update);
+        JsonNode reserializedNode = JsonNode.Parse(reserializedUpdate);
+        Assert.That(reserializedNode["type"]?.GetValue<string>(), Is.EqualTo("response.audio.done"));
+    }
 }

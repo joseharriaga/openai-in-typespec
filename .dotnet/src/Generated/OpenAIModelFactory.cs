@@ -131,6 +131,18 @@ namespace OpenAI
                 delta);
         }
 
+        public static ConversationAudioDoneUpdate ConversationAudioDoneUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, int contentIndex = default)
+        {
+            return new ConversationAudioDoneUpdate(
+                ConversationUpdateKind.ResponseAudioDone,
+                eventId,
+                serializedAdditionalRawData: null,
+                responseId,
+                itemId,
+                outputIndex,
+                contentIndex);
+        }
+
         public static ConversationOutputTranscriptionDeltaUpdate ConversationOutputTranscriptionDeltaUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, int contentIndex = default, string delta = null)
         {
             return new ConversationOutputTranscriptionDeltaUpdate(

@@ -21,9 +21,8 @@ namespace OpenAI.RealtimeConversation
             ContentIndex = contentIndex;
         }
 
-        internal ConversationAudioDoneUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string type, string responseId, string itemId, int outputIndex, int contentIndex) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationAudioDoneUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex) : base(kind, eventId, serializedAdditionalRawData)
         {
-            Type = type;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -33,8 +32,6 @@ namespace OpenAI.RealtimeConversation
         internal ConversationAudioDoneUpdate()
         {
         }
-
-        internal string Type { get; set; } = "response.audio.done";
 
         public string ResponseId { get; }
         public string ItemId { get; }

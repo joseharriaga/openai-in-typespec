@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+#if !AZURE_OPENAI_GA
+
 using System.ClientModel;
 using System.ClientModel.Primitives;
 
@@ -36,3 +38,5 @@ internal partial class AzureFineTuningClient : FineTuningClient
         return new AzureFineTuningJobOperation(Pipeline, _endpoint, jobId, status, response, _apiVersion);
     }
 }
+
+#endif

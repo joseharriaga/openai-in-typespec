@@ -11,6 +11,9 @@ using OpenAI;
 @@access(ChatCompletionToolChoice, Access.public);
 @@usage(ChatCompletionToolChoice, Usage.input);
 
+@@access(ChatMessageContent, Access.public);
+@@usage(ChatMessageContent, Usage.input | Usage.output);
+
 @@access(ChatMessageContentPart, Access.public);
 @@usage(ChatMessageContentPart, Usage.input | Usage.output);
 

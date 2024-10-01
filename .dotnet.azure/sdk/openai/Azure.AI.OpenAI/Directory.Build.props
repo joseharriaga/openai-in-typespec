@@ -4,8 +4,9 @@
   <!-- Now configure the Azure OpenAI projects to reference the local OpenAI source code -->
   <PropertyGroup>
     <ExternalOpenAISource>$(RepoRoot)/../.dotnet/src/OpenAI.csproj</ExternalOpenAISource>
-    <SystemClientModelVersion>1.1.0-beta.5</SystemClientModelVersion>
+    <GAServiceVersionLabel>2024_06_01</GAServiceVersionLabel>
     <!--
+    <SystemClientModelVersion>1.1.0-beta.5</SystemClientModelVersion>
     <ExternalOpenAILibrary>path/to/OpenAI.dll</ExternalOpenAILibrary>
     <ExternalAzureCoreSource>$(RepoRoot)/sdk/core/Azure.Core/src/Azure.Core.csproj</ExternalAzureCoreSource>
     <ExternalAzureCoreLibrary>../../external/Azure.Core.Slim/netstandard2.0/Azure.Core.Slim.dll</ExternalAzureCoreLibrary>

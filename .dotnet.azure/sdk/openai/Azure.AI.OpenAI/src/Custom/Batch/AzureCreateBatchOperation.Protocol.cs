@@ -1,4 +1,9 @@
-﻿using System.ClientModel;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+#if !AZURE_OPENAI_GA
+
+using System.ClientModel;
 using System.ClientModel.Primitives;
 
 #nullable enable
@@ -54,3 +59,5 @@ internal partial class AzureCreateBatchOperation : CreateBatchOperation
     private static PipelineMessageClassifier? _pipelineMessageClassifier200;
     private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 }
+
+#endif

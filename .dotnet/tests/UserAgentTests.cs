@@ -26,11 +26,11 @@ public class UserAgentTests
 
         OpenAIClientOptions options = useApplicationId ? new()
         {
-            ApplicationId = "test-application-id",
+            UserAgentApplicationId = "test-application-id",
         } : new();
         options.AddPolicy(policy, PipelinePosition.BeforeTransport);
 
-        ChatClient client = new("no-real-model-needed", Environment.GetEnvironmentVariable("OPENAI_API_KEY"), options);
+        ChatClient client = new("no-real-model-needed", new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")), options);
         RequestOptions noThrowOptions = new() { ErrorOptions = ClientErrorBehaviors.NoThrow, };
         using BinaryContent emptyContent = BinaryContent.Create(new MemoryStream());
         _ = client.CompleteChat(emptyContent, noThrowOptions);

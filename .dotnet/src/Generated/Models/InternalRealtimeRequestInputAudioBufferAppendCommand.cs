@@ -13,11 +13,11 @@ namespace OpenAI.RealtimeConversation
         {
             Argument.AssertNotNull(audio, nameof(audio));
 
-            Type = InternalRealtimeRequestCommandType.InputAudioBufferAppend;
+            Kind = InternalRealtimeRequestCommandType.InputAudioBufferAppend;
             Audio = audio;
         }
 
-        internal InternalRealtimeRequestInputAudioBufferAppendCommand(InternalRealtimeRequestCommandType type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, BinaryData audio) : base(type, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestInputAudioBufferAppendCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, BinaryData audio) : base(kind, eventId, serializedAdditionalRawData)
         {
             Audio = audio;
         }

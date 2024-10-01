@@ -1,6 +1,6 @@
 using TypeSpec.OpenAPI;
 
-namespace OpenAI.Realtime;
+namespace OpenAI;
 
 union RealtimeVoice {
   string,

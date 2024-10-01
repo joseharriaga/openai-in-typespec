@@ -14,15 +14,16 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(itemId, nameof(itemId));
 
-            Type = ConversationUpdateKind.ResponseAudioDone;
+            Kind = ConversationUpdateKind.ResponseAudioDone;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
             ContentIndex = contentIndex;
         }
 
-        internal ConversationAudioDoneUpdate(ConversationUpdateKind type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex) : base(type, eventId, serializedAdditionalRawData)
+        internal ConversationAudioDoneUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string type, string responseId, string itemId, int outputIndex, int contentIndex) : base(kind, eventId, serializedAdditionalRawData)
         {
+            Type = type;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -32,6 +33,8 @@ namespace OpenAI.RealtimeConversation
         internal ConversationAudioDoneUpdate()
         {
         }
+
+        internal string Type { get; set; } = "response.audio.done";
 
         public string ResponseId { get; }
         public string ItemId { get; }

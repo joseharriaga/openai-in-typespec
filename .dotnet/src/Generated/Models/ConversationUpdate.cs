@@ -15,9 +15,9 @@ namespace OpenAI.RealtimeConversation
             EventId = eventId;
         }
 
-        internal ConversationUpdate(ConversationUpdateKind type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ConversationUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Type = type;
+            Kind = kind;
             EventId = eventId;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }

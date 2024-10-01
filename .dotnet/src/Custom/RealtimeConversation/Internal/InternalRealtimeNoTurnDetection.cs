@@ -6,11 +6,10 @@ namespace OpenAI.RealtimeConversation;
 internal partial class InternalRealtimeNoTurnDetection : ConversationTurnDetectionOptions
 {
     public InternalRealtimeNoTurnDetection()
-    {
-        Type = ConversationTurnDetectionKind.Disabled;
-    }
+        : this(ConversationTurnDetectionKind.Disabled, null)
+    { }
 
-    internal InternalRealtimeNoTurnDetection(ConversationTurnDetectionKind type, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, serializedAdditionalRawData)
-    {
-    }
+    internal InternalRealtimeNoTurnDetection(ConversationTurnDetectionKind type, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        : base(type, serializedAdditionalRawData)
+    { }
 }

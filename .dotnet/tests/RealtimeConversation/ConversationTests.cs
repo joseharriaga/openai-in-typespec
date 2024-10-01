@@ -43,7 +43,7 @@ public class ConversationTests : ConversationTestFixtureBase
             
             if (update is ConversationErrorUpdate errorUpdate)
             {
-                Assert.That(errorUpdate.Type, Is.EqualTo(ConversationUpdateKind.Error));
+                Assert.That(errorUpdate.Kind, Is.EqualTo(ConversationUpdateKind.Error));
                 Assert.Fail($"Error: {ModelReaderWriter.Write(errorUpdate)}");
             }
             else if (update is ConversationResponseFinishedUpdate turnFinishedUpdate)

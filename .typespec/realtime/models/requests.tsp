@@ -5,7 +5,7 @@ import "./turn_detection.tsp";
 
 using TypeSpec.OpenAPI;
 
-namespace OpenAI.Realtime;
+namespace OpenAI;
 
 union RealtimeRequestCommandType {
   string,

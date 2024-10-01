@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class UnknownRealtimeRequestCommand : InternalRealtimeRequestCommand
     {
-        internal UnknownRealtimeRequestCommand(InternalRealtimeRequestCommandType type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, eventId, serializedAdditionalRawData)
+        internal UnknownRealtimeRequestCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
         {
         }
 

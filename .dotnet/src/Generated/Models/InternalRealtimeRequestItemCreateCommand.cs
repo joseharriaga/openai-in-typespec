@@ -13,11 +13,11 @@ namespace OpenAI.RealtimeConversation
         {
             Argument.AssertNotNull(item, nameof(item));
 
-            Type = InternalRealtimeRequestCommandType.ItemCreate;
+            Kind = InternalRealtimeRequestCommandType.ItemCreate;
             Item = item;
         }
 
-        internal InternalRealtimeRequestItemCreateCommand(InternalRealtimeRequestCommandType type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string previousItemId, ConversationItem item) : base(type, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestItemCreateCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string previousItemId, ConversationItem item) : base(kind, eventId, serializedAdditionalRawData)
         {
             PreviousItemId = previousItemId;
             Item = item;

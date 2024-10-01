@@ -3,7 +3,7 @@ import "./content_parts.tsp";
 
 using TypeSpec.OpenAPI;
 
-namespace OpenAI.Realtime;
+namespace OpenAI;
 
 @discriminator("type")
 model RealtimeRequestItem {

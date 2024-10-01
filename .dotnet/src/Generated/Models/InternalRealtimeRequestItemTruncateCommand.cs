@@ -13,13 +13,13 @@ namespace OpenAI.RealtimeConversation
         {
             Argument.AssertNotNull(itemId, nameof(itemId));
 
-            Type = InternalRealtimeRequestCommandType.ItemTruncate;
+            Kind = InternalRealtimeRequestCommandType.ItemTruncate;
             ItemId = itemId;
             ContentIndex = contentIndex;
             AudioEndMs = audioEndMs;
         }
 
-        internal InternalRealtimeRequestItemTruncateCommand(InternalRealtimeRequestCommandType type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId, int contentIndex, int audioEndMs) : base(type, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestItemTruncateCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId, int contentIndex, int audioEndMs) : base(kind, eventId, serializedAdditionalRawData)
         {
             ItemId = itemId;
             ContentIndex = contentIndex;

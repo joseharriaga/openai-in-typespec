@@ -13,11 +13,11 @@ namespace OpenAI.RealtimeConversation
         {
             Argument.AssertNotNull(itemId, nameof(itemId));
 
-            Type = InternalRealtimeRequestCommandType.ItemDelete;
+            Kind = InternalRealtimeRequestCommandType.ItemDelete;
             ItemId = itemId;
         }
 
-        internal InternalRealtimeRequestItemDeleteCommand(InternalRealtimeRequestCommandType type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId) : base(type, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestItemDeleteCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId) : base(kind, eventId, serializedAdditionalRawData)
         {
             ItemId = itemId;
         }

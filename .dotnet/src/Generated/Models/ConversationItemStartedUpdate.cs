@@ -14,13 +14,13 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(internalItem, nameof(internalItem));
 
-            Type = ConversationUpdateKind.ItemStarted;
+            Kind = ConversationUpdateKind.ItemStarted;
             ResponseId = responseId;
             OutputIndex = outputIndex;
             _internalItem = internalItem;
         }
 
-        internal ConversationItemStartedUpdate(ConversationUpdateKind type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, int outputIndex, InternalRealtimeResponseItem internalItem) : base(type, eventId, serializedAdditionalRawData)
+        internal ConversationItemStartedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, int outputIndex, InternalRealtimeResponseItem internalItem) : base(kind, eventId, serializedAdditionalRawData)
         {
             ResponseId = responseId;
             OutputIndex = outputIndex;

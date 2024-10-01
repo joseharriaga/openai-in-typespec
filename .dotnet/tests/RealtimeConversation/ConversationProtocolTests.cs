@@ -84,7 +84,9 @@ public class ConversationProtocolTests : ConversationTestFixtureBase
         List<JsonNode> NodesOfType(string type) => receivedCommands.Where(command => command["type"].GetValue<string>() == type).ToList();
 
         Assert.That(NodesOfType("session.created"), Has.Count.EqualTo(1));
+        Assert.That(NodesOfType("session.updated"), Has.Count.EqualTo(1));
         Assert.That(NodesOfType("response.created"), Has.Count.EqualTo(1));
+        Assert.That(NodesOfType("response.done"), Has.Count.EqualTo(1));
         Assert.That(NodesOfType("response.output_item.added"), Has.Count.EqualTo(1));
         Assert.That(NodesOfType("conversation.item.created"), Has.Count.EqualTo(1));
         Assert.That(NodesOfType("response.content_part.added"), Has.Count.EqualTo(1));

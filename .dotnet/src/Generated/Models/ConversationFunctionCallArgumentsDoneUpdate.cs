@@ -17,7 +17,7 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(name, nameof(name));
             Argument.AssertNotNull(arguments, nameof(arguments));
 
-            Type = ConversationUpdateKind.ResponseFunctionCallArgumentsDone;
+            Kind = ConversationUpdateKind.ResponseFunctionCallArgumentsDone;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -26,7 +26,7 @@ namespace OpenAI.RealtimeConversation
             Arguments = arguments;
         }
 
-        internal ConversationFunctionCallArgumentsDoneUpdate(ConversationUpdateKind type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, string callId, string name, string arguments) : base(type, eventId, serializedAdditionalRawData)
+        internal ConversationFunctionCallArgumentsDoneUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, string callId, string name, string arguments) : base(kind, eventId, serializedAdditionalRawData)
         {
             ResponseId = responseId;
             ItemId = itemId;

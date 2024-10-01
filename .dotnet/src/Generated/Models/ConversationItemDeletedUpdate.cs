@@ -13,11 +13,11 @@ namespace OpenAI.RealtimeConversation
         {
             Argument.AssertNotNull(itemId, nameof(itemId));
 
-            Type = ConversationUpdateKind.ItemDeleted;
+            Kind = ConversationUpdateKind.ItemDeleted;
             ItemId = itemId;
         }
 
-        internal ConversationItemDeletedUpdate(ConversationUpdateKind type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId) : base(type, eventId, serializedAdditionalRawData)
+        internal ConversationItemDeletedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId) : base(kind, eventId, serializedAdditionalRawData)
         {
             ItemId = itemId;
         }

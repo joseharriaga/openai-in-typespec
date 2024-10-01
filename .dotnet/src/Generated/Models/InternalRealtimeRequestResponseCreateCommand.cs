@@ -11,10 +11,10 @@ namespace OpenAI.RealtimeConversation
     {
         public InternalRealtimeRequestResponseCreateCommand()
         {
-            Type = InternalRealtimeRequestCommandType.ResponseCreate;
+            Kind = InternalRealtimeRequestCommandType.ResponseCreate;
         }
 
-        internal InternalRealtimeRequestResponseCreateCommand(InternalRealtimeRequestCommandType type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeRequestResponseCreateCommandResponse response) : base(type, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestResponseCreateCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeRequestResponseCreateCommandResponse response) : base(kind, eventId, serializedAdditionalRawData)
         {
             Response = response;
         }

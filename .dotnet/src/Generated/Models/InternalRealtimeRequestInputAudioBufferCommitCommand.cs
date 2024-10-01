@@ -11,10 +11,10 @@ namespace OpenAI.RealtimeConversation
     {
         public InternalRealtimeRequestInputAudioBufferCommitCommand()
         {
-            Type = InternalRealtimeRequestCommandType.InputAudioBufferCommit;
+            Kind = InternalRealtimeRequestCommandType.InputAudioBufferCommit;
         }
 
-        internal InternalRealtimeRequestInputAudioBufferCommitCommand(InternalRealtimeRequestCommandType type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestInputAudioBufferCommitCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
         {
         }
     }

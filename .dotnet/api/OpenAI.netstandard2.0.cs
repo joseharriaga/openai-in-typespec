@@ -2804,8 +2804,7 @@ namespace OpenAI.RealtimeConversation {
         Disabled = 1
     }
     public abstract class ConversationTurnDetectionOptions : IJsonModel<ConversationTurnDetectionOptions>, IPersistableModel<ConversationTurnDetectionOptions> {
-        public ConversationTurnDetectionKind Kind { get; }
-        public ConversationTurnDetectionKind Type { get; set; }
+        public ConversationTurnDetectionKind Kind { get; protected internal set; }
         public static ConversationTurnDetectionOptions CreateDisabledTurnDetectionOptions();
         public static ConversationTurnDetectionOptions CreateServerVoiceActivityTurnDetectionOptions(float? detectionThreshold = null, TimeSpan? prefixPaddingDuration = null, TimeSpan? silenceDuration = null);
         ConversationTurnDetectionOptions IJsonModel<ConversationTurnDetectionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -2817,7 +2816,7 @@ namespace OpenAI.RealtimeConversation {
     public abstract class ConversationUpdate : IJsonModel<ConversationUpdate>, IPersistableModel<ConversationUpdate> {
         protected ConversationUpdate(string eventId);
         public string EventId { get; }
-        public ConversationUpdateKind Type { get; set; }
+        public ConversationUpdateKind Kind { get; protected internal set; }
         public BinaryData GetRawContent();
         ConversationUpdate IJsonModel<ConversationUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);

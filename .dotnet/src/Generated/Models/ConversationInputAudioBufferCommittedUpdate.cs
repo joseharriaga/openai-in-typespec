@@ -13,11 +13,11 @@ namespace OpenAI.RealtimeConversation
         {
             Argument.AssertNotNull(itemId, nameof(itemId));
 
-            Type = ConversationUpdateKind.InputAudioBufferCommitted;
+            Kind = ConversationUpdateKind.InputAudioBufferCommitted;
             ItemId = itemId;
         }
 
-        internal ConversationInputAudioBufferCommittedUpdate(ConversationUpdateKind type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId, string previousItemId) : base(type, eventId, serializedAdditionalRawData)
+        internal ConversationInputAudioBufferCommittedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId, string previousItemId) : base(kind, eventId, serializedAdditionalRawData)
         {
             ItemId = itemId;
             PreviousItemId = previousItemId;

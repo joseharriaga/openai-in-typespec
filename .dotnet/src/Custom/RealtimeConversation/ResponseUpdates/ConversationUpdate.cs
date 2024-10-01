@@ -8,8 +8,8 @@ namespace OpenAI.RealtimeConversation;
 [CodeGenModel("RealtimeResponseCommand")]
 public partial class ConversationUpdate
 {
-    [CodeGenMember("Type")]
-    public ConversationUpdateKind Type { get; set; }
+    [CodeGenMember("Kind")]
+    public ConversationUpdateKind Kind { get; internal protected set; }
 
     public BinaryData GetRawContent() => ModelReaderWriter.Write(this);
 }

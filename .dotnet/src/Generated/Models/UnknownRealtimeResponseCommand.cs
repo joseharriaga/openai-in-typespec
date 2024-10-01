@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class UnknownRealtimeResponseCommand : ConversationUpdate
     {
-        internal UnknownRealtimeResponseCommand(ConversationUpdateKind type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, eventId, serializedAdditionalRawData)
+        internal UnknownRealtimeResponseCommand(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
         {
         }
 

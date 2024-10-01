@@ -13,11 +13,11 @@ namespace OpenAI.RealtimeConversation
         {
             Argument.AssertNotNull(session, nameof(session));
 
-            Type = InternalRealtimeRequestCommandType.SessionUpdate;
+            Kind = InternalRealtimeRequestCommandType.SessionUpdate;
             Session = session;
         }
 
-        internal InternalRealtimeRequestSessionUpdateCommand(InternalRealtimeRequestCommandType type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, ConversationSessionOptions session) : base(type, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestSessionUpdateCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, ConversationSessionOptions session) : base(kind, eventId, serializedAdditionalRawData)
         {
             Session = session;
         }

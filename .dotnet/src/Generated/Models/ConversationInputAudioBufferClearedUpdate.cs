@@ -11,10 +11,10 @@ namespace OpenAI.RealtimeConversation
     {
         internal ConversationInputAudioBufferClearedUpdate(string eventId) : base(eventId)
         {
-            Type = ConversationUpdateKind.InputAudioBufferCleared;
+            Kind = ConversationUpdateKind.InputAudioBufferCleared;
         }
 
-        internal ConversationInputAudioBufferClearedUpdate(ConversationUpdateKind type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, eventId, serializedAdditionalRawData)
+        internal ConversationInputAudioBufferClearedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
         {
         }
 

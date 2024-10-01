@@ -7,10 +7,8 @@ namespace OpenAI.RealtimeConversation;
 [CodeGenModel("RealtimeTurnDetection")]
 public partial class ConversationTurnDetectionOptions
 {
-    public ConversationTurnDetectionKind Kind => Type;
-
-    [CodeGenMember("Type")]
-    public ConversationTurnDetectionKind Type { get; set; }
+    [CodeGenMember("Kind")]
+    public ConversationTurnDetectionKind Kind { get; internal protected set; }
 
     public static ConversationTurnDetectionOptions CreateDisabledTurnDetectionOptions()
     {

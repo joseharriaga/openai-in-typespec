@@ -4,7 +4,6 @@ info:
   description: The OpenAI REST API. Please see https://platform.openai.com/docs/api-reference for more details.
   version: 0.0.0
 tags:
-  - name: Realtime
   - name: Audio
   - name: Assistants
   - name: Batch
@@ -16,6 +15,7 @@ tags:
   - name: Images
   - name: Models
   - name: Moderations
+  - name: Realtime
   - name: Vector Stores
   - name: Uploads
 paths:
@@ -1274,7 +1274,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
+                  $ref: '#/components/schemas/RealtimeResponseCommand'
       tags:
         - Realtime
       requestBody:
@@ -1284,7 +1284,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/Realtime.RealtimeRequestCommand'
+                $ref: '#/components/schemas/RealtimeRequestCommand'
   /threads:
     post:
       operationId: createThread
@@ -8724,7 +8724,7 @@ components:
             - owner
             - member
           description: '`owner` or `member`'
-    Realtime.RealtimeAudioFormat:
+    RealtimeAudioFormat:
       anyOf:
         - type: string
         - type: string
@@ -8732,34 +8732,34 @@ components:
             - pcm16
             - g711_ulaw
             - g711_alaw
-    Realtime.RealtimeAudioInputTranscriptionModel:
+    RealtimeAudioInputTranscriptionModel:
       anyOf:
         - type: string
         - type: string
           enum:
             - whisper-1
-    Realtime.RealtimeAudioInputTranscriptionSettings:
+    RealtimeAudioInputTranscriptionSettings:
       type: object
       properties:
         model:
           allOf:
-            - $ref: '#/components/schemas/Realtime.RealtimeAudioInputTranscriptionModel'
+            - $ref: '#/components/schemas/RealtimeAudioInputTranscriptionModel'
           default: whisper-1
-    Realtime.RealtimeContentPart:
+    RealtimeContentPart:
       type: object
       required:
         - type
       properties:
         type:
-          $ref: '#/components/schemas/Realtime.RealtimeContentPartType'
+          $ref: '#/components/schemas/RealtimeContentPartType'
       discriminator:
         propertyName: type
         mapping:
-          input_text: '#/components/schemas/Realtime.RealtimeRequestTextContentPart'
-          input_audio: '#/components/schemas/Realtime.RealtimeRequestAudioContentPart'
-          text: '#/components/schemas/Realtime.RealtimeResponseTextContentPart'
-          audio: '#/components/schemas/Realtime.RealtimeResponseAudioContentPart'
-    Realtime.RealtimeContentPartType:
+          input_text: '#/components/schemas/RealtimeRequestTextContentPart'
+          input_audio: '#/components/schemas/RealtimeRequestAudioContentPart'
+          text: '#/components/schemas/RealtimeResponseTextContentPart'
+          audio: '#/components/schemas/RealtimeResponseAudioContentPart'
+    RealtimeContentPartType:
       anyOf:
         - type: string
         - type: string
@@ -8768,7 +8768,7 @@ components:
             - input_audio
             - text
             - audio
-    Realtime.RealtimeFunctionTool:
+    RealtimeFunctionTool:
       type: object
       required:
         - type
@@ -8784,9 +8784,9 @@ components:
           type: string
         parameters: {}
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeTool'
+        - $ref: '#/components/schemas/RealtimeTool'
       description: The definition of a function tool as used by the realtime endpoint.
-    Realtime.RealtimeItemStatus:
+    RealtimeItemStatus:
       anyOf:
         - type: string
         - type: string
@@ -8794,7 +8794,7 @@ components:
             - in_progress
             - completed
             - incomplete
-    Realtime.RealtimeItemType:
+    RealtimeItemType:
       anyOf:
         - type: string
         - type: string
@@ -8802,7 +8802,7 @@ components:
             - message
             - function_call
             - function_call_output
-    Realtime.RealtimeMessageRole:
+    RealtimeMessageRole:
       anyOf:
         - type: string
         - type: string
@@ -8810,7 +8810,7 @@ components:
             - system
             - user
             - assistant
-    Realtime.RealtimeRequestAssistantMessageItem:
+    RealtimeRequestAssistantMessageItem:
       type: object
       required:
         - role
@@ -8823,10 +8823,10 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/Realtime.RealtimeRequestTextContentPart'
+            $ref: '#/components/schemas/RealtimeRequestTextContentPart'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestMessageItem'
-    Realtime.RealtimeRequestAudioContentPart:
+        - $ref: '#/components/schemas/RealtimeRequestMessageItem'
+    RealtimeRequestAudioContentPart:
       type: object
       required:
         - type
@@ -8838,30 +8838,30 @@ components:
         transcript:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeContentPart'
-    Realtime.RealtimeRequestCommand:
+        - $ref: '#/components/schemas/RealtimeContentPart'
+    RealtimeRequestCommand:
       type: object
       required:
         - type
       properties:
         type:
-          $ref: '#/components/schemas/Realtime.RealtimeRequestCommandType'
+          $ref: '#/components/schemas/RealtimeRequestCommandType'
         event_id:
           type: string
       discriminator:
         propertyName: type
         mapping:
-          session.update: '#/components/schemas/Realtime.RealtimeRequestSessionUpdateCommand'
-          input_audio_buffer.append: '#/components/schemas/Realtime.RealtimeRequestInputAudioBufferAppendCommand'
-          input_audio_buffer.commit: '#/components/schemas/Realtime.RealtimeRequestInputAudioBufferCommitCommand'
-          input_audio_buffer.clear: '#/components/schemas/Realtime.RealtimeRequestInputAudioBufferClearCommand'
-          conversation.item.create: '#/components/schemas/Realtime.RealtimeRequestItemCreateCommand'
-          conversation.item.delete: '#/components/schemas/Realtime.RealtimeRequestItemDeleteCommand'
-          conversation.item.truncate: '#/components/schemas/Realtime.RealtimeRequestItemTruncateCommand'
-          response.create: '#/components/schemas/Realtime.RealtimeRequestResponseCreateCommand'
-          response.cancel: '#/components/schemas/Realtime.RealtimeRequestResponseCancelCommand'
+          session.update: '#/components/schemas/RealtimeRequestSessionUpdateCommand'
+          input_audio_buffer.append: '#/components/schemas/RealtimeRequestInputAudioBufferAppendCommand'
+          input_audio_buffer.commit: '#/components/schemas/RealtimeRequestInputAudioBufferCommitCommand'
+          input_audio_buffer.clear: '#/components/schemas/RealtimeRequestInputAudioBufferClearCommand'
+          conversation.item.create: '#/components/schemas/RealtimeRequestItemCreateCommand'
+          conversation.item.delete: '#/components/schemas/RealtimeRequestItemDeleteCommand'
+          conversation.item.truncate: '#/components/schemas/RealtimeRequestItemTruncateCommand'
+          response.create: '#/components/schemas/RealtimeRequestResponseCreateCommand'
+          response.cancel: '#/components/schemas/RealtimeRequestResponseCancelCommand'
       description: A base representation for messages sent by the client to the service.
-    Realtime.RealtimeRequestCommandType:
+    RealtimeRequestCommandType:
       anyOf:
         - type: string
         - type: string
@@ -8875,7 +8875,7 @@ components:
             - conversation.item.truncate
             - response.create
             - response.cancel
-    Realtime.RealtimeRequestFunctionCallItem:
+    RealtimeRequestFunctionCallItem:
       type: object
       required:
         - type
@@ -8894,10 +8894,10 @@ components:
         arguments:
           type: string
         status:
-          $ref: '#/components/schemas/Realtime.RealtimeItemStatus'
+          $ref: '#/components/schemas/RealtimeItemStatus'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestItem'
-    Realtime.RealtimeRequestFunctionCallOutputItem:
+        - $ref: '#/components/schemas/RealtimeRequestItem'
+    RealtimeRequestFunctionCallOutputItem:
       type: object
       required:
         - type
@@ -8913,8 +8913,8 @@ components:
         output:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestItem'
-    Realtime.RealtimeRequestInputAudioBufferAppendCommand:
+        - $ref: '#/components/schemas/RealtimeRequestItem'
+    RealtimeRequestInputAudioBufferAppendCommand:
       type: object
       required:
         - type
@@ -8928,8 +8928,8 @@ components:
           type: string
           format: base64
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestCommand'
-    Realtime.RealtimeRequestInputAudioBufferClearCommand:
+        - $ref: '#/components/schemas/RealtimeRequestCommand'
+    RealtimeRequestInputAudioBufferClearCommand:
       type: object
       required:
         - type
@@ -8939,8 +8939,8 @@ components:
           enum:
             - input_audio_buffer.clear
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestCommand'
-    Realtime.RealtimeRequestInputAudioBufferCommitCommand:
+        - $ref: '#/components/schemas/RealtimeRequestCommand'
+    RealtimeRequestInputAudioBufferCommitCommand:
       type: object
       required:
         - type
@@ -8950,23 +8950,23 @@ components:
           enum:
             - input_audio_buffer.commit
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestCommand'
-    Realtime.RealtimeRequestItem:
+        - $ref: '#/components/schemas/RealtimeRequestCommand'
+    RealtimeRequestItem:
       type: object
       required:
         - type
       properties:
         type:
-          $ref: '#/components/schemas/Realtime.RealtimeItemType'
+          $ref: '#/components/schemas/RealtimeItemType'
         id:
           type: string
       discriminator:
         propertyName: type
         mapping:
-          message: '#/components/schemas/Realtime.RealtimeRequestMessageItem'
-          function_call: '#/components/schemas/Realtime.RealtimeRequestFunctionCallItem'
-          function_call_output: '#/components/schemas/Realtime.RealtimeRequestFunctionCallOutputItem'
-    Realtime.RealtimeRequestItemCreateCommand:
+          message: '#/components/schemas/RealtimeRequestMessageItem'
+          function_call: '#/components/schemas/RealtimeRequestFunctionCallItem'
+          function_call_output: '#/components/schemas/RealtimeRequestFunctionCallOutputItem'
+    RealtimeRequestItemCreateCommand:
       type: object
       required:
         - type
@@ -8979,10 +8979,10 @@ components:
         previous_item_id:
           type: string
         item:
-          $ref: '#/components/schemas/Realtime.RealtimeRequestItem'
+          $ref: '#/components/schemas/RealtimeRequestItem'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestCommand'
-    Realtime.RealtimeRequestItemDeleteCommand:
+        - $ref: '#/components/schemas/RealtimeRequestCommand'
+    RealtimeRequestItemDeleteCommand:
       type: object
       required:
         - type
@@ -8995,8 +8995,8 @@ components:
         item_id:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestCommand'
-    Realtime.RealtimeRequestItemTruncateCommand:
+        - $ref: '#/components/schemas/RealtimeRequestCommand'
+    RealtimeRequestItemTruncateCommand:
       type: object
       required:
         - type
@@ -9017,8 +9017,8 @@ components:
           type: integer
           format: int32
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestCommand'
-    Realtime.RealtimeRequestMessageItem:
+        - $ref: '#/components/schemas/RealtimeRequestCommand'
+    RealtimeRequestMessageItem:
       type: object
       required:
         - type
@@ -9029,18 +9029,18 @@ components:
           enum:
             - message
         role:
-          $ref: '#/components/schemas/Realtime.RealtimeMessageRole'
+          $ref: '#/components/schemas/RealtimeMessageRole'
         status:
-          $ref: '#/components/schemas/Realtime.RealtimeItemStatus'
+          $ref: '#/components/schemas/RealtimeItemStatus'
       discriminator:
         propertyName: role
         mapping:
-          system: '#/components/schemas/Realtime.RealtimeRequestSystemMessageItem'
-          user: '#/components/schemas/Realtime.RealtimeRequestUserMessageItem'
-          assistant: '#/components/schemas/Realtime.RealtimeRequestAssistantMessageItem'
+          system: '#/components/schemas/RealtimeRequestSystemMessageItem'
+          user: '#/components/schemas/RealtimeRequestUserMessageItem'
+          assistant: '#/components/schemas/RealtimeRequestAssistantMessageItem'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestItem'
-    Realtime.RealtimeRequestMessageReferenceItem:
+        - $ref: '#/components/schemas/RealtimeRequestItem'
+    RealtimeRequestMessageReferenceItem:
       type: object
       required:
         - type
@@ -9052,13 +9052,13 @@ components:
             - message
         id:
           type: string
-    Realtime.RealtimeRequestModel:
+    RealtimeRequestModel:
       anyOf:
         - type: string
         - type: string
           enum:
             - gpt-4o-realtime
-    Realtime.RealtimeRequestResponseCancelCommand:
+    RealtimeRequestResponseCancelCommand:
       type: object
       required:
         - type
@@ -9068,8 +9068,8 @@ components:
           enum:
             - response.cancel
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestCommand'
-    Realtime.RealtimeRequestResponseCreateCommand:
+        - $ref: '#/components/schemas/RealtimeRequestCommand'
+    RealtimeRequestResponseCreateCommand:
       type: object
       required:
         - type
@@ -9090,11 +9090,11 @@ components:
             append_input_items:
               type: array
               items:
-                $ref: '#/components/schemas/Realtime.RealtimeRequestItem'
+                $ref: '#/components/schemas/RealtimeRequestItem'
             input_items:
               type: array
               items:
-                $ref: '#/components/schemas/Realtime.RealtimeRequestItem'
+                $ref: '#/components/schemas/RealtimeRequestItem'
             instructions:
               type: string
             modalities:
@@ -9105,7 +9105,7 @@ components:
                   - text
                   - audio
             voice:
-              $ref: '#/components/schemas/Realtime.RealtimeVoice'
+              $ref: '#/components/schemas/RealtimeVoice'
             temperature:
               type: number
               format: float
@@ -9120,16 +9120,16 @@ components:
             tools:
               type: array
               items:
-                $ref: '#/components/schemas/Realtime.RealtimeTool'
+                $ref: '#/components/schemas/RealtimeTool'
             tool_choice:
-              $ref: '#/components/schemas/Realtime.RealtimeToolChoice'
+              $ref: '#/components/schemas/RealtimeToolChoice'
             output_audio_format:
-              $ref: '#/components/schemas/Realtime.RealtimeAudioFormat'
+              $ref: '#/components/schemas/RealtimeAudioFormat'
           required:
             - commit
             - cancel_previous
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestCommand'
+        - $ref: '#/components/schemas/RealtimeRequestCommand'
       description: |-
         Trigger model inference to generate a model turn, the response will be streamed back with
         a series of events, starting with an add_message event and ending with a turn_finished event.
@@ -9151,7 +9151,7 @@ components:
         - messages: If conversation_label is not set or does not exist, this will be the initial messages
         of the conversation, i.e. the context of the generation. If the conversation exists, this will
         throw an error.
-    Realtime.RealtimeRequestSessionUpdateCommand:
+    RealtimeRequestSessionUpdateCommand:
       type: object
       required:
         - type
@@ -9165,7 +9165,7 @@ components:
           type: object
           properties:
             model:
-              $ref: '#/components/schemas/Realtime.RealtimeRequestModel'
+              $ref: '#/components/schemas/RealtimeRequestModel'
             modalities:
               type: array
               items:
@@ -9175,25 +9175,25 @@ components:
                   - audio
             voice:
               allOf:
-                - $ref: '#/components/schemas/Realtime.RealtimeVoice'
+                - $ref: '#/components/schemas/RealtimeVoice'
               default: alloy
             instructions:
               type: string
             input_audio_format:
-              $ref: '#/components/schemas/Realtime.RealtimeAudioFormat'
+              $ref: '#/components/schemas/RealtimeAudioFormat'
             output_audio_format:
-              $ref: '#/components/schemas/Realtime.RealtimeAudioFormat'
+              $ref: '#/components/schemas/RealtimeAudioFormat'
             input_audio_transcription:
-              $ref: '#/components/schemas/Realtime.RealtimeAudioInputTranscriptionSettings'
+              $ref: '#/components/schemas/RealtimeAudioInputTranscriptionSettings'
             turn_detection:
-              $ref: '#/components/schemas/Realtime.RealtimeTurnDetection'
+              $ref: '#/components/schemas/RealtimeTurnDetection'
             tools:
               type: array
               items:
-                $ref: '#/components/schemas/Realtime.RealtimeTool'
+                $ref: '#/components/schemas/RealtimeTool'
             tool_choice:
               allOf:
-                - $ref: '#/components/schemas/Realtime.RealtimeToolChoice'
+                - $ref: '#/components/schemas/RealtimeToolChoice'
               default: auto
             temperature:
               type: number
@@ -9206,8 +9206,8 @@ components:
                   enum:
                     - inf
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestCommand'
-    Realtime.RealtimeRequestSystemMessageItem:
+        - $ref: '#/components/schemas/RealtimeRequestCommand'
+    RealtimeRequestSystemMessageItem:
       type: object
       required:
         - role
@@ -9220,10 +9220,10 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/Realtime.RealtimeRequestTextContentPart'
+            $ref: '#/components/schemas/RealtimeRequestTextContentPart'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestMessageItem'
-    Realtime.RealtimeRequestTextContentPart:
+        - $ref: '#/components/schemas/RealtimeRequestMessageItem'
+    RealtimeRequestTextContentPart:
       type: object
       required:
         - type
@@ -9236,8 +9236,8 @@ components:
         text:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeContentPart'
-    Realtime.RealtimeRequestUserMessageItem:
+        - $ref: '#/components/schemas/RealtimeContentPart'
+    RealtimeRequestUserMessageItem:
       type: object
       required:
         - role
@@ -9251,11 +9251,11 @@ components:
           type: array
           items:
             anyOf:
-              - $ref: '#/components/schemas/Realtime.RealtimeRequestTextContentPart'
-              - $ref: '#/components/schemas/Realtime.RealtimeRequestAudioContentPart'
+              - $ref: '#/components/schemas/RealtimeRequestTextContentPart'
+              - $ref: '#/components/schemas/RealtimeRequestAudioContentPart'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeRequestMessageItem'
-    Realtime.RealtimeResponse:
+        - $ref: '#/components/schemas/RealtimeRequestMessageItem'
+    RealtimeResponse:
       type: object
       required:
         - object
@@ -9273,17 +9273,17 @@ components:
           type: string
         status:
           allOf:
-            - $ref: '#/components/schemas/Realtime.RealtimeResponseStatus'
+            - $ref: '#/components/schemas/RealtimeResponseStatus'
           default: in_progress
         status_details:
           type: object
           allOf:
-            - $ref: '#/components/schemas/Realtime.RealtimeResponseStatusDetails'
+            - $ref: '#/components/schemas/RealtimeResponseStatusDetails'
           nullable: true
         output:
           type: array
           items:
-            $ref: '#/components/schemas/Realtime.RealtimeResponseItem'
+            $ref: '#/components/schemas/RealtimeResponseItem'
         usage:
           type: object
           properties:
@@ -9330,7 +9330,7 @@ components:
             - output_tokens
             - input_token_details
             - output_token_details
-    Realtime.RealtimeResponseApiError:
+    RealtimeResponseApiError:
       type: object
       required:
         - type
@@ -9344,7 +9344,7 @@ components:
           type: string
         param:
           type: string
-    Realtime.RealtimeResponseAudioContentPart:
+    RealtimeResponseAudioContentPart:
       type: object
       required:
         - type
@@ -9358,8 +9358,8 @@ components:
           type: string
           nullable: true
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeContentPart'
-    Realtime.RealtimeResponseAudioDeltaCommand:
+        - $ref: '#/components/schemas/RealtimeContentPart'
+    RealtimeResponseAudioDeltaCommand:
       type: object
       required:
         - type
@@ -9387,8 +9387,8 @@ components:
           type: string
           format: base64
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseAudioDoneCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseAudioDoneCommand:
       type: object
       required:
         - type
@@ -9412,8 +9412,8 @@ components:
           type: integer
           format: int32
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseAudioTranscriptDeltaCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseAudioTranscriptDeltaCommand:
       type: object
       required:
         - type
@@ -9440,8 +9440,8 @@ components:
         delta:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseAudioTranscriptDoneCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseAudioTranscriptDoneCommand:
       type: object
       required:
         - type
@@ -9465,8 +9465,8 @@ components:
           type: integer
           format: int32
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseCancelledStatusDetails:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseCancelledStatusDetails:
       type: object
       required:
         - type
@@ -9482,50 +9482,50 @@ components:
             - turn_detected
             - client_cancelled
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseStatusDetails'
-    Realtime.RealtimeResponseCommand:
+        - $ref: '#/components/schemas/RealtimeResponseStatusDetails'
+    RealtimeResponseCommand:
       type: object
       required:
         - type
         - event_id
       properties:
         type:
-          $ref: '#/components/schemas/Realtime.RealtimeResponseCommandType'
+          $ref: '#/components/schemas/RealtimeResponseCommandType'
         event_id:
           type: string
           nullable: true
       discriminator:
         propertyName: type
         mapping:
-          session.created: '#/components/schemas/Realtime.RealtimeResponseSessionCreatedCommand'
-          session.updated: '#/components/schemas/Realtime.RealtimeResponseSessionUpdatedCommand'
-          conversation.item.created: '#/components/schemas/Realtime.RealtimeResponseItemCreatedCommand'
-          conversation.item.deleted: '#/components/schemas/Realtime.RealtimeResponseItemDeletedCommand'
-          conversation.item.truncated: '#/components/schemas/Realtime.RealtimeResponseItemTruncatedCommand'
-          response.created: '#/components/schemas/Realtime.RealtimeResponseCreatedCommand'
-          response.done: '#/components/schemas/Realtime.RealtimeResponseDoneCommand'
-          rate_limits.updated: '#/components/schemas/Realtime.RealtimeResponseRateLimitsUpdatedCommand'
-          response.output_item.added: '#/components/schemas/Realtime.RealtimeResponseOutputItemAddedCommand'
-          response.output_item.done: '#/components/schemas/Realtime.RealtimeResponseOutputItemDoneCommand'
-          response.content_part.added: '#/components/schemas/Realtime.RealtimeResponseContentPartAddedCommand'
-          response.content_part.done: '#/components/schemas/Realtime.RealtimeResponseContentPartDoneCommand'
-          response.audio.delta: '#/components/schemas/Realtime.RealtimeResponseAudioDeltaCommand'
-          response.audio.done: '#/components/schemas/Realtime.RealtimeResponseAudioDoneCommand'
-          response.audio_transcript.delta: '#/components/schemas/Realtime.RealtimeResponseAudioTranscriptDeltaCommand'
-          response.audio_transcript.done: '#/components/schemas/Realtime.RealtimeResponseAudioTranscriptDoneCommand'
-          response.text.delta: '#/components/schemas/Realtime.RealtimeResponseTextDeltaCommand'
-          response.text.done: '#/components/schemas/Realtime.RealtimeResponseTextDoneCommand'
-          response.function_call_arguments.delta: '#/components/schemas/Realtime.RealtimeResponseFunctionCallArgumentsDeltaCommand'
-          response.function_call_arguments.done: '#/components/schemas/Realtime.RealtimeResponseFunctionCallArgumentsDoneCommand'
-          input_audio_buffer.speech_started: '#/components/schemas/Realtime.RealtimeResponseInputAudioBufferSpeechStartedCommand'
-          input_audio_buffer.speech_stopped: '#/components/schemas/Realtime.RealtimeResponseInputAudioBufferSpeechStoppedCommand'
-          conversation.item.input_audio_transcription.completed: '#/components/schemas/Realtime.RealtimeResponseItemInputAudioTranscriptionCompletedCommand'
-          conversation.item.input_audio_transcription.failed: '#/components/schemas/Realtime.RealtimeResponseItemInputAudioTranscriptionFailedCommand'
-          input_audio_buffer.committed: '#/components/schemas/Realtime.RealtimeResponseInputAudioBufferCommittedCommand'
-          input_audio_buffer.cleared: '#/components/schemas/Realtime.RealtimeResponseInputAudioBufferClearedCommand'
-          error: '#/components/schemas/Realtime.RealtimeResponseErrorCommand'
+          session.created: '#/components/schemas/RealtimeResponseSessionCreatedCommand'
+          session.updated: '#/components/schemas/RealtimeResponseSessionUpdatedCommand'
+          conversation.item.created: '#/components/schemas/RealtimeResponseItemCreatedCommand'
+          conversation.item.deleted: '#/components/schemas/RealtimeResponseItemDeletedCommand'
+          conversation.item.truncated: '#/components/schemas/RealtimeResponseItemTruncatedCommand'
+          response.created: '#/components/schemas/RealtimeResponseCreatedCommand'
+          response.done: '#/components/schemas/RealtimeResponseDoneCommand'
+          rate_limits.updated: '#/components/schemas/RealtimeResponseRateLimitsUpdatedCommand'
+          response.output_item.added: '#/components/schemas/RealtimeResponseOutputItemAddedCommand'
+          response.output_item.done: '#/components/schemas/RealtimeResponseOutputItemDoneCommand'
+          response.content_part.added: '#/components/schemas/RealtimeResponseContentPartAddedCommand'
+          response.content_part.done: '#/components/schemas/RealtimeResponseContentPartDoneCommand'
+          response.audio.delta: '#/components/schemas/RealtimeResponseAudioDeltaCommand'
+          response.audio.done: '#/components/schemas/RealtimeResponseAudioDoneCommand'
+          response.audio_transcript.delta: '#/components/schemas/RealtimeResponseAudioTranscriptDeltaCommand'
+          response.audio_transcript.done: '#/components/schemas/RealtimeResponseAudioTranscriptDoneCommand'
+          response.text.delta: '#/components/schemas/RealtimeResponseTextDeltaCommand'
+          response.text.done: '#/components/schemas/RealtimeResponseTextDoneCommand'
+          response.function_call_arguments.delta: '#/components/schemas/RealtimeResponseFunctionCallArgumentsDeltaCommand'
+          response.function_call_arguments.done: '#/components/schemas/RealtimeResponseFunctionCallArgumentsDoneCommand'
+          input_audio_buffer.speech_started: '#/components/schemas/RealtimeResponseInputAudioBufferSpeechStartedCommand'
+          input_audio_buffer.speech_stopped: '#/components/schemas/RealtimeResponseInputAudioBufferSpeechStoppedCommand'
+          conversation.item.input_audio_transcription.completed: '#/components/schemas/RealtimeResponseItemInputAudioTranscriptionCompletedCommand'
+          conversation.item.input_audio_transcription.failed: '#/components/schemas/RealtimeResponseItemInputAudioTranscriptionFailedCommand'
+          input_audio_buffer.committed: '#/components/schemas/RealtimeResponseInputAudioBufferCommittedCommand'
+          input_audio_buffer.cleared: '#/components/schemas/RealtimeResponseInputAudioBufferClearedCommand'
+          error: '#/components/schemas/RealtimeResponseErrorCommand'
       description: Base representation of a WebSocket message received from the service.
-    Realtime.RealtimeResponseCommandType:
+    RealtimeResponseCommandType:
       anyOf:
         - type: string
         - type: string
@@ -9557,7 +9557,7 @@ components:
             - input_audio_buffer.committed
             - input_audio_buffer.cleared
             - error
-    Realtime.RealtimeResponseContentPartAddedCommand:
+    RealtimeResponseContentPartAddedCommand:
       type: object
       required:
         - type
@@ -9582,10 +9582,10 @@ components:
           type: integer
           format: int32
         part:
-          $ref: '#/components/schemas/Realtime.RealtimeContentPart'
+          $ref: '#/components/schemas/RealtimeContentPart'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseContentPartDoneCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseContentPartDoneCommand:
       type: object
       required:
         - type
@@ -9610,10 +9610,10 @@ components:
           type: integer
           format: int32
         part:
-          $ref: '#/components/schemas/Realtime.RealtimeContentPart'
+          $ref: '#/components/schemas/RealtimeContentPart'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseCreatedCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseCreatedCommand:
       type: object
       required:
         - type
@@ -9624,10 +9624,10 @@ components:
           enum:
             - response.created
         response:
-          $ref: '#/components/schemas/Realtime.RealtimeResponse'
+          $ref: '#/components/schemas/RealtimeResponse'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseDoneCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseDoneCommand:
       type: object
       required:
         - type
@@ -9638,10 +9638,10 @@ components:
           enum:
             - response.done
         response:
-          $ref: '#/components/schemas/Realtime.RealtimeResponse'
+          $ref: '#/components/schemas/RealtimeResponse'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseError:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseError:
       type: object
       required:
         - type
@@ -9657,7 +9657,7 @@ components:
           type: string
         event_id:
           type: string
-    Realtime.RealtimeResponseErrorCommand:
+    RealtimeResponseErrorCommand:
       type: object
       required:
         - type
@@ -9668,11 +9668,11 @@ components:
           enum:
             - error
         error:
-          $ref: '#/components/schemas/Realtime.RealtimeResponseError'
+          $ref: '#/components/schemas/RealtimeResponseError'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
       description: A command that describes an error encountered during a realtime operation.
-    Realtime.RealtimeResponseFailedStatusDetails:
+    RealtimeResponseFailedStatusDetails:
       type: object
       required:
         - type
@@ -9684,8 +9684,8 @@ components:
             - failed
         error: {}
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseStatusDetails'
-    Realtime.RealtimeResponseFunctionCallArgumentsDeltaCommand:
+        - $ref: '#/components/schemas/RealtimeResponseStatusDetails'
+    RealtimeResponseFunctionCallArgumentsDeltaCommand:
       type: object
       required:
         - type
@@ -9711,8 +9711,8 @@ components:
         delta:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseFunctionCallArgumentsDoneCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseFunctionCallArgumentsDoneCommand:
       type: object
       required:
         - type
@@ -9741,8 +9741,8 @@ components:
         arguments:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseFunctionCallItem:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseFunctionCallItem:
       type: object
       required:
         - type
@@ -9762,10 +9762,10 @@ components:
         arguments:
           type: string
         status:
-          $ref: '#/components/schemas/Realtime.RealtimeItemStatus'
+          $ref: '#/components/schemas/RealtimeItemStatus'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseItem'
-    Realtime.RealtimeResponseFunctionCallOutputItem:
+        - $ref: '#/components/schemas/RealtimeResponseItem'
+    RealtimeResponseFunctionCallOutputItem:
       type: object
       required:
         - type
@@ -9781,8 +9781,8 @@ components:
         output:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseItem'
-    Realtime.RealtimeResponseIncompleteStatusDetails:
+        - $ref: '#/components/schemas/RealtimeResponseItem'
+    RealtimeResponseIncompleteStatusDetails:
       type: object
       required:
         - type
@@ -9798,8 +9798,8 @@ components:
             - max_output_tokens
             - content_filter
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseStatusDetails'
-    Realtime.RealtimeResponseInputAudioBufferClearedCommand:
+        - $ref: '#/components/schemas/RealtimeResponseStatusDetails'
+    RealtimeResponseInputAudioBufferClearedCommand:
       type: object
       required:
         - type
@@ -9809,8 +9809,8 @@ components:
           enum:
             - input_audio_buffer.cleared
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseInputAudioBufferCommittedCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseInputAudioBufferCommittedCommand:
       type: object
       required:
         - type
@@ -9825,8 +9825,8 @@ components:
         previous_item_id:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseInputAudioBufferSpeechStartedCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseInputAudioBufferSpeechStartedCommand:
       type: object
       required:
         - type
@@ -9843,8 +9843,8 @@ components:
         item_id:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseInputAudioBufferSpeechStoppedCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseInputAudioBufferSpeechStoppedCommand:
       type: object
       required:
         - type
@@ -9861,8 +9861,8 @@ components:
         item_id:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseItem:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseItem:
       type: object
       required:
         - object
@@ -9874,17 +9874,17 @@ components:
           enum:
             - realtime.item
         type:
-          $ref: '#/components/schemas/Realtime.RealtimeItemType'
+          $ref: '#/components/schemas/RealtimeItemType'
         id:
           type: string
           nullable: true
       discriminator:
         propertyName: type
         mapping:
-          message: '#/components/schemas/Realtime.RealtimeResponseMessageItem'
-          function_call: '#/components/schemas/Realtime.RealtimeResponseFunctionCallItem'
-          function_call_output: '#/components/schemas/Realtime.RealtimeResponseFunctionCallOutputItem'
-    Realtime.RealtimeResponseItemCreatedCommand:
+          message: '#/components/schemas/RealtimeResponseMessageItem'
+          function_call: '#/components/schemas/RealtimeResponseFunctionCallItem'
+          function_call_output: '#/components/schemas/RealtimeResponseFunctionCallOutputItem'
+    RealtimeResponseItemCreatedCommand:
       type: object
       required:
         - type
@@ -9895,10 +9895,10 @@ components:
           enum:
             - conversation.item.created
         item:
-          $ref: '#/components/schemas/Realtime.RealtimeResponseItem'
+          $ref: '#/components/schemas/RealtimeResponseItem'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseItemDeletedCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseItemDeletedCommand:
       type: object
       required:
         - type
@@ -9911,8 +9911,8 @@ components:
         item_id:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseItemInputAudioTranscriptionCompletedCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseItemInputAudioTranscriptionCompletedCommand:
       type: object
       required:
         - type
@@ -9932,8 +9932,8 @@ components:
         transcript:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseItemInputAudioTranscriptionFailedCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseItemInputAudioTranscriptionFailedCommand:
       type: object
       required:
         - type
@@ -9951,10 +9951,10 @@ components:
           type: integer
           format: int32
         error:
-          $ref: '#/components/schemas/Realtime.RealtimeResponseApiError'
+          $ref: '#/components/schemas/RealtimeResponseApiError'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseItemTruncatedCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseItemTruncatedCommand:
       type: object
       required:
         - type
@@ -9976,8 +9976,8 @@ components:
           format: int32
           default: 0
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseMessageItem:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseMessageItem:
       type: object
       required:
         - type
@@ -9990,16 +9990,16 @@ components:
           enum:
             - message
         role:
-          $ref: '#/components/schemas/Realtime.RealtimeMessageRole'
+          $ref: '#/components/schemas/RealtimeMessageRole'
         content:
           type: array
           items:
-            $ref: '#/components/schemas/Realtime.RealtimeContentPart'
+            $ref: '#/components/schemas/RealtimeContentPart'
         status:
-          $ref: '#/components/schemas/Realtime.RealtimeItemStatus'
+          $ref: '#/components/schemas/RealtimeItemStatus'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseItem'
-    Realtime.RealtimeResponseOutputItemAddedCommand:
+        - $ref: '#/components/schemas/RealtimeResponseItem'
+    RealtimeResponseOutputItemAddedCommand:
       type: object
       required:
         - type
@@ -10017,10 +10017,10 @@ components:
           type: integer
           format: int32
         item:
-          $ref: '#/components/schemas/Realtime.RealtimeResponseItem'
+          $ref: '#/components/schemas/RealtimeResponseItem'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseOutputItemDoneCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseOutputItemDoneCommand:
       type: object
       required:
         - type
@@ -10038,10 +10038,10 @@ components:
           type: integer
           format: int32
         item:
-          $ref: '#/components/schemas/Realtime.RealtimeResponseItem'
+          $ref: '#/components/schemas/RealtimeResponseItem'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseRateLimitDetailsItem:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseRateLimitDetailsItem:
       type: object
       required:
         - name
@@ -10060,7 +10060,7 @@ components:
         reset_seconds:
           type: number
           format: float
-    Realtime.RealtimeResponseRateLimitsUpdatedCommand:
+    RealtimeResponseRateLimitsUpdatedCommand:
       type: object
       required:
         - type
@@ -10073,10 +10073,10 @@ components:
         rate_limits:
           type: array
           items:
-            $ref: '#/components/schemas/Realtime.RealtimeResponseRateLimitDetailsItem'
+            $ref: '#/components/schemas/RealtimeResponseRateLimitDetailsItem'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseSession:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseSession:
       type: object
       required:
         - object
@@ -10112,24 +10112,24 @@ components:
         instructions:
           type: string
         voice:
-          $ref: '#/components/schemas/Realtime.RealtimeVoice'
+          $ref: '#/components/schemas/RealtimeVoice'
         input_audio_format:
-          $ref: '#/components/schemas/Realtime.RealtimeAudioFormat'
+          $ref: '#/components/schemas/RealtimeAudioFormat'
         output_audio_format:
-          $ref: '#/components/schemas/Realtime.RealtimeAudioFormat'
+          $ref: '#/components/schemas/RealtimeAudioFormat'
         input_audio_transcription:
           type: object
           allOf:
-            - $ref: '#/components/schemas/Realtime.RealtimeAudioInputTranscriptionSettings'
+            - $ref: '#/components/schemas/RealtimeAudioInputTranscriptionSettings'
           nullable: true
         turn_detection:
-          $ref: '#/components/schemas/Realtime.RealtimeTurnDetection'
+          $ref: '#/components/schemas/RealtimeTurnDetection'
         tools:
           type: array
           items:
-            $ref: '#/components/schemas/Realtime.RealtimeTool'
+            $ref: '#/components/schemas/RealtimeTool'
         tool_choice:
-          $ref: '#/components/schemas/Realtime.RealtimeToolChoice'
+          $ref: '#/components/schemas/RealtimeToolChoice'
         temperature:
           type: number
           format: float
@@ -10137,7 +10137,7 @@ components:
           type: integer
           format: int32
           nullable: true
-    Realtime.RealtimeResponseSessionCreatedCommand:
+    RealtimeResponseSessionCreatedCommand:
       type: object
       required:
         - type
@@ -10148,10 +10148,10 @@ components:
           enum:
             - session.created
         session:
-          $ref: '#/components/schemas/Realtime.RealtimeResponseSession'
+          $ref: '#/components/schemas/RealtimeResponseSession'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseSessionUpdatedCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseSessionUpdatedCommand:
       type: object
       required:
         - type
@@ -10162,10 +10162,10 @@ components:
           enum:
             - session.updated
         session:
-          $ref: '#/components/schemas/Realtime.RealtimeResponseSession'
+          $ref: '#/components/schemas/RealtimeResponseSession'
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseStatus:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseStatus:
       anyOf:
         - type: string
         - type: string
@@ -10175,20 +10175,20 @@ components:
             - cancelled
             - incomplete
             - failed
-    Realtime.RealtimeResponseStatusDetails:
+    RealtimeResponseStatusDetails:
       type: object
       required:
         - type
       properties:
         type:
-          $ref: '#/components/schemas/Realtime.RealtimeResponseStatus'
+          $ref: '#/components/schemas/RealtimeResponseStatus'
       discriminator:
         propertyName: type
         mapping:
-          cancelled: '#/components/schemas/Realtime.RealtimeResponseCancelledStatusDetails'
-          incomplete: '#/components/schemas/Realtime.RealtimeResponseIncompleteStatusDetails'
-          failed: '#/components/schemas/Realtime.RealtimeResponseFailedStatusDetails'
-    Realtime.RealtimeResponseTextContentPart:
+          cancelled: '#/components/schemas/RealtimeResponseCancelledStatusDetails'
+          incomplete: '#/components/schemas/RealtimeResponseIncompleteStatusDetails'
+          failed: '#/components/schemas/RealtimeResponseFailedStatusDetails'
+    RealtimeResponseTextContentPart:
       type: object
       required:
         - type
@@ -10201,8 +10201,8 @@ components:
         text:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeContentPart'
-    Realtime.RealtimeResponseTextDeltaCommand:
+        - $ref: '#/components/schemas/RealtimeContentPart'
+    RealtimeResponseTextDeltaCommand:
       type: object
       required:
         - type
@@ -10229,8 +10229,8 @@ components:
         delta:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeResponseTextDoneCommand:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeResponseTextDoneCommand:
       type: object
       required:
         - type
@@ -10257,8 +10257,8 @@ components:
         value:
           type: string
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeResponseCommand'
-    Realtime.RealtimeServerVadTurnDetection:
+        - $ref: '#/components/schemas/RealtimeResponseCommand'
+    RealtimeServerVadTurnDetection:
       type: object
       required:
         - type
@@ -10278,27 +10278,27 @@ components:
           type: string
           format: duration
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeTurnDetection'
-    Realtime.RealtimeTool:
+        - $ref: '#/components/schemas/RealtimeTurnDetection'
+    RealtimeTool:
       type: object
       required:
         - type
       properties:
         type:
-          $ref: '#/components/schemas/Realtime.RealtimeToolType'
+          $ref: '#/components/schemas/RealtimeToolType'
       discriminator:
         propertyName: type
         mapping:
-          function: '#/components/schemas/Realtime.RealtimeFunctionTool'
+          function: '#/components/schemas/RealtimeFunctionTool'
       description: The base representation of a realtime tool definition.
-    Realtime.RealtimeToolChoice:
+    RealtimeToolChoice:
       anyOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeToolChoiceLiteral'
-        - $ref: '#/components/schemas/Realtime.RealtimeToolChoiceObject'
+        - $ref: '#/components/schemas/RealtimeToolChoiceLiteral'
+        - $ref: '#/components/schemas/RealtimeToolChoiceObject'
       description: |-
         The combined set of available representations for a realtime tool_choice parameter, encompassing both string
         literal options like 'auto' as well as structured references to defined tools.
-    Realtime.RealtimeToolChoiceFunctionObject:
+    RealtimeToolChoiceFunctionObject:
       type: object
       required:
         - type
@@ -10316,9 +10316,9 @@ components:
           required:
             - name
       allOf:
-        - $ref: '#/components/schemas/Realtime.RealtimeToolChoiceObject'
+        - $ref: '#/components/schemas/RealtimeToolChoiceObject'
       description: The representation of a realtime tool_choice selecting a named function tool.
-    Realtime.RealtimeToolChoiceLiteral:
+    RealtimeToolChoiceLiteral:
       anyOf:
         - type: string
         - type: string
@@ -10327,19 +10327,19 @@ components:
             - none
             - required
       description: The available set of mode-level, string literal tool_choice options for the realtime endpoint.
-    Realtime.RealtimeToolChoiceObject:
+    RealtimeToolChoiceObject:
       type: object
       required:
         - type
       properties:
         type:
-          $ref: '#/components/schemas/Realtime.RealtimeToolType'
+          $ref: '#/components/schemas/RealtimeToolType'
       discriminator:
         propertyName: type
         mapping:
-          function: '#/components/schemas/Realtime.RealtimeToolChoiceFunctionObject'
+          function: '#/components/schemas/RealtimeToolChoiceFunctionObject'
       description: A base representation for a realtime tool_choice selecting a named tool.
-    Realtime.RealtimeToolType:
+    RealtimeToolType:
       anyOf:
         - type: string
         - type: string
@@ -10348,24 +10348,24 @@ components:
       description: |-
         The supported tool type discriminators for realtime tools.
         Currently, only 'function' tools are supported.
-    Realtime.RealtimeTurnDetection:
+    RealtimeTurnDetection:
       type: object
       required:
         - type
       properties:
         type:
-          $ref: '#/components/schemas/Realtime.RealtimeTurnDetectionType'
+          $ref: '#/components/schemas/RealtimeTurnDetectionType'
       discriminator:
         propertyName: type
         mapping:
-          server_vad: '#/components/schemas/Realtime.RealtimeServerVadTurnDetection'
-    Realtime.RealtimeTurnDetectionType:
+          server_vad: '#/components/schemas/RealtimeServerVadTurnDetection'
+    RealtimeTurnDetectionType:
       anyOf:
         - type: string
         - type: string
           enum:
             - server_vad
-    Realtime.RealtimeVoice:
+    RealtimeVoice:
       anyOf:
         - type: string
         - type: string

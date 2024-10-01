@@ -14,11 +14,11 @@ namespace OpenAI.RealtimeConversation
         {
             Argument.AssertNotNull(rateLimits, nameof(rateLimits));
 
-            Type = ConversationUpdateKind.RateLimitsUpdated;
+            Kind = ConversationUpdateKind.RateLimitsUpdated;
             RateLimits = rateLimits.ToList();
         }
 
-        internal ConversationRateLimitsUpdatedUpdate(ConversationUpdateKind type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, IReadOnlyList<ConversationRateLimitDetailsItem> rateLimits) : base(type, eventId, serializedAdditionalRawData)
+        internal ConversationRateLimitsUpdatedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, IReadOnlyList<ConversationRateLimitDetailsItem> rateLimits) : base(kind, eventId, serializedAdditionalRawData)
         {
             RateLimits = rateLimits;
         }

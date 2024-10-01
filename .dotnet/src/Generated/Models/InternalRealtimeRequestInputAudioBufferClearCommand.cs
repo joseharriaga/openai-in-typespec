@@ -11,10 +11,10 @@ namespace OpenAI.RealtimeConversation
     {
         public InternalRealtimeRequestInputAudioBufferClearCommand()
         {
-            Type = InternalRealtimeRequestCommandType.InputAudioBufferClear;
+            Kind = InternalRealtimeRequestCommandType.InputAudioBufferClear;
         }
 
-        internal InternalRealtimeRequestInputAudioBufferClearCommand(InternalRealtimeRequestCommandType type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestInputAudioBufferClearCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
         {
         }
     }

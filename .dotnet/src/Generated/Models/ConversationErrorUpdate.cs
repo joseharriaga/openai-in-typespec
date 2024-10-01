@@ -13,11 +13,11 @@ namespace OpenAI.RealtimeConversation
         {
             Argument.AssertNotNull(error, nameof(error));
 
-            Type = ConversationUpdateKind.Error;
+            Kind = ConversationUpdateKind.Error;
             _error = error;
         }
 
-        internal ConversationErrorUpdate(ConversationUpdateKind type, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeResponseError error) : base(type, eventId, serializedAdditionalRawData)
+        internal ConversationErrorUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeResponseError error) : base(kind, eventId, serializedAdditionalRawData)
         {
             _error = error;
         }

@@ -44,7 +44,7 @@ namespace OpenAI.RealtimeConversation
             if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type.ToSerialString());
+                writer.WriteStringValue(Kind.ToSerialString());
             }
             if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
             {

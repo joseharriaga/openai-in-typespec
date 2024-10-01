@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Azure.Core;
 
 namespace Azure.AI.OpenAI.Chat;
 
@@ -25,6 +26,7 @@ internal partial class InternalAzureSearchChatDataSourceParameters
         }
     }
 
+#if !AZURE_OPENAI_GA
     /// <summary>
     /// The authentication options to use with the Azure Search data source.
     /// </summary>
@@ -34,9 +36,22 @@ internal partial class InternalAzureSearchChatDataSourceParameters
     /// <item><see cref="DataSourceAuthentication.FromApiKey(string)"/></item>
     /// <item><see cref="DataSourceAuthentication.FromAccessToken(string)"/></item>
     /// <item><see cref="DataSourceAuthentication.FromSystemManagedIdentity()"/></item>
-    /// <item><see cref="DataSourceAuthentication.FromUserManagedIdentity(string)"/></item>
+    /// <item><see cref="DataSourceAuthentication.FromUserManagedIdentity(ResourceIdentifier)"/></item>
     /// </list>
     /// </remarks>
+#else
+    /// <summary>
+    /// The authentication options to use with the Azure Search data source.
+    /// </summary>
+    /// <remarks>
+    /// Azure Search data sources support any of the following options:
+    /// <list type="bullet">
+    /// <item><see cref="DataSourceAuthentication.FromApiKey(string)"/></item>
+    /// <item><see cref="DataSourceAuthentication.FromSystemManagedIdentity()"/></item>
+    /// <item><see cref="DataSourceAuthentication.FromUserManagedIdentity(ResourceIdentifier)"/></item>
+    /// </list>
+    /// </remarks>
+#endif
     [CodeGenMember("Authentication")]
     public DataSourceAuthentication Authentication { get; set; }
 

@@ -129,7 +129,7 @@ public class BatchTests : AoaiTestBase<BatchClient>
         private MockHttpMessageHandler _handler;
         private List<BatchOperation> _operations;
         private string? _uploadId;
-        private FileClient _fileClient;
+        private OpenAIFileClient _fileClient;
 
         public BatchOperations(AoaiTestBase<BatchClient> testBase, BatchClient batchClient)
         {
@@ -139,7 +139,7 @@ public class BatchTests : AoaiTestBase<BatchClient>
 
             BatchFileName = "batch-" + Guid.NewGuid().ToString("D") + ".json";
 
-            _fileClient = testBase.GetTestClientFrom<FileClient>(batchClient);
+            _fileClient = testBase.GetTestClientFrom<OpenAIFileClient>(batchClient);
 
             // Generate the fake pipeline to capture requests and save them to a file later
             AzureOpenAIClient fakeTopLevel = new AzureOpenAIClient(

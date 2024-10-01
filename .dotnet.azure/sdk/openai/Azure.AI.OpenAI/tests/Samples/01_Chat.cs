@@ -237,8 +237,8 @@ public partial class AzureOpenAISamples
     #region
     public class SequenceBuilder<T>
     {
-        Segment _first;
-        Segment _last;
+        private Segment _first;
+        private Segment _last;
 
         public void Append(ReadOnlyMemory<T> data)
         {

@@ -397,8 +397,8 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
             case nameof(EmbeddingClient):
                 clientObject = topLevelClient.GetEmbeddingClient(getDeployment());
                 break;
-            case nameof(FileClient):
-                clientObject = topLevelClient.GetFileClient();
+            case nameof(OpenAIFileClient):
+                clientObject = topLevelClient.GetOpenAIFileClient();
                 break;
             case nameof(FineTuningClient):
                 clientObject = topLevelClient.GetFineTuningClient();
@@ -638,7 +638,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
         RequestOptions requestOptions = new() { ErrorOptions = ClientErrorBehaviors.NoThrow, };
 
 #if !AZURE_OPENAI_GA
-        FileClient fileClient = topLevelCleanupClient.GetFileClient();
+        OpenAIFileClient fileClient = topLevelCleanupClient.GetOpenAIFileClient();
         foreach (string fileId in _fileIdsToDelete)
         {
             Console.WriteLine($"Cleanup: {fileId} -> {fileClient.DeleteFile(fileId, requestOptions)?.GetRawResponse().Status}");

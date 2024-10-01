@@ -27,6 +27,7 @@ using OpenAI;
 
 @@clientName(RealtimeResponseAudioDeltaCommand.type, "Kind", "csharp");
 @@clientName(RealtimeResponseAudioDeltaCommand.type, "Kind", "csharp");
+@@clientName(RealtimeResponseAudioDoneCommand.type, "Kind", "csharp");
 @@clientName(RealtimeResponseAudioTranscriptDeltaCommand.type,
   "Kind",
   "csharp"

@@ -26,4 +26,6 @@ model ChatCompletionFunctionChoice {}
 
 model ChatCompletionToolChoice {}
 
+model ChatMessageContent {}
+
 model ChatMessageContentPart {}

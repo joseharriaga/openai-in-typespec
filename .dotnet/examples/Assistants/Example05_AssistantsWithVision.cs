@@ -3,6 +3,7 @@ using OpenAI.Assistants;
 using OpenAI.Files;
 using System;
 using System.ClientModel;
+using System.IO;
 
 namespace OpenAI.Examples;
 
@@ -12,14 +13,15 @@ public partial class AssistantExamples
     public void Example05_AssistantsWithVision()
     {
         // Assistants is a beta API and subject to change; acknowledge its experimental status by suppressing the matching warning.
+        #pragma warning disable OPENAI001
         OpenAIClient openAIClient = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
-        FileClient fileClient = openAIClient.GetFileClient();
+        OpenAIFileClient fileClient = openAIClient.GetOpenAIFileClient();
         AssistantClient assistantClient = openAIClient.GetAssistantClient();
 
         OpenAIFile pictureOfAppleFile = fileClient.UploadFile(
-            "picture-of-apple.jpg",
+            Path.Combine("Assets", "picture-of-apple.png"),
             FileUploadPurpose.Vision);
-        Uri linkToPictureOfOrange = new("https://platform.openai.com/fictitious-files/picture-of-orange.png");
+        Uri linkToPictureOfOrange = new("https://raw.githubusercontent.com/openai/openai-dotnet/refs/heads/main/examples/Assets/picture-of-orange.png");
 
         Assistant assistant = assistantClient.CreateAssistant(
             "gpt-4o",

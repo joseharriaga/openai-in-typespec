@@ -1,6 +1,11 @@
-﻿using System.ClientModel;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
+
+#if !AZURE_OPENAI_GA
 
 #nullable enable
 
@@ -10,7 +15,7 @@ namespace Azure.AI.OpenAI.FineTuning;
 /// A long-running operation for creating a new model from a given dataset.
 /// </summary>
 [Experimental("OPENAI001")]
-public class AzureFineTuningJobOperation : FineTuningJobOperation
+internal class AzureFineTuningJobOperation : FineTuningJobOperation
 {
     private readonly PipelineMessageClassifier _deleteJobClassifier;
     private readonly ClientPipeline _pipeline;
@@ -164,3 +169,5 @@ public class AzureFineTuningJobOperation : FineTuningJobOperation
         .WithOptions(options)
         .Build();
 }
+
+#endif

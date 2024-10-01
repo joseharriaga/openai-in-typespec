@@ -14,7 +14,8 @@ public partial class ChatExamples
     {
         ChatClient client = new("gpt-4o-mini", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-        List<ChatMessage> messages = [
+        List<ChatMessage> messages =
+        [
             new UserChatMessage("How can I solve 8x + 7 = -23?"),
         ];
 
@@ -47,9 +48,9 @@ public partial class ChatExamples
                 jsonSchemaIsStrict: true)
         };
 
-        ChatCompletion chatCompletion = await client.CompleteChatAsync(messages, options);
+        ChatCompletion completion = await client.CompleteChatAsync(messages, options);
 
-        using JsonDocument structuredJson = JsonDocument.Parse(chatCompletion.ToString());
+        using JsonDocument structuredJson = JsonDocument.Parse(completion.Content[0].Text);
 
         Console.WriteLine($"Final answer: {structuredJson.RootElement.GetProperty("final_answer").GetString()}");
         Console.WriteLine("Reasoning steps:");

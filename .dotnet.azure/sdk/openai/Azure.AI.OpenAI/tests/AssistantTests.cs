@@ -22,6 +22,7 @@ namespace Azure.AI.OpenAI.Tests;
 
 public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsync)
 {
+#if !AZURE_OPENAI_GA
     [Test]
     [Category("Smoke")]
     public void CanCreateClient() => Assert.That(GetTestClient(), Is.InstanceOf<AssistantClient>());
@@ -34,16 +35,16 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
         Assert.DoesNotThrow(() =>
             options = new AzureOpenAIClientOptions()
             {
-                ApplicationId = "init does not throw",
+                UserAgentApplicationId = "init does not throw",
             });
         Assert.DoesNotThrow(() =>
-            options.ApplicationId = "set before freeze OK");
+            options.UserAgentApplicationId = "set before freeze OK");
         AzureOpenAIClient azureClient = new(
             new Uri("https://www.microsoft.com/placeholder"),
             new ApiKeyCredential("placeholder"),
             options);
         Assert.Throws<InvalidOperationException>(() =>
-            options.ApplicationId = "set after freeze throws");
+            options.UserAgentApplicationId = "set after freeze throws");
     }
 
     [RecordedTest]
@@ -508,7 +509,7 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
         // First, we need to upload a simple test file.
         AssistantClient client = GetTestClient();
         string modelName = client.DeploymentOrThrow();
-        FileClient fileClient = GetTestClientFrom<FileClient>(client);
+        OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(client);
 
         OpenAIFile testFile = await fileClient.UploadFileAsync(
             BinaryData.FromString("""
@@ -705,4 +706,13 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
           "additionalProperties": false
         }
         """);
+
+#else
+    [Test]
+    [SyncOnly]
+    public void VersionUnsupportedAssistantClientThrows()
+    {
+        Assert.Throws<InvalidOperationException>(() => GetTestClient());
+    }
+#endif
 }

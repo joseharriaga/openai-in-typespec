@@ -9,7 +9,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Azure.AI.OpenAI.FineTuning;
 using Azure.AI.OpenAI.Tests.Models;
 using Azure.AI.OpenAI.Tests.Utils;
 using Azure.AI.OpenAI.Tests.Utils.Config;
@@ -19,6 +18,10 @@ using OpenAI.FineTuning;
 using OpenAI.TestFramework;
 using OpenAI.TestFramework.Utils;
 
+#if !AZURE_OPENAI_GA
+using Azure.AI.OpenAI.FineTuning;
+#endif
+
 namespace Azure.AI.OpenAI.Tests;
 
 public class FineTuningTests : AoaiTestBase<FineTuningClient>
@@ -26,6 +29,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     public FineTuningTests(bool isAsync) : base(isAsync)
     { }
 
+#if !AZURE_OPENAI_GA
     [Test]
     [Category("Smoke")]
     public void CanCreateClient() => Assert.That(GetTestClient(), Is.InstanceOf<FineTuningClient>());
@@ -133,7 +137,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         var fineTuningFile = Assets.FineTuning;
 
         FineTuningClient client = GetTestClient();
-        FileClient fileClient = GetTestClientFrom<FileClient>(client);
+        OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(client);
 
         OpenAIFile uploadedFile;
         try
@@ -211,7 +215,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         var fineTuningFile = Assets.FineTuning;
 
         FineTuningClient client = GetTestClient();
-        FileClient fileClient = GetTestClientFrom<FileClient>(client);
+        OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(client);
         OpenAIFile uploadedFile;
         try
         {
@@ -255,7 +259,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         Assert.True(deleted, "Failed to delete fine tuning model: {0}", job.FineTunedModel);
     }
 
-    [RecordedTest(AutomaticRecord = false)]
+    [RecordedTest]//AutomaticRecord = false)]
     [Category("LongRunning")] // CAUTION: This test can take around 10 to 15 *minutes* in live mode to run
     public async Task DeployAndChatWithModel()
     {
@@ -342,7 +346,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         return model!;
     }
 
-    private async Task<OpenAIFile> UploadAndWaitForCompleteOrFail(FileClient fileClient, string path)
+    private async Task<OpenAIFile> UploadAndWaitForCompleteOrFail(OpenAIFileClient fileClient, string path)
     {
         OpenAIFile uploadedFile = await fileClient.UploadFileAsync(path, FileUploadPurpose.FineTune);
         Validate(uploadedFile);
@@ -420,4 +424,15 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     #endregion
+
+#else
+
+    [Test]
+    [SyncOnly]
+    public void UnsupportedVersionFineTuningClientThrows()
+    {
+        Assert.Throws<InvalidOperationException>(() => GetTestClient());
+    }
+
+#endif
 }

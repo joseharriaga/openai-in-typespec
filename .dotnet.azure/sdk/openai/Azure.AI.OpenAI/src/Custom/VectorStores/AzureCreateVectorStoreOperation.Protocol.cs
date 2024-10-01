@@ -1,4 +1,9 @@
-﻿using Azure.AI.OpenAI;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+#if !AZURE_OPENAI_GA
+
+using Azure.AI.OpenAI;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -17,3 +22,5 @@ internal partial class AzureCreateVectorStoreOperation
             .WithOptions(options)
             .Build();
 }
+
+#endif

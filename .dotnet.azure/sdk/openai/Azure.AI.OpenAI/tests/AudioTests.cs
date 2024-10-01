@@ -33,6 +33,7 @@ public class AudioTests(bool isAsync) : AoaiTestBase<AudioClient>(isAsync)
         Assert.That(translation?.Text, Is.Not.Null.Or.Empty);
     }
 
+#if !AZURE_OPENAI_GA
     [RecordedTest]
     public async Task TextToSpeechWorks()
     {
@@ -42,6 +43,15 @@ public class AudioTests(bool isAsync) : AoaiTestBase<AudioClient>(isAsync)
             GeneratedSpeechVoice.Alloy);
         Assert.That(ttsData, Is.Not.Null);
     }
+#else
+    [Test]
+    public void VersionNotSupportedTextToSpeechThrows()
+    {
+        AudioClient audioClient = GetTestClient("tts");
+        Assert.ThrowsAsync<InvalidOperationException>(async ()
+            => await audioClient.GenerateSpeechAsync("hello, world!", GeneratedSpeechVoice.Alloy));
+    }
+#endif
 
     [RecordedTest]
     [TestCase("json")]

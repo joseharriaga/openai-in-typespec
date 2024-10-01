@@ -1,7 +1,12 @@
-﻿using System.ClientModel.Primitives;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+#if !AZURE_OPENAI_GA
+
+using System.ClientModel.Primitives;
 
 namespace Azure.AI.OpenAI.VectorStores;
-public partial class AzureAddFileToVectorStoreOperation : AddFileToVectorStoreOperation
+internal partial class AzureAddFileToVectorStoreOperation : AddFileToVectorStoreOperation
 {
     internal override PipelineMessage CreateGetVectorStoreFileRequest(string vectorStoreId, string fileId, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, _apiVersion)
@@ -11,3 +16,5 @@ public partial class AzureAddFileToVectorStoreOperation : AddFileToVectorStoreOp
             .WithOptions(options)
             .Build();
 }
+
+#endif

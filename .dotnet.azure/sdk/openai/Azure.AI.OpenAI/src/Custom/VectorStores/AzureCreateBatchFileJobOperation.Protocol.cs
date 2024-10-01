@@ -1,8 +1,13 @@
-﻿using System.ClientModel;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+#if !AZURE_OPENAI_GA
+
+using System.ClientModel;
 using System.ClientModel.Primitives;
 
 namespace Azure.AI.OpenAI.VectorStores;
-public partial class AzureCreateBatchFileJobOperation
+internal partial class AzureCreateBatchFileJobOperation
 {
     internal override PipelineMessage CreateGetVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, _apiVersion)
@@ -20,3 +25,5 @@ public partial class AzureCreateBatchFileJobOperation
             .WithOptions(options)
             .Build();
 }
+
+#endif

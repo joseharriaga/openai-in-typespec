@@ -100,11 +100,7 @@ public partial class AssistantExamples
             List<ToolOutput> outputsToSubmit = [];
             await foreach (StreamingUpdate update in asyncUpdates)
             {
-                if (update is RunUpdate runUpdate)
-                {
-                    currentRun = runUpdate;
-                }
-                else if (update is RequiredActionUpdate requiredActionUpdate)
+                if (update is RequiredActionUpdate requiredActionUpdate)
                 {
                     if (requiredActionUpdate.FunctionName == getTemperatureTool.FunctionName)
                     {
@@ -114,6 +110,10 @@ public partial class AssistantExamples
                     {
                         outputsToSubmit.Add(new ToolOutput(requiredActionUpdate.ToolCallId, "25%"));
                     }
+                }
+                else if (update is RunUpdate runUpdate)
+                {
+                    currentRun = runUpdate;
                 }
                 else if (update is MessageContentUpdate contentUpdate)
                 {

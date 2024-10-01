@@ -24,6 +24,8 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
     public VectorStoreTests(bool isAsync) : base(isAsync)
     { }
 
+#if !AZURE_OPENAI_GA
+
     [Test]
     [Category("Smoke")]
     public void CanCreateClient()
@@ -233,7 +235,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             ShouldOutputRequests = false,
             ShouldOutputResponses = false,
         });
-        FileClient client = GetTestClient<FileClient>(azureClient, config);
+        OpenAIFileClient client = GetTestClient<OpenAIFileClient>(azureClient, config);
 
         List<OpenAIFile> files = [];
         for (int i = 0; i < count; i++)
@@ -251,4 +253,15 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
     }
 
     private static readonly DateTimeOffset s_2024 = new(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+#else
+
+    [Test]
+    [SyncOnly]
+    public void UnsupportedVersionVectorStoreClientThrows()
+    {
+        Assert.Throws<InvalidOperationException>(() => GetTestClient());
+    }
+
+#endif
 }

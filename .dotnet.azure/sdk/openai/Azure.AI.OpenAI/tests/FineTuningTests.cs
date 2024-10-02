@@ -249,10 +249,10 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         Assert.That(job.Status, !(Is.Null.Or.EqualTo("failed").Or.EqualTo("cancelled")));
 
         // Wait for the fine tuning to complete
-        //await operation.WaitForCompletionAsync();
-        //job = ValidateAndParse<FineTuningJob>(await operation.GetJobAsync(null));
-        //Assert.That(job.Status, Is.EqualTo("succeeded"), "Fine tuning did not succeed");
-        //Assert.That(job.FineTunedModel, Is.Not.Null.Or.Empty);
+        await operation.WaitForCompletionAsync();
+        job = ValidateAndParse<FineTuningJob>(await operation.GetJobAsync(null));
+        Assert.That(job.Status, Is.EqualTo("succeeded"), "Fine tuning did not succeed");
+        Assert.That(job.FineTunedModel, Is.Not.Null.Or.Empty);
 
         // Delete the fine tuned model
         bool deleted = await DeleteJobAndVerifyAsync((AzureFineTuningJobOperation)operation, job.ID);

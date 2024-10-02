@@ -10,38 +10,40 @@ namespace OpenAI.Chat
 {
     public partial class ChatCompletion
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
-
-        internal ChatCompletion(string id, string model, InternalCreateChatCompletionResponseObject @object, IEnumerable<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset createdAt)
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        internal ChatCompletion(string id, IEnumerable<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset createdAt, string model)
         {
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(choices, nameof(choices));
+            Argument.AssertNotNull(model, nameof(model));
+
             Id = id;
-            Model = model;
-            Object = @object;
             Choices = choices.ToList();
             CreatedAt = createdAt;
+            Model = model;
         }
 
-        internal ChatCompletion(string id, string model, InternalCreateChatCompletionResponseServiceTier? serviceTier, string systemFingerprint, ChatTokenUsage usage, InternalCreateChatCompletionResponseObject @object, IReadOnlyList<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset createdAt, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatCompletion(string id, IReadOnlyList<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset createdAt, string model, InternalCreateChatCompletionResponseServiceTier? serviceTier, string systemFingerprint, InternalCreateChatCompletionResponseObject @object, ChatTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
+            Choices = choices;
+            CreatedAt = createdAt;
             Model = model;
             ServiceTier = serviceTier;
             SystemFingerprint = systemFingerprint;
-            Usage = usage;
             Object = @object;
-            Choices = choices;
-            CreatedAt = createdAt;
-            _additionalBinaryDataProperties = additionalBinaryDataProperties;
+            Usage = usage;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        public string Id { get; set; }
+        internal ChatCompletion()
+        {
+        }
 
-        public string Model { get; set; }
+        public string Id { get; }
+        public string Model { get; }
+        public string SystemFingerprint { get; }
 
-        public InternalCreateChatCompletionResponseServiceTier? ServiceTier { get; set; }
-
-        public string SystemFingerprint { get; set; }
-
-        public ChatTokenUsage Usage { get; set; }
+        public ChatTokenUsage Usage { get; }
     }
 }

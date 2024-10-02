@@ -34,7 +34,7 @@ public class EmbeddingsTests : SyncAsyncTestBase
 
         string input = "Hello, world!";
 
-        Embedding embedding = IsAsync
+        OpenAIEmbedding embedding = IsAsync
             ? await client.GenerateEmbeddingAsync(input)
             : client.GenerateEmbedding(input);
         Assert.That(embedding, Is.Not.Null);
@@ -62,7 +62,7 @@ public class EmbeddingsTests : SyncAsyncTestBase
             Dimensions = Dimensions,
         };
 
-        EmbeddingCollection embeddings = null;
+        OpenAIEmbeddingCollection embeddings = null;
 
         if (embeddingsInputKind == EmbeddingsInputKind.UsingStrings)
         {
@@ -79,11 +79,11 @@ public class EmbeddingsTests : SyncAsyncTestBase
         }
         else if (embeddingsInputKind == EmbeddingsInputKind.UsingIntegers)
         {
-            List<List<int>> prompts =
+            List<ReadOnlyMemory<int>> prompts =
             [
-                [104, 101, 108, 108, 111],
-                [119, 111, 114, 108, 100],
-                [84, 69, 83, 84]
+                new[] {104, 101, 108, 108, 111 },
+                new[] {119, 111, 114, 108, 100 },
+                new[] {84, 69, 83, 84 }
             ];
 
             embeddings = IsAsync
@@ -94,8 +94,8 @@ public class EmbeddingsTests : SyncAsyncTestBase
         Assert.That(embeddings, Is.Not.Null);
         Assert.That(embeddings.Count, Is.EqualTo(3));
         Assert.That(embeddings.Model, Is.EqualTo("text-embedding-3-small"));
-        Assert.That(embeddings.Usage.InputTokens, Is.GreaterThan(0));
-        Assert.That(embeddings.Usage.TotalTokens, Is.GreaterThan(0));
+        Assert.That(embeddings.Usage.InputTokenCount, Is.GreaterThan(0));
+        Assert.That(embeddings.Usage.TotalTokenCount, Is.GreaterThan(0));
 
         for (int i = 0; i < embeddings.Count; i++)
         {
@@ -162,8 +162,8 @@ public class EmbeddingsTests : SyncAsyncTestBase
             else if (embeddingsInputKind == EmbeddingsInputKind.UsingIntegers)
             {
                 _ = IsAsync
-                    ? await client.GenerateEmbeddingsAsync([[1]], options)
-                    : client.GenerateEmbeddings([[1]], options);
+                    ? await client.GenerateEmbeddingsAsync([new[] { 1 }], options)
+                    : client.GenerateEmbeddings([new[] { 1 }], options);
             }
         }
         catch (Exception ex)
@@ -173,6 +173,31 @@ public class EmbeddingsTests : SyncAsyncTestBase
 
         Assert.That(caughtException, Is.InstanceOf<ClientResultException>());
         Assert.That(caughtException.Message, Contains.Substring("dimensions"));
+    }
+
+    [Test]
+    public async Task EmbeddingFromStringAndEmbeddingFromTokenIdsAreEqual()
+    {
+        EmbeddingClient client = GetTestClient();
+
+        List<string> input1 = new List<string> { "Hello, world!" };
+        List<ReadOnlyMemory<int>> input2 = new List<ReadOnlyMemory<int>> { new[] { 9906, 11, 1917, 0 } };
+
+        OpenAIEmbeddingCollection results1 = IsAsync
+            ? await client.GenerateEmbeddingsAsync(input1)
+            : client.GenerateEmbeddings(input1);
+
+        OpenAIEmbeddingCollection results2 = IsAsync
+            ? await client.GenerateEmbeddingsAsync(input2)
+            : client.GenerateEmbeddings(input2);
+
+        ReadOnlyMemory<float> vector1 = results1[0].ToFloats();
+        ReadOnlyMemory<float> vector2 = results2[0].ToFloats();
+
+        for (int i = 0; i < vector1.Length; i++)
+        {
+            Assert.That(vector1.Span[i], Is.EqualTo(vector2.Span[i]).Within(0.0005));
+        }
     }
 
     [Test]

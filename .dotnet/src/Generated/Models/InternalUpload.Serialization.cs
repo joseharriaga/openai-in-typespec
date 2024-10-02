@@ -7,50 +7,61 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI;
 
 namespace OpenAI.Files
 {
     internal partial class InternalUpload : IJsonModel<InternalUpload>
     {
-        internal InternalUpload()
-        {
-        }
-
         void IJsonModel<InternalUpload>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
-        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalUpload>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUpload>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalUpload)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("created_at"u8);
-            writer.WriteNumberValue(CreatedAt, "U");
-            writer.WritePropertyName("filename"u8);
-            writer.WriteStringValue(Filename);
-            writer.WritePropertyName("bytes"u8);
-            writer.WriteNumberValue(Bytes);
-            writer.WritePropertyName("purpose"u8);
-            writer.WriteStringValue(Purpose);
-            writer.WritePropertyName("status"u8);
-            writer.WriteStringValue(Status.ToString());
-            writer.WritePropertyName("expires_at"u8);
-            writer.WriteNumberValue(ExpiresAt, "U");
-            if (Optional.IsDefined(Object))
+
+            writer.WriteStartObject();
+            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("created_at") != true)
+            {
+                writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("filename") != true)
+            {
+                writer.WritePropertyName("filename"u8);
+                writer.WriteStringValue(Filename);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("bytes") != true)
+            {
+                writer.WritePropertyName("bytes"u8);
+                writer.WriteNumberValue(Bytes);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("purpose") != true)
+            {
+                writer.WritePropertyName("purpose"u8);
+                writer.WriteStringValue(Purpose);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("status") != true)
+            {
+                writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToString());
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("expires_at") != true)
+            {
+                writer.WritePropertyName("expires_at"u8);
+                writer.WriteNumberValue(ExpiresAt, "U");
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("object") != true && Optional.IsDefined(Object))
             {
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.Value.ToString());
             }
-            if (Optional.IsDefined(File))
+            if (SerializedAdditionalRawData?.ContainsKey("file") != true && Optional.IsDefined(File))
             {
                 if (File != null)
                 {
@@ -59,16 +70,20 @@ namespace OpenAI.Files
                 }
                 else
                 {
-                    writer.WriteNull("file"u8);
+                    writer.WriteNull("file");
                 }
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (SerializedAdditionalRawData != null)
             {
-                foreach (var item in _additionalBinaryDataProperties)
+                foreach (var item in SerializedAdditionalRawData)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-                    writer.WriteRawValue(item.Value);
+				writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -77,23 +92,25 @@ namespace OpenAI.Files
 #endif
                 }
             }
+            writer.WriteEndObject();
         }
 
-        InternalUpload IJsonModel<InternalUpload>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
-
-        protected virtual InternalUpload JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalUpload IJsonModel<InternalUpload>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalUpload>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUpload>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalUpload)} does not support reading '{format}' format.");
             }
+
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalUpload(document.RootElement, options);
         }
 
-        internal static InternalUpload DeserializeInternalUpload(JsonElement element, ModelReaderWriterOptions options)
+        internal static InternalUpload DeserializeInternalUpload(JsonElement element, ModelReaderWriterOptions options = null)
         {
+            options ??= ModelSerializationExtensions.WireOptions;
+
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
@@ -106,70 +123,72 @@ namespace OpenAI.Files
             InternalUploadStatus status = default;
             DateTimeOffset expiresAt = default;
             InternalUploadObject? @object = default;
-            OpenAIFileInfo @file = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            foreach (var prop in element.EnumerateObject())
+            OpenAIFile file = default;
+            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
+            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
+            foreach (var property in element.EnumerateObject())
             {
-                if (prop.NameEquals("id"u8))
+                if (property.NameEquals("id"u8))
                 {
-                    id = prop.Value.GetString();
+                    id = property.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("created_at"u8))
+                if (property.NameEquals("created_at"u8))
                 {
-                    createdAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
+                    createdAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
-                if (prop.NameEquals("filename"u8))
+                if (property.NameEquals("filename"u8))
                 {
-                    filename = prop.Value.GetString();
+                    filename = property.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("bytes"u8))
+                if (property.NameEquals("bytes"u8))
                 {
-                    bytes = prop.Value.GetInt32();
+                    bytes = property.Value.GetInt32();
                     continue;
                 }
-                if (prop.NameEquals("purpose"u8))
+                if (property.NameEquals("purpose"u8))
                 {
-                    purpose = prop.Value.GetString();
+                    purpose = property.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("status"u8))
+                if (property.NameEquals("status"u8))
                 {
-                    status = new InternalUploadStatus(prop.Value.GetString());
+                    status = new InternalUploadStatus(property.Value.GetString());
                     continue;
                 }
-                if (prop.NameEquals("expires_at"u8))
+                if (property.NameEquals("expires_at"u8))
                 {
-                    expiresAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
+                    expiresAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
                     continue;
                 }
-                if (prop.NameEquals("object"u8))
+                if (property.NameEquals("object"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        @object = null;
                         continue;
                     }
-                    @object = new InternalUploadObject(prop.Value.GetString());
+                    @object = new InternalUploadObject(property.Value.GetString());
                     continue;
                 }
-                if (prop.NameEquals("file"u8))
+                if (property.NameEquals("file"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        @file = null;
+                        file = null;
                         continue;
                     }
-                    @file = OpenAIFileInfo.DeserializeOpenAIFileInfo(prop.Value, options);
+                    file = OpenAIFile.DeserializeOpenAIFile(property.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
+                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }
+            serializedAdditionalRawData = rawDataDictionary;
             return new InternalUpload(
                 id,
                 createdAt,
@@ -179,15 +198,14 @@ namespace OpenAI.Files
                 status,
                 expiresAt,
                 @object,
-                @file,
-                additionalBinaryDataProperties);
+                file,
+                serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<InternalUpload>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
-
-        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalUpload>.Write(ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalUpload>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUpload>)this).GetFormatFromOptions(options) : options.Format;
+
             switch (format)
             {
                 case "J":
@@ -197,16 +215,15 @@ namespace OpenAI.Files
             }
         }
 
-        InternalUpload IPersistableModel<InternalUpload>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
-
-        protected virtual InternalUpload PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        InternalUpload IPersistableModel<InternalUpload>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalUpload>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalUpload>)this).GetFormatFromOptions(options) : options.Format;
+
             switch (format)
             {
                 case "J":
-                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
+                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalUpload(document.RootElement, options);
                     }
                 default:
@@ -216,16 +233,15 @@ namespace OpenAI.Files
 
         string IPersistableModel<InternalUpload>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        public static implicit operator BinaryContent(InternalUpload internalUpload)
+        internal static InternalUpload FromResponse(PipelineResponse response)
         {
-            return BinaryContent.Create(internalUpload, ModelSerializationExtensions.WireOptions);
+            using var document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalUpload(document.RootElement);
         }
 
-        public static explicit operator InternalUpload(ClientResult result)
+        internal virtual BinaryContent ToBinaryContent()
         {
-            using PipelineResponse response = result.GetRawResponse();
-            using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalUpload(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

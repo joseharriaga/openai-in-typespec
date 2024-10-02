@@ -4,49 +4,49 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenAI.Audio
 {
     public readonly partial struct TranscribedSegment
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
-
-        internal TranscribedSegment(int id, string text, float temperature, float compressionRatio, TimeSpan startTime, TimeSpan endTime, int seekOffset, IEnumerable<int> tokenIds, float averageLogProbability, float noSpeechProbability)
+        internal TranscribedSegment(int id, int seekOffset, TimeSpan startTime, TimeSpan endTime, string text, ReadOnlyMemory<int> tokenIds, float temperature, float averageLogProbability, float compressionRatio, float noSpeechProbability)
         {
+            Argument.AssertNotNull(text, nameof(text));
+
             Id = id;
-            Text = text;
-            Temperature = temperature;
-            CompressionRatio = compressionRatio;
+            SeekOffset = seekOffset;
             StartTime = startTime;
             EndTime = endTime;
-            SeekOffset = seekOffset;
-            TokenIds = tokenIds.ToList();
-            AverageLogProbability = averageLogProbability;
-            NoSpeechProbability = noSpeechProbability;
-        }
-
-        internal TranscribedSegment(int id, string text, float temperature, float compressionRatio, TimeSpan startTime, TimeSpan endTime, int seekOffset, IReadOnlyList<int> tokenIds, float averageLogProbability, float noSpeechProbability, IDictionary<string, BinaryData> additionalBinaryDataProperties)
-        {
-            Id = id;
             Text = text;
-            Temperature = temperature;
-            CompressionRatio = compressionRatio;
-            StartTime = startTime;
-            EndTime = endTime;
-            SeekOffset = seekOffset;
             TokenIds = tokenIds;
+            Temperature = temperature;
             AverageLogProbability = averageLogProbability;
+            CompressionRatio = compressionRatio;
             NoSpeechProbability = noSpeechProbability;
-            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public int Id { get; set; }
+        internal TranscribedSegment(int id, int seekOffset, TimeSpan startTime, TimeSpan endTime, string text, ReadOnlyMemory<int> tokenIds, float temperature, float averageLogProbability, float compressionRatio, float noSpeechProbability, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        {
+            Id = id;
+            SeekOffset = seekOffset;
+            StartTime = startTime;
+            EndTime = endTime;
+            Text = text;
+            TokenIds = tokenIds;
+            Temperature = temperature;
+            AverageLogProbability = averageLogProbability;
+            CompressionRatio = compressionRatio;
+            NoSpeechProbability = noSpeechProbability;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
+        }
 
-        public string Text { get; set; }
+        public TranscribedSegment()
+        {
+        }
 
-        public float Temperature { get; set; }
-
-        public float CompressionRatio { get; set; }
+        public int Id { get; }
+        public string Text { get; }
+        public float Temperature { get; }
+        public float CompressionRatio { get; }
     }
 }

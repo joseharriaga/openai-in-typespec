@@ -1,3 +1,4 @@
+using OpenAI.Files;
 using System;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
     {
         writer.WriteStartObject();
         writer.WritePropertyName("type"u8);
-        writer.WriteStringValue(instance._kind.ToString());
+        writer.WriteStringValue(instance._kind.ToSerialString());
 
         if (instance._kind == ChatMessageContentPartKind.Text)
         {
@@ -36,29 +37,6 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
         writer.WriteEndObject();
     }
 
-    internal static void WriteCoreContentPartList(IList<ChatMessageContentPart> instances, Utf8JsonWriter writer, ModelReaderWriterOptions options)
-    {
-        if (!Optional.IsCollectionDefined(instances))
-        {
-            return;
-        }
-
-        writer.WritePropertyName("content"u8);
-        if (instances.Count == 1 && !string.IsNullOrEmpty(instances[0].Text))
-        {
-            writer.WriteStringValue(instances[0].Text);
-        }
-        else
-        {
-            writer.WriteStartArray();
-            foreach (var item in instances)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
-        }
-    }
-
     internal static ChatMessageContentPart DeserializeChatMessageContentPart(JsonElement element, ModelReaderWriterOptions options = null)
     {
         options ??= ModelSerializationExtensions.WireOptions;
@@ -68,7 +46,7 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
             return null;
         }
 
-        string kind = default;
+        ChatMessageContentPartKind kind = default;
         string text = default;
         string refusal = default;
         InternalChatCompletionRequestMessageContentPartImageImageUrl imageUri = default;
@@ -78,7 +56,7 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
         {
             if (property.NameEquals("type"u8))
             {
-                kind = property.Value.GetString();
+                kind = property.Value.GetString().ToChatMessageContentPartKind();
                 continue;
             }
             if (property.NameEquals("text"u8))

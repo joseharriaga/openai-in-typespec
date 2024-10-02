@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>This is the OpenAI client library for developing .NET applications with rich experience.</Description>
+    <Description>
+    The official .NET library for the OpenAI service API.
+    </Description>
     <AssemblyTitle>SDK Code Generation OpenAI</AssemblyTitle>
     <PackageTags>OpenAI;openai-dotnet;ChatGPT;Dall-E</PackageTags>
 
-    <VersionPrefix>2.0.0</VersionPrefix>
-    <VersionSuffix>beta.12</VersionSuffix>
+    <VersionPrefix>2.1.0</VersionPrefix>
+    <VersionSuffix>beta.1</VersionSuffix>
 
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
@@ -37,7 +39,7 @@
     <NoWarn>$(NoWarn),0169</NoWarn>
 
     <!-- Disable warnings for experimental APIs -->
-    <NoWarn>$(NoWarn),OPENAI001;</NoWarn>
+    <NoWarn>$(NoWarn),OPENAI001;OPENAI002</NoWarn>
 
     <Configurations>Debug;Release;Unsigned</Configurations>
   </PropertyGroup>

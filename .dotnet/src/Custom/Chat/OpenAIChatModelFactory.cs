@@ -12,7 +12,7 @@ public static partial class OpenAIChatModelFactory
     public static ChatCompletion ChatCompletion(
         string id = null,
         ChatFinishReason finishReason = default,
-        IEnumerable<ChatMessageContentPart> content = null,
+        ChatMessageContent content = null,
         string refusal = null,
         IEnumerable<ChatToolCall> toolCalls = null,
         ChatMessageRole role = default,
@@ -24,13 +24,13 @@ public static partial class OpenAIChatModelFactory
         string systemFingerprint = null,
         ChatTokenUsage usage = null)
     {
-        content ??= new List<ChatMessageContentPart>();
+        content ??= new ChatMessageContent();
         toolCalls ??= new List<ChatToolCall>();
         contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
         InternalChatCompletionResponseMessage message = new InternalChatCompletionResponseMessage(
-            content.ToList(),
+            content,
             refusal,
             toolCalls.ToList(),
             role,
@@ -90,28 +90,28 @@ public static partial class OpenAIChatModelFactory
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatTokenUsage"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.ChatTokenUsage"/> instance for mocking. </returns>
-    public static ChatTokenUsage ChatTokenUsage(int outputTokens = default, int inputTokens = default, int totalTokens = default, ChatOutputTokenUsageDetails outputTokenDetails = default)
+    public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = default, int inputTokenCount = default, int totalTokenCount = default, ChatOutputTokenUsageDetails outputTokenDetails = null)
     {
         return new ChatTokenUsage(
-            outputTokens,
-            inputTokens,
-            totalTokens,
+            outputTokenCount,
+            inputTokenCount,
+            totalTokenCount,
             outputTokenDetails,
             serializedAdditionalRawData: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatOutputTokenUsageDetails"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.ChatOutputTokenusageDetails"/> instance for mocking. </returns>
-    public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokens = default)
+    public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default)
     {
-        return new ChatOutputTokenUsageDetails(reasoningTokens, serializedAdditionalRawData: null);
+        return new ChatOutputTokenUsageDetails(reasoningTokenCount, serializedAdditionalRawData: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatCompletionUpdate"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.StreamingChatCompletionUpdate"/> instance for mocking. </returns>
     public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(
-        string id = null,
-        IEnumerable<ChatMessageContentPart> contentUpdate = null,
+        string completionId = null,
+        ChatMessageContent contentUpdate = null,
         StreamingChatFunctionCallUpdate functionCallUpdate = null,
         IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null,
         ChatMessageRole? role = null,
@@ -124,13 +124,13 @@ public static partial class OpenAIChatModelFactory
         string systemFingerprint = null,
         ChatTokenUsage usage = null)
     {
-        contentUpdate ??= new List<ChatMessageContentPart>();
+        contentUpdate ??= new ChatMessageContent();
         toolCallUpdates ??= new List<StreamingChatToolCallUpdate>();
         contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
         InternalChatCompletionStreamResponseDelta delta = new InternalChatCompletionStreamResponseDelta(
-            contentUpdate.ToList(),
+            contentUpdate,
             functionCallUpdate,
             toolCallUpdates.ToList(),
             role,
@@ -152,7 +152,7 @@ public static partial class OpenAIChatModelFactory
         ];
 
         return new StreamingChatCompletionUpdate(
-            id,
+            completionId,
             choices,
             createdAt,
             model,
@@ -166,17 +166,17 @@ public static partial class OpenAIChatModelFactory
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatFunctionCallUpdate"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.StreamingChatFunctionCallUpdate"/> instance for mocking. </returns>
     [Obsolete($"This class is obsolete. Please use {nameof(StreamingChatToolCallUpdate)} instead.")]
-    public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null)
+    public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = null, BinaryData functionArgumentsUpdate = null)
     {
         return new StreamingChatFunctionCallUpdate(
-            functionArgumentsUpdate,
             functionName,
+            functionArgumentsUpdate,
             serializedAdditionalRawData: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatToolCallUpdate"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.StreamingChatToolCallUpdate"/> instance for mocking. </returns>
-    public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = default, string id = null, ChatToolCallKind kind = default, string functionName = null, string functionArgumentsUpdate = null)
+    public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = default, string toolCallId = null, ChatToolCallKind kind = default, string functionName = null, BinaryData functionArgumentsUpdate = null)
     {
         InternalChatCompletionMessageToolCallChunkFunction function = new InternalChatCompletionMessageToolCallChunkFunction(
             functionName,
@@ -185,7 +185,7 @@ public static partial class OpenAIChatModelFactory
 
         return new StreamingChatToolCallUpdate(
             index,
-            id,
+            toolCallId,
             kind,
             function,
             serializedAdditionalRawData: null);

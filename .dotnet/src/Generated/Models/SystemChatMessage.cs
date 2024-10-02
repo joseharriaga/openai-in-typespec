@@ -4,25 +4,18 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI;
 
 namespace OpenAI.Chat
 {
     public partial class SystemChatMessage : ChatMessage
     {
-        public SystemChatMessage(BinaryData content)
+        internal SystemChatMessage(ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> serializedAdditionalRawData, string participantName) : base(role, content, serializedAdditionalRawData)
         {
-            Argument.AssertNotNull(content, nameof(content));
-
-            Content = content;
-        }
-
-        internal SystemChatMessage(BinaryData content, string participantName, Chat.ChatMessageRole role, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, additionalBinaryDataProperties)
-        {
-            Content = content;
             ParticipantName = participantName;
         }
 
-        public BinaryData Content { get; set; }
+        internal SystemChatMessage()
+        {
+        }
     }
 }

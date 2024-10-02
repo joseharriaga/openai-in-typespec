@@ -4,26 +4,26 @@ namespace OpenAI {
         public OpenAIClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public OpenAIClient(ApiKeyCredential credential);
         protected internal OpenAIClient(ClientPipeline pipeline, OpenAIClientOptions options);
-        public OpenAIClient(string apiKey, OpenAIClientOptions options);
         public OpenAIClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual AssistantClient GetAssistantClient();
         public virtual AudioClient GetAudioClient(string model);
         public virtual BatchClient GetBatchClient();
         public virtual ChatClient GetChatClient(string model);
         public virtual EmbeddingClient GetEmbeddingClient(string model);
-        public virtual FileClient GetFileClient();
         public virtual FineTuningClient GetFineTuningClient();
         public virtual ImageClient GetImageClient(string model);
-        public virtual ModelClient GetModelClient();
         public virtual ModerationClient GetModerationClient(string model);
+        public virtual OpenAIFileClient GetOpenAIFileClient();
+        public virtual OpenAIModelClient GetOpenAIModelClient();
+        public virtual RealtimeConversation.RealtimeConversationClient GetRealtimeConversationClient(string model);
         public virtual VectorStoreClient GetVectorStoreClient();
     }
     public class OpenAIClientOptions : ClientPipelineOptions {
-        public string ApplicationId { get; set; }
         public Uri Endpoint { get; set; }
         public string OrganizationId { get; set; }
         public string ProjectId { get; set; }
+        public string UserAgentApplicationId { get; set; }
     }
 }
 namespace OpenAI.Assistants {
@@ -51,14 +51,11 @@ namespace OpenAI.Assistants {
         public AssistantClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public AssistantClient(ApiKeyCredential credential);
         protected internal AssistantClient(ClientPipeline pipeline, OpenAIClientOptions options);
-        public AssistantClient(string apiKey, OpenAIClientOptions options);
         public AssistantClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<ThreadRun> CancelRun(ThreadRun run);
+        public ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CancelRun(string threadId, string runId, RequestOptions options);
         public virtual ClientResult<ThreadRun> CancelRun(string threadId, string runId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<ThreadRun>> CancelRunAsync(ThreadRun run);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CancelRunAsync(string threadId, string runId, RequestOptions options);
         public virtual Task<ClientResult<ThreadRun>> CancelRunAsync(string threadId, string runId, CancellationToken cancellationToken = default);
@@ -68,65 +65,49 @@ namespace OpenAI.Assistants {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateAssistantAsync(BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<Assistant>> CreateAssistantAsync(string model, AssistantCreationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult<ThreadMessage> CreateMessage(AssistantThread thread, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null);
         public virtual ClientResult<ThreadMessage> CreateMessage(string threadId, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateMessage(string threadId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<ThreadMessage>> CreateMessageAsync(AssistantThread thread, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null);
         public virtual Task<ClientResult<ThreadMessage>> CreateMessageAsync(string threadId, MessageRole role, IEnumerable<MessageContent> content, MessageCreationOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateMessageAsync(string threadId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<ThreadRun> CreateRun(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateRun(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> CreateRun(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<ThreadRun>> CreateRunAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateRunAsync(string threadId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadRun>> CreateRunAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<StreamingUpdate> CreateRunStreaming(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
         public virtual CollectionResult<StreamingUpdate> CreateRunStreaming(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual AsyncCollectionResult<StreamingUpdate> CreateRunStreamingAsync(AssistantThread thread, Assistant assistant, RunCreationOptions options = null);
         public virtual AsyncCollectionResult<StreamingUpdate> CreateRunStreamingAsync(string threadId, string assistantId, RunCreationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<AssistantThread> CreateThread(ThreadCreationOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateThread(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<ThreadRun> CreateThreadAndRun(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CreateThreadAndRun(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> CreateThreadAndRun(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<ThreadRun>> CreateThreadAndRunAsync(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateThreadAndRunAsync(BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadRun>> CreateThreadAndRunAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<StreamingUpdate> CreateThreadAndRunStreaming(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
         public virtual CollectionResult<StreamingUpdate> CreateThreadAndRunStreaming(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
-        public virtual AsyncCollectionResult<StreamingUpdate> CreateThreadAndRunStreamingAsync(Assistant assistant, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null);
         public virtual AsyncCollectionResult<StreamingUpdate> CreateThreadAndRunStreamingAsync(string assistantId, ThreadCreationOptions threadOptions = null, RunCreationOptions runOptions = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<AssistantThread>> CreateThreadAsync(ThreadCreationOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CreateThreadAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<AssistantDeletionResult> DeleteAssistant(Assistant assistant);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteAssistant(string assistantId, RequestOptions options);
         public virtual ClientResult<AssistantDeletionResult> DeleteAssistant(string assistantId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<AssistantDeletionResult>> DeleteAssistantAsync(Assistant assistant);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteAssistantAsync(string assistantId, RequestOptions options);
         public virtual Task<ClientResult<AssistantDeletionResult>> DeleteAssistantAsync(string assistantId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<MessageDeletionResult> DeleteMessage(ThreadMessage message);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteMessage(string threadId, string messageId, RequestOptions options);
         public virtual ClientResult<MessageDeletionResult> DeleteMessage(string threadId, string messageId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<MessageDeletionResult>> DeleteMessageAsync(ThreadMessage message);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteMessageAsync(string threadId, string messageId, RequestOptions options);
         public virtual Task<ClientResult<MessageDeletionResult>> DeleteMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<ThreadDeletionResult> DeleteThread(AssistantThread thread);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteThread(string threadId, RequestOptions options);
         public virtual ClientResult<ThreadDeletionResult> DeleteThread(string threadId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<ThreadDeletionResult>> DeleteThreadAsync(AssistantThread thread);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteThreadAsync(string threadId, RequestOptions options);
         public virtual Task<ClientResult<ThreadDeletionResult>> DeleteThreadAsync(string threadId, CancellationToken cancellationToken = default);
@@ -144,38 +125,30 @@ namespace OpenAI.Assistants {
         public virtual AsyncCollectionResult<Assistant> GetAssistantsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AsyncCollectionResult GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options);
-        public virtual ClientResult<ThreadMessage> GetMessage(ThreadMessage message);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetMessage(string threadId, string messageId, RequestOptions options);
         public virtual ClientResult<ThreadMessage> GetMessage(string threadId, string messageId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<ThreadMessage>> GetMessageAsync(ThreadMessage message);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetMessageAsync(string threadId, string messageId, RequestOptions options);
         public virtual Task<ClientResult<ThreadMessage>> GetMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<ThreadMessage> GetMessages(AssistantThread thread, MessageCollectionOptions options = null);
         public virtual CollectionResult<ThreadMessage> GetMessages(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         public virtual CollectionResult<ThreadMessage> GetMessages(string threadId, MessageCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual CollectionResult GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncCollectionResult<ThreadMessage> GetMessagesAsync(AssistantThread thread, MessageCollectionOptions options = null);
         public virtual AsyncCollectionResult<ThreadMessage> GetMessagesAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         public virtual AsyncCollectionResult<ThreadMessage> GetMessagesAsync(string threadId, MessageCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AsyncCollectionResult GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual ClientResult<ThreadRun> GetRun(ThreadRun run);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetRun(string threadId, string runId, RequestOptions options);
         public virtual ClientResult<ThreadRun> GetRun(string threadId, string runId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<ThreadRun>> GetRunAsync(ThreadRun run);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetRunAsync(string threadId, string runId, RequestOptions options);
         public virtual Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<ThreadRun> GetRuns(AssistantThread thread, RunCollectionOptions options = null);
         public virtual CollectionResult<ThreadRun> GetRuns(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         public virtual CollectionResult<ThreadRun> GetRuns(string threadId, RunCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual CollectionResult GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncCollectionResult<ThreadRun> GetRunsAsync(AssistantThread thread, RunCollectionOptions options = null);
         public virtual AsyncCollectionResult<ThreadRun> GetRunsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         public virtual AsyncCollectionResult<ThreadRun> GetRunsAsync(string threadId, RunCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -186,37 +159,29 @@ namespace OpenAI.Assistants {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetRunStepAsync(string threadId, string runId, string stepId, RequestOptions options);
         public virtual Task<ClientResult<RunStep>> GetRunStepAsync(string threadId, string runId, string stepId, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<RunStep> GetRunSteps(ThreadRun run, RunStepCollectionOptions options = null);
         public virtual CollectionResult<RunStep> GetRunSteps(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         public virtual CollectionResult<RunStep> GetRunSteps(string threadId, string runId, RunStepCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual CollectionResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncCollectionResult<RunStep> GetRunStepsAsync(ThreadRun run, RunStepCollectionOptions options = null);
         public virtual AsyncCollectionResult<RunStep> GetRunStepsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         public virtual AsyncCollectionResult<RunStep> GetRunStepsAsync(string threadId, string runId, RunStepCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AsyncCollectionResult GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
-        public virtual ClientResult<AssistantThread> GetThread(AssistantThread thread);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetThread(string threadId, RequestOptions options);
         public virtual ClientResult<AssistantThread> GetThread(string threadId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<AssistantThread>> GetThreadAsync(AssistantThread thread);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetThreadAsync(string threadId, RequestOptions options);
         public virtual Task<ClientResult<AssistantThread>> GetThreadAsync(string threadId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<Assistant> ModifyAssistant(Assistant assistant, AssistantModificationOptions options);
         public virtual ClientResult<Assistant> ModifyAssistant(string assistantId, AssistantModificationOptions options, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ModifyAssistant(string assistantId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<Assistant>> ModifyAssistantAsync(Assistant assistant, AssistantModificationOptions options);
         public virtual Task<ClientResult<Assistant>> ModifyAssistantAsync(string assistantId, AssistantModificationOptions options, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ModifyAssistantAsync(string assistantId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<ThreadMessage> ModifyMessage(ThreadMessage message, MessageModificationOptions options);
         public virtual ClientResult<ThreadMessage> ModifyMessage(string threadId, string messageId, MessageModificationOptions options, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ModifyMessage(string threadId, string messageId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<ThreadMessage>> ModifyMessageAsync(ThreadMessage message, MessageModificationOptions options);
         public virtual Task<ClientResult<ThreadMessage>> ModifyMessageAsync(string threadId, string messageId, MessageModificationOptions options, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ModifyMessageAsync(string threadId, string messageId, BinaryContent content, RequestOptions options = null);
@@ -224,25 +189,19 @@ namespace OpenAI.Assistants {
         public virtual ClientResult ModifyRun(string threadId, string runId, BinaryContent content, RequestOptions options = null);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ModifyRunAsync(string threadId, string runId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<AssistantThread> ModifyThread(AssistantThread thread, ThreadModificationOptions options);
         public virtual ClientResult<AssistantThread> ModifyThread(string threadId, ThreadModificationOptions options, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ModifyThread(string threadId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<AssistantThread>> ModifyThreadAsync(AssistantThread thread, ThreadModificationOptions options);
         public virtual Task<ClientResult<AssistantThread>> ModifyThreadAsync(string threadId, ThreadModificationOptions options, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ModifyThreadAsync(string threadId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult SubmitToolOutputsToRun(string threadId, string runId, BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<ThreadRun> SubmitToolOutputsToRun(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> SubmitToolOutputsToRunAsync(string threadId, string runId, BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreaming(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
         public virtual CollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
-        public virtual AsyncCollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(ThreadRun run, IEnumerable<ToolOutput> toolOutputs);
         public virtual AsyncCollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
     }
     public class AssistantCollectionOptions {
@@ -447,12 +406,12 @@ namespace OpenAI.Assistants {
     public abstract class MessageContent : IJsonModel<MessageContent>, IPersistableModel<MessageContent> {
         public MessageImageDetail? ImageDetail { get; }
         public string ImageFileId { get; }
-        public Uri ImageUrl { get; }
+        public Uri ImageUri { get; }
         public string Refusal { get; }
         public string Text { get; }
         public IReadOnlyList<TextAnnotation> TextAnnotations { get; }
         public static MessageContent FromImageFileId(string imageFileId, MessageImageDetail? detail = null);
-        public static MessageContent FromImageUrl(Uri imageUri, MessageImageDetail? detail = null);
+        public static MessageContent FromImageUri(Uri imageUri, MessageImageDetail? detail = null);
         public static MessageContent FromText(string text);
         public static implicit operator MessageContent(string value);
         MessageContent IJsonModel<MessageContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -598,13 +557,13 @@ namespace OpenAI.Assistants {
     public class RunCreationOptions : IJsonModel<RunCreationOptions>, IPersistableModel<RunCreationOptions> {
         public string AdditionalInstructions { get; set; }
         public IList<ThreadInitializationMessage> AdditionalMessages { get; }
+        public bool? AllowParallelToolCalls { get; set; }
         public string InstructionsOverride { get; set; }
-        public int? MaxCompletionTokens { get; set; }
-        public int? MaxPromptTokens { get; set; }
+        public int? MaxInputTokenCount { get; set; }
+        public int? MaxOutputTokenCount { get; set; }
         public IDictionary<string, string> Metadata { get; }
         public string ModelOverride { get; set; }
         public float? NucleusSamplingFactor { get; set; }
-        public bool? ParallelToolCallsEnabled { get; set; }
         public AssistantResponseFormat ResponseFormat { get; set; }
         public float? Temperature { get; set; }
         public ToolConstraint ToolConstraint { get; set; }
@@ -654,8 +613,8 @@ namespace OpenAI.Assistants {
         private readonly object _dummy;
         private readonly int _dummyPrimitive;
         public RunIncompleteReason(string value);
-        public static RunIncompleteReason MaxCompletionTokens { get; }
-        public static RunIncompleteReason MaxPromptTokens { get; }
+        public static RunIncompleteReason MaxInputTokenCount { get; }
+        public static RunIncompleteReason MaxOutputTokenCount { get; }
         public readonly bool Equals(RunIncompleteReason other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
@@ -826,9 +785,9 @@ namespace OpenAI.Assistants {
         public override readonly string ToString();
     }
     public class RunStepTokenUsage : IJsonModel<RunStepTokenUsage>, IPersistableModel<RunStepTokenUsage> {
-        public int CompletionTokens { get; }
-        public int PromptTokens { get; }
-        public int TotalTokens { get; }
+        public int InputTokenCount { get; }
+        public int OutputTokenCount { get; }
+        public int TotalTokenCount { get; }
         RunStepTokenUsage IJsonModel<RunStepTokenUsage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<RunStepTokenUsage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         RunStepTokenUsage IPersistableModel<RunStepTokenUsage>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -887,9 +846,9 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<RunStepUpdateCodeInterpreterOutput>.Write(ModelReaderWriterOptions options);
     }
     public class RunTokenUsage : IJsonModel<RunTokenUsage>, IPersistableModel<RunTokenUsage> {
-        public int CompletionTokens { get; }
-        public int PromptTokens { get; }
-        public int TotalTokens { get; }
+        public int InputTokenCount { get; }
+        public int OutputTokenCount { get; }
+        public int TotalTokenCount { get; }
         RunTokenUsage IJsonModel<RunTokenUsage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<RunTokenUsage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         RunTokenUsage IPersistableModel<RunTokenUsage>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1011,6 +970,7 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<ThreadModificationOptions>.Write(ModelReaderWriterOptions options);
     }
     public class ThreadRun : IJsonModel<ThreadRun>, IPersistableModel<ThreadRun> {
+        public bool? AllowParallelToolCalls { get; }
         public string AssistantId { get; }
         public DateTimeOffset? CancelledAt { get; }
         public DateTimeOffset? CompletedAt { get; }
@@ -1021,12 +981,11 @@ namespace OpenAI.Assistants {
         public RunIncompleteDetails IncompleteDetails { get; }
         public string Instructions { get; }
         public RunError LastError { get; }
-        public int? MaxCompletionTokens { get; }
-        public int? MaxPromptTokens { get; }
+        public int? MaxInputTokenCount { get; }
+        public int? MaxOutputTokenCount { get; }
         public IReadOnlyDictionary<string, string> Metadata { get; }
         public string Model { get; }
         public float? NucleusSamplingFactor { get; }
-        public bool? ParallelToolCallsEnabled { get; }
         public IReadOnlyList<RequiredAction> RequiredActions { get; }
         public AssistantResponseFormat ResponseFormat { get; }
         public DateTimeOffset? StartedAt { get; }
@@ -1094,7 +1053,7 @@ namespace OpenAI.Assistants {
     }
     public class VectorStoreCreationHelper : IJsonModel<VectorStoreCreationHelper>, IPersistableModel<VectorStoreCreationHelper> {
         public VectorStoreCreationHelper();
-        public VectorStoreCreationHelper(IEnumerable<OpenAIFileInfo> files);
+        public VectorStoreCreationHelper(IEnumerable<OpenAIFile> files);
         public VectorStoreCreationHelper(IEnumerable<string> fileIds);
         public FileChunkingStrategy ChunkingStrategy { get; set; }
         public IList<string> FileIds { get; }
@@ -1112,9 +1071,8 @@ namespace OpenAI.Audio {
         protected internal AudioClient(ClientPipeline pipeline, string model, OpenAIClientOptions options);
         public AudioClient(string model, ApiKeyCredential credential, OpenAIClientOptions options);
         public AudioClient(string model, ApiKeyCredential credential);
-        public AudioClient(string model, string apiKey, OpenAIClientOptions options);
         public AudioClient(string model, string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GenerateSpeech(BinaryContent content, RequestOptions options = null);
         public virtual ClientResult<BinaryData> GenerateSpeech(string text, GeneratedSpeechVoice voice, SpeechGenerationOptions options = null, CancellationToken cancellationToken = default);
@@ -1154,19 +1112,32 @@ namespace OpenAI.Audio {
         string IPersistableModel<AudioTranscription>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<AudioTranscription>.Write(ModelReaderWriterOptions options);
     }
-    public enum AudioTranscriptionFormat {
-        Text = 0,
-        Simple = 1,
-        Verbose = 2,
-        Srt = 3,
-        Vtt = 4
+    public readonly partial struct AudioTranscriptionFormat : IEquatable<AudioTranscriptionFormat> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public AudioTranscriptionFormat(string value);
+        public static AudioTranscriptionFormat Simple { get; }
+        public static AudioTranscriptionFormat Srt { get; }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static AudioTranscriptionFormat Text { get; }
+        public static AudioTranscriptionFormat Verbose { get; }
+        public static AudioTranscriptionFormat Vtt { get; }
+        public readonly bool Equals(AudioTranscriptionFormat other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(AudioTranscriptionFormat left, AudioTranscriptionFormat right);
+        public static implicit operator AudioTranscriptionFormat(string value);
+        public static bool operator !=(AudioTranscriptionFormat left, AudioTranscriptionFormat right);
+        public override readonly string ToString();
     }
     public class AudioTranscriptionOptions : IJsonModel<AudioTranscriptionOptions>, IPersistableModel<AudioTranscriptionOptions> {
-        public AudioTimestampGranularities Granularities { get; set; }
         public string Language { get; set; }
         public string Prompt { get; set; }
         public AudioTranscriptionFormat? ResponseFormat { get; set; }
         public float? Temperature { get; set; }
+        public AudioTimestampGranularities TimestampGranularities { get; set; }
         AudioTranscriptionOptions IJsonModel<AudioTranscriptionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<AudioTranscriptionOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         AudioTranscriptionOptions IPersistableModel<AudioTranscriptionOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1184,12 +1155,25 @@ namespace OpenAI.Audio {
         string IPersistableModel<AudioTranslation>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<AudioTranslation>.Write(ModelReaderWriterOptions options);
     }
-    public enum AudioTranslationFormat {
-        Text = 0,
-        Simple = 1,
-        Verbose = 2,
-        Srt = 3,
-        Vtt = 4
+    public readonly partial struct AudioTranslationFormat : IEquatable<AudioTranslationFormat> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public AudioTranslationFormat(string value);
+        public static AudioTranslationFormat Simple { get; }
+        public static AudioTranslationFormat Srt { get; }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static AudioTranslationFormat Text { get; }
+        public static AudioTranslationFormat Verbose { get; }
+        public static AudioTranslationFormat Vtt { get; }
+        public readonly bool Equals(AudioTranslationFormat other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(AudioTranslationFormat left, AudioTranslationFormat right);
+        public static implicit operator AudioTranslationFormat(string value);
+        public static bool operator !=(AudioTranslationFormat left, AudioTranslationFormat right);
+        public override readonly string ToString();
     }
     public class AudioTranslationOptions : IJsonModel<AudioTranslationOptions>, IPersistableModel<AudioTranslationOptions> {
         public string Prompt { get; set; }
@@ -1244,7 +1228,7 @@ namespace OpenAI.Audio {
     public static class OpenAIAudioModelFactory {
         public static AudioTranscription AudioTranscription(string language = null, TimeSpan? duration = null, string text = null, IEnumerable<TranscribedWord> words = null, IEnumerable<TranscribedSegment> segments = null);
         public static AudioTranslation AudioTranslation(string language = null, TimeSpan? duration = null, string text = null, IEnumerable<TranscribedSegment> segments = null);
-        public static TranscribedSegment TranscribedSegment(int id = 0, int seekOffset = 0, TimeSpan startTime = default, TimeSpan endTime = default, string text = null, IEnumerable<int> tokenIds = null, float temperature = 0, float averageLogProbability = 0, float compressionRatio = 0, float noSpeechProbability = 0);
+        public static TranscribedSegment TranscribedSegment(int id = 0, int seekOffset = 0, TimeSpan startTime = default, TimeSpan endTime = default, string text = null, ReadOnlyMemory<int> tokenIds = default, float temperature = 0, float averageLogProbability = 0, float compressionRatio = 0, float noSpeechProbability = 0);
         public static TranscribedWord TranscribedWord(string word = null, TimeSpan startTime = default, TimeSpan endTime = default);
     }
     public class SpeechGenerationOptions : IJsonModel<SpeechGenerationOptions>, IPersistableModel<SpeechGenerationOptions> {
@@ -1268,7 +1252,7 @@ namespace OpenAI.Audio {
         public TimeSpan StartTime { get; }
         public float Temperature { get; }
         public string Text { get; }
-        public IReadOnlyList<int> TokenIds { get; }
+        public ReadOnlyMemory<int> TokenIds { get; }
         readonly TranscribedSegment IJsonModel<TranscribedSegment>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         readonly void IJsonModel<TranscribedSegment>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         readonly object IJsonModel<object>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -1304,22 +1288,30 @@ namespace OpenAI.Batch {
         public BatchClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public BatchClient(ApiKeyCredential credential);
         protected internal BatchClient(ClientPipeline pipeline, OpenAIClientOptions options);
-        public BatchClient(string apiKey, OpenAIClientOptions options);
         public BatchClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult CancelBatch(string batchId, RequestOptions options);
-        public virtual Task<ClientResult> CancelBatchAsync(string batchId, RequestOptions options);
-        public virtual ClientResult CreateBatch(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult> CreateBatchAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult GetBatch(string batchId, RequestOptions options);
-        public virtual Task<ClientResult> GetBatchAsync(string batchId, RequestOptions options);
+        public ClientPipeline Pipeline { get; }
+        public virtual CreateBatchOperation CreateBatch(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
+        public virtual Task<CreateBatchOperation> CreateBatchAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
         public virtual CollectionResult GetBatches(string after, int? limit, RequestOptions options);
         public virtual AsyncCollectionResult GetBatchesAsync(string after, int? limit, RequestOptions options);
+    }
+    public class CreateBatchOperation : OperationResult {
+        public string BatchId { get; }
+        public override ContinuationToken? RehydrationToken { get; protected set; }
+        public virtual ClientResult Cancel(RequestOptions? options);
+        public virtual Task<ClientResult> CancelAsync(RequestOptions? options);
+        public virtual ClientResult GetBatch(RequestOptions? options);
+        public virtual Task<ClientResult> GetBatchAsync(RequestOptions? options);
+        public static CreateBatchOperation Rehydrate(BatchClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<CreateBatchOperation> RehydrateAsync(BatchClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public override ClientResult UpdateStatus(RequestOptions? options = null);
+        public override ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null);
     }
 }
 namespace OpenAI.Chat {
     public class AssistantChatMessage : ChatMessage, IJsonModel<AssistantChatMessage>, IPersistableModel<AssistantChatMessage> {
         public AssistantChatMessage(ChatCompletion chatCompletion);
+        [Obsolete("This constructor is obsolete. Please use the constructor that takes an IEnumerable<ChatToolCall> parameter instead.")]
         public AssistantChatMessage(ChatFunctionCall functionCall);
         public AssistantChatMessage(params ChatMessageContentPart[] contentParts);
         public AssistantChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
@@ -1341,9 +1333,8 @@ namespace OpenAI.Chat {
         protected internal ChatClient(ClientPipeline pipeline, string model, OpenAIClientOptions options);
         public ChatClient(string model, ApiKeyCredential credential, OpenAIClientOptions options);
         public ChatClient(string model, ApiKeyCredential credential);
-        public ChatClient(string model, string apiKey, OpenAIClientOptions options);
         public ChatClient(string model, string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual ClientResult<ChatCompletion> CompleteChat(params ChatMessage[] messages);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CompleteChat(BinaryContent content, RequestOptions options = null);
@@ -1358,7 +1349,7 @@ namespace OpenAI.Chat {
         public virtual AsyncCollectionResult<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
     }
     public class ChatCompletion : IJsonModel<ChatCompletion>, IPersistableModel<ChatCompletion> {
-        public IReadOnlyList<ChatMessageContentPart> Content { get; }
+        public ChatMessageContent Content { get; }
         public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities { get; }
         public DateTimeOffset CreatedAt { get; }
         public ChatFinishReason FinishReason { get; }
@@ -1377,9 +1368,9 @@ namespace OpenAI.Chat {
         ChatCompletion IPersistableModel<ChatCompletion>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatCompletion>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatCompletion>.Write(ModelReaderWriterOptions options);
-        public override string ToString();
     }
     public class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>, IPersistableModel<ChatCompletionOptions> {
+        public bool? AllowParallelToolCalls { get; set; }
         public string EndUserId { get; set; }
         public float? FrequencyPenalty { get; set; }
         [Obsolete("This property is obsolete. Please use ToolChoice instead.")]
@@ -1389,7 +1380,6 @@ namespace OpenAI.Chat {
         public bool? IncludeLogProbabilities { get; set; }
         public IDictionary<int, int> LogitBiases { get; }
         public int? MaxOutputTokenCount { get; set; }
-        public bool? ParallelToolCallsEnabled { get; set; }
         public float? PresencePenalty { get; set; }
         public ChatResponseFormat ResponseFormat { get; set; }
         public long? Seed { get; set; }
@@ -1426,8 +1416,8 @@ namespace OpenAI.Chat {
     }
     [Obsolete("This class is obsolete. Please use ChatToolCall instead.")]
     public class ChatFunctionCall : IJsonModel<ChatFunctionCall>, IPersistableModel<ChatFunctionCall> {
-        public ChatFunctionCall(string functionName, string functionArguments);
-        public string FunctionArguments { get; }
+        public ChatFunctionCall(string functionName, BinaryData functionArguments);
+        public BinaryData FunctionArguments { get; }
         public string FunctionName { get; }
         ChatFunctionCall IJsonModel<ChatFunctionCall>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatFunctionCall>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -1437,9 +1427,9 @@ namespace OpenAI.Chat {
     }
     [Obsolete("This class is obsolete. Please use ChatToolChoice instead.")]
     public class ChatFunctionChoice : IJsonModel<ChatFunctionChoice>, IPersistableModel<ChatFunctionChoice> {
-        public ChatFunctionChoice(ChatFunction chatFunction);
-        public static ChatFunctionChoice Auto { get; }
-        public static ChatFunctionChoice None { get; }
+        public static ChatFunctionChoice CreateAutoChoice();
+        public static ChatFunctionChoice CreateNamedChoice(string functionName);
+        public static ChatFunctionChoice CreateNoneChoice();
         ChatFunctionChoice IJsonModel<ChatFunctionChoice>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatFunctionChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatFunctionChoice IPersistableModel<ChatFunctionChoice>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1463,8 +1453,8 @@ namespace OpenAI.Chat {
         public static bool operator !=(ChatImageDetailLevel left, ChatImageDetailLevel right);
         public override readonly string ToString();
     }
-    public abstract class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
-        public IList<ChatMessageContentPart> Content { get; }
+    public class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
+        public ChatMessageContent Content { get; }
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
         public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall);
         public static AssistantChatMessage CreateAssistantMessage(params ChatMessageContentPart[] contentParts);
@@ -1482,12 +1472,18 @@ namespace OpenAI.Chat {
         public static UserChatMessage CreateUserMessage(params ChatMessageContentPart[] contentParts);
         public static UserChatMessage CreateUserMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static UserChatMessage CreateUserMessage(string content);
-        public static implicit operator ChatMessage(string userMessage);
+        public static implicit operator ChatMessage(string content);
         ChatMessage IJsonModel<ChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatMessage IPersistableModel<ChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatMessage>.Write(ModelReaderWriterOptions options);
+    }
+    public class ChatMessageContent : ObjectModel.Collection<ChatMessageContentPart> {
+        public ChatMessageContent();
+        public ChatMessageContent(params ChatMessageContentPart[] contentParts);
+        public ChatMessageContent(IEnumerable<ChatMessageContentPart> contentParts);
+        public ChatMessageContent(string content);
     }
     public class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>, IPersistableModel<ChatMessageContentPart> {
         public BinaryData ImageBytes { get; }
@@ -1508,22 +1504,10 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatMessageContentPart>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatMessageContentPart>.Write(ModelReaderWriterOptions options);
     }
-    public readonly partial struct ChatMessageContentPartKind : IEquatable<ChatMessageContentPartKind> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public ChatMessageContentPartKind(string value);
-        public static ChatMessageContentPartKind Image { get; }
-        public static ChatMessageContentPartKind Refusal { get; }
-        public static ChatMessageContentPartKind Text { get; }
-        public readonly bool Equals(ChatMessageContentPartKind other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(ChatMessageContentPartKind left, ChatMessageContentPartKind right);
-        public static implicit operator ChatMessageContentPartKind(string value);
-        public static bool operator !=(ChatMessageContentPartKind left, ChatMessageContentPartKind right);
-        public override readonly string ToString();
+    public enum ChatMessageContentPartKind {
+        Text = 0,
+        Refusal = 1,
+        Image = 2
     }
     public enum ChatMessageRole {
         System = 0,
@@ -1540,7 +1524,7 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatOutputTokenUsageDetails>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatOutputTokenUsageDetails>.Write(ModelReaderWriterOptions options);
     }
-    public abstract class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
+    public class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
         public static ChatResponseFormat CreateJsonObjectFormat();
         public static ChatResponseFormat CreateJsonSchemaFormat(string jsonSchemaFormatName, BinaryData jsonSchema, string jsonSchemaFormatDescription = null, bool? jsonSchemaIsStrict = null);
         public static ChatResponseFormat CreateTextFormat();
@@ -1596,31 +1580,19 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<ChatTool>.Write(ModelReaderWriterOptions options);
     }
     public class ChatToolCall : IJsonModel<ChatToolCall>, IPersistableModel<ChatToolCall> {
-        public string FunctionArguments { get; }
+        public BinaryData FunctionArguments { get; }
         public string FunctionName { get; }
         public string Id { get; set; }
         public ChatToolCallKind Kind { get; }
-        public static ChatToolCall CreateFunctionToolCall(string toolCallId, string functionName, string functionArguments);
+        public static ChatToolCall CreateFunctionToolCall(string id, string functionName, BinaryData functionArguments);
         ChatToolCall IJsonModel<ChatToolCall>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatToolCall>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatToolCall IPersistableModel<ChatToolCall>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ChatToolCall>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatToolCall>.Write(ModelReaderWriterOptions options);
     }
-    public readonly partial struct ChatToolCallKind : IEquatable<ChatToolCallKind> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public ChatToolCallKind(string value);
-        public static ChatToolCallKind Function { get; }
-        public readonly bool Equals(ChatToolCallKind other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(ChatToolCallKind left, ChatToolCallKind right);
-        public static implicit operator ChatToolCallKind(string value);
-        public static bool operator !=(ChatToolCallKind left, ChatToolCallKind right);
-        public override readonly string ToString();
+    public enum ChatToolCallKind {
+        Function = 0
     }
     public class ChatToolChoice : IJsonModel<ChatToolChoice>, IPersistableModel<ChatToolChoice> {
         public static ChatToolChoice CreateAutoChoice();
@@ -1633,20 +1605,8 @@ namespace OpenAI.Chat {
         string IPersistableModel<ChatToolChoice>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ChatToolChoice>.Write(ModelReaderWriterOptions options);
     }
-    public readonly partial struct ChatToolKind : IEquatable<ChatToolKind> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public ChatToolKind(string value);
-        public static ChatToolKind Function { get; }
-        public readonly bool Equals(ChatToolKind other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(ChatToolKind left, ChatToolKind right);
-        public static implicit operator ChatToolKind(string value);
-        public static bool operator !=(ChatToolKind left, ChatToolKind right);
-        public override readonly string ToString();
+    public enum ChatToolKind {
+        Function = 0
     }
     [Obsolete("This class is obsolete. Please use ToolChatMessage instead.")]
     public class FunctionChatMessage : ChatMessage, IJsonModel<FunctionChatMessage>, IPersistableModel<FunctionChatMessage> {
@@ -1659,24 +1619,24 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<FunctionChatMessage>.Write(ModelReaderWriterOptions options);
     }
     public static class OpenAIChatModelFactory {
-        public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, IEnumerable<ChatMessageContentPart> content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokens = 0);
+        public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, ChatMessageContent content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0);
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
-        public static ChatTokenUsage ChatTokenUsage(int outputTokens = 0, int inputTokens = 0, int totalTokens = 0, ChatOutputTokenUsageDetails outputTokenDetails = null);
-        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string id = null, IEnumerable<ChatMessageContentPart> contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null);
+        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string completionId = null, ChatMessageContent contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
         [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
-        public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionArgumentsUpdate = null, string functionName = null);
-        public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = 0, string id = null, ChatToolCallKind kind = default, string functionName = null, string functionArgumentsUpdate = null);
+        public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = null, BinaryData functionArgumentsUpdate = null);
+        public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = 0, string toolCallId = null, ChatToolCallKind kind = ChatToolCallKind.Function, string functionName = null, BinaryData functionArgumentsUpdate = null);
     }
     public class StreamingChatCompletionUpdate : IJsonModel<StreamingChatCompletionUpdate>, IPersistableModel<StreamingChatCompletionUpdate> {
+        public string CompletionId { get; }
         public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities { get; }
-        public IReadOnlyList<ChatMessageContentPart> ContentUpdate { get; }
+        public ChatMessageContent ContentUpdate { get; }
         public DateTimeOffset CreatedAt { get; }
         public ChatFinishReason? FinishReason { get; }
         [Obsolete("This property is obsolete. Please use ToolCallUpdates instead.")]
         public StreamingChatFunctionCallUpdate FunctionCallUpdate { get; }
-        public string Id { get; }
         public string Model { get; }
         public IReadOnlyList<ChatTokenLogProbabilityDetails> RefusalTokenLogProbabilities { get; }
         public string RefusalUpdate { get; }
@@ -1692,7 +1652,7 @@ namespace OpenAI.Chat {
     }
     [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
     public class StreamingChatFunctionCallUpdate : IJsonModel<StreamingChatFunctionCallUpdate>, IPersistableModel<StreamingChatFunctionCallUpdate> {
-        public string FunctionArgumentsUpdate { get; }
+        public BinaryData FunctionArgumentsUpdate { get; }
         public string FunctionName { get; }
         StreamingChatFunctionCallUpdate IJsonModel<StreamingChatFunctionCallUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<StreamingChatFunctionCallUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -1701,11 +1661,11 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<StreamingChatFunctionCallUpdate>.Write(ModelReaderWriterOptions options);
     }
     public class StreamingChatToolCallUpdate : IJsonModel<StreamingChatToolCallUpdate>, IPersistableModel<StreamingChatToolCallUpdate> {
-        public string FunctionArgumentsUpdate { get; }
+        public BinaryData FunctionArgumentsUpdate { get; }
         public string FunctionName { get; }
-        public string Id { get; }
         public int Index { get; }
         public ChatToolCallKind Kind { get; }
+        public string ToolCallId { get; }
         StreamingChatToolCallUpdate IJsonModel<StreamingChatToolCallUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<StreamingChatToolCallUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         StreamingChatToolCallUpdate IPersistableModel<StreamingChatToolCallUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1735,8 +1695,8 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<ToolChatMessage>.Write(ModelReaderWriterOptions options);
     }
     public class UserChatMessage : ChatMessage, IJsonModel<UserChatMessage>, IPersistableModel<UserChatMessage> {
-        public UserChatMessage(params ChatMessageContentPart[] content);
-        public UserChatMessage(IEnumerable<ChatMessageContentPart> content);
+        public UserChatMessage(params ChatMessageContentPart[] contentParts);
+        public UserChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public UserChatMessage(string content);
         public string ParticipantName { get; set; }
         UserChatMessage IJsonModel<UserChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -1747,42 +1707,23 @@ namespace OpenAI.Chat {
     }
 }
 namespace OpenAI.Embeddings {
-    public class Embedding : IJsonModel<Embedding>, IPersistableModel<Embedding> {
-        public int Index { get; }
-        Embedding IJsonModel<Embedding>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<Embedding>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        Embedding IPersistableModel<Embedding>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<Embedding>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<Embedding>.Write(ModelReaderWriterOptions options);
-        public ReadOnlyMemory<float> ToFloats();
-    }
     public class EmbeddingClient {
         protected EmbeddingClient();
         protected internal EmbeddingClient(ClientPipeline pipeline, string model, OpenAIClientOptions options);
         public EmbeddingClient(string model, ApiKeyCredential credential, OpenAIClientOptions options);
         public EmbeddingClient(string model, ApiKeyCredential credential);
-        public EmbeddingClient(string model, string apiKey, OpenAIClientOptions options);
         public EmbeddingClient(string model, string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<Embedding> GenerateEmbedding(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<Embedding>> GenerateEmbeddingAsync(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public ClientPipeline Pipeline { get; }
+        public virtual ClientResult<OpenAIEmbedding> GenerateEmbedding(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<OpenAIEmbedding>> GenerateEmbeddingAsync(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GenerateEmbeddings(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIEmbeddingCollection> GenerateEmbeddings(IEnumerable<ReadOnlyMemory<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIEmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GenerateEmbeddingsAsync(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
-    }
-    public class EmbeddingCollection : ObjectModel.ReadOnlyCollection<Embedding>, IJsonModel<EmbeddingCollection>, IPersistableModel<EmbeddingCollection> {
-        public string Model { get; }
-        public EmbeddingTokenUsage Usage { get; }
-        EmbeddingCollection IJsonModel<EmbeddingCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<EmbeddingCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        EmbeddingCollection IPersistableModel<EmbeddingCollection>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<EmbeddingCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<EmbeddingCollection>.Write(ModelReaderWriterOptions options);
+        public virtual Task<ClientResult<OpenAIEmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<ReadOnlyMemory<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<OpenAIEmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default);
     }
     public class EmbeddingGenerationOptions : IJsonModel<EmbeddingGenerationOptions>, IPersistableModel<EmbeddingGenerationOptions> {
         public int? Dimensions { get; set; }
@@ -1794,29 +1735,104 @@ namespace OpenAI.Embeddings {
         BinaryData IPersistableModel<EmbeddingGenerationOptions>.Write(ModelReaderWriterOptions options);
     }
     public class EmbeddingTokenUsage : IJsonModel<EmbeddingTokenUsage>, IPersistableModel<EmbeddingTokenUsage> {
-        public int InputTokens { get; }
-        public int TotalTokens { get; }
+        public int InputTokenCount { get; }
+        public int TotalTokenCount { get; }
         EmbeddingTokenUsage IJsonModel<EmbeddingTokenUsage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<EmbeddingTokenUsage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         EmbeddingTokenUsage IPersistableModel<EmbeddingTokenUsage>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<EmbeddingTokenUsage>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<EmbeddingTokenUsage>.Write(ModelReaderWriterOptions options);
     }
+    public class OpenAIEmbedding : IJsonModel<OpenAIEmbedding>, IPersistableModel<OpenAIEmbedding> {
+        public int Index { get; }
+        OpenAIEmbedding IJsonModel<OpenAIEmbedding>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<OpenAIEmbedding>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        OpenAIEmbedding IPersistableModel<OpenAIEmbedding>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<OpenAIEmbedding>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<OpenAIEmbedding>.Write(ModelReaderWriterOptions options);
+        public ReadOnlyMemory<float> ToFloats();
+    }
+    public class OpenAIEmbeddingCollection : ObjectModel.ReadOnlyCollection<OpenAIEmbedding>, IJsonModel<OpenAIEmbeddingCollection>, IPersistableModel<OpenAIEmbeddingCollection> {
+        public string Model { get; }
+        public EmbeddingTokenUsage Usage { get; }
+        OpenAIEmbeddingCollection IJsonModel<OpenAIEmbeddingCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<OpenAIEmbeddingCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        OpenAIEmbeddingCollection IPersistableModel<OpenAIEmbeddingCollection>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<OpenAIEmbeddingCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<OpenAIEmbeddingCollection>.Write(ModelReaderWriterOptions options);
+    }
     public static class OpenAIEmbeddingsModelFactory {
-        public static Embedding Embedding(int index = 0, IEnumerable<float> vector = null);
-        public static EmbeddingCollection EmbeddingCollection(IEnumerable<Embedding> items = null, string model = null, EmbeddingTokenUsage usage = null);
-        public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokens = 0, int totalTokens = 0);
+        public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokenCount = 0, int totalTokenCount = 0);
+        public static OpenAIEmbedding OpenAIEmbedding(int index = 0, IEnumerable<float> vector = null);
+        public static OpenAIEmbeddingCollection OpenAIEmbeddingCollection(IEnumerable<OpenAIEmbedding> items = null, string model = null, EmbeddingTokenUsage usage = null);
     }
 }
 namespace OpenAI.Files {
-    public class FileClient {
-        protected FileClient();
-        public FileClient(ApiKeyCredential credential, OpenAIClientOptions options);
-        public FileClient(ApiKeyCredential credential);
-        protected internal FileClient(ClientPipeline pipeline, OpenAIClientOptions options);
-        public FileClient(string apiKey, OpenAIClientOptions options);
-        public FileClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+    public class FileDeletionResult : IJsonModel<FileDeletionResult>, IPersistableModel<FileDeletionResult> {
+        public bool Deleted { get; }
+        public string FileId { get; }
+        FileDeletionResult IJsonModel<FileDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<FileDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        FileDeletionResult IPersistableModel<FileDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<FileDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<FileDeletionResult>.Write(ModelReaderWriterOptions options);
+    }
+    public enum FilePurpose {
+        Assistants = 0,
+        AssistantsOutput = 1,
+        Batch = 2,
+        BatchOutput = 3,
+        FineTune = 4,
+        FineTuneResults = 5,
+        Vision = 6
+    }
+    [Obsolete("This struct is obsolete. If this is a fine-tuning training file, it may take some time to process after it has been uploaded. While the file is processing, you can still create a fine-tuning job but it will not start until the file processing has completed.")]
+    public enum FileStatus {
+        Uploaded = 0,
+        Processed = 1,
+        Error = 2
+    }
+    public readonly partial struct FileUploadPurpose : IEquatable<FileUploadPurpose> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public FileUploadPurpose(string value);
+        public static FileUploadPurpose Assistants { get; }
+        public static FileUploadPurpose Batch { get; }
+        public static FileUploadPurpose FineTune { get; }
+        public static FileUploadPurpose Vision { get; }
+        public readonly bool Equals(FileUploadPurpose other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(FileUploadPurpose left, FileUploadPurpose right);
+        public static implicit operator FileUploadPurpose(string value);
+        public static bool operator !=(FileUploadPurpose left, FileUploadPurpose right);
+        public override readonly string ToString();
+    }
+    public class OpenAIFile : IJsonModel<OpenAIFile>, IPersistableModel<OpenAIFile> {
+        public DateTimeOffset CreatedAt { get; }
+        public string Filename { get; }
+        public string Id { get; }
+        public FilePurpose Purpose { get; }
+        public int? SizeInBytes { get; }
+        [Obsolete("This property is obsolete. If this is a fine-tuning training file, it may take some time to process after it has been uploaded. While the file is processing, you can still create a fine-tuning job but it will not start until the file processing has completed.")]
+        public FileStatus Status { get; }
+        [Obsolete("This property is obsolete. For details on why a fine-tuning training file failed validation, see the `error` field on the fine-tuning job.")]
+        public string StatusDetails { get; }
+        OpenAIFile IJsonModel<OpenAIFile>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<OpenAIFile>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        OpenAIFile IPersistableModel<OpenAIFile>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<OpenAIFile>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<OpenAIFile>.Write(ModelReaderWriterOptions options);
+    }
+    public class OpenAIFileClient {
+        protected OpenAIFileClient();
+        public OpenAIFileClient(ApiKeyCredential credential, OpenAIClientOptions options);
+        public OpenAIFileClient(ApiKeyCredential credential);
+        protected internal OpenAIFileClient(ClientPipeline pipeline, OpenAIClientOptions options);
+        public OpenAIFileClient(string apiKey);
+        public ClientPipeline Pipeline { get; }
         public virtual ClientResult AddUploadPart(string uploadId, BinaryContent content, string contentType, RequestOptions options = null);
         public virtual Task<ClientResult> AddUploadPartAsync(string uploadId, BinaryContent content, string contentType, RequestOptions options = null);
         public virtual ClientResult CancelUpload(string uploadId, RequestOptions options = null);
@@ -1839,122 +1855,40 @@ namespace OpenAI.Files {
         public virtual Task<ClientResult<BinaryData>> DownloadFileAsync(string fileId, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetFile(string fileId, RequestOptions options);
-        public virtual ClientResult<OpenAIFileInfo> GetFile(string fileId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFile> GetFile(string fileId, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFileAsync(string fileId, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIFileInfo>> GetFileAsync(string fileId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<OpenAIFileInfoCollection> GetFiles(OpenAIFilePurpose purpose, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<OpenAIFile>> GetFileAsync(string fileId, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFileCollection> GetFiles(FilePurpose purpose, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetFiles(string purpose, RequestOptions options);
-        public virtual ClientResult<OpenAIFileInfoCollection> GetFiles(CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<OpenAIFileInfoCollection>> GetFilesAsync(OpenAIFilePurpose purpose, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFileCollection> GetFiles(CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<OpenAIFileCollection>> GetFilesAsync(FilePurpose purpose, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFilesAsync(string purpose, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIFileInfoCollection>> GetFilesAsync(CancellationToken cancellationToken = default);
-        public virtual ClientResult<OpenAIFileInfo> UploadFile(BinaryData file, string filename, FileUploadPurpose purpose);
+        public virtual Task<ClientResult<OpenAIFileCollection>> GetFilesAsync(CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFile> UploadFile(BinaryData file, string filename, FileUploadPurpose purpose);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult UploadFile(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual ClientResult<OpenAIFileInfo> UploadFile(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
-        public virtual ClientResult<OpenAIFileInfo> UploadFile(string filePath, FileUploadPurpose purpose);
-        public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(BinaryData file, string filename, FileUploadPurpose purpose);
+        public virtual ClientResult<OpenAIFile> UploadFile(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
+        public virtual ClientResult<OpenAIFile> UploadFile(string filePath, FileUploadPurpose purpose);
+        public virtual Task<ClientResult<OpenAIFile>> UploadFileAsync(BinaryData file, string filename, FileUploadPurpose purpose);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> UploadFileAsync(BinaryContent content, string contentType, RequestOptions options = null);
-        public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<OpenAIFileInfo>> UploadFileAsync(string filePath, FileUploadPurpose purpose);
+        public virtual Task<ClientResult<OpenAIFile>> UploadFileAsync(Stream file, string filename, FileUploadPurpose purpose, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<OpenAIFile>> UploadFileAsync(string filePath, FileUploadPurpose purpose);
     }
-    public class FileDeletionResult : IJsonModel<FileDeletionResult>, IPersistableModel<FileDeletionResult> {
-        public bool Deleted { get; }
-        public string FileId { get; }
-        FileDeletionResult IJsonModel<FileDeletionResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<FileDeletionResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        FileDeletionResult IPersistableModel<FileDeletionResult>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<FileDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<FileDeletionResult>.Write(ModelReaderWriterOptions options);
-    }
-    public readonly partial struct FileUploadPurpose : IEquatable<FileUploadPurpose> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public FileUploadPurpose(string value);
-        public static FileUploadPurpose Assistants { get; }
-        public static FileUploadPurpose Batch { get; }
-        public static FileUploadPurpose FineTune { get; }
-        public static FileUploadPurpose Vision { get; }
-        public readonly bool Equals(FileUploadPurpose other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(FileUploadPurpose left, FileUploadPurpose right);
-        public static implicit operator FileUploadPurpose(string value);
-        public static bool operator !=(FileUploadPurpose left, FileUploadPurpose right);
-        public override readonly string ToString();
-    }
-    public class OpenAIFileInfo : IJsonModel<OpenAIFileInfo>, IPersistableModel<OpenAIFileInfo> {
-        public DateTimeOffset CreatedAt { get; }
-        public string Filename { get; }
-        public string Id { get; }
-        public OpenAIFilePurpose Purpose { get; }
-        public int? SizeInBytes { get; }
-        [Obsolete("This property is obsolete. If this is a fine-tuning training file, it may take some time to process after it has been uploaded. While the file is processing, you can still create a fine-tuning job but it will not start until the file processing has completed.")]
-        public OpenAIFileStatus Status { get; }
-        [Obsolete("This property is obsolete. For details on why a fine-tuning training file failed validation, see the `error` field on the fine-tuning job.")]
-        public string StatusDetails { get; }
-        OpenAIFileInfo IJsonModel<OpenAIFileInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<OpenAIFileInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        OpenAIFileInfo IPersistableModel<OpenAIFileInfo>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<OpenAIFileInfo>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<OpenAIFileInfo>.Write(ModelReaderWriterOptions options);
-    }
-    public class OpenAIFileInfoCollection : ObjectModel.ReadOnlyCollection<OpenAIFileInfo>, IJsonModel<OpenAIFileInfoCollection>, IPersistableModel<OpenAIFileInfoCollection> {
-        OpenAIFileInfoCollection IJsonModel<OpenAIFileInfoCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<OpenAIFileInfoCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        OpenAIFileInfoCollection IPersistableModel<OpenAIFileInfoCollection>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<OpenAIFileInfoCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<OpenAIFileInfoCollection>.Write(ModelReaderWriterOptions options);
-    }
-    public readonly partial struct OpenAIFilePurpose : IEquatable<OpenAIFilePurpose> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public OpenAIFilePurpose(string value);
-        public static OpenAIFilePurpose Assistants { get; }
-        public static OpenAIFilePurpose AssistantsOutput { get; }
-        public static OpenAIFilePurpose Batch { get; }
-        public static OpenAIFilePurpose BatchOutput { get; }
-        public static OpenAIFilePurpose FineTune { get; }
-        public static OpenAIFilePurpose FineTuneResults { get; }
-        public static OpenAIFilePurpose Vision { get; }
-        public readonly bool Equals(OpenAIFilePurpose other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(OpenAIFilePurpose left, OpenAIFilePurpose right);
-        public static implicit operator OpenAIFilePurpose(string value);
-        public static bool operator !=(OpenAIFilePurpose left, OpenAIFilePurpose right);
-        public override readonly string ToString();
+    public class OpenAIFileCollection : ObjectModel.ReadOnlyCollection<OpenAIFile>, IJsonModel<OpenAIFileCollection>, IPersistableModel<OpenAIFileCollection> {
+        OpenAIFileCollection IJsonModel<OpenAIFileCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<OpenAIFileCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        OpenAIFileCollection IPersistableModel<OpenAIFileCollection>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<OpenAIFileCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<OpenAIFileCollection>.Write(ModelReaderWriterOptions options);
     }
     public static class OpenAIFilesModelFactory {
         public static FileDeletionResult FileDeletionResult(string fileId = null, bool deleted = false);
-        public static OpenAIFileInfo OpenAIFileInfo(string id = null, int? sizeInBytes = null, DateTimeOffset createdAt = default, string filename = null, OpenAIFilePurpose purpose = default, OpenAIFileStatus status = default, string statusDetails = null);
-        public static OpenAIFileInfoCollection OpenAIFileInfoCollection(IEnumerable<OpenAIFileInfo> items = null);
-    }
-    [Obsolete("This struct is obsolete. If this is a fine-tuning training file, it may take some time to process after it has been uploaded. While the file is processing, you can still create a fine-tuning job but it will not start until the file processing has completed.")]
-    public readonly partial struct OpenAIFileStatus : IEquatable<OpenAIFileStatus> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public OpenAIFileStatus(string value);
-        public static OpenAIFileStatus Error { get; }
-        public static OpenAIFileStatus Processed { get; }
-        public static OpenAIFileStatus Uploaded { get; }
-        public readonly bool Equals(OpenAIFileStatus other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(OpenAIFileStatus left, OpenAIFileStatus right);
-        public static implicit operator OpenAIFileStatus(string value);
-        public static bool operator !=(OpenAIFileStatus left, OpenAIFileStatus right);
-        public override readonly string ToString();
+        public static OpenAIFileCollection OpenAIFileCollection(IEnumerable<OpenAIFile> items = null);
+        public static OpenAIFile OpenAIFileInfo(string id = null, int? sizeInBytes = null, DateTimeOffset createdAt = default, string filename = null, FilePurpose purpose = FilePurpose.Assistants, FileStatus status = FileStatus.Uploaded, string statusDetails = null);
     }
 }
 namespace OpenAI.FineTuning {
@@ -1963,21 +1897,32 @@ namespace OpenAI.FineTuning {
         public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public FineTuningClient(ApiKeyCredential credential);
         protected internal FineTuningClient(ClientPipeline pipeline, OpenAIClientOptions options);
-        public FineTuningClient(string apiKey, OpenAIClientOptions options);
         public FineTuningClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult CancelJob(string jobId, RequestOptions options);
-        public virtual Task<ClientResult> CancelJobAsync(string jobId, RequestOptions options);
-        public virtual ClientResult CreateJob(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult> CreateJobAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult GetJob(string jobId, RequestOptions options);
-        public virtual Task<ClientResult> GetJobAsync(string jobId, RequestOptions options);
-        public virtual CollectionResult GetJobCheckpoints(string jobId, string after, int? limit, RequestOptions options);
-        public virtual AsyncCollectionResult GetJobCheckpointsAsync(string jobId, string after, int? limit, RequestOptions options);
-        public virtual CollectionResult GetJobEvents(string jobId, string after, int? limit, RequestOptions options);
-        public virtual AsyncCollectionResult GetJobEventsAsync(string jobId, string after, int? limit, RequestOptions options);
+        public ClientPipeline Pipeline { get; }
+        public virtual FineTuningJobOperation CreateFineTuningJob(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
+        public virtual Task<FineTuningJobOperation> CreateFineTuningJobAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
+        public virtual ClientResult GetJob(string fineTuningJobId, RequestOptions options);
+        public virtual Task<ClientResult> GetJobAsync(string fineTuningJobId, RequestOptions options);
         public virtual CollectionResult GetJobs(string after, int? limit, RequestOptions options);
         public virtual AsyncCollectionResult GetJobsAsync(string after, int? limit, RequestOptions options);
+    }
+    public class FineTuningJobOperation : OperationResult {
+        public string JobId { get; }
+        public override ContinuationToken? RehydrationToken { get; protected set; }
+        public virtual ClientResult Cancel(RequestOptions? options);
+        public virtual Task<ClientResult> CancelAsync(RequestOptions? options);
+        public virtual ClientResult GetJob(RequestOptions? options);
+        public virtual Task<ClientResult> GetJobAsync(RequestOptions? options);
+        public virtual CollectionResult GetJobCheckpoints(string? after, int? limit, RequestOptions? options);
+        public virtual AsyncCollectionResult GetJobCheckpointsAsync(string? after, int? limit, RequestOptions? options);
+        public virtual CollectionResult GetJobEvents(string? after, int? limit, RequestOptions options);
+        public virtual AsyncCollectionResult GetJobEventsAsync(string? after, int? limit, RequestOptions options);
+        public static FineTuningJobOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static FineTuningJobOperation Rehydrate(FineTuningClient client, string fineTuningJobId, CancellationToken cancellationToken = default);
+        public static Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, string fineTuningJobId, CancellationToken cancellationToken = default);
+        public override ClientResult UpdateStatus(RequestOptions? options = null);
+        public override ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null);
     }
 }
 namespace OpenAI.Images {
@@ -1999,13 +1944,37 @@ namespace OpenAI.Images {
         string IPersistableModel<GeneratedImageCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<GeneratedImageCollection>.Write(ModelReaderWriterOptions options);
     }
-    public enum GeneratedImageFormat {
-        Bytes = 0,
-        Uri = 1
+    public readonly partial struct GeneratedImageFormat : IEquatable<GeneratedImageFormat> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public GeneratedImageFormat(string value);
+        public static GeneratedImageFormat Bytes { get; }
+        public static GeneratedImageFormat Uri { get; }
+        public readonly bool Equals(GeneratedImageFormat other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(GeneratedImageFormat left, GeneratedImageFormat right);
+        public static implicit operator GeneratedImageFormat(string value);
+        public static bool operator !=(GeneratedImageFormat left, GeneratedImageFormat right);
+        public override readonly string ToString();
     }
-    public enum GeneratedImageQuality {
-        High = 0,
-        Standard = 1
+    public readonly partial struct GeneratedImageQuality : IEquatable<GeneratedImageQuality> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public GeneratedImageQuality(string value);
+        public static GeneratedImageQuality High { get; }
+        public static GeneratedImageQuality Standard { get; }
+        public readonly bool Equals(GeneratedImageQuality other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(GeneratedImageQuality left, GeneratedImageQuality right);
+        public static implicit operator GeneratedImageQuality(string value);
+        public static bool operator !=(GeneratedImageQuality left, GeneratedImageQuality right);
+        public override readonly string ToString();
     }
     public readonly partial struct GeneratedImageSize : IEquatable<GeneratedImageSize> {
         private readonly object _dummy;
@@ -2025,18 +1994,29 @@ namespace OpenAI.Images {
         public static bool operator !=(GeneratedImageSize left, GeneratedImageSize right);
         public override readonly string ToString();
     }
-    public enum GeneratedImageStyle {
-        Vivid = 0,
-        Natural = 1
+    public readonly partial struct GeneratedImageStyle : IEquatable<GeneratedImageStyle> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public GeneratedImageStyle(string value);
+        public static GeneratedImageStyle Natural { get; }
+        public static GeneratedImageStyle Vivid { get; }
+        public readonly bool Equals(GeneratedImageStyle other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(GeneratedImageStyle left, GeneratedImageStyle right);
+        public static implicit operator GeneratedImageStyle(string value);
+        public static bool operator !=(GeneratedImageStyle left, GeneratedImageStyle right);
+        public override readonly string ToString();
     }
     public class ImageClient {
         protected ImageClient();
         protected internal ImageClient(ClientPipeline pipeline, string model, OpenAIClientOptions options);
         public ImageClient(string model, ApiKeyCredential credential, OpenAIClientOptions options);
         public ImageClient(string model, ApiKeyCredential credential);
-        public ImageClient(string model, string apiKey, OpenAIClientOptions options);
         public ImageClient(string model, string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         public virtual ClientResult<GeneratedImage> GenerateImage(string prompt, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<GeneratedImage>> GenerateImageAsync(string prompt, ImageGenerationOptions options = null, CancellationToken cancellationToken = default);
         public virtual ClientResult<GeneratedImage> GenerateImageEdit(Stream image, string imageFilename, string prompt, ImageEditOptions options = null, CancellationToken cancellationToken = default);
@@ -2116,33 +2096,6 @@ namespace OpenAI.Images {
     }
 }
 namespace OpenAI.Models {
-    public class ModelClient {
-        protected ModelClient();
-        public ModelClient(ApiKeyCredential credential, OpenAIClientOptions options);
-        public ModelClient(ApiKeyCredential credential);
-        protected internal ModelClient(ClientPipeline pipeline, OpenAIClientOptions options);
-        public ModelClient(string apiKey, OpenAIClientOptions options);
-        public ModelClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult DeleteModel(string model, RequestOptions options);
-        public virtual ClientResult<ModelDeletionResult> DeleteModel(string model, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> DeleteModelAsync(string model, RequestOptions options);
-        public virtual Task<ClientResult<ModelDeletionResult>> DeleteModelAsync(string model, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetModel(string model, RequestOptions options);
-        public virtual ClientResult<OpenAIModelInfo> GetModel(string model, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetModelAsync(string model, RequestOptions options);
-        public virtual Task<ClientResult<OpenAIModelInfo>> GetModelAsync(string model, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetModels(RequestOptions options);
-        public virtual ClientResult<OpenAIModelInfoCollection> GetModels(CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetModelsAsync(RequestOptions options);
-        public virtual Task<ClientResult<OpenAIModelInfoCollection>> GetModelsAsync(CancellationToken cancellationToken = default);
-    }
     public class ModelDeletionResult : IJsonModel<ModelDeletionResult>, IPersistableModel<ModelDeletionResult> {
         public bool Deleted { get; }
         public string ModelId { get; }
@@ -2152,110 +2105,869 @@ namespace OpenAI.Models {
         string IPersistableModel<ModelDeletionResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ModelDeletionResult>.Write(ModelReaderWriterOptions options);
     }
-    public class OpenAIModelInfo : IJsonModel<OpenAIModelInfo>, IPersistableModel<OpenAIModelInfo> {
+    public class OpenAIModel : IJsonModel<OpenAIModel>, IPersistableModel<OpenAIModel> {
         public DateTimeOffset CreatedAt { get; }
         public string Id { get; }
         public string OwnedBy { get; }
-        OpenAIModelInfo IJsonModel<OpenAIModelInfo>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<OpenAIModelInfo>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        OpenAIModelInfo IPersistableModel<OpenAIModelInfo>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<OpenAIModelInfo>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<OpenAIModelInfo>.Write(ModelReaderWriterOptions options);
+        OpenAIModel IJsonModel<OpenAIModel>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<OpenAIModel>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        OpenAIModel IPersistableModel<OpenAIModel>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<OpenAIModel>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<OpenAIModel>.Write(ModelReaderWriterOptions options);
     }
-    public class OpenAIModelInfoCollection : ObjectModel.ReadOnlyCollection<OpenAIModelInfo>, IJsonModel<OpenAIModelInfoCollection>, IPersistableModel<OpenAIModelInfoCollection> {
-        OpenAIModelInfoCollection IJsonModel<OpenAIModelInfoCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<OpenAIModelInfoCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        OpenAIModelInfoCollection IPersistableModel<OpenAIModelInfoCollection>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<OpenAIModelInfoCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<OpenAIModelInfoCollection>.Write(ModelReaderWriterOptions options);
+    public class OpenAIModelClient {
+        protected OpenAIModelClient();
+        public OpenAIModelClient(ApiKeyCredential credential, OpenAIClientOptions options);
+        public OpenAIModelClient(ApiKeyCredential credential);
+        protected internal OpenAIModelClient(ClientPipeline pipeline, OpenAIClientOptions options);
+        public OpenAIModelClient(string apiKey);
+        public ClientPipeline Pipeline { get; }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult DeleteModel(string model, RequestOptions options);
+        public virtual ClientResult<ModelDeletionResult> DeleteModel(string model, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> DeleteModelAsync(string model, RequestOptions options);
+        public virtual Task<ClientResult<ModelDeletionResult>> DeleteModelAsync(string model, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult GetModel(string model, RequestOptions options);
+        public virtual ClientResult<OpenAIModel> GetModel(string model, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> GetModelAsync(string model, RequestOptions options);
+        public virtual Task<ClientResult<OpenAIModel>> GetModelAsync(string model, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult GetModels(RequestOptions options);
+        public virtual ClientResult<OpenAIModelCollection> GetModels(CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> GetModelsAsync(RequestOptions options);
+        public virtual Task<ClientResult<OpenAIModelCollection>> GetModelsAsync(CancellationToken cancellationToken = default);
+    }
+    public class OpenAIModelCollection : ObjectModel.ReadOnlyCollection<OpenAIModel>, IJsonModel<OpenAIModelCollection>, IPersistableModel<OpenAIModelCollection> {
+        OpenAIModelCollection IJsonModel<OpenAIModelCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<OpenAIModelCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        OpenAIModelCollection IPersistableModel<OpenAIModelCollection>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<OpenAIModelCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<OpenAIModelCollection>.Write(ModelReaderWriterOptions options);
     }
     public static class OpenAIModelsModelFactory {
         public static ModelDeletionResult ModelDeletionResult(string modelId = null, bool deleted = false);
-        public static OpenAIModelInfo OpenAIModelInfo(string id = null, DateTimeOffset createdAt = default, string ownedBy = null);
-        public static OpenAIModelInfoCollection OpenAIModelInfoCollection(IEnumerable<OpenAIModelInfo> items = null);
+        public static OpenAIModel OpenAIModel(string id = null, DateTimeOffset createdAt = default, string ownedBy = null);
+        public static OpenAIModelCollection OpenAIModelCollection(IEnumerable<OpenAIModel> items = null);
     }
 }
 namespace OpenAI.Moderations {
-    public class ModerationCategories : IJsonModel<ModerationCategories>, IPersistableModel<ModerationCategories> {
-        public bool Harassment { get; }
-        public bool HarassmentThreatening { get; }
-        public bool Hate { get; }
-        public bool HateThreatening { get; }
-        public bool SelfHarm { get; }
-        public bool SelfHarmInstructions { get; }
-        public bool SelfHarmIntent { get; }
-        public bool Sexual { get; }
-        public bool SexualMinors { get; }
-        public bool Violence { get; }
-        public bool ViolenceGraphic { get; }
-        ModerationCategories IJsonModel<ModerationCategories>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ModerationCategories>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ModerationCategories IPersistableModel<ModerationCategories>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ModerationCategories>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ModerationCategories>.Write(ModelReaderWriterOptions options);
-    }
-    public class ModerationCategoryScores : IJsonModel<ModerationCategoryScores>, IPersistableModel<ModerationCategoryScores> {
-        public float Harassment { get; }
-        public float HarassmentThreatening { get; }
-        public float Hate { get; }
-        public float HateThreatening { get; }
-        public float SelfHarm { get; }
-        public float SelfHarmInstructions { get; }
-        public float SelfHarmIntent { get; }
-        public float Sexual { get; }
-        public float SexualMinors { get; }
-        public float Violence { get; }
-        public float ViolenceGraphic { get; }
-        ModerationCategoryScores IJsonModel<ModerationCategoryScores>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ModerationCategoryScores>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ModerationCategoryScores IPersistableModel<ModerationCategoryScores>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ModerationCategoryScores>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ModerationCategoryScores>.Write(ModelReaderWriterOptions options);
+    public class ModerationCategory {
+        public bool Flagged { get; }
+        public float Score { get; }
     }
     public class ModerationClient {
         protected ModerationClient();
         protected internal ModerationClient(ClientPipeline pipeline, string model, OpenAIClientOptions options);
         public ModerationClient(string model, ApiKeyCredential credential, OpenAIClientOptions options);
         public ModerationClient(string model, ApiKeyCredential credential);
-        public ModerationClient(string model, string apiKey, OpenAIClientOptions options);
         public ModerationClient(string model, string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
+        public ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ClassifyText(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<ModerationCollection> ClassifyText(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
+        public virtual ClientResult<ModerationResultCollection> ClassifyText(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
         public virtual ClientResult<ModerationResult> ClassifyText(string input, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ClassifyTextAsync(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<ModerationCollection>> ClassifyTextAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult<ModerationResultCollection>> ClassifyTextAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<ModerationResult>> ClassifyTextAsync(string input, CancellationToken cancellationToken = default);
     }
-    public class ModerationCollection : ObjectModel.ReadOnlyCollection<ModerationResult>, IJsonModel<ModerationCollection>, IPersistableModel<ModerationCollection> {
-        public string Id { get; }
-        public string Model { get; }
-        ModerationCollection IJsonModel<ModerationCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ModerationCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ModerationCollection IPersistableModel<ModerationCollection>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ModerationCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ModerationCollection>.Write(ModelReaderWriterOptions options);
-    }
     public class ModerationResult : IJsonModel<ModerationResult>, IPersistableModel<ModerationResult> {
-        public ModerationCategories Categories { get; }
-        public ModerationCategoryScores CategoryScores { get; }
         public bool Flagged { get; }
+        public ModerationCategory Harassment { get; }
+        public ModerationCategory HarassmentThreatening { get; }
+        public ModerationCategory Hate { get; }
+        public ModerationCategory HateThreatening { get; }
+        public ModerationCategory SelfHarm { get; }
+        public ModerationCategory SelfHarmInstructions { get; }
+        public ModerationCategory SelfHarmIntent { get; }
+        public ModerationCategory Sexual { get; }
+        public ModerationCategory SexualMinors { get; }
+        public ModerationCategory Violence { get; }
+        public ModerationCategory ViolenceGraphic { get; }
         ModerationResult IJsonModel<ModerationResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ModerationResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ModerationResult IPersistableModel<ModerationResult>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ModerationResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ModerationResult>.Write(ModelReaderWriterOptions options);
     }
+    public class ModerationResultCollection : ObjectModel.ReadOnlyCollection<ModerationResult>, IJsonModel<ModerationResultCollection>, IPersistableModel<ModerationResultCollection> {
+        public string Id { get; }
+        public string Model { get; }
+        ModerationResultCollection IJsonModel<ModerationResultCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ModerationResultCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ModerationResultCollection IPersistableModel<ModerationResultCollection>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ModerationResultCollection>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ModerationResultCollection>.Write(ModelReaderWriterOptions options);
+    }
     public static class OpenAIModerationsModelFactory {
-        public static ModerationCategories ModerationCategories(bool hate = false, bool hateThreatening = false, bool harassment = false, bool harassmentThreatening = false, bool selfHarm = false, bool selfHarmIntent = false, bool selfHarmInstructions = false, bool sexual = false, bool sexualMinors = false, bool violence = false, bool violenceGraphic = false);
-        public static ModerationCategoryScores ModerationCategoryScores(float hate = 0, float hateThreatening = 0, float harassment = 0, float harassmentThreatening = 0, float selfHarm = 0, float selfHarmIntent = 0, float selfHarmInstructions = 0, float sexual = 0, float sexualMinors = 0, float violence = 0, float violenceGraphic = 0);
-        public static ModerationCollection ModerationCollection(string id = null, string model = null, IEnumerable<ModerationResult> items = null);
-        public static ModerationResult ModerationResult(bool flagged = false, ModerationCategories categories = null, ModerationCategoryScores categoryScores = null);
+        public static ModerationCategory ModerationCategory(bool flagged = false, float score = 0);
+        public static ModerationResult ModerationResult(bool flagged = false, ModerationCategory hate = null, ModerationCategory hateThreatening = null, ModerationCategory harassment = null, ModerationCategory harassmentThreatening = null, ModerationCategory selfHarm = null, ModerationCategory selfHarmIntent = null, ModerationCategory selfHarmInstructions = null, ModerationCategory sexual = null, ModerationCategory sexualMinors = null, ModerationCategory violence = null, ModerationCategory violenceGraphic = null);
+        public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> items = null);
+    }
+}
+namespace OpenAI.RealtimeConversation {
+    public class ConversationAudioDeltaUpdate : ConversationUpdate, IJsonModel<ConversationAudioDeltaUpdate>, IPersistableModel<ConversationAudioDeltaUpdate> {
+        public int ContentIndex { get; }
+        public BinaryData Delta { get; }
+        public string ItemId { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        ConversationAudioDeltaUpdate IJsonModel<ConversationAudioDeltaUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationAudioDeltaUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationAudioDeltaUpdate IPersistableModel<ConversationAudioDeltaUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationAudioDeltaUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationAudioDeltaUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationAudioDoneUpdate : ConversationUpdate, IJsonModel<ConversationAudioDoneUpdate>, IPersistableModel<ConversationAudioDoneUpdate> {
+        public int ContentIndex { get; }
+        public string ItemId { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        ConversationAudioDoneUpdate IJsonModel<ConversationAudioDoneUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationAudioDoneUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationAudioDoneUpdate IPersistableModel<ConversationAudioDoneUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationAudioDoneUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationAudioDoneUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public readonly partial struct ConversationAudioFormat : IEquatable<ConversationAudioFormat> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public ConversationAudioFormat(string value);
+        public static ConversationAudioFormat G711Alaw { get; }
+        public static ConversationAudioFormat G711Ulaw { get; }
+        public static ConversationAudioFormat Pcm16 { get; }
+        public readonly bool Equals(ConversationAudioFormat other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ConversationAudioFormat left, ConversationAudioFormat right);
+        public static implicit operator ConversationAudioFormat(string value);
+        public static bool operator !=(ConversationAudioFormat left, ConversationAudioFormat right);
+        public override readonly string ToString();
+    }
+    [Flags]
+    public enum ConversationContentModalities {
+        Text = 1,
+        Audio = 2
+    }
+    public abstract class ConversationContentPart : IJsonModel<ConversationContentPart>, IPersistableModel<ConversationContentPart> {
+        public string AudioTranscriptValue { get; }
+        public ConversationContentPartKind Kind { get; }
+        public string TextValue { get; }
+        public static ConversationContentPart FromInputAudioTranscript(string transcript = null);
+        public static ConversationContentPart FromInputText(string text);
+        public static ConversationContentPart FromOutputAudioTranscript(string transcript = null);
+        public static ConversationContentPart FromOutputText(string text);
+        public static implicit operator ConversationContentPart(string text);
+        ConversationContentPart IJsonModel<ConversationContentPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationContentPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationContentPart IPersistableModel<ConversationContentPart>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationContentPart>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationContentPart>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationContentPartFinishedUpdate : ConversationUpdate, IJsonModel<ConversationContentPartFinishedUpdate>, IPersistableModel<ConversationContentPartFinishedUpdate> {
+        public string AudioTranscript { get; }
+        public int ContentIndex { get; }
+        public ConversationContentPartKind ContentKind { get; }
+        public string ItemId { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        public string Text { get; }
+        ConversationContentPartFinishedUpdate IJsonModel<ConversationContentPartFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationContentPartFinishedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationContentPartFinishedUpdate IPersistableModel<ConversationContentPartFinishedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationContentPartFinishedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationContentPartFinishedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public readonly partial struct ConversationContentPartKind : IEquatable<ConversationContentPartKind> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public ConversationContentPartKind(string value);
+        public static ConversationContentPartKind Audio { get; }
+        public static ConversationContentPartKind InputAudio { get; }
+        public static ConversationContentPartKind InputText { get; }
+        public static ConversationContentPartKind Text { get; }
+        public readonly bool Equals(ConversationContentPartKind other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ConversationContentPartKind left, ConversationContentPartKind right);
+        public static implicit operator ConversationContentPartKind(string value);
+        public static bool operator !=(ConversationContentPartKind left, ConversationContentPartKind right);
+        public override readonly string ToString();
+    }
+    public class ConversationContentPartStartedUpdate : ConversationUpdate, IJsonModel<ConversationContentPartStartedUpdate>, IPersistableModel<ConversationContentPartStartedUpdate> {
+        public string AudioTranscript { get; }
+        public int ContentIndex { get; }
+        public ConversationContentPartKind ContentKind { get; }
+        public string ItemId { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        public string Text { get; }
+        ConversationContentPartStartedUpdate IJsonModel<ConversationContentPartStartedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationContentPartStartedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationContentPartStartedUpdate IPersistableModel<ConversationContentPartStartedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationContentPartStartedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationContentPartStartedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationErrorUpdate : ConversationUpdate, IJsonModel<ConversationErrorUpdate>, IPersistableModel<ConversationErrorUpdate> {
+        public string ErrorCode { get; }
+        public string ErrorEventId { get; }
+        public string ErrorMessage { get; }
+        public string ErrorParameterName { get; }
+        ConversationErrorUpdate IJsonModel<ConversationErrorUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationErrorUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationErrorUpdate IPersistableModel<ConversationErrorUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationErrorUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationErrorUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationFunctionCallArgumentsDeltaUpdate : ConversationUpdate, IJsonModel<ConversationFunctionCallArgumentsDeltaUpdate>, IPersistableModel<ConversationFunctionCallArgumentsDeltaUpdate> {
+        public string CallId { get; }
+        public string Delta { get; }
+        public string ItemId { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        ConversationFunctionCallArgumentsDeltaUpdate IJsonModel<ConversationFunctionCallArgumentsDeltaUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationFunctionCallArgumentsDeltaUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationFunctionCallArgumentsDeltaUpdate IPersistableModel<ConversationFunctionCallArgumentsDeltaUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationFunctionCallArgumentsDeltaUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationFunctionCallArgumentsDeltaUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationFunctionCallArgumentsDoneUpdate : ConversationUpdate, IJsonModel<ConversationFunctionCallArgumentsDoneUpdate>, IPersistableModel<ConversationFunctionCallArgumentsDoneUpdate> {
+        public string Arguments { get; }
+        public string CallId { get; }
+        public string ItemId { get; }
+        public string Name { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        ConversationFunctionCallArgumentsDoneUpdate IJsonModel<ConversationFunctionCallArgumentsDoneUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationFunctionCallArgumentsDoneUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationFunctionCallArgumentsDoneUpdate IPersistableModel<ConversationFunctionCallArgumentsDoneUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationFunctionCallArgumentsDoneUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationFunctionCallArgumentsDoneUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationFunctionTool : ConversationTool, IJsonModel<ConversationFunctionTool>, IPersistableModel<ConversationFunctionTool> {
+        public ConversationFunctionTool();
+        public ConversationFunctionTool(string name);
+        public string Description { get; set; }
+        public required string Name { get; set; }
+        public BinaryData Parameters { get; set; }
+        ConversationFunctionTool IJsonModel<ConversationFunctionTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationFunctionTool>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationFunctionTool IPersistableModel<ConversationFunctionTool>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationFunctionTool>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationFunctionTool>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationInputAudioBufferClearedUpdate : ConversationUpdate, IJsonModel<ConversationInputAudioBufferClearedUpdate>, IPersistableModel<ConversationInputAudioBufferClearedUpdate> {
+        ConversationInputAudioBufferClearedUpdate IJsonModel<ConversationInputAudioBufferClearedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationInputAudioBufferClearedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationInputAudioBufferClearedUpdate IPersistableModel<ConversationInputAudioBufferClearedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationInputAudioBufferClearedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationInputAudioBufferClearedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationInputAudioBufferCommittedUpdate : ConversationUpdate, IJsonModel<ConversationInputAudioBufferCommittedUpdate>, IPersistableModel<ConversationInputAudioBufferCommittedUpdate> {
+        public string ItemId { get; }
+        public string PreviousItemId { get; }
+        ConversationInputAudioBufferCommittedUpdate IJsonModel<ConversationInputAudioBufferCommittedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationInputAudioBufferCommittedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationInputAudioBufferCommittedUpdate IPersistableModel<ConversationInputAudioBufferCommittedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationInputAudioBufferCommittedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationInputAudioBufferCommittedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationInputSpeechFinishedUpdate : ConversationUpdate, IJsonModel<ConversationInputSpeechFinishedUpdate>, IPersistableModel<ConversationInputSpeechFinishedUpdate> {
+        public int AudioEndMs { get; }
+        public string ItemId { get; }
+        ConversationInputSpeechFinishedUpdate IJsonModel<ConversationInputSpeechFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationInputSpeechFinishedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationInputSpeechFinishedUpdate IPersistableModel<ConversationInputSpeechFinishedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationInputSpeechFinishedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationInputSpeechFinishedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationInputSpeechStartedUpdate : ConversationUpdate, IJsonModel<ConversationInputSpeechStartedUpdate>, IPersistableModel<ConversationInputSpeechStartedUpdate> {
+        public int AudioStartMs { get; }
+        public string ItemId { get; }
+        ConversationInputSpeechStartedUpdate IJsonModel<ConversationInputSpeechStartedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationInputSpeechStartedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationInputSpeechStartedUpdate IPersistableModel<ConversationInputSpeechStartedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationInputSpeechStartedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationInputSpeechStartedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationInputTokenUsageDetails : IJsonModel<ConversationInputTokenUsageDetails>, IPersistableModel<ConversationInputTokenUsageDetails> {
+        public int AudioTokens { get; }
+        public int CachedTokens { get; }
+        public int TextTokens { get; }
+        ConversationInputTokenUsageDetails IJsonModel<ConversationInputTokenUsageDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationInputTokenUsageDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationInputTokenUsageDetails IPersistableModel<ConversationInputTokenUsageDetails>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationInputTokenUsageDetails>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationInputTokenUsageDetails>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationInputTranscriptionFailedUpdate : ConversationUpdate, IJsonModel<ConversationInputTranscriptionFailedUpdate>, IPersistableModel<ConversationInputTranscriptionFailedUpdate> {
+        public int ContentIndex { get; }
+        public string ErrorCode { get; }
+        public string ErrorMessage { get; }
+        public string ErrorParameterName { get; }
+        public string ItemId { get; }
+        ConversationInputTranscriptionFailedUpdate IJsonModel<ConversationInputTranscriptionFailedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationInputTranscriptionFailedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationInputTranscriptionFailedUpdate IPersistableModel<ConversationInputTranscriptionFailedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationInputTranscriptionFailedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationInputTranscriptionFailedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationInputTranscriptionFinishedUpdate : ConversationUpdate, IJsonModel<ConversationInputTranscriptionFinishedUpdate>, IPersistableModel<ConversationInputTranscriptionFinishedUpdate> {
+        public int ContentIndex { get; }
+        public string ItemId { get; }
+        public string Transcript { get; }
+        ConversationInputTranscriptionFinishedUpdate IJsonModel<ConversationInputTranscriptionFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationInputTranscriptionFinishedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationInputTranscriptionFinishedUpdate IPersistableModel<ConversationInputTranscriptionFinishedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationInputTranscriptionFinishedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationInputTranscriptionFinishedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationInputTranscriptionOptions : IJsonModel<ConversationInputTranscriptionOptions>, IPersistableModel<ConversationInputTranscriptionOptions> {
+        public ConversationTranscriptionModel? Model { get; set; }
+        ConversationInputTranscriptionOptions IJsonModel<ConversationInputTranscriptionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationInputTranscriptionOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationInputTranscriptionOptions IPersistableModel<ConversationInputTranscriptionOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationInputTranscriptionOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationInputTranscriptionOptions>.Write(ModelReaderWriterOptions options);
+    }
+    public abstract class ConversationItem : IJsonModel<ConversationItem>, IPersistableModel<ConversationItem> {
+        public string FunctionArguments { get; }
+        public string FunctionCallId { get; }
+        public string FunctionName { get; }
+        public string Id { get; set; }
+        public IReadOnlyList<ConversationContentPart> MessageContentParts { get; }
+        public ConversationMessageRole? MessageRole { get; }
+        public static ConversationItem CreateAssistantMessage(IEnumerable<ConversationContentPart> contentItems);
+        public static ConversationItem CreateFunctionCall(string name, string callId, string arguments);
+        public static ConversationItem CreateFunctionCallOutput(string callId, string output);
+        public static ConversationItem CreateSystemMessage(string toolCallId, IEnumerable<ConversationContentPart> contentItems);
+        public static ConversationItem CreateUserMessage(IEnumerable<ConversationContentPart> contentItems);
+        ConversationItem IJsonModel<ConversationItem>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationItem>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationItem IPersistableModel<ConversationItem>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationItem>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationItem>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationItemAcknowledgedUpdate : ConversationUpdate, IJsonModel<ConversationItemAcknowledgedUpdate>, IPersistableModel<ConversationItemAcknowledgedUpdate> {
+        public ConversationItem Item { get; }
+        ConversationItemAcknowledgedUpdate IJsonModel<ConversationItemAcknowledgedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationItemAcknowledgedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationItemAcknowledgedUpdate IPersistableModel<ConversationItemAcknowledgedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationItemAcknowledgedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationItemAcknowledgedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationItemDeletedUpdate : ConversationUpdate, IJsonModel<ConversationItemDeletedUpdate>, IPersistableModel<ConversationItemDeletedUpdate> {
+        public string ItemId { get; }
+        ConversationItemDeletedUpdate IJsonModel<ConversationItemDeletedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationItemDeletedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationItemDeletedUpdate IPersistableModel<ConversationItemDeletedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationItemDeletedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationItemDeletedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationItemFinishedUpdate : ConversationUpdate, IJsonModel<ConversationItemFinishedUpdate>, IPersistableModel<ConversationItemFinishedUpdate> {
+        public string FunctionCallArguments { get; }
+        public string FunctionCallId { get; }
+        public string FunctionCallOutput { get; }
+        public string FunctionName { get; }
+        public IReadOnlyList<ConversationContentPart> MessageContentParts { get; }
+        public ConversationMessageRole? MessageRole { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        ConversationItemFinishedUpdate IJsonModel<ConversationItemFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationItemFinishedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationItemFinishedUpdate IPersistableModel<ConversationItemFinishedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationItemFinishedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationItemFinishedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationItemStartedUpdate : ConversationUpdate, IJsonModel<ConversationItemStartedUpdate>, IPersistableModel<ConversationItemStartedUpdate> {
+        public string FunctionCallArguments { get; }
+        public string FunctionCallId { get; }
+        public string FunctionCallOutput { get; }
+        public string FunctionName { get; }
+        public IReadOnlyList<ConversationContentPart> MessageContentParts { get; }
+        public ConversationMessageRole? MessageRole { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        ConversationItemStartedUpdate IJsonModel<ConversationItemStartedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationItemStartedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationItemStartedUpdate IPersistableModel<ConversationItemStartedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationItemStartedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationItemStartedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public readonly partial struct ConversationItemStatus : IEquatable<ConversationItemStatus> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public ConversationItemStatus(string value);
+        public static ConversationItemStatus Completed { get; }
+        public static ConversationItemStatus Incomplete { get; }
+        public static ConversationItemStatus InProgress { get; }
+        public readonly bool Equals(ConversationItemStatus other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ConversationItemStatus left, ConversationItemStatus right);
+        public static implicit operator ConversationItemStatus(string value);
+        public static bool operator !=(ConversationItemStatus left, ConversationItemStatus right);
+        public override readonly string ToString();
+    }
+    public class ConversationItemTruncatedUpdate : ConversationUpdate, IJsonModel<ConversationItemTruncatedUpdate>, IPersistableModel<ConversationItemTruncatedUpdate> {
+        public int AudioEndMs { get; }
+        public int Index { get; }
+        public string ItemId { get; }
+        ConversationItemTruncatedUpdate IJsonModel<ConversationItemTruncatedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationItemTruncatedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationItemTruncatedUpdate IPersistableModel<ConversationItemTruncatedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationItemTruncatedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationItemTruncatedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationMaxTokensChoice : IJsonModel<ConversationMaxTokensChoice>, IPersistableModel<ConversationMaxTokensChoice> {
+        public ConversationMaxTokensChoice(int numberValue);
+        public int? NumericValue { get; }
+        public static ConversationMaxTokensChoice CreateDefaultMaxTokensChoice();
+        public static ConversationMaxTokensChoice CreateInfiniteMaxTokensChoice();
+        public static ConversationMaxTokensChoice CreateNumericMaxTokensChoice(int maxTokens);
+        public static implicit operator ConversationMaxTokensChoice(int maxTokens);
+        ConversationMaxTokensChoice IJsonModel<ConversationMaxTokensChoice>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationMaxTokensChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationMaxTokensChoice IPersistableModel<ConversationMaxTokensChoice>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationMaxTokensChoice>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationMaxTokensChoice>.Write(ModelReaderWriterOptions options);
+    }
+    public readonly partial struct ConversationMessageRole : IEquatable<ConversationMessageRole> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public ConversationMessageRole(string value);
+        public static ConversationMessageRole Assistant { get; }
+        public static ConversationMessageRole System { get; }
+        public static ConversationMessageRole User { get; }
+        public readonly bool Equals(ConversationMessageRole other);
+        [EditorBrowsable(global::EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(global::EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ConversationMessageRole left, ConversationMessageRole right);
+        public static implicit operator ConversationMessageRole(string value);
+        public static bool operator !=(ConversationMessageRole left, ConversationMessageRole right);
+        public override readonly string ToString();
+    }
+    public class ConversationOutputTokenUsageDetails : IJsonModel<ConversationOutputTokenUsageDetails>, IPersistableModel<ConversationOutputTokenUsageDetails> {
+        public int AudioTokens { get; }
+        public int TextTokens { get; }
+        ConversationOutputTokenUsageDetails IJsonModel<ConversationOutputTokenUsageDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationOutputTokenUsageDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationOutputTokenUsageDetails IPersistableModel<ConversationOutputTokenUsageDetails>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationOutputTokenUsageDetails>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationOutputTokenUsageDetails>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationOutputTranscriptionDeltaUpdate : ConversationUpdate, IJsonModel<ConversationOutputTranscriptionDeltaUpdate>, IPersistableModel<ConversationOutputTranscriptionDeltaUpdate> {
+        public int ContentIndex { get; }
+        public string Delta { get; }
+        public string ItemId { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        ConversationOutputTranscriptionDeltaUpdate IJsonModel<ConversationOutputTranscriptionDeltaUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationOutputTranscriptionDeltaUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationOutputTranscriptionDeltaUpdate IPersistableModel<ConversationOutputTranscriptionDeltaUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationOutputTranscriptionDeltaUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationOutputTranscriptionDeltaUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationOutputTranscriptionFinishedUpdate : ConversationUpdate, IJsonModel<ConversationOutputTranscriptionFinishedUpdate>, IPersistableModel<ConversationOutputTranscriptionFinishedUpdate> {
+        public int ContentIndex { get; }
+        public string ItemId { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        ConversationOutputTranscriptionFinishedUpdate IJsonModel<ConversationOutputTranscriptionFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationOutputTranscriptionFinishedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationOutputTranscriptionFinishedUpdate IPersistableModel<ConversationOutputTranscriptionFinishedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationOutputTranscriptionFinishedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationOutputTranscriptionFinishedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationRateLimitDetailsItem : IJsonModel<ConversationRateLimitDetailsItem>, IPersistableModel<ConversationRateLimitDetailsItem> {
+        public int Limit { get; }
+        public string Name { get; }
+        public int Remaining { get; }
+        public float ResetSeconds { get; }
+        ConversationRateLimitDetailsItem IJsonModel<ConversationRateLimitDetailsItem>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationRateLimitDetailsItem>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationRateLimitDetailsItem IPersistableModel<ConversationRateLimitDetailsItem>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationRateLimitDetailsItem>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationRateLimitDetailsItem>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationRateLimitsUpdatedUpdate : ConversationUpdate, IJsonModel<ConversationRateLimitsUpdatedUpdate>, IPersistableModel<ConversationRateLimitsUpdatedUpdate> {
+        public IReadOnlyList<ConversationRateLimitDetailsItem> RateLimits { get; }
+        ConversationRateLimitsUpdatedUpdate IJsonModel<ConversationRateLimitsUpdatedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationRateLimitsUpdatedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationRateLimitsUpdatedUpdate IPersistableModel<ConversationRateLimitsUpdatedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationRateLimitsUpdatedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationRateLimitsUpdatedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationResponseFinishedUpdate : ConversationUpdate, IJsonModel<ConversationResponseFinishedUpdate>, IPersistableModel<ConversationResponseFinishedUpdate> {
+        public IReadOnlyList<ConversationItem> CreatedItems { get; }
+        public string Id { get; }
+        public ConversationStatus? Status { get; }
+        ConversationResponseFinishedUpdate IJsonModel<ConversationResponseFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationResponseFinishedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationResponseFinishedUpdate IPersistableModel<ConversationResponseFinishedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationResponseFinishedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationResponseFinishedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationResponseStartedUpdate : ConversationUpdate, IJsonModel<ConversationResponseStartedUpdate>, IPersistableModel<ConversationResponseStartedUpdate> {
+        ConversationResponseStartedUpdate IJsonModel<ConversationResponseStartedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationResponseStartedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationResponseStartedUpdate IPersistableModel<ConversationResponseStartedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationResponseStartedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationResponseStartedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationSessionConfiguredUpdate : ConversationUpdate, IJsonModel<ConversationSessionConfiguredUpdate>, IPersistableModel<ConversationSessionConfiguredUpdate> {
+        public ConversationContentModalities ContentModalities { get; }
+        public ConversationAudioFormat InputAudioFormat { get; }
+        public string Instructions { get; }
+        public ConversationMaxTokensChoice MaxOutputTokens { get; }
+        public string Model { get; }
+        public ConversationAudioFormat OutputAudioFormat { get; }
+        public string SessionId { get; }
+        public float Temperature { get; }
+        public ConversationToolChoice ToolChoice { get; }
+        public IReadOnlyList<ConversationTool> Tools { get; }
+        public ConversationInputTranscriptionOptions TranscriptionSettings { get; }
+        public ConversationTurnDetectionOptions TurnDetectionSettings { get; }
+        public ConversationVoice Voice { get; }
+        ConversationSessionConfiguredUpdate IJsonModel<ConversationSessionConfiguredUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationSessionConfiguredUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationSessionConfiguredUpdate IPersistableModel<ConversationSessionConfiguredUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationSessionConfiguredUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationSessionConfiguredUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationSessionOptions : IJsonModel<ConversationSessionOptions>, IPersistableModel<ConversationSessionOptions> {
+        public ConversationContentModalities ContentModalities { get; set; }
+        public ConversationAudioFormat? InputAudioFormat { get; set; }
+        public ConversationInputTranscriptionOptions InputTranscriptionOptions { get; set; }
+        public string Instructions { get; set; }
+        public ConversationMaxTokensChoice MaxResponseOutputTokens { get; set; }
+        public string Model { get; set; }
+        public ConversationAudioFormat? OutputAudioFormat { get; set; }
+        public float? Temperature { get; set; }
+        public ConversationToolChoice ToolChoice { get; set; }
+        public IList<ConversationTool> Tools { get; }
+        public ConversationTurnDetectionOptions TurnDetectionOptions { get; set; }
+        public ConversationVoice? Voice { get; set; }
+        ConversationSessionOptions IJsonModel<ConversationSessionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationSessionOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationSessionOptions IPersistableModel<ConversationSessionOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationSessionOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationSessionOptions>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationSessionStartedUpdate : ConversationUpdate, IJsonModel<ConversationSessionStartedUpdate>, IPersistableModel<ConversationSessionStartedUpdate> {
+        public ConversationContentModalities ContentModalities { get; }
+        public ConversationAudioFormat InputAudioFormat { get; }
+        public string Instructions { get; }
+        public ConversationMaxTokensChoice MaxOutputTokens { get; }
+        public string Model { get; }
+        public ConversationAudioFormat OutputAudioFormat { get; }
+        public string SessionId { get; }
+        public float Temperature { get; }
+        public ConversationToolChoice ToolChoice { get; }
+        public IReadOnlyList<ConversationTool> Tools { get; }
+        public ConversationInputTranscriptionOptions TranscriptionSettings { get; }
+        public ConversationTurnDetectionOptions TurnDetectionSettings { get; }
+        public ConversationVoice Voice { get; }
+        ConversationSessionStartedUpdate IJsonModel<ConversationSessionStartedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationSessionStartedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationSessionStartedUpdate IPersistableModel<ConversationSessionStartedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationSessionStartedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationSessionStartedUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public readonly partial struct ConversationStatus : IEquatable<ConversationStatus> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public ConversationStatus(string value);
+        public static ConversationStatus Cancelled { get; }
+        public static ConversationStatus Completed { get; }
+        public static ConversationStatus Failed { get; }
+        public static ConversationStatus Incomplete { get; }
+        public static ConversationStatus InProgress { get; }
+        public readonly bool Equals(ConversationStatus other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ConversationStatus left, ConversationStatus right);
+        public static implicit operator ConversationStatus(string value);
+        public static bool operator !=(ConversationStatus left, ConversationStatus right);
+        public override readonly string ToString();
+    }
+    public class ConversationTextDeltaUpdate : ConversationUpdate, IJsonModel<ConversationTextDeltaUpdate>, IPersistableModel<ConversationTextDeltaUpdate> {
+        public int ContentIndex { get; }
+        public string Delta { get; }
+        public string ItemId { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        ConversationTextDeltaUpdate IJsonModel<ConversationTextDeltaUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationTextDeltaUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationTextDeltaUpdate IPersistableModel<ConversationTextDeltaUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationTextDeltaUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationTextDeltaUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationTextDoneUpdate : ConversationUpdate, IJsonModel<ConversationTextDoneUpdate>, IPersistableModel<ConversationTextDoneUpdate> {
+        public int ContentIndex { get; }
+        public string ItemId { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        public string Value { get; }
+        ConversationTextDoneUpdate IJsonModel<ConversationTextDoneUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationTextDoneUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationTextDoneUpdate IPersistableModel<ConversationTextDoneUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationTextDoneUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationTextDoneUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationTokenUsage : IJsonModel<ConversationTokenUsage>, IPersistableModel<ConversationTokenUsage> {
+        public ConversationInputTokenUsageDetails InputTokenDetails { get; }
+        public int InputTokens { get; }
+        public ConversationOutputTokenUsageDetails OutputTokenDetails { get; }
+        public int OutputTokens { get; }
+        public int TotalTokens { get; }
+        ConversationTokenUsage IJsonModel<ConversationTokenUsage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationTokenUsage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationTokenUsage IPersistableModel<ConversationTokenUsage>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationTokenUsage>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationTokenUsage>.Write(ModelReaderWriterOptions options);
+    }
+    public abstract class ConversationTool : IJsonModel<ConversationTool>, IPersistableModel<ConversationTool> {
+        public ConversationToolKind Kind { get; }
+        public static ConversationTool CreateFunctionTool(string name, string description = null, BinaryData parameters = null);
+        ConversationTool IJsonModel<ConversationTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationTool>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationTool IPersistableModel<ConversationTool>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationTool>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationTool>.Write(ModelReaderWriterOptions options);
+    }
+    public class ConversationToolChoice : IJsonModel<ConversationToolChoice>, IPersistableModel<ConversationToolChoice> {
+        public string FunctionName { get; }
+        public ConversationToolChoiceKind Kind { get; }
+        public static ConversationToolChoice CreateAutoToolChoice();
+        public static ConversationToolChoice CreateFunctionToolChoice(string functionName);
+        public static ConversationToolChoice CreateNoneToolChoice();
+        public static ConversationToolChoice CreateRequiredToolChoice();
+        ConversationToolChoice IJsonModel<ConversationToolChoice>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationToolChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationToolChoice IPersistableModel<ConversationToolChoice>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationToolChoice>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationToolChoice>.Write(ModelReaderWriterOptions options);
+    }
+    public enum ConversationToolChoiceKind {
+        Auto = 0,
+        None = 1,
+        Required = 2,
+        Function = 3
+    }
+    public readonly partial struct ConversationToolKind : IEquatable<ConversationToolKind> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public ConversationToolKind(string value);
+        public static ConversationToolKind Function { get; }
+        public readonly bool Equals(ConversationToolKind other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ConversationToolKind left, ConversationToolKind right);
+        public static implicit operator ConversationToolKind(string value);
+        public static bool operator !=(ConversationToolKind left, ConversationToolKind right);
+        public override readonly string ToString();
+    }
+    public readonly partial struct ConversationTranscriptionModel : IEquatable<ConversationTranscriptionModel> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public ConversationTranscriptionModel(string value);
+        public static ConversationTranscriptionModel Whisper1 { get; }
+        public readonly bool Equals(ConversationTranscriptionModel other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ConversationTranscriptionModel left, ConversationTranscriptionModel right);
+        public static implicit operator ConversationTranscriptionModel(string value);
+        public static bool operator !=(ConversationTranscriptionModel left, ConversationTranscriptionModel right);
+        public override readonly string ToString();
+    }
+    public enum ConversationTurnDetectionKind {
+        ServerVoiceActivityDetection = 0,
+        Disabled = 1
+    }
+    public abstract class ConversationTurnDetectionOptions : IJsonModel<ConversationTurnDetectionOptions>, IPersistableModel<ConversationTurnDetectionOptions> {
+        public ConversationTurnDetectionKind Kind { get; protected internal set; }
+        public static ConversationTurnDetectionOptions CreateDisabledTurnDetectionOptions();
+        public static ConversationTurnDetectionOptions CreateServerVoiceActivityTurnDetectionOptions(float? detectionThreshold = null, TimeSpan? prefixPaddingDuration = null, TimeSpan? silenceDuration = null);
+        ConversationTurnDetectionOptions IJsonModel<ConversationTurnDetectionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationTurnDetectionOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationTurnDetectionOptions IPersistableModel<ConversationTurnDetectionOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationTurnDetectionOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationTurnDetectionOptions>.Write(ModelReaderWriterOptions options);
+    }
+    public abstract class ConversationUpdate : IJsonModel<ConversationUpdate>, IPersistableModel<ConversationUpdate> {
+        protected ConversationUpdate(string eventId);
+        public string EventId { get; }
+        public ConversationUpdateKind Kind { get; protected internal set; }
+        public BinaryData GetRawContent();
+        ConversationUpdate IJsonModel<ConversationUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationUpdate IPersistableModel<ConversationUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationUpdate>.Write(ModelReaderWriterOptions options);
+    }
+    public enum ConversationUpdateKind {
+        SessionStarted = 0,
+        SessionConfigured = 1,
+        ItemAcknowledged = 2,
+        ItemDeleted = 3,
+        ItemTruncated = 4,
+        ResponseStarted = 5,
+        ResponseFinished = 6,
+        RateLimitsUpdated = 7,
+        ItemStarted = 8,
+        ItemFinished = 9,
+        ContentPartStarted = 10,
+        ContentPartFinished = 11,
+        ResponseAudioDelta = 12,
+        ResponseAudioDone = 13,
+        ResponseAudioTranscriptDelta = 14,
+        ResponseAudioTranscriptDone = 15,
+        ResponseTextDelta = 16,
+        ResponseTextDone = 17,
+        ResponseFunctionCallArgumentsDelta = 18,
+        ResponseFunctionCallArgumentsDone = 19,
+        InputAudioBufferSpeechStarted = 20,
+        InputAudioBufferSpeechStopped = 21,
+        ItemInputAudioTranscriptionCompleted = 22,
+        ItemInputAudioTranscriptionFailed = 23,
+        InputAudioBufferCommitted = 24,
+        InputAudioBufferCleared = 25,
+        Error = 26
+    }
+    public readonly partial struct ConversationVoice : IEquatable<ConversationVoice> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public ConversationVoice(string value);
+        public static ConversationVoice Alloy { get; }
+        public static ConversationVoice Echo { get; }
+        public static ConversationVoice Shimmer { get; }
+        public readonly bool Equals(ConversationVoice other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ConversationVoice left, ConversationVoice right);
+        public static implicit operator ConversationVoice(string value);
+        public static bool operator !=(ConversationVoice left, ConversationVoice right);
+        public override readonly string ToString();
+    }
+    public class RealtimeConversationClient {
+        protected RealtimeConversationClient();
+        protected internal RealtimeConversationClient(ClientPipeline pipeline, OpenAIClientOptions options);
+        public RealtimeConversationClient(string model, ApiKeyCredential credential, OpenAIClientOptions options);
+        public RealtimeConversationClient(string model, ApiKeyCredential credential);
+        public virtual ClientPipeline Pipeline { get; }
+        public event EventHandler<BinaryData> OnReceivingCommand { add; remove; }
+        public event EventHandler<BinaryData> OnSendingCommand { add; remove; }
+        public RealtimeConversationSession StartConversationSession(CancellationToken cancellationToken = default);
+        public virtual Task<RealtimeConversationSession> StartConversationSessionAsync(RequestOptions options);
+        public virtual Task<RealtimeConversationSession> StartConversationSessionAsync(CancellationToken cancellationToken = default);
+    }
+    public class RealtimeConversationSession : IDisposable {
+        protected Net.WebSockets.ClientWebSocket _clientWebSocket;
+        protected internal RealtimeConversationSession(RealtimeConversationClient parentClient, Uri endpoint, ApiKeyCredential credential);
+        public Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
+        public Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default);
+        public Task CancelResponseTurnAsync(CancellationToken cancellationToken = default);
+        public Task CommitPendingAudioAsync(CancellationToken cancellationToken = default);
+        public Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected internal virtual void Connect(RequestOptions options);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected internal virtual Task ConnectAsync(RequestOptions options);
+        public Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default);
+        public void Dispose();
+        public Task InterruptTurnAsync(CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual IEnumerable<ClientResult> ReceiveUpdates(RequestOptions options);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual IAsyncEnumerable<ClientResult> ReceiveUpdatesAsync(RequestOptions options);
+        public IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync(CancellationToken cancellationToken = default);
+        public Task SendAudioAsync(BinaryData audio, CancellationToken cancellationToken = default);
+        public Task SendAudioAsync(Stream audio, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual void SendCommand(BinaryData data, RequestOptions options);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task SendCommandAsync(BinaryData data, RequestOptions options);
+        public Task StartResponseTurnAsync(CancellationToken cancellationToken = default);
     }
 }
 namespace OpenAI.VectorStores {
+    public class AddFileToVectorStoreOperation : OperationResult {
+        public string FileId { get; }
+        public override ContinuationToken? RehydrationToken { get; protected set; }
+        public VectorStoreFileAssociationStatus? Status { get; }
+        public VectorStoreFileAssociation? Value { get; }
+        public string VectorStoreId { get; }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult GetFileAssociation(RequestOptions? options);
+        public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> GetFileAssociationAsync(RequestOptions? options);
+        public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(CancellationToken cancellationToken = default);
+        public static AddFileToVectorStoreOperation Rehydrate(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<AddFileToVectorStoreOperation> RehydrateAsync(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public override ClientResult UpdateStatus(RequestOptions? options = null);
+        public override ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null);
+    }
+    public class CreateBatchFileJobOperation : OperationResult {
+        public string BatchId { get; }
+        public override ContinuationToken? RehydrationToken { get; protected set; }
+        public VectorStoreBatchFileJobStatus? Status { get; }
+        public VectorStoreBatchFileJob? Value { get; }
+        public string VectorStoreId { get; }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult Cancel(RequestOptions? options);
+        public virtual ClientResult<VectorStoreBatchFileJob> Cancel(CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> CancelAsync(RequestOptions? options);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelAsync(CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult GetFileBatch(RequestOptions? options);
+        public virtual ClientResult<VectorStoreBatchFileJob> GetFileBatch(CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> GetFileBatchAsync(RequestOptions? options);
+        public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetFileBatchAsync(CancellationToken cancellationToken = default);
+        public static CreateBatchFileJobOperation Rehydrate(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<CreateBatchFileJobOperation> RehydrateAsync(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public override ClientResult UpdateStatus(RequestOptions? options = null);
+        public override ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null);
+    }
+    public class CreateVectorStoreOperation : OperationResult {
+        public override ContinuationToken? RehydrationToken { get; protected set; }
+        public VectorStoreStatus? Status { get; }
+        public VectorStore? Value { get; }
+        public string VectorStoreId { get; }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual ClientResult GetVectorStore(RequestOptions? options);
+        public virtual ClientResult<VectorStore> GetVectorStore(CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<ClientResult> GetVectorStoreAsync(RequestOptions? options);
+        public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(CancellationToken cancellationToken = default);
+        public static CreateVectorStoreOperation Rehydrate(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<CreateVectorStoreOperation> RehydrateAsync(VectorStoreClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public override ClientResult UpdateStatus(RequestOptions? options = null);
+        public override ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null);
+    }
     public abstract class FileChunkingStrategy : IJsonModel<FileChunkingStrategy>, IPersistableModel<FileChunkingStrategy> {
         public static FileChunkingStrategy Auto { get; }
         public static FileChunkingStrategy Unknown { get; }
@@ -2337,64 +3049,48 @@ namespace OpenAI.VectorStores {
         public VectorStoreClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public VectorStoreClient(ApiKeyCredential credential);
         protected internal VectorStoreClient(ClientPipeline pipeline, OpenAIClientOptions options);
-        public VectorStoreClient(string apiKey, OpenAIClientOptions options);
         public VectorStoreClient(string apiKey);
-        public virtual ClientPipeline Pipeline { get; }
-        public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(VectorStore vectorStore, OpenAIFileInfo file);
+        public ClientPipeline Pipeline { get; }
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult AddFileToVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<VectorStoreFileAssociation> AddFileToVectorStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(VectorStore vectorStore, OpenAIFileInfo file);
+        public virtual AddFileToVectorStoreOperation AddFileToVectorStore(string vectorStoreId, BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
+        public virtual AddFileToVectorStoreOperation AddFileToVectorStore(string vectorStoreId, string fileId, bool waitUntilCompleted, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> AddFileToVectorStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(VectorStoreBatchFileJob batchJob);
+        public virtual Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(string vectorStoreId, BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
+        public virtual Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(string vectorStoreId, string fileId, bool waitUntilCompleted, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult CancelBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
         public virtual ClientResult<VectorStoreBatchFileJob> CancelBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(VectorStoreBatchFileJob batchJob);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> CancelBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> CancelBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult CreateBatchFileJob(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<VectorStoreBatchFileJob> CreateBatchFileJob(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(VectorStore vectorStore, IEnumerable<OpenAIFileInfo> files);
+        public virtual CreateBatchFileJobOperation CreateBatchFileJob(string vectorStoreId, BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
+        public virtual CreateBatchFileJobOperation CreateBatchFileJob(string vectorStoreId, IEnumerable<string> fileIds, bool waitUntilCompleted, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> CreateBatchFileJobAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> CreateBatchFileJobAsync(string vectorStoreId, IEnumerable<string> fileIds, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStore> CreateVectorStore(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
+        public virtual Task<CreateBatchFileJobOperation> CreateBatchFileJobAsync(string vectorStoreId, BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
+        public virtual Task<CreateBatchFileJobOperation> CreateBatchFileJobAsync(string vectorStoreId, IEnumerable<string> fileIds, bool waitUntilCompleted, CancellationToken cancellationToken = default);
+        public virtual CreateVectorStoreOperation CreateVectorStore(bool waitUntilCompleted, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual CreateVectorStoreOperation CreateVectorStore(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
         public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStore>> CreateVectorStoreAsync(VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
+        public virtual Task<CreateVectorStoreOperation> CreateVectorStoreAsync(bool waitUntilCompleted, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual Task<CreateVectorStoreOperation> CreateVectorStoreAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
         public virtual Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<VectorStoreDeletionResult> DeleteVectorStore(VectorStore vectorStore);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult DeleteVectorStore(string vectorStoreId, RequestOptions options);
         public virtual ClientResult<VectorStoreDeletionResult> DeleteVectorStore(string vectorStoreId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreDeletionResult>> DeleteVectorStoreAsync(VectorStore vectorStore);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> DeleteVectorStoreAsync(string vectorStoreId, RequestOptions options);
         public virtual Task<ClientResult<VectorStoreDeletionResult>> DeleteVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(VectorStoreBatchFileJob batchJob);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetBatchFileJob(string vectorStoreId, string batchId, RequestOptions options);
         public virtual ClientResult<VectorStoreBatchFileJob> GetBatchFileJob(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(VectorStoreBatchFileJob batchJob);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetBatchFileJobAsync(string vectorStoreId, string batchId, RequestOptions options);
         public virtual Task<ClientResult<VectorStoreBatchFileJob>> GetBatchFileJobAsync(string vectorStoreId, string batchJobId, CancellationToken cancellationToken = default);
-        public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult GetFileAssociation(string vectorStoreId, string fileId, RequestOptions options);
         public virtual ClientResult<VectorStoreFileAssociation> GetFileAssociation(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetFileAssociationAsync(string vectorStoreId, string fileId, RequestOptions options);
         public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(VectorStore vectorStore, VectorStoreFileAssociationCollectionOptions options = null);
-        public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(VectorStoreBatchFileJob batchJob, VectorStoreFileAssociationCollectionOptions options = null);
         public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -2403,8 +3099,6 @@ namespace OpenAI.VectorStores {
         public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual CollectionResult GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStore vectorStore, VectorStoreFileAssociationCollectionOptions options = null);
-        public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(VectorStoreBatchFileJob batchJob, VectorStoreFileAssociationCollectionOptions options = null);
         public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -2413,14 +3107,7 @@ namespace OpenAI.VectorStores {
         public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AsyncCollectionResult GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual ClientResult<VectorStore> GetVectorStore(VectorStore vectorStore);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual ClientResult GetVectorStore(string vectorStoreId, RequestOptions options);
         public virtual ClientResult<VectorStore> GetVectorStore(string vectorStoreId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(VectorStore vectorStore);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task<ClientResult> GetVectorStoreAsync(string vectorStoreId, RequestOptions options);
-        public virtual Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId, CancellationToken cancellationToken = default);
         public virtual CollectionResult<VectorStore> GetVectorStores(VectorStoreCollectionOptions options = null, CancellationToken cancellationToken = default);
         public virtual CollectionResult<VectorStore> GetVectorStores(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -2429,19 +3116,15 @@ namespace OpenAI.VectorStores {
         public virtual AsyncCollectionResult<VectorStore> GetVectorStoresAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AsyncCollectionResult GetVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options);
-        public virtual ClientResult<VectorStore> ModifyVectorStore(VectorStore vectorStore, VectorStoreModificationOptions options);
         public virtual ClientResult<VectorStore> ModifyVectorStore(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult ModifyVectorStore(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(VectorStore vectorStore, VectorStoreModificationOptions options);
         public virtual Task<ClientResult<VectorStore>> ModifyVectorStoreAsync(string vectorStoreId, VectorStoreModificationOptions vectorStore, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> ModifyVectorStoreAsync(string vectorStoreId, BinaryContent content, RequestOptions options = null);
-        public virtual ClientResult<FileFromStoreRemovalResult> RemoveFileFromStore(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ClientResult RemoveFileFromStore(string vectorStoreId, string fileId, RequestOptions options);
         public virtual ClientResult<FileFromStoreRemovalResult> RemoveFileFromStore(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-        public virtual Task<ClientResult<FileFromStoreRemovalResult>> RemoveFileFromStoreAsync(VectorStore vectorStore, OpenAIFileInfo file);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, RequestOptions options);
         public virtual Task<ClientResult<FileFromStoreRemovalResult>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);

@@ -21,6 +21,12 @@ public partial class EmbeddingClient
 {
     private readonly string _model;
 
+    // CUSTOM: Remove virtual keyword.
+    /// <summary>
+    /// The HTTP pipeline for sending and receiving REST requests and responses.
+    /// </summary>
+    public ClientPipeline Pipeline => _pipeline;
+
     // CUSTOM: Added as a convenience.
     /// <summary> Initializes a new instance of <see cref="EmbeddingClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
@@ -105,7 +111,7 @@ public partial class EmbeddingClient
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="input"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="input"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<Embedding>> GenerateEmbeddingAsync(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default)
+    public virtual async Task<ClientResult<OpenAIEmbedding>> GenerateEmbeddingAsync(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(input, nameof(input));
 
@@ -114,7 +120,7 @@ public partial class EmbeddingClient
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = await GenerateEmbeddingsAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(OpenAIEmbeddingCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
     // CUSTOM: Added to simplify generating a single embedding from a string input.
@@ -124,7 +130,7 @@ public partial class EmbeddingClient
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="input"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="input"/> is an empty string, and was expected to be non-empty. </exception>
-    public virtual ClientResult<Embedding> GenerateEmbedding(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default)
+    public virtual ClientResult<OpenAIEmbedding> GenerateEmbedding(string input, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(input, nameof(input));
 
@@ -133,7 +139,7 @@ public partial class EmbeddingClient
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = GenerateEmbeddings(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(OpenAIEmbeddingCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
     // CUSTOM: Added to simplify passing the input as a collection of strings instead of BinaryData.
@@ -143,7 +149,7 @@ public partial class EmbeddingClient
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputs"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="inputs"/> is an empty collection, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default)
+    public virtual async Task<ClientResult<OpenAIEmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
@@ -152,7 +158,7 @@ public partial class EmbeddingClient
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = await GenerateEmbeddingsAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue(OpenAIEmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
 
     }
 
@@ -163,7 +169,7 @@ public partial class EmbeddingClient
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputs"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="inputs"/> is an empty collection, and was expected to be non-empty. </exception>
-    public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default)
+    public virtual ClientResult<OpenAIEmbeddingCollection> GenerateEmbeddings(IEnumerable<string> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
@@ -172,17 +178,17 @@ public partial class EmbeddingClient
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = GenerateEmbeddings(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue(OpenAIEmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    // CUSTOM: Added to simplify passing the input as a collection of a collection of tokens instead of BinaryData.
+    // CUSTOM: Added to simplify passing the input as a collection of ReadOnlyMemory tokens instead of BinaryData.
     /// <summary> Generates embeddings representing the text inputs. </summary>
     /// <param name="inputs"> The text inputs to generate embeddings for. </param>
     /// <param name="options"> The options to configure the embedding generation. </param>
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputs"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="inputs"/> is an empty collection, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<EmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default)
+    public virtual async Task<ClientResult<OpenAIEmbeddingCollection>> GenerateEmbeddingsAsync(IEnumerable<ReadOnlyMemory<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
@@ -191,17 +197,17 @@ public partial class EmbeddingClient
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = await GenerateEmbeddingsAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue(OpenAIEmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
-    // CUSTOM: Added to simplify passing the input as a collection of a collection of tokens instead of BinaryData.
+    // CUSTOM: Added to simplify passing the input as a collection of ReadOnlyMemory of tokens instead of BinaryData.
     /// <summary> Generates embeddings representing the text inputs. </summary>
     /// <param name="inputs"> The text inputs to generate embeddings for. </param>
     /// <param name="options"> The options to configure the embedding generation. </param>
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputs"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="inputs"/> is an empty collection, and was expected to be non-empty. </exception>
-    public virtual ClientResult<EmbeddingCollection> GenerateEmbeddings(IEnumerable<IEnumerable<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default)
+    public virtual ClientResult<OpenAIEmbeddingCollection> GenerateEmbeddings(IEnumerable<ReadOnlyMemory<int>> inputs, EmbeddingGenerationOptions options = null, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
@@ -210,7 +216,7 @@ public partial class EmbeddingClient
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = GenerateEmbeddings(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(EmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue(OpenAIEmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
     private void CreateEmbeddingGenerationOptions(BinaryData input, ref EmbeddingGenerationOptions options)

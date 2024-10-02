@@ -14,6 +14,8 @@ namespace OpenAI.Embeddings
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
+        private readonly ClientPipeline _pipeline;
+        private readonly Uri _endpoint;
 
         protected EmbeddingClient()
         {

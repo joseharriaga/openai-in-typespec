@@ -6,89 +6,259 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading.Tasks;
-using OpenAI;
 
 namespace OpenAI.Assistants
 {
-    public partial class InternalAssistantRunClient
+    // Data plane generated sub-client.
+    internal partial class InternalAssistantRunClient
     {
-        private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
+        private readonly ClientPipeline _pipeline;
+        private readonly Uri _endpoint;
 
         protected InternalAssistantRunClient()
         {
         }
 
-        public ClientPipeline Pipeline { get; }
-
-        public virtual ClientResult ListRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+        public virtual async Task<ClientResult> GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
         {
-            Argument.AssertNotNull(threadId, nameof(threadId));
+            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-            using PipelineMessage message = CreateListRunsRequest(threadId, limit, order, after, before, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+            using PipelineMessage message = CreateGetRunsRequest(threadId, limit, order, after, before, options);
+            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual async Task<ClientResult> ListRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+        public virtual ClientResult GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options)
         {
-            Argument.AssertNotNull(threadId, nameof(threadId));
+            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
 
-            using PipelineMessage message = CreateListRunsRequest(threadId, limit, order, after, before, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+            using PipelineMessage message = CreateGetRunsRequest(threadId, limit, order, after, before, options);
+            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
         }
 
-        public virtual ClientResult<InternalListRunsResponse> ListRuns(string threadId, int? limit, RunCollectionOrder? order, string after, string before)
+        public virtual async Task<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
         {
-            Argument.AssertNotNull(threadId, nameof(threadId));
+            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+            Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-            ClientResult result = ListRuns(threadId, limit, order.ToString(), after, before, null);
-            return ClientResult.FromValue((InternalListRunsResponse)result, result.GetRawResponse());
+            using PipelineMessage message = CreateGetRunStepsRequest(threadId, runId, limit, order, after, before, options);
+            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual async Task<ClientResult<InternalListRunsResponse>> ListRunsAsync(string threadId, int? limit, RunCollectionOrder? order, string after, string before)
+        public virtual ClientResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
         {
-            Argument.AssertNotNull(threadId, nameof(threadId));
+            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
+            Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-            ClientResult result = await ListRunsAsync(threadId, limit, order.ToString(), after, before, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListRunsResponse)result, result.GetRawResponse());
+            using PipelineMessage message = CreateGetRunStepsRequest(threadId, runId, limit, order, after, before, options);
+            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
         }
 
-        public virtual ClientResult ListRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
+        internal PipelineMessage CreateCreateThreadAndRunRequest(BinaryContent content, RequestOptions options)
         {
-            Argument.AssertNotNull(threadId, nameof(threadId));
-            Argument.AssertNotNull(runId, nameof(runId));
-
-            using PipelineMessage message = CreateListRunStepsRequest(threadId, runId, limit, order, after, before, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "POST";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/threads/runs", false);
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("Content-Type", "application/json");
+            request.Content = content;
+            message.Apply(options);
+            return message;
         }
 
-        public virtual async Task<ClientResult> ListRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
+        internal PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, RequestOptions options)
         {
-            Argument.AssertNotNull(threadId, nameof(threadId));
-            Argument.AssertNotNull(runId, nameof(runId));
-
-            using PipelineMessage message = CreateListRunStepsRequest(threadId, runId, limit, order, after, before, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "POST";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/threads/", false);
+            uri.AppendPath(threadId, true);
+            uri.AppendPath("/runs", false);
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("Content-Type", "application/json");
+            request.Content = content;
+            message.Apply(options);
+            return message;
         }
 
-        public virtual ClientResult<InternalListRunStepsResponse> ListRunSteps(string threadId, string runId, int? limit, RunStepCollectionOrder? order, string after, string before)
+        internal PipelineMessage CreateGetRunsRequest(string threadId, int? limit, string order, string after, string before, RequestOptions options)
         {
-            Argument.AssertNotNull(threadId, nameof(threadId));
-            Argument.AssertNotNull(runId, nameof(runId));
-
-            ClientResult result = ListRunSteps(threadId, runId, limit, order.ToString(), after, before, null);
-            return ClientResult.FromValue((InternalListRunStepsResponse)result, result.GetRawResponse());
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "GET";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/threads/", false);
+            uri.AppendPath(threadId, true);
+            uri.AppendPath("/runs", false);
+            if (limit != null)
+            {
+                uri.AppendQuery("limit", limit.Value, true);
+            }
+            if (order != null)
+            {
+                uri.AppendQuery("order", order, true);
+            }
+            if (after != null)
+            {
+                uri.AppendQuery("after", after, true);
+            }
+            if (before != null)
+            {
+                uri.AppendQuery("before", before, true);
+            }
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            message.Apply(options);
+            return message;
         }
 
-        public virtual async Task<ClientResult<InternalListRunStepsResponse>> ListRunStepsAsync(string threadId, string runId, int? limit, RunStepCollectionOrder? order, string after, string before)
+        internal PipelineMessage CreateGetRunRequest(string threadId, string runId, RequestOptions options)
         {
-            Argument.AssertNotNull(threadId, nameof(threadId));
-            Argument.AssertNotNull(runId, nameof(runId));
-
-            ClientResult result = await ListRunStepsAsync(threadId, runId, limit, order.ToString(), after, before, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListRunStepsResponse)result, result.GetRawResponse());
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "GET";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/threads/", false);
+            uri.AppendPath(threadId, true);
+            uri.AppendPath("/runs/", false);
+            uri.AppendPath(runId, true);
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            message.Apply(options);
+            return message;
         }
+
+        internal PipelineMessage CreateModifyRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
+        {
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "POST";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/threads/", false);
+            uri.AppendPath(threadId, true);
+            uri.AppendPath("/runs/", false);
+            uri.AppendPath(runId, true);
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("Content-Type", "application/json");
+            request.Content = content;
+            message.Apply(options);
+            return message;
+        }
+
+        internal PipelineMessage CreateCancelRunRequest(string threadId, string runId, RequestOptions options)
+        {
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "POST";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/threads/", false);
+            uri.AppendPath(threadId, true);
+            uri.AppendPath("/runs/", false);
+            uri.AppendPath(runId, true);
+            uri.AppendPath("/cancel", false);
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            message.Apply(options);
+            return message;
+        }
+
+        internal PipelineMessage CreateSubmitToolOutputsToRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
+        {
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "POST";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/threads/", false);
+            uri.AppendPath(threadId, true);
+            uri.AppendPath("/runs/", false);
+            uri.AppendPath(runId, true);
+            uri.AppendPath("/submit_tool_outputs", false);
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("Content-Type", "application/json");
+            request.Content = content;
+            message.Apply(options);
+            return message;
+        }
+
+        internal PipelineMessage CreateGetRunStepsRequest(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
+        {
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "GET";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/threads/", false);
+            uri.AppendPath(threadId, true);
+            uri.AppendPath("/runs/", false);
+            uri.AppendPath(runId, true);
+            uri.AppendPath("/steps", false);
+            if (limit != null)
+            {
+                uri.AppendQuery("limit", limit.Value, true);
+            }
+            if (order != null)
+            {
+                uri.AppendQuery("order", order, true);
+            }
+            if (after != null)
+            {
+                uri.AppendQuery("after", after, true);
+            }
+            if (before != null)
+            {
+                uri.AppendQuery("before", before, true);
+            }
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            message.Apply(options);
+            return message;
+        }
+
+        internal PipelineMessage CreateGetRunStepRequest(string threadId, string runId, string stepId, RequestOptions options)
+        {
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "GET";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/threads/", false);
+            uri.AppendPath(threadId, true);
+            uri.AppendPath("/runs/", false);
+            uri.AppendPath(runId, true);
+            uri.AppendPath("/steps/", false);
+            uri.AppendPath(stepId, true);
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            message.Apply(options);
+            return message;
+        }
+
+        private static PipelineMessageClassifier _pipelineMessageClassifier200;
+        private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
     }
 }

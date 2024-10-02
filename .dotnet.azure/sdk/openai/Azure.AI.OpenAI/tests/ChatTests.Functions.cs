@@ -61,9 +61,9 @@ public partial class ChatTests
         {
             FunctionChoice = functionCallType switch
             {
-                FunctionCallTestType.Auto => ChatFunctionChoice.Auto,
-                FunctionCallTestType.None => ChatFunctionChoice.None,
-                FunctionCallTestType.Function => new ChatFunctionChoice(FUNCTION_TEMPERATURE),
+                FunctionCallTestType.Auto => ChatFunctionChoice.CreateAutoChoice(),
+                FunctionCallTestType.None => ChatFunctionChoice.CreateNoneChoice(),
+                FunctionCallTestType.Function => ChatFunctionChoice.CreateNamedChoice(FUNCTION_TEMPERATURE.FunctionName),
                 _ => throw new NotImplementedException(),
             },
             Functions = { FUNCTION_TEMPERATURE },
@@ -174,9 +174,9 @@ public partial class ChatTests
         {
             FunctionChoice = functionCallType switch
             {
-                FunctionCallTestType.Auto => ChatFunctionChoice.Auto,
-                FunctionCallTestType.None => ChatFunctionChoice.None,
-                FunctionCallTestType.Function => new ChatFunctionChoice(FUNCTION_TEMPERATURE),
+                FunctionCallTestType.Auto => ChatFunctionChoice.CreateAutoChoice(),
+                FunctionCallTestType.None => ChatFunctionChoice.CreateNoneChoice(),
+                FunctionCallTestType.Function => ChatFunctionChoice.CreateNamedChoice(FUNCTION_TEMPERATURE.FunctionName),
                 _ => throw new NotImplementedException(),
             },
             Functions = { FUNCTION_TEMPERATURE },
@@ -194,7 +194,10 @@ public partial class ChatTests
                 functionName ??= update.FunctionCallUpdate.FunctionName; 
 
                 Assert.That(update.FunctionCallUpdate.FunctionArgumentsUpdate, Is.Not.Null);
-                functionArgs.Append(update.FunctionCallUpdate.FunctionArgumentsUpdate);
+                if (!update.FunctionCallUpdate.FunctionArgumentsUpdate.ToMemory().IsEmpty)
+                {
+                    functionArgs.Append(update.FunctionCallUpdate.FunctionArgumentsUpdate.ToString());
+                }
             }
 
             foreach (var part in update.ContentUpdate)
@@ -240,7 +243,7 @@ public partial class ChatTests
             Assert.That(parsedArgs.LocationName, Is.Not.Null.Or.Empty);
             Assert.That(parsedArgs.Date, Is.Not.Null.Or.Empty);
 
-            // TODO FIXME: There isn't a clear or obvious way to pass the assitant function message back to the service, and the constructors that allow
+            // TODO FIXME: There isn't a clear or obvious way to pass the assistant function message back to the service, and the constructors that allow
             //             us manual control are internal. So let's use JSON.
             var converted = ModelReaderWriter.Read<ChatFunctionCall>(BinaryData.FromString(JsonSerializer.Serialize(new { name = functionName, arguments = functionArgs.ToString() })));
             messages.Add(new AssistantChatMessage(converted));

@@ -3,7 +3,6 @@ using OpenAI.Assistants;
 using OpenAI.Files;
 using System;
 using System.ClientModel;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,8 +15,9 @@ public partial class AssistantExamples
     public async Task Example01_RetrievalAugmentedGenerationAsync()
     {
         // Assistants is a beta API and subject to change; acknowledge its experimental status by suppressing the matching warning.
+        #pragma warning disable OPENAI001
         OpenAIClient openAIClient = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
-        FileClient fileClient = openAIClient.GetFileClient();
+        OpenAIFileClient fileClient = openAIClient.GetOpenAIFileClient();
         AssistantClient assistantClient = openAIClient.GetAssistantClient();
 
         // First, let's contrive a document we'll use retrieval with and upload it.
@@ -50,7 +50,7 @@ public partial class AssistantExamples
             }
             """).ToStream();
 
-        OpenAIFileInfo salesFile = await fileClient.UploadFileAsync(
+        OpenAIFile salesFile = await fileClient.UploadFileAsync(
             document,
             "monthly_sales.json",
             FileUploadPurpose.Assistants);
@@ -130,7 +130,7 @@ public partial class AssistantExamples
                 }
                 if (!string.IsNullOrEmpty(contentItem.ImageFileId))
                 {
-                    OpenAIFileInfo imageInfo = await fileClient.GetFileAsync(contentItem.ImageFileId);
+                    OpenAIFile imageInfo = await fileClient.GetFileAsync(contentItem.ImageFileId);
                     BinaryData imageBytes = await fileClient.DownloadFileAsync(contentItem.ImageFileId);
                     using FileStream stream = File.OpenWrite($"{imageInfo.Filename}.png");
                     imageBytes.ToStream().CopyTo(stream);
@@ -143,7 +143,7 @@ public partial class AssistantExamples
 
         // Optionally, delete any persistent resources you no longer need.
         _ = await assistantClient.DeleteThreadAsync(threadRun.ThreadId);
-        _ = await assistantClient.DeleteAssistantAsync(assistant);
+        _ = await assistantClient.DeleteAssistantAsync(assistant.Id);
         _ = await fileClient.DeleteFileAsync(salesFile.Id);
     }
 }

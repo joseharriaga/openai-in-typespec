@@ -53,9 +53,7 @@ interface Audio {
   @summary("Translates audio into English..")
   createTranslation(
     @header accept: "application/json",
-
     @header contentType: "multipart/form-data",
-
     @body requestBody: CreateTranslationRequest,
   ):
     | CreateTranslationResponseVerboseJson

@@ -21,6 +21,12 @@ public partial class ModerationClient
 {
     private readonly string _model;
 
+    // CUSTOM: Remove virtual keyword.
+    /// <summary>
+    /// The HTTP pipeline for sending and receiving REST requests and responses.
+    /// </summary>
+    public ClientPipeline Pipeline => _pipeline;
+
     // CUSTOM: Added as a convenience.
     /// <summary> Initializes a new instance of <see cref="ModerationClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
@@ -112,7 +118,7 @@ public partial class ModerationClient
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = await ClassifyTextAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(ModerationCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(ModerationResultCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Classifies if the text input is potentially harmful across several categories. </summary>
@@ -129,7 +135,7 @@ public partial class ModerationClient
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = ClassifyText(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(ModerationCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(ModerationResultCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Classifies if the text inputs are potentially harmful across several categories. </summary>
@@ -137,7 +143,7 @@ public partial class ModerationClient
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputs"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="inputs"/> is an empty collection, and was expected to be non-empty. </exception>
-    public virtual async Task<ClientResult<ModerationCollection>> ClassifyTextAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default)
+    public virtual async Task<ClientResult<ModerationResultCollection>> ClassifyTextAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
@@ -146,7 +152,7 @@ public partial class ModerationClient
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = await ClassifyTextAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(ModerationCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue(ModerationResultCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
     /// <summary> Classifies if the text inputs are potentially harmful across several categories. </summary>
@@ -154,7 +160,7 @@ public partial class ModerationClient
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputs"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="inputs"/> is an empty collection, and was expected to be non-empty. </exception>
-    public virtual ClientResult<ModerationCollection> ClassifyText(IEnumerable<string> inputs, CancellationToken cancellationToken = default)
+    public virtual ClientResult<ModerationResultCollection> ClassifyText(IEnumerable<string> inputs, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
@@ -163,7 +169,7 @@ public partial class ModerationClient
 
         using BinaryContent content = options.ToBinaryContent();
         ClientResult result = ClassifyText(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(ModerationCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue(ModerationResultCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
 
     private void CreateModerationOptions(BinaryData input, ref ModerationOptions options)

@@ -10,15 +10,12 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFineTuneChatCompletionRequestAssistantMessage : AssistantChatMessage
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
-
         public InternalFineTuneChatCompletionRequestAssistantMessage()
         {
         }
 
-        internal InternalFineTuneChatCompletionRequestAssistantMessage(BinaryData content, string refusal, string participantName, IList<ChatToolCall> toolCalls, Chat.ChatMessageRole role, IDictionary<string, BinaryData> additionalBinaryDataProperties, IDictionary<string, BinaryData> additionalBinaryDataProperties0) : base(content, refusal, participantName, toolCalls, role, additionalBinaryDataProperties)
+        internal InternalFineTuneChatCompletionRequestAssistantMessage(ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> serializedAdditionalRawData, string refusal, string participantName, IList<ChatToolCall> toolCalls, ChatFunctionCall functionCall) : base(role, content, serializedAdditionalRawData, refusal, participantName, toolCalls, functionCall)
         {
-            _additionalBinaryDataProperties = additionalBinaryDataProperties0;
         }
     }
 }

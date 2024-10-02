@@ -10,45 +10,17 @@ namespace OpenAI.Assistants
 {
     public partial class ThreadRun
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
 
-        internal ThreadRun(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, InternalRunRequiredAction requiredAction, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IEnumerable<ToolDefinition> tools, IDictionary<string, string> metadata, RunTokenUsage usage, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, InternalRunObjectObject @object, AssistantResponseFormat responseFormat, ToolConstraint toolConstraint, bool? parallelToolCallsEnabled)
+        internal ThreadRun(string id, InternalRunObjectObject @object, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, InternalRunRequiredAction internalRequiredAction, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IReadOnlyList<ToolDefinition> tools, IReadOnlyDictionary<string, string> metadata, RunTokenUsage usage, float? temperature, float? nucleusSamplingFactor, int? maxInputTokenCount, int? maxOutputTokenCount, RunTruncationStrategy truncationStrategy, ToolConstraint toolConstraint, bool? allowParallelToolCalls, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Id = id;
-            CreatedAt = createdAt;
-            ThreadId = threadId;
-            AssistantId = assistantId;
-            Status = status;
-            RequiredAction = requiredAction;
-            LastError = lastError;
-            ExpiresAt = expiresAt;
-            StartedAt = startedAt;
-            CancelledAt = cancelledAt;
-            FailedAt = failedAt;
-            CompletedAt = completedAt;
-            IncompleteDetails = incompleteDetails;
-            Model = model;
-            Instructions = instructions;
-            Tools = tools.ToList();
-            Metadata = metadata;
-            Usage = usage;
-            MaxPromptTokens = maxPromptTokens;
-            MaxCompletionTokens = maxCompletionTokens;
-            TruncationStrategy = truncationStrategy;
             Object = @object;
-            ResponseFormat = responseFormat;
-            ToolConstraint = toolConstraint;
-            ParallelToolCallsEnabled = parallelToolCallsEnabled;
-        }
-
-        internal ThreadRun(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, InternalRunRequiredAction requiredAction, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IList<ToolDefinition> tools, IDictionary<string, string> metadata, RunTokenUsage usage, float? temperature, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, InternalRunObjectObject @object, AssistantResponseFormat responseFormat, ToolConstraint toolConstraint, float? nucleusSamplingFactor, bool? parallelToolCallsEnabled, IDictionary<string, BinaryData> additionalBinaryDataProperties)
-        {
-            Id = id;
             CreatedAt = createdAt;
             ThreadId = threadId;
             AssistantId = assistantId;
             Status = status;
-            RequiredAction = requiredAction;
+            _internalRequiredAction = internalRequiredAction;
             LastError = lastError;
             ExpiresAt = expiresAt;
             StartedAt = startedAt;
@@ -62,59 +34,39 @@ namespace OpenAI.Assistants
             Metadata = metadata;
             Usage = usage;
             Temperature = temperature;
-            MaxPromptTokens = maxPromptTokens;
-            MaxCompletionTokens = maxCompletionTokens;
-            TruncationStrategy = truncationStrategy;
-            Object = @object;
-            ResponseFormat = responseFormat;
-            ToolConstraint = toolConstraint;
             NucleusSamplingFactor = nucleusSamplingFactor;
-            ParallelToolCallsEnabled = parallelToolCallsEnabled;
-            _additionalBinaryDataProperties = additionalBinaryDataProperties;
+            MaxInputTokenCount = maxInputTokenCount;
+            MaxOutputTokenCount = maxOutputTokenCount;
+            TruncationStrategy = truncationStrategy;
+            ToolConstraint = toolConstraint;
+            AllowParallelToolCalls = allowParallelToolCalls;
+            ResponseFormat = responseFormat;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        public string Id { get; set; }
+        internal ThreadRun()
+        {
+        }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public string Id { get; }
 
-        public string ThreadId { get; set; }
-
-        public string AssistantId { get; set; }
-
-        public RunStatus Status { get; set; }
-
-        public InternalRunRequiredAction RequiredAction { get; set; }
-
-        public RunError LastError { get; set; }
-
-        public DateTimeOffset? ExpiresAt { get; set; }
-
-        public DateTimeOffset? StartedAt { get; set; }
-
-        public DateTimeOffset? CancelledAt { get; set; }
-
-        public DateTimeOffset? FailedAt { get; set; }
-
-        public DateTimeOffset? CompletedAt { get; set; }
-
-        public RunIncompleteDetails IncompleteDetails { get; set; }
-
-        public string Model { get; set; }
-
-        public string Instructions { get; set; }
-
-        public IList<ToolDefinition> Tools { get; }
-
-        public IDictionary<string, string> Metadata { get; set; }
-
-        public RunTokenUsage Usage { get; set; }
-
-        public float? Temperature { get; set; }
-
-        public int? MaxPromptTokens { get; set; }
-
-        public int? MaxCompletionTokens { get; set; }
-
-        public RunTruncationStrategy TruncationStrategy { get; set; }
+        public DateTimeOffset CreatedAt { get; }
+        public string ThreadId { get; }
+        public string AssistantId { get; }
+        public RunStatus Status { get; }
+        public RunError LastError { get; }
+        public DateTimeOffset? ExpiresAt { get; }
+        public DateTimeOffset? StartedAt { get; }
+        public DateTimeOffset? CancelledAt { get; }
+        public DateTimeOffset? FailedAt { get; }
+        public DateTimeOffset? CompletedAt { get; }
+        public RunIncompleteDetails IncompleteDetails { get; }
+        public string Model { get; }
+        public string Instructions { get; }
+        public IReadOnlyList<ToolDefinition> Tools { get; }
+        public IReadOnlyDictionary<string, string> Metadata { get; }
+        public RunTokenUsage Usage { get; }
+        public float? Temperature { get; }
+        public RunTruncationStrategy TruncationStrategy { get; }
     }
 }

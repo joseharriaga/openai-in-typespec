@@ -9,27 +9,6 @@ namespace OpenAI.Moderations
 {
     public partial class ModerationResult
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
-
-        internal ModerationResult(bool flagged, ModerationCategories categories, ModerationCategoryScores categoryScores)
-        {
-            Flagged = flagged;
-            Categories = categories;
-            CategoryScores = categoryScores;
-        }
-
-        internal ModerationResult(bool flagged, ModerationCategories categories, ModerationCategoryScores categoryScores, IDictionary<string, BinaryData> additionalBinaryDataProperties)
-        {
-            Flagged = flagged;
-            Categories = categories;
-            CategoryScores = categoryScores;
-            _additionalBinaryDataProperties = additionalBinaryDataProperties;
-        }
-
-        public bool Flagged { get; set; }
-
-        public ModerationCategories Categories { get; set; }
-
-        public ModerationCategoryScores CategoryScores { get; set; }
+        public bool Flagged { get; }
     }
 }

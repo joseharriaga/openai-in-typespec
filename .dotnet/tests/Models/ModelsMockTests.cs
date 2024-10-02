@@ -29,9 +29,9 @@ public class ModelsMockTests : SyncAsyncTestBase
             "created": 1704096000
         }
         """);
-        ModelClient client = new ModelClient(s_fakeCredential, clientOptions);
+        OpenAIModelClient client = new OpenAIModelClient(s_fakeCredential, clientOptions);
 
-        OpenAIModelInfo modelInfo = IsAsync
+        OpenAIModel modelInfo = IsAsync
             ? await client.GetModelAsync("model_name")
             : client.GetModel("model_name");
 
@@ -50,12 +50,12 @@ public class ModelsMockTests : SyncAsyncTestBase
             ]
         }
         """);
-        ModelClient client = new ModelClient(s_fakeCredential, clientOptions);
+        OpenAIModelClient client = new OpenAIModelClient(s_fakeCredential, clientOptions);
 
-        OpenAIModelInfoCollection modelInfoCollection = IsAsync
+        OpenAIModelCollection modelInfoCollection = IsAsync
             ? await client.GetModelsAsync()
             : client.GetModels();
-        OpenAIModelInfo modelInfo = modelInfoCollection.Single();
+        OpenAIModel modelInfo = modelInfoCollection.Single();
 
         Assert.That(modelInfo.CreatedAt.ToUnixTimeSeconds(), Is.EqualTo(1704096000));
     }

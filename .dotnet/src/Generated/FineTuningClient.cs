@@ -6,109 +6,90 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading.Tasks;
-using OpenAI;
 
 namespace OpenAI.FineTuning
 {
+    // Data plane generated sub-client.
     public partial class FineTuningClient
     {
-        private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
+        private readonly ClientPipeline _pipeline;
+        private readonly Uri _endpoint;
 
         protected FineTuningClient()
         {
         }
 
-        public ClientPipeline Pipeline { get; }
-
-        public virtual ClientResult ListPaginatedFineTuningJobs(string after, int? limit, RequestOptions options)
+        internal PipelineMessage CreateCancelFineTuningJobRequest(string fineTuningJobId, RequestOptions options)
         {
-            using PipelineMessage message = CreateListPaginatedFineTuningJobsRequest(after, limit, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "POST";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/fine_tuning/jobs/", false);
+            uri.AppendPath(fineTuningJobId, true);
+            uri.AppendPath("/cancel", false);
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            message.Apply(options);
+            return message;
         }
 
-        public virtual async Task<ClientResult> ListPaginatedFineTuningJobsAsync(string after, int? limit, RequestOptions options)
+        internal PipelineMessage CreateGetFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions options)
         {
-            using PipelineMessage message = CreateListPaginatedFineTuningJobsRequest(after, limit, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "GET";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/fine_tuning/jobs/", false);
+            uri.AppendPath(fineTuningJobId, true);
+            uri.AppendPath("/checkpoints", false);
+            if (after != null)
+            {
+                uri.AppendQuery("after", after, true);
+            }
+            if (limit != null)
+            {
+                uri.AppendQuery("limit", limit.Value, true);
+            }
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            message.Apply(options);
+            return message;
         }
 
-        public virtual ClientResult<InternalListPaginatedFineTuningJobsResponse> ListPaginatedFineTuningJobs(string after, int? limit)
+        internal PipelineMessage CreateGetFineTuningEventsRequest(string fineTuningJobId, string after, int? limit, RequestOptions options)
         {
-            ClientResult result = ListPaginatedFineTuningJobs(after, limit, null);
-            return ClientResult.FromValue((InternalListPaginatedFineTuningJobsResponse)result, result.GetRawResponse());
+            var message = _pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            var request = message.Request;
+            request.Method = "GET";
+            var uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/fine_tuning/jobs/", false);
+            uri.AppendPath(fineTuningJobId, true);
+            uri.AppendPath("/events", false);
+            if (after != null)
+            {
+                uri.AppendQuery("after", after, true);
+            }
+            if (limit != null)
+            {
+                uri.AppendQuery("limit", limit.Value, true);
+            }
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            message.Apply(options);
+            return message;
         }
 
-        public virtual async Task<ClientResult<InternalListPaginatedFineTuningJobsResponse>> ListPaginatedFineTuningJobsAsync(string after, int? limit)
-        {
-            ClientResult result = await ListPaginatedFineTuningJobsAsync(after, limit, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListPaginatedFineTuningJobsResponse)result, result.GetRawResponse());
-        }
-
-        public virtual ClientResult ListFineTuningJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options)
-        {
-            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
-
-            using PipelineMessage message = CreateListFineTuningJobCheckpointsRequest(fineTuningJobId, after, limit, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> ListFineTuningJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
-        {
-            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
-
-            using PipelineMessage message = CreateListFineTuningJobCheckpointsRequest(fineTuningJobId, after, limit, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult<InternalListFineTuningJobCheckpointsResponse> ListFineTuningJobCheckpoints(string fineTuningJobId, string after, int? limit)
-        {
-            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
-
-            ClientResult result = ListFineTuningJobCheckpoints(fineTuningJobId, after, limit, null);
-            return ClientResult.FromValue((InternalListFineTuningJobCheckpointsResponse)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<InternalListFineTuningJobCheckpointsResponse>> ListFineTuningJobCheckpointsAsync(string fineTuningJobId, string after, int? limit)
-        {
-            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
-
-            ClientResult result = await ListFineTuningJobCheckpointsAsync(fineTuningJobId, after, limit, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListFineTuningJobCheckpointsResponse)result, result.GetRawResponse());
-        }
-
-        public virtual ClientResult ListFineTuningEvents(string fineTuningJobId, string after, int? limit, RequestOptions options)
-        {
-            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
-
-            using PipelineMessage message = CreateListFineTuningEventsRequest(fineTuningJobId, after, limit, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> ListFineTuningEventsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
-        {
-            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
-
-            using PipelineMessage message = CreateListFineTuningEventsRequest(fineTuningJobId, after, limit, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult<InternalListFineTuningJobEventsResponse> ListFineTuningEvents(string fineTuningJobId, string after, int? limit)
-        {
-            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
-
-            ClientResult result = ListFineTuningEvents(fineTuningJobId, after, limit, null);
-            return ClientResult.FromValue((InternalListFineTuningJobEventsResponse)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<InternalListFineTuningJobEventsResponse>> ListFineTuningEventsAsync(string fineTuningJobId, string after, int? limit)
-        {
-            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
-
-            ClientResult result = await ListFineTuningEventsAsync(fineTuningJobId, after, limit, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListFineTuningJobEventsResponse)result, result.GetRawResponse());
-        }
+        private static PipelineMessageClassifier _pipelineMessageClassifier200;
+        private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
     }
 }

@@ -7,90 +7,68 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
-using OpenAI;
 
 namespace OpenAI.Chat
 {
     public partial class ToolChatMessage : IJsonModel<ToolChatMessage>
     {
-        internal ToolChatMessage()
+        ToolChatMessage IJsonModel<ToolChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-        }
-
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            string format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
-            if (format != "J")
-            {
-                throw new FormatException($"The model {nameof(ToolChatMessage)} does not support writing '{format}' format.");
-            }
-            base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("content"u8);
-#if NET6_0_OR_GREATER
-            writer.WriteRawValue(Content);
-#else
-            using (JsonDocument document = JsonDocument.Parse(Content))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
-#endif
-            writer.WritePropertyName("tool_call_id"u8);
-            writer.WriteStringValue(ToolCallId);
-        }
-
-        ToolChatMessage IJsonModel<ToolChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ToolChatMessage)JsonModelCreateCore(ref reader, options);
-
-        protected override ChatMessage JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
-        {
-            string format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ToolChatMessage)} does not support reading '{format}' format.");
             }
+
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeToolChatMessage(document.RootElement, options);
         }
 
-        internal static ToolChatMessage DeserializeToolChatMessage(JsonElement element, ModelReaderWriterOptions options)
+        internal static ToolChatMessage DeserializeToolChatMessage(JsonElement element, ModelReaderWriterOptions options = null)
         {
+            options ??= ModelSerializationExtensions.WireOptions;
+
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            BinaryData content = default;
             string toolCallId = default;
-            Chat.ChatMessageRole role = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            foreach (var prop in element.EnumerateObject())
+            ChatMessageRole role = default;
+            ChatMessageContent content = default;
+            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
+            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
+            foreach (var property in element.EnumerateObject())
             {
-                if (prop.NameEquals("content"u8))
+                if (property.NameEquals("tool_call_id"u8))
                 {
-                    content = BinaryData.FromString(prop.Value.GetRawText());
+                    toolCallId = property.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("tool_call_id"u8))
+                if (property.NameEquals("role"u8))
                 {
-                    toolCallId = prop.Value.GetString();
+                    role = property.Value.GetString().ToChatMessageRole();
                     continue;
                 }
-                if (prop.NameEquals("role"u8))
+                if (property.NameEquals("content"u8))
                 {
-                    role = prop.Value.GetInt32().ToChatMessageRole();
+                    DeserializeContentValue(property, ref content);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
+                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
+                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }
-            return new ToolChatMessage(content, toolCallId, role, additionalBinaryDataProperties);
+            serializedAdditionalRawData = rawDataDictionary;
+            // CUSTOM: Initialize Content collection property.
+            return new ToolChatMessage(role, content ?? new ChatMessageContent(), serializedAdditionalRawData, toolCallId);
         }
 
-        BinaryData IPersistableModel<ToolChatMessage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
-
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ToolChatMessage>.Write(ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
+
             switch (format)
             {
                 case "J":
@@ -100,16 +78,15 @@ namespace OpenAI.Chat
             }
         }
 
-        ToolChatMessage IPersistableModel<ToolChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options) => (ToolChatMessage)PersistableModelCreateCore(data, options);
-
-        protected override ChatMessage PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        ToolChatMessage IPersistableModel<ToolChatMessage>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ToolChatMessage>)this).GetFormatFromOptions(options) : options.Format;
+
             switch (format)
             {
                 case "J":
-                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
+                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeToolChatMessage(document.RootElement, options);
                     }
                 default:
@@ -119,16 +96,15 @@ namespace OpenAI.Chat
 
         string IPersistableModel<ToolChatMessage>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        public static implicit operator BinaryContent(ToolChatMessage toolChatMessage)
+        internal static new ToolChatMessage FromResponse(PipelineResponse response)
         {
-            return BinaryContent.Create(toolChatMessage, ModelSerializationExtensions.WireOptions);
+            using var document = JsonDocument.Parse(response.Content);
+            return DeserializeToolChatMessage(document.RootElement);
         }
 
-        public static explicit operator ToolChatMessage(ClientResult result)
+        internal override BinaryContent ToBinaryContent()
         {
-            using PipelineResponse response = result.GetRawResponse();
-            using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeToolChatMessage(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

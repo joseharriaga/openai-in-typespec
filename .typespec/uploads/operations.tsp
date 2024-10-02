@@ -26,8 +26,7 @@ interface Uploads {
     """)
   createUpload(
     @header accept: "application/json",
-    
-    @body requestBody: CreateUploadRequest
+    @body requestBody: CreateUploadRequest,
   ): Upload | ErrorResponse;
 
   @route("{upload_id}/parts")
@@ -43,11 +42,8 @@ interface Uploads {
     """)
   addUploadPart(
     @header accept: "application/json",
-
     @header contentType: "multipart/form-data",
-
     @path upload_id: string,
-
     @body requestBody: AddUploadPartRequest,
   ): UploadPart | ErrorResponse;
 
@@ -66,9 +62,7 @@ interface Uploads {
     """)
   completeUpload(
     @header accept: "application/json",
-
     @path upload_id: string,
-    
     @body requestBody: CompleteUploadRequest,
   ): Upload | ErrorResponse;
 
@@ -79,7 +73,6 @@ interface Uploads {
   @summary("Cancels the Upload. No Parts may be added after an Upload is cancelled.")
   cancelUpload(
     @header accept: "application/json",
-    
-    @path upload_id: string
+    @path upload_id: string,
   ): Upload | ErrorResponse;
 }

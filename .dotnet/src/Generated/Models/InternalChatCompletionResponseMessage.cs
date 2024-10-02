@@ -4,35 +4,33 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using OpenAI;
 
 namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionResponseMessage
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
-
-        internal InternalChatCompletionResponseMessage(string refusal, Chat.ChatMessageRole role, IEnumerable<ChatMessageContentPart> content)
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        internal InternalChatCompletionResponseMessage(ChatMessageContent content, string refusal)
         {
+            Content = content;
             Refusal = refusal;
             ToolCalls = new ChangeTrackingList<ChatToolCall>();
-            Role = role;
-            Content = content.ToList();
         }
 
-        internal InternalChatCompletionResponseMessage(string refusal, IList<ChatToolCall> toolCalls, Chat.ChatMessageRole role, IReadOnlyList<ChatMessageContentPart> content, ChatFunctionCall functionCall, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalChatCompletionResponseMessage(ChatMessageContent content, string refusal, IReadOnlyList<ChatToolCall> toolCalls, ChatMessageRole role, ChatFunctionCall functionCall, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
+            Content = content;
             Refusal = refusal;
             ToolCalls = toolCalls;
             Role = role;
-            Content = content;
             FunctionCall = functionCall;
-            _additionalBinaryDataProperties = additionalBinaryDataProperties;
+            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        public string Refusal { get; set; }
-
-        public IList<ChatToolCall> ToolCalls { get; }
+        internal InternalChatCompletionResponseMessage()
+        {
+        }
+        public string Refusal { get; }
+        public IReadOnlyList<ChatToolCall> ToolCalls { get; }
     }
 }

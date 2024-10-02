@@ -16,7 +16,7 @@ namespace OpenAI.Tests.Files;
 [Category("Files")]
 public class FilesTests : SyncAsyncTestBase
 {
-    private static FileClient GetTestClient() => GetTestClient<FileClient>(TestScenario.Files);
+    private static OpenAIFileClient GetTestClient() => GetTestClient<OpenAIFileClient>(TestScenario.Files);
 
     public FilesTests(bool isAsync) : base(isAsync)
     {
@@ -25,17 +25,17 @@ public class FilesTests : SyncAsyncTestBase
     [Test]
     public async Task ListFiles()
     {
-        FileClient client = GetTestClient();
+        OpenAIFileClient client = GetTestClient();
         using Stream file1 = BinaryData.FromString("Hello! This is a test text file. Please delete me.").ToStream();
         using Stream file2 = BinaryData.FromString("Hello! This is another test text file. Please delete me.").ToStream();
         string filename = "test-file-delete-me.txt";
         string visionFilename = "images_dog_and_cat.png";
         string visionFilePath = Path.Combine("Assets", visionFilename);
 
-        OpenAIFileInfo uploadedFile1 = null;
-        OpenAIFileInfo uploadedFile2 = null;
-        OpenAIFileInfo uploadedVisionFile = null;
-        OpenAIFileInfoCollection fileInfoCollection;
+        OpenAIFile uploadedFile1 = null;
+        OpenAIFile uploadedFile2 = null;
+        OpenAIFile uploadedVisionFile = null;
+        OpenAIFileCollection fileInfoCollection;
 
         try
         {
@@ -44,8 +44,8 @@ public class FilesTests : SyncAsyncTestBase
             uploadedVisionFile = await client.UploadFileAsync(visionFilePath, FileUploadPurpose.Vision);
 
             fileInfoCollection = IsAsync
-                ? await client.GetFilesAsync(OpenAIFilePurpose.Assistants)
-                : client.GetFiles(OpenAIFilePurpose.Assistants);
+                ? await client.GetFilesAsync(FilePurpose.Assistants)
+                : client.GetFiles(FilePurpose.Assistants);
         }
         finally
         {
@@ -65,11 +65,11 @@ public class FilesTests : SyncAsyncTestBase
             }
         }
 
-        OpenAIFileInfo fileInfo1 = null;
-        OpenAIFileInfo fileInfo2 = null;
-        OpenAIFileInfo visionFileInfo = null;
+        OpenAIFile fileInfo1 = null;
+        OpenAIFile fileInfo2 = null;
+        OpenAIFile visionFileInfo = null;
 
-        foreach (OpenAIFileInfo item in fileInfoCollection)
+        foreach (OpenAIFile item in fileInfoCollection)
         {
             if (item.Id == uploadedFile1.Id)
             {
@@ -108,25 +108,6 @@ public class FilesTests : SyncAsyncTestBase
         Assert.That(visionFileInfo, Is.Null);
     }
 
-    [Test]
-    public void ListFilesCanParseServiceError()
-    {
-        FileClient client = GetTestClient();
-        OpenAIFilePurpose fakePurpose = new OpenAIFilePurpose("world_domination");
-        ClientResultException ex = null;
-
-        if (IsAsync)
-        {
-            ex = Assert.ThrowsAsync<ClientResultException>(async () => await client.GetFilesAsync(fakePurpose));
-        }
-        else
-        {
-            ex = Assert.Throws<ClientResultException>(() => client.GetFiles(fakePurpose));
-        }
-
-        Assert.That(ex.Status, Is.EqualTo(400));
-    }
-
     public enum FileSourceKind
     {
         UsingStream,
@@ -140,10 +121,10 @@ public class FilesTests : SyncAsyncTestBase
     [TestCaseSource(nameof(s_fileSourceKindSource))]
     public async Task UploadFile(FileSourceKind fileSourceKind)
     {
-        FileClient client = GetTestClient();
+        OpenAIFileClient client = GetTestClient();
         string filename = "images_dog_and_cat.png";
         string path = Path.Combine("Assets", filename);
-        OpenAIFileInfo fileInfo = null;
+        OpenAIFile fileInfo = null;
 
         try
         {
@@ -192,16 +173,16 @@ public class FilesTests : SyncAsyncTestBase
         Assert.That(fileInfo.SizeInBytes, Is.EqualTo(expectedSize));
         Assert.That(fileInfo.CreatedAt.ToUnixTimeSeconds(), Is.GreaterThan(unixTime2024));
         Assert.That(fileInfo.Filename, Is.EqualTo(expectedFilename));
-        Assert.That(fileInfo.Purpose, Is.EqualTo(OpenAIFilePurpose.Vision));
+        Assert.That(fileInfo.Purpose, Is.EqualTo(FilePurpose.Vision));
 #pragma warning disable CS0618
-        Assert.That(fileInfo.Status, Is.Not.EqualTo(default(OpenAIFileStatus)));
+        Assert.That(fileInfo.Status, Is.Not.EqualTo(default(FileStatus)));
 #pragma warning restore CS0618
     }
 
     [Test]
     public void UploadFileCanParseServiceError()
     {
-        FileClient client = GetTestClient();
+        OpenAIFileClient client = GetTestClient();
         string filename = "images_dog_and_cat.png";
         string path = Path.Combine("Assets", filename);
         FileUploadPurpose fakePurpose = new FileUploadPurpose("world_domination");
@@ -224,12 +205,12 @@ public class FilesTests : SyncAsyncTestBase
     [TestCase(false)]
     public async Task DeleteFile(bool useFileInfoOverload)
     {
-        FileClient client = GetTestClient();
+        OpenAIFileClient client = GetTestClient();
         string fileContent = "Hello! This is a test text file. Please delete me.";
         using Stream file = BinaryData.FromString(fileContent).ToStream();
         string filename = "test-file-delete-me.txt";
 
-        OpenAIFileInfo uploadedFile = await client.UploadFileAsync(file, filename, FileUploadPurpose.Assistants);
+        OpenAIFile uploadedFile = await client.UploadFileAsync(file, filename, FileUploadPurpose.Assistants);
         FileDeletionResult result;
 
         if (useFileInfoOverload)
@@ -252,7 +233,7 @@ public class FilesTests : SyncAsyncTestBase
     [Test]
     public void DeleteFileCanParseServiceError()
     {
-        FileClient client = GetTestClient();
+        OpenAIFileClient client = GetTestClient();
         ClientResultException ex = null;
 
         if (IsAsync)
@@ -270,11 +251,11 @@ public class FilesTests : SyncAsyncTestBase
     [Test]
     public async Task GetFile()
     {
-        FileClient client = GetTestClient();
+        OpenAIFileClient client = GetTestClient();
         using Stream file = BinaryData.FromString("Hello! This is a test text file. Please delete me.").ToStream();
         string filename = "test-file-delete-me.txt";
-        OpenAIFileInfo uploadedFile = null;
-        OpenAIFileInfo fileInfo;
+        OpenAIFile uploadedFile = null;
+        OpenAIFile fileInfo;
 
         try
         {
@@ -307,7 +288,7 @@ public class FilesTests : SyncAsyncTestBase
     [Test]
     public void GetFileCanParseServiceError()
     {
-        FileClient client = GetTestClient();
+        OpenAIFileClient client = GetTestClient();
         ClientResultException ex = null;
 
         if (IsAsync)
@@ -325,11 +306,11 @@ public class FilesTests : SyncAsyncTestBase
     [Test]
     public async Task DownloadContent()
     {
-        FileClient client = GetTestClient();
+        OpenAIFileClient client = GetTestClient();
         string filename = "images_dog_and_cat.png";
         string path = Path.Combine("Assets", filename);
         using Stream file = File.OpenRead(path);
-        OpenAIFileInfo uploadedFile = null;
+        OpenAIFile uploadedFile = null;
         BinaryData downloadedContent;
 
         try
@@ -357,7 +338,7 @@ public class FilesTests : SyncAsyncTestBase
     [Test]
     public void DownloadFileCanParseServiceError()
     {
-        FileClient client = GetTestClient();
+        OpenAIFileClient client = GetTestClient();
         ClientResultException ex = null;
 
         if (IsAsync)
@@ -381,10 +362,10 @@ public class FilesTests : SyncAsyncTestBase
     [Test]
     public async Task NonAsciiFilename()
     {
-        FileClient client = GetTestClient();
+        OpenAIFileClient client = GetTestClient();
         string filename = "你好.txt";
         BinaryData fileContent = BinaryData.FromString("世界您好！这是个测试。");
-        OpenAIFileInfo uploadedFile = IsAsync
+        OpenAIFile uploadedFile = IsAsync
             ? await client.UploadFileAsync(fileContent, filename, FileUploadPurpose.Assistants)
             : client.UploadFile(fileContent, filename, FileUploadPurpose.Assistants);
         Assert.That(uploadedFile?.Filename, Is.EqualTo(filename));

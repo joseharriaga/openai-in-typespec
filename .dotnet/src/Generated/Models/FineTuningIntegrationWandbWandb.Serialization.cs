@@ -61,7 +61,7 @@ namespace OpenAI.FineTuning
             {
                 writer.WritePropertyName("tags"u8);
                 writer.WriteStartArray();
-                foreach (var item in Tags)
+                foreach (string item in Tags)
                 {
                     if (item == null)
                     {

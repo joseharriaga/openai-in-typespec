@@ -12,7 +12,7 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ThreadRun(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, InternalRunRequiredAction requiredAction, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IEnumerable<ToolDefinition> tools, IDictionary<string, string> metadata, RunTokenUsage usage, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, BinaryData toolChoice, bool parallelToolCalls, BinaryData responseFormat)
+        internal ThreadRun(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, InternalRunRequiredAction requiredAction, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IEnumerable<ToolDefinition> tools, IDictionary<string, string> metadata, RunTokenUsage usage, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, InternalRunObjectObject @object, AssistantResponseFormat responseFormat, ToolConstraint toolConstraint, bool? parallelToolCallsEnabled)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -35,15 +35,15 @@ namespace OpenAI.Assistants
             MaxPromptTokens = maxPromptTokens;
             MaxCompletionTokens = maxCompletionTokens;
             TruncationStrategy = truncationStrategy;
-            ToolChoice = toolChoice;
-            ParallelToolCalls = parallelToolCalls;
+            Object = @object;
             ResponseFormat = responseFormat;
+            ToolConstraint = toolConstraint;
+            ParallelToolCallsEnabled = parallelToolCallsEnabled;
         }
 
-        internal ThreadRun(string id, InternalRunObjectObject @object, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, InternalRunRequiredAction requiredAction, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IList<ToolDefinition> tools, IDictionary<string, string> metadata, RunTokenUsage usage, float? temperature, float? topP, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, BinaryData toolChoice, bool parallelToolCalls, BinaryData responseFormat, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ThreadRun(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, InternalRunRequiredAction requiredAction, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IList<ToolDefinition> tools, IDictionary<string, string> metadata, RunTokenUsage usage, float? temperature, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, InternalRunObjectObject @object, AssistantResponseFormat responseFormat, ToolConstraint toolConstraint, float? nucleusSamplingFactor, bool? parallelToolCallsEnabled, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Object = @object;
             CreatedAt = createdAt;
             ThreadId = threadId;
             AssistantId = assistantId;
@@ -62,13 +62,14 @@ namespace OpenAI.Assistants
             Metadata = metadata;
             Usage = usage;
             Temperature = temperature;
-            TopP = topP;
             MaxPromptTokens = maxPromptTokens;
             MaxCompletionTokens = maxCompletionTokens;
             TruncationStrategy = truncationStrategy;
-            ToolChoice = toolChoice;
-            ParallelToolCalls = parallelToolCalls;
+            Object = @object;
             ResponseFormat = responseFormat;
+            ToolConstraint = toolConstraint;
+            NucleusSamplingFactor = nucleusSamplingFactor;
+            ParallelToolCallsEnabled = parallelToolCallsEnabled;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

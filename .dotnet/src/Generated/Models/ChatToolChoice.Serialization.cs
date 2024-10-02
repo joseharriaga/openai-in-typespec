@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI;
 
@@ -13,13 +12,6 @@ namespace OpenAI.Chat
 {
     public partial class ChatToolChoice : IJsonModel<ChatToolChoice>
     {
-        void IJsonModel<ChatToolChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<ChatToolChoice>)this).GetFormatFromOptions(options) : options.Format;
@@ -54,24 +46,7 @@ namespace OpenAI.Chat
                 throw new FormatException($"The model {nameof(ChatToolChoice)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeChatToolChoice(document.RootElement, options);
-        }
-
-        internal static ChatToolChoice DeserializeChatToolChoice(JsonElement element, ModelReaderWriterOptions options)
-        {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            foreach (var prop in element.EnumerateObject())
-            {
-                if (options.Format != "W")
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
-            }
-            return new ChatToolChoice(additionalBinaryDataProperties);
+            return ChatToolChoice.DeserializeChatToolChoice(document.RootElement, options);
         }
 
         BinaryData IPersistableModel<ChatToolChoice>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
@@ -98,7 +73,7 @@ namespace OpenAI.Chat
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeChatToolChoice(document.RootElement, options);
+                        return ChatToolChoice.DeserializeChatToolChoice(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(ChatToolChoice)} does not support reading '{options.Format}' format.");
@@ -116,7 +91,7 @@ namespace OpenAI.Chat
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeChatToolChoice(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return ChatToolChoice.DeserializeChatToolChoice(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

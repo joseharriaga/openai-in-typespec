@@ -13,13 +13,6 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatResponseFormatText : IJsonModel<InternalChatResponseFormatText>
     {
-        void IJsonModel<InternalChatResponseFormatText>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<InternalChatResponseFormatText>)this).GetFormatFromOptions(options) : options.Format;

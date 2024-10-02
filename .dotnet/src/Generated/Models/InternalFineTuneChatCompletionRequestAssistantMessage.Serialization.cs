@@ -67,10 +67,9 @@ namespace OpenAI.FineTuning
             }
             BinaryData content = default;
             string refusal = default;
-            string name = default;
+            string participantName = default;
             IList<ChatToolCall> toolCalls = default;
-            ChatFunctionCall functionCall = default;
-            string role = default;
+            Chat.ChatMessageRole role = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             IDictionary<string, BinaryData> additionalBinaryDataProperties0 = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -97,12 +96,7 @@ namespace OpenAI.FineTuning
                 }
                 if (prop.NameEquals("name"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
-                    name = prop.Value.GetString();
+                    participantName = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("tool_calls"u8))
@@ -119,19 +113,9 @@ namespace OpenAI.FineTuning
                     toolCalls = array;
                     continue;
                 }
-                if (prop.NameEquals("function_call"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        functionCall = null;
-                        continue;
-                    }
-                    functionCall = ChatFunctionCall.DeserializeChatFunctionCall(prop.Value, options);
-                    continue;
-                }
                 if (prop.NameEquals("role"u8))
                 {
-                    role = prop.Value.GetString();
+                    role = prop.Value.GetInt32().ToChatMessageRole();
                     continue;
                 }
                 if (options.Format != "W")
@@ -142,9 +126,8 @@ namespace OpenAI.FineTuning
             return new InternalFineTuneChatCompletionRequestAssistantMessage(
                 content,
                 refusal,
-                name,
+                participantName,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
-                functionCall,
                 role,
                 additionalBinaryDataProperties,
                 additionalBinaryDataProperties0);

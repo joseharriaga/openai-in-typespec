@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI;
 
@@ -15,13 +14,6 @@ namespace OpenAI.Assistants
     {
         internal ToolConstraint()
         {
-        }
-
-        void IJsonModel<ToolConstraint>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
         }
 
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -55,8 +47,6 @@ namespace OpenAI.Assistants
             }
         }
 
-        ToolConstraint IJsonModel<ToolConstraint>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
-
         protected virtual ToolConstraint JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<ToolConstraint>)this).GetFormatFromOptions(options) : options.Format;
@@ -65,44 +55,8 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(ToolConstraint)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeToolConstraint(document.RootElement, options);
+            return ToolConstraint.DeserializeToolConstraint(document.RootElement, options);
         }
-
-        internal static ToolConstraint DeserializeToolConstraint(JsonElement element, ModelReaderWriterOptions options)
-        {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-            InternalAssistantsNamedToolChoiceType @type = default;
-            InternalAssistantsNamedToolChoiceFunction function = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            foreach (var prop in element.EnumerateObject())
-            {
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = new InternalAssistantsNamedToolChoiceType(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("function"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        function = null;
-                        continue;
-                    }
-                    function = InternalAssistantsNamedToolChoiceFunction.DeserializeInternalAssistantsNamedToolChoiceFunction(prop.Value, options);
-                    continue;
-                }
-                if (options.Format != "W")
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
-            }
-            return new ToolConstraint(@type, function, additionalBinaryDataProperties);
-        }
-
-        BinaryData IPersistableModel<ToolConstraint>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
         protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
@@ -116,8 +70,6 @@ namespace OpenAI.Assistants
             }
         }
 
-        ToolConstraint IPersistableModel<ToolConstraint>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
-
         protected virtual ToolConstraint PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<ToolConstraint>)this).GetFormatFromOptions(options) : options.Format;
@@ -126,7 +78,7 @@ namespace OpenAI.Assistants
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeToolConstraint(document.RootElement, options);
+                        return ToolConstraint.DeserializeToolConstraint(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(ToolConstraint)} does not support reading '{options.Format}' format.");
@@ -144,7 +96,7 @@ namespace OpenAI.Assistants
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeToolConstraint(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return ToolConstraint.DeserializeToolConstraint(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -6,7 +6,6 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading.Tasks;
-using OpenAI;
 
 namespace OpenAI.Assistants
 {
@@ -22,22 +21,6 @@ namespace OpenAI.Assistants
         }
 
         public ClientPipeline Pipeline { get; }
-
-        public virtual ClientResult CreateAssistant(BinaryContent content, RequestOptions options)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateCreateAssistantRequest(content, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> CreateAssistantAsync(BinaryContent content, RequestOptions options)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateCreateAssistantRequest(content, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
 
         public virtual ClientResult ListAssistants(int? limit, string order, string after, string before, RequestOptions options)
         {
@@ -61,56 +44,6 @@ namespace OpenAI.Assistants
         {
             ClientResult result = await ListAssistantsAsync(limit, order.ToString(), after, before, null).ConfigureAwait(false);
             return ClientResult.FromValue((InternalListAssistantsResponse)result, result.GetRawResponse());
-        }
-
-        public virtual ClientResult GetAssistant(string assistant_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(assistant_id, nameof(assistant_id));
-
-            using PipelineMessage message = CreateGetAssistantRequest(assistant_id, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> GetAssistantAsync(string assistant_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(assistant_id, nameof(assistant_id));
-
-            using PipelineMessage message = CreateGetAssistantRequest(assistant_id, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult ModifyAssistant(string assistant_id, BinaryContent content, RequestOptions options)
-        {
-            Argument.AssertNotNull(assistant_id, nameof(assistant_id));
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateModifyAssistantRequest(assistant_id, content, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> ModifyAssistantAsync(string assistant_id, BinaryContent content, RequestOptions options)
-        {
-            Argument.AssertNotNull(assistant_id, nameof(assistant_id));
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateModifyAssistantRequest(assistant_id, content, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult DeleteAssistant(string assistant_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(assistant_id, nameof(assistant_id));
-
-            using PipelineMessage message = CreateDeleteAssistantRequest(assistant_id, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> DeleteAssistantAsync(string assistant_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(assistant_id, nameof(assistant_id));
-
-            using PipelineMessage message = CreateDeleteAssistantRequest(assistant_id, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
     }
 }

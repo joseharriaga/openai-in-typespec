@@ -21,14 +21,12 @@ namespace OpenAI.Assistants
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        internal InternalCreateThreadAndRunRequest(string assistantId, ThreadCreationOptions thread, InternalCreateThreadAndRunRequestModel? model, string instructions, IList<ToolDefinition> tools, InternalCreateThreadAndRunRequestToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, BinaryData toolChoice, bool? parallelToolCalls, BinaryData responseFormat, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalCreateThreadAndRunRequest(string assistantId, ThreadCreationOptions thread, string instructions, IList<ToolDefinition> tools, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, bool? parallelToolCalls, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             AssistantId = assistantId;
             Thread = thread;
-            Model = model;
             Instructions = instructions;
             Tools = tools;
-            ToolResources = toolResources;
             Metadata = metadata;
             Temperature = temperature;
             TopP = topP;
@@ -36,9 +34,7 @@ namespace OpenAI.Assistants
             MaxPromptTokens = maxPromptTokens;
             MaxCompletionTokens = maxCompletionTokens;
             TruncationStrategy = truncationStrategy;
-            ToolChoice = toolChoice;
             ParallelToolCalls = parallelToolCalls;
-            ResponseFormat = responseFormat;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

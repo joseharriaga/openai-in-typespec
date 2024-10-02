@@ -15,7 +15,7 @@ namespace OpenAI.Assistants
         {
         }
 
-        internal InternalMessageDeltaContentImageUrlObjectImageUrl(Uri url, InternalMessageDeltaContentImageUrlObjectImageUrlDetail? detail, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalMessageDeltaContentImageUrlObjectImageUrl(Uri url, string detail, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Url = url;
             Detail = detail;

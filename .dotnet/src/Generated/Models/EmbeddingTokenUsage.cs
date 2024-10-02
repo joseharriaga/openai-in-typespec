@@ -11,16 +11,16 @@ namespace OpenAI.Embeddings
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal EmbeddingTokenUsage(int promptTokens, int totalTokens)
+        internal EmbeddingTokenUsage(int totalTokens, int inputTokens)
         {
-            PromptTokens = promptTokens;
             TotalTokens = totalTokens;
+            InputTokens = inputTokens;
         }
 
-        internal EmbeddingTokenUsage(int promptTokens, int totalTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal EmbeddingTokenUsage(int totalTokens, int inputTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            PromptTokens = promptTokens;
             TotalTokens = totalTokens;
+            InputTokens = inputTokens;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

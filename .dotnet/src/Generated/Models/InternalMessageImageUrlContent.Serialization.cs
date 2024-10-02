@@ -17,13 +17,6 @@ namespace OpenAI.Assistants
         {
         }
 
-        void IJsonModel<InternalMessageImageUrlContent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<InternalMessageImageUrlContent>)this).GetFormatFromOptions(options) : options.Format;

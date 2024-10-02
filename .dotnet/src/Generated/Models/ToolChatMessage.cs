@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     public partial class ToolChatMessage : ChatMessage
     {
-        public ToolChatMessage(BinaryData content, string toolCallId) : base("tool")
+        public ToolChatMessage(BinaryData content, string toolCallId)
         {
             Argument.AssertNotNull(content, nameof(content));
             Argument.AssertNotNull(toolCallId, nameof(toolCallId));
@@ -19,7 +19,7 @@ namespace OpenAI.Chat
             ToolCallId = toolCallId;
         }
 
-        internal ToolChatMessage(BinaryData content, string toolCallId, string role, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, additionalBinaryDataProperties)
+        internal ToolChatMessage(BinaryData content, string toolCallId, Chat.ChatMessageRole role, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, additionalBinaryDataProperties)
         {
             Content = content;
             ToolCallId = toolCallId;

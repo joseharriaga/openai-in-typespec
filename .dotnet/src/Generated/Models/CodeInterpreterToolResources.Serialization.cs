@@ -27,21 +27,6 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(CodeInterpreterToolResources)} does not support writing '{format}' format.");
             }
-            if (Optional.IsCollectionDefined(FileIds))
-            {
-                writer.WritePropertyName("file_ids"u8);
-                writer.WriteStartArray();
-                foreach (var item in FileIds)
-                {
-                    if (item == null)
-                    {
-                        writer.WriteNullValue();
-                        continue;
-                    }
-                    writer.WriteStringValue(item);
-                }
-                writer.WriteEndArray();
-            }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -78,37 +63,15 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            IList<string> fileIds = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("file_ids"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    List<string> array = new List<string>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(item.GetString());
-                        }
-                    }
-                    fileIds = array;
-                    continue;
-                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new CodeInterpreterToolResources(fileIds ?? new ChangeTrackingList<string>(), additionalBinaryDataProperties);
+            return new CodeInterpreterToolResources(additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<CodeInterpreterToolResources>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

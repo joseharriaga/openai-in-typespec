@@ -14,15 +14,15 @@ namespace OpenAI.Assistants
 
         public ThreadCreationOptions()
         {
-            Messages = new ChangeTrackingList<MessageCreationOptions>();
             Metadata = new ChangeTrackingDictionary<string, string>();
+            InternalMessages = new ChangeTrackingList<MessageCreationOptions>();
         }
 
-        internal ThreadCreationOptions(IList<MessageCreationOptions> messages, InternalCreateThreadRequestToolResources toolResources, IDictionary<string, string> metadata, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ThreadCreationOptions(IDictionary<string, string> metadata, ToolResources toolResources, IList<MessageCreationOptions> internalMessages, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Messages = messages;
-            ToolResources = toolResources;
             Metadata = metadata;
+            ToolResources = toolResources;
+            InternalMessages = internalMessages;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

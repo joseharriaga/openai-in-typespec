@@ -17,13 +17,6 @@ namespace OpenAI.Chat
         {
         }
 
-        void IJsonModel<ChatResponseFormat>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<ChatResponseFormat>)this).GetFormatFromOptions(options) : options.Format;

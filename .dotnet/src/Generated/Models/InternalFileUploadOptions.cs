@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI;
 
 namespace OpenAI.Files
 {
@@ -12,18 +11,8 @@ namespace OpenAI.Files
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public InternalFileUploadOptions(BinaryData @file, FileUploadPurpose purpose)
+        internal InternalFileUploadOptions(IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Argument.AssertNotNull(@file, nameof(@file));
-
-            File = @file;
-            Purpose = purpose;
-        }
-
-        internal InternalFileUploadOptions(BinaryData @file, FileUploadPurpose purpose, IDictionary<string, BinaryData> additionalBinaryDataProperties)
-        {
-            File = @file;
-            Purpose = purpose;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

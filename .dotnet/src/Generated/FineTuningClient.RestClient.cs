@@ -61,7 +61,7 @@ namespace OpenAI.FineTuning
             return message;
         }
 
-        internal PipelineMessage CreateRetrieveFineTuningJobRequest(string fine_tuning_job_id, RequestOptions options)
+        internal PipelineMessage CreateRetrieveFineTuningJobRequest(string fineTuningJobId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -70,14 +70,14 @@ namespace OpenAI.FineTuning
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/fine_tuning/jobs/", false);
-            uri.AppendPath(fine_tuning_job_id, true);
+            uri.AppendPath(fineTuningJobId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateCancelFineTuningJobRequest(string fine_tuning_job_id, RequestOptions options)
+        internal PipelineMessage CreateCancelFineTuningJobRequest(string fineTuningJobId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -86,7 +86,7 @@ namespace OpenAI.FineTuning
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/fine_tuning/jobs/", false);
-            uri.AppendPath(fine_tuning_job_id, true);
+            uri.AppendPath(fineTuningJobId, true);
             uri.AppendPath("/cancel", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
@@ -94,7 +94,7 @@ namespace OpenAI.FineTuning
             return message;
         }
 
-        internal PipelineMessage CreateListFineTuningJobCheckpointsRequest(string fine_tuning_job_id, string after, int? limit, RequestOptions options)
+        internal PipelineMessage CreateListFineTuningJobCheckpointsRequest(string fineTuningJobId, string after, int? limit, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -103,7 +103,7 @@ namespace OpenAI.FineTuning
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/fine_tuning/jobs/", false);
-            uri.AppendPath(fine_tuning_job_id, true);
+            uri.AppendPath(fineTuningJobId, true);
             uri.AppendPath("/checkpoints", false);
             if (after != null)
             {
@@ -119,7 +119,7 @@ namespace OpenAI.FineTuning
             return message;
         }
 
-        internal PipelineMessage CreateListFineTuningEventsRequest(string fine_tuning_job_id, string after, int? limit, RequestOptions options)
+        internal PipelineMessage CreateListFineTuningEventsRequest(string fineTuningJobId, string after, int? limit, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -128,7 +128,7 @@ namespace OpenAI.FineTuning
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/fine_tuning/jobs/", false);
-            uri.AppendPath(fine_tuning_job_id, true);
+            uri.AppendPath(fineTuningJobId, true);
             uri.AppendPath("/events", false);
             if (after != null)
             {

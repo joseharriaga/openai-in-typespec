@@ -16,16 +16,16 @@ namespace OpenAI.FineTuning
         {
             Argument.AssertNotNull(project, nameof(project));
 
-            Project = project;
             Tags = new ChangeTrackingList<string>();
+            Project = project;
         }
 
-        internal InternalCreateFineTuningJobRequestWandbIntegrationWandb(string project, string name, string entity, IList<string> tags, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalCreateFineTuningJobRequestWandbIntegrationWandb(string name, string entity, IList<string> tags, string project, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Project = project;
             Name = name;
             Entity = entity;
             Tags = tags;
+            Project = project;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

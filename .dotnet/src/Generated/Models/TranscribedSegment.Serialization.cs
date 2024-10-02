@@ -33,29 +33,29 @@ namespace OpenAI.Audio
             }
             writer.WritePropertyName("id"u8);
             writer.WriteNumberValue(Id);
-            writer.WritePropertyName("seek"u8);
-            writer.WriteNumberValue(Seek);
-            writer.WritePropertyName("start"u8);
-            writer.WriteNumberValue(Convert.ToDouble(Start.ToString("s\\.FFF")));
-            writer.WritePropertyName("end"u8);
-            writer.WriteNumberValue(Convert.ToDouble(End.ToString("s\\.FFF")));
             writer.WritePropertyName("text"u8);
             writer.WriteStringValue(Text);
+            writer.WritePropertyName("temperature"u8);
+            writer.WriteNumberValue(Temperature);
+            writer.WritePropertyName("compression_ratio"u8);
+            writer.WriteNumberValue(CompressionRatio);
+            writer.WritePropertyName("start"u8);
+            writer.WriteNumberValue(Convert.ToDouble(StartTime.ToString("s\\.FFF")));
+            writer.WritePropertyName("end"u8);
+            writer.WriteNumberValue(Convert.ToDouble(EndTime.ToString("s\\.FFF")));
+            writer.WritePropertyName("seek"u8);
+            writer.WriteNumberValue(SeekOffset);
             writer.WritePropertyName("tokens"u8);
             writer.WriteStartArray();
-            foreach (var item in Tokens)
+            foreach (int item in TokenIds)
             {
                 writer.WriteNumberValue(item);
             }
             writer.WriteEndArray();
-            writer.WritePropertyName("temperature"u8);
-            writer.WriteNumberValue(Temperature);
             writer.WritePropertyName("avg_logprob"u8);
-            writer.WriteNumberValue(AvgLogprob);
-            writer.WritePropertyName("compression_ratio"u8);
-            writer.WriteNumberValue(CompressionRatio);
+            writer.WriteNumberValue(AverageLogProbability);
             writer.WritePropertyName("no_speech_prob"u8);
-            writer.WriteNumberValue(NoSpeechProb);
+            writer.WriteNumberValue(NoSpeechProbability);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -93,15 +93,15 @@ namespace OpenAI.Audio
                 return null;
             }
             int id = default;
-            int seek = default;
-            TimeSpan start = default;
-            TimeSpan end = default;
             string text = default;
-            IList<int> tokens = default;
             float temperature = default;
-            float avgLogprob = default;
             float compressionRatio = default;
-            float noSpeechProb = default;
+            TimeSpan startTime = default;
+            TimeSpan endTime = default;
+            int seekOffset = default;
+            IReadOnlyList<int> tokenIds = default;
+            float averageLogProbability = default;
+            float noSpeechProbability = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -110,24 +110,34 @@ namespace OpenAI.Audio
                     id = prop.Value.GetInt32();
                     continue;
                 }
-                if (prop.NameEquals("seek"u8))
+                if (prop.NameEquals("text"u8))
                 {
-                    seek = prop.Value.GetInt32();
+                    text = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("temperature"u8))
+                {
+                    temperature = prop.Value.GetSingle();
+                    continue;
+                }
+                if (prop.NameEquals("compression_ratio"u8))
+                {
+                    compressionRatio = prop.Value.GetSingle();
                     continue;
                 }
                 if (prop.NameEquals("start"u8))
                 {
-                    start = TimeSpan.FromSeconds(prop.Value.GetDouble());
+                    startTime = TimeSpan.FromSeconds(prop.Value.GetDouble());
                     continue;
                 }
                 if (prop.NameEquals("end"u8))
                 {
-                    end = TimeSpan.FromSeconds(prop.Value.GetDouble());
+                    endTime = TimeSpan.FromSeconds(prop.Value.GetDouble());
                     continue;
                 }
-                if (prop.NameEquals("text"u8))
+                if (prop.NameEquals("seek"u8))
                 {
-                    text = prop.Value.GetString();
+                    seekOffset = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("tokens"u8))
@@ -137,27 +147,17 @@ namespace OpenAI.Audio
                     {
                         array.Add(item.GetInt32());
                     }
-                    tokens = array;
-                    continue;
-                }
-                if (prop.NameEquals("temperature"u8))
-                {
-                    temperature = prop.Value.GetSingle();
+                    tokenIds = array;
                     continue;
                 }
                 if (prop.NameEquals("avg_logprob"u8))
                 {
-                    avgLogprob = prop.Value.GetSingle();
-                    continue;
-                }
-                if (prop.NameEquals("compression_ratio"u8))
-                {
-                    compressionRatio = prop.Value.GetSingle();
+                    averageLogProbability = prop.Value.GetSingle();
                     continue;
                 }
                 if (prop.NameEquals("no_speech_prob"u8))
                 {
-                    noSpeechProb = prop.Value.GetSingle();
+                    noSpeechProbability = prop.Value.GetSingle();
                     continue;
                 }
                 if (options.Format != "W")
@@ -167,15 +167,15 @@ namespace OpenAI.Audio
             }
             return new TranscribedSegment(
                 id,
-                seek,
-                start,
-                end,
                 text,
-                tokens,
                 temperature,
-                avgLogprob,
                 compressionRatio,
-                noSpeechProb,
+                startTime,
+                endTime,
+                seekOffset,
+                tokenIds,
+                averageLogProbability,
+                noSpeechProbability,
                 additionalBinaryDataProperties);
         }
 

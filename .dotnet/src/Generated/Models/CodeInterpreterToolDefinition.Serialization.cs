@@ -13,13 +13,6 @@ namespace OpenAI.Assistants
 {
     public partial class CodeInterpreterToolDefinition : IJsonModel<CodeInterpreterToolDefinition>
     {
-        void IJsonModel<CodeInterpreterToolDefinition>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<CodeInterpreterToolDefinition>)this).GetFormatFromOptions(options) : options.Format;

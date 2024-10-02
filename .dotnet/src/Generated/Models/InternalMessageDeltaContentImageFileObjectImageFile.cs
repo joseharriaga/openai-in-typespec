@@ -15,7 +15,7 @@ namespace OpenAI.Assistants
         {
         }
 
-        internal InternalMessageDeltaContentImageFileObjectImageFile(string fileId, InternalMessageDeltaContentImageFileObjectImageFileDetail? detail, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalMessageDeltaContentImageFileObjectImageFile(string fileId, string detail, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             FileId = fileId;
             Detail = detail;

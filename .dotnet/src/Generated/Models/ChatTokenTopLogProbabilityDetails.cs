@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenAI.Chat
 {
@@ -12,18 +11,18 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatTokenTopLogProbabilityDetails(string token, float logprob, IEnumerable<int> bytes)
+        internal ChatTokenTopLogProbabilityDetails(string token, float logProbability, ReadOnlyMemory<byte>? utf8Bytes)
         {
             Token = token;
-            Logprob = logprob;
-            Bytes = bytes?.ToList();
+            LogProbability = logProbability;
+            Utf8Bytes = utf8Bytes;
         }
 
-        internal ChatTokenTopLogProbabilityDetails(string token, float logprob, IList<int> bytes, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatTokenTopLogProbabilityDetails(string token, float logProbability, ReadOnlyMemory<byte>? utf8Bytes, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Token = token;
-            Logprob = logprob;
-            Bytes = bytes;
+            LogProbability = logProbability;
+            Utf8Bytes = utf8Bytes;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

@@ -31,7 +31,7 @@ namespace OpenAI.Assistants
             {
                 writer.WritePropertyName("vector_store_ids"u8);
                 writer.WriteStartArray();
-                foreach (var item in VectorStoreIds)
+                foreach (string item in VectorStoreIds)
                 {
                     if (item == null)
                     {
@@ -42,13 +42,13 @@ namespace OpenAI.Assistants
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsCollectionDefined(VectorStores))
+            if (Optional.IsCollectionDefined(NewVectorStores))
             {
                 writer.WritePropertyName("vector_stores"u8);
                 writer.WriteStartArray();
-                foreach (var item in VectorStores)
+                foreach (VectorStoreCreationHelper item in NewVectorStores)
                 {
-                    writer.WriteObjectValue<VectorStoreCreationHelper>(item, options);
+                    writer.WriteObjectValue(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -89,7 +89,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             IList<string> vectorStoreIds = default;
-            IList<VectorStoreCreationHelper> vectorStores = default;
+            IList<VectorStoreCreationHelper> newVectorStores = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -125,7 +125,7 @@ namespace OpenAI.Assistants
                     {
                         array.Add(VectorStoreCreationHelper.DeserializeVectorStoreCreationHelper(item, options));
                     }
-                    vectorStores = array;
+                    newVectorStores = array;
                     continue;
                 }
                 if (options.Format != "W")
@@ -133,7 +133,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new FileSearchToolResources(vectorStoreIds ?? new ChangeTrackingList<string>(), vectorStores ?? new ChangeTrackingList<VectorStoreCreationHelper>(), additionalBinaryDataProperties);
+            return new FileSearchToolResources(vectorStoreIds ?? new ChangeTrackingList<string>(), newVectorStores ?? new ChangeTrackingList<VectorStoreCreationHelper>(), additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<FileSearchToolResources>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

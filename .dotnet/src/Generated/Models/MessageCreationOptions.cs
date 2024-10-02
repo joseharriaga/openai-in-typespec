@@ -11,12 +11,12 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal MessageCreationOptions(Assistants.MessageRole role, IList<MessageContent> content, IList<MessageCreationAttachment> attachments, IDictionary<string, string> metadata, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal MessageCreationOptions(IList<MessageCreationAttachment> attachments, IDictionary<string, string> metadata, Assistants.MessageRole role, IList<MessageContent> content, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Role = role;
-            Content = content;
             Attachments = attachments;
             Metadata = metadata;
+            Role = role;
+            Content = content;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

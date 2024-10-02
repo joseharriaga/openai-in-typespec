@@ -35,7 +35,7 @@ namespace OpenAI.Chat
             writer.WriteStringValue(Id);
             writer.WritePropertyName("choices"u8);
             writer.WriteStartArray();
-            foreach (var item in Choices)
+            foreach (InternalCreateChatCompletionFunctionResponseChoice item in Choices)
             {
                 writer.WriteObjectValue(item, options);
             }

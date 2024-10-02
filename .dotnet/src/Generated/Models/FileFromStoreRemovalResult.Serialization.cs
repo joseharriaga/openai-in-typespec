@@ -32,11 +32,11 @@ namespace OpenAI.VectorStores
                 throw new FormatException($"The model {nameof(FileFromStoreRemovalResult)} does not support writing '{format}' format.");
             }
             writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
+            writer.WriteStringValue(FileId);
             writer.WritePropertyName("deleted"u8);
-            writer.WriteBooleanValue(Deleted);
+            writer.WriteBooleanValue(Removed);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
+            writer.WriteObjectValue<InternalDeleteVectorStoreFileResponseObject>(Object, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -73,25 +73,25 @@ namespace OpenAI.VectorStores
             {
                 return null;
             }
-            string id = default;
-            bool deleted = default;
+            string fileId = default;
+            bool removed = default;
             InternalDeleteVectorStoreFileResponseObject @object = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("id"u8))
                 {
-                    id = prop.Value.GetString();
+                    fileId = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("deleted"u8))
                 {
-                    deleted = prop.Value.GetBoolean();
+                    removed = prop.Value.GetBoolean();
                     continue;
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = new InternalDeleteVectorStoreFileResponseObject(prop.Value.GetString());
+                    @object = InternalDeleteVectorStoreFileResponseObject.DeserializeInternalDeleteVectorStoreFileResponseObject(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -99,7 +99,7 @@ namespace OpenAI.VectorStores
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new FileFromStoreRemovalResult(id, deleted, @object, additionalBinaryDataProperties);
+            return new FileFromStoreRemovalResult(fileId, removed, @object, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<FileFromStoreRemovalResult>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

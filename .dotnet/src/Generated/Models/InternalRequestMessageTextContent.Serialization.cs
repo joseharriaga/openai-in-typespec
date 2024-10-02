@@ -17,13 +17,6 @@ namespace OpenAI.Assistants
         {
         }
 
-        void IJsonModel<InternalRequestMessageTextContent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<InternalRequestMessageTextContent>)this).GetFormatFromOptions(options) : options.Format;
@@ -35,7 +28,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type.ToString());
             writer.WritePropertyName("text"u8);
-            writer.WriteStringValue(Text);
+            writer.WriteStringValue(InternalText);
         }
 
         InternalRequestMessageTextContent IJsonModel<InternalRequestMessageTextContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRequestMessageTextContent)JsonModelCreateCore(ref reader, options);
@@ -58,7 +51,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             InternalMessageRequestContentTextObjectType @type = default;
-            string text = default;
+            string internalText = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -69,7 +62,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("text"u8))
                 {
-                    text = prop.Value.GetString();
+                    internalText = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -77,7 +70,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRequestMessageTextContent(@type, text, additionalBinaryDataProperties);
+            return new InternalRequestMessageTextContent(@type, internalText, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalRequestMessageTextContent>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

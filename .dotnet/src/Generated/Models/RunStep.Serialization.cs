@@ -33,8 +33,6 @@ namespace OpenAI.Assistants
             }
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("assistant_id"u8);
@@ -47,8 +45,6 @@ namespace OpenAI.Assistants
             writer.WriteStringValue(Type.ToString());
             writer.WritePropertyName("status"u8);
             writer.WriteStringValue(Status.ToString());
-            writer.WritePropertyName("step_details"u8);
-            writer.WriteObjectValue<RunStepDetails>(StepDetails, options);
             if (LastError != null)
             {
                 writer.WritePropertyName("last_error"u8);
@@ -123,6 +119,10 @@ namespace OpenAI.Assistants
             {
                 writer.WriteNull("usage"u8);
             }
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalRunStepObjectObject>(Object, options);
+            writer.WritePropertyName("step_details"u8);
+            writer.WriteObjectValue<RunStepDetails>(Details, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -160,14 +160,12 @@ namespace OpenAI.Assistants
                 return null;
             }
             string id = default;
-            InternalRunStepObjectObject @object = default;
             DateTimeOffset createdAt = default;
             string assistantId = default;
             string threadId = default;
             string runId = default;
             RunStepType @type = default;
             RunStepStatus status = default;
-            RunStepDetails stepDetails = default;
             RunStepError lastError = default;
             DateTimeOffset? expiredAt = default;
             DateTimeOffset? cancelledAt = default;
@@ -175,17 +173,14 @@ namespace OpenAI.Assistants
             DateTimeOffset? completedAt = default;
             IDictionary<string, string> metadata = default;
             RunStepTokenUsage usage = default;
+            InternalRunStepObjectObject @object = default;
+            RunStepDetails details = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("id"u8))
                 {
                     id = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("object"u8))
-                {
-                    @object = new InternalRunStepObjectObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("created_at"u8))
@@ -216,11 +211,6 @@ namespace OpenAI.Assistants
                 if (prop.NameEquals("status"u8))
                 {
                     status = new RunStepStatus(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("step_details"u8))
-                {
-                    stepDetails = RunStepDetails.DeserializeRunStepDetails(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("last_error"u8))
@@ -305,6 +295,16 @@ namespace OpenAI.Assistants
                     usage = RunStepTokenUsage.DeserializeRunStepTokenUsage(prop.Value, options);
                     continue;
                 }
+                if (prop.NameEquals("object"u8))
+                {
+                    @object = InternalRunStepObjectObject.DeserializeInternalRunStepObjectObject(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("step_details"u8))
+                {
+                    details = RunStepDetails.DeserializeRunStepDetails(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -312,14 +312,12 @@ namespace OpenAI.Assistants
             }
             return new RunStep(
                 id,
-                @object,
                 createdAt,
                 assistantId,
                 threadId,
                 runId,
                 @type,
                 status,
-                stepDetails,
                 lastError,
                 expiredAt,
                 cancelledAt,
@@ -327,6 +325,8 @@ namespace OpenAI.Assistants
                 completedAt,
                 metadata,
                 usage,
+                @object,
+                details,
                 additionalBinaryDataProperties);
         }
 

@@ -17,10 +17,10 @@ namespace OpenAI.Assistants
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        internal ThreadModificationOptions(InternalModifyThreadRequestToolResources toolResources, IDictionary<string, string> metadata, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ThreadModificationOptions(IDictionary<string, string> metadata, ToolResources toolResources, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            ToolResources = toolResources;
             Metadata = metadata;
+            ToolResources = toolResources;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

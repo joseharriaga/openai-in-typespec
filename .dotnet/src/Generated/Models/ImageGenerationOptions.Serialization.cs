@@ -27,32 +27,6 @@ namespace OpenAI.Images
             {
                 throw new FormatException($"The model {nameof(ImageGenerationOptions)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("prompt"u8);
-            writer.WriteStringValue(Prompt);
-            if (Optional.IsDefined(Model))
-            {
-                if (Model != null)
-                {
-                    writer.WritePropertyName("model"u8);
-                    writer.WriteStringValue(Model.Value.ToString());
-                }
-                else
-                {
-                    writer.WriteNull("model"u8);
-                }
-            }
-            if (Optional.IsDefined(N))
-            {
-                if (N != null)
-                {
-                    writer.WritePropertyName("n"u8);
-                    writer.WriteNumberValue(N.Value);
-                }
-                else
-                {
-                    writer.WriteNull("n"u8);
-                }
-            }
             if (Optional.IsDefined(Quality))
             {
                 writer.WritePropertyName("quality"u8);
@@ -94,10 +68,10 @@ namespace OpenAI.Images
                     writer.WriteNull("style"u8);
                 }
             }
-            if (Optional.IsDefined(User))
+            if (Optional.IsDefined(EndUserId))
             {
                 writer.WritePropertyName("user"u8);
-                writer.WriteStringValue(User);
+                writer.WriteStringValue(EndUserId);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -135,42 +109,14 @@ namespace OpenAI.Images
             {
                 return null;
             }
-            string prompt = default;
-            InternalCreateImageRequestModel? model = default;
-            int? n = default;
             Images.GeneratedImageQuality? quality = default;
             Images.GeneratedImageFormat? responseFormat = default;
             GeneratedImageSize? size = default;
             Images.GeneratedImageStyle? style = default;
-            string user = default;
+            string endUserId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("prompt"u8))
-                {
-                    prompt = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("model"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        model = null;
-                        continue;
-                    }
-                    model = new InternalCreateImageRequestModel(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("n"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        n = null;
-                        continue;
-                    }
-                    n = prop.Value.GetInt32();
-                    continue;
-                }
                 if (prop.NameEquals("quality"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -213,12 +159,7 @@ namespace OpenAI.Images
                 }
                 if (prop.NameEquals("user"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        user = null;
-                        continue;
-                    }
-                    user = prop.Value.GetString();
+                    endUserId = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -227,14 +168,11 @@ namespace OpenAI.Images
                 }
             }
             return new ImageGenerationOptions(
-                prompt,
-                model,
-                n,
                 quality,
                 responseFormat,
                 size,
                 style,
-                user,
+                endUserId,
                 additionalBinaryDataProperties);
         }
 

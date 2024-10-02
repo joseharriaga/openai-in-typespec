@@ -11,18 +11,18 @@ namespace OpenAI.Audio
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal TranscribedWord(string word, TimeSpan start, TimeSpan end)
+        internal TranscribedWord(string word, TimeSpan startTime, TimeSpan endTime)
         {
             Word = word;
-            Start = start;
-            End = end;
+            StartTime = startTime;
+            EndTime = endTime;
         }
 
-        internal TranscribedWord(string word, TimeSpan start, TimeSpan end, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal TranscribedWord(string word, TimeSpan startTime, TimeSpan endTime, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Word = word;
-            Start = start;
-            End = end;
+            StartTime = startTime;
+            EndTime = endTime;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

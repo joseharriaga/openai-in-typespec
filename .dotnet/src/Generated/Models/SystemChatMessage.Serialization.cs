@@ -17,13 +17,6 @@ namespace OpenAI.Chat
         {
         }
 
-        void IJsonModel<SystemChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<SystemChatMessage>)this).GetFormatFromOptions(options) : options.Format;
@@ -41,10 +34,10 @@ namespace OpenAI.Chat
                 JsonSerializer.Serialize(writer, document.RootElement);
             }
 #endif
-            if (Optional.IsDefined(Name))
+            if (Optional.IsDefined(ParticipantName))
             {
                 writer.WritePropertyName("name"u8);
-                writer.WriteStringValue(Name);
+                writer.WriteStringValue(ParticipantName);
             }
         }
 
@@ -68,8 +61,8 @@ namespace OpenAI.Chat
                 return null;
             }
             BinaryData content = default;
-            string name = default;
-            string role = "system";
+            string participantName = default;
+            Chat.ChatMessageRole role = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -80,17 +73,12 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("name"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
-                    name = prop.Value.GetString();
+                    participantName = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("role"u8))
                 {
-                    role = prop.Value.GetString();
+                    role = prop.Value.GetInt32().ToChatMessageRole();
                     continue;
                 }
                 if (options.Format != "W")
@@ -98,7 +86,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new SystemChatMessage(content, name, role, additionalBinaryDataProperties);
+            return new SystemChatMessage(content, participantName, role, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<SystemChatMessage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -84,7 +84,7 @@ namespace OpenAI.FineTuning
             writer.WriteStringValue(OrganizationId);
             writer.WritePropertyName("result_files"u8);
             writer.WriteStartArray();
-            foreach (var item in ResultFiles)
+            foreach (string item in ResultFiles)
             {
                 if (item == null)
                 {
@@ -122,7 +122,7 @@ namespace OpenAI.FineTuning
                 {
                     writer.WritePropertyName("integrations"u8);
                     writer.WriteStartArray();
-                    foreach (var item in Integrations)
+                    foreach (InternalFineTuningIntegration item in Integrations)
                     {
                         writer.WriteObjectValue(item, options);
                     }

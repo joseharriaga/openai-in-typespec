@@ -19,7 +19,7 @@ namespace OpenAI.VectorStores
             FileId = fileId;
         }
 
-        internal InternalCreateVectorStoreFileRequest(string fileId, BinaryData chunkingStrategy, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalCreateVectorStoreFileRequest(string fileId, FileChunkingStrategy chunkingStrategy, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             FileId = fileId;
             ChunkingStrategy = chunkingStrategy;

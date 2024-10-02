@@ -36,7 +36,7 @@ namespace OpenAI.Assistants
             if (Optional.IsDefined(Detail))
             {
                 writer.WritePropertyName("detail"u8);
-                writer.WriteStringValue(Detail.Value.ToString());
+                writer.WriteStringValue(Detail);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -75,7 +75,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             Uri url = default;
-            InternalMessageContentImageUrlObjectImageUrlDetail? detail = default;
+            string detail = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -86,12 +86,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("detail"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        detail = null;
-                        continue;
-                    }
-                    detail = new InternalMessageContentImageUrlObjectImageUrlDetail(prop.Value.GetString());
+                    detail = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")

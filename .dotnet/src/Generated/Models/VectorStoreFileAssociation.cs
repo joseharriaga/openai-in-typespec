@@ -11,25 +11,26 @@ namespace OpenAI.VectorStores
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal VectorStoreFileAssociation(string id, int usageBytes, DateTimeOffset createdAt, string vectorStoreId, VectorStores.VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError)
+        internal VectorStoreFileAssociation(DateTimeOffset createdAt, string vectorStoreId, VectorStores.VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError, InternalVectorStoreFileObjectObject @object, string fileId, int size)
         {
-            Id = id;
-            UsageBytes = usageBytes;
             CreatedAt = createdAt;
             VectorStoreId = vectorStoreId;
             Status = status;
             LastError = lastError;
+            Object = @object;
+            FileId = fileId;
+            Size = size;
         }
 
-        internal VectorStoreFileAssociation(string id, InternalVectorStoreFileObjectObject @object, int usageBytes, DateTimeOffset createdAt, string vectorStoreId, VectorStores.VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError, BinaryData chunkingStrategy, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal VectorStoreFileAssociation(DateTimeOffset createdAt, string vectorStoreId, VectorStores.VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError, InternalVectorStoreFileObjectObject @object, string fileId, int size, FileChunkingStrategy chunkingStrategy, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Id = id;
-            Object = @object;
-            UsageBytes = usageBytes;
             CreatedAt = createdAt;
             VectorStoreId = vectorStoreId;
             Status = status;
             LastError = lastError;
+            Object = @object;
+            FileId = fileId;
+            Size = size;
             ChunkingStrategy = chunkingStrategy;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }

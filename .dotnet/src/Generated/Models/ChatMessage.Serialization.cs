@@ -13,13 +13,6 @@ namespace OpenAI.Chat
     [PersistableModelProxy(typeof(InternalUnknownChatMessage))]
     public abstract partial class ChatMessage : IJsonModel<ChatMessage>
     {
-        void IJsonModel<ChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<ChatMessage>)this).GetFormatFromOptions(options) : options.Format;
@@ -28,7 +21,7 @@ namespace OpenAI.Chat
                 throw new FormatException($"The model {nameof(ChatMessage)} does not support writing '{format}' format.");
             }
             writer.WritePropertyName("role"u8);
-            writer.WriteStringValue(Role);
+            writer.WriteNumberValue((int)Role);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

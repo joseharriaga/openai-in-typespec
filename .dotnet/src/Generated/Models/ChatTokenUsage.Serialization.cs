@@ -32,15 +32,15 @@ namespace OpenAI.Chat
                 throw new FormatException($"The model {nameof(ChatTokenUsage)} does not support writing '{format}' format.");
             }
             writer.WritePropertyName("completion_tokens"u8);
-            writer.WriteNumberValue(CompletionTokens);
+            writer.WriteNumberValue(OutputTokenCount);
             writer.WritePropertyName("prompt_tokens"u8);
-            writer.WriteNumberValue(PromptTokens);
+            writer.WriteNumberValue(InputTokenCount);
             writer.WritePropertyName("total_tokens"u8);
-            writer.WriteNumberValue(TotalTokens);
-            if (Optional.IsDefined(CompletionTokensDetails))
+            writer.WriteNumberValue(TotalTokenCount);
+            if (Optional.IsDefined(OutputTokenDetails))
             {
                 writer.WritePropertyName("completion_tokens_details"u8);
-                writer.WriteObjectValue<ChatOutputTokenUsageDetails>(CompletionTokensDetails, options);
+                writer.WriteObjectValue<ChatOutputTokenUsageDetails>(OutputTokenDetails, options);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -78,36 +78,35 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            int completionTokens = default;
-            int promptTokens = default;
-            int totalTokens = default;
-            ChatOutputTokenUsageDetails completionTokensDetails = default;
+            int outputTokenCount = default;
+            int inputTokenCount = default;
+            int totalTokenCount = default;
+            ChatOutputTokenUsageDetails outputTokenDetails = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("completion_tokens"u8))
                 {
-                    completionTokens = prop.Value.GetInt32();
+                    outputTokenCount = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("prompt_tokens"u8))
                 {
-                    promptTokens = prop.Value.GetInt32();
+                    inputTokenCount = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("total_tokens"u8))
                 {
-                    totalTokens = prop.Value.GetInt32();
+                    totalTokenCount = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("completion_tokens_details"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        completionTokensDetails = null;
                         continue;
                     }
-                    completionTokensDetails = ChatOutputTokenUsageDetails.DeserializeChatOutputTokenUsageDetails(prop.Value, options);
+                    outputTokenDetails = ChatOutputTokenUsageDetails.DeserializeChatOutputTokenUsageDetails(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -115,7 +114,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ChatTokenUsage(completionTokens, promptTokens, totalTokens, completionTokensDetails, additionalBinaryDataProperties);
+            return new ChatTokenUsage(outputTokenCount, inputTokenCount, totalTokenCount, outputTokenDetails, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ChatTokenUsage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

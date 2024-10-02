@@ -17,11 +17,11 @@ namespace OpenAI.VectorStores
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        internal VectorStoreModificationOptions(string name, VectorStoreExpirationPolicy expiresAfter, IDictionary<string, string> metadata, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal VectorStoreModificationOptions(string name, IDictionary<string, string> metadata, VectorStoreExpirationPolicy expirationPolicy, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Name = name;
-            ExpiresAfter = expiresAfter;
             Metadata = metadata;
+            ExpirationPolicy = expirationPolicy;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

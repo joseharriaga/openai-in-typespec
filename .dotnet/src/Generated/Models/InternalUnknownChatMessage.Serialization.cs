@@ -16,13 +16,6 @@ namespace OpenAI.Chat
         {
         }
 
-        void IJsonModel<ChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<ChatMessage>)this).GetFormatFromOptions(options) : options.Format;
@@ -52,13 +45,13 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            string role = "unknown";
+            Chat.ChatMessageRole role = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("role"u8))
                 {
-                    role = prop.Value.GetString();
+                    role = prop.Value.GetInt32().ToChatMessageRole();
                     continue;
                 }
                 if (options.Format != "W")

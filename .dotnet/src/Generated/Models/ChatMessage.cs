@@ -11,12 +11,12 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        private protected ChatMessage(string role)
+        private protected ChatMessage(Chat.ChatMessageRole role)
         {
             Role = role;
         }
 
-        internal ChatMessage(string role, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatMessage(Chat.ChatMessageRole role, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Role = role;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;

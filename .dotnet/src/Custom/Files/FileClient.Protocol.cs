@@ -248,7 +248,7 @@ public partial class FileClient
     /// <param name="uploadId"> The ID of the upload. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="uploadId"> or <paramref name="content"/> is null. </exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="uploadId"/> or <paramref name="content"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="uploadId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
@@ -265,7 +265,7 @@ public partial class FileClient
     /// <param name="uploadId"> The ID of the upload. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="uploadId"> or <paramref name="content"/> is null. </exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="uploadId"/> or <paramref name="content"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="uploadId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
@@ -281,7 +281,7 @@ public partial class FileClient
     /// <param name="uploadId"> The ID of the upload. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="uploadId"> or <paramref name="content"/> is null. </exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="uploadId"/> or <paramref name="content"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="uploadId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
@@ -297,7 +297,7 @@ public partial class FileClient
     /// <param name="uploadId"> The ID of the upload. </param>
     /// <param name="content"> The content to send as the body of the request. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="uploadId"> or <paramref name="content"/> is null. </exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="uploadId"/> or <paramref name="content"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="uploadId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
@@ -312,7 +312,7 @@ public partial class FileClient
     /// </summary>
     /// <param name="uploadId"> The ID of the upload. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="uploadId"> is null. </exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="uploadId"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="uploadId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
@@ -327,7 +327,7 @@ public partial class FileClient
     /// </summary>
     /// <param name="uploadId"> The ID of the upload. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="uploadId"> is null. </exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="uploadId"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="uploadId"/> is an empty string, and was expected to be non-empty. </exception>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>

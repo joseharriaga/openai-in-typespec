@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI;
 
@@ -13,13 +12,6 @@ namespace OpenAI.Images
 {
     public partial class GeneratedImageCollection : IJsonModel<GeneratedImageCollection>
     {
-        void IJsonModel<GeneratedImageCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<GeneratedImageCollection>)this).GetFormatFromOptions(options) : options.Format;
@@ -27,15 +19,6 @@ namespace OpenAI.Images
             {
                 throw new FormatException($"The model {nameof(GeneratedImageCollection)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("created"u8);
-            writer.WriteNumberValue(Created, "U");
-            writer.WritePropertyName("data"u8);
-            writer.WriteStartArray();
-            foreach (var item in Data)
-            {
-                writer.WriteObjectValue<GeneratedImage>(item, options);
-            }
-            writer.WriteEndArray();
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -63,41 +46,7 @@ namespace OpenAI.Images
                 throw new FormatException($"The model {nameof(GeneratedImageCollection)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeGeneratedImageCollection(document.RootElement, options);
-        }
-
-        internal static GeneratedImageCollection DeserializeGeneratedImageCollection(JsonElement element, ModelReaderWriterOptions options)
-        {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-            DateTimeOffset created = default;
-            IList<GeneratedImage> data = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            foreach (var prop in element.EnumerateObject())
-            {
-                if (prop.NameEquals("created"u8))
-                {
-                    created = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
-                    continue;
-                }
-                if (prop.NameEquals("data"u8))
-                {
-                    List<GeneratedImage> array = new List<GeneratedImage>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        array.Add(GeneratedImage.DeserializeGeneratedImage(item, options));
-                    }
-                    data = array;
-                    continue;
-                }
-                if (options.Format != "W")
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
-            }
-            return new GeneratedImageCollection(created, data, additionalBinaryDataProperties);
+            return GeneratedImageCollection.DeserializeGeneratedImageCollection(document.RootElement, options);
         }
 
         BinaryData IPersistableModel<GeneratedImageCollection>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
@@ -124,7 +73,7 @@ namespace OpenAI.Images
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeGeneratedImageCollection(document.RootElement, options);
+                        return GeneratedImageCollection.DeserializeGeneratedImageCollection(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(GeneratedImageCollection)} does not support reading '{options.Format}' format.");
@@ -142,7 +91,7 @@ namespace OpenAI.Images
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeGeneratedImageCollection(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return GeneratedImageCollection.DeserializeGeneratedImageCollection(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

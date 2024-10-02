@@ -11,7 +11,7 @@ namespace OpenAI.VectorStores
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal VectorStore(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStores.VectorStoreStatus status, DateTimeOffset? lastActiveAt, IDictionary<string, string> metadata)
+        internal VectorStore(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStores.VectorStoreStatus status, DateTimeOffset? lastActiveAt, IDictionary<string, string> metadata, InternalVectorStoreObjectObject @object)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -21,21 +21,22 @@ namespace OpenAI.VectorStores
             Status = status;
             LastActiveAt = lastActiveAt;
             Metadata = metadata;
+            Object = @object;
         }
 
-        internal VectorStore(string id, InternalVectorStoreObjectObject @object, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStores.VectorStoreStatus status, VectorStoreExpirationPolicy expiresAfter, DateTimeOffset? expiresAt, DateTimeOffset? lastActiveAt, IDictionary<string, string> metadata, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal VectorStore(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStores.VectorStoreStatus status, DateTimeOffset? expiresAt, DateTimeOffset? lastActiveAt, IDictionary<string, string> metadata, InternalVectorStoreObjectObject @object, VectorStoreExpirationPolicy expirationPolicy, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Object = @object;
             CreatedAt = createdAt;
             Name = name;
             UsageBytes = usageBytes;
             FileCounts = fileCounts;
             Status = status;
-            ExpiresAfter = expiresAfter;
             ExpiresAt = expiresAt;
             LastActiveAt = lastActiveAt;
             Metadata = metadata;
+            Object = @object;
+            ExpirationPolicy = expirationPolicy;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

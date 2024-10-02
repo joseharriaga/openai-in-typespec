@@ -20,7 +20,7 @@ namespace OpenAI.Assistants
             Content = new ChangeTrackingList<InternalRunStepDetailsToolCallsFileSearchResultObjectContent>();
         }
 
-        internal RunStepFileSearchResult(string fileId, string fileName, float score, IList<InternalRunStepDetailsToolCallsFileSearchResultObjectContent> content, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal RunStepFileSearchResult(string fileId, string fileName, float score, IReadOnlyList<InternalRunStepDetailsToolCallsFileSearchResultObjectContent> content, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             FileId = fileId;
             FileName = fileName;

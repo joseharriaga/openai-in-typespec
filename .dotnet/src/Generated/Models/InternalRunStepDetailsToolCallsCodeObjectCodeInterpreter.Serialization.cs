@@ -35,7 +35,7 @@ namespace OpenAI.Assistants
             writer.WriteStringValue(Input);
             writer.WritePropertyName("outputs"u8);
             writer.WriteStartArray();
-            foreach (var item in Outputs)
+            foreach (RunStepCodeInterpreterOutput item in Outputs)
             {
                 writer.WriteObjectValue(item, options);
             }

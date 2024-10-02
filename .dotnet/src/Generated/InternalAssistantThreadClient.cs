@@ -5,8 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading.Tasks;
-using OpenAI;
 
 namespace OpenAI.Assistants
 {
@@ -22,71 +20,5 @@ namespace OpenAI.Assistants
         }
 
         public ClientPipeline Pipeline { get; }
-
-        public virtual ClientResult CreateThread(BinaryContent content, RequestOptions options)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateCreateThreadRequest(content, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> CreateThreadAsync(BinaryContent content, RequestOptions options)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateCreateThreadRequest(content, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult GetThread(string thread_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-
-            using PipelineMessage message = CreateGetThreadRequest(thread_id, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> GetThreadAsync(string thread_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-
-            using PipelineMessage message = CreateGetThreadRequest(thread_id, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult ModifyThread(string thread_id, BinaryContent content, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateModifyThreadRequest(thread_id, content, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> ModifyThreadAsync(string thread_id, BinaryContent content, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateModifyThreadRequest(thread_id, content, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult DeleteThread(string thread_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-
-            using PipelineMessage message = CreateDeleteThreadRequest(thread_id, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> DeleteThreadAsync(string thread_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-
-            using PipelineMessage message = CreateDeleteThreadRequest(thread_id, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
     }
 }

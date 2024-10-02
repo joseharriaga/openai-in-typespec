@@ -31,12 +31,10 @@ namespace OpenAI.VectorStores
             {
                 throw new FormatException($"The model {nameof(VectorStoreDeletionResult)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
             writer.WritePropertyName("deleted"u8);
             writer.WriteBooleanValue(Deleted);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
+            writer.WritePropertyName("id"u8);
+            writer.WriteStringValue(VectorStoreId);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -73,25 +71,19 @@ namespace OpenAI.VectorStores
             {
                 return null;
             }
-            string id = default;
             bool deleted = default;
-            InternalDeleteVectorStoreResponseObject @object = default;
+            string vectorStoreId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("id"u8))
-                {
-                    id = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("deleted"u8))
                 {
                     deleted = prop.Value.GetBoolean();
                     continue;
                 }
-                if (prop.NameEquals("object"u8))
+                if (prop.NameEquals("id"u8))
                 {
-                    @object = new InternalDeleteVectorStoreResponseObject(prop.Value.GetString());
+                    vectorStoreId = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -99,7 +91,7 @@ namespace OpenAI.VectorStores
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new VectorStoreDeletionResult(id, deleted, @object, additionalBinaryDataProperties);
+            return new VectorStoreDeletionResult(deleted, vectorStoreId, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<VectorStoreDeletionResult>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

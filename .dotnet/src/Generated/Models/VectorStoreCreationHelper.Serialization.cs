@@ -8,6 +8,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI;
+using OpenAI.VectorStores;
 
 namespace OpenAI.Assistants
 {
@@ -31,7 +32,7 @@ namespace OpenAI.Assistants
             {
                 writer.WritePropertyName("file_ids"u8);
                 writer.WriteStartArray();
-                foreach (var item in FileIds)
+                foreach (string item in FileIds)
                 {
                     if (item == null)
                     {
@@ -41,18 +42,6 @@ namespace OpenAI.Assistants
                     writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
-            }
-            if (Optional.IsDefined(ChunkingStrategy))
-            {
-                writer.WritePropertyName("chunking_strategy"u8);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(ChunkingStrategy);
-#else
-                using (JsonDocument document = JsonDocument.Parse(ChunkingStrategy))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
             }
             if (Optional.IsCollectionDefined(Metadata))
             {
@@ -69,6 +58,11 @@ namespace OpenAI.Assistants
                     writer.WriteStringValue(item.Value);
                 }
                 writer.WriteEndObject();
+            }
+            if (Optional.IsDefined(ChunkingStrategy))
+            {
+                writer.WritePropertyName("chunking_strategy"u8);
+                writer.WriteObjectValue<FileChunkingStrategy>(ChunkingStrategy, options);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -107,8 +101,8 @@ namespace OpenAI.Assistants
                 return null;
             }
             IList<string> fileIds = default;
-            BinaryData chunkingStrategy = default;
             IDictionary<string, string> metadata = default;
+            FileChunkingStrategy chunkingStrategy = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -133,16 +127,6 @@ namespace OpenAI.Assistants
                     fileIds = array;
                     continue;
                 }
-                if (prop.NameEquals("chunking_strategy"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        chunkingStrategy = null;
-                        continue;
-                    }
-                    chunkingStrategy = BinaryData.FromString(prop.Value.GetRawText());
-                    continue;
-                }
                 if (prop.NameEquals("metadata"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -164,12 +148,21 @@ namespace OpenAI.Assistants
                     metadata = dictionary;
                     continue;
                 }
+                if (prop.NameEquals("chunking_strategy"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    chunkingStrategy = FileChunkingStrategy.DeserializeFileChunkingStrategy(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new VectorStoreCreationHelper(fileIds ?? new ChangeTrackingList<string>(), chunkingStrategy, metadata ?? new ChangeTrackingDictionary<string, string>(), additionalBinaryDataProperties);
+            return new VectorStoreCreationHelper(fileIds ?? new ChangeTrackingList<string>(), metadata ?? new ChangeTrackingDictionary<string, string>(), chunkingStrategy, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<VectorStoreCreationHelper>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

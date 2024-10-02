@@ -27,10 +27,6 @@ namespace OpenAI.Audio
             {
                 throw new FormatException($"The model {nameof(AudioTranscriptionOptions)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("file"u8);
-            writer.WriteBase64StringValue(File.ToArray(), "D");
-            writer.WritePropertyName("model"u8);
-            writer.WriteStringValue(Model.ToString());
             if (Optional.IsDefined(Language))
             {
                 writer.WritePropertyName("language"u8);
@@ -50,16 +46,6 @@ namespace OpenAI.Audio
             {
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
-            }
-            if (Optional.IsCollectionDefined(TimestampGranularities))
-            {
-                writer.WritePropertyName("timestamp_granularities"u8);
-                writer.WriteStartArray();
-                foreach (var item in TimestampGranularities)
-                {
-                    writer.WriteStringValue(item.ToString());
-                }
-                writer.WriteEndArray();
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -97,26 +83,13 @@ namespace OpenAI.Audio
             {
                 return null;
             }
-            BinaryData @file = default;
-            InternalCreateTranscriptionRequestModel model = default;
             string language = default;
             string prompt = default;
             Audio.AudioTranscriptionFormat? responseFormat = default;
             float? temperature = default;
-            IList<InternalCreateTranscriptionRequestTimestampGranularity> timestampGranularities = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("file"u8))
-                {
-                    @file = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
-                    continue;
-                }
-                if (prop.NameEquals("model"u8))
-                {
-                    model = new InternalCreateTranscriptionRequestModel(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("language"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -157,34 +130,12 @@ namespace OpenAI.Audio
                     temperature = prop.Value.GetSingle();
                     continue;
                 }
-                if (prop.NameEquals("timestamp_granularities"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    List<InternalCreateTranscriptionRequestTimestampGranularity> array = new List<InternalCreateTranscriptionRequestTimestampGranularity>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        array.Add(new InternalCreateTranscriptionRequestTimestampGranularity(item.GetString()));
-                    }
-                    timestampGranularities = array;
-                    continue;
-                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new AudioTranscriptionOptions(
-                @file,
-                model,
-                language,
-                prompt,
-                responseFormat,
-                temperature,
-                timestampGranularities ?? new ChangeTrackingList<InternalCreateTranscriptionRequestTimestampGranularity>(),
-                additionalBinaryDataProperties);
+            return new AudioTranscriptionOptions(language, prompt, responseFormat, temperature, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<AudioTranscriptionOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -11,12 +11,12 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal StreamingChatToolCallUpdate(int index, string id, InternalChatCompletionMessageToolCallChunkType? @type, InternalChatCompletionMessageToolCallChunkFunction function, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal StreamingChatToolCallUpdate(int index, string id, InternalChatCompletionMessageToolCallChunkFunction function, ChatToolCallKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Index = index;
             Id = id;
-            Type = @type;
             Function = function;
+            Kind = kind;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

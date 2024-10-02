@@ -35,7 +35,7 @@ namespace OpenAI.Chat
             {
                 writer.WritePropertyName("content"u8);
                 writer.WriteStartArray();
-                foreach (var item in Content)
+                foreach (ChatTokenLogProbabilityDetails item in Content)
                 {
                     writer.WriteObjectValue(item, options);
                 }
@@ -49,7 +49,7 @@ namespace OpenAI.Chat
             {
                 writer.WritePropertyName("refusal"u8);
                 writer.WriteStartArray();
-                foreach (var item in Refusal)
+                foreach (ChatTokenLogProbabilityDetails item in Refusal)
                 {
                     writer.WriteObjectValue(item, options);
                 }

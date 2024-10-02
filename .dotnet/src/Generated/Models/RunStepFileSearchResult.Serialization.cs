@@ -41,9 +41,9 @@ namespace OpenAI.Assistants
             {
                 writer.WritePropertyName("content"u8);
                 writer.WriteStartArray();
-                foreach (var item in Content)
+                foreach (InternalRunStepDetailsToolCallsFileSearchResultObjectContent item in Content)
                 {
-                    writer.WriteObjectValue<InternalRunStepDetailsToolCallsFileSearchResultObjectContent>(item, options);
+                    writer.WriteObjectValue(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -86,7 +86,7 @@ namespace OpenAI.Assistants
             string fileId = default;
             string fileName = default;
             float score = default;
-            IList<InternalRunStepDetailsToolCallsFileSearchResultObjectContent> content = default;
+            IReadOnlyList<InternalRunStepDetailsToolCallsFileSearchResultObjectContent> content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {

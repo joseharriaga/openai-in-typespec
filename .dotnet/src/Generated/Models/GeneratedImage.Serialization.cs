@@ -27,20 +27,20 @@ namespace OpenAI.Images
             {
                 throw new FormatException($"The model {nameof(GeneratedImage)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(B64Json))
-            {
-                writer.WritePropertyName("b64_json"u8);
-                writer.WriteBase64StringValue(B64Json.ToArray(), "D");
-            }
-            if (Optional.IsDefined(Url))
-            {
-                writer.WritePropertyName("url"u8);
-                writer.WriteStringValue(Url.AbsoluteUri);
-            }
             if (Optional.IsDefined(RevisedPrompt))
             {
                 writer.WritePropertyName("revised_prompt"u8);
                 writer.WriteStringValue(RevisedPrompt);
+            }
+            if (Optional.IsDefined(ImageBytes))
+            {
+                writer.WritePropertyName("b64_json"u8);
+                writer.WriteObjectValue<BinaryData>(ImageBytes, options);
+            }
+            if (Optional.IsDefined(ImageUri))
+            {
+                writer.WritePropertyName("url"u8);
+                writer.WriteObjectValue<Uri>(ImageUri, options);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -78,32 +78,12 @@ namespace OpenAI.Images
             {
                 return null;
             }
-            BinaryData b64Json = default;
-            Uri url = default;
             string revisedPrompt = default;
+            BinaryData imageBytes = default;
+            Uri imageUri = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("b64_json"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        b64Json = null;
-                        continue;
-                    }
-                    b64Json = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
-                    continue;
-                }
-                if (prop.NameEquals("url"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        url = null;
-                        continue;
-                    }
-                    url = new Uri(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("revised_prompt"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -114,12 +94,30 @@ namespace OpenAI.Images
                     revisedPrompt = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("b64_json"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    imageBytes = BinaryData.DeserializeBinaryData(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("url"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    imageUri = Uri.DeserializeUri(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new GeneratedImage(b64Json, url, revisedPrompt, additionalBinaryDataProperties);
+            return new GeneratedImage(revisedPrompt, imageBytes, imageUri, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<GeneratedImage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

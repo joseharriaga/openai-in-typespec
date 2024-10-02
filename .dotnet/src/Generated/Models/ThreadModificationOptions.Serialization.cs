@@ -27,18 +27,6 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(ThreadModificationOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(ToolResources))
-            {
-                if (ToolResources != null)
-                {
-                    writer.WritePropertyName("tool_resources"u8);
-                    writer.WriteObjectValue<InternalModifyThreadRequestToolResources>(ToolResources, options);
-                }
-                else
-                {
-                    writer.WriteNull("toolResources"u8);
-                }
-            }
             if (Optional.IsCollectionDefined(Metadata))
             {
                 if (Metadata != null)
@@ -60,6 +48,18 @@ namespace OpenAI.Assistants
                 else
                 {
                     writer.WriteNull("metadata"u8);
+                }
+            }
+            if (Optional.IsDefined(ToolResources))
+            {
+                if (ToolResources != null)
+                {
+                    writer.WritePropertyName("tool_resources"u8);
+                    writer.WriteObjectValue(ToolResources, options);
+                }
+                else
+                {
+                    writer.WriteNull("toolResources"u8);
                 }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
@@ -98,21 +98,11 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            InternalModifyThreadRequestToolResources toolResources = default;
             IDictionary<string, string> metadata = default;
+            ToolResources toolResources = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("tool_resources"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        toolResources = null;
-                        continue;
-                    }
-                    toolResources = InternalModifyThreadRequestToolResources.DeserializeInternalModifyThreadRequestToolResources(prop.Value, options);
-                    continue;
-                }
                 if (prop.NameEquals("metadata"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -134,12 +124,21 @@ namespace OpenAI.Assistants
                     metadata = dictionary;
                     continue;
                 }
+                if (prop.NameEquals("tool_resources"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    toolResources = ToolResources.DeserializeToolResources(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ThreadModificationOptions(toolResources, metadata ?? new ChangeTrackingDictionary<string, string>(), additionalBinaryDataProperties);
+            return new ThreadModificationOptions(metadata ?? new ChangeTrackingDictionary<string, string>(), toolResources, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ThreadModificationOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

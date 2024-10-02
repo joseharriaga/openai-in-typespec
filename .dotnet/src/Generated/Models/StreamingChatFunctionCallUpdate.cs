@@ -15,10 +15,10 @@ namespace OpenAI.Chat
         {
         }
 
-        internal StreamingChatFunctionCallUpdate(string arguments, string name, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal StreamingChatFunctionCallUpdate(string functionName, string functionArgumentsUpdate, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Arguments = arguments;
-            Name = name;
+            FunctionName = functionName;
+            FunctionArgumentsUpdate = functionArgumentsUpdate;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

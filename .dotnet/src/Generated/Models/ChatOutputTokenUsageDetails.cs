@@ -15,9 +15,9 @@ namespace OpenAI.Chat
         {
         }
 
-        internal ChatOutputTokenUsageDetails(int? reasoningTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatOutputTokenUsageDetails(int reasoningTokenCount, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            ReasoningTokens = reasoningTokens;
+            ReasoningTokenCount = reasoningTokenCount;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

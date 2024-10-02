@@ -19,7 +19,7 @@ namespace OpenAI.Assistants
             FileId = fileId;
         }
 
-        internal InternalMessageContentItemFileObjectImageFile(string fileId, InternalMessageContentImageFileObjectImageFileDetail? detail, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalMessageContentItemFileObjectImageFile(string fileId, string detail, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             FileId = fileId;
             Detail = detail;

@@ -38,16 +38,13 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(Id);
             }
-            if (Optional.IsDefined(Type))
-            {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type.Value.ToString());
-            }
             if (Optional.IsDefined(Function))
             {
                 writer.WritePropertyName("function"u8);
                 writer.WriteObjectValue<InternalChatCompletionMessageToolCallChunkFunction>(Function, options);
             }
+            writer.WritePropertyName("type"u8);
+            writer.WriteObjectValue<ChatToolCallKind>(Kind, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -86,8 +83,8 @@ namespace OpenAI.Chat
             }
             int index = default;
             string id = default;
-            InternalChatCompletionMessageToolCallChunkType? @type = default;
             InternalChatCompletionMessageToolCallChunkFunction function = default;
+            ChatToolCallKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -106,24 +103,22 @@ namespace OpenAI.Chat
                     id = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        @type = null;
-                        continue;
-                    }
-                    @type = new InternalChatCompletionMessageToolCallChunkType(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("function"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        function = null;
                         continue;
                     }
                     function = InternalChatCompletionMessageToolCallChunkFunction.DeserializeInternalChatCompletionMessageToolCallChunkFunction(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("type"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    kind = ChatToolCallKind.DeserializeChatToolCallKind(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -131,7 +126,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new StreamingChatToolCallUpdate(index, id, @type, function, additionalBinaryDataProperties);
+            return new StreamingChatToolCallUpdate(index, id, function, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<StreamingChatToolCallUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

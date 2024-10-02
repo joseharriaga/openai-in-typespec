@@ -32,7 +32,7 @@ namespace OpenAI.FineTuning
             {
                 writer.WritePropertyName("messages"u8);
                 writer.WriteStartArray();
-                foreach (var item in Messages)
+                foreach (BinaryData item in Messages)
                 {
                     if (item == null)
                     {
@@ -54,7 +54,7 @@ namespace OpenAI.FineTuning
             {
                 writer.WritePropertyName("tools"u8);
                 writer.WriteStartArray();
-                foreach (var item in Tools)
+                foreach (ChatTool item in Tools)
                 {
                     writer.WriteObjectValue(item, options);
                 }
@@ -69,7 +69,7 @@ namespace OpenAI.FineTuning
             {
                 writer.WritePropertyName("functions"u8);
                 writer.WriteStartArray();
-                foreach (var item in Functions)
+                foreach (ChatFunction item in Functions)
                 {
                     writer.WriteObjectValue(item, options);
                 }

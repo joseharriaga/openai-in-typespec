@@ -38,7 +38,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateCreateRunRequest(string thread_id, BinaryContent content, RequestOptions options)
+        internal PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -47,7 +47,7 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/runs", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
@@ -57,7 +57,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateListRunsRequest(string thread_id, int? limit, string order, string after, string before, RequestOptions options)
+        internal PipelineMessage CreateListRunsRequest(string threadId, int? limit, string order, string after, string before, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -66,7 +66,7 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/runs", false);
             if (limit != null)
             {
@@ -90,7 +90,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateGetRunRequest(string thread_id, string run_id, RequestOptions options)
+        internal PipelineMessage CreateGetRunRequest(string threadId, string runId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -99,16 +99,16 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/runs/", false);
-            uri.AppendPath(run_id, true);
+            uri.AppendPath(runId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateModifyRunRequest(string thread_id, string run_id, BinaryContent content, RequestOptions options)
+        internal PipelineMessage CreateModifyRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -117,9 +117,9 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/runs/", false);
-            uri.AppendPath(run_id, true);
+            uri.AppendPath(runId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
@@ -128,7 +128,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateCancelRunRequest(string thread_id, string run_id, RequestOptions options)
+        internal PipelineMessage CreateCancelRunRequest(string threadId, string runId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -137,9 +137,9 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/runs/", false);
-            uri.AppendPath(run_id, true);
+            uri.AppendPath(runId, true);
             uri.AppendPath("/cancel", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
@@ -147,7 +147,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateSubmitToolOutputsToRunRequest(string thread_id, string run_id, BinaryContent content, RequestOptions options)
+        internal PipelineMessage CreateSubmitToolOutputsToRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -156,9 +156,9 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/runs/", false);
-            uri.AppendPath(run_id, true);
+            uri.AppendPath(runId, true);
             uri.AppendPath("/submit_tool_outputs", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
@@ -168,7 +168,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateListRunStepsRequest(string thread_id, string run_id, int? limit, string order, string after, string before, RequestOptions options)
+        internal PipelineMessage CreateListRunStepsRequest(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -177,9 +177,9 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/runs/", false);
-            uri.AppendPath(run_id, true);
+            uri.AppendPath(runId, true);
             uri.AppendPath("/steps", false);
             if (limit != null)
             {
@@ -203,7 +203,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateGetRunStepRequest(string thread_id, string run_id, string step_id, RequestOptions options)
+        internal PipelineMessage CreateGetRunStepRequest(string threadId, string runId, string stepId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -212,11 +212,11 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/runs/", false);
-            uri.AppendPath(run_id, true);
+            uri.AppendPath(runId, true);
             uri.AppendPath("/steps/", false);
-            uri.AppendPath(step_id, true);
+            uri.AppendPath(stepId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);

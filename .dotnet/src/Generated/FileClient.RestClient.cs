@@ -57,7 +57,7 @@ namespace OpenAI.Files
             return message;
         }
 
-        internal PipelineMessage CreateRetrieveFileRequest(string file_id, RequestOptions options)
+        internal PipelineMessage CreateRetrieveFileRequest(string fileId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -66,14 +66,14 @@ namespace OpenAI.Files
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/files/", false);
-            uri.AppendPath(file_id, true);
+            uri.AppendPath(fileId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateDeleteFileRequest(string file_id, RequestOptions options)
+        internal PipelineMessage CreateDeleteFileRequest(string fileId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -82,14 +82,14 @@ namespace OpenAI.Files
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/files/", false);
-            uri.AppendPath(file_id, true);
+            uri.AppendPath(fileId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateDownloadFileRequest(string file_id, RequestOptions options)
+        internal PipelineMessage CreateDownloadFileRequest(string fileId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -98,7 +98,7 @@ namespace OpenAI.Files
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/files/", false);
-            uri.AppendPath(file_id, true);
+            uri.AppendPath(fileId, true);
             uri.AppendPath("/content", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");

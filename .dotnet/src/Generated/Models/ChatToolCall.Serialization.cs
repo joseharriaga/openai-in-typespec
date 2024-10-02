@@ -33,10 +33,10 @@ namespace OpenAI.Chat
             }
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type.ToString());
             writer.WritePropertyName("function"u8);
             writer.WriteObjectValue<InternalChatCompletionMessageToolCallFunction>(Function, options);
+            writer.WritePropertyName("type"u8);
+            writer.WriteObjectValue<ChatToolCallKind>(Kind, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -74,8 +74,8 @@ namespace OpenAI.Chat
                 return null;
             }
             string id = default;
-            ChatToolCallKind @type = default;
             InternalChatCompletionMessageToolCallFunction function = default;
+            ChatToolCallKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -84,14 +84,14 @@ namespace OpenAI.Chat
                     id = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = new ChatToolCallKind(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("function"u8))
                 {
                     function = InternalChatCompletionMessageToolCallFunction.DeserializeInternalChatCompletionMessageToolCallFunction(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = ChatToolCallKind.DeserializeChatToolCallKind(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -99,7 +99,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ChatToolCall(id, @type, function, additionalBinaryDataProperties);
+            return new ChatToolCall(id, function, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ChatToolCall>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

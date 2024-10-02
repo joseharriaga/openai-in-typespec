@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI;
 
@@ -13,13 +12,6 @@ namespace OpenAI.Files
 {
     public partial class OpenAIFileInfoCollection : IJsonModel<OpenAIFileInfoCollection>
     {
-        void IJsonModel<OpenAIFileInfoCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<OpenAIFileInfoCollection>)this).GetFormatFromOptions(options) : options.Format;
@@ -27,15 +19,6 @@ namespace OpenAI.Files
             {
                 throw new FormatException($"The model {nameof(OpenAIFileInfoCollection)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("data"u8);
-            writer.WriteStartArray();
-            foreach (var item in Data)
-            {
-                writer.WriteObjectValue<OpenAIFileInfo>(item, options);
-            }
-            writer.WriteEndArray();
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -63,41 +46,7 @@ namespace OpenAI.Files
                 throw new FormatException($"The model {nameof(OpenAIFileInfoCollection)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeOpenAIFileInfoCollection(document.RootElement, options);
-        }
-
-        internal static OpenAIFileInfoCollection DeserializeOpenAIFileInfoCollection(JsonElement element, ModelReaderWriterOptions options)
-        {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-            IList<OpenAIFileInfo> data = default;
-            InternalListFilesResponseObject @object = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            foreach (var prop in element.EnumerateObject())
-            {
-                if (prop.NameEquals("data"u8))
-                {
-                    List<OpenAIFileInfo> array = new List<OpenAIFileInfo>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        array.Add(OpenAIFileInfo.DeserializeOpenAIFileInfo(item, options));
-                    }
-                    data = array;
-                    continue;
-                }
-                if (prop.NameEquals("object"u8))
-                {
-                    @object = new InternalListFilesResponseObject(prop.Value.GetString());
-                    continue;
-                }
-                if (options.Format != "W")
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
-            }
-            return new OpenAIFileInfoCollection(data, @object, additionalBinaryDataProperties);
+            return OpenAIFileInfoCollection.DeserializeOpenAIFileInfoCollection(document.RootElement, options);
         }
 
         BinaryData IPersistableModel<OpenAIFileInfoCollection>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
@@ -124,7 +73,7 @@ namespace OpenAI.Files
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeOpenAIFileInfoCollection(document.RootElement, options);
+                        return OpenAIFileInfoCollection.DeserializeOpenAIFileInfoCollection(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(OpenAIFileInfoCollection)} does not support reading '{options.Format}' format.");
@@ -142,7 +91,7 @@ namespace OpenAI.Files
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeOpenAIFileInfoCollection(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return OpenAIFileInfoCollection.DeserializeOpenAIFileInfoCollection(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -47,67 +47,67 @@ namespace OpenAI.FineTuning
             return ClientResult.FromValue((InternalListPaginatedFineTuningJobsResponse)result, result.GetRawResponse());
         }
 
-        public virtual ClientResult ListFineTuningJobCheckpoints(string fine_tuning_job_id, string after, int? limit, RequestOptions options)
+        public virtual ClientResult ListFineTuningJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options)
         {
-            Argument.AssertNotNull(fine_tuning_job_id, nameof(fine_tuning_job_id));
+            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
 
-            using PipelineMessage message = CreateListFineTuningJobCheckpointsRequest(fine_tuning_job_id, after, limit, options);
+            using PipelineMessage message = CreateListFineTuningJobCheckpointsRequest(fineTuningJobId, after, limit, options);
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> ListFineTuningJobCheckpointsAsync(string fine_tuning_job_id, string after, int? limit, RequestOptions options)
+        public virtual async Task<ClientResult> ListFineTuningJobCheckpointsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
         {
-            Argument.AssertNotNull(fine_tuning_job_id, nameof(fine_tuning_job_id));
+            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
 
-            using PipelineMessage message = CreateListFineTuningJobCheckpointsRequest(fine_tuning_job_id, after, limit, options);
+            using PipelineMessage message = CreateListFineTuningJobCheckpointsRequest(fineTuningJobId, after, limit, options);
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult<InternalListFineTuningJobCheckpointsResponse> ListFineTuningJobCheckpoints(string fine_tuning_job_id, string after, int? limit)
+        public virtual ClientResult<InternalListFineTuningJobCheckpointsResponse> ListFineTuningJobCheckpoints(string fineTuningJobId, string after, int? limit)
         {
-            Argument.AssertNotNull(fine_tuning_job_id, nameof(fine_tuning_job_id));
+            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
 
-            ClientResult result = ListFineTuningJobCheckpoints(fine_tuning_job_id, after, limit, null);
+            ClientResult result = ListFineTuningJobCheckpoints(fineTuningJobId, after, limit, null);
             return ClientResult.FromValue((InternalListFineTuningJobCheckpointsResponse)result, result.GetRawResponse());
         }
 
-        public virtual async Task<ClientResult<InternalListFineTuningJobCheckpointsResponse>> ListFineTuningJobCheckpointsAsync(string fine_tuning_job_id, string after, int? limit)
+        public virtual async Task<ClientResult<InternalListFineTuningJobCheckpointsResponse>> ListFineTuningJobCheckpointsAsync(string fineTuningJobId, string after, int? limit)
         {
-            Argument.AssertNotNull(fine_tuning_job_id, nameof(fine_tuning_job_id));
+            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
 
-            ClientResult result = await ListFineTuningJobCheckpointsAsync(fine_tuning_job_id, after, limit, null).ConfigureAwait(false);
+            ClientResult result = await ListFineTuningJobCheckpointsAsync(fineTuningJobId, after, limit, null).ConfigureAwait(false);
             return ClientResult.FromValue((InternalListFineTuningJobCheckpointsResponse)result, result.GetRawResponse());
         }
 
-        public virtual ClientResult ListFineTuningEvents(string fine_tuning_job_id, string after, int? limit, RequestOptions options)
+        public virtual ClientResult ListFineTuningEvents(string fineTuningJobId, string after, int? limit, RequestOptions options)
         {
-            Argument.AssertNotNull(fine_tuning_job_id, nameof(fine_tuning_job_id));
+            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
 
-            using PipelineMessage message = CreateListFineTuningEventsRequest(fine_tuning_job_id, after, limit, options);
+            using PipelineMessage message = CreateListFineTuningEventsRequest(fineTuningJobId, after, limit, options);
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> ListFineTuningEventsAsync(string fine_tuning_job_id, string after, int? limit, RequestOptions options)
+        public virtual async Task<ClientResult> ListFineTuningEventsAsync(string fineTuningJobId, string after, int? limit, RequestOptions options)
         {
-            Argument.AssertNotNull(fine_tuning_job_id, nameof(fine_tuning_job_id));
+            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
 
-            using PipelineMessage message = CreateListFineTuningEventsRequest(fine_tuning_job_id, after, limit, options);
+            using PipelineMessage message = CreateListFineTuningEventsRequest(fineTuningJobId, after, limit, options);
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult<InternalListFineTuningJobEventsResponse> ListFineTuningEvents(string fine_tuning_job_id, string after, int? limit)
+        public virtual ClientResult<InternalListFineTuningJobEventsResponse> ListFineTuningEvents(string fineTuningJobId, string after, int? limit)
         {
-            Argument.AssertNotNull(fine_tuning_job_id, nameof(fine_tuning_job_id));
+            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
 
-            ClientResult result = ListFineTuningEvents(fine_tuning_job_id, after, limit, null);
+            ClientResult result = ListFineTuningEvents(fineTuningJobId, after, limit, null);
             return ClientResult.FromValue((InternalListFineTuningJobEventsResponse)result, result.GetRawResponse());
         }
 
-        public virtual async Task<ClientResult<InternalListFineTuningJobEventsResponse>> ListFineTuningEventsAsync(string fine_tuning_job_id, string after, int? limit)
+        public virtual async Task<ClientResult<InternalListFineTuningJobEventsResponse>> ListFineTuningEventsAsync(string fineTuningJobId, string after, int? limit)
         {
-            Argument.AssertNotNull(fine_tuning_job_id, nameof(fine_tuning_job_id));
+            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
 
-            ClientResult result = await ListFineTuningEventsAsync(fine_tuning_job_id, after, limit, null).ConfigureAwait(false);
+            ClientResult result = await ListFineTuningEventsAsync(fineTuningJobId, after, limit, null).ConfigureAwait(false);
             return ClientResult.FromValue((InternalListFineTuningJobEventsResponse)result, result.GetRawResponse());
         }
     }

@@ -34,12 +34,12 @@ namespace OpenAI.Chat
             writer.WritePropertyName("token"u8);
             writer.WriteStringValue(Token);
             writer.WritePropertyName("logprob"u8);
-            writer.WriteNumberValue(Logprob);
-            if (Bytes != null && Optional.IsCollectionDefined(Bytes))
+            writer.WriteNumberValue(LogProbability);
+            if (Utf8Bytes != null)
             {
                 writer.WritePropertyName("bytes"u8);
                 writer.WriteStartArray();
-                foreach (var item in Bytes)
+                foreach (byte item in Utf8Bytes.Value.Span)
                 {
                     writer.WriteNumberValue(item);
                 }
@@ -86,8 +86,8 @@ namespace OpenAI.Chat
                 return null;
             }
             string token = default;
-            float logprob = default;
-            IList<int> bytes = default;
+            float logProbability = default;
+            ReadOnlyMemory<byte>? utf8Bytes = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -98,22 +98,21 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("logprob"u8))
                 {
-                    logprob = prop.Value.GetSingle();
+                    logProbability = prop.Value.GetSingle();
                     continue;
                 }
                 if (prop.NameEquals("bytes"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        bytes = new ChangeTrackingList<int>();
                         continue;
                     }
-                    List<int> array = new List<int>();
+                    List<byte> array = new List<byte>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(item.GetInt32());
+                        array.Add(item.GetByte());
                     }
-                    bytes = array;
+                    utf8Bytes = array;
                     continue;
                 }
                 if (options.Format != "W")
@@ -121,7 +120,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ChatTokenTopLogProbabilityDetails(token, logprob, bytes, additionalBinaryDataProperties);
+            return new ChatTokenTopLogProbabilityDetails(token, logProbability, utf8Bytes, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ChatTokenTopLogProbabilityDetails>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

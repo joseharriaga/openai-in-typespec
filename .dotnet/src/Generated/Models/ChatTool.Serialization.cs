@@ -31,10 +31,10 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatTool)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type.ToString());
             writer.WritePropertyName("function"u8);
             writer.WriteObjectValue<InternalFunctionDefinition>(Function, options);
+            writer.WritePropertyName("type"u8);
+            writer.WriteObjectValue<ChatToolKind>(Kind, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -71,19 +71,19 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            ChatToolKind @type = default;
             InternalFunctionDefinition function = default;
+            ChatToolKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = new ChatToolKind(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("function"u8))
                 {
                     function = InternalFunctionDefinition.DeserializeInternalFunctionDefinition(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = ChatToolKind.DeserializeChatToolKind(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -91,7 +91,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ChatTool(@type, function, additionalBinaryDataProperties);
+            return new ChatTool(function, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ChatTool>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

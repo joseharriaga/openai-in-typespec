@@ -11,19 +11,18 @@ namespace OpenAI.Models
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal OpenAIModelInfo(string id, DateTimeOffset created, string ownedBy)
+        internal OpenAIModelInfo(string id, string ownedBy, DateTimeOffset createdAt)
         {
             Id = id;
-            Created = created;
             OwnedBy = ownedBy;
+            CreatedAt = createdAt;
         }
 
-        internal OpenAIModelInfo(string id, DateTimeOffset created, InternalModelObject @object, string ownedBy, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal OpenAIModelInfo(string id, string ownedBy, DateTimeOffset createdAt, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Created = created;
-            Object = @object;
             OwnedBy = ownedBy;
+            CreatedAt = createdAt;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

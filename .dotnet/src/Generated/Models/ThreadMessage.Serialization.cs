@@ -33,8 +33,6 @@ namespace OpenAI.Assistants
             }
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("thread_id"u8);
@@ -68,11 +66,9 @@ namespace OpenAI.Assistants
             {
                 writer.WriteNull("incompleteAt"u8);
             }
-            writer.WritePropertyName("role"u8);
-            writer.WriteStringValue(Role.ToString());
             writer.WritePropertyName("content"u8);
             writer.WriteStartArray();
-            foreach (var item in Content)
+            foreach (MessageContent item in Content)
             {
                 writer.WriteObjectValue(item, options);
             }
@@ -95,20 +91,6 @@ namespace OpenAI.Assistants
             {
                 writer.WriteNull("runId"u8);
             }
-            if (Attachments != null && Optional.IsCollectionDefined(Attachments))
-            {
-                writer.WritePropertyName("attachments"u8);
-                writer.WriteStartArray();
-                foreach (var item in Attachments)
-                {
-                    writer.WriteObjectValue<InternalMessageObjectAttachment>(item, options);
-                }
-                writer.WriteEndArray();
-            }
-            else
-            {
-                writer.WriteNull("attachments"u8);
-            }
             if (Metadata != null && Optional.IsCollectionDefined(Metadata))
             {
                 writer.WritePropertyName("metadata"u8);
@@ -129,6 +111,10 @@ namespace OpenAI.Assistants
             {
                 writer.WriteNull("metadata"u8);
             }
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalMessageObjectObject>(Object, options);
+            writer.WritePropertyName("role"u8);
+            writer.WriteNumberValue((int)Role);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -166,30 +152,24 @@ namespace OpenAI.Assistants
                 return null;
             }
             string id = default;
-            InternalMessageObjectObject @object = default;
             DateTimeOffset createdAt = default;
             string threadId = default;
             MessageStatus status = default;
             MessageFailureDetails incompleteDetails = default;
             DateTimeOffset? completedAt = default;
             DateTimeOffset? incompleteAt = default;
-            InternalMessageObjectRole role = default;
             IList<MessageContent> content = default;
             string assistantId = default;
             string runId = default;
-            IList<InternalMessageObjectAttachment> attachments = default;
             IDictionary<string, string> metadata = default;
+            InternalMessageObjectObject @object = default;
+            Assistants.MessageRole role = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("id"u8))
                 {
                     id = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("object"u8))
-                {
-                    @object = new InternalMessageObjectObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("created_at"u8))
@@ -237,11 +217,6 @@ namespace OpenAI.Assistants
                     incompleteAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (prop.NameEquals("role"u8))
-                {
-                    role = new InternalMessageObjectRole(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("content"u8))
                 {
                     List<MessageContent> array = new List<MessageContent>();
@@ -272,21 +247,6 @@ namespace OpenAI.Assistants
                     runId = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("attachments"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        attachments = new ChangeTrackingList<InternalMessageObjectAttachment>();
-                        continue;
-                    }
-                    List<InternalMessageObjectAttachment> array = new List<InternalMessageObjectAttachment>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        array.Add(InternalMessageObjectAttachment.DeserializeInternalMessageObjectAttachment(item, options));
-                    }
-                    attachments = array;
-                    continue;
-                }
                 if (prop.NameEquals("metadata"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -309,6 +269,16 @@ namespace OpenAI.Assistants
                     metadata = dictionary;
                     continue;
                 }
+                if (prop.NameEquals("object"u8))
+                {
+                    @object = InternalMessageObjectObject.DeserializeInternalMessageObjectObject(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("role"u8))
+                {
+                    role = prop.Value.GetInt32().ToMessageRole();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -316,19 +286,18 @@ namespace OpenAI.Assistants
             }
             return new ThreadMessage(
                 id,
-                @object,
                 createdAt,
                 threadId,
                 status,
                 incompleteDetails,
                 completedAt,
                 incompleteAt,
-                role,
                 content,
                 assistantId,
                 runId,
-                attachments,
                 metadata,
+                @object,
+                role,
                 additionalBinaryDataProperties);
         }
 

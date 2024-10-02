@@ -5,9 +5,7 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using OpenAI;
 
 namespace OpenAI.Batch
 {
@@ -23,40 +21,6 @@ namespace OpenAI.Batch
         }
 
         public ClientPipeline Pipeline { get; }
-
-        public virtual ClientResult CreateBatch(BinaryContent content, RequestOptions options)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateCreateBatchRequest(content, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> CreateBatchAsync(BinaryContent content, RequestOptions options)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateCreateBatchRequest(content, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult<InternalBatchJob> CreateBatch(string input_file_id, InternalCreateBatchRequestEndpoint endpoint, InternalBatchCompletionTimeframe completion_window, IDictionary<string, string> metadata = default)
-        {
-            Argument.AssertNotNull(input_file_id, nameof(input_file_id));
-
-            InternalCreateBatchRequest spreadModel = new InternalCreateBatchRequest(null, endpoint, null, metadata, null);
-            ClientResult result = CreateBatch(spreadModel, null);
-            return ClientResult.FromValue((InternalBatchJob)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<InternalBatchJob>> CreateBatchAsync(string input_file_id, InternalCreateBatchRequestEndpoint endpoint, InternalBatchCompletionTimeframe completion_window, IDictionary<string, string> metadata = default)
-        {
-            Argument.AssertNotNull(input_file_id, nameof(input_file_id));
-
-            InternalCreateBatchRequest spreadModel = new InternalCreateBatchRequest(null, endpoint, null, metadata, null);
-            ClientResult result = await CreateBatchAsync(spreadModel, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalBatchJob)result, result.GetRawResponse());
-        }
 
         public virtual ClientResult ListBatches(string after, int? limit, RequestOptions options)
         {
@@ -80,22 +44,6 @@ namespace OpenAI.Batch
         {
             ClientResult result = await ListBatchesAsync(after, limit, null).ConfigureAwait(false);
             return ClientResult.FromValue((InternalListBatchesResponse)result, result.GetRawResponse());
-        }
-
-        public virtual ClientResult CancelBatch(string batch_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(batch_id, nameof(batch_id));
-
-            using PipelineMessage message = CreateCancelBatchRequest(batch_id, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> CancelBatchAsync(string batch_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(batch_id, nameof(batch_id));
-
-            using PipelineMessage message = CreateCancelBatchRequest(batch_id, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
     }
 }

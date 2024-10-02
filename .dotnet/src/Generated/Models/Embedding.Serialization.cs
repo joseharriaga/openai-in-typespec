@@ -33,17 +33,6 @@ namespace OpenAI.Embeddings
             }
             writer.WritePropertyName("index"u8);
             writer.WriteNumberValue(Index);
-            writer.WritePropertyName("embedding"u8);
-#if NET6_0_OR_GREATER
-            writer.WriteRawValue(Embedding);
-#else
-            using (JsonDocument document = JsonDocument.Parse(Embedding))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
-#endif
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -81,8 +70,6 @@ namespace OpenAI.Embeddings
                 return null;
             }
             int index = default;
-            BinaryData embedding = default;
-            InternalEmbeddingObject @object = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -91,22 +78,12 @@ namespace OpenAI.Embeddings
                     index = prop.Value.GetInt32();
                     continue;
                 }
-                if (prop.NameEquals("embedding"u8))
-                {
-                    embedding = BinaryData.FromString(prop.Value.GetRawText());
-                    continue;
-                }
-                if (prop.NameEquals("object"u8))
-                {
-                    @object = new InternalEmbeddingObject(prop.Value.GetString());
-                    continue;
-                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new Embedding(index, embedding, @object, additionalBinaryDataProperties);
+            return new Embedding(index, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<Embedding>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

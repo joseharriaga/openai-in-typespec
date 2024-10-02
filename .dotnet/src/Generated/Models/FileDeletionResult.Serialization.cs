@@ -31,12 +31,12 @@ namespace OpenAI.Files
             {
                 throw new FormatException($"The model {nameof(FileDeletionResult)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
             writer.WritePropertyName("deleted"u8);
             writer.WriteBooleanValue(Deleted);
+            writer.WritePropertyName("id"u8);
+            writer.WriteStringValue(FileId);
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalDeleteFileResponseObject>(Object, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -73,25 +73,25 @@ namespace OpenAI.Files
             {
                 return null;
             }
-            string id = default;
-            InternalDeleteFileResponseObject @object = default;
             bool deleted = default;
+            string fileId = default;
+            InternalDeleteFileResponseObject @object = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("deleted"u8))
+                {
+                    deleted = prop.Value.GetBoolean();
+                    continue;
+                }
                 if (prop.NameEquals("id"u8))
                 {
-                    id = prop.Value.GetString();
+                    fileId = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = new InternalDeleteFileResponseObject(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("deleted"u8))
-                {
-                    deleted = prop.Value.GetBoolean();
+                    @object = InternalDeleteFileResponseObject.DeserializeInternalDeleteFileResponseObject(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -99,7 +99,7 @@ namespace OpenAI.Files
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new FileDeletionResult(id, @object, deleted, additionalBinaryDataProperties);
+            return new FileDeletionResult(deleted, fileId, @object, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<FileDeletionResult>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

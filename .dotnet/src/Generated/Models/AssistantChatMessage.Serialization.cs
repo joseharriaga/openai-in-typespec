@@ -13,13 +13,6 @@ namespace OpenAI.Chat
 {
     public partial class AssistantChatMessage : IJsonModel<AssistantChatMessage>
     {
-        void IJsonModel<AssistantChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<AssistantChatMessage>)this).GetFormatFromOptions(options) : options.Format;
@@ -59,32 +52,20 @@ namespace OpenAI.Chat
                     writer.WriteNull("refusal"u8);
                 }
             }
-            if (Optional.IsDefined(Name))
+            if (Optional.IsDefined(ParticipantName))
             {
                 writer.WritePropertyName("name"u8);
-                writer.WriteStringValue(Name);
+                writer.WriteStringValue(ParticipantName);
             }
             if (Optional.IsCollectionDefined(ToolCalls))
             {
                 writer.WritePropertyName("tool_calls"u8);
                 writer.WriteStartArray();
-                foreach (var item in ToolCalls)
+                foreach (ChatToolCall item in ToolCalls)
                 {
-                    writer.WriteObjectValue<ChatToolCall>(item, options);
+                    writer.WriteObjectValue(item, options);
                 }
                 writer.WriteEndArray();
-            }
-            if (Optional.IsDefined(FunctionCall))
-            {
-                if (FunctionCall != null)
-                {
-                    writer.WritePropertyName("function_call"u8);
-                    writer.WriteObjectValue<ChatFunctionCall>(FunctionCall, options);
-                }
-                else
-                {
-                    writer.WriteNull("functionCall"u8);
-                }
             }
         }
 
@@ -109,10 +90,9 @@ namespace OpenAI.Chat
             }
             BinaryData content = default;
             string refusal = default;
-            string name = default;
+            string participantName = default;
             IList<ChatToolCall> toolCalls = default;
-            ChatFunctionCall functionCall = default;
-            string role = "assistant";
+            Chat.ChatMessageRole role = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -138,12 +118,7 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("name"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
-                    name = prop.Value.GetString();
+                    participantName = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("tool_calls"u8))
@@ -160,19 +135,9 @@ namespace OpenAI.Chat
                     toolCalls = array;
                     continue;
                 }
-                if (prop.NameEquals("function_call"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        functionCall = null;
-                        continue;
-                    }
-                    functionCall = ChatFunctionCall.DeserializeChatFunctionCall(prop.Value, options);
-                    continue;
-                }
                 if (prop.NameEquals("role"u8))
                 {
-                    role = prop.Value.GetString();
+                    role = prop.Value.GetInt32().ToChatMessageRole();
                     continue;
                 }
                 if (options.Format != "W")
@@ -183,9 +148,8 @@ namespace OpenAI.Chat
             return new AssistantChatMessage(
                 content,
                 refusal,
-                name,
+                participantName,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
-                functionCall,
                 role,
                 additionalBinaryDataProperties);
         }

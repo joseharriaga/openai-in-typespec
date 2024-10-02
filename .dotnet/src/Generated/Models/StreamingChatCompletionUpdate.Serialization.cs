@@ -33,40 +33,40 @@ namespace OpenAI.Chat
             }
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("choices"u8);
-            writer.WriteStartArray();
-            foreach (var item in Choices)
-            {
-                writer.WriteObjectValue<InternalCreateChatCompletionStreamResponseChoice>(item, options);
-            }
-            writer.WriteEndArray();
-            writer.WritePropertyName("created"u8);
-            writer.WriteNumberValue(Created, "U");
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model);
-            if (Optional.IsDefined(ServiceTier))
-            {
-                if (ServiceTier != null)
-                {
-                    writer.WritePropertyName("service_tier"u8);
-                    writer.WriteStringValue(ServiceTier.Value.ToString());
-                }
-                else
-                {
-                    writer.WriteNull("serviceTier"u8);
-                }
-            }
             if (Optional.IsDefined(SystemFingerprint))
             {
                 writer.WritePropertyName("system_fingerprint"u8);
                 writer.WriteStringValue(SystemFingerprint);
             }
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
+            writer.WriteObjectValue<InternalCreateChatCompletionStreamResponseObject>(Object, options);
+            writer.WritePropertyName("choices"u8);
+            writer.WriteStartArray();
+            foreach (InternalCreateChatCompletionStreamResponseChoice item in Choices)
+            {
+                writer.WriteObjectValue(item, options);
+            }
+            writer.WriteEndArray();
+            writer.WritePropertyName("created"u8);
+            writer.WriteNumberValue(CreatedAt, "U");
             if (Optional.IsDefined(Usage))
             {
                 writer.WritePropertyName("usage"u8);
-                writer.WriteObjectValue<InternalCreateChatCompletionStreamResponseUsage>(Usage, options);
+                writer.WriteObjectValue<ChatTokenUsage>(Usage, options);
+            }
+            if (Optional.IsDefined(ServiceTier))
+            {
+                if (ServiceTier != null)
+                {
+                    writer.WritePropertyName("service_tier"u8);
+                    writer.WriteObjectValue<Chat.OpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier<InternalCreateChatCompletionStreamResponseServiceTier>?>(ServiceTier, options);
+                }
+                else
+                {
+                    writer.WriteNull("serviceTier"u8);
+                }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -105,13 +105,13 @@ namespace OpenAI.Chat
                 return null;
             }
             string id = default;
-            IList<InternalCreateChatCompletionStreamResponseChoice> choices = default;
-            DateTimeOffset created = default;
             string model = default;
-            InternalCreateChatCompletionStreamResponseServiceTier? serviceTier = default;
             string systemFingerprint = default;
             InternalCreateChatCompletionStreamResponseObject @object = default;
-            InternalCreateChatCompletionStreamResponseUsage usage = default;
+            IReadOnlyList<InternalCreateChatCompletionStreamResponseChoice> choices = default;
+            DateTimeOffset createdAt = default;
+            ChatTokenUsage usage = default;
+            Chat.OpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier<InternalCreateChatCompletionStreamResponseServiceTier>? serviceTier = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -120,34 +120,9 @@ namespace OpenAI.Chat
                     id = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("choices"u8))
-                {
-                    List<InternalCreateChatCompletionStreamResponseChoice> array = new List<InternalCreateChatCompletionStreamResponseChoice>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        array.Add(InternalCreateChatCompletionStreamResponseChoice.DeserializeInternalCreateChatCompletionStreamResponseChoice(item, options));
-                    }
-                    choices = array;
-                    continue;
-                }
-                if (prop.NameEquals("created"u8))
-                {
-                    created = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
-                    continue;
-                }
                 if (prop.NameEquals("model"u8))
                 {
                     model = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("service_tier"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        serviceTier = null;
-                        continue;
-                    }
-                    serviceTier = new InternalCreateChatCompletionStreamResponseServiceTier(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("system_fingerprint"u8))
@@ -162,17 +137,41 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = new InternalCreateChatCompletionStreamResponseObject(prop.Value.GetString());
+                    @object = InternalCreateChatCompletionStreamResponseObject.DeserializeInternalCreateChatCompletionStreamResponseObject(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("choices"u8))
+                {
+                    List<InternalCreateChatCompletionStreamResponseChoice> array = new List<InternalCreateChatCompletionStreamResponseChoice>();
+                    foreach (var item in prop.Value.EnumerateArray())
+                    {
+                        array.Add(InternalCreateChatCompletionStreamResponseChoice.DeserializeInternalCreateChatCompletionStreamResponseChoice(item, options));
+                    }
+                    choices = array;
+                    continue;
+                }
+                if (prop.NameEquals("created"u8))
+                {
+                    createdAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
                 if (prop.NameEquals("usage"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        usage = null;
                         continue;
                     }
-                    usage = InternalCreateChatCompletionStreamResponseUsage.DeserializeInternalCreateChatCompletionStreamResponseUsage(prop.Value, options);
+                    usage = ChatTokenUsage.DeserializeChatTokenUsage(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("service_tier"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        serviceTier = null;
+                        continue;
+                    }
+                    serviceTier = Chat.OpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier<InternalCreateChatCompletionStreamResponseServiceTier>?.DeserializeOpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -182,13 +181,13 @@ namespace OpenAI.Chat
             }
             return new StreamingChatCompletionUpdate(
                 id,
-                choices,
-                created,
                 model,
-                serviceTier,
                 systemFingerprint,
                 @object,
+                choices,
+                createdAt,
                 usage,
+                serviceTier,
                 additionalBinaryDataProperties);
         }
 

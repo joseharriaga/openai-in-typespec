@@ -38,7 +38,7 @@ namespace OpenAI.Files
             return message;
         }
 
-        internal PipelineMessage CreateAddUploadPartRequest(string upload_id, BinaryContent content, string contentType, RequestOptions options)
+        internal PipelineMessage CreateAddUploadPartRequest(string uploadId, BinaryContent content, string contentType, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -47,7 +47,7 @@ namespace OpenAI.Files
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/uploads/", false);
-            uri.AppendPath(upload_id, true);
+            uri.AppendPath(uploadId, true);
             uri.AppendPath("/parts", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
@@ -57,7 +57,7 @@ namespace OpenAI.Files
             return message;
         }
 
-        internal PipelineMessage CreateCompleteUploadRequest(string upload_id, BinaryContent content, RequestOptions options)
+        internal PipelineMessage CreateCompleteUploadRequest(string uploadId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -66,7 +66,7 @@ namespace OpenAI.Files
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/uploads/", false);
-            uri.AppendPath(upload_id, true);
+            uri.AppendPath(uploadId, true);
             uri.AppendPath("/complete", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
@@ -76,7 +76,7 @@ namespace OpenAI.Files
             return message;
         }
 
-        internal PipelineMessage CreateCancelUploadRequest(string upload_id, RequestOptions options)
+        internal PipelineMessage CreateCancelUploadRequest(string uploadId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -85,7 +85,7 @@ namespace OpenAI.Files
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/uploads/", false);
-            uri.AppendPath(upload_id, true);
+            uri.AppendPath(uploadId, true);
             uri.AppendPath("/cancel", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");

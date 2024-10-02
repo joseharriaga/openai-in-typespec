@@ -11,15 +11,12 @@ namespace OpenAI.Audio
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal AudioTranscriptionOptions(BinaryData @file, InternalCreateTranscriptionRequestModel model, string language, string prompt, Audio.AudioTranscriptionFormat? responseFormat, float? temperature, IList<InternalCreateTranscriptionRequestTimestampGranularity> timestampGranularities, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal AudioTranscriptionOptions(string language, string prompt, Audio.AudioTranscriptionFormat? responseFormat, float? temperature, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            File = @file;
-            Model = model;
             Language = language;
             Prompt = prompt;
             ResponseFormat = responseFormat;
             Temperature = temperature;
-            TimestampGranularities = timestampGranularities;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

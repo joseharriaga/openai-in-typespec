@@ -19,7 +19,7 @@ namespace OpenAI.Assistants
             Url = url;
         }
 
-        internal InternalMessageContentImageUrlObjectImageUrl(Uri url, InternalMessageContentImageUrlObjectImageUrlDetail? detail, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalMessageContentImageUrlObjectImageUrl(Uri url, string detail, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Url = url;
             Detail = detail;

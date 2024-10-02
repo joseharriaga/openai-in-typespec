@@ -55,89 +55,89 @@ namespace OpenAI.Files
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 
-        public virtual ClientResult AddUploadPart(string upload_id, BinaryContent content, string contentType, RequestOptions options)
+        public virtual ClientResult AddUploadPart(string uploadId, BinaryContent content, string contentType, RequestOptions options)
         {
-            Argument.AssertNotNull(upload_id, nameof(upload_id));
+            Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(content, nameof(content));
 
-            using PipelineMessage message = CreateAddUploadPartRequest(upload_id, content, contentType, options);
+            using PipelineMessage message = CreateAddUploadPartRequest(uploadId, content, contentType, options);
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> AddUploadPartAsync(string upload_id, BinaryContent content, string contentType, RequestOptions options)
+        public virtual async Task<ClientResult> AddUploadPartAsync(string uploadId, BinaryContent content, string contentType, RequestOptions options)
         {
-            Argument.AssertNotNull(upload_id, nameof(upload_id));
+            Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(content, nameof(content));
 
-            using PipelineMessage message = CreateAddUploadPartRequest(upload_id, content, contentType, options);
+            using PipelineMessage message = CreateAddUploadPartRequest(uploadId, content, contentType, options);
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult CompleteUpload(string upload_id, BinaryContent content, RequestOptions options)
+        public virtual ClientResult CompleteUpload(string uploadId, BinaryContent content, RequestOptions options)
         {
-            Argument.AssertNotNull(upload_id, nameof(upload_id));
+            Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(content, nameof(content));
 
-            using PipelineMessage message = CreateCompleteUploadRequest(upload_id, content, options);
+            using PipelineMessage message = CreateCompleteUploadRequest(uploadId, content, options);
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> CompleteUploadAsync(string upload_id, BinaryContent content, RequestOptions options)
+        public virtual async Task<ClientResult> CompleteUploadAsync(string uploadId, BinaryContent content, RequestOptions options)
         {
-            Argument.AssertNotNull(upload_id, nameof(upload_id));
+            Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(content, nameof(content));
 
-            using PipelineMessage message = CreateCompleteUploadRequest(upload_id, content, options);
+            using PipelineMessage message = CreateCompleteUploadRequest(uploadId, content, options);
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult<InternalUpload> CompleteUpload(string upload_id, InternalCompleteUploadRequest requestBody)
+        public virtual ClientResult<InternalUpload> CompleteUpload(string uploadId, InternalCompleteUploadRequest requestBody)
         {
-            Argument.AssertNotNull(upload_id, nameof(upload_id));
+            Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(requestBody, nameof(requestBody));
 
-            ClientResult result = CompleteUpload(upload_id, requestBody, null);
+            ClientResult result = CompleteUpload(uploadId, requestBody, null);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 
-        public virtual async Task<ClientResult<InternalUpload>> CompleteUploadAsync(string upload_id, InternalCompleteUploadRequest requestBody)
+        public virtual async Task<ClientResult<InternalUpload>> CompleteUploadAsync(string uploadId, InternalCompleteUploadRequest requestBody)
         {
-            Argument.AssertNotNull(upload_id, nameof(upload_id));
+            Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(requestBody, nameof(requestBody));
 
-            ClientResult result = await CompleteUploadAsync(upload_id, requestBody, null).ConfigureAwait(false);
+            ClientResult result = await CompleteUploadAsync(uploadId, requestBody, null).ConfigureAwait(false);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 
-        public virtual ClientResult CancelUpload(string upload_id, RequestOptions options)
+        public virtual ClientResult CancelUpload(string uploadId, RequestOptions options)
         {
-            Argument.AssertNotNull(upload_id, nameof(upload_id));
+            Argument.AssertNotNull(uploadId, nameof(uploadId));
 
-            using PipelineMessage message = CreateCancelUploadRequest(upload_id, options);
+            using PipelineMessage message = CreateCancelUploadRequest(uploadId, options);
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> CancelUploadAsync(string upload_id, RequestOptions options)
+        public virtual async Task<ClientResult> CancelUploadAsync(string uploadId, RequestOptions options)
         {
-            Argument.AssertNotNull(upload_id, nameof(upload_id));
+            Argument.AssertNotNull(uploadId, nameof(uploadId));
 
-            using PipelineMessage message = CreateCancelUploadRequest(upload_id, options);
+            using PipelineMessage message = CreateCancelUploadRequest(uploadId, options);
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult<InternalUpload> CancelUpload(string upload_id)
+        public virtual ClientResult<InternalUpload> CancelUpload(string uploadId)
         {
-            Argument.AssertNotNull(upload_id, nameof(upload_id));
+            Argument.AssertNotNull(uploadId, nameof(uploadId));
 
-            ClientResult result = CancelUpload(upload_id, null);
+            ClientResult result = CancelUpload(uploadId, null);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 
-        public virtual async Task<ClientResult<InternalUpload>> CancelUploadAsync(string upload_id)
+        public virtual async Task<ClientResult<InternalUpload>> CancelUploadAsync(string uploadId)
         {
-            Argument.AssertNotNull(upload_id, nameof(upload_id));
+            Argument.AssertNotNull(uploadId, nameof(uploadId));
 
-            ClientResult result = await CancelUploadAsync(upload_id, null).ConfigureAwait(false);
+            ClientResult result = await CancelUploadAsync(uploadId, null).ConfigureAwait(false);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
     }

@@ -33,29 +33,20 @@ namespace OpenAI.Files
             }
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
-            if (Bytes != null)
-            {
-                writer.WritePropertyName("bytes"u8);
-                writer.WriteNumberValue(Bytes.Value);
-            }
-            else
-            {
-                writer.WriteNull("bytes"u8);
-            }
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("filename"u8);
             writer.WriteStringValue(Filename);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
             writer.WritePropertyName("purpose"u8);
             writer.WriteStringValue(Purpose.ToString());
-            writer.WritePropertyName("status"u8);
-            writer.WriteStringValue(Status.ToString());
-            if (Optional.IsDefined(StatusDetails))
+            if (SizeInBytes != null)
             {
-                writer.WritePropertyName("status_details"u8);
-                writer.WriteStringValue(StatusDetails);
+                writer.WritePropertyName("bytes"u8);
+                writer.WriteNumberValue(SizeInBytes.Value);
+            }
+            else
+            {
+                writer.WriteNull("bytes"u8);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -94,29 +85,16 @@ namespace OpenAI.Files
                 return null;
             }
             string id = default;
-            int? bytes = default;
             DateTimeOffset createdAt = default;
             string filename = default;
-            InternalOpenAIFileObject @object = default;
             OpenAIFilePurpose purpose = default;
-            OpenAIFileStatus status = default;
-            string statusDetails = default;
+            int? sizeInBytes = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("id"u8))
                 {
                     id = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("bytes"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        bytes = null;
-                        continue;
-                    }
-                    bytes = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("created_at"u8))
@@ -129,29 +107,19 @@ namespace OpenAI.Files
                     filename = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("object"u8))
-                {
-                    @object = new InternalOpenAIFileObject(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("purpose"u8))
                 {
                     purpose = new OpenAIFilePurpose(prop.Value.GetString());
                     continue;
                 }
-                if (prop.NameEquals("status"u8))
-                {
-                    status = new OpenAIFileStatus(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("status_details"u8))
+                if (prop.NameEquals("bytes"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        statusDetails = null;
+                        sizeInBytes = null;
                         continue;
                     }
-                    statusDetails = prop.Value.GetString();
+                    sizeInBytes = prop.Value.GetInt32();
                     continue;
                 }
                 if (options.Format != "W")
@@ -161,13 +129,10 @@ namespace OpenAI.Files
             }
             return new OpenAIFileInfo(
                 id,
-                bytes,
                 createdAt,
                 filename,
-                @object,
                 purpose,
-                status,
-                statusDetails,
+                sizeInBytes,
                 additionalBinaryDataProperties);
         }
 

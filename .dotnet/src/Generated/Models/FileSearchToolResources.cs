@@ -11,10 +11,10 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal FileSearchToolResources(IList<string> vectorStoreIds, IList<VectorStoreCreationHelper> vectorStores, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal FileSearchToolResources(IList<string> vectorStoreIds, IList<VectorStoreCreationHelper> newVectorStores, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             VectorStoreIds = vectorStoreIds;
-            VectorStores = vectorStores;
+            NewVectorStores = newVectorStores;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

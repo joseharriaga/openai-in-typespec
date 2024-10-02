@@ -36,7 +36,7 @@ namespace OpenAI.Assistants
             {
                 writer.WritePropertyName("tools"u8);
                 writer.WriteStartArray();
-                foreach (var item in Tools)
+                foreach (BinaryData item in Tools)
                 {
                     if (item == null)
                     {

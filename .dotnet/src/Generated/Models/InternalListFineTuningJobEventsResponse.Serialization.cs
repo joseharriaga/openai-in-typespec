@@ -35,7 +35,7 @@ namespace OpenAI.FineTuning
             writer.WriteBooleanValue(HasMore);
             writer.WritePropertyName("data"u8);
             writer.WriteStartArray();
-            foreach (var item in Data)
+            foreach (FineTuningJobEvent item in Data)
             {
                 writer.WriteObjectValue(item, options);
             }

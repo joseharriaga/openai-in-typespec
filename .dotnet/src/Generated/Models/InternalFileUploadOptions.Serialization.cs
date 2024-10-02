@@ -27,10 +27,6 @@ namespace OpenAI.Files
             {
                 throw new FormatException($"The model {nameof(InternalFileUploadOptions)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("file"u8);
-            writer.WriteBase64StringValue(File.ToArray(), "D");
-            writer.WritePropertyName("purpose"u8);
-            writer.WriteStringValue(Purpose.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -67,27 +63,15 @@ namespace OpenAI.Files
             {
                 return null;
             }
-            BinaryData @file = default;
-            FileUploadPurpose purpose = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("file"u8))
-                {
-                    @file = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
-                    continue;
-                }
-                if (prop.NameEquals("purpose"u8))
-                {
-                    purpose = new FileUploadPurpose(prop.Value.GetString());
-                    continue;
-                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalFileUploadOptions(@file, purpose, additionalBinaryDataProperties);
+            return new InternalFileUploadOptions(additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalFileUploadOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

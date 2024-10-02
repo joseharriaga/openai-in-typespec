@@ -12,24 +12,25 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatCompletion(string id, IEnumerable<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset created, string model)
+        internal ChatCompletion(string id, string model, InternalCreateChatCompletionResponseObject @object, IEnumerable<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset createdAt)
         {
             Id = id;
-            Choices = choices.ToList();
-            Created = created;
             Model = model;
+            Object = @object;
+            Choices = choices.ToList();
+            CreatedAt = createdAt;
         }
 
-        internal ChatCompletion(string id, IList<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset created, string model, InternalCreateChatCompletionResponseServiceTier? serviceTier, string systemFingerprint, InternalCreateChatCompletionResponseObject @object, ChatTokenUsage usage, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatCompletion(string id, string model, InternalCreateChatCompletionResponseServiceTier? serviceTier, string systemFingerprint, ChatTokenUsage usage, InternalCreateChatCompletionResponseObject @object, IReadOnlyList<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset createdAt, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Choices = choices;
-            Created = created;
             Model = model;
             ServiceTier = serviceTier;
             SystemFingerprint = systemFingerprint;
-            Object = @object;
             Usage = usage;
+            Object = @object;
+            Choices = choices;
+            CreatedAt = createdAt;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

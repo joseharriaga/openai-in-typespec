@@ -31,19 +31,15 @@ namespace OpenAI.Audio
             {
                 throw new FormatException($"The model {nameof(AudioTranscription)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("task"u8);
-            writer.WriteStringValue(Task.ToString());
             writer.WritePropertyName("language"u8);
             writer.WriteStringValue(Language);
-            writer.WritePropertyName("duration"u8);
-            writer.WriteNumberValue(Convert.ToDouble(Duration.ToString("s\\.FFF")));
             writer.WritePropertyName("text"u8);
             writer.WriteStringValue(Text);
             if (Optional.IsCollectionDefined(Words))
             {
                 writer.WritePropertyName("words"u8);
                 writer.WriteStartArray();
-                foreach (var item in Words)
+                foreach (TranscribedWord item in Words)
                 {
                     writer.WriteObjectValue(item, options);
                 }
@@ -53,7 +49,7 @@ namespace OpenAI.Audio
             {
                 writer.WritePropertyName("segments"u8);
                 writer.WriteStartArray();
-                foreach (var item in Segments)
+                foreach (TranscribedSegment item in Segments)
                 {
                     writer.WriteObjectValue(item, options);
                 }
@@ -95,28 +91,16 @@ namespace OpenAI.Audio
             {
                 return null;
             }
-            InternalCreateTranscriptionResponseVerboseJsonTask task = default;
             string language = default;
-            TimeSpan duration = default;
             string text = default;
             IList<TranscribedWord> words = default;
             IList<TranscribedSegment> segments = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("task"u8))
-                {
-                    task = new InternalCreateTranscriptionResponseVerboseJsonTask(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("language"u8))
                 {
                     language = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("duration"u8))
-                {
-                    duration = TimeSpan.FromSeconds(prop.Value.GetDouble());
                     continue;
                 }
                 if (prop.NameEquals("text"u8))
@@ -157,14 +141,7 @@ namespace OpenAI.Audio
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new AudioTranscription(
-                task,
-                language,
-                duration,
-                text,
-                words ?? new ChangeTrackingList<TranscribedWord>(),
-                segments ?? new ChangeTrackingList<TranscribedSegment>(),
-                additionalBinaryDataProperties);
+            return new AudioTranscription(language, text, words ?? new ChangeTrackingList<TranscribedWord>(), segments ?? new ChangeTrackingList<TranscribedSegment>(), additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<AudioTranscription>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

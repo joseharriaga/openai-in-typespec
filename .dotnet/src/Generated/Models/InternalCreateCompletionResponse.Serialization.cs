@@ -36,7 +36,7 @@ namespace OpenAI.LegacyCompletions
             writer.WriteStringValue(Id);
             writer.WritePropertyName("choices"u8);
             writer.WriteStartArray();
-            foreach (var item in Choices)
+            foreach (InternalCreateCompletionResponseChoice item in Choices)
             {
                 writer.WriteObjectValue(item, options);
             }

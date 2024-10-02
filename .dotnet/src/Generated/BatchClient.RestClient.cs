@@ -61,7 +61,7 @@ namespace OpenAI.Batch
             return message;
         }
 
-        internal PipelineMessage CreateRetrieveBatchRequest(string batch_id, RequestOptions options)
+        internal PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -70,14 +70,14 @@ namespace OpenAI.Batch
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/batches/", false);
-            uri.AppendPath(batch_id, true);
+            uri.AppendPath(batchId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateCancelBatchRequest(string batch_id, RequestOptions options)
+        internal PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -86,7 +86,7 @@ namespace OpenAI.Batch
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/batches/", false);
-            uri.AppendPath(batch_id, true);
+            uri.AppendPath(batchId, true);
             uri.AppendPath("/cancel", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");

@@ -27,31 +27,15 @@ namespace OpenAI.Embeddings
             {
                 throw new FormatException($"The model {nameof(EmbeddingGenerationOptions)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("input"u8);
-#if NET6_0_OR_GREATER
-            writer.WriteRawValue(Input);
-#else
-            using (JsonDocument document = JsonDocument.Parse(Input))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
-#endif
-            writer.WritePropertyName("model"u8);
-            writer.WriteStringValue(Model.ToString());
-            if (Optional.IsDefined(EncodingFormat))
-            {
-                writer.WritePropertyName("encoding_format"u8);
-                writer.WriteStringValue(EncodingFormat.Value.ToString());
-            }
             if (Optional.IsDefined(Dimensions))
             {
                 writer.WritePropertyName("dimensions"u8);
                 writer.WriteNumberValue(Dimensions.Value);
             }
-            if (Optional.IsDefined(User))
+            if (Optional.IsDefined(EndUserId))
             {
                 writer.WritePropertyName("user"u8);
-                writer.WriteStringValue(User);
+                writer.WriteStringValue(EndUserId);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -89,34 +73,11 @@ namespace OpenAI.Embeddings
             {
                 return null;
             }
-            BinaryData input = default;
-            InternalCreateEmbeddingRequestModel model = default;
-            InternalCreateEmbeddingRequestEncodingFormat? encodingFormat = default;
             int? dimensions = default;
-            string user = default;
+            string endUserId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("input"u8))
-                {
-                    input = BinaryData.FromString(prop.Value.GetRawText());
-                    continue;
-                }
-                if (prop.NameEquals("model"u8))
-                {
-                    model = new InternalCreateEmbeddingRequestModel(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("encoding_format"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        encodingFormat = null;
-                        continue;
-                    }
-                    encodingFormat = new InternalCreateEmbeddingRequestEncodingFormat(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("dimensions"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -129,12 +90,7 @@ namespace OpenAI.Embeddings
                 }
                 if (prop.NameEquals("user"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        user = null;
-                        continue;
-                    }
-                    user = prop.Value.GetString();
+                    endUserId = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -142,13 +98,7 @@ namespace OpenAI.Embeddings
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new EmbeddingGenerationOptions(
-                input,
-                model,
-                encodingFormat,
-                dimensions,
-                user,
-                additionalBinaryDataProperties);
+            return new EmbeddingGenerationOptions(dimensions, endUserId, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<EmbeddingGenerationOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

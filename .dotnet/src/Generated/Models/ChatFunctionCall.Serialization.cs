@@ -31,10 +31,10 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatFunctionCall)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("arguments"u8);
-            writer.WriteStringValue(Arguments);
             writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(Name);
+            writer.WriteStringValue(FunctionName);
+            writer.WritePropertyName("arguments"u8);
+            writer.WriteStringValue(FunctionArguments);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -71,19 +71,19 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            string arguments = default;
-            string name = default;
+            string functionName = default;
+            string functionArguments = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("arguments"u8))
-                {
-                    arguments = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("name"u8))
                 {
-                    name = prop.Value.GetString();
+                    functionName = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("arguments"u8))
+                {
+                    functionArguments = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -91,7 +91,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ChatFunctionCall(arguments, name, additionalBinaryDataProperties);
+            return new ChatFunctionCall(functionName, functionArguments, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ChatFunctionCall>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

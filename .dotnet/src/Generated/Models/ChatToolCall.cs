@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
@@ -11,11 +12,21 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatToolCall(string id, ChatToolCallKind @type, InternalChatCompletionMessageToolCallFunction function, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        public ChatToolCall(string id, InternalChatCompletionMessageToolCallFunction function, ChatToolCallKind kind)
+        {
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(function, nameof(function));
+
+            Id = id;
+            Function = function;
+            Kind = kind;
+        }
+
+        internal ChatToolCall(string id, InternalChatCompletionMessageToolCallFunction function, ChatToolCallKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Type = @type;
             Function = function;
+            Kind = kind;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

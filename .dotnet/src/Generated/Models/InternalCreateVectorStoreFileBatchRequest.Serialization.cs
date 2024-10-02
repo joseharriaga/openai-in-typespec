@@ -33,7 +33,7 @@ namespace OpenAI.VectorStores
             }
             writer.WritePropertyName("file_ids"u8);
             writer.WriteStartArray();
-            foreach (var item in FileIds)
+            foreach (string item in FileIds)
             {
                 if (item == null)
                 {

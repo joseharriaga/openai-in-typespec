@@ -17,13 +17,6 @@ namespace OpenAI.Assistants
         {
         }
 
-        void IJsonModel<InternalMessageRefusalContent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<InternalMessageRefusalContent>)this).GetFormatFromOptions(options) : options.Format;
@@ -35,7 +28,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type.ToString());
             writer.WritePropertyName("refusal"u8);
-            writer.WriteStringValue(Refusal);
+            writer.WriteStringValue(InternalRefusal);
         }
 
         InternalMessageRefusalContent IJsonModel<InternalMessageRefusalContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalMessageRefusalContent)JsonModelCreateCore(ref reader, options);
@@ -58,7 +51,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             InternalMessageContentRefusalObjectType @type = default;
-            string refusal = default;
+            string internalRefusal = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -69,7 +62,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("refusal"u8))
                 {
-                    refusal = prop.Value.GetString();
+                    internalRefusal = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -77,7 +70,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalMessageRefusalContent(@type, refusal, additionalBinaryDataProperties);
+            return new InternalMessageRefusalContent(@type, internalRefusal, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalMessageRefusalContent>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

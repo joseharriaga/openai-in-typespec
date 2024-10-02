@@ -33,7 +33,7 @@ namespace OpenAI.Files
             }
             writer.WritePropertyName("part_ids"u8);
             writer.WriteStartArray();
-            foreach (var item in PartIds)
+            foreach (string item in PartIds)
             {
                 if (item == null)
                 {

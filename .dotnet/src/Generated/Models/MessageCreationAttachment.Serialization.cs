@@ -35,21 +35,9 @@ namespace OpenAI.Assistants
             writer.WriteStringValue(FileId);
             writer.WritePropertyName("tools"u8);
             writer.WriteStartArray();
-            foreach (var item in Tools)
+            foreach (ToolDefinition item in Tools)
             {
-                if (item == null)
-                {
-                    writer.WriteNullValue();
-                    continue;
-                }
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(item);
-#else
-                using (JsonDocument document = JsonDocument.Parse(item))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteObjectValue(item, options);
             }
             writer.WriteEndArray();
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
@@ -89,7 +77,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             string fileId = default;
-            IList<BinaryData> tools = default;
+            IReadOnlyList<ToolDefinition> tools = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -100,17 +88,10 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("tools"u8))
                 {
-                    List<BinaryData> array = new List<BinaryData>();
+                    List<ToolDefinition> array = new List<ToolDefinition>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(BinaryData.FromString(item.GetRawText()));
-                        }
+                        array.Add(ToolDefinition.DeserializeToolDefinition(item, options));
                     }
                     tools = array;
                     continue;

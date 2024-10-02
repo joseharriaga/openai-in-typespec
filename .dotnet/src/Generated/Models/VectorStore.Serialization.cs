@@ -33,8 +33,6 @@ namespace OpenAI.VectorStores
             }
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("name"u8);
@@ -45,11 +43,6 @@ namespace OpenAI.VectorStores
             writer.WriteObjectValue(FileCounts, options);
             writer.WritePropertyName("status"u8);
             writer.WriteStringValue(Status.ToSerialString());
-            if (Optional.IsDefined(ExpiresAfter))
-            {
-                writer.WritePropertyName("expires_after"u8);
-                writer.WriteObjectValue<VectorStoreExpirationPolicy>(ExpiresAfter, options);
-            }
             if (Optional.IsDefined(ExpiresAt))
             {
                 if (ExpiresAt != null)
@@ -91,6 +84,13 @@ namespace OpenAI.VectorStores
             {
                 writer.WriteNull("metadata"u8);
             }
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalVectorStoreObjectObject>(Object, options);
+            if (Optional.IsDefined(ExpirationPolicy))
+            {
+                writer.WritePropertyName("expires_after"u8);
+                writer.WriteObjectValue<VectorStoreExpirationPolicy>(ExpirationPolicy, options);
+            }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -128,27 +128,22 @@ namespace OpenAI.VectorStores
                 return null;
             }
             string id = default;
-            InternalVectorStoreObjectObject @object = default;
             DateTimeOffset createdAt = default;
             string name = default;
             int usageBytes = default;
             VectorStoreFileCounts fileCounts = default;
             VectorStores.VectorStoreStatus status = default;
-            VectorStoreExpirationPolicy expiresAfter = default;
             DateTimeOffset? expiresAt = default;
             DateTimeOffset? lastActiveAt = default;
             IDictionary<string, string> metadata = default;
+            InternalVectorStoreObjectObject @object = default;
+            VectorStoreExpirationPolicy expirationPolicy = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("id"u8))
                 {
                     id = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("object"u8))
-                {
-                    @object = new InternalVectorStoreObjectObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("created_at"u8))
@@ -174,16 +169,6 @@ namespace OpenAI.VectorStores
                 if (prop.NameEquals("status"u8))
                 {
                     status = prop.Value.GetString().ToVectorStoreStatus();
-                    continue;
-                }
-                if (prop.NameEquals("expires_after"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        expiresAfter = null;
-                        continue;
-                    }
-                    expiresAfter = VectorStoreExpirationPolicy.DeserializeVectorStoreExpirationPolicy(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("expires_at"u8))
@@ -228,6 +213,20 @@ namespace OpenAI.VectorStores
                     metadata = dictionary;
                     continue;
                 }
+                if (prop.NameEquals("object"u8))
+                {
+                    @object = InternalVectorStoreObjectObject.DeserializeInternalVectorStoreObjectObject(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("expires_after"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    expirationPolicy = VectorStoreExpirationPolicy.DeserializeVectorStoreExpirationPolicy(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -235,16 +234,16 @@ namespace OpenAI.VectorStores
             }
             return new VectorStore(
                 id,
-                @object,
                 createdAt,
                 name,
                 usageBytes,
                 fileCounts,
                 status,
-                expiresAfter,
                 expiresAt,
                 lastActiveAt,
                 metadata,
+                @object,
+                expirationPolicy,
                 additionalBinaryDataProperties);
         }
 

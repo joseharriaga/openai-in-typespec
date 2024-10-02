@@ -11,24 +11,19 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal RunCreationOptions(string assistantId, InternalCreateRunRequestModel? model, string instructions, string additionalInstructions, IList<MessageCreationOptions> additionalMessages, IList<ToolDefinition> tools, IDictionary<string, string> metadata, float? temperature, float? topP, bool? stream, int? maxPromptTokens, int? maxCompletionTokens, RunTruncationStrategy truncationStrategy, BinaryData toolChoice, bool? parallelToolCalls, BinaryData responseFormat, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal RunCreationOptions(string assistantId, bool? stream, AssistantResponseFormat responseFormat, string modelOverride, string instructionsOverride, string additionalInstructions, IList<MessageCreationOptions> internalMessages, bool? parallelToolCallsEnabled, IList<ToolDefinition> toolsOverride, float? nucleusSamplingFactor, ToolConstraint toolConstraint, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             AssistantId = assistantId;
-            Model = model;
-            Instructions = instructions;
-            AdditionalInstructions = additionalInstructions;
-            AdditionalMessages = additionalMessages;
-            Tools = tools;
-            Metadata = metadata;
-            Temperature = temperature;
-            TopP = topP;
             Stream = stream;
-            MaxPromptTokens = maxPromptTokens;
-            MaxCompletionTokens = maxCompletionTokens;
-            TruncationStrategy = truncationStrategy;
-            ToolChoice = toolChoice;
-            ParallelToolCalls = parallelToolCalls;
             ResponseFormat = responseFormat;
+            ModelOverride = modelOverride;
+            InstructionsOverride = instructionsOverride;
+            AdditionalInstructions = additionalInstructions;
+            InternalMessages = internalMessages;
+            ParallelToolCallsEnabled = parallelToolCallsEnabled;
+            ToolsOverride = toolsOverride;
+            NucleusSamplingFactor = nucleusSamplingFactor;
+            ToolConstraint = toolConstraint;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

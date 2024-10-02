@@ -31,7 +31,7 @@ namespace OpenAI.LegacyCompletions
             {
                 writer.WritePropertyName("text_offset"u8);
                 writer.WriteStartArray();
-                foreach (var item in TextOffset)
+                foreach (int item in TextOffset)
                 {
                     writer.WriteNumberValue(item);
                 }
@@ -41,7 +41,7 @@ namespace OpenAI.LegacyCompletions
             {
                 writer.WritePropertyName("token_logprobs"u8);
                 writer.WriteStartArray();
-                foreach (var item in TokenLogprobs)
+                foreach (float item in TokenLogprobs)
                 {
                     writer.WriteNumberValue(item);
                 }
@@ -51,7 +51,7 @@ namespace OpenAI.LegacyCompletions
             {
                 writer.WritePropertyName("tokens"u8);
                 writer.WriteStartArray();
-                foreach (var item in Tokens)
+                foreach (string item in Tokens)
                 {
                     if (item == null)
                     {
@@ -66,7 +66,7 @@ namespace OpenAI.LegacyCompletions
             {
                 writer.WritePropertyName("top_logprobs"u8);
                 writer.WriteStartArray();
-                foreach (var item in TopLogprobs)
+                foreach (IDictionary<string, float> item in TopLogprobs)
                 {
                     if (item == null)
                     {

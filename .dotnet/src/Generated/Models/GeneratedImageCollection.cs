@@ -11,10 +11,8 @@ namespace OpenAI.Images
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal GeneratedImageCollection(DateTimeOffset created, IList<GeneratedImage> data, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal GeneratedImageCollection(IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Created = created;
-            Data = data;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

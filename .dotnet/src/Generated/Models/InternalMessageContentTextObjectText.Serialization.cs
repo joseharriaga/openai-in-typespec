@@ -35,7 +35,7 @@ namespace OpenAI.Assistants
             writer.WriteStringValue(Value);
             writer.WritePropertyName("annotations"u8);
             writer.WriteStartArray();
-            foreach (var item in Annotations)
+            foreach (InternalMessageContentTextObjectAnnotation item in Annotations)
             {
                 writer.WriteObjectValue(item, options);
             }

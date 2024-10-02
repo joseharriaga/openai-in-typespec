@@ -11,13 +11,13 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalChatCompletionStreamResponseDelta(string content, StreamingChatFunctionCallUpdate functionCall, IList<StreamingChatToolCallUpdate> toolCalls, InternalChatCompletionStreamResponseDeltaRole? role, string refusal, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalChatCompletionStreamResponseDelta(StreamingChatFunctionCallUpdate functionCall, IList<StreamingChatToolCallUpdate> toolCalls, string refusal, Chat.OpenAI.Chat.ChatMessageRole<Chat.ChatMessageRole>? role, IReadOnlyList<ChatMessageContentPart> content, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Content = content;
             FunctionCall = functionCall;
             ToolCalls = toolCalls;
-            Role = role;
             Refusal = refusal;
+            Role = role;
+            Content = content;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

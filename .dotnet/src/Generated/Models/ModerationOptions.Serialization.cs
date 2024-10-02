@@ -27,20 +27,6 @@ namespace OpenAI.Moderations
             {
                 throw new FormatException($"The model {nameof(ModerationOptions)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("input"u8);
-#if NET6_0_OR_GREATER
-            writer.WriteRawValue(Input);
-#else
-            using (JsonDocument document = JsonDocument.Parse(Input))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
-#endif
-            if (Optional.IsDefined(Model))
-            {
-                writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model.Value.ToString());
-            }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -77,32 +63,15 @@ namespace OpenAI.Moderations
             {
                 return null;
             }
-            BinaryData input = default;
-            InternalCreateModerationRequestModel? model = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("input"u8))
-                {
-                    input = BinaryData.FromString(prop.Value.GetRawText());
-                    continue;
-                }
-                if (prop.NameEquals("model"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        model = null;
-                        continue;
-                    }
-                    model = new InternalCreateModerationRequestModel(prop.Value.GetString());
-                    continue;
-                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ModerationOptions(input, model, additionalBinaryDataProperties);
+            return new ModerationOptions(additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ModerationOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

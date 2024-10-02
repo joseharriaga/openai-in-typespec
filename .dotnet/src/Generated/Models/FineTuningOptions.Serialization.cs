@@ -70,7 +70,7 @@ namespace OpenAI.FineTuning
                 {
                     writer.WritePropertyName("integrations"u8);
                     writer.WriteStartArray();
-                    foreach (var item in Integrations)
+                    foreach (FineTuningIntegration item in Integrations)
                     {
                         writer.WriteObjectValue(item, options);
                     }

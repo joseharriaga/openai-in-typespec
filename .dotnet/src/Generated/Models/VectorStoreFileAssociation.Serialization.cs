@@ -31,12 +31,6 @@ namespace OpenAI.VectorStores
             {
                 throw new FormatException($"The model {nameof(VectorStoreFileAssociation)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
-            writer.WritePropertyName("usage_bytes"u8);
-            writer.WriteNumberValue(UsageBytes);
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             writer.WritePropertyName("vector_store_id"u8);
@@ -52,17 +46,16 @@ namespace OpenAI.VectorStores
             {
                 writer.WriteNull("lastError"u8);
             }
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalVectorStoreFileObjectObject>(Object, options);
+            writer.WritePropertyName("id"u8);
+            writer.WriteStringValue(FileId);
+            writer.WritePropertyName("usage_bytes"u8);
+            writer.WriteNumberValue(Size);
             if (Optional.IsDefined(ChunkingStrategy))
             {
                 writer.WritePropertyName("chunking_strategy"u8);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(ChunkingStrategy);
-#else
-                using (JsonDocument document = JsonDocument.Parse(ChunkingStrategy))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteObjectValue<FileChunkingStrategy>(ChunkingStrategy, options);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -100,32 +93,17 @@ namespace OpenAI.VectorStores
             {
                 return null;
             }
-            string id = default;
-            InternalVectorStoreFileObjectObject @object = default;
-            int usageBytes = default;
             DateTimeOffset createdAt = default;
             string vectorStoreId = default;
             VectorStores.VectorStoreFileAssociationStatus status = default;
             VectorStoreFileAssociationError lastError = default;
-            BinaryData chunkingStrategy = default;
+            InternalVectorStoreFileObjectObject @object = default;
+            string fileId = default;
+            int size = default;
+            FileChunkingStrategy chunkingStrategy = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("id"u8))
-                {
-                    id = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("object"u8))
-                {
-                    @object = new InternalVectorStoreFileObjectObject(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("usage_bytes"u8))
-                {
-                    usageBytes = prop.Value.GetInt32();
-                    continue;
-                }
                 if (prop.NameEquals("created_at"u8))
                 {
                     createdAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
@@ -151,14 +129,28 @@ namespace OpenAI.VectorStores
                     lastError = VectorStoreFileAssociationError.DeserializeVectorStoreFileAssociationError(prop.Value, options);
                     continue;
                 }
+                if (prop.NameEquals("object"u8))
+                {
+                    @object = InternalVectorStoreFileObjectObject.DeserializeInternalVectorStoreFileObjectObject(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("id"u8))
+                {
+                    fileId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("usage_bytes"u8))
+                {
+                    size = prop.Value.GetInt32();
+                    continue;
+                }
                 if (prop.NameEquals("chunking_strategy"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        chunkingStrategy = null;
                         continue;
                     }
-                    chunkingStrategy = BinaryData.FromString(prop.Value.GetRawText());
+                    chunkingStrategy = FileChunkingStrategy.DeserializeFileChunkingStrategy(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -167,13 +159,13 @@ namespace OpenAI.VectorStores
                 }
             }
             return new VectorStoreFileAssociation(
-                id,
-                @object,
-                usageBytes,
                 createdAt,
                 vectorStoreId,
                 status,
                 lastError,
+                @object,
+                fileId,
+                size,
                 chunkingStrategy,
                 additionalBinaryDataProperties);
         }

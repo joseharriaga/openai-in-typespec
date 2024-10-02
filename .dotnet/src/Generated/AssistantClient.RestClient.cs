@@ -69,7 +69,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateGetAssistantRequest(string assistant_id, RequestOptions options)
+        internal PipelineMessage CreateGetAssistantRequest(string assistantId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -78,14 +78,14 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/assistants/", false);
-            uri.AppendPath(assistant_id, true);
+            uri.AppendPath(assistantId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateModifyAssistantRequest(string assistant_id, BinaryContent content, RequestOptions options)
+        internal PipelineMessage CreateModifyAssistantRequest(string assistantId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -94,7 +94,7 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/assistants/", false);
-            uri.AppendPath(assistant_id, true);
+            uri.AppendPath(assistantId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
@@ -103,7 +103,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateDeleteAssistantRequest(string assistant_id, RequestOptions options)
+        internal PipelineMessage CreateDeleteAssistantRequest(string assistantId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -112,7 +112,7 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/assistants/", false);
-            uri.AppendPath(assistant_id, true);
+            uri.AppendPath(assistantId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);

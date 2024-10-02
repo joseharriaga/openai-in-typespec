@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("logs"u8);
-            writer.WriteStringValue(Logs);
+            writer.WriteStringValue(InternalLogs);
         }
 
         InternalRunStepCodeInterpreterLogOutput IJsonModel<InternalRunStepCodeInterpreterLogOutput>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepCodeInterpreterLogOutput)JsonModelCreateCore(ref reader, options);
@@ -55,14 +55,14 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            string logs = default;
+            string internalLogs = default;
             string @type = "logs";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("logs"u8))
                 {
-                    logs = prop.Value.GetString();
+                    internalLogs = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
@@ -75,7 +75,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunStepCodeInterpreterLogOutput(logs, @type, additionalBinaryDataProperties);
+            return new InternalRunStepCodeInterpreterLogOutput(internalLogs, @type, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalRunStepCodeInterpreterLogOutput>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

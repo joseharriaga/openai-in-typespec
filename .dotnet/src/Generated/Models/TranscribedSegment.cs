@@ -12,32 +12,32 @@ namespace OpenAI.Audio
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal TranscribedSegment(int id, int seek, TimeSpan start, TimeSpan end, string text, IEnumerable<int> tokens, float temperature, float avgLogprob, float compressionRatio, float noSpeechProb)
+        internal TranscribedSegment(int id, string text, float temperature, float compressionRatio, TimeSpan startTime, TimeSpan endTime, int seekOffset, IEnumerable<int> tokenIds, float averageLogProbability, float noSpeechProbability)
         {
             Id = id;
-            Seek = seek;
-            Start = start;
-            End = end;
             Text = text;
-            Tokens = tokens.ToList();
             Temperature = temperature;
-            AvgLogprob = avgLogprob;
             CompressionRatio = compressionRatio;
-            NoSpeechProb = noSpeechProb;
+            StartTime = startTime;
+            EndTime = endTime;
+            SeekOffset = seekOffset;
+            TokenIds = tokenIds.ToList();
+            AverageLogProbability = averageLogProbability;
+            NoSpeechProbability = noSpeechProbability;
         }
 
-        internal TranscribedSegment(int id, int seek, TimeSpan start, TimeSpan end, string text, IList<int> tokens, float temperature, float avgLogprob, float compressionRatio, float noSpeechProb, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal TranscribedSegment(int id, string text, float temperature, float compressionRatio, TimeSpan startTime, TimeSpan endTime, int seekOffset, IReadOnlyList<int> tokenIds, float averageLogProbability, float noSpeechProbability, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Seek = seek;
-            Start = start;
-            End = end;
             Text = text;
-            Tokens = tokens;
             Temperature = temperature;
-            AvgLogprob = avgLogprob;
             CompressionRatio = compressionRatio;
-            NoSpeechProb = noSpeechProb;
+            StartTime = startTime;
+            EndTime = endTime;
+            SeekOffset = seekOffset;
+            TokenIds = tokenIds;
+            AverageLogProbability = averageLogProbability;
+            NoSpeechProbability = noSpeechProbability;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

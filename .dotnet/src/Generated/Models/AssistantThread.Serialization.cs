@@ -33,19 +33,8 @@ namespace OpenAI.Assistants
             }
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
             writer.WritePropertyName("created_at"u8);
             writer.WriteNumberValue(CreatedAt, "U");
-            if (ToolResources != null)
-            {
-                writer.WritePropertyName("tool_resources"u8);
-                writer.WriteObjectValue<InternalThreadObjectToolResources>(ToolResources, options);
-            }
-            else
-            {
-                writer.WriteNull("toolResources"u8);
-            }
             if (Metadata != null && Optional.IsCollectionDefined(Metadata))
             {
                 writer.WritePropertyName("metadata"u8);
@@ -66,6 +55,8 @@ namespace OpenAI.Assistants
             {
                 writer.WriteNull("metadata"u8);
             }
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalThreadObjectObject>(Object, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -103,10 +94,9 @@ namespace OpenAI.Assistants
                 return null;
             }
             string id = default;
-            InternalThreadObjectObject @object = default;
             DateTimeOffset createdAt = default;
-            InternalThreadObjectToolResources toolResources = default;
             IDictionary<string, string> metadata = default;
+            InternalThreadObjectObject @object = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -115,24 +105,9 @@ namespace OpenAI.Assistants
                     id = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("object"u8))
-                {
-                    @object = new InternalThreadObjectObject(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("created_at"u8))
                 {
                     createdAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
-                    continue;
-                }
-                if (prop.NameEquals("tool_resources"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        toolResources = null;
-                        continue;
-                    }
-                    toolResources = InternalThreadObjectToolResources.DeserializeInternalThreadObjectToolResources(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("metadata"u8))
@@ -157,18 +132,17 @@ namespace OpenAI.Assistants
                     metadata = dictionary;
                     continue;
                 }
+                if (prop.NameEquals("object"u8))
+                {
+                    @object = InternalThreadObjectObject.DeserializeInternalThreadObjectObject(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new AssistantThread(
-                id,
-                @object,
-                createdAt,
-                toolResources,
-                metadata,
-                additionalBinaryDataProperties);
+            return new AssistantThread(id, createdAt, metadata, @object, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<AssistantThread>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -31,10 +31,10 @@ namespace OpenAI.Embeddings
             {
                 throw new FormatException($"The model {nameof(EmbeddingTokenUsage)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("prompt_tokens"u8);
-            writer.WriteNumberValue(PromptTokens);
             writer.WritePropertyName("total_tokens"u8);
             writer.WriteNumberValue(TotalTokens);
+            writer.WritePropertyName("prompt_tokens"u8);
+            writer.WriteNumberValue(InputTokens);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -71,19 +71,19 @@ namespace OpenAI.Embeddings
             {
                 return null;
             }
-            int promptTokens = default;
             int totalTokens = default;
+            int inputTokens = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("prompt_tokens"u8))
-                {
-                    promptTokens = prop.Value.GetInt32();
-                    continue;
-                }
                 if (prop.NameEquals("total_tokens"u8))
                 {
                     totalTokens = prop.Value.GetInt32();
+                    continue;
+                }
+                if (prop.NameEquals("prompt_tokens"u8))
+                {
+                    inputTokens = prop.Value.GetInt32();
                     continue;
                 }
                 if (options.Format != "W")
@@ -91,7 +91,7 @@ namespace OpenAI.Embeddings
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new EmbeddingTokenUsage(promptTokens, totalTokens, additionalBinaryDataProperties);
+            return new EmbeddingTokenUsage(totalTokens, inputTokens, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<EmbeddingTokenUsage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

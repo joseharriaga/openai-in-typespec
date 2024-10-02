@@ -34,10 +34,10 @@ namespace OpenAI.Assistants
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("index"u8);
             writer.WriteNumberValue(Index);
-            if (Optional.IsDefined(Logs))
+            if (Optional.IsDefined(InternalLogs))
             {
                 writer.WritePropertyName("logs"u8);
-                writer.WriteStringValue(Logs);
+                writer.WriteStringValue(InternalLogs);
             }
         }
 
@@ -61,7 +61,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             int index = default;
-            string logs = default;
+            string internalLogs = default;
             string @type = "logs";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -73,12 +73,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("logs"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        logs = null;
-                        continue;
-                    }
-                    logs = prop.Value.GetString();
+                    internalLogs = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
@@ -91,7 +86,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(index, logs, @type, additionalBinaryDataProperties);
+            return new InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(index, internalLogs, @type, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -21,7 +21,7 @@ namespace OpenAI.Assistants
 
         private static OpenAI.InternalAssistantMessageClient.Classifier2xxAnd4xx PipelineMessageClassifier2xxAnd4xx => _pipelineMessageClassifier2xxAnd4xx ??= new OpenAI.InternalAssistantMessageClient.Classifier2xxAnd4xx();
 
-        internal PipelineMessage CreateCreateMessageRequest(string thread_id, BinaryContent content, RequestOptions options)
+        internal PipelineMessage CreateCreateMessageRequest(string threadId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -30,7 +30,7 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/messages", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
@@ -40,7 +40,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateListMessagesRequest(string thread_id, int? limit, string order, string after, string before, RequestOptions options)
+        internal PipelineMessage CreateListMessagesRequest(string threadId, int? limit, string order, string after, string before, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -49,7 +49,7 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/messages", false);
             if (limit != null)
             {
@@ -73,7 +73,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateGetMessageRequest(string thread_id, string message_id, RequestOptions options)
+        internal PipelineMessage CreateGetMessageRequest(string threadId, string messageId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -82,16 +82,16 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/messages/", false);
-            uri.AppendPath(message_id, true);
+            uri.AppendPath(messageId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateModifyMessageRequest(string thread_id, string message_id, BinaryContent content, RequestOptions options)
+        internal PipelineMessage CreateModifyMessageRequest(string threadId, string messageId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -100,9 +100,9 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/messages/", false);
-            uri.AppendPath(message_id, true);
+            uri.AppendPath(messageId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
@@ -111,7 +111,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateDeleteMessageRequest(string thread_id, string message_id, RequestOptions options)
+        internal PipelineMessage CreateDeleteMessageRequest(string threadId, string messageId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -120,9 +120,9 @@ namespace OpenAI.Assistants
             ClientUriBuilder uri = new ClientUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/", false);
-            uri.AppendPath(thread_id, true);
+            uri.AppendPath(threadId, true);
             uri.AppendPath("/messages/", false);
-            uri.AppendPath(message_id, true);
+            uri.AppendPath(messageId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);

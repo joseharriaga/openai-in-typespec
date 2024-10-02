@@ -10,17 +10,17 @@ namespace OpenAI.Chat
 {
     public partial class UserChatMessage : ChatMessage
     {
-        public UserChatMessage(BinaryData content) : base("user")
+        public UserChatMessage(BinaryData content)
         {
             Argument.AssertNotNull(content, nameof(content));
 
             Content = content;
         }
 
-        internal UserChatMessage(BinaryData content, string name, string role, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, additionalBinaryDataProperties)
+        internal UserChatMessage(BinaryData content, string participantName, Chat.ChatMessageRole role, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, additionalBinaryDataProperties)
         {
             Content = content;
-            Name = name;
+            ParticipantName = participantName;
         }
 
         public BinaryData Content { get; set; }

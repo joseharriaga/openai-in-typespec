@@ -14,10 +14,10 @@ namespace OpenAI.Assistants
             Index = index;
         }
 
-        internal InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(int index, string logs, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(int index, string internalLogs, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
             Index = index;
-            Logs = logs;
+            InternalLogs = internalLogs;
         }
 
         public int Index { get; set; }

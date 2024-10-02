@@ -12,24 +12,25 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal StreamingChatCompletionUpdate(string id, IEnumerable<InternalCreateChatCompletionStreamResponseChoice> choices, DateTimeOffset created, string model)
+        internal StreamingChatCompletionUpdate(string id, string model, InternalCreateChatCompletionStreamResponseObject @object, IEnumerable<InternalCreateChatCompletionStreamResponseChoice> choices, DateTimeOffset createdAt)
         {
             Id = id;
-            Choices = choices.ToList();
-            Created = created;
             Model = model;
+            Object = @object;
+            Choices = choices.ToList();
+            CreatedAt = createdAt;
         }
 
-        internal StreamingChatCompletionUpdate(string id, IList<InternalCreateChatCompletionStreamResponseChoice> choices, DateTimeOffset created, string model, InternalCreateChatCompletionStreamResponseServiceTier? serviceTier, string systemFingerprint, InternalCreateChatCompletionStreamResponseObject @object, InternalCreateChatCompletionStreamResponseUsage usage, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal StreamingChatCompletionUpdate(string id, string model, string systemFingerprint, InternalCreateChatCompletionStreamResponseObject @object, IReadOnlyList<InternalCreateChatCompletionStreamResponseChoice> choices, DateTimeOffset createdAt, ChatTokenUsage usage, Chat.OpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier<InternalCreateChatCompletionStreamResponseServiceTier>? serviceTier, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Choices = choices;
-            Created = created;
             Model = model;
-            ServiceTier = serviceTier;
             SystemFingerprint = systemFingerprint;
             Object = @object;
+            Choices = choices;
+            CreatedAt = createdAt;
             Usage = usage;
+            ServiceTier = serviceTier;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

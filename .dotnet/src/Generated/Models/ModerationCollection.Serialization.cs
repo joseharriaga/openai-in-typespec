@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI;
 
@@ -13,13 +12,6 @@ namespace OpenAI.Moderations
 {
     public partial class ModerationCollection : IJsonModel<ModerationCollection>
     {
-        void IJsonModel<ModerationCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<ModerationCollection>)this).GetFormatFromOptions(options) : options.Format;
@@ -31,13 +23,6 @@ namespace OpenAI.Moderations
             writer.WriteStringValue(Id);
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model);
-            writer.WritePropertyName("results"u8);
-            writer.WriteStartArray();
-            foreach (var item in Results)
-            {
-                writer.WriteObjectValue<ModerationResult>(item, options);
-            }
-            writer.WriteEndArray();
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -65,47 +50,7 @@ namespace OpenAI.Moderations
                 throw new FormatException($"The model {nameof(ModerationCollection)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeModerationCollection(document.RootElement, options);
-        }
-
-        internal static ModerationCollection DeserializeModerationCollection(JsonElement element, ModelReaderWriterOptions options)
-        {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-            string id = default;
-            string model = default;
-            IList<ModerationResult> results = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            foreach (var prop in element.EnumerateObject())
-            {
-                if (prop.NameEquals("id"u8))
-                {
-                    id = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("model"u8))
-                {
-                    model = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("results"u8))
-                {
-                    List<ModerationResult> array = new List<ModerationResult>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        array.Add(ModerationResult.DeserializeModerationResult(item, options));
-                    }
-                    results = array;
-                    continue;
-                }
-                if (options.Format != "W")
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
-            }
-            return new ModerationCollection(id, model, results, additionalBinaryDataProperties);
+            return ModerationCollection.DeserializeModerationCollection(document.RootElement, options);
         }
 
         BinaryData IPersistableModel<ModerationCollection>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
@@ -132,7 +77,7 @@ namespace OpenAI.Moderations
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeModerationCollection(document.RootElement, options);
+                        return ModerationCollection.DeserializeModerationCollection(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(ModerationCollection)} does not support reading '{options.Format}' format.");
@@ -150,7 +95,7 @@ namespace OpenAI.Moderations
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeModerationCollection(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return ModerationCollection.DeserializeModerationCollection(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

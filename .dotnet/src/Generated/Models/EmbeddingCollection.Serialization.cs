@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI;
 
@@ -13,13 +12,6 @@ namespace OpenAI.Embeddings
 {
     public partial class EmbeddingCollection : IJsonModel<EmbeddingCollection>
     {
-        void IJsonModel<EmbeddingCollection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
-        }
-
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<EmbeddingCollection>)this).GetFormatFromOptions(options) : options.Format;
@@ -27,19 +19,12 @@ namespace OpenAI.Embeddings
             {
                 throw new FormatException($"The model {nameof(EmbeddingCollection)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("data"u8);
-            writer.WriteStartArray();
-            foreach (var item in Data)
-            {
-                writer.WriteObjectValue<Embedding>(item, options);
-            }
-            writer.WriteEndArray();
             writer.WritePropertyName("model"u8);
             writer.WriteStringValue(Model);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
             writer.WritePropertyName("usage"u8);
             writer.WriteObjectValue(Usage, options);
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalCreateEmbeddingResponseObject>(Object, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -67,53 +52,7 @@ namespace OpenAI.Embeddings
                 throw new FormatException($"The model {nameof(EmbeddingCollection)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeEmbeddingCollection(document.RootElement, options);
-        }
-
-        internal static EmbeddingCollection DeserializeEmbeddingCollection(JsonElement element, ModelReaderWriterOptions options)
-        {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-            IList<Embedding> data = default;
-            string model = default;
-            InternalCreateEmbeddingResponseObject @object = default;
-            EmbeddingTokenUsage usage = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            foreach (var prop in element.EnumerateObject())
-            {
-                if (prop.NameEquals("data"u8))
-                {
-                    List<Embedding> array = new List<Embedding>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        array.Add(Embedding.DeserializeEmbedding(item, options));
-                    }
-                    data = array;
-                    continue;
-                }
-                if (prop.NameEquals("model"u8))
-                {
-                    model = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("object"u8))
-                {
-                    @object = new InternalCreateEmbeddingResponseObject(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("usage"u8))
-                {
-                    usage = EmbeddingTokenUsage.DeserializeEmbeddingTokenUsage(prop.Value, options);
-                    continue;
-                }
-                if (options.Format != "W")
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
-            }
-            return new EmbeddingCollection(data, model, @object, usage, additionalBinaryDataProperties);
+            return EmbeddingCollection.DeserializeEmbeddingCollection(document.RootElement, options);
         }
 
         BinaryData IPersistableModel<EmbeddingCollection>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
@@ -140,7 +79,7 @@ namespace OpenAI.Embeddings
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeEmbeddingCollection(document.RootElement, options);
+                        return EmbeddingCollection.DeserializeEmbeddingCollection(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(EmbeddingCollection)} does not support reading '{options.Format}' format.");
@@ -158,7 +97,7 @@ namespace OpenAI.Embeddings
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeEmbeddingCollection(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return EmbeddingCollection.DeserializeEmbeddingCollection(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

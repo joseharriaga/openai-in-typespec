@@ -17,10 +17,10 @@ namespace OpenAI.Assistants
             Results = new ChangeTrackingList<RunStepFileSearchResult>();
         }
 
-        internal InternalRunStepDetailsToolCallsFileSearchObjectFileSearch(InternalRunStepDetailsToolCallsFileSearchRankingOptionsObject rankingOptions, IList<RunStepFileSearchResult> results, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRunStepDetailsToolCallsFileSearchObjectFileSearch(IList<RunStepFileSearchResult> results, FileSearchRankingOptions rankingOptions, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            RankingOptions = rankingOptions;
             Results = results;
+            RankingOptions = rankingOptions;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

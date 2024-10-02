@@ -10,17 +10,17 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRequestMessageTextContent : MessageContent
     {
-        public InternalRequestMessageTextContent(string text)
+        public InternalRequestMessageTextContent(string internalText)
         {
-            Argument.AssertNotNull(text, nameof(text));
+            Argument.AssertNotNull(internalText, nameof(internalText));
 
-            Text = text;
+            InternalText = internalText;
         }
 
-        internal InternalRequestMessageTextContent(InternalMessageRequestContentTextObjectType @type, string text, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
+        internal InternalRequestMessageTextContent(InternalMessageRequestContentTextObjectType @type, string internalText, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
         {
             Type = @type;
-            Text = text;
+            InternalText = internalText;
         }
 
         public InternalMessageRequestContentTextObjectType Type { get; } = "text";

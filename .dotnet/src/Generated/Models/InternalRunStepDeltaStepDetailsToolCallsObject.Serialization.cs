@@ -32,7 +32,7 @@ namespace OpenAI.Assistants
             {
                 writer.WritePropertyName("tool_calls"u8);
                 writer.WriteStartArray();
-                foreach (var item in ToolCalls)
+                foreach (InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject item in ToolCalls)
                 {
                     writer.WriteObjectValue(item, options);
                 }

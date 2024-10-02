@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using OpenAI;
 
 namespace OpenAI.Chat
@@ -12,19 +13,20 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalChatCompletionResponseMessage(string content, string refusal)
+        internal InternalChatCompletionResponseMessage(string refusal, Chat.ChatMessageRole role, IEnumerable<ChatMessageContentPart> content)
         {
-            Content = content;
             Refusal = refusal;
             ToolCalls = new ChangeTrackingList<ChatToolCall>();
+            Role = role;
+            Content = content.ToList();
         }
 
-        internal InternalChatCompletionResponseMessage(string content, string refusal, IList<ChatToolCall> toolCalls, InternalChatCompletionResponseMessageRole role, InternalChatCompletionResponseMessageFunctionCall functionCall, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalChatCompletionResponseMessage(string refusal, IList<ChatToolCall> toolCalls, Chat.ChatMessageRole role, IReadOnlyList<ChatMessageContentPart> content, ChatFunctionCall functionCall, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Content = content;
             Refusal = refusal;
             ToolCalls = toolCalls;
             Role = role;
+            Content = content;
             FunctionCall = functionCall;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }

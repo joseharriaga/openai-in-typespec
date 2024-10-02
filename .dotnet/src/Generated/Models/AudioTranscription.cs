@@ -12,20 +12,17 @@ namespace OpenAI.Audio
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal AudioTranscription(string language, TimeSpan duration, string text)
+        internal AudioTranscription(string language, string text)
         {
             Language = language;
-            Duration = duration;
             Text = text;
             Words = new ChangeTrackingList<TranscribedWord>();
             Segments = new ChangeTrackingList<TranscribedSegment>();
         }
 
-        internal AudioTranscription(InternalCreateTranscriptionResponseVerboseJsonTask task, string language, TimeSpan duration, string text, IList<TranscribedWord> words, IList<TranscribedSegment> segments, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal AudioTranscription(string language, string text, IList<TranscribedWord> words, IList<TranscribedSegment> segments, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Task = task;
             Language = language;
-            Duration = duration;
             Text = text;
             Words = words;
             Segments = segments;

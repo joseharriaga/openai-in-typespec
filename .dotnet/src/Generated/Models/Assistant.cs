@@ -12,7 +12,7 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal Assistant(string id, DateTimeOffset createdAt, string name, string description, string model, string instructions, IEnumerable<ToolDefinition> tools, IDictionary<string, string> metadata)
+        internal Assistant(string id, DateTimeOffset createdAt, string name, string description, string model, string instructions, IEnumerable<ToolDefinition> tools, IDictionary<string, string> metadata, InternalAssistantObjectObject @object)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -22,12 +22,12 @@ namespace OpenAI.Assistants
             Instructions = instructions;
             Tools = tools.ToList();
             Metadata = metadata;
+            Object = @object;
         }
 
-        internal Assistant(string id, InternalAssistantObjectObject @object, DateTimeOffset createdAt, string name, string description, string model, string instructions, IList<ToolDefinition> tools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, BinaryData responseFormat, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal Assistant(string id, DateTimeOffset createdAt, string name, string description, string model, string instructions, IList<ToolDefinition> tools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, InternalAssistantObjectObject @object, float? nucleusSamplingFactor, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Object = @object;
             CreatedAt = createdAt;
             Name = name;
             Description = description;
@@ -37,8 +37,8 @@ namespace OpenAI.Assistants
             ToolResources = toolResources;
             Metadata = metadata;
             Temperature = temperature;
-            TopP = topP;
-            ResponseFormat = responseFormat;
+            Object = @object;
+            NucleusSamplingFactor = nucleusSamplingFactor;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

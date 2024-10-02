@@ -31,17 +31,17 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatFunction)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Description))
+            writer.WritePropertyName("name"u8);
+            writer.WriteStringValue(FunctionName);
+            if (Optional.IsDefined(FunctionDescription))
             {
                 writer.WritePropertyName("description"u8);
-                writer.WriteStringValue(Description);
+                writer.WriteStringValue(FunctionDescription);
             }
-            writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(Name);
-            if (Optional.IsDefined(Parameters))
+            if (Optional.IsDefined(FunctionParameters))
             {
                 writer.WritePropertyName("parameters"u8);
-                writer.WriteObjectValue<InternalFunctionParameters>(Parameters, options);
+                writer.WriteObjectValue<BinaryData>(FunctionParameters, options);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -79,35 +79,29 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            string description = default;
-            string name = default;
-            InternalFunctionParameters parameters = default;
+            string functionName = default;
+            string functionDescription = default;
+            BinaryData functionParameters = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("description"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        description = null;
-                        continue;
-                    }
-                    description = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("name"u8))
                 {
-                    name = prop.Value.GetString();
+                    functionName = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("description"u8))
+                {
+                    functionDescription = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("parameters"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        parameters = null;
                         continue;
                     }
-                    parameters = InternalFunctionParameters.DeserializeInternalFunctionParameters(prop.Value, options);
+                    functionParameters = BinaryData.DeserializeBinaryData(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -115,7 +109,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ChatFunction(description, name, parameters, additionalBinaryDataProperties);
+            return new ChatFunction(functionName, functionDescription, functionParameters, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ChatFunction>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

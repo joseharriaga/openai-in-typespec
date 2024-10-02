@@ -12,7 +12,7 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, InternalMessageObjectRole role, IEnumerable<MessageContent> content, string assistantId, string runId, IEnumerable<InternalMessageObjectAttachment> attachments, IDictionary<string, string> metadata)
+        internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, IEnumerable<MessageContent> content, string assistantId, string runId, IDictionary<string, string> metadata, InternalMessageObjectObject @object, Assistants.MessageRole role)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -21,30 +21,29 @@ namespace OpenAI.Assistants
             IncompleteDetails = incompleteDetails;
             CompletedAt = completedAt;
             IncompleteAt = incompleteAt;
-            Role = role;
             Content = content.ToList();
             AssistantId = assistantId;
             RunId = runId;
-            Attachments = attachments?.ToList();
             Metadata = metadata;
+            Object = @object;
+            Role = role;
         }
 
-        internal ThreadMessage(string id, InternalMessageObjectObject @object, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, InternalMessageObjectRole role, IList<MessageContent> content, string assistantId, string runId, IList<InternalMessageObjectAttachment> attachments, IDictionary<string, string> metadata, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, IList<MessageContent> content, string assistantId, string runId, IDictionary<string, string> metadata, InternalMessageObjectObject @object, Assistants.MessageRole role, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Object = @object;
             CreatedAt = createdAt;
             ThreadId = threadId;
             Status = status;
             IncompleteDetails = incompleteDetails;
             CompletedAt = completedAt;
             IncompleteAt = incompleteAt;
-            Role = role;
             Content = content;
             AssistantId = assistantId;
             RunId = runId;
-            Attachments = attachments;
             Metadata = metadata;
+            Object = @object;
+            Role = role;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

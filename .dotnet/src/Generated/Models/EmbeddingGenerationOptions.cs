@@ -11,13 +11,10 @@ namespace OpenAI.Embeddings
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal EmbeddingGenerationOptions(BinaryData input, InternalCreateEmbeddingRequestModel model, InternalCreateEmbeddingRequestEncodingFormat? encodingFormat, int? dimensions, string user, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal EmbeddingGenerationOptions(int? dimensions, string endUserId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Input = input;
-            Model = model;
-            EncodingFormat = encodingFormat;
             Dimensions = dimensions;
-            User = user;
+            EndUserId = endUserId;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

@@ -31,8 +31,6 @@ namespace OpenAI.VectorStores
             {
                 throw new FormatException($"The model {nameof(VectorStoreBatchFileJob)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
             writer.WritePropertyName("object"u8);
             writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("created_at"u8);
@@ -41,8 +39,8 @@ namespace OpenAI.VectorStores
             writer.WriteStringValue(VectorStoreId);
             writer.WritePropertyName("status"u8);
             writer.WriteStringValue(Status.ToString());
-            writer.WritePropertyName("file_counts"u8);
-            writer.WriteObjectValue<InternalVectorStoreFileBatchObjectFileCounts>(FileCounts, options);
+            writer.WritePropertyName("id"u8);
+            writer.WriteStringValue(BatchId);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -79,20 +77,14 @@ namespace OpenAI.VectorStores
             {
                 return null;
             }
-            string id = default;
             InternalVectorStoreFileBatchObjectObject @object = default;
             DateTimeOffset createdAt = default;
             string vectorStoreId = default;
             VectorStoreBatchFileJobStatus status = default;
-            InternalVectorStoreFileBatchObjectFileCounts fileCounts = default;
+            string batchId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("id"u8))
-                {
-                    id = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("object"u8))
                 {
                     @object = new InternalVectorStoreFileBatchObjectObject(prop.Value.GetString());
@@ -113,9 +105,9 @@ namespace OpenAI.VectorStores
                     status = new VectorStoreBatchFileJobStatus(prop.Value.GetString());
                     continue;
                 }
-                if (prop.NameEquals("file_counts"u8))
+                if (prop.NameEquals("id"u8))
                 {
-                    fileCounts = InternalVectorStoreFileBatchObjectFileCounts.DeserializeInternalVectorStoreFileBatchObjectFileCounts(prop.Value, options);
+                    batchId = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -124,12 +116,11 @@ namespace OpenAI.VectorStores
                 }
             }
             return new VectorStoreBatchFileJob(
-                id,
                 @object,
                 createdAt,
                 vectorStoreId,
                 status,
-                fileCounts,
+                batchId,
                 additionalBinaryDataProperties);
         }
 

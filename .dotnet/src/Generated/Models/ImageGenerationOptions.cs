@@ -11,16 +11,13 @@ namespace OpenAI.Images
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ImageGenerationOptions(string prompt, InternalCreateImageRequestModel? model, int? n, Images.GeneratedImageQuality? quality, Images.GeneratedImageFormat? responseFormat, GeneratedImageSize? size, Images.GeneratedImageStyle? style, string user, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ImageGenerationOptions(Images.GeneratedImageQuality? quality, Images.GeneratedImageFormat? responseFormat, GeneratedImageSize? size, Images.GeneratedImageStyle? style, string endUserId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Prompt = prompt;
-            Model = model;
-            N = n;
             Quality = quality;
             ResponseFormat = responseFormat;
             Size = size;
             Style = style;
-            User = user;
+            EndUserId = endUserId;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

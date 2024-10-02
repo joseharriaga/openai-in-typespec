@@ -11,32 +11,30 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatCompletionOptions(IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, float? frequencyPenalty, IDictionary<string, int> logitBias, bool? logprobs, int? topLogprobs, int? maxTokens, int? maxCompletionTokens, int? n, float? presencePenalty, ChatResponseFormat responseFormat, long? seed, InternalCreateChatCompletionRequestServiceTier? serviceTier, BinaryData stop, bool? stream, InternalChatCompletionStreamOptions streamOptions, float? temperature, float? topP, IList<ChatTool> tools, BinaryData toolChoice, bool? parallelToolCalls, string user, BinaryData functionCall, IList<ChatFunction> functions, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatCompletionOptions(float? frequencyPenalty, float? presencePenalty, ChatResponseFormat responseFormat, InternalCreateChatCompletionRequestServiceTier? serviceTier, float? temperature, float? topP, IList<ChatTool> tools, IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, int? n, bool? stream, InternalChatCompletionStreamOptions streamOptions, bool? includeLogProbabilities, int? topLogProbabilityCount, IList<string> stopSequences, IDictionary<int, int> logitBiases, ChatToolChoice toolChoice, ChatFunctionChoice functionChoice, bool? parallelToolCallsEnabled, string endUserId, int? deprecatedMaxTokens, int? maxOutputTokenCount, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Messages = messages;
-            Model = model;
             FrequencyPenalty = frequencyPenalty;
-            LogitBias = logitBias;
-            Logprobs = logprobs;
-            TopLogprobs = topLogprobs;
-            MaxTokens = maxTokens;
-            MaxCompletionTokens = maxCompletionTokens;
-            N = n;
             PresencePenalty = presencePenalty;
             ResponseFormat = responseFormat;
-            Seed = seed;
             ServiceTier = serviceTier;
-            Stop = stop;
-            Stream = stream;
-            StreamOptions = streamOptions;
             Temperature = temperature;
             TopP = topP;
             Tools = tools;
+            Messages = messages;
+            Model = model;
+            N = n;
+            Stream = stream;
+            StreamOptions = streamOptions;
+            IncludeLogProbabilities = includeLogProbabilities;
+            TopLogProbabilityCount = topLogProbabilityCount;
+            StopSequences = stopSequences;
+            LogitBiases = logitBiases;
             ToolChoice = toolChoice;
-            ParallelToolCalls = parallelToolCalls;
-            User = user;
-            FunctionCall = functionCall;
-            Functions = functions;
+            FunctionChoice = functionChoice;
+            ParallelToolCallsEnabled = parallelToolCallsEnabled;
+            EndUserId = endUserId;
+            _deprecatedMaxTokens = deprecatedMaxTokens;
+            MaxOutputTokenCount = maxOutputTokenCount;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

@@ -31,12 +31,12 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(MessageDeletionResult)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
             writer.WritePropertyName("deleted"u8);
             writer.WriteBooleanValue(Deleted);
+            writer.WritePropertyName("id"u8);
+            writer.WriteStringValue(MessageId);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(object.ToString());
+            writer.WriteObjectValue<InternalDeleteMessageResponseObject>(Object, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -73,25 +73,25 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            string id = default;
             bool deleted = default;
+            string messageId = default;
             InternalDeleteMessageResponseObject @object = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("id"u8))
-                {
-                    id = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("deleted"u8))
                 {
                     deleted = prop.Value.GetBoolean();
                     continue;
                 }
+                if (prop.NameEquals("id"u8))
+                {
+                    messageId = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = new InternalDeleteMessageResponseObject(prop.Value.GetString());
+                    @object = InternalDeleteMessageResponseObject.DeserializeInternalDeleteMessageResponseObject(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -99,7 +99,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new MessageDeletionResult(id, deleted, @object, additionalBinaryDataProperties);
+            return new MessageDeletionResult(deleted, messageId, @object, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<MessageDeletionResult>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -11,10 +11,8 @@ namespace OpenAI.Moderations
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ModerationOptions(BinaryData input, InternalCreateModerationRequestModel? model, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ModerationOptions(IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Input = input;
-            Model = model;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

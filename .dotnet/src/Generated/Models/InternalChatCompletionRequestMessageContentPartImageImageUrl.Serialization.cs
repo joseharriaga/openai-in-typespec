@@ -31,13 +31,13 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalChatCompletionRequestMessageContentPartImageImageUrl)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("url"u8);
-            writer.WriteStringValue(Url.AbsoluteUri);
             if (Optional.IsDefined(Detail))
             {
                 writer.WritePropertyName("detail"u8);
                 writer.WriteStringValue(Detail.Value.ToString());
             }
+            writer.WritePropertyName("url"u8);
+            writer.WriteStringValue(Url);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -74,16 +74,11 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            Uri url = default;
             ChatImageDetailLevel? detail = default;
+            string url = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("url"u8))
-                {
-                    url = new Uri(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("detail"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -94,12 +89,17 @@ namespace OpenAI.Chat
                     detail = new ChatImageDetailLevel(prop.Value.GetString());
                     continue;
                 }
+                if (prop.NameEquals("url"u8))
+                {
+                    url = prop.Value.GetString();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalChatCompletionRequestMessageContentPartImageImageUrl(url, detail, additionalBinaryDataProperties);
+            return new InternalChatCompletionRequestMessageContentPartImageImageUrl(detail, url, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalChatCompletionRequestMessageContentPartImageImageUrl>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -27,11 +27,8 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatOutputTokenUsageDetails)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(ReasoningTokens))
-            {
-                writer.WritePropertyName("reasoning_tokens"u8);
-                writer.WriteNumberValue(ReasoningTokens.Value);
-            }
+            writer.WritePropertyName("reasoning_tokens"u8);
+            writer.WriteNumberValue(ReasoningTokenCount);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -68,7 +65,7 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            int? reasoningTokens = default;
+            int reasoningTokenCount = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -76,10 +73,9 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        reasoningTokens = null;
                         continue;
                     }
-                    reasoningTokens = prop.Value.GetInt32();
+                    reasoningTokenCount = prop.Value.GetInt32();
                     continue;
                 }
                 if (options.Format != "W")
@@ -87,7 +83,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ChatOutputTokenUsageDetails(reasoningTokens, additionalBinaryDataProperties);
+            return new ChatOutputTokenUsageDetails(reasoningTokenCount, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ChatOutputTokenUsageDetails>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

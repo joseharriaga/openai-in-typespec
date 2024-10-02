@@ -34,9 +34,9 @@ namespace OpenAI.Audio
             writer.WritePropertyName("word"u8);
             writer.WriteStringValue(Word);
             writer.WritePropertyName("start"u8);
-            writer.WriteNumberValue(Convert.ToDouble(Start.ToString("s\\.FFF")));
+            writer.WriteNumberValue(Convert.ToDouble(StartTime.ToString("s\\.FFF")));
             writer.WritePropertyName("end"u8);
-            writer.WriteNumberValue(Convert.ToDouble(End.ToString("s\\.FFF")));
+            writer.WriteNumberValue(Convert.ToDouble(EndTime.ToString("s\\.FFF")));
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -74,8 +74,8 @@ namespace OpenAI.Audio
                 return null;
             }
             string word = default;
-            TimeSpan start = default;
-            TimeSpan end = default;
+            TimeSpan startTime = default;
+            TimeSpan endTime = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -86,12 +86,12 @@ namespace OpenAI.Audio
                 }
                 if (prop.NameEquals("start"u8))
                 {
-                    start = TimeSpan.FromSeconds(prop.Value.GetDouble());
+                    startTime = TimeSpan.FromSeconds(prop.Value.GetDouble());
                     continue;
                 }
                 if (prop.NameEquals("end"u8))
                 {
-                    end = TimeSpan.FromSeconds(prop.Value.GetDouble());
+                    endTime = TimeSpan.FromSeconds(prop.Value.GetDouble());
                     continue;
                 }
                 if (options.Format != "W")
@@ -99,7 +99,7 @@ namespace OpenAI.Audio
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new TranscribedWord(word, start, end, additionalBinaryDataProperties);
+            return new TranscribedWord(word, startTime, endTime, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<TranscribedWord>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

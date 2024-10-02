@@ -23,110 +23,36 @@ namespace OpenAI.Assistants
 
         public ClientPipeline Pipeline { get; }
 
-        public virtual ClientResult CreateMessage(string thread_id, BinaryContent content, RequestOptions options)
+        public virtual ClientResult ListMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options)
         {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-            Argument.AssertNotNull(content, nameof(content));
+            Argument.AssertNotNull(threadId, nameof(threadId));
 
-            using PipelineMessage message = CreateCreateMessageRequest(thread_id, content, options);
+            using PipelineMessage message = CreateListMessagesRequest(threadId, limit, order, after, before, options);
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> CreateMessageAsync(string thread_id, BinaryContent content, RequestOptions options)
+        public virtual async Task<ClientResult> ListMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options)
         {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-            Argument.AssertNotNull(content, nameof(content));
+            Argument.AssertNotNull(threadId, nameof(threadId));
 
-            using PipelineMessage message = CreateCreateMessageRequest(thread_id, content, options);
+            using PipelineMessage message = CreateListMessagesRequest(threadId, limit, order, after, before, options);
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult ListMessages(string thread_id, int? limit, string order, string after, string before, RequestOptions options)
+        public virtual ClientResult<InternalListMessagesResponse> ListMessages(string threadId, int? limit, MessageCollectionOrder? order, string after, string before)
         {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(threadId, nameof(threadId));
 
-            using PipelineMessage message = CreateListMessagesRequest(thread_id, limit, order, after, before, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> ListMessagesAsync(string thread_id, int? limit, string order, string after, string before, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-
-            using PipelineMessage message = CreateListMessagesRequest(thread_id, limit, order, after, before, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult<InternalListMessagesResponse> ListMessages(string thread_id, int? limit, MessageCollectionOrder? order, string after, string before)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-
-            ClientResult result = ListMessages(thread_id, limit, order.ToString(), after, before, null);
+            ClientResult result = ListMessages(threadId, limit, order.ToString(), after, before, null);
             return ClientResult.FromValue((InternalListMessagesResponse)result, result.GetRawResponse());
         }
 
-        public virtual async Task<ClientResult<InternalListMessagesResponse>> ListMessagesAsync(string thread_id, int? limit, MessageCollectionOrder? order, string after, string before)
+        public virtual async Task<ClientResult<InternalListMessagesResponse>> ListMessagesAsync(string threadId, int? limit, MessageCollectionOrder? order, string after, string before)
         {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
+            Argument.AssertNotNull(threadId, nameof(threadId));
 
-            ClientResult result = await ListMessagesAsync(thread_id, limit, order.ToString(), after, before, null).ConfigureAwait(false);
+            ClientResult result = await ListMessagesAsync(threadId, limit, order.ToString(), after, before, null).ConfigureAwait(false);
             return ClientResult.FromValue((InternalListMessagesResponse)result, result.GetRawResponse());
-        }
-
-        public virtual ClientResult GetMessage(string thread_id, string message_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-            Argument.AssertNotNull(message_id, nameof(message_id));
-
-            using PipelineMessage message = CreateGetMessageRequest(thread_id, message_id, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> GetMessageAsync(string thread_id, string message_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-            Argument.AssertNotNull(message_id, nameof(message_id));
-
-            using PipelineMessage message = CreateGetMessageRequest(thread_id, message_id, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult ModifyMessage(string thread_id, string message_id, BinaryContent content, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-            Argument.AssertNotNull(message_id, nameof(message_id));
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateModifyMessageRequest(thread_id, message_id, content, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> ModifyMessageAsync(string thread_id, string message_id, BinaryContent content, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-            Argument.AssertNotNull(message_id, nameof(message_id));
-            Argument.AssertNotNull(content, nameof(content));
-
-            using PipelineMessage message = CreateModifyMessageRequest(thread_id, message_id, content, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult DeleteMessage(string thread_id, string message_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-            Argument.AssertNotNull(message_id, nameof(message_id));
-
-            using PipelineMessage message = CreateDeleteMessageRequest(thread_id, message_id, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> DeleteMessageAsync(string thread_id, string message_id, RequestOptions options)
-        {
-            Argument.AssertNotNull(thread_id, nameof(thread_id));
-            Argument.AssertNotNull(message_id, nameof(message_id));
-
-            using PipelineMessage message = CreateDeleteMessageRequest(thread_id, message_id, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
     }
 }

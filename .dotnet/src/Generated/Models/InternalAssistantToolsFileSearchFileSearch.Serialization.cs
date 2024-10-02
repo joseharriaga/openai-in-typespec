@@ -27,15 +27,15 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalAssistantToolsFileSearchFileSearch)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(MaxNumResults))
-            {
-                writer.WritePropertyName("max_num_results"u8);
-                writer.WriteNumberValue(MaxNumResults.Value);
-            }
             if (Optional.IsDefined(RankingOptions))
             {
                 writer.WritePropertyName("ranking_options"u8);
                 writer.WriteObjectValue(RankingOptions, options);
+            }
+            if (Optional.IsDefined(InternalMaxNumResults))
+            {
+                writer.WritePropertyName("max_num_results"u8);
+                writer.WriteNumberValue(InternalMaxNumResults.Value);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -73,21 +73,11 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            int? maxNumResults = default;
             FileSearchRankingOptions rankingOptions = default;
+            int? internalMaxNumResults = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("max_num_results"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        maxNumResults = null;
-                        continue;
-                    }
-                    maxNumResults = prop.Value.GetInt32();
-                    continue;
-                }
                 if (prop.NameEquals("ranking_options"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -98,12 +88,22 @@ namespace OpenAI.Assistants
                     rankingOptions = FileSearchRankingOptions.DeserializeFileSearchRankingOptions(prop.Value, options);
                     continue;
                 }
+                if (prop.NameEquals("max_num_results"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        internalMaxNumResults = null;
+                        continue;
+                    }
+                    internalMaxNumResults = prop.Value.GetInt32();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalAssistantToolsFileSearchFileSearch(maxNumResults, rankingOptions, additionalBinaryDataProperties);
+            return new InternalAssistantToolsFileSearchFileSearch(rankingOptions, internalMaxNumResults, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalAssistantToolsFileSearchFileSearch>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

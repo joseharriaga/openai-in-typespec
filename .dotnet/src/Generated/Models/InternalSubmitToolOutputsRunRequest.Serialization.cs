@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
             }
             writer.WritePropertyName("tool_outputs"u8);
             writer.WriteStartArray();
-            foreach (var item in ToolOutputs)
+            foreach (ToolOutput item in ToolOutputs)
             {
                 writer.WriteObjectValue(item, options);
             }

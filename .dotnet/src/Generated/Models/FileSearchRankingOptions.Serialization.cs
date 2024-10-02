@@ -32,8 +32,6 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("ranker"u8);
                 writer.WriteStringValue(Ranker.Value.ToString());
             }
-            writer.WritePropertyName("score_threshold"u8);
-            writer.WriteNumberValue(ScoreThreshold);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -71,7 +69,6 @@ namespace OpenAI.Assistants
                 return null;
             }
             FileSearchRanker? ranker = default;
-            float scoreThreshold = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -85,17 +82,12 @@ namespace OpenAI.Assistants
                     ranker = new FileSearchRanker(prop.Value.GetString());
                     continue;
                 }
-                if (prop.NameEquals("score_threshold"u8))
-                {
-                    scoreThreshold = prop.Value.GetSingle();
-                    continue;
-                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new FileSearchRankingOptions(ranker, scoreThreshold, additionalBinaryDataProperties);
+            return new FileSearchRankingOptions(ranker, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<FileSearchRankingOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

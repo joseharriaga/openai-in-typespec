@@ -14,22 +14,21 @@ namespace OpenAI.Assistants
 
         public AssistantModificationOptions()
         {
-            Tools = new ChangeTrackingList<ToolDefinition>();
             Metadata = new ChangeTrackingDictionary<string, string>();
+            DefaultTools = new ChangeTrackingList<ToolDefinition>();
         }
 
-        internal AssistantModificationOptions(string model, string name, string description, string instructions, IList<ToolDefinition> tools, InternalModifyAssistantRequestToolResources toolResources, IDictionary<string, string> metadata, float? temperature, float? topP, BinaryData responseFormat, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal AssistantModificationOptions(string name, string description, string instructions, IDictionary<string, string> metadata, float? temperature, IList<ToolDefinition> defaultTools, ToolResources toolResources, AssistantResponseFormat responseFormat, float? nucleusSamplingFactor, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Model = model;
             Name = name;
             Description = description;
             Instructions = instructions;
-            Tools = tools;
-            ToolResources = toolResources;
             Metadata = metadata;
             Temperature = temperature;
-            TopP = topP;
+            DefaultTools = defaultTools;
+            ToolResources = toolResources;
             ResponseFormat = responseFormat;
+            NucleusSamplingFactor = nucleusSamplingFactor;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

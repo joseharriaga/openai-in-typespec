@@ -11,19 +11,19 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatTokenUsage(int completionTokens, int promptTokens, int totalTokens)
+        internal ChatTokenUsage(int outputTokenCount, int inputTokenCount, int totalTokenCount)
         {
-            CompletionTokens = completionTokens;
-            PromptTokens = promptTokens;
-            TotalTokens = totalTokens;
+            OutputTokenCount = outputTokenCount;
+            InputTokenCount = inputTokenCount;
+            TotalTokenCount = totalTokenCount;
         }
 
-        internal ChatTokenUsage(int completionTokens, int promptTokens, int totalTokens, ChatOutputTokenUsageDetails completionTokensDetails, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatTokenUsage(int outputTokenCount, int inputTokenCount, int totalTokenCount, ChatOutputTokenUsageDetails outputTokenDetails, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            CompletionTokens = completionTokens;
-            PromptTokens = promptTokens;
-            TotalTokens = totalTokens;
-            CompletionTokensDetails = completionTokensDetails;
+            OutputTokenCount = outputTokenCount;
+            InputTokenCount = inputTokenCount;
+            TotalTokenCount = totalTokenCount;
+            OutputTokenDetails = outputTokenDetails;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

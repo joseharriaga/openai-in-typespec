@@ -12,20 +12,20 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatTokenLogProbabilityDetails(string token, float logprob, IEnumerable<int> bytes, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogprobs)
+        internal ChatTokenLogProbabilityDetails(string token, float logProbability, ReadOnlyMemory<byte>? utf8Bytes, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities)
         {
             Token = token;
-            Logprob = logprob;
-            Bytes = bytes?.ToList();
-            TopLogprobs = topLogprobs.ToList();
+            LogProbability = logProbability;
+            Utf8Bytes = utf8Bytes;
+            TopLogProbabilities = topLogProbabilities.ToList();
         }
 
-        internal ChatTokenLogProbabilityDetails(string token, float logprob, IList<int> bytes, IList<ChatTokenTopLogProbabilityDetails> topLogprobs, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatTokenLogProbabilityDetails(string token, float logProbability, ReadOnlyMemory<byte>? utf8Bytes, IReadOnlyList<ChatTokenTopLogProbabilityDetails> topLogProbabilities, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Token = token;
-            Logprob = logprob;
-            Bytes = bytes;
-            TopLogprobs = topLogprobs;
+            LogProbability = logProbability;
+            Utf8Bytes = utf8Bytes;
+            TopLogProbabilities = topLogProbabilities;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

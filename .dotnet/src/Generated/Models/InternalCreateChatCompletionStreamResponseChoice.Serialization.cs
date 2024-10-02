@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI;
 
@@ -15,13 +14,6 @@ namespace OpenAI.Chat
     {
         internal InternalCreateChatCompletionStreamResponseChoice()
         {
-        }
-
-        void IJsonModel<InternalCreateChatCompletionStreamResponseChoice>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
-        {
-            writer.WriteStartObject();
-            JsonModelWriteCore(writer, options);
-            writer.WriteEndObject();
         }
 
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -45,17 +37,17 @@ namespace OpenAI.Chat
                     writer.WriteNull("logprobs"u8);
                 }
             }
+            writer.WritePropertyName("index"u8);
+            writer.WriteNumberValue(Index);
             if (FinishReason != null)
             {
                 writer.WritePropertyName("finish_reason"u8);
-                writer.WriteStringValue(FinishReason.Value.ToString());
+                writer.WriteObjectValue<Chat.OpenAI.Chat.ChatFinishReason<Chat.ChatFinishReason>?>(FinishReason, options);
             }
             else
             {
                 writer.WriteNull("finishReason"u8);
             }
-            writer.WritePropertyName("index"u8);
-            writer.WriteNumberValue(Index);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -83,58 +75,7 @@ namespace OpenAI.Chat
                 throw new FormatException($"The model {nameof(InternalCreateChatCompletionStreamResponseChoice)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalCreateChatCompletionStreamResponseChoice(document.RootElement, options);
-        }
-
-        internal static InternalCreateChatCompletionStreamResponseChoice DeserializeInternalCreateChatCompletionStreamResponseChoice(JsonElement element, ModelReaderWriterOptions options)
-        {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-            InternalChatCompletionStreamResponseDelta delta = default;
-            InternalCreateChatCompletionStreamResponseChoiceLogprobs logprobs = default;
-            InternalCreateChatCompletionStreamResponseChoiceFinishReason? finishReason = default;
-            int index = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            foreach (var prop in element.EnumerateObject())
-            {
-                if (prop.NameEquals("delta"u8))
-                {
-                    delta = InternalChatCompletionStreamResponseDelta.DeserializeInternalChatCompletionStreamResponseDelta(prop.Value, options);
-                    continue;
-                }
-                if (prop.NameEquals("logprobs"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        logprobs = null;
-                        continue;
-                    }
-                    logprobs = InternalCreateChatCompletionStreamResponseChoiceLogprobs.DeserializeInternalCreateChatCompletionStreamResponseChoiceLogprobs(prop.Value, options);
-                    continue;
-                }
-                if (prop.NameEquals("finish_reason"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        finishReason = null;
-                        continue;
-                    }
-                    finishReason = new InternalCreateChatCompletionStreamResponseChoiceFinishReason(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("index"u8))
-                {
-                    index = prop.Value.GetInt32();
-                    continue;
-                }
-                if (options.Format != "W")
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
-            }
-            return new InternalCreateChatCompletionStreamResponseChoice(delta, logprobs, finishReason, index, additionalBinaryDataProperties);
+            return InternalCreateChatCompletionStreamResponseChoice.DeserializeInternalCreateChatCompletionStreamResponseChoice(document.RootElement, options);
         }
 
         BinaryData IPersistableModel<InternalCreateChatCompletionStreamResponseChoice>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
@@ -161,7 +102,7 @@ namespace OpenAI.Chat
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeInternalCreateChatCompletionStreamResponseChoice(document.RootElement, options);
+                        return InternalCreateChatCompletionStreamResponseChoice.DeserializeInternalCreateChatCompletionStreamResponseChoice(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(InternalCreateChatCompletionStreamResponseChoice)} does not support reading '{options.Format}' format.");
@@ -179,7 +120,7 @@ namespace OpenAI.Chat
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalCreateChatCompletionStreamResponseChoice(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return InternalCreateChatCompletionStreamResponseChoice.DeserializeInternalCreateChatCompletionStreamResponseChoice(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

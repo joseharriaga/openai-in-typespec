@@ -35,7 +35,7 @@ namespace OpenAI.Assistants
             writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("data"u8);
             writer.WriteStartArray();
-            foreach (var item in Data)
+            foreach (ThreadRun item in Data)
             {
                 writer.WriteObjectValue(item, options);
             }

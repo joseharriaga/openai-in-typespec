@@ -13,7 +13,7 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public MessageCreationAttachment(string fileId, IEnumerable<BinaryData> tools)
+        public MessageCreationAttachment(string fileId, IEnumerable<ToolDefinition> tools)
         {
             Argument.AssertNotNull(fileId, nameof(fileId));
             Argument.AssertNotNull(tools, nameof(tools));
@@ -22,7 +22,7 @@ namespace OpenAI.Assistants
             Tools = tools.ToList();
         }
 
-        internal MessageCreationAttachment(string fileId, IList<BinaryData> tools, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal MessageCreationAttachment(string fileId, IReadOnlyList<ToolDefinition> tools, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             FileId = fileId;
             Tools = tools;

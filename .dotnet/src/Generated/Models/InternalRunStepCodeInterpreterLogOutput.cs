@@ -9,14 +9,14 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepCodeInterpreterLogOutput : RunStepCodeInterpreterOutput
     {
-        internal InternalRunStepCodeInterpreterLogOutput(string logs) : base("logs")
+        internal InternalRunStepCodeInterpreterLogOutput(string internalLogs) : base("logs")
         {
-            Logs = logs;
+            InternalLogs = internalLogs;
         }
 
-        internal InternalRunStepCodeInterpreterLogOutput(string logs, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRunStepCodeInterpreterLogOutput(string internalLogs, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
-            Logs = logs;
+            InternalLogs = internalLogs;
         }
     }
 }

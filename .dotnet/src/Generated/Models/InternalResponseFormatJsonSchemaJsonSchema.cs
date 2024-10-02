@@ -19,12 +19,12 @@ namespace OpenAI.Internal
             Name = name;
         }
 
-        internal InternalResponseFormatJsonSchemaJsonSchema(string description, string name, InternalResponseFormatJsonSchemaSchema schema, bool? strict, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalResponseFormatJsonSchemaJsonSchema(string description, string name, bool? strict, BinaryData schema, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Description = description;
             Name = name;
-            Schema = schema;
             Strict = strict;
+            Schema = schema;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

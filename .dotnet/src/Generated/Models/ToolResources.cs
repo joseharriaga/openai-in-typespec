@@ -11,10 +11,8 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ToolResources(CodeInterpreterToolResources codeInterpreter, InternalToolResourcesFileSearchIdsOnly fileSearch, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ToolResources(IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            CodeInterpreter = codeInterpreter;
-            FileSearch = fileSearch;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

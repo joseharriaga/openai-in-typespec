@@ -31,7 +31,7 @@ namespace OpenAI.Assistants
             {
                 writer.WritePropertyName("vector_store_ids"u8);
                 writer.WriteStartArray();
-                foreach (var item in VectorStoreIds)
+                foreach (string item in VectorStoreIds)
                 {
                     if (item == null)
                     {

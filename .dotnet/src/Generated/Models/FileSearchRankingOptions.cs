@@ -11,10 +11,9 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal FileSearchRankingOptions(FileSearchRanker? ranker, float scoreThreshold, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal FileSearchRankingOptions(FileSearchRanker? ranker, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Ranker = ranker;
-            ScoreThreshold = scoreThreshold;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

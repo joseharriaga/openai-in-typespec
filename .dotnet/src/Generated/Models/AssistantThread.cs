@@ -11,21 +11,20 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal AssistantThread(string id, DateTimeOffset createdAt, InternalThreadObjectToolResources toolResources, IDictionary<string, string> metadata)
+        internal AssistantThread(string id, DateTimeOffset createdAt, IDictionary<string, string> metadata, InternalThreadObjectObject @object)
         {
             Id = id;
             CreatedAt = createdAt;
-            ToolResources = toolResources;
             Metadata = metadata;
+            Object = @object;
         }
 
-        internal AssistantThread(string id, InternalThreadObjectObject @object, DateTimeOffset createdAt, InternalThreadObjectToolResources toolResources, IDictionary<string, string> metadata, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal AssistantThread(string id, DateTimeOffset createdAt, IDictionary<string, string> metadata, InternalThreadObjectObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Object = @object;
             CreatedAt = createdAt;
-            ToolResources = toolResources;
             Metadata = metadata;
+            Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

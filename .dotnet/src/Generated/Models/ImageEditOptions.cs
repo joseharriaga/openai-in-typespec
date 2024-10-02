@@ -11,7 +11,7 @@ namespace OpenAI.Images
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ImageEditOptions(Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>? size, Images.OpenAI.Images.GeneratedImageFormat<Images.GeneratedImageFormat>? responseFormat, string endUserId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ImageEditOptions(Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>? size, Images.OpenAI.Images.GeneratedImageFormat<GeneratedImageFormat>? responseFormat, string endUserId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Size = size;
             ResponseFormat = responseFormat;

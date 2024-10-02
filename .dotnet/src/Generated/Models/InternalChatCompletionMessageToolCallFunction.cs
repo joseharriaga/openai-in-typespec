@@ -4,30 +4,25 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionMessageToolCallFunction
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        public InternalChatCompletionMessageToolCallFunction(string name, BinaryData arguments)
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        public InternalChatCompletionMessageToolCallFunction(string name)
         {
             Argument.AssertNotNull(name, nameof(name));
-            Argument.AssertNotNull(arguments, nameof(arguments));
 
             Name = name;
-            Arguments = arguments;
         }
 
-        internal InternalChatCompletionMessageToolCallFunction(string name, BinaryData arguments, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalChatCompletionMessageToolCallFunction(string name, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Name = name;
-            Arguments = arguments;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        internal InternalChatCompletionMessageToolCallFunction()
-        {
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public string Name { get; set; }

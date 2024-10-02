@@ -7,51 +7,51 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
     public partial class StreamingChatToolCallUpdate : IJsonModel<StreamingChatToolCallUpdate>
     {
+        internal StreamingChatToolCallUpdate()
+        {
+        }
+
         void IJsonModel<StreamingChatToolCallUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatToolCallUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatToolCallUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(StreamingChatToolCallUpdate)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("index") != true)
-            {
-                writer.WritePropertyName("index"u8);
-                writer.WriteNumberValue(Index);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("id") != true && Optional.IsDefined(ToolCallId))
-            {
-                writer.WritePropertyName("id"u8);
-                writer.WriteStringValue(ToolCallId);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
-            {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Kind.ToSerialString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("function") != true && Optional.IsDefined(Function))
+            writer.WritePropertyName("index"u8);
+            writer.WriteNumberValue(Index);
+            if (Optional.IsDefined(Function))
             {
                 writer.WritePropertyName("function"u8);
                 writer.WriteObjectValue<InternalChatCompletionMessageToolCallChunkFunction>(Function, options);
             }
-            if (SerializedAdditionalRawData != null)
+            writer.WritePropertyName("type"u8);
+            writer.WriteNumberValue((int)Kind);
+            if (Optional.IsDefined(ToolCallId))
             {
-                foreach (var item in SerializedAdditionalRawData)
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(ToolCallId);
+            }
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            {
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -60,79 +60,75 @@ namespace OpenAI.Chat
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        StreamingChatToolCallUpdate IJsonModel<StreamingChatToolCallUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        StreamingChatToolCallUpdate IJsonModel<StreamingChatToolCallUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual StreamingChatToolCallUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatToolCallUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatToolCallUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(StreamingChatToolCallUpdate)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeStreamingChatToolCallUpdate(document.RootElement, options);
         }
 
-        internal static StreamingChatToolCallUpdate DeserializeStreamingChatToolCallUpdate(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static StreamingChatToolCallUpdate DeserializeStreamingChatToolCallUpdate(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             int index = default;
-            string id = default;
-            ChatToolCallKind type = default;
             InternalChatCompletionMessageToolCallChunkFunction function = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            Chat.ChatToolCallKind kind = default;
+            string toolCallId = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("index"u8))
+                if (prop.NameEquals("index"u8))
                 {
-                    index = property.Value.GetInt32();
+                    index = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("id"u8))
+                if (prop.NameEquals("function"u8))
                 {
-                    id = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("type"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    type = property.Value.GetString().ToChatToolCallKind();
+                    function = InternalChatCompletionMessageToolCallChunkFunction.DeserializeInternalChatCompletionMessageToolCallChunkFunction(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("function"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    function = InternalChatCompletionMessageToolCallChunkFunction.DeserializeInternalChatCompletionMessageToolCallChunkFunction(property.Value, options);
+                    kind = prop.Value.GetInt32().ToChatToolCallKind();
                     continue;
                 }
-                if (true)
+                if (prop.NameEquals("id"u8))
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    toolCallId = prop.Value.GetString();
+                    continue;
+                }
+                if (options.Format != "W")
+                {
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new StreamingChatToolCallUpdate(index, id, type, function, serializedAdditionalRawData);
+            return new StreamingChatToolCallUpdate(index, function, kind, toolCallId, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<StreamingChatToolCallUpdate>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatToolCallUpdate>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<StreamingChatToolCallUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatToolCallUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -142,15 +138,16 @@ namespace OpenAI.Chat
             }
         }
 
-        StreamingChatToolCallUpdate IPersistableModel<StreamingChatToolCallUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatToolCallUpdate>)this).GetFormatFromOptions(options) : options.Format;
+        StreamingChatToolCallUpdate IPersistableModel<StreamingChatToolCallUpdate>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual StreamingChatToolCallUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatToolCallUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeStreamingChatToolCallUpdate(document.RootElement, options);
                     }
                 default:
@@ -160,15 +157,16 @@ namespace OpenAI.Chat
 
         string IPersistableModel<StreamingChatToolCallUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static StreamingChatToolCallUpdate FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(StreamingChatToolCallUpdate streamingChatToolCallUpdate)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeStreamingChatToolCallUpdate(document.RootElement);
+            return BinaryContent.Create(streamingChatToolCallUpdate, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator StreamingChatToolCallUpdate(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeStreamingChatToolCallUpdate(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

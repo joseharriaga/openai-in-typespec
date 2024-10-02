@@ -7,83 +7,74 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
     public partial class StreamingChatCompletionUpdate : IJsonModel<StreamingChatCompletionUpdate>
     {
+        internal StreamingChatCompletionUpdate()
+        {
+        }
+
         void IJsonModel<StreamingChatCompletionUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatCompletionUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatCompletionUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(StreamingChatCompletionUpdate)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
-            {
-                writer.WritePropertyName("id"u8);
-                writer.WriteStringValue(CompletionId);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("choices") != true)
-            {
-                writer.WritePropertyName("choices"u8);
-                writer.WriteStartArray();
-                foreach (var item in Choices)
-                {
-                    writer.WriteObjectValue<InternalCreateChatCompletionStreamResponseChoice>(item, options);
-                }
-                writer.WriteEndArray();
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("created") != true)
-            {
-                writer.WritePropertyName("created"u8);
-                writer.WriteNumberValue(CreatedAt, "U");
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("model") != true)
-            {
-                writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("service_tier") != true && Optional.IsDefined(ServiceTier))
-            {
-                if (ServiceTier != null)
-                {
-                    writer.WritePropertyName("service_tier"u8);
-                    writer.WriteStringValue(ServiceTier.Value.ToString());
-                }
-                else
-                {
-                    writer.WriteNull("service_tier");
-                }
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("system_fingerprint") != true && Optional.IsDefined(SystemFingerprint))
+            writer.WritePropertyName("model"u8);
+            writer.WriteStringValue(Model);
+            if (Optional.IsDefined(SystemFingerprint))
             {
                 writer.WritePropertyName("system_fingerprint"u8);
                 writer.WriteStringValue(SystemFingerprint);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalCreateChatCompletionStreamResponseObject>(Object, options);
+            writer.WritePropertyName("id"u8);
+            writer.WriteStringValue(CompletionId);
+            if (Optional.IsDefined(ServiceTier))
             {
-                writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(Object.ToString());
+                if (ServiceTier != null)
+                {
+                    writer.WritePropertyName("service_tier"u8);
+                    writer.WriteObjectValue<Chat.OpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier<InternalCreateChatCompletionStreamResponseServiceTier>?>(ServiceTier, options);
+                }
+                else
+                {
+                    writer.WriteNull("serviceTier"u8);
+                }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("usage") != true && Optional.IsDefined(Usage))
+            writer.WritePropertyName("choices"u8);
+            writer.WriteStartArray();
+            foreach (InternalCreateChatCompletionStreamResponseChoice item in Choices)
+            {
+                writer.WriteObjectValue(item, options);
+            }
+            writer.WriteEndArray();
+            writer.WritePropertyName("created"u8);
+            writer.WriteNumberValue(CreatedAt, "U");
+            if (Optional.IsDefined(Usage))
             {
                 writer.WritePropertyName("usage"u8);
                 writer.WriteObjectValue<ChatTokenUsage>(Usage, options);
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -92,118 +83,119 @@ namespace OpenAI.Chat
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        StreamingChatCompletionUpdate IJsonModel<StreamingChatCompletionUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        StreamingChatCompletionUpdate IJsonModel<StreamingChatCompletionUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual StreamingChatCompletionUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatCompletionUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatCompletionUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(StreamingChatCompletionUpdate)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeStreamingChatCompletionUpdate(document.RootElement, options);
         }
 
-        internal static StreamingChatCompletionUpdate DeserializeStreamingChatCompletionUpdate(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static StreamingChatCompletionUpdate DeserializeStreamingChatCompletionUpdate(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            string id = default;
-            IReadOnlyList<InternalCreateChatCompletionStreamResponseChoice> choices = default;
-            DateTimeOffset created = default;
             string model = default;
-            InternalCreateChatCompletionStreamResponseServiceTier? serviceTier = default;
             string systemFingerprint = default;
             InternalCreateChatCompletionStreamResponseObject @object = default;
+            string completionId = default;
+            Chat.OpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier<InternalCreateChatCompletionStreamResponseServiceTier>? serviceTier = default;
+            IReadOnlyList<InternalCreateChatCompletionStreamResponseChoice> choices = default;
+            DateTimeOffset createdAt = default;
             ChatTokenUsage usage = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("id"u8))
+                if (prop.NameEquals("model"u8))
                 {
-                    id = property.Value.GetString();
+                    model = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("choices"u8))
+                if (prop.NameEquals("system_fingerprint"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        systemFingerprint = null;
+                        continue;
+                    }
+                    systemFingerprint = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("object"u8))
+                {
+                    @object = InternalCreateChatCompletionStreamResponseObject.DeserializeInternalCreateChatCompletionStreamResponseObject(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("id"u8))
+                {
+                    completionId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("service_tier"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        serviceTier = null;
+                        continue;
+                    }
+                    serviceTier = Chat.OpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier<InternalCreateChatCompletionStreamResponseServiceTier>?.DeserializeOpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("choices"u8))
                 {
                     List<InternalCreateChatCompletionStreamResponseChoice> array = new List<InternalCreateChatCompletionStreamResponseChoice>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
                         array.Add(InternalCreateChatCompletionStreamResponseChoice.DeserializeInternalCreateChatCompletionStreamResponseChoice(item, options));
                     }
                     choices = array;
                     continue;
                 }
-                if (property.NameEquals("created"u8))
+                if (prop.NameEquals("created"u8))
                 {
-                    created = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    createdAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("model"u8))
+                if (prop.NameEquals("usage"u8))
                 {
-                    model = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("service_tier"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        serviceTier = null;
-                        continue;
-                    }
-                    serviceTier = new InternalCreateChatCompletionStreamResponseServiceTier(property.Value.GetString());
-                    continue;
-                }
-                if (property.NameEquals("system_fingerprint"u8))
-                {
-                    systemFingerprint = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("object"u8))
-                {
-                    @object = new InternalCreateChatCompletionStreamResponseObject(property.Value.GetString());
-                    continue;
-                }
-                if (property.NameEquals("usage"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    usage = ChatTokenUsage.DeserializeChatTokenUsage(property.Value, options);
+                    usage = ChatTokenUsage.DeserializeChatTokenUsage(prop.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new StreamingChatCompletionUpdate(
-                id,
-                choices,
-                created,
                 model,
-                serviceTier,
                 systemFingerprint,
                 @object,
+                completionId,
+                serviceTier,
+                choices,
+                createdAt,
                 usage,
-                serializedAdditionalRawData);
+                additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<StreamingChatCompletionUpdate>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatCompletionUpdate>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<StreamingChatCompletionUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatCompletionUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -213,15 +205,16 @@ namespace OpenAI.Chat
             }
         }
 
-        StreamingChatCompletionUpdate IPersistableModel<StreamingChatCompletionUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<StreamingChatCompletionUpdate>)this).GetFormatFromOptions(options) : options.Format;
+        StreamingChatCompletionUpdate IPersistableModel<StreamingChatCompletionUpdate>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual StreamingChatCompletionUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatCompletionUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeStreamingChatCompletionUpdate(document.RootElement, options);
                     }
                 default:
@@ -231,15 +224,16 @@ namespace OpenAI.Chat
 
         string IPersistableModel<StreamingChatCompletionUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static StreamingChatCompletionUpdate FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(StreamingChatCompletionUpdate streamingChatCompletionUpdate)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeStreamingChatCompletionUpdate(document.RootElement);
+            return BinaryContent.Create(streamingChatCompletionUpdate, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator StreamingChatCompletionUpdate(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeStreamingChatCompletionUpdate(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -6,27 +6,58 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Moderations
 {
     public partial class ModerationResultCollection : IJsonModel<ModerationResultCollection>
     {
-        ModerationResultCollection IJsonModel<ModerationResultCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ModerationResultCollection>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ModerationResultCollection>)this).GetFormatFromOptions(options) : options.Format;
+            if (format != "J")
+            {
+                throw new FormatException($"The model {nameof(ModerationResultCollection)} does not support writing '{format}' format.");
+            }
+            writer.WritePropertyName("id"u8);
+            writer.WriteStringValue(Id);
+            writer.WritePropertyName("model"u8);
+            writer.WriteStringValue(Model);
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            {
+                foreach (var item in _additionalBinaryDataProperties)
+                {
+                    writer.WritePropertyName(item.Key);
+#if NET6_0_OR_GREATER
+                    writer.WriteRawValue(item.Value);
+#else
+                    using (JsonDocument document = JsonDocument.Parse(item.Value))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
+#endif
+                }
+            }
+        }
+
+        ModerationResultCollection IJsonModel<ModerationResultCollection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual ModerationResultCollection JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ModerationResultCollection>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ModerationResultCollection)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeModerationResultCollection(document.RootElement, options);
+            return ModerationResultCollection.DeserializeModerationResultCollection(document.RootElement, options);
         }
 
-        BinaryData IPersistableModel<ModerationResultCollection>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ModerationResultCollection>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<ModerationResultCollection>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ModerationResultCollection>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -36,16 +67,17 @@ namespace OpenAI.Moderations
             }
         }
 
-        ModerationResultCollection IPersistableModel<ModerationResultCollection>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ModerationResultCollection>)this).GetFormatFromOptions(options) : options.Format;
+        ModerationResultCollection IPersistableModel<ModerationResultCollection>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual ModerationResultCollection PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ModerationResultCollection>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeModerationResultCollection(document.RootElement, options);
+                        return ModerationResultCollection.DeserializeModerationResultCollection(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(ModerationResultCollection)} does not support reading '{options.Format}' format.");
@@ -54,15 +86,16 @@ namespace OpenAI.Moderations
 
         string IPersistableModel<ModerationResultCollection>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static ModerationResultCollection FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(ModerationResultCollection moderationResultCollection)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeModerationResultCollection(document.RootElement);
+            return BinaryContent.Create(moderationResultCollection, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator ModerationResultCollection(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return ModerationResultCollection.DeserializeModerationResultCollection(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -7,26 +7,38 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OpenAI;
 
 namespace OpenAI.Batch
 {
-    // Data plane generated sub-client.
     public partial class BatchClient
     {
+        private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly ClientPipeline _pipeline;
-        private readonly Uri _endpoint;
 
         protected BatchClient()
         {
         }
 
-        private static PipelineMessageClassifier _pipelineMessageClassifier200;
-        private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
+        public virtual ClientResult<InternalBatchJob> CreateBatch(string inputFileId, InternalCreateBatchRequestEndpoint endpoint, InternalBatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata = default)
+        {
+            Argument.AssertNotNull(inputFileId, nameof(inputFileId));
 
-        public ClientPipeline Pipeline { get; }
+            InternalCreateBatchRequest spreadModel = new InternalCreateBatchRequest(null, endpoint, null, metadata, null);
+            ClientResult result = this.CreateBatch(spreadModel, null);
+            return ClientResult.FromValue((InternalBatchJob)result, result.GetRawResponse());
+        }
+
+        public virtual async Task<ClientResult<InternalBatchJob>> CreateBatchAsync(string inputFileId, InternalCreateBatchRequestEndpoint endpoint, InternalBatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata = default)
+        {
+            Argument.AssertNotNull(inputFileId, nameof(inputFileId));
+
+            InternalCreateBatchRequest spreadModel = new InternalCreateBatchRequest(null, endpoint, null, metadata, null);
+            ClientResult result = await this.CreateBatchAsync(spreadModel, null).ConfigureAwait(false);
+            return ClientResult.FromValue((InternalBatchJob)result, result.GetRawResponse());
+        }
 
         public virtual ClientResult ListBatches(string after, int? limit, RequestOptions options)
         {

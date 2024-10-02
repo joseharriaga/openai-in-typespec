@@ -9,41 +9,33 @@ namespace OpenAI.Files
 {
     public partial class OpenAIFile
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal OpenAIFile(string id, int? sizeInBytes, DateTimeOffset createdAt, string filename, FilePurpose purpose, FileStatus status)
-        {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(filename, nameof(filename));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
+        internal OpenAIFile(string id, DateTimeOffset createdAt, string filename, Files.FilePurpose purpose, int? sizeInBytes)
+        {
             Id = id;
-            SizeInBytes = sizeInBytes;
             CreatedAt = createdAt;
             Filename = filename;
             Purpose = purpose;
-            Status = status;
+            SizeInBytes = sizeInBytes;
         }
 
-        internal OpenAIFile(string id, int? sizeInBytes, DateTimeOffset createdAt, string filename, InternalOpenAIFileObject @object, FilePurpose purpose, FileStatus status, string statusDetails, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal OpenAIFile(string id, DateTimeOffset createdAt, string filename, Files.FilePurpose purpose, int? sizeInBytes, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            SizeInBytes = sizeInBytes;
             CreatedAt = createdAt;
             Filename = filename;
-            Object = @object;
             Purpose = purpose;
-            Status = status;
-            StatusDetails = statusDetails;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            SizeInBytes = sizeInBytes;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal OpenAIFile()
-        {
-        }
+        public string Id { get; set; }
 
-        public string Id { get; }
-        public DateTimeOffset CreatedAt { get; }
-        public string Filename { get; }
+        public DateTimeOffset CreatedAt { get; set; }
 
-        public FilePurpose Purpose { get; }
+        public string Filename { get; set; }
+
+        public Files.FilePurpose Purpose { get; set; }
     }
 }

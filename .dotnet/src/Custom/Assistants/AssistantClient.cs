@@ -75,7 +75,7 @@ public partial class AssistantClient
         Argument.AssertNotNull(credential, nameof(credential));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
         _messageSubClient = new(_pipeline, options);
         _runSubClient = new(_pipeline, options);

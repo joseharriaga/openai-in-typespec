@@ -2,15 +2,30 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace OpenAI.Moderations
 {
-    public partial class ModerationResultCollection : ReadOnlyCollection<ModerationResult>
+    public partial class ModerationResultCollection
     {
-        public string Id { get; }
-        public string Model { get; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        internal ModerationResultCollection(string id, string model)
+        {
+            Id = id;
+            Model = model;
+        }
+
+        internal ModerationResultCollection(string id, string model, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        {
+            Id = id;
+            Model = model;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
+
+        public string Id { get; set; }
+
+        public string Model { get; set; }
     }
 }

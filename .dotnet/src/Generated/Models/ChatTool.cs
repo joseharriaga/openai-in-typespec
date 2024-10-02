@@ -12,7 +12,7 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public ChatTool(InternalFunctionDefinition function, ChatToolKind kind)
+        public ChatTool(InternalFunctionDefinition function, Chat.ChatToolKind kind)
         {
             Argument.AssertNotNull(function, nameof(function));
 
@@ -20,7 +20,7 @@ namespace OpenAI.Chat
             Kind = kind;
         }
 
-        internal ChatTool(InternalFunctionDefinition function, ChatToolKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatTool(InternalFunctionDefinition function, Chat.ChatToolKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Function = function;
             Kind = kind;

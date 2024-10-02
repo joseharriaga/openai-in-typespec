@@ -11,7 +11,7 @@ namespace OpenAI.Images
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ImageGenerationOptions(Images.GeneratedImageQuality? quality, Images.GeneratedImageFormat? responseFormat, GeneratedImageSize? size, Images.GeneratedImageStyle? style, string endUserId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ImageGenerationOptions(GeneratedImageQuality? quality, GeneratedImageFormat? responseFormat, GeneratedImageSize? size, GeneratedImageStyle? style, string endUserId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Quality = quality;
             ResponseFormat = responseFormat;
@@ -21,12 +21,12 @@ namespace OpenAI.Images
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public Images.GeneratedImageQuality? Quality { get; set; }
+        public GeneratedImageQuality? Quality { get; set; }
 
-        public Images.GeneratedImageFormat? ResponseFormat { get; set; }
+        public GeneratedImageFormat? ResponseFormat { get; set; }
 
         public GeneratedImageSize? Size { get; set; }
 
-        public Images.GeneratedImageStyle? Style { get; set; }
+        public GeneratedImageStyle? Style { get; set; }
     }
 }

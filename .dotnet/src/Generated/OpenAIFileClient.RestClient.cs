@@ -9,17 +9,17 @@ using OpenAI;
 
 namespace OpenAI.Files
 {
-    public partial class FileClient
+    public partial class OpenAIFileClient
     {
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier _pipelineMessageClassifier204;
-        private static OpenAI.FileClient.Classifier2xxAnd4xx _pipelineMessageClassifier2xxAnd4xx;
+        private static OpenAI.OpenAIFileClient.Classifier2xxAnd4xx _pipelineMessageClassifier2xxAnd4xx;
 
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 = PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 
         private static PipelineMessageClassifier PipelineMessageClassifier204 => _pipelineMessageClassifier204 = PipelineMessageClassifier.Create(stackalloc ushort[] { 204 });
 
-        private static OpenAI.FileClient.Classifier2xxAnd4xx PipelineMessageClassifier2xxAnd4xx => _pipelineMessageClassifier2xxAnd4xx ??= new OpenAI.FileClient.Classifier2xxAnd4xx();
+        private static OpenAI.OpenAIFileClient.Classifier2xxAnd4xx PipelineMessageClassifier2xxAnd4xx => _pipelineMessageClassifier2xxAnd4xx ??= new OpenAI.OpenAIFileClient.Classifier2xxAnd4xx();
 
         internal PipelineMessage CreateCreateFileRequest(BinaryContent content, string contentType, RequestOptions options)
         {

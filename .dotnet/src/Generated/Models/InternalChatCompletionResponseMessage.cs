@@ -4,33 +4,34 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionResponseMessage
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalChatCompletionResponseMessage(ChatMessageContent content, string refusal)
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        internal InternalChatCompletionResponseMessage(string refusal, Chat.ChatMessageRole role, Chat.ChatMessageContent content)
         {
-            Content = content;
             Refusal = refusal;
             ToolCalls = new ChangeTrackingList<ChatToolCall>();
+            Role = role;
+            Content = content;
         }
 
-        internal InternalChatCompletionResponseMessage(ChatMessageContent content, string refusal, IReadOnlyList<ChatToolCall> toolCalls, ChatMessageRole role, ChatFunctionCall functionCall, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalChatCompletionResponseMessage(string refusal, IList<ChatToolCall> toolCalls, Chat.ChatMessageRole role, Chat.ChatMessageContent content, ChatFunctionCall functionCall, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Content = content;
             Refusal = refusal;
             ToolCalls = toolCalls;
             Role = role;
+            Content = content;
             FunctionCall = functionCall;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalChatCompletionResponseMessage()
-        {
-        }
-        public string Refusal { get; }
-        public IReadOnlyList<ChatToolCall> ToolCalls { get; }
+        public string Refusal { get; set; }
+
+        public IList<ChatToolCall> ToolCalls { get; }
     }
 }

@@ -11,7 +11,7 @@ namespace OpenAI.Audio
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal AudioTranslationOptions(string prompt, Audio.AudioTranslationFormat? responseFormat, float? temperature, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal AudioTranslationOptions(string prompt, AudioTranslationFormat? responseFormat, float? temperature, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Prompt = prompt;
             ResponseFormat = responseFormat;
@@ -21,7 +21,7 @@ namespace OpenAI.Audio
 
         public string Prompt { get; set; }
 
-        public Audio.AudioTranslationFormat? ResponseFormat { get; set; }
+        public AudioTranslationFormat? ResponseFormat { get; set; }
 
         public float? Temperature { get; set; }
     }

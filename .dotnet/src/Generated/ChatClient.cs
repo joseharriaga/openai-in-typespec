@@ -4,7 +4,6 @@
 
 using System;
 using System.ClientModel;
-using System.ClientModel.Primitives;
 
 namespace OpenAI.Chat
 {
@@ -14,13 +13,9 @@ namespace OpenAI.Chat
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly ClientPipeline _pipeline;
-        private readonly Uri _endpoint;
 
         protected ChatClient()
         {
         }
-
-        public ClientPipeline Pipeline { get; }
     }
 }

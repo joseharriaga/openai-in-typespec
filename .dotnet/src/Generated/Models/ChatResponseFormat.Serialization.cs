@@ -13,10 +13,6 @@ namespace OpenAI.Chat
     [PersistableModelProxy(typeof(InternalUnknownChatResponseFormat))]
     public abstract partial class ChatResponseFormat : IJsonModel<ChatResponseFormat>
     {
-        internal ChatResponseFormat()
-        {
-        }
-
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<ChatResponseFormat>)this).GetFormatFromOptions(options) : options.Format;

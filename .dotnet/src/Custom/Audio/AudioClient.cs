@@ -24,12 +24,6 @@ public partial class AudioClient
 {
     private readonly string _model;
 
-    // CUSTOM: Remove virtual keyword.
-    /// <summary>
-    /// The HTTP pipeline for sending and receiving REST requests and responses.
-    /// </summary>
-    public ClientPipeline Pipeline => _pipeline;
-
     // CUSTOM: Added as a convenience.
     /// <summary> Initializes a new instance of <see cref="AudioClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
@@ -81,7 +75,7 @@ public partial class AudioClient
         options ??= new OpenAIClientOptions();
 
         _model = model;
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -103,7 +97,7 @@ public partial class AudioClient
         options ??= new OpenAIClientOptions();
 
         _model = model;
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -127,7 +121,7 @@ public partial class AudioClient
         options ??= new();
         CreateSpeechGenerationOptions(text, voice, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = await GenerateSpeechAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }
@@ -150,7 +144,7 @@ public partial class AudioClient
         options ??= new();
         CreateSpeechGenerationOptions(text, voice, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = GenerateSpeech(content, cancellationToken.ToRequestOptions()); ;
         return ClientResult.FromValue(result.GetRawResponse().Content, result.GetRawResponse());
     }

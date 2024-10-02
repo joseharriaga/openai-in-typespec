@@ -9,67 +9,39 @@ using System.Threading.Tasks;
 
 namespace OpenAI.Models
 {
-    // Data plane generated sub-client.
     public partial class OpenAIModelClient
     {
+        private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly ClientPipeline _pipeline;
-        private readonly Uri _endpoint;
 
         protected OpenAIModelClient()
         {
         }
 
-        internal PipelineMessage CreateGetModelsRequest(RequestOptions options)
+        public virtual ClientResult ListModels(RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/models", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            using PipelineMessage message = CreateListModelsRequest(options);
+            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        internal PipelineMessage CreateRetrieveModelRequest(string model, RequestOptions options)
+        public virtual async Task<ClientResult> ListModelsAsync(RequestOptions options)
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "GET";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/models/", false);
-            uri.AppendPath(model, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            using PipelineMessage message = CreateListModelsRequest(options);
+            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        internal PipelineMessage CreateDeleteModelRequest(string model, RequestOptions options)
+        public virtual ClientResult<OpenAIModelCollection> ListModels()
         {
-            var message = _pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            var request = message.Request;
-            request.Method = "DELETE";
-            var uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/models/", false);
-            uri.AppendPath(model, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
+            ClientResult result = ListModels(null);
+            return ClientResult.FromValue((OpenAIModelCollection)result, result.GetRawResponse());
         }
 
-        private static PipelineMessageClassifier _pipelineMessageClassifier200;
-        private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
+        public virtual async Task<ClientResult<OpenAIModelCollection>> ListModelsAsync()
+        {
+            ClientResult result = await ListModelsAsync(null).ConfigureAwait(false);
+            return ClientResult.FromValue((OpenAIModelCollection)result, result.GetRawResponse());
+        }
     }
 }

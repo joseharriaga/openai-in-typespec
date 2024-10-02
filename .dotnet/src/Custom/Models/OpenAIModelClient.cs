@@ -29,7 +29,7 @@ public partial class OpenAIModelClient
     public ClientPipeline Pipeline => _pipeline;
 
     // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="OpenAIModelClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="OpenAIModelClient"/>. </summary>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="apiKey"/> is null. </exception>
     public OpenAIModelClient(string apiKey) : this(new ApiKeyCredential(apiKey), new OpenAIClientOptions())
@@ -39,7 +39,7 @@ public partial class OpenAIModelClient
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="OpenAIModelClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="OpenAIModelClient"/>. </summary>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
     public OpenAIModelClient(ApiKeyCredential credential) : this(credential, new OpenAIClientOptions())
@@ -49,7 +49,7 @@ public partial class OpenAIModelClient
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="OpenAIModelClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="OpenAIModelClient"/>. </summary>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
@@ -66,7 +66,7 @@ public partial class OpenAIModelClient
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
     // - Made protected.
-    /// <summary> Initializes a new instance of <see cref="OpenAIModelClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="OpenAIModelClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline to send and receive REST requests and responses. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="pipeline"/> is null. </exception>

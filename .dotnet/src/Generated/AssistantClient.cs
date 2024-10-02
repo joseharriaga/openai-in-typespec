@@ -15,14 +15,10 @@ namespace OpenAI.Assistants
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly ClientPipeline _pipeline;
-        private readonly Uri _endpoint;
 
         protected AssistantClient()
         {
         }
-
-        public ClientPipeline Pipeline { get; }
 
         public virtual ClientResult ListAssistants(int? limit, string order, string after, string before, RequestOptions options)
         {

@@ -3,7 +3,6 @@
 #nullable disable
 
 using System;
-using System.ClientModel;
 using System.ClientModel.Primitives;
 using OpenAI;
 
@@ -20,23 +19,6 @@ namespace OpenAI.Batch
         private static PipelineMessageClassifier PipelineMessageClassifier204 => _pipelineMessageClassifier204 = PipelineMessageClassifier.Create(stackalloc ushort[] { 204 });
 
         private static OpenAI.BatchClient.Classifier2xxAnd4xx PipelineMessageClassifier2xxAnd4xx => _pipelineMessageClassifier2xxAnd4xx ??= new OpenAI.BatchClient.Classifier2xxAnd4xx();
-
-        internal PipelineMessage CreateCreateBatchRequest(BinaryContent content, RequestOptions options)
-        {
-            PipelineMessage message = Pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            PipelineRequest request = message.Request;
-            request.Method = "POST";
-            ClientUriBuilder uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/batches", false);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            request.Headers.Set("Content-Type", "application/json");
-            request.Content = content;
-            message.Apply(options);
-            return message;
-        }
 
         internal PipelineMessage CreateListBatchesRequest(string after, int? limit, RequestOptions options)
         {
@@ -55,39 +37,6 @@ namespace OpenAI.Batch
             {
                 uri.AppendQuery("limit", TypeFormatters.ConvertToString(limit, null), true);
             }
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
-        }
-
-        internal PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions options)
-        {
-            PipelineMessage message = Pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            PipelineRequest request = message.Request;
-            request.Method = "GET";
-            ClientUriBuilder uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/batches/", false);
-            uri.AppendPath(batchId, true);
-            request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
-            message.Apply(options);
-            return message;
-        }
-
-        internal PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions options)
-        {
-            PipelineMessage message = Pipeline.CreateMessage();
-            message.ResponseClassifier = PipelineMessageClassifier200;
-            PipelineRequest request = message.Request;
-            request.Method = "POST";
-            ClientUriBuilder uri = new ClientUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/batches/", false);
-            uri.AppendPath(batchId, true);
-            uri.AppendPath("/cancel", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);

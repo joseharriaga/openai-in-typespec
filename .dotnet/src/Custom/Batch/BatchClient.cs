@@ -62,7 +62,7 @@ public partial class BatchClient
     }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="BatchClient"//> that will use an API key when authenticating.
+    /// Initializes a new instance of <see cref="BatchClient"/> that will use an API key when authenticating.
     /// </summary>
     /// <param name="credential"> The API key used to authenticate with the service endpoint. </param>
     /// <param name="options"> Additional options to customize the client. </param>

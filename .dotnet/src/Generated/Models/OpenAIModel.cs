@@ -9,32 +9,25 @@ namespace OpenAI.Models
 {
     public partial class OpenAIModel
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal OpenAIModel(string id, DateTimeOffset createdAt, string ownedBy)
-        {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(ownedBy, nameof(ownedBy));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-            Id = id;
-            CreatedAt = createdAt;
-            OwnedBy = ownedBy;
-        }
-
-        internal OpenAIModel(string id, DateTimeOffset createdAt, InternalModelObject @object, string ownedBy, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal OpenAIModel(string id, string ownedBy, DateTimeOffset createdAt)
         {
             Id = id;
-            CreatedAt = createdAt;
-            Object = @object;
             OwnedBy = ownedBy;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            CreatedAt = createdAt;
         }
 
-        internal OpenAIModel()
+        internal OpenAIModel(string id, string ownedBy, DateTimeOffset createdAt, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
+            Id = id;
+            OwnedBy = ownedBy;
+            CreatedAt = createdAt;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; }
+        public string Id { get; set; }
 
-        public string OwnedBy { get; }
+        public string OwnedBy { get; set; }
     }
 }

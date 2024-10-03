@@ -19,7 +19,7 @@ internal partial class AzureRealtimeConversationSession : RealtimeConversationSe
 
         if (_tokenCredential is not null)
         {
-            AccessToken token = await _tokenCredential.GetTokenAsync(_tokenRequestContext, options?.CancellationToken ?? default);
+            AccessToken token = await _tokenCredential.GetTokenAsync(_tokenRequestContext, options?.CancellationToken ?? default).ConfigureAwait(false);
             _clientWebSocket.Options.SetRequestHeader("Authorization", $"Bearer {token.Token}");
         }
         else

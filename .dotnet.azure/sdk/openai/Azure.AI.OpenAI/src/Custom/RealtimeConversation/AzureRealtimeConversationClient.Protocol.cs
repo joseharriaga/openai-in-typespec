@@ -14,10 +14,8 @@ internal partial class AzureRealtimeConversationClient : RealtimeConversationCli
 {
     /// <summary>
     /// <para>[Protocol Method]</para>
-    /// Creates a new realtime conversation operation instance, establishing the connection and optionally sending an
-    /// initial configuration message payload.
+    /// Creates a new realtime conversation operation instance, establishing a connection with the /realtime endpoint.
     /// </summary>
-    /// <param name="data"> An initial configuration payload to send once the connection is established. </param>
     /// <param name="options"></param>
     /// <returns></returns>
     [EditorBrowsable(EditorBrowsableState.Never)]

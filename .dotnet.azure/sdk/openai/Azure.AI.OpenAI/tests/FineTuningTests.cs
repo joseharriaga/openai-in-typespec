@@ -208,8 +208,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         Assert.True(operation.HasCompleted);
     }
 
-    [RecordedTest(AutomaticRecord = false)]
-    [Category("LongRunning")] // CAUTION: This test can take up 30 *minutes* to run in live mode
+    [RecordedTest]
     public async Task CreateAndDeleteFineTuning()
     {
         var fineTuningFile = Assets.FineTuning;
@@ -239,7 +238,12 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         using var requestContent = new FineTuningOptions()
         {
             Model = client.DeploymentOrThrow(),
-            TrainingFile = uploadedFile.Id
+            TrainingFile = uploadedFile.Id,
+            Hyperparameters = new FineTuningHyperparameters()
+            {
+                NumEpochs = 1,
+                BatchSize = 11
+            }
         }.ToBinaryContent();
 
         FineTuningJobOperation operation = await client.CreateFineTuningJobAsync(requestContent, waitUntilCompleted: false);
@@ -247,12 +251,12 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         Assert.That(job.ID, Is.Not.Null.Or.Empty);
         Assert.That(job.Error, Is.Null);
         Assert.That(job.Status, !(Is.Null.Or.EqualTo("failed").Or.EqualTo("cancelled")));
+        await operation.CancelAsync(options: null);
 
         // Wait for the fine tuning to complete
         await operation.WaitForCompletionAsync();
         job = ValidateAndParse<FineTuningJob>(await operation.GetJobAsync(null));
-        Assert.That(job.Status, Is.EqualTo("succeeded"), "Fine tuning did not succeed");
-        Assert.That(job.FineTunedModel, Is.Not.Null.Or.Empty);
+        Assert.That(job.Status, Is.EqualTo("cancelled"), "Fine tuning did not cancel");
 
         // Delete the fine tuned model
         bool deleted = await DeleteJobAndVerifyAsync((AzureFineTuningJobOperation)operation, job.ID);

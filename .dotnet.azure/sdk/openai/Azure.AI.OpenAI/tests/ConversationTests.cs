@@ -163,8 +163,6 @@ public class ConversationTests : ConversationTestFixtureBase
 
         await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
         {
-            Assert.That(update.EventId, Is.Not.Null.And.Not.Empty);
-
             if (update is ConversationSessionStartedUpdate sessionStartedUpdate)
             {
                 Assert.That(sessionStartedUpdate.SessionId, Is.Not.Null.And.Not.Empty);

@@ -20,7 +20,8 @@ public partial class RealtimeConversationSession : IDisposable
     private readonly Uri _endpoint;
     private readonly ApiKeyCredential _credential;
     private readonly object _sendingAudioLock = new();
-    private bool _isSendingAudio = false;
+    private bool _isSendingAudioStream = false;
+    private readonly SemaphoreSlim _audioSendSemaphore = new(1, 1);
 
     internal bool ShouldBufferTurnResponseData { get; set; }
 
@@ -50,38 +51,45 @@ public partial class RealtimeConversationSession : IDisposable
     /// <exception cref="InvalidOperationException"></exception>
     public async Task SendAudioAsync(Stream audio, CancellationToken cancellationToken = default)
     {
-        lock (_sendingAudioLock)
+        await _audioSendSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
         {
-            if (_isSendingAudio)
+            if (_isSendingAudioStream)
             {
                 throw new InvalidOperationException($"Only one stream of audio may be sent at once.");
             }
-            _isSendingAudio = true;
-        }
-        try
-        {
-            byte[] buffer = ArrayPool<byte>.Shared.Rent(1024 * 16);
-            while (true)
-            {
-                int bytesRead = await audio.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false);
-                if (bytesRead == 0)
-                {
-                    break;
-                }
-
-                ReadOnlyMemory<byte> audioMemory = buffer.AsMemory(0, bytesRead);
-                BinaryData audioData = BinaryData.FromBytes(audioMemory);
-                InternalRealtimeRequestInputAudioBufferAppendCommand internalCommand = new(audioData);
-                BinaryData requestData = ModelReaderWriter.Write(internalCommand);
-                await SendCommandAsync(requestData, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-            }
+            _isSendingAudioStream = true;
         }
         finally
         {
-            lock (_sendingAudioLock)
+            _audioSendSemaphore.Release();
+        }
+
+        const int audioInputDataChunkSize = 1024 * 16;
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(audioInputDataChunkSize);
+        while (true)
+        {
+            int bytesRead = await audio.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false);
+            if (bytesRead == 0)
             {
-                _isSendingAudio = false;
+                break;
             }
+
+            ReadOnlyMemory<byte> audioMemory = buffer.AsMemory(0, bytesRead);
+            BinaryData audioData = BinaryData.FromBytes(audioMemory);
+            InternalRealtimeRequestInputAudioBufferAppendCommand internalCommand = new(audioData);
+            BinaryData requestData = ModelReaderWriter.Write(internalCommand);
+            await SendCommandAsync(requestData, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        }
+
+        await _audioSendSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            _isSendingAudioStream = false;
+        }
+        finally
+        {
+            _audioSendSemaphore.Release();
         }
     }
 
@@ -94,24 +102,28 @@ public partial class RealtimeConversationSession : IDisposable
     /// <exception cref="InvalidOperationException"></exception>
     public async Task SendAudioAsync(BinaryData audio, CancellationToken cancellationToken = default)
     {
-        lock (_sendingAudioLock)
+        await _audioSendSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
         {
-            if (_isSendingAudio)
+            if (_isSendingAudioStream)
             {
                 throw new InvalidOperationException($"Cannot send a standalone audio chunk while a stream is already in progress.");
             }
-            _isSendingAudio = true;
+            // TODO: consider automatically limiting/breaking size of chunk (as with streaming)
+            // TODO: improve efficiency of data copies
+            InternalRealtimeRequestInputAudioBufferAppendCommand internalCommand = new(audio);
+            await SendInternalCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
         }
-        // TODO: consider automatically limiting/breaking size of chunk (as with streaming)
-        InternalRealtimeRequestInputAudioBufferAppendCommand internalCommand = new(audio);
-        BinaryData requestData = ModelReaderWriter.Write(internalCommand);
-        await SendCommandAsync(requestData, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        finally
+        {
+            _audioSendSemaphore.Release();
+        }
     }
 
     public async Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default)
     {
         InternalRealtimeRequestSessionUpdateCommand internalCommand = new(sessionOptions);
-        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+        await SendInternalCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default)
@@ -123,23 +135,23 @@ public partial class RealtimeConversationSession : IDisposable
         {
             PreviousItemId = previousItemId,
         };
-        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+        await SendInternalCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(itemId, nameof(itemId));
-        await SendCommandAsync(new InternalRealtimeRequestItemDeleteCommand(itemId), cancellationToken).ConfigureAwait(false);
+        await SendInternalCommandAsync(new InternalRealtimeRequestItemDeleteCommand(itemId), cancellationToken).ConfigureAwait(false);
     }
 
     public async Task CommitPendingAudioAsync(CancellationToken cancellationToken = default)
     {
-        await SendCommandAsync(new InternalRealtimeRequestInputAudioBufferCommitCommand(), cancellationToken).ConfigureAwait(false);
+        await SendInternalCommandAsync(new InternalRealtimeRequestInputAudioBufferCommitCommand(), cancellationToken).ConfigureAwait(false);
     }
 
     public async Task InterruptTurnAsync(CancellationToken cancellationToken = default)
     {
-        await SendCommandAsync(new InternalRealtimeRequestResponseCancelCommand(), cancellationToken).ConfigureAwait(false);
+        await SendInternalCommandAsync(new InternalRealtimeRequestResponseCancelCommand(), cancellationToken).ConfigureAwait(false);
     }
 
     public async Task StartResponseTurnAsync(CancellationToken cancellationToken = default)
@@ -148,16 +160,16 @@ public partial class RealtimeConversationSession : IDisposable
         {
             Response = new(commit: true, cancelPrevious: true)
         };
-        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+        await SendInternalCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task CancelResponseTurnAsync(CancellationToken cancellationToken = default)
     {
         InternalRealtimeRequestResponseCancelCommand internalCommand = new();
-        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+        await SendInternalCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
-    internal virtual async Task SendCommandAsync(InternalRealtimeRequestCommand command, CancellationToken cancellationToken = default)
+    internal virtual async Task SendInternalCommandAsync(InternalRealtimeRequestCommand command, CancellationToken cancellationToken = default)
     {
         BinaryData requestData = ModelReaderWriter.Write(command);
         RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();

@@ -1,5 +1,13 @@
 # Release History
 
+## 2.1.0-beta.2 (Unreleased)
+
+### Bugs fixed
+
+***`RealtimeConversationClient` (preview)***:
+
+- Fixed `SendAudioAsync(BinaryData, CancellationToken)` to not block indefinitely on the first send (#242)(commit_hash)
+
 ## 2.1.0-beta.1 (2024-10-01)
 
 With this updated preview library release, we're excited to bring early support for the newly-announced `/realtime` beta API. You can read more about `/realtime` here: https://openai.com/index/introducing-the-realtime-api/

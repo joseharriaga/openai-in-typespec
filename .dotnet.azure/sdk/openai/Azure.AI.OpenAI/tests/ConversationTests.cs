@@ -31,7 +31,7 @@ public class ConversationTests : ConversationTestFixtureBase
             {
                 Instructions = "You are a helpful assistant.",
                 TurnDetectionOptions = ConversationTurnDetectionOptions.CreateDisabledTurnDetectionOptions(),
-                OutputAudioFormat = ConversationAudioFormat.G711Ulaw
+                OutputAudioFormat = ConversationAudioFormat.G711Ulaw,
             },
             CancellationToken);
 

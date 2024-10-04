@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeResponseOutputItemDoneCommand")]
+[CodeGenModel("RealtimeServerEventResponseOutputItemDone")]
 public partial class ConversationItemFinishedUpdate
 {
     [CodeGenMember("Item")]

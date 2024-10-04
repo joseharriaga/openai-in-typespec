@@ -21,6 +21,11 @@ namespace OpenAI.RealtimeConversation
             }
 
             writer.WriteStartObject();
+            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
             if (SerializedAdditionalRawData?.ContainsKey("response_id") != true)
             {
                 writer.WritePropertyName("response_id"u8);
@@ -41,27 +46,15 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("content_index"u8);
                 writer.WriteNumberValue(ContentIndex);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("value") != true)
+            if (SerializedAdditionalRawData?.ContainsKey("text") != true)
             {
-                writer.WritePropertyName("value"u8);
-                writer.WriteStringValue(Value);
+                writer.WritePropertyName("text"u8);
+                writer.WriteStringValue(Text);
             }
             if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Kind.ToSerialString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
-            {
-                if (EventId != null)
-                {
-                    writer.WritePropertyName("event_id"u8);
-                    writer.WriteStringValue(EventId);
-                }
-                else
-                {
-                    writer.WriteNull("event_id");
-                }
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -105,17 +98,22 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
+            string eventId = default;
             string responseId = default;
             string itemId = default;
             int outputIndex = default;
             int contentIndex = default;
-            string value = default;
+            string text = default;
             ConversationUpdateKind type = default;
-            string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("event_id"u8))
+                {
+                    eventId = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("response_id"u8))
                 {
                     responseId = property.Value.GetString();
@@ -136,24 +134,14 @@ namespace OpenAI.RealtimeConversation
                     contentIndex = property.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("value"u8))
+                if (property.NameEquals("text"u8))
                 {
-                    value = property.Value.GetString();
+                    text = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("type"u8))
                 {
                     type = property.Value.GetString().ToConversationUpdateKind();
-                    continue;
-                }
-                if (property.NameEquals("event_id"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
-                    eventId = property.Value.GetString();
                     continue;
                 }
                 if (true)
@@ -165,13 +153,13 @@ namespace OpenAI.RealtimeConversation
             serializedAdditionalRawData = rawDataDictionary;
             return new ConversationTextDoneUpdate(
                 type,
-                eventId,
                 serializedAdditionalRawData,
+                eventId,
                 responseId,
                 itemId,
                 outputIndex,
                 contentIndex,
-                value);
+                text);
         }
 
         BinaryData IPersistableModel<ConversationTextDoneUpdate>.Write(ModelReaderWriterOptions options)

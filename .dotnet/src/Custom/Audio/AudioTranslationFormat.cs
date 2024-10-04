@@ -1,41 +1,48 @@
+using System;
 using System.ComponentModel;
 
 namespace OpenAI.Audio;
 
-// CUSTOM: Renamed.
-/// <summary> The format of the translation. </summary>
-[CodeGenModel("CreateTranslationRequestResponseFormat")]
-public readonly partial struct AudioTranslationFormat
+// CUSTOM: Introduced as scenario-specific redirection of common format.
+/// <summary> The format of the transcription. </summary>
+public readonly partial struct AudioTranslationFormat : IEquatable<AudioTranslationFormat>
 {
-    // CUSTOM:
-    // - Applied the EditorBrowsable attribute.
-    // - Added custom doc comments.
+    internal readonly InternalAudioResponseFormat _internalAudioResponseFormat;
+
+    public AudioTranslationFormat(string value)
+        : this(new InternalAudioResponseFormat(value))
+    { }
+
+    internal AudioTranslationFormat(InternalAudioResponseFormat internalAudioResponseFormat)
+    {
+        _internalAudioResponseFormat = internalAudioResponseFormat;
+    }
+
     /// <summary> Plain text only. </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [CodeGenMember("Text")]
-    public static AudioTranslationFormat Text { get; } = new AudioTranslationFormat(TextValue);
+    public static AudioTranslationFormat Text { get; } = new (InternalAudioResponseFormat.Text.ToString());
 
-    // CUSTOM:
-    // - Renamed.
-    // - Added custom doc comments.
     /// <summary> Plain text only. </summary>
-    [CodeGenMember("Json")]
-    public static AudioTranslationFormat Simple { get; } = new AudioTranslationFormat(SimpleValue);
+    public static AudioTranslationFormat Simple { get; } = new (InternalAudioResponseFormat.Json.ToString());
 
-    // CUSTOM:
-    // - Renamed.
-    // - Added custom doc comments.
     /// <summary> Plain text provided with additional metadata, such as duration and timestamps. </summary>
-    [CodeGenMember("VerboseJson")]
-    public static AudioTranslationFormat Verbose { get; } = new AudioTranslationFormat(VerboseValue);
+    public static AudioTranslationFormat Verbose { get; } = new (InternalAudioResponseFormat.VerboseJson.ToString());
 
-    // CUSTOM: Added custom doc comments.
     /// <summary> Text formatted as SubRip (.srt) file. </summary>
-    [CodeGenMember("Srt")]
-    public static AudioTranslationFormat Srt { get; } = new AudioTranslationFormat(SrtValue);
+    public static AudioTranslationFormat Srt { get; } = new (InternalAudioResponseFormat.Srt.ToString());
 
-    // CUSTOM: Added custom doc comments.
     /// <summary> Text formatted as a Web Video Text Tracks, a.k.a. WebVTT, (.vtt) file. </summary>
-    [CodeGenMember("Vtt")]
-    public static AudioTranslationFormat Vtt { get; } = new AudioTranslationFormat(VttValue);
+    public static AudioTranslationFormat Vtt { get; } = new(InternalAudioResponseFormat.Vtt.ToString());
+
+    public static bool operator ==(AudioTranslationFormat left, AudioTranslationFormat right) => left.Equals(right);
+    public static bool operator !=(AudioTranslationFormat left, AudioTranslationFormat right) => !left.Equals(right);
+    public static implicit operator AudioTranslationFormat(string value) => new AudioTranslationFormat(value);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override bool Equals(object obj) => obj is AudioTranslationFormat other && Equals(other);
+    public bool Equals(AudioTranslationFormat other) => _internalAudioResponseFormat.Equals(other._internalAudioResponseFormat);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override int GetHashCode() => _internalAudioResponseFormat.GetHashCode();
+    public override string ToString() => _internalAudioResponseFormat.ToString();
 }

@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeResponseSessionUpdatedCommand")]
+[CodeGenModel("RealtimeServerEventSessionUpdated")]
 public partial class ConversationSessionConfiguredUpdate
 {
     [CodeGenMember("Session")]

@@ -14,10 +14,12 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        internal ConversationTurnDetectionOptions(ConversationTurnDetectionKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ConversationTurnDetectionOptions(ConversationTurnDetectionKind type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Kind = kind;
+            Type = type;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
+
+        internal ConversationTurnDetectionKind Type { get; set; }
     }
 }

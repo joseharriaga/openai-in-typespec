@@ -6,15 +6,15 @@ using System.Diagnostics.CodeAnalysis;
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeRequestSessionUpdateCommandSession")]
+[CodeGenModel("RealtimeRequestSession")]
 public partial class ConversationSessionOptions
 {
     [CodeGenMember("Model")]
     public string Model { get; set; }
 
     [CodeGenMember("Modalities")]
-    private readonly IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> _internalModalities
-        = new ChangeTrackingList<InternalRealtimeRequestSessionUpdateCommandSessionModality>();
+    private readonly IList<InternalRealtimeClientEventSessionUpdateSessionModality> _internalModalities
+        = new ChangeTrackingList<InternalRealtimeClientEventSessionUpdateSessionModality>();
 
     public ConversationContentModalities ContentModalities
     {

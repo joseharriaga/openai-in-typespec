@@ -8,16 +8,44 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 model CreateModerationRequest {
-  /** The input text to classify */
-  input: string | string[];
+  /**
+   * Input (or inputs) to classify. Can be a single string, an array of strings, or
+   * an array of multi-modal input objects similar to other models.
+   */
+  @extension("x-oaiExpandable", true)
+  input: string | string[] | ({
+    @doc("""
+      Always `image_url`.
+      """)
+    type: "image_url";
 
-  @doc("""
-    Two content moderations models are available: `text-moderation-stable` and `text-moderation-latest`.
-    
-    The default is `text-moderation-latest` which will be automatically upgraded over time. This ensures you are always using our most accurate model. If you use `text-moderation-stable`, we will provide advanced notice before updating the model. Accuracy of `text-moderation-stable` may be slightly lower than for `text-moderation-latest`.
-    """)
+    /** Contains either an image URL or a data URL for a base64 encoded image. */
+    image_url: {
+      /** Either a URL of the image or the base64 encoded image data. */
+      url: string;
+    };
+  } | {
+    @doc("""
+      Always `text`.
+      """)
+    type: "text";
+
+    /** A string of text to classify. */
+    text: string;
+  })[];
+
+  /**
+   * The content moderation model you would like to use. Learn more in
+   * [the moderation guide](/docs/guides/moderation), and learn about
+   * available models [here](/docs/models/moderation).
+   */
   @extension("x-oaiTypeLabel", "string")
-  `model`?: string | "text-moderation-latest" | "text-moderation-stable" = "text-moderation-latest";
+  `model`?:
+    | string
+    | "omni-moderation-latest"
+    | "omni-moderation-2024-09-26"
+    | "text-moderation-latest"
+    | "text-moderation-stable" = "omni-moderation-latest";
 }
 
 /** Represents if a given text input is potentially harmful. */
@@ -46,6 +74,12 @@ model CreateModerationResponse {
 
       /** Harassment content that also includes violence or serious harm towards any target. */
       `harassment/threatening`: boolean;
+
+      /** Content that includes instructions or advice that facilitate the planning or execution of wrongdoing, or that gives advice or instruction on how to commit illicit acts. For example, "how to shoplift" would fit this category. */
+      illicit: boolean;
+
+      /** Content that includes instructions or advice that facilitate the planning or execution of wrongdoing that also includes violence, or that gives advice or instruction on the procurement of any weapon. */
+      `illicit/violent`: boolean;
 
       /** Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders. */
       `self-harm`: boolean;
@@ -83,6 +117,12 @@ model CreateModerationResponse {
       /** The score for the category 'harassment/threatening'. */
       `harassment/threatening`: float32;
 
+      /** The score for the category 'illicit'. */
+      illicit: float32;
+
+      /** The score for the category 'illicit/violent'. */
+      `illicit/violent`: float32;
+
       /** The score for the category 'self-harm'. */
       `self-harm`: float32;
 
@@ -103,6 +143,48 @@ model CreateModerationResponse {
 
       /** The score for the category 'violence/graphic'. */
       `violence/graphic`: float32;
+    };
+
+    /** A list of the categories along with the input type(s) that the score applies to. */
+    category_applied_input_types: {
+      /** The applied input type(s) for the category 'hate'. */
+      hate: "text"[];
+
+      /** The applied input type(s) for the category 'hate/threatening'. */
+      `hate/threatening`: "text"[];
+
+      /** The applied input type(s) for the category 'harassment'. */
+      harassment: "text"[];
+
+      /** The applied input type(s) for the category 'harassment/threatening'. */
+      `harassment/threatening`: "text"[];
+
+      /** The applied input type(s) for the category 'illicit'. */
+      illicit: "text"[];
+
+      /** The applied input type(s) for the category 'illicit/violent'. */
+      `illicit/violent`: "text"[];
+
+      /** The applied input type(s) for the category 'self-harm'. */
+      `self-harm`: ("text" | "image")[];
+
+      /** The applied input type(s) for the category 'self-harm/intent'. */
+      `self-harm/intent`: ("text" | "image")[];
+
+      /** The applied input type(s) for the category 'self-harm/instructions'. */
+      `self-harm/instructions`: ("text" | "image")[];
+
+      /** The applied input type(s) for the category 'sexual'. */
+      sexual: ("text" | "image")[];
+
+      /** The applied input type(s) for the category 'sexual/minors'. */
+      `sexual/minors`: "text"[];
+
+      /** The applied input type(s) for the category 'violence'. */
+      violence: ("text" | "image")[];
+
+      /** The applied input type(s) for the category 'violence/graphic'. */
+      `violence/graphic`: ("text" | "image")[];
     };
   }[];
 }

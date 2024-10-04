@@ -9,16 +9,19 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationItemDeletedUpdate : ConversationUpdate
     {
-        internal ConversationItemDeletedUpdate(string eventId, string itemId) : base(eventId)
+        internal ConversationItemDeletedUpdate(string eventId, string itemId)
         {
+            Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(itemId, nameof(itemId));
 
             Kind = ConversationUpdateKind.ItemDeleted;
+            EventId = eventId;
             ItemId = itemId;
         }
 
-        internal ConversationItemDeletedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationItemDeletedUpdate(ConversationUpdateKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, string itemId) : base(kind, serializedAdditionalRawData)
         {
+            EventId = eventId;
             ItemId = itemId;
         }
 
@@ -26,6 +29,7 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
+        public string EventId { get; }
         public string ItemId { get; }
     }
 }

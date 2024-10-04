@@ -21,37 +21,30 @@ namespace OpenAI.RealtimeConversation
             }
 
             writer.WriteStartObject();
+            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
             if (SerializedAdditionalRawData?.ContainsKey("item_id") != true)
             {
                 writer.WritePropertyName("item_id"u8);
                 writer.WriteStringValue(ItemId);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("content_index") != true)
+            {
+                writer.WritePropertyName("content_index"u8);
+                writer.WriteNumberValue(ContentIndex);
             }
             if (SerializedAdditionalRawData?.ContainsKey("audio_end_ms") != true)
             {
                 writer.WritePropertyName("audio_end_ms"u8);
                 writer.WriteNumberValue(AudioEndMs);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("index") != true)
-            {
-                writer.WritePropertyName("index"u8);
-                writer.WriteNumberValue(Index);
-            }
             if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Kind.ToSerialString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
-            {
-                if (EventId != null)
-                {
-                    writer.WritePropertyName("event_id"u8);
-                    writer.WriteStringValue(EventId);
-                }
-                else
-                {
-                    writer.WriteNull("event_id");
-                }
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -95,18 +88,28 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string itemId = default;
-            int audioEndMs = default;
-            int index = default;
-            ConversationUpdateKind type = default;
             string eventId = default;
+            string itemId = default;
+            int contentIndex = default;
+            int audioEndMs = default;
+            ConversationUpdateKind type = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("event_id"u8))
+                {
+                    eventId = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("item_id"u8))
                 {
                     itemId = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("content_index"u8))
+                {
+                    contentIndex = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("audio_end_ms"u8))
@@ -114,24 +117,9 @@ namespace OpenAI.RealtimeConversation
                     audioEndMs = property.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("index"u8))
-                {
-                    index = property.Value.GetInt32();
-                    continue;
-                }
                 if (property.NameEquals("type"u8))
                 {
                     type = property.Value.GetString().ToConversationUpdateKind();
-                    continue;
-                }
-                if (property.NameEquals("event_id"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
-                    eventId = property.Value.GetString();
                     continue;
                 }
                 if (true)
@@ -143,11 +131,11 @@ namespace OpenAI.RealtimeConversation
             serializedAdditionalRawData = rawDataDictionary;
             return new ConversationItemTruncatedUpdate(
                 type,
-                eventId,
                 serializedAdditionalRawData,
+                eventId,
                 itemId,
-                audioEndMs,
-                index);
+                contentIndex,
+                audioEndMs);
         }
 
         BinaryData IPersistableModel<ConversationItemTruncatedUpdate>.Write(ModelReaderWriterOptions options)

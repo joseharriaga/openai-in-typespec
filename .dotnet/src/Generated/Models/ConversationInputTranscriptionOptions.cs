@@ -14,12 +14,14 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        internal ConversationInputTranscriptionOptions(ConversationTranscriptionModel? model, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ConversationInputTranscriptionOptions(ConversationTranscriptionModel? model, bool? enabled, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Model = model;
+            Enabled = enabled;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         public ConversationTranscriptionModel? Model { get; set; }
+        public bool? Enabled { get; set; }
     }
 }

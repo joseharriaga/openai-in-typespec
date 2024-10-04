@@ -14,10 +14,10 @@ namespace OpenAI.Chat
         {
         }
 
-        internal StreamingChatFunctionCallUpdate(string functionName, BinaryData functionArgumentsUpdate, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal StreamingChatFunctionCallUpdate(BinaryData functionArgumentsUpdate, string functionName, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            FunctionName = functionName;
             FunctionArgumentsUpdate = functionArgumentsUpdate;
+            FunctionName = functionName;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
     }

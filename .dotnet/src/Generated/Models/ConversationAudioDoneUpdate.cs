@@ -9,21 +9,23 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationAudioDoneUpdate : ConversationUpdate
     {
-        internal ConversationAudioDoneUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex) : base(eventId)
+        internal ConversationAudioDoneUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex)
         {
+            Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(itemId, nameof(itemId));
 
             Kind = ConversationUpdateKind.ResponseAudioDone;
+            EventId = eventId;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
             ContentIndex = contentIndex;
         }
 
-        internal ConversationAudioDoneUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string type, string responseId, string itemId, int outputIndex, int contentIndex) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationAudioDoneUpdate(ConversationUpdateKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, string responseId, string itemId, int outputIndex, int contentIndex) : base(kind, serializedAdditionalRawData)
         {
-            Type = type;
+            EventId = eventId;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -34,8 +36,7 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        internal string Type { get; set; } = "response.audio.done";
-
+        public string EventId { get; }
         public string ResponseId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }

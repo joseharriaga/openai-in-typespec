@@ -167,4 +167,16 @@ public class ConversationSmokeTests : ConversationTestFixtureBase
         Assert.That(serializedNode["turn_detection"]?["type"]?.GetValue<string>(), Is.EqualTo("server_vad"));
         Assert.That(serializedNode["turn_detection"]?["threshold"]?.GetValue<float>(), Is.EqualTo(0.42f));
     }
+
+    [Test]
+    public void UnknownCommandSerializationWorks()
+    {
+        BinaryData serializedUnknownCommand = BinaryData.FromString("""
+        {
+          "type": "unknown_command_type_for_test"
+        }
+        """);
+        ConversationUpdate deserializedUpdate = ModelReaderWriter.Read<ConversationUpdate>(serializedUnknownCommand);
+        Assert.That(deserializedUpdate, Is.Not.Null);
+    }
 }

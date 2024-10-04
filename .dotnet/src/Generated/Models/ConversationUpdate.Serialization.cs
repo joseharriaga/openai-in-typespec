@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    [PersistableModelProxy(typeof(UnknownRealtimeResponseCommand))]
+    [PersistableModelProxy(typeof(UnknownRealtimeServerEvent))]
     public partial class ConversationUpdate : IJsonModel<ConversationUpdate>
     {
         void IJsonModel<ConversationUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -25,18 +25,6 @@ namespace OpenAI.RealtimeConversation
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Kind.ToSerialString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
-            {
-                if (EventId != null)
-                {
-                    writer.WritePropertyName("event_id"u8);
-                    writer.WriteStringValue(EventId);
-                }
-                else
-                {
-                    writer.WriteNull("event_id");
-                }
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -84,6 +72,7 @@ namespace OpenAI.RealtimeConversation
             {
                 switch (discriminator.GetString())
                 {
+                    case "conversation.created": return InternalRealtimeServerEventConversationCreated.DeserializeInternalRealtimeServerEventConversationCreated(element, options);
                     case "conversation.item.created": return ConversationItemAcknowledgedUpdate.DeserializeConversationItemAcknowledgedUpdate(element, options);
                     case "conversation.item.deleted": return ConversationItemDeletedUpdate.DeserializeConversationItemDeletedUpdate(element, options);
                     case "conversation.item.input_audio_transcription.completed": return ConversationInputTranscriptionFinishedUpdate.DeserializeConversationInputTranscriptionFinishedUpdate(element, options);
@@ -113,7 +102,7 @@ namespace OpenAI.RealtimeConversation
                     case "session.updated": return ConversationSessionConfiguredUpdate.DeserializeConversationSessionConfiguredUpdate(element, options);
                 }
             }
-            return UnknownRealtimeResponseCommand.DeserializeUnknownRealtimeResponseCommand(element, options);
+            return UnknownRealtimeServerEvent.DeserializeUnknownRealtimeServerEvent(element, options);
         }
 
         BinaryData IPersistableModel<ConversationUpdate>.Write(ModelReaderWriterOptions options)

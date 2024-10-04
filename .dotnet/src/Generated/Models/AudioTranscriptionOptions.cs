@@ -11,20 +11,19 @@ namespace OpenAI.Audio
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
 
-        internal AudioTranscriptionOptions(BinaryData file, InternalCreateTranscriptionRequestModel model, string language, string prompt, AudioTranscriptionFormat? responseFormat, float? temperature, IList<BinaryData> internalTimestampGranularities, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal AudioTranscriptionOptions(BinaryData file, InternalCreateTranscriptionRequestModel model, string language, string prompt, InternalAudioResponseFormat? responseFormat, float? temperature, IList<BinaryData> internalTimestampGranularities, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             File = file;
             Model = model;
             Language = language;
             Prompt = prompt;
-            ResponseFormat = responseFormat;
+            _responseFormat = responseFormat;
             Temperature = temperature;
             InternalTimestampGranularities = internalTimestampGranularities;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
         public string Language { get; set; }
         public string Prompt { get; set; }
-        public AudioTranscriptionFormat? ResponseFormat { get; set; }
         public float? Temperature { get; set; }
     }
 }

@@ -40,4 +40,24 @@ public partial class ChatFunctionCall
     /// </summary>
     [CodeGenMember("Arguments")]
     public BinaryData FunctionArguments { get; }
+
+    // CUSTOM: parameter order preserved.
+    public ChatFunctionCall(string functionName, BinaryData functionArguments)
+        : this(functionArguments, functionName)
+    {
+        Argument.AssertNotNull(functionArguments, nameof(functionArguments));
+        Argument.AssertNotNull(functionName, nameof(functionName));
+
+        FunctionArguments = functionArguments;
+        FunctionName = functionName;
+    }
+
+    internal ChatFunctionCall(BinaryData functionArguments, string functionName)
+    {
+        Argument.AssertNotNull(functionArguments, nameof(functionArguments));
+        Argument.AssertNotNull(functionName, nameof(functionName));
+
+        FunctionArguments = functionArguments;
+        FunctionName = functionName;
+    }
 }

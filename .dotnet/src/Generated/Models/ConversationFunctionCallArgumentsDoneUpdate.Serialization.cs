@@ -21,6 +21,11 @@ namespace OpenAI.RealtimeConversation
             }
 
             writer.WriteStartObject();
+            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
             if (SerializedAdditionalRawData?.ContainsKey("response_id") != true)
             {
                 writer.WritePropertyName("response_id"u8);
@@ -41,11 +46,6 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("call_id"u8);
                 writer.WriteStringValue(CallId);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("name") != true)
-            {
-                writer.WritePropertyName("name"u8);
-                writer.WriteStringValue(Name);
-            }
             if (SerializedAdditionalRawData?.ContainsKey("arguments") != true)
             {
                 writer.WritePropertyName("arguments"u8);
@@ -55,18 +55,6 @@ namespace OpenAI.RealtimeConversation
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Kind.ToSerialString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
-            {
-                if (EventId != null)
-                {
-                    writer.WritePropertyName("event_id"u8);
-                    writer.WriteStringValue(EventId);
-                }
-                else
-                {
-                    writer.WriteNull("event_id");
-                }
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -110,18 +98,22 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
+            string eventId = default;
             string responseId = default;
             string itemId = default;
             int outputIndex = default;
             string callId = default;
-            string name = default;
             string arguments = default;
             ConversationUpdateKind type = default;
-            string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("event_id"u8))
+                {
+                    eventId = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("response_id"u8))
                 {
                     responseId = property.Value.GetString();
@@ -142,11 +134,6 @@ namespace OpenAI.RealtimeConversation
                     callId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("name"u8))
-                {
-                    name = property.Value.GetString();
-                    continue;
-                }
                 if (property.NameEquals("arguments"u8))
                 {
                     arguments = property.Value.GetString();
@@ -155,16 +142,6 @@ namespace OpenAI.RealtimeConversation
                 if (property.NameEquals("type"u8))
                 {
                     type = property.Value.GetString().ToConversationUpdateKind();
-                    continue;
-                }
-                if (property.NameEquals("event_id"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
-                    eventId = property.Value.GetString();
                     continue;
                 }
                 if (true)
@@ -176,13 +153,12 @@ namespace OpenAI.RealtimeConversation
             serializedAdditionalRawData = rawDataDictionary;
             return new ConversationFunctionCallArgumentsDoneUpdate(
                 type,
-                eventId,
                 serializedAdditionalRawData,
+                eventId,
                 responseId,
                 itemId,
                 outputIndex,
                 callId,
-                name,
                 arguments);
         }
 

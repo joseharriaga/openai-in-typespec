@@ -7,11 +7,11 @@ using System.Diagnostics.CodeAnalysis;
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeResponseErrorCommand")]
+[CodeGenModel("RealtimeServerEventError")]
 public partial class ConversationErrorUpdate
 {
     [CodeGenMember("Error")]
-    private readonly InternalRealtimeResponseError _error;
+    private readonly InternalRealtimeServerEventErrorError _error;
 
     public string ErrorCode => _error?.Code;
     public string ErrorMessage => _error?.Message;

@@ -9,13 +9,15 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationContentPartStartedUpdate : ConversationUpdate
     {
-        internal ConversationContentPartStartedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(eventId)
+        internal ConversationContentPartStartedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart)
         {
+            Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(itemId, nameof(itemId));
             Argument.AssertNotNull(internalContentPart, nameof(internalContentPart));
 
             Kind = ConversationUpdateKind.ContentPartStarted;
+            EventId = eventId;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -23,8 +25,9 @@ namespace OpenAI.RealtimeConversation
             _internalContentPart = internalContentPart;
         }
 
-        internal ConversationContentPartStartedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationContentPartStartedUpdate(ConversationUpdateKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(kind, serializedAdditionalRawData)
         {
+            EventId = eventId;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -36,6 +39,7 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
+        public string EventId { get; }
         public string ResponseId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }

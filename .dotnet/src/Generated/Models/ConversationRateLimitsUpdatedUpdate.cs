@@ -10,16 +10,19 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationRateLimitsUpdatedUpdate : ConversationUpdate
     {
-        internal ConversationRateLimitsUpdatedUpdate(string eventId, IEnumerable<ConversationRateLimitDetailsItem> rateLimits) : base(eventId)
+        internal ConversationRateLimitsUpdatedUpdate(string eventId, IEnumerable<ConversationRateLimitDetailsItem> rateLimits)
         {
+            Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(rateLimits, nameof(rateLimits));
 
             Kind = ConversationUpdateKind.RateLimitsUpdated;
+            EventId = eventId;
             RateLimits = rateLimits.ToList();
         }
 
-        internal ConversationRateLimitsUpdatedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, IReadOnlyList<ConversationRateLimitDetailsItem> rateLimits) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationRateLimitsUpdatedUpdate(ConversationUpdateKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, IReadOnlyList<ConversationRateLimitDetailsItem> rateLimits) : base(kind, serializedAdditionalRawData)
         {
+            EventId = eventId;
             RateLimits = rateLimits;
         }
 
@@ -27,6 +30,7 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
+        public string EventId { get; }
         public IReadOnlyList<ConversationRateLimitDetailsItem> RateLimits { get; }
     }
 }

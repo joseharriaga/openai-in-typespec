@@ -5,9 +5,10 @@ using System.Diagnostics.CodeAnalysis;
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeResponseCommandType")]
+[CodeGenModel("RealtimeServerEventType")]
 public enum ConversationUpdateKind
 {
+    Unknown,
     /// <summary>
     /// The <c>session.created</c> response command.
     /// </summary>
@@ -18,17 +19,18 @@ public enum ConversationUpdateKind
     /// </summary>
     [CodeGenMember("SessionUpdated")]
     SessionConfigured,
-    [CodeGenMember("ItemCreated")]
+    [CodeGenMember("ConversationItemCreated")]
     ItemAcknowledged,
+    ConversationCreated,
     /// <summary>
     /// The <c>conversation.item.deleted</c> response command.
     /// </summary>
-    [CodeGenMember("ItemDeleted")]
+    [CodeGenMember("ConversationItemDeleted")]
     ItemDeleted,
     /// <summary>
     /// The <c>conversation.item.truncated</c> response command.
     /// </summary>
-    [CodeGenMember("ItemTruncated")]
+    [CodeGenMember("ConversationItemTruncated")]
     ItemTruncated,
     /// <summary>
     /// The <c>response.created</c> response command.
@@ -82,9 +84,9 @@ public enum ConversationUpdateKind
     InputAudioBufferSpeechStarted,
     [CodeGenMember("InputAudioBufferSpeechStopped")]
     InputAudioBufferSpeechStopped,
-    [CodeGenMember("ItemInputAudioTranscriptionCompleted")]
+    [CodeGenMember("ConversationItemInputAudioTranscriptionCompleted")]
     ItemInputAudioTranscriptionCompleted,
-    [CodeGenMember("ItemInputAudioTranscriptionFailed")]
+    [CodeGenMember("ConversationItemInputAudioTranscriptionFailed")]
     ItemInputAudioTranscriptionFailed,
     [CodeGenMember("InputAudioBufferCommitted")]
     InputAudioBufferCommitted,

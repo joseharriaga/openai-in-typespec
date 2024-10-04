@@ -7,6 +7,17 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
+@doc("""
+  The format of the output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
+  """)
+union AudioResponseFormat {
+  "json",
+  "text",
+  "srt",
+  "verbose_json",
+  "vtt",
+}
+
 model CreateSpeechRequest {
   @doc("""
     One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`
@@ -55,10 +66,7 @@ model CreateTranscriptionRequest {
   /** An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should match the audio language. */
   prompt?: string;
 
-  @doc("""
-    The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
-    """)
-  response_format?: "json" | "text" | "srt" | "verbose_json" | "vtt" = "json";
+  response_format?: AudioResponseFormat = "json";
 
   // Tool customization: add missing but documented min/max for temperature
   /** The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit. */
@@ -88,11 +96,7 @@ model CreateTranslationRequest {
   /** An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should be in English. */
   prompt?: string;
 
-  // Tool customization: add enum types
-  @doc("""
-    The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
-    """)
-  response_format?: "json" | "text" | "srt" | "verbose_json" | "vtt" = "json";
+  response_format?: AudioResponseFormat = "json";
 
   // Tool customization: add missing but documented min/max for temperature
   /** The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit. */

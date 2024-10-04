@@ -1113,8 +1113,6 @@ namespace OpenAI.Audio {
         BinaryData IPersistableModel<AudioTranscription>.Write(ModelReaderWriterOptions options);
     }
     public readonly partial struct AudioTranscriptionFormat : IEquatable<AudioTranscriptionFormat> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
         public AudioTranscriptionFormat(string value);
         public static AudioTranscriptionFormat Simple { get; }
         public static AudioTranscriptionFormat Srt { get; }
@@ -1156,8 +1154,6 @@ namespace OpenAI.Audio {
         BinaryData IPersistableModel<AudioTranslation>.Write(ModelReaderWriterOptions options);
     }
     public readonly partial struct AudioTranslationFormat : IEquatable<AudioTranslationFormat> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
         public AudioTranslationFormat(string value);
         public static AudioTranslationFormat Simple { get; }
         public static AudioTranslationFormat Srt { get; }
@@ -1371,6 +1367,7 @@ namespace OpenAI.Chat {
     }
     public class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>, IPersistableModel<ChatCompletionOptions> {
         public bool? AllowParallelToolCalls { get; set; }
+        public bool? EnableOutputStorage { get; set; }
         public string EndUserId { get; set; }
         public float? FrequencyPenalty { get; set; }
         [Obsolete("This property is obsolete. Please use ToolChoice instead.")]
@@ -1380,6 +1377,7 @@ namespace OpenAI.Chat {
         public bool? IncludeLogProbabilities { get; set; }
         public IDictionary<int, int> LogitBiases { get; }
         public int? MaxOutputTokenCount { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public float? PresencePenalty { get; set; }
         public ChatResponseFormat ResponseFormat { get; set; }
         public long? Seed { get; set; }
@@ -1453,6 +1451,15 @@ namespace OpenAI.Chat {
         public static bool operator !=(ChatImageDetailLevel left, ChatImageDetailLevel right);
         public override readonly string ToString();
     }
+    public class ChatInputTokenUsageDetails : IJsonModel<ChatInputTokenUsageDetails>, IPersistableModel<ChatInputTokenUsageDetails> {
+        public int? AudioTokenCount { get; }
+        public int? CachedTokenCount { get; }
+        ChatInputTokenUsageDetails IJsonModel<ChatInputTokenUsageDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ChatInputTokenUsageDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ChatInputTokenUsageDetails IPersistableModel<ChatInputTokenUsageDetails>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ChatInputTokenUsageDetails>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ChatInputTokenUsageDetails>.Write(ModelReaderWriterOptions options);
+    }
     public class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
         public ChatMessageContent Content { get; }
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
@@ -1517,6 +1524,7 @@ namespace OpenAI.Chat {
         Function = 4
     }
     public class ChatOutputTokenUsageDetails : IJsonModel<ChatOutputTokenUsageDetails>, IPersistableModel<ChatOutputTokenUsageDetails> {
+        public int? AudioTokenCount { get; }
         public int ReasoningTokenCount { get; }
         ChatOutputTokenUsageDetails IJsonModel<ChatOutputTokenUsageDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatOutputTokenUsageDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -1557,6 +1565,7 @@ namespace OpenAI.Chat {
     }
     public class ChatTokenUsage : IJsonModel<ChatTokenUsage>, IPersistableModel<ChatTokenUsage> {
         public int InputTokenCount { get; }
+        public ChatInputTokenUsageDetails InputTokenDetails { get; }
         public int OutputTokenCount { get; }
         public ChatOutputTokenUsageDetails OutputTokenDetails { get; }
         public int TotalTokenCount { get; }
@@ -1620,10 +1629,11 @@ namespace OpenAI.Chat {
     }
     public static class OpenAIChatModelFactory {
         public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, ChatMessageContent content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0);
+        public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int? audioTokenCount = null, int? cachedTokenCount = null);
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0, int? audioTokenCount = null);
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
-        public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null);
+        public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null, ChatInputTokenUsageDetails inputTokenDetails = null);
         public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string completionId = null, ChatMessageContent contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
         [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = null, BinaryData functionArgumentsUpdate = null);
@@ -2181,6 +2191,8 @@ namespace OpenAI.Moderations {
         public ModerationCategory HarassmentThreatening { get; }
         public ModerationCategory Hate { get; }
         public ModerationCategory HateThreatening { get; }
+        public ModerationCategory Illicit { get; }
+        public ModerationCategory IllicitViolent { get; }
         public ModerationCategory SelfHarm { get; }
         public ModerationCategory SelfHarmInstructions { get; }
         public ModerationCategory SelfHarmIntent { get; }
@@ -2213,6 +2225,7 @@ namespace OpenAI.RealtimeConversation {
     public class ConversationAudioDeltaUpdate : ConversationUpdate, IJsonModel<ConversationAudioDeltaUpdate>, IPersistableModel<ConversationAudioDeltaUpdate> {
         public int ContentIndex { get; }
         public BinaryData Delta { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
@@ -2224,6 +2237,7 @@ namespace OpenAI.RealtimeConversation {
     }
     public class ConversationAudioDoneUpdate : ConversationUpdate, IJsonModel<ConversationAudioDoneUpdate>, IPersistableModel<ConversationAudioDoneUpdate> {
         public int ContentIndex { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
@@ -2274,6 +2288,7 @@ namespace OpenAI.RealtimeConversation {
         public string AudioTranscript { get; }
         public int ContentIndex { get; }
         public ConversationContentPartKind ContentKind { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
@@ -2306,6 +2321,7 @@ namespace OpenAI.RealtimeConversation {
         public string AudioTranscript { get; }
         public int ContentIndex { get; }
         public ConversationContentPartKind ContentKind { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
@@ -2321,6 +2337,7 @@ namespace OpenAI.RealtimeConversation {
         public string ErrorEventId { get; }
         public string ErrorMessage { get; }
         public string ErrorParameterName { get; }
+        public string EventId { get; }
         ConversationErrorUpdate IJsonModel<ConversationErrorUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationErrorUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ConversationErrorUpdate IPersistableModel<ConversationErrorUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2330,6 +2347,7 @@ namespace OpenAI.RealtimeConversation {
     public class ConversationFunctionCallArgumentsDeltaUpdate : ConversationUpdate, IJsonModel<ConversationFunctionCallArgumentsDeltaUpdate>, IPersistableModel<ConversationFunctionCallArgumentsDeltaUpdate> {
         public string CallId { get; }
         public string Delta { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
@@ -2342,8 +2360,8 @@ namespace OpenAI.RealtimeConversation {
     public class ConversationFunctionCallArgumentsDoneUpdate : ConversationUpdate, IJsonModel<ConversationFunctionCallArgumentsDoneUpdate>, IPersistableModel<ConversationFunctionCallArgumentsDoneUpdate> {
         public string Arguments { get; }
         public string CallId { get; }
+        public string EventId { get; }
         public string ItemId { get; }
-        public string Name { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
         ConversationFunctionCallArgumentsDoneUpdate IJsonModel<ConversationFunctionCallArgumentsDoneUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -2365,6 +2383,7 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationFunctionTool>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationInputAudioBufferClearedUpdate : ConversationUpdate, IJsonModel<ConversationInputAudioBufferClearedUpdate>, IPersistableModel<ConversationInputAudioBufferClearedUpdate> {
+        public string EventId { get; }
         ConversationInputAudioBufferClearedUpdate IJsonModel<ConversationInputAudioBufferClearedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationInputAudioBufferClearedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ConversationInputAudioBufferClearedUpdate IPersistableModel<ConversationInputAudioBufferClearedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2372,6 +2391,7 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationInputAudioBufferClearedUpdate>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationInputAudioBufferCommittedUpdate : ConversationUpdate, IJsonModel<ConversationInputAudioBufferCommittedUpdate>, IPersistableModel<ConversationInputAudioBufferCommittedUpdate> {
+        public string EventId { get; }
         public string ItemId { get; }
         public string PreviousItemId { get; }
         ConversationInputAudioBufferCommittedUpdate IJsonModel<ConversationInputAudioBufferCommittedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -2382,6 +2402,7 @@ namespace OpenAI.RealtimeConversation {
     }
     public class ConversationInputSpeechFinishedUpdate : ConversationUpdate, IJsonModel<ConversationInputSpeechFinishedUpdate>, IPersistableModel<ConversationInputSpeechFinishedUpdate> {
         public int AudioEndMs { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         ConversationInputSpeechFinishedUpdate IJsonModel<ConversationInputSpeechFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationInputSpeechFinishedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -2391,6 +2412,7 @@ namespace OpenAI.RealtimeConversation {
     }
     public class ConversationInputSpeechStartedUpdate : ConversationUpdate, IJsonModel<ConversationInputSpeechStartedUpdate>, IPersistableModel<ConversationInputSpeechStartedUpdate> {
         public int AudioStartMs { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         ConversationInputSpeechStartedUpdate IJsonModel<ConversationInputSpeechStartedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationInputSpeechStartedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -2413,6 +2435,7 @@ namespace OpenAI.RealtimeConversation {
         public string ErrorCode { get; }
         public string ErrorMessage { get; }
         public string ErrorParameterName { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         ConversationInputTranscriptionFailedUpdate IJsonModel<ConversationInputTranscriptionFailedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationInputTranscriptionFailedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -2422,6 +2445,7 @@ namespace OpenAI.RealtimeConversation {
     }
     public class ConversationInputTranscriptionFinishedUpdate : ConversationUpdate, IJsonModel<ConversationInputTranscriptionFinishedUpdate>, IPersistableModel<ConversationInputTranscriptionFinishedUpdate> {
         public int ContentIndex { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         public string Transcript { get; }
         ConversationInputTranscriptionFinishedUpdate IJsonModel<ConversationInputTranscriptionFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -2431,6 +2455,7 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationInputTranscriptionFinishedUpdate>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationInputTranscriptionOptions : IJsonModel<ConversationInputTranscriptionOptions>, IPersistableModel<ConversationInputTranscriptionOptions> {
+        public bool? Enabled { get; set; }
         public ConversationTranscriptionModel? Model { get; set; }
         ConversationInputTranscriptionOptions IJsonModel<ConversationInputTranscriptionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationInputTranscriptionOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -2457,7 +2482,9 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationItem>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationItemAcknowledgedUpdate : ConversationUpdate, IJsonModel<ConversationItemAcknowledgedUpdate>, IPersistableModel<ConversationItemAcknowledgedUpdate> {
+        public string EventId { get; }
         public ConversationItem Item { get; }
+        public string PreviousItemId { get; }
         ConversationItemAcknowledgedUpdate IJsonModel<ConversationItemAcknowledgedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationItemAcknowledgedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ConversationItemAcknowledgedUpdate IPersistableModel<ConversationItemAcknowledgedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2465,6 +2492,7 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationItemAcknowledgedUpdate>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationItemDeletedUpdate : ConversationUpdate, IJsonModel<ConversationItemDeletedUpdate>, IPersistableModel<ConversationItemDeletedUpdate> {
+        public string EventId { get; }
         public string ItemId { get; }
         ConversationItemDeletedUpdate IJsonModel<ConversationItemDeletedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationItemDeletedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -2473,6 +2501,7 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationItemDeletedUpdate>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationItemFinishedUpdate : ConversationUpdate, IJsonModel<ConversationItemFinishedUpdate>, IPersistableModel<ConversationItemFinishedUpdate> {
+        public string EventId { get; }
         public string FunctionCallArguments { get; }
         public string FunctionCallId { get; }
         public string FunctionCallOutput { get; }
@@ -2488,6 +2517,7 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationItemFinishedUpdate>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationItemStartedUpdate : ConversationUpdate, IJsonModel<ConversationItemStartedUpdate>, IPersistableModel<ConversationItemStartedUpdate> {
+        public string EventId { get; }
         public string FunctionCallArguments { get; }
         public string FunctionCallId { get; }
         public string FunctionCallOutput { get; }
@@ -2521,7 +2551,8 @@ namespace OpenAI.RealtimeConversation {
     }
     public class ConversationItemTruncatedUpdate : ConversationUpdate, IJsonModel<ConversationItemTruncatedUpdate>, IPersistableModel<ConversationItemTruncatedUpdate> {
         public int AudioEndMs { get; }
-        public int Index { get; }
+        public int ContentIndex { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         ConversationItemTruncatedUpdate IJsonModel<ConversationItemTruncatedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationItemTruncatedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -2571,6 +2602,7 @@ namespace OpenAI.RealtimeConversation {
     public class ConversationOutputTranscriptionDeltaUpdate : ConversationUpdate, IJsonModel<ConversationOutputTranscriptionDeltaUpdate>, IPersistableModel<ConversationOutputTranscriptionDeltaUpdate> {
         public int ContentIndex { get; }
         public string Delta { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
@@ -2582,9 +2614,11 @@ namespace OpenAI.RealtimeConversation {
     }
     public class ConversationOutputTranscriptionFinishedUpdate : ConversationUpdate, IJsonModel<ConversationOutputTranscriptionFinishedUpdate>, IPersistableModel<ConversationOutputTranscriptionFinishedUpdate> {
         public int ContentIndex { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
+        public string Transcript { get; }
         ConversationOutputTranscriptionFinishedUpdate IJsonModel<ConversationOutputTranscriptionFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationOutputTranscriptionFinishedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ConversationOutputTranscriptionFinishedUpdate IPersistableModel<ConversationOutputTranscriptionFinishedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2592,10 +2626,10 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationOutputTranscriptionFinishedUpdate>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationRateLimitDetailsItem : IJsonModel<ConversationRateLimitDetailsItem>, IPersistableModel<ConversationRateLimitDetailsItem> {
-        public int Limit { get; }
+        public int? Limit { get; }
         public string Name { get; }
-        public int Remaining { get; }
-        public float ResetSeconds { get; }
+        public int? Remaining { get; }
+        public float? ResetSeconds { get; }
         ConversationRateLimitDetailsItem IJsonModel<ConversationRateLimitDetailsItem>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationRateLimitDetailsItem>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ConversationRateLimitDetailsItem IPersistableModel<ConversationRateLimitDetailsItem>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2603,6 +2637,7 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationRateLimitDetailsItem>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationRateLimitsUpdatedUpdate : ConversationUpdate, IJsonModel<ConversationRateLimitsUpdatedUpdate>, IPersistableModel<ConversationRateLimitsUpdatedUpdate> {
+        public string EventId { get; }
         public IReadOnlyList<ConversationRateLimitDetailsItem> RateLimits { get; }
         ConversationRateLimitsUpdatedUpdate IJsonModel<ConversationRateLimitsUpdatedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationRateLimitsUpdatedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -2612,6 +2647,7 @@ namespace OpenAI.RealtimeConversation {
     }
     public class ConversationResponseFinishedUpdate : ConversationUpdate, IJsonModel<ConversationResponseFinishedUpdate>, IPersistableModel<ConversationResponseFinishedUpdate> {
         public IReadOnlyList<ConversationItem> CreatedItems { get; }
+        public string EventId { get; }
         public string Id { get; }
         public ConversationStatus? Status { get; }
         ConversationResponseFinishedUpdate IJsonModel<ConversationResponseFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -2621,6 +2657,7 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationResponseFinishedUpdate>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationResponseStartedUpdate : ConversationUpdate, IJsonModel<ConversationResponseStartedUpdate>, IPersistableModel<ConversationResponseStartedUpdate> {
+        public string EventId { get; }
         ConversationResponseStartedUpdate IJsonModel<ConversationResponseStartedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationResponseStartedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ConversationResponseStartedUpdate IPersistableModel<ConversationResponseStartedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2629,6 +2666,7 @@ namespace OpenAI.RealtimeConversation {
     }
     public class ConversationSessionConfiguredUpdate : ConversationUpdate, IJsonModel<ConversationSessionConfiguredUpdate>, IPersistableModel<ConversationSessionConfiguredUpdate> {
         public ConversationContentModalities ContentModalities { get; }
+        public string EventId { get; }
         public ConversationAudioFormat InputAudioFormat { get; }
         public string Instructions { get; }
         public ConversationMaxTokensChoice MaxOutputTokens { get; }
@@ -2668,6 +2706,7 @@ namespace OpenAI.RealtimeConversation {
     }
     public class ConversationSessionStartedUpdate : ConversationUpdate, IJsonModel<ConversationSessionStartedUpdate>, IPersistableModel<ConversationSessionStartedUpdate> {
         public ConversationContentModalities ContentModalities { get; }
+        public string EventId { get; }
         public ConversationAudioFormat InputAudioFormat { get; }
         public string Instructions { get; }
         public ConversationMaxTokensChoice MaxOutputTokens { get; }
@@ -2708,6 +2747,7 @@ namespace OpenAI.RealtimeConversation {
     public class ConversationTextDeltaUpdate : ConversationUpdate, IJsonModel<ConversationTextDeltaUpdate>, IPersistableModel<ConversationTextDeltaUpdate> {
         public int ContentIndex { get; }
         public string Delta { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
@@ -2719,10 +2759,11 @@ namespace OpenAI.RealtimeConversation {
     }
     public class ConversationTextDoneUpdate : ConversationUpdate, IJsonModel<ConversationTextDoneUpdate>, IPersistableModel<ConversationTextDoneUpdate> {
         public int ContentIndex { get; }
+        public string EventId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
-        public string Value { get; }
+        public string Text { get; }
         ConversationTextDoneUpdate IJsonModel<ConversationTextDoneUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationTextDoneUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ConversationTextDoneUpdate IPersistableModel<ConversationTextDoneUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -2814,8 +2855,6 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationTurnDetectionOptions>.Write(ModelReaderWriterOptions options);
     }
     public abstract class ConversationUpdate : IJsonModel<ConversationUpdate>, IPersistableModel<ConversationUpdate> {
-        protected ConversationUpdate(string eventId);
-        public string EventId { get; }
         public ConversationUpdateKind Kind { get; protected internal set; }
         public BinaryData GetRawContent();
         ConversationUpdate IJsonModel<ConversationUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -2825,33 +2864,35 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationUpdate>.Write(ModelReaderWriterOptions options);
     }
     public enum ConversationUpdateKind {
-        SessionStarted = 0,
-        SessionConfigured = 1,
-        ItemAcknowledged = 2,
-        ItemDeleted = 3,
-        ItemTruncated = 4,
-        ResponseStarted = 5,
-        ResponseFinished = 6,
-        RateLimitsUpdated = 7,
-        ItemStarted = 8,
-        ItemFinished = 9,
-        ContentPartStarted = 10,
-        ContentPartFinished = 11,
-        ResponseAudioDelta = 12,
-        ResponseAudioDone = 13,
-        ResponseAudioTranscriptDelta = 14,
-        ResponseAudioTranscriptDone = 15,
-        ResponseTextDelta = 16,
-        ResponseTextDone = 17,
-        ResponseFunctionCallArgumentsDelta = 18,
-        ResponseFunctionCallArgumentsDone = 19,
-        InputAudioBufferSpeechStarted = 20,
-        InputAudioBufferSpeechStopped = 21,
-        ItemInputAudioTranscriptionCompleted = 22,
-        ItemInputAudioTranscriptionFailed = 23,
-        InputAudioBufferCommitted = 24,
-        InputAudioBufferCleared = 25,
-        Error = 26
+        Unknown = 0,
+        SessionStarted = 1,
+        SessionConfigured = 2,
+        ItemAcknowledged = 3,
+        ConversationCreated = 4,
+        ItemDeleted = 5,
+        ItemTruncated = 6,
+        ResponseStarted = 7,
+        ResponseFinished = 8,
+        RateLimitsUpdated = 9,
+        ItemStarted = 10,
+        ItemFinished = 11,
+        ContentPartStarted = 12,
+        ContentPartFinished = 13,
+        ResponseAudioDelta = 14,
+        ResponseAudioDone = 15,
+        ResponseAudioTranscriptDelta = 16,
+        ResponseAudioTranscriptDone = 17,
+        ResponseTextDelta = 18,
+        ResponseTextDone = 19,
+        ResponseFunctionCallArgumentsDelta = 20,
+        ResponseFunctionCallArgumentsDone = 21,
+        InputAudioBufferSpeechStarted = 22,
+        InputAudioBufferSpeechStopped = 23,
+        ItemInputAudioTranscriptionCompleted = 24,
+        ItemInputAudioTranscriptionFailed = 25,
+        InputAudioBufferCommitted = 26,
+        InputAudioBufferCleared = 27,
+        Error = 28
     }
     public readonly partial struct ConversationVoice : IEquatable<ConversationVoice> {
         private readonly object _dummy;

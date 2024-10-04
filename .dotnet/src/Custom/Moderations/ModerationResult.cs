@@ -8,8 +8,8 @@ namespace OpenAI.Moderations;
 [CodeGenModel("CreateModerationResponseResult")]
 [CodeGenSuppress("Categories")]
 [CodeGenSuppress("CategoryScores")]
-[CodeGenSuppress(nameof(ModerationResult), typeof(bool), typeof(InternalModerationCategories), typeof(InternalModerationCategoryScores))]
-[CodeGenSuppress(nameof(ModerationResult), typeof(bool), typeof(InternalModerationCategories), typeof(InternalModerationCategoryScores), typeof(IDictionary<string, BinaryData>))]
+[CodeGenSuppress(nameof(ModerationResult), typeof(bool), typeof(InternalModerationCategories), typeof(InternalModerationCategoryScores), typeof(InternalCreateModerationResponseResultCategoryAppliedInputTypes))]
+[CodeGenSuppress(nameof(ModerationResult), typeof(bool), typeof(InternalModerationCategories), typeof(InternalModerationCategoryScores), typeof(InternalCreateModerationResponseResultCategoryAppliedInputTypes), typeof(IDictionary<string, BinaryData>))]
 public partial class ModerationResult
 {
     internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
@@ -59,6 +59,10 @@ public partial class ModerationResult
 
     public ModerationCategory HarassmentThreatening { get; }
 
+    public ModerationCategory Illicit { get; }
+
+    public ModerationCategory IllicitViolent { get; }
+
     public ModerationCategory SelfHarm { get; }
 
     public ModerationCategory SelfHarmIntent { get; }
@@ -72,4 +76,7 @@ public partial class ModerationResult
     public ModerationCategory Violence { get; }
 
     public ModerationCategory ViolenceGraphic { get; }
+
+    [CodeGenMember("CategoryAppliedInputTypes")] 
+    internal InternalCreateModerationResponseResultCategoryAppliedInputTypes InternalCategoryAppliedInputTypes { get; }
 }

@@ -26,6 +26,11 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("model"u8);
                 writer.WriteStringValue(Model.Value.ToString());
             }
+            if (SerializedAdditionalRawData?.ContainsKey("enabled") != true && Optional.IsDefined(Enabled))
+            {
+                writer.WritePropertyName("enabled"u8);
+                writer.WriteBooleanValue(Enabled.Value);
+            }
             if (SerializedAdditionalRawData != null)
             {
                 foreach (var item in SerializedAdditionalRawData)
@@ -69,6 +74,7 @@ namespace OpenAI.RealtimeConversation
                 return null;
             }
             ConversationTranscriptionModel? model = default;
+            bool? enabled = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -82,6 +88,15 @@ namespace OpenAI.RealtimeConversation
                     model = new ConversationTranscriptionModel(property.Value.GetString());
                     continue;
                 }
+                if (property.NameEquals("enabled"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    enabled = property.Value.GetBoolean();
+                    continue;
+                }
                 if (true)
                 {
                     rawDataDictionary ??= new Dictionary<string, BinaryData>();
@@ -89,7 +104,7 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ConversationInputTranscriptionOptions(model, serializedAdditionalRawData);
+            return new ConversationInputTranscriptionOptions(model, enabled, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<ConversationInputTranscriptionOptions>.Write(ModelReaderWriterOptions options)

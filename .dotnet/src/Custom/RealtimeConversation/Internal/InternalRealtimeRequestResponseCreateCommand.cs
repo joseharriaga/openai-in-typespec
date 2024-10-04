@@ -7,8 +7,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeRequestResponseCreateCommand")]
-internal partial class InternalRealtimeRequestResponseCreateCommand
+[CodeGenModel("RealtimeClientEventResponseCreate")]
+internal partial class InternalRealtimeClientEventResponseCreate
 {
     [CodeGenMember("MaxOutputTokens")]
     private BinaryData _maxOutputTokens;

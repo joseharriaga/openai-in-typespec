@@ -49,10 +49,10 @@ namespace OpenAI.Audio
                 writer.WritePropertyName("prompt"u8);
                 writer.WriteStringValue(Prompt);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("response_format") != true && Optional.IsDefined(ResponseFormat))
+            if (SerializedAdditionalRawData?.ContainsKey("response_format") != true && Optional.IsDefined(_responseFormat))
             {
                 writer.WritePropertyName("response_format"u8);
-                writer.WriteStringValue(ResponseFormat.Value.ToString());
+                writer.WriteStringValue(_responseFormat.Value.ToString());
             }
             if (SerializedAdditionalRawData?.ContainsKey("temperature") != true && Optional.IsDefined(Temperature))
             {
@@ -127,7 +127,7 @@ namespace OpenAI.Audio
             InternalCreateTranscriptionRequestModel model = default;
             string language = default;
             string prompt = default;
-            AudioTranscriptionFormat? responseFormat = default;
+            InternalAudioResponseFormat? responseFormat = default;
             float? temperature = default;
             IList<BinaryData> timestampGranularities = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -160,7 +160,7 @@ namespace OpenAI.Audio
                     {
                         continue;
                     }
-                    responseFormat = new AudioTranscriptionFormat(property.Value.GetString());
+                    responseFormat = new InternalAudioResponseFormat(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("temperature"u8))
@@ -239,9 +239,9 @@ namespace OpenAI.Audio
             {
                 content.Add(Prompt, "prompt");
             }
-            if (Optional.IsDefined(ResponseFormat))
+            if (Optional.IsDefined(_responseFormat))
             {
-                content.Add(ResponseFormat.Value.ToString(), "response_format");
+                content.Add(_responseFormat.Value.ToString(), "response_format");
             }
             if (Optional.IsDefined(Temperature))
             {

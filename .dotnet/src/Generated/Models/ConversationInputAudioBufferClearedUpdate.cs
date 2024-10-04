@@ -9,17 +9,23 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationInputAudioBufferClearedUpdate : ConversationUpdate
     {
-        internal ConversationInputAudioBufferClearedUpdate(string eventId) : base(eventId)
+        internal ConversationInputAudioBufferClearedUpdate(string eventId)
         {
+            Argument.AssertNotNull(eventId, nameof(eventId));
+
             Kind = ConversationUpdateKind.InputAudioBufferCleared;
+            EventId = eventId;
         }
 
-        internal ConversationInputAudioBufferClearedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationInputAudioBufferClearedUpdate(ConversationUpdateKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId) : base(kind, serializedAdditionalRawData)
         {
+            EventId = eventId;
         }
 
         internal ConversationInputAudioBufferClearedUpdate()
         {
         }
+
+        public string EventId { get; }
     }
 }

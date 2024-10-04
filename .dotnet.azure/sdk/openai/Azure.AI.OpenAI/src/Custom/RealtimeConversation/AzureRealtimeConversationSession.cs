@@ -55,12 +55,12 @@ internal partial class AzureRealtimeConversationSession : RealtimeConversationSe
         _clientWebSocket.Options.SetRequestHeader("x-ms-client-request-id", _clientRequestId);
     }
 
-    internal override async Task SendCommandAsync(InternalRealtimeRequestCommand command, CancellationToken cancellationToken = default)
+    internal override async Task SendCommandAsync(InternalRealtimeClientEvent command, CancellationToken cancellationToken = default)
     {
         BinaryData requestData = ModelReaderWriter.Write(command);
 
         // Temporary backcompat quirk
-        if (command is InternalRealtimeRequestSessionUpdateCommand sessionUpdateCommand
+        if (command is InternalRealtimeClientEventSessionUpdate sessionUpdateCommand
             && sessionUpdateCommand.Session?.TurnDetectionOptions is InternalRealtimeNoTurnDetection)
         {
             requestData = BinaryData.FromString(requestData.ToString()

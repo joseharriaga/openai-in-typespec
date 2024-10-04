@@ -9,25 +9,31 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationInputAudioBufferCommittedUpdate : ConversationUpdate
     {
-        internal ConversationInputAudioBufferCommittedUpdate(string eventId, string itemId) : base(eventId)
+        internal ConversationInputAudioBufferCommittedUpdate(string eventId, string previousItemId, string itemId)
         {
+            Argument.AssertNotNull(eventId, nameof(eventId));
+            Argument.AssertNotNull(previousItemId, nameof(previousItemId));
             Argument.AssertNotNull(itemId, nameof(itemId));
 
             Kind = ConversationUpdateKind.InputAudioBufferCommitted;
+            EventId = eventId;
+            PreviousItemId = previousItemId;
             ItemId = itemId;
         }
 
-        internal ConversationInputAudioBufferCommittedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId, string previousItemId) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationInputAudioBufferCommittedUpdate(ConversationUpdateKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, string previousItemId, string itemId) : base(kind, serializedAdditionalRawData)
         {
-            ItemId = itemId;
+            EventId = eventId;
             PreviousItemId = previousItemId;
+            ItemId = itemId;
         }
 
         internal ConversationInputAudioBufferCommittedUpdate()
         {
         }
 
-        public string ItemId { get; }
+        public string EventId { get; }
         public string PreviousItemId { get; }
+        public string ItemId { get; }
     }
 }

@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeResponseContentPartAddedCommand")]
+[CodeGenModel("RealtimeServerEventResponseContentPartAdded")]
 public partial class ConversationContentPartStartedUpdate
 {
     [CodeGenMember("Part")]

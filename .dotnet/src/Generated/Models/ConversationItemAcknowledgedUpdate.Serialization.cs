@@ -21,6 +21,16 @@ namespace OpenAI.RealtimeConversation
             }
 
             writer.WriteStartObject();
+            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("previous_item_id") != true)
+            {
+                writer.WritePropertyName("previous_item_id"u8);
+                writer.WriteStringValue(PreviousItemId);
+            }
             if (SerializedAdditionalRawData?.ContainsKey("item") != true)
             {
                 writer.WritePropertyName("item"u8);
@@ -30,18 +40,6 @@ namespace OpenAI.RealtimeConversation
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Kind.ToSerialString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
-            {
-                if (EventId != null)
-                {
-                    writer.WritePropertyName("event_id"u8);
-                    writer.WriteStringValue(EventId);
-                }
-                else
-                {
-                    writer.WriteNull("event_id");
-                }
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -85,13 +83,24 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
+            string eventId = default;
+            string previousItemId = default;
             ConversationItem item = default;
             ConversationUpdateKind type = default;
-            string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("event_id"u8))
+                {
+                    eventId = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("previous_item_id"u8))
+                {
+                    previousItemId = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("item"u8))
                 {
                     item = ConversationItem.DeserializeConversationItem(property.Value, options);
@@ -102,16 +111,6 @@ namespace OpenAI.RealtimeConversation
                     type = property.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
-                if (property.NameEquals("event_id"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
-                    eventId = property.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     rawDataDictionary ??= new Dictionary<string, BinaryData>();
@@ -119,7 +118,7 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ConversationItemAcknowledgedUpdate(type, eventId, serializedAdditionalRawData, item);
+            return new ConversationItemAcknowledgedUpdate(type, serializedAdditionalRawData, eventId, previousItemId, item);
         }
 
         BinaryData IPersistableModel<ConversationItemAcknowledgedUpdate>.Write(ModelReaderWriterOptions options)

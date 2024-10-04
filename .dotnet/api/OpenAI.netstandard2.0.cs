@@ -2167,6 +2167,7 @@ namespace OpenAI.Models {
 namespace OpenAI.Moderations {
     public class ModerationCategory {
         public bool Flagged { get; }
+        public ModerationInputKinds InputKinds { get; }
         public float Score { get; }
     }
     public class ModerationClient {
@@ -2184,6 +2185,12 @@ namespace OpenAI.Moderations {
         public virtual Task<ClientResult> ClassifyTextAsync(BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ModerationResultCollection>> ClassifyTextAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<ModerationResult>> ClassifyTextAsync(string input, CancellationToken cancellationToken = default);
+    }
+    [Flags]
+    public enum ModerationInputKinds {
+        Other = 1,
+        Text = 2,
+        Image = 4
     }
     public class ModerationResult : IJsonModel<ModerationResult>, IPersistableModel<ModerationResult> {
         public bool Flagged { get; }
@@ -2216,8 +2223,8 @@ namespace OpenAI.Moderations {
         BinaryData IPersistableModel<ModerationResultCollection>.Write(ModelReaderWriterOptions options);
     }
     public static class OpenAIModerationsModelFactory {
-        public static ModerationCategory ModerationCategory(bool flagged = false, float score = 0);
-        public static ModerationResult ModerationResult(bool flagged = false, ModerationCategory hate = null, ModerationCategory hateThreatening = null, ModerationCategory harassment = null, ModerationCategory harassmentThreatening = null, ModerationCategory selfHarm = null, ModerationCategory selfHarmIntent = null, ModerationCategory selfHarmInstructions = null, ModerationCategory sexual = null, ModerationCategory sexualMinors = null, ModerationCategory violence = null, ModerationCategory violenceGraphic = null);
+        public static ModerationCategory ModerationCategory(bool flagged = false, float score = 0, ModerationInputKinds inputKinds = 0);
+        public static ModerationResult ModerationResult(bool flagged = false, ModerationCategory hate = null, ModerationCategory hateThreatening = null, ModerationCategory harassment = null, ModerationCategory harassmentThreatening = null, ModerationCategory selfHarm = null, ModerationCategory selfHarmIntent = null, ModerationCategory selfHarmInstructions = null, ModerationCategory sexual = null, ModerationCategory sexualMinors = null, ModerationCategory violence = null, ModerationCategory violenceGraphic = null, ModerationCategory illicit = null, ModerationCategory illicitViolent = null);
         public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> items = null);
     }
 }
@@ -2691,7 +2698,6 @@ namespace OpenAI.RealtimeConversation {
         public ConversationInputTranscriptionOptions InputTranscriptionOptions { get; set; }
         public string Instructions { get; set; }
         public ConversationMaxTokensChoice MaxResponseOutputTokens { get; set; }
-        public string Model { get; set; }
         public ConversationAudioFormat? OutputAudioFormat { get; set; }
         public float? Temperature { get; set; }
         public ConversationToolChoice ToolChoice { get; set; }

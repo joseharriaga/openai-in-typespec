@@ -7,9 +7,9 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")]
 internal static partial class ConversationContentModalitiesExtensions
 {
-    internal static void ToInternalModalities(this ConversationContentModalities modalities, IList<InternalRealtimeClientEventSessionUpdateSessionModality> internalModalities)
+    internal static IList<InternalRealtimeClientEventSessionUpdateSessionModality> ToInternalModalities(this ConversationContentModalities modalities)
     {
-        internalModalities.Clear();
+        List<InternalRealtimeClientEventSessionUpdateSessionModality> internalModalities = [];
         if (modalities.HasFlag(ConversationContentModalities.Text))
         {
             internalModalities.Add(InternalRealtimeClientEventSessionUpdateSessionModality.Text);
@@ -18,6 +18,7 @@ internal static partial class ConversationContentModalitiesExtensions
         {
             internalModalities.Add(InternalRealtimeClientEventSessionUpdateSessionModality.Audio);
         }
+        return internalModalities;
     }
 
     internal static ConversationContentModalities FromInternalModalities(IEnumerable<InternalRealtimeClientEventSessionUpdateSessionModality> internalModalities)

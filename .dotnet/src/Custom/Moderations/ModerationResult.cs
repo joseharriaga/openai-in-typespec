@@ -8,19 +8,22 @@ namespace OpenAI.Moderations;
 [CodeGenModel("CreateModerationResponseResult")]
 [CodeGenSuppress("Categories")]
 [CodeGenSuppress("CategoryScores")]
+[CodeGenSuppress("CategoryAppliedInputTypes")]
 [CodeGenSuppress(nameof(ModerationResult), typeof(bool), typeof(InternalModerationCategories), typeof(InternalModerationCategoryScores), typeof(InternalCreateModerationResponseResultCategoryAppliedInputTypes))]
 [CodeGenSuppress(nameof(ModerationResult), typeof(bool), typeof(InternalModerationCategories), typeof(InternalModerationCategoryScores), typeof(InternalCreateModerationResponseResultCategoryAppliedInputTypes), typeof(IDictionary<string, BinaryData>))]
 public partial class ModerationResult
 {
     internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
     
-    internal ModerationResult(bool flagged, ModerationCategory hate, ModerationCategory hateThreatening, ModerationCategory harassment, ModerationCategory harassmentThreatening, ModerationCategory selfHarm, ModerationCategory selfHarmIntent, ModerationCategory selfHarmInstructions, ModerationCategory sexual, ModerationCategory sexualMinors, ModerationCategory violence, ModerationCategory violenceGraphic)
+    internal ModerationResult(bool flagged, ModerationCategory hate, ModerationCategory hateThreatening, ModerationCategory harassment, ModerationCategory harassmentThreatening, ModerationCategory illicit, ModerationCategory illicitViolent, ModerationCategory selfHarm, ModerationCategory selfHarmIntent, ModerationCategory selfHarmInstructions, ModerationCategory sexual, ModerationCategory sexualMinors, ModerationCategory violence, ModerationCategory violenceGraphic)
     {
         Flagged = flagged;
         Hate = hate;
         HateThreatening = hateThreatening;
         Harassment = harassment;
         HarassmentThreatening = harassmentThreatening;
+        Illicit = illicit;
+        IllicitViolent = illicitViolent;
         SelfHarm = selfHarm;
         SelfHarmIntent = selfHarmIntent;
         SelfHarmInstructions = selfHarmInstructions;
@@ -30,13 +33,15 @@ public partial class ModerationResult
         ViolenceGraphic = violenceGraphic;
     }
 
-    internal ModerationResult(bool flagged, ModerationCategory hate, ModerationCategory hateThreatening, ModerationCategory harassment, ModerationCategory harassmentThreatening, ModerationCategory selfHarm, ModerationCategory selfHarmIntent, ModerationCategory selfHarmInstructions, ModerationCategory sexual, ModerationCategory sexualMinors, ModerationCategory violence, ModerationCategory violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    internal ModerationResult(bool flagged, ModerationCategory hate, ModerationCategory hateThreatening, ModerationCategory harassment, ModerationCategory harassmentThreatening, ModerationCategory illicit, ModerationCategory illicitViolent, ModerationCategory selfHarm, ModerationCategory selfHarmIntent, ModerationCategory selfHarmInstructions, ModerationCategory sexual, ModerationCategory sexualMinors, ModerationCategory violence, ModerationCategory violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
     {
         Flagged = flagged;
         Hate = hate;
         HateThreatening = hateThreatening;
         Harassment = harassment;
         HarassmentThreatening = harassmentThreatening;
+        Illicit = illicit;
+        IllicitViolent = illicitViolent;
         SelfHarm = selfHarm;
         SelfHarmIntent = selfHarmIntent;
         SelfHarmInstructions = selfHarmInstructions;
@@ -76,7 +81,4 @@ public partial class ModerationResult
     public ModerationCategory Violence { get; }
 
     public ModerationCategory ViolenceGraphic { get; }
-
-    [CodeGenMember("CategoryAppliedInputTypes")] 
-    internal InternalCreateModerationResponseResultCategoryAppliedInputTypes InternalCategoryAppliedInputTypes { get; }
 }

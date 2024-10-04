@@ -9,17 +9,13 @@ namespace OpenAI.RealtimeConversation;
 [CodeGenModel("RealtimeRequestSession")]
 public partial class ConversationSessionOptions
 {
-    [CodeGenMember("Model")]
-    public string Model { get; set; }
-
     [CodeGenMember("Modalities")]
-    private readonly IList<InternalRealtimeClientEventSessionUpdateSessionModality> _internalModalities
-        = new ChangeTrackingList<InternalRealtimeClientEventSessionUpdateSessionModality>();
+    private IList<InternalRealtimeClientEventSessionUpdateSessionModality> _internalModalities;
 
     public ConversationContentModalities ContentModalities
     {
         get => ConversationContentModalitiesExtensions.FromInternalModalities(_internalModalities);
-        set => value.ToInternalModalities(_internalModalities);
+        set => _internalModalities = value.ToInternalModalities();
     }
 
     [CodeGenMember("ToolChoice")]

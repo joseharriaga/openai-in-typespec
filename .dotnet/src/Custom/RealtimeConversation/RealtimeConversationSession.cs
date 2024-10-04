@@ -144,7 +144,7 @@ public partial class RealtimeConversationSession : IDisposable
 
     public async Task StartResponseTurnAsync(CancellationToken cancellationToken = default)
     {
-        InternalRealtimeClientEventResponseCreate internalCommand = new();
+        InternalRealtimeClientEventResponseCreate internalCommand = new(new());
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 

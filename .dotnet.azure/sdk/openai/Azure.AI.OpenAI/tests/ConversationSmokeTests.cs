@@ -37,7 +37,6 @@ public class ConversationSmokeTests : ConversationTestFixtureBase
             },
             Instructions = "test instructions",
             MaxResponseOutputTokens = 42,
-            Model = "gpt-4o-realtime-preview",
             OutputAudioFormat = ConversationAudioFormat.G711Ulaw,
             Temperature = 0.42f,
             ToolChoice = ConversationToolChoice.CreateFunctionToolChoice("test-function"),
@@ -67,7 +66,6 @@ public class ConversationSmokeTests : ConversationTestFixtureBase
         Assert.That(jsonNode["input_audio_transcription"]?["model"]?.GetValue<string>(), Is.EqualTo("whisper-1"));
         Assert.That(jsonNode["instructions"]?.GetValue<string>(), Is.EqualTo("test instructions"));
         Assert.That(jsonNode["max_response_output_tokens"]?.GetValue<int>(), Is.EqualTo(42));
-        Assert.That(jsonNode["model"]?.GetValue<string>(), Is.EqualTo("gpt-4o-realtime-preview"));
         Assert.That(jsonNode["output_audio_format"]?.GetValue<string>(), Is.EqualTo("g711_ulaw"));
         Assert.That(jsonNode["temperature"]?.GetValue<float>(), Is.EqualTo(0.42f));
         Assert.That(jsonNode["tools"]?.AsArray()?.ToList(), Has.Count.EqualTo(1));
@@ -86,7 +84,6 @@ public class ConversationSmokeTests : ConversationTestFixtureBase
         Assert.That(deserializedOptions.InputTranscriptionOptions?.Model, Is.EqualTo(ConversationTranscriptionModel.Whisper1));
         Assert.That(deserializedOptions.Instructions, Is.EqualTo("test instructions"));
         Assert.That(deserializedOptions.MaxResponseOutputTokens.NumericValue, Is.EqualTo(42));
-        Assert.That(deserializedOptions.Model, Is.EqualTo("gpt-4o-realtime-preview"));
         Assert.That(deserializedOptions.OutputAudioFormat, Is.EqualTo(ConversationAudioFormat.G711Ulaw));
         Assert.That(deserializedOptions.Tools, Has.Count.EqualTo(1));
         Assert.That(deserializedOptions.Tools[0].Kind, Is.EqualTo(ConversationToolKind.Function));

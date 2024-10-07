@@ -21,25 +21,20 @@ namespace OpenAI.RealtimeConversation
             }
 
             writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("name") != true && Optional.IsDefined(Name))
+            if (SerializedAdditionalRawData?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(Name);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("limit") != true && Optional.IsDefined(Limit))
+            if (SerializedAdditionalRawData?.ContainsKey("limit") != true)
             {
                 writer.WritePropertyName("limit"u8);
-                writer.WriteNumberValue(Limit.Value);
+                writer.WriteNumberValue(Limit);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("remaining") != true && Optional.IsDefined(Remaining))
-            {
-                writer.WritePropertyName("remaining"u8);
-                writer.WriteNumberValue(Remaining.Value);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("reset_seconds") != true && Optional.IsDefined(ResetSeconds))
+            if (SerializedAdditionalRawData?.ContainsKey("reset_seconds") != true)
             {
                 writer.WritePropertyName("reset_seconds"u8);
-                writer.WriteNumberValue(ResetSeconds.Value);
+                writer.WriteNumberValue(Convert.ToDouble(ResetSeconds.ToString("s\\.FFF")));
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -84,9 +79,8 @@ namespace OpenAI.RealtimeConversation
                 return null;
             }
             string name = default;
-            int? limit = default;
-            int? remaining = default;
-            float? resetSeconds = default;
+            int limit = default;
+            TimeSpan resetSeconds = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -98,29 +92,12 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (property.NameEquals("limit"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     limit = property.Value.GetInt32();
-                    continue;
-                }
-                if (property.NameEquals("remaining"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    remaining = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("reset_seconds"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    resetSeconds = property.Value.GetSingle();
+                    resetSeconds = TimeSpan.FromSeconds(property.Value.GetDouble());
                     continue;
                 }
                 if (true)
@@ -130,7 +107,7 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ConversationRateLimitDetailsItem(name, limit, remaining, resetSeconds, serializedAdditionalRawData);
+            return new ConversationRateLimitDetailsItem(name, limit, resetSeconds, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<ConversationRateLimitDetailsItem>.Write(ModelReaderWriterOptions options)

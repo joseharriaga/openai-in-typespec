@@ -2633,24 +2633,25 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationOutputTranscriptionFinishedUpdate>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationRateLimitDetailsItem : IJsonModel<ConversationRateLimitDetailsItem>, IPersistableModel<ConversationRateLimitDetailsItem> {
-        public int? Limit { get; }
+        public int Limit { get; }
         public string Name { get; }
-        public int? Remaining { get; }
-        public float? ResetSeconds { get; }
+        public TimeSpan ResetSeconds { get; }
         ConversationRateLimitDetailsItem IJsonModel<ConversationRateLimitDetailsItem>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationRateLimitDetailsItem>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ConversationRateLimitDetailsItem IPersistableModel<ConversationRateLimitDetailsItem>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<ConversationRateLimitDetailsItem>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ConversationRateLimitDetailsItem>.Write(ModelReaderWriterOptions options);
     }
-    public class ConversationRateLimitsUpdatedUpdate : ConversationUpdate, IJsonModel<ConversationRateLimitsUpdatedUpdate>, IPersistableModel<ConversationRateLimitsUpdatedUpdate> {
+    public class ConversationRateLimitsUpdate : ConversationUpdate, IJsonModel<ConversationRateLimitsUpdate>, IPersistableModel<ConversationRateLimitsUpdate> {
+        public IReadOnlyList<ConversationRateLimitDetailsItem> AllDetails { get; }
         public string EventId { get; }
-        public IReadOnlyList<ConversationRateLimitDetailsItem> RateLimits { get; }
-        ConversationRateLimitsUpdatedUpdate IJsonModel<ConversationRateLimitsUpdatedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ConversationRateLimitsUpdatedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ConversationRateLimitsUpdatedUpdate IPersistableModel<ConversationRateLimitsUpdatedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ConversationRateLimitsUpdatedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ConversationRateLimitsUpdatedUpdate>.Write(ModelReaderWriterOptions options);
+        public ConversationRateLimitDetailsItem RequestDetails { get; }
+        public ConversationRateLimitDetailsItem TokenDetails { get; }
+        ConversationRateLimitsUpdate IJsonModel<ConversationRateLimitsUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationRateLimitsUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationRateLimitsUpdate IPersistableModel<ConversationRateLimitsUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationRateLimitsUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationRateLimitsUpdate>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationResponseFinishedUpdate : ConversationUpdate, IJsonModel<ConversationResponseFinishedUpdate>, IPersistableModel<ConversationResponseFinishedUpdate> {
         public IReadOnlyList<ConversationItem> CreatedItems { get; }

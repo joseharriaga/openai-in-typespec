@@ -168,12 +168,12 @@ model TranscriptionSegment {
   /** Seek offset of the segment. */
   seek: int32;
 
-  // Tool customization: timespans are encoded durations
+  // Tool customization: numeric timespans are encoded durations
   /** Start time of the segment in seconds. */
   @encode("seconds", float32)
   start: duration;
 
-  // Tool customization: timespans are encoded durations
+  // Tool customization: numeric timespans are encoded durations
   /** End time of the segment in seconds. */
   @encode("seconds", float32)
   end: duration;
@@ -203,12 +203,12 @@ model TranscriptionWord {
   /** The text content of the word. */
   word: string;
 
-  // Tool customization: timespans are encoded durations
+  // Tool customization: numeric timespans are encoded durations
   /** Start time of the word in seconds. */
   @encode("seconds", float32)
   start: duration;
 
-  // Tool customization: timespans are encoded durations
+  // Tool customization: numeric timespans are encoded durations
   /** End time of the word in seconds. */
   @encode("seconds", float32)
   end: duration;

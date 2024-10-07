@@ -235,16 +235,16 @@ namespace OpenAI
                 arguments);
         }
 
-        public static ConversationRateLimitsUpdatedUpdate ConversationRateLimitsUpdatedUpdate(string eventId = null, IEnumerable<ConversationRateLimitDetailsItem> rateLimits = null)
+        public static ConversationRateLimitsUpdate ConversationRateLimitsUpdate(string eventId = null, IEnumerable<ConversationRateLimitDetailsItem> allDetails = null)
         {
-            rateLimits ??= new List<ConversationRateLimitDetailsItem>();
+            allDetails ??= new List<ConversationRateLimitDetailsItem>();
 
-            return new ConversationRateLimitsUpdatedUpdate(ConversationUpdateKind.RateLimitsUpdated, serializedAdditionalRawData: null, eventId, rateLimits?.ToList());
+            return new ConversationRateLimitsUpdate(ConversationUpdateKind.RateLimitsUpdated, serializedAdditionalRawData: null, eventId, allDetails?.ToList());
         }
 
-        public static ConversationRateLimitDetailsItem ConversationRateLimitDetailsItem(string name = null, int? limit = null, int? remaining = null, float? resetSeconds = null)
+        public static ConversationRateLimitDetailsItem ConversationRateLimitDetailsItem(string name = null, int limit = default, TimeSpan resetSeconds = default)
         {
-            return new ConversationRateLimitDetailsItem(name, limit, remaining, resetSeconds, serializedAdditionalRawData: null);
+            return new ConversationRateLimitDetailsItem(name, limit, resetSeconds, serializedAdditionalRawData: null);
         }
 
         public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)

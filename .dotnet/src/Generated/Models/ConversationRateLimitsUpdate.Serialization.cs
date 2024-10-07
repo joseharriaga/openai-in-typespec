@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationRateLimitsUpdatedUpdate : IJsonModel<ConversationRateLimitsUpdatedUpdate>
+    public partial class ConversationRateLimitsUpdate : IJsonModel<ConversationRateLimitsUpdate>
     {
-        void IJsonModel<ConversationRateLimitsUpdatedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ConversationRateLimitsUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdatedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationRateLimitsUpdatedUpdate)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationRateLimitsUpdate)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -30,9 +30,9 @@ namespace OpenAI.RealtimeConversation
             {
                 writer.WritePropertyName("rate_limits"u8);
                 writer.WriteStartArray();
-                foreach (var item in RateLimits)
+                foreach (var item in AllDetails)
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WriteObjectValue<ConversationRateLimitDetailsItem>(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -63,19 +63,19 @@ namespace OpenAI.RealtimeConversation
             writer.WriteEndObject();
         }
 
-        ConversationRateLimitsUpdatedUpdate IJsonModel<ConversationRateLimitsUpdatedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ConversationRateLimitsUpdate IJsonModel<ConversationRateLimitsUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdatedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationRateLimitsUpdatedUpdate)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationRateLimitsUpdate)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeConversationRateLimitsUpdatedUpdate(document.RootElement, options);
+            return DeserializeConversationRateLimitsUpdate(document.RootElement, options);
         }
 
-        internal static ConversationRateLimitsUpdatedUpdate DeserializeConversationRateLimitsUpdatedUpdate(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ConversationRateLimitsUpdate DeserializeConversationRateLimitsUpdate(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -117,44 +117,44 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ConversationRateLimitsUpdatedUpdate(type, serializedAdditionalRawData, eventId, rateLimits);
+            return new ConversationRateLimitsUpdate(type, serializedAdditionalRawData, eventId, rateLimits);
         }
 
-        BinaryData IPersistableModel<ConversationRateLimitsUpdatedUpdate>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ConversationRateLimitsUpdate>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdatedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdate>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ConversationRateLimitsUpdatedUpdate)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationRateLimitsUpdate)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ConversationRateLimitsUpdatedUpdate IPersistableModel<ConversationRateLimitsUpdatedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ConversationRateLimitsUpdate IPersistableModel<ConversationRateLimitsUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdatedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdate>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeConversationRateLimitsUpdatedUpdate(document.RootElement, options);
+                        return DeserializeConversationRateLimitsUpdate(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ConversationRateLimitsUpdatedUpdate)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationRateLimitsUpdate)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ConversationRateLimitsUpdatedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ConversationRateLimitsUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new ConversationRateLimitsUpdatedUpdate FromResponse(PipelineResponse response)
+        internal static new ConversationRateLimitsUpdate FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeConversationRateLimitsUpdatedUpdate(document.RootElement);
+            return DeserializeConversationRateLimitsUpdate(document.RootElement);
         }
 
         internal override BinaryContent ToBinaryContent()

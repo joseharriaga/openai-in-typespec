@@ -75,6 +75,7 @@ public class ConversationTests : ConversationTestFixtureBase
         await session.StartResponseTurnAsync(CancellationToken);
 
         StringBuilder responseBuilder = new();
+        bool gotRateLimits = false;
 
         await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
         {
@@ -92,13 +93,18 @@ public class ConversationTests : ConversationTestFixtureBase
                 Assert.That(itemAddedUpdate.Item is not null);
             }
 
-            if (update is ConversationRateLimitsUpdatedUpdate)
+            if (update is ConversationRateLimitsUpdate rateLimitsUpdate)
             {
+                Assert.That(rateLimitsUpdate.AllDetails, Has.Count.EqualTo(2));
+                Assert.That(rateLimitsUpdate.TokenDetails, Is.Not.Null);
+                Assert.That(rateLimitsUpdate.RequestDetails, Is.Not.Null);
+                gotRateLimits = true;
                 break;
             }
         }
 
         Assert.That(responseBuilder.ToString(), Is.Not.Null.Or.Empty);
+        Assert.That(gotRateLimits, Is.True);
     }
 
     [Test]

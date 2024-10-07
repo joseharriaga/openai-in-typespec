@@ -128,3 +128,16 @@ union RealtimeResponseStatus {
 model RealtimeResponseStatusDetails {
   type: RealtimeResponseStatus;
 }
+
+model RealtimeServerEventRateLimitsUpdatedRateLimitsItem {
+  /** The rate limit property name that this item includes information about. */
+  name: string;
+
+  /** The maximum configured limit for this rate limit property. */
+  limit: int32;
+
+  /** The remaining quota available against the configured limit for this rate limit property. */
+  /** The remaining time, in seconds, until this rate limit property is reset. */
+  @encode("seconds", float32)
+  reset_seconds: duration;
+}

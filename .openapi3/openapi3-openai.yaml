@@ -10098,27 +10098,29 @@ components:
         rate_limits:
           type: array
           items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the rate limit ("requests", "tokens", "input_tokens", "output_tokens").
-              limit:
-                type: integer
-                format: int32
-                description: The maximum allowed value for the rate limit.
-              remaining:
-                type: integer
-                format: int32
-                description: The remaining value before the limit is reached.
-              reset_seconds:
-                type: number
-                format: float
-                description: Seconds until the rate limit resets.
+            $ref: '#/components/schemas/RealtimeServerEventRateLimitsUpdatedRateLimitsItem'
           description: List of rate limit information.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
       description: Emitted after every "response.done" event to indicate the updated rate limits.
+    RealtimeServerEventRateLimitsUpdatedRateLimitsItem:
+      type: object
+      required:
+        - name
+        - limit
+        - reset_seconds
+      properties:
+        name:
+          type: string
+          description: The rate limit property name that this item includes information about.
+        limit:
+          type: integer
+          format: int32
+          description: The maximum configured limit for this rate limit property.
+        reset_seconds:
+          type: number
+          format: float
+          description: The remaining quota available against the configured limit for this rate limit property.The remaining time, in seconds, until this rate limit property is reset.
     RealtimeServerEventResponseAudioDelta:
       type: object
       required:

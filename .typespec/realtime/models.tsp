@@ -760,18 +760,7 @@ model RealtimeServerEventRateLimitsUpdated extends RealtimeServerEvent {
   /** The event type, must be "rate_limits.updated". */
   type: RealtimeServerEventType.rate_limits_updated;
 
+  // Tool customization: use custom type for rate limit items (applying encoded duration)
   /** List of rate limit information. */
-  rate_limits: {
-    /** The name of the rate limit ("requests", "tokens", "input_tokens", "output_tokens"). */
-    name?: string;
-
-    /** The maximum allowed value for the rate limit. */
-    limit?: int32;
-
-    /** The remaining value before the limit is reached. */
-    remaining?: int32;
-
-    /** Seconds until the rate limit resets. */
-    reset_seconds?: float32;
-  }[];
+  rate_limits: RealtimeServerEventRateLimitsUpdatedRateLimitsItem[];
 }

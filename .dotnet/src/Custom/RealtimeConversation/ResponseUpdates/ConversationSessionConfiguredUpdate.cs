@@ -1,34 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeServerEventSessionUpdated")]
-public partial class ConversationSessionConfiguredUpdate
+[CodeGenModel("RealtimeServerEventRateLimitsUpdated")]
+public partial class ConversationRateLimitsUpdate
 {
-    [CodeGenMember("Session")]
-    internal readonly InternalRealtimeResponseSession _internalSession;
+    public ConversationRateLimitDetailsItem TokenDetails
+        => _tokenDetails ??= AllDetails.FirstOrDefault(item => item.Name == "tokens");
+    private ConversationRateLimitDetailsItem _tokenDetails;
+    public ConversationRateLimitDetailsItem RequestDetails
+        => _tokenDetails ??= AllDetails.FirstOrDefault(item => item.Name == "requests");
 
-    public string SessionId => _internalSession.Id;
-
-    public string Model => _internalSession.Model;
-
-    public ConversationContentModalities ContentModalities
-        => ConversationContentModalitiesExtensions.FromInternalModalities(_internalSession.Modalities);
-
-    public string Instructions => _internalSession.Instructions;
-
-    public ConversationVoice Voice => _internalSession.Voice;
-
-    public ConversationAudioFormat InputAudioFormat => _internalSession.InputAudioFormat;
-    public ConversationAudioFormat OutputAudioFormat => _internalSession.OutputAudioFormat;
-
-    public ConversationInputTranscriptionOptions TranscriptionSettings => _internalSession.InputAudioTranscription;
-    public ConversationTurnDetectionOptions TurnDetectionSettings => _internalSession.TurnDetection;
-    public IReadOnlyList<ConversationTool> Tools => _internalSession.Tools;
-    public ConversationToolChoice ToolChoice => ConversationToolChoice.FromBinaryData(_internalSession.ToolChoice);
-    public float Temperature => _internalSession.Temperature;
-    public ConversationMaxTokensChoice MaxOutputTokens => _internalSession.MaxResponseOutputTokens;
+    [CodeGenMember("RateLimits")]
+    public IReadOnlyList<ConversationRateLimitDetailsItem> AllDetails { get; }
 }

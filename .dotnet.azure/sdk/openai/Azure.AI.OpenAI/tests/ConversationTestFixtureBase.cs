@@ -32,7 +32,7 @@ public class ConversationTestFixtureBase
         {
             CancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(15));
         }
-        DefaultConfiguration = TestConfig.GetConfig("rt_eus2");
+        DefaultConfiguration = TestConfig.GetConfig("rt_rob_futures");
         if (DefaultConfiguration is null || DefaultConfiguration.Endpoint is null)
         {
             Assert.Inconclusive();

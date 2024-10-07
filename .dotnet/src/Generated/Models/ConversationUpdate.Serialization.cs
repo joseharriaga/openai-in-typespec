@@ -83,7 +83,7 @@ namespace OpenAI.RealtimeConversation
                     case "input_audio_buffer.committed": return ConversationInputAudioBufferCommittedUpdate.DeserializeConversationInputAudioBufferCommittedUpdate(element, options);
                     case "input_audio_buffer.speech_started": return ConversationInputSpeechStartedUpdate.DeserializeConversationInputSpeechStartedUpdate(element, options);
                     case "input_audio_buffer.speech_stopped": return ConversationInputSpeechFinishedUpdate.DeserializeConversationInputSpeechFinishedUpdate(element, options);
-                    case "rate_limits.updated": return ConversationRateLimitsUpdatedUpdate.DeserializeConversationRateLimitsUpdatedUpdate(element, options);
+                    case "rate_limits.updated": return ConversationRateLimitsUpdate.DeserializeConversationRateLimitsUpdate(element, options);
                     case "response.audio_transcript.delta": return ConversationOutputTranscriptionDeltaUpdate.DeserializeConversationOutputTranscriptionDeltaUpdate(element, options);
                     case "response.audio_transcript.done": return ConversationOutputTranscriptionFinishedUpdate.DeserializeConversationOutputTranscriptionFinishedUpdate(element, options);
                     case "response.audio.delta": return ConversationAudioDeltaUpdate.DeserializeConversationAudioDeltaUpdate(element, options);

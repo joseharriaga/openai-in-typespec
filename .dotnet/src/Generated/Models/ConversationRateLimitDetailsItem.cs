@@ -10,20 +10,22 @@ namespace OpenAI.RealtimeConversation
     public partial class ConversationRateLimitDetailsItem
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal ConversationRateLimitDetailsItem(string name, int limit, TimeSpan resetSeconds)
+        internal ConversationRateLimitDetailsItem(string name, int maximumCount, int remainingCount, TimeSpan timeUntilReset)
         {
             Argument.AssertNotNull(name, nameof(name));
 
             Name = name;
-            Limit = limit;
-            ResetSeconds = resetSeconds;
+            MaximumCount = maximumCount;
+            RemainingCount = remainingCount;
+            TimeUntilReset = timeUntilReset;
         }
 
-        internal ConversationRateLimitDetailsItem(string name, int limit, TimeSpan resetSeconds, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ConversationRateLimitDetailsItem(string name, int maximumCount, int remainingCount, TimeSpan timeUntilReset, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Name = name;
-            Limit = limit;
-            ResetSeconds = resetSeconds;
+            MaximumCount = maximumCount;
+            RemainingCount = remainingCount;
+            TimeUntilReset = timeUntilReset;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -32,7 +34,5 @@ namespace OpenAI.RealtimeConversation
         }
 
         public string Name { get; }
-        public int Limit { get; }
-        public TimeSpan ResetSeconds { get; }
     }
 }

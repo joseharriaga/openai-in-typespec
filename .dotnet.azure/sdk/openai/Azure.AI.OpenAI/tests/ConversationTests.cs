@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using OpenAI;
 using OpenAI.RealtimeConversation;
 using System;
 using System.ClientModel.Primitives;
@@ -77,6 +78,8 @@ public class ConversationTests : ConversationTestFixtureBase
         await session.StartResponseTurnAsync(CancellationToken);
 
         StringBuilder responseBuilder = new();
+        bool gotResponseDone = false;
+        bool gotRateLimits = false;
 
         await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
         {
@@ -94,13 +97,40 @@ public class ConversationTests : ConversationTestFixtureBase
                 Assert.That(itemAddedUpdate.Item is not null);
             }
 
-            if (update is ConversationResponseFinishedUpdate)
+            if (update is ConversationResponseFinishedUpdate responseFinishedUpdate)
             {
+                Assert.That(responseFinishedUpdate.CreatedItems, Has.Count.GreaterThan(0));
+                gotResponseDone = true;
+                if (client.GetType().IsSubclassOf(typeof(RealtimeConversationClient)))
+                {
+                    // Temporarily assume that subclients don't support rate limits as the terminal command
+                    break;
+                }
+            }
+
+            if (update is ConversationRateLimitsUpdate rateLimitsUpdate)
+            {
+                Assert.That(rateLimitsUpdate.AllDetails, Has.Count.EqualTo(2));
+                Assert.That(rateLimitsUpdate.TokenDetails, Is.Not.Null);
+                Assert.That(rateLimitsUpdate.TokenDetails.Name, Is.EqualTo("tokens"));
+                Assert.That(rateLimitsUpdate.TokenDetails.MaximumCount, Is.GreaterThan(0));
+                Assert.That(rateLimitsUpdate.TokenDetails.RemainingCount, Is.GreaterThan(0));
+                Assert.That(rateLimitsUpdate.TokenDetails.RemainingCount, Is.LessThan(rateLimitsUpdate.TokenDetails.MaximumCount));
+                Assert.That(rateLimitsUpdate.TokenDetails.TimeUntilReset, Is.GreaterThan(TimeSpan.Zero));
+                Assert.That(rateLimitsUpdate.RequestDetails, Is.Not.Null);
+                gotRateLimits = true;
                 break;
             }
         }
 
         Assert.That(responseBuilder.ToString(), Is.Not.Null.Or.Empty);
+        Assert.That(gotResponseDone, Is.True);
+
+        if (!client.GetType().IsSubclassOf(typeof(RealtimeConversationClient)))
+        {
+            // Temporarily assume that subclients don't support rate limit terminal commands
+            Assert.That(gotRateLimits, Is.True);
+        }
     }
 
     [Test]

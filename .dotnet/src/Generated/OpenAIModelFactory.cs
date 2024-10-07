@@ -242,9 +242,9 @@ namespace OpenAI
             return new ConversationRateLimitsUpdate(ConversationUpdateKind.RateLimitsUpdated, serializedAdditionalRawData: null, eventId, allDetails?.ToList());
         }
 
-        public static ConversationRateLimitDetailsItem ConversationRateLimitDetailsItem(string name = null, int limit = default, TimeSpan resetSeconds = default)
+        public static ConversationRateLimitDetailsItem ConversationRateLimitDetailsItem(string name = null, int maximumCount = default, int remainingCount = default, TimeSpan timeUntilReset = default)
         {
-            return new ConversationRateLimitDetailsItem(name, limit, resetSeconds, serializedAdditionalRawData: null);
+            return new ConversationRateLimitDetailsItem(name, maximumCount, remainingCount, timeUntilReset, serializedAdditionalRawData: null);
         }
 
         public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)

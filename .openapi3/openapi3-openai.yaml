@@ -10108,6 +10108,7 @@ components:
       required:
         - name
         - limit
+        - remaining
         - reset_seconds
       properties:
         name:
@@ -10117,10 +10118,14 @@ components:
           type: integer
           format: int32
           description: The maximum configured limit for this rate limit property.
+        remaining:
+          type: integer
+          format: int32
+          description: The remaining quota available against the configured limit for this rate limit property.
         reset_seconds:
           type: number
           format: float
-          description: The remaining quota available against the configured limit for this rate limit property.The remaining time, in seconds, until this rate limit property is reset.
+          description: The remaining time, in seconds, until this rate limit property is reset.
     RealtimeServerEventResponseAudioDelta:
       type: object
       required:

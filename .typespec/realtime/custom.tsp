@@ -137,6 +137,8 @@ model RealtimeServerEventRateLimitsUpdatedRateLimitsItem {
   limit: int32;
 
   /** The remaining quota available against the configured limit for this rate limit property. */
+  remaining: int32;
+
   /** The remaining time, in seconds, until this rate limit property is reset. */
   @encode("seconds", float32)
   reset_seconds: duration;

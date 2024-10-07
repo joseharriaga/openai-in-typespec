@@ -29,12 +29,17 @@ namespace OpenAI.RealtimeConversation
             if (SerializedAdditionalRawData?.ContainsKey("limit") != true)
             {
                 writer.WritePropertyName("limit"u8);
-                writer.WriteNumberValue(Limit);
+                writer.WriteNumberValue(MaximumCount);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("remaining") != true)
+            {
+                writer.WritePropertyName("remaining"u8);
+                writer.WriteNumberValue(RemainingCount);
             }
             if (SerializedAdditionalRawData?.ContainsKey("reset_seconds") != true)
             {
                 writer.WritePropertyName("reset_seconds"u8);
-                writer.WriteNumberValue(Convert.ToDouble(ResetSeconds.ToString("s\\.FFF")));
+                writer.WriteNumberValue(Convert.ToDouble(TimeUntilReset.ToString("s\\.FFF")));
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -80,6 +85,7 @@ namespace OpenAI.RealtimeConversation
             }
             string name = default;
             int limit = default;
+            int remaining = default;
             TimeSpan resetSeconds = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -95,6 +101,11 @@ namespace OpenAI.RealtimeConversation
                     limit = property.Value.GetInt32();
                     continue;
                 }
+                if (property.NameEquals("remaining"u8))
+                {
+                    remaining = property.Value.GetInt32();
+                    continue;
+                }
                 if (property.NameEquals("reset_seconds"u8))
                 {
                     resetSeconds = TimeSpan.FromSeconds(property.Value.GetDouble());
@@ -107,7 +118,7 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ConversationRateLimitDetailsItem(name, limit, resetSeconds, serializedAdditionalRawData);
+            return new ConversationRateLimitDetailsItem(name, limit, remaining, resetSeconds, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<ConversationRateLimitDetailsItem>.Write(ModelReaderWriterOptions options)

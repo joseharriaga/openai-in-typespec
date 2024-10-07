@@ -21,7 +21,6 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventConversationItemDeleted")] public partial class ConversationItemDeletedUpdate { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventConversationItemInputAudioTranscriptionCompleted")] public partial class ConversationInputTranscriptionFinishedUpdate { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventConversationItemTruncated")] public partial class ConversationItemTruncatedUpdate { }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventRateLimitsUpdatedRateLimitsItem")] public partial class ConversationRateLimitDetailsItem { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatus")] public readonly partial struct ConversationStatus { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventResponseTextDelta")] public partial class ConversationTextDeltaUpdate{ }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventResponseTextDone")] public partial class ConversationTextDoneUpdate{ }

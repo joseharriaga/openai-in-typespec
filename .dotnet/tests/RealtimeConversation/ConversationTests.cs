@@ -40,7 +40,7 @@ public class ConversationTests : ConversationTestFixtureBase
         await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
         {
             receivedUpdates.Add(update);
-            
+
             if (update is ConversationErrorUpdate errorUpdate)
             {
                 Assert.That(errorUpdate.Kind, Is.EqualTo(ConversationUpdateKind.Error));
@@ -167,7 +167,7 @@ public class ConversationTests : ConversationTestFixtureBase
                 Assert.That(sessionStartedUpdate.Temperature, Is.GreaterThan(0));
             }
 
-            if (update is ConversationInputTranscriptionFinishedUpdate  inputTranscriptionCompletedUpdate)
+            if (update is ConversationInputTranscriptionFinishedUpdate inputTranscriptionCompletedUpdate)
             {
                 userTranscript = inputTranscriptionCompletedUpdate.Transcript;
             }
@@ -232,7 +232,7 @@ public class ConversationTests : ConversationTestFixtureBase
 
             if (update is ConversationInputSpeechStartedUpdate
                 or ConversationInputSpeechFinishedUpdate
-                or ConversationInputTranscriptionFinishedUpdate 
+                or ConversationInputTranscriptionFinishedUpdate
                 or ConversationInputTranscriptionFailedUpdate
                 or ConversationResponseStartedUpdate
                 or ConversationResponseFinishedUpdate)

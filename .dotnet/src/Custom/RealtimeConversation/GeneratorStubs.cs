@@ -8,8 +8,8 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("RealtimeContentPartType")] public readonly partial struct ConversationContentPartKind { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeItemStatus")] public readonly partial struct ConversationItemStatus { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeMessageRole")] public readonly partial struct ConversationMessageRole { }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseAudioDeltaCommand")] public partial class ConversationAudioDeltaUpdate{ }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseAudioDoneCommand")] public partial class ConversationAudioDoneUpdate{ }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseAudioDeltaCommand")] public partial class ConversationAudioDeltaUpdate { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseAudioDoneCommand")] public partial class ConversationAudioDoneUpdate { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseAudioTranscriptDeltaCommand")] public partial class ConversationOutputTranscriptionDeltaUpdate { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseAudioTranscriptDoneCommand")] public partial class ConversationOutputTranscriptionFinishedUpdate { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseFunctionCallArgumentsDeltaCommand")] public partial class ConversationFunctionCallArgumentsDeltaUpdate { }
@@ -22,10 +22,10 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseItemInputAudioTranscriptionCompletedCommand")] public partial class ConversationInputTranscriptionFinishedUpdate { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseItemTruncatedCommand")] public partial class ConversationItemTruncatedUpdate { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseRateLimitDetailsItem")] public partial class ConversationRateLimitDetailsItem { }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseRateLimitsUpdatedCommand")] public partial class ConversationRateLimitsUpdatedUpdate{ }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseRateLimitsUpdatedCommand")] public partial class ConversationRateLimitsUpdatedUpdate { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatus")] public readonly partial struct ConversationStatus { }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseTextDeltaCommand")] public partial class ConversationTextDeltaUpdate{ }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseTextDoneCommand")] public partial class ConversationTextDoneUpdate{ }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseTextDeltaCommand")] public partial class ConversationTextDeltaUpdate { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseTextDoneCommand")] public partial class ConversationTextDoneUpdate { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseUsage")] public partial class ConversationTokenUsage { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseUsageInputTokenDetails")] public partial class ConversationInputTokenUsageDetails { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseUsageOutputTokenDetails")] public partial class ConversationOutputTokenUsageDetails { }

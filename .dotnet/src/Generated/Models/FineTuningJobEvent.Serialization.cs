@@ -7,10 +7,11 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Models;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class FineTuningJobEvent : IJsonModel<FineTuningJobEvent>
+    public partial class FineTuningJobEvent : IJsonModel<FineTuningJobEvent>
     {
         void IJsonModel<FineTuningJobEvent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -34,7 +35,7 @@ namespace OpenAI.FineTuning
             if (SerializedAdditionalRawData?.ContainsKey("level") != true)
             {
                 writer.WritePropertyName("level"u8);
-                writer.WriteStringValue(Level.ToSerialString());
+                writer.WriteStringValue(Level);
             }
             if (SerializedAdditionalRawData?.ContainsKey("message") != true)
             {
@@ -90,9 +91,9 @@ namespace OpenAI.FineTuning
             }
             string id = default;
             DateTimeOffset createdAt = default;
-            FineTuningJobEventLevel level = default;
+            string level = default;
             string message = default;
-            InternalFineTuningJobEventObject @object = default;
+            FineTuningJobEventObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -109,7 +110,7 @@ namespace OpenAI.FineTuning
                 }
                 if (property.NameEquals("level"u8))
                 {
-                    level = property.Value.GetString().ToFineTuningJobEventLevel();
+                    level = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("message"u8))
@@ -119,7 +120,7 @@ namespace OpenAI.FineTuning
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new InternalFineTuningJobEventObject(property.Value.GetString());
+                    @object = new FineTuningJobEventObject(property.Value.GetString());
                     continue;
                 }
                 if (true)

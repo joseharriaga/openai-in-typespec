@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class HyperparameterOptions : IJsonModel<HyperparameterOptions>
+    public partial class HyperparameterOptions : IJsonModel<HyperparameterOptions>
     {
         void IJsonModel<HyperparameterOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -21,41 +21,20 @@ namespace OpenAI.FineTuning
             }
 
             writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("n_epochs") != true && Optional.IsDefined(NEpochs))
+            if (SerializedAdditionalRawData?.ContainsKey("n_epochs") != true)
             {
                 writer.WritePropertyName("n_epochs"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(NEpochs);
-#else
-                using (JsonDocument document = JsonDocument.Parse(NEpochs))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteStringValue(CycleCount.ToString());
             }
-            if (SerializedAdditionalRawData?.ContainsKey("batch_size") != true && Optional.IsDefined(BatchSize))
+            if (SerializedAdditionalRawData?.ContainsKey("batch_size") != true)
             {
                 writer.WritePropertyName("batch_size"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(BatchSize);
-#else
-                using (JsonDocument document = JsonDocument.Parse(BatchSize))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteStringValue(BatchSize.ToString());
             }
-            if (SerializedAdditionalRawData?.ContainsKey("learning_rate_multiplier") != true && Optional.IsDefined(LearningRateMultiplier))
+            if (SerializedAdditionalRawData?.ContainsKey("learning_rate_multiplier") != true)
             {
                 writer.WritePropertyName("learning_rate_multiplier"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(LearningRateMultiplier);
-#else
-                using (JsonDocument document = JsonDocument.Parse(LearningRateMultiplier))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteStringValue(LearningRate.ToString());
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -99,9 +78,9 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            BinaryData nEpochs = default;
-            BinaryData batchSize = default;
-            BinaryData learningRateMultiplier = default;
+            HyperparameterCycleCount nEpochs = default;
+            HyperparameterBatchSize batchSize = default;
+            HyperparameterLearningRate learningRateMultiplier = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -112,7 +91,7 @@ namespace OpenAI.FineTuning
                     {
                         continue;
                     }
-                    nEpochs = BinaryData.FromString(property.Value.GetRawText());
+                    nEpochs = new HyperparameterCycleCount(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("batch_size"u8))
@@ -121,7 +100,7 @@ namespace OpenAI.FineTuning
                     {
                         continue;
                     }
-                    batchSize = BinaryData.FromString(property.Value.GetRawText());
+                    batchSize = new HyperparameterBatchSize(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("learning_rate_multiplier"u8))
@@ -130,7 +109,7 @@ namespace OpenAI.FineTuning
                     {
                         continue;
                     }
-                    learningRateMultiplier = BinaryData.FromString(property.Value.GetRawText());
+                    learningRateMultiplier = new HyperparameterLearningRate(property.Value.GetString());
                     continue;
                 }
                 if (true)

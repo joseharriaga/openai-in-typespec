@@ -7,10 +7,11 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI.Models;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class FineTuningOptions : IJsonModel<FineTuningOptions>
+    public partial class FineTuningOptions : IJsonModel<FineTuningOptions>
     {
         void IJsonModel<FineTuningOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -34,7 +35,7 @@ namespace OpenAI.FineTuning
             if (SerializedAdditionalRawData?.ContainsKey("hyperparameters") != true && Optional.IsDefined(Hyperparameters))
             {
                 writer.WritePropertyName("hyperparameters"u8);
-                writer.WriteObjectValue(Hyperparameters, options);
+                writer.WriteObjectValue<HyperparameterOptions>(Hyperparameters, options);
             }
             if (SerializedAdditionalRawData?.ContainsKey("suffix") != true && Optional.IsDefined(Suffix))
             {
@@ -68,7 +69,7 @@ namespace OpenAI.FineTuning
                     writer.WriteStartArray();
                     foreach (var item in Integrations)
                     {
-                        writer.WriteObjectValue(item, options);
+                        writer.WriteObjectValue<FineTuningIntegration>(item, options);
                     }
                     writer.WriteEndArray();
                 }
@@ -131,7 +132,7 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            InternalCreateFineTuningJobRequestModel model = default;
+            CreateFineTuningJobRequestModel model = default;
             string trainingFile = default;
             HyperparameterOptions hyperparameters = default;
             string suffix = default;
@@ -144,7 +145,7 @@ namespace OpenAI.FineTuning
             {
                 if (property.NameEquals("model"u8))
                 {
-                    model = new InternalCreateFineTuningJobRequestModel(property.Value.GetString());
+                    model = new CreateFineTuningJobRequestModel(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("training_file"u8))

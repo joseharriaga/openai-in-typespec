@@ -11,6 +11,4 @@
 1. Run the following script:
     `.\openai-in-typespec\.scripts\Update-ClientModel.ps1`
 1. Run the following script:
-    `.\openai-in-typespec\.scripts\ConvertTo-Internal.ps1`
-1. Run the following script:
     `.\openai-in-typespec\.scripts\Add-Customizations.ps1`

@@ -1,6 +1,9 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -53,9 +56,8 @@ public partial class FineTuningClient
 
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string jobId = doc.RootElement.GetProperty("id"u8).GetString();
-        string status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        FineTuningJobOperation operation = this.CreateCreateJobOperation(jobId, status, response);
+        FineTuningJobOperation operation = this.CreateCreateJobOperation(jobId, response);
         return await operation.WaitUntilAsync(waitUntilCompleted, options).ConfigureAwait(false);
     }
 
@@ -92,9 +94,8 @@ public partial class FineTuningClient
 
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string jobId = doc.RootElement.GetProperty("id"u8).GetString();
-        string status = doc.RootElement.GetProperty("status"u8).GetString();
 
-        FineTuningJobOperation operation = this.CreateCreateJobOperation(jobId, status, response);
+        FineTuningJobOperation operation = this.CreateCreateJobOperation(jobId, response);
         return operation.WaitUntil(waitUntilCompleted, options);
     }
 
@@ -102,32 +103,33 @@ public partial class FineTuningClient
     // - Renamed.
     // - Edited doc comment.
     /// <summary>
-    /// [Protocol Method] List your organization's fine-tuning jobs
+    /// [Protocol Method] List all of your organization's fine-tuning jobs
     /// </summary>
-    /// <param name="after"> Identifier for the last job from the previous pagination request. </param>
-    /// <param name="limit"> Number of fine-tuning jobs to retrieve. </param>
+    /// <param name="afterJobId"> Identifier for the last job from the previous pagination request. </param>
+    /// <param name="pageSize"> Number of fine-tuning jobs to retrieve at a time. Collection will iterate until _all_ jobs are fetched. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual AsyncCollectionResult GetJobsAsync(string after, int? limit, RequestOptions options)
+    public virtual AsyncCollectionResult GetJobsAsync(string afterJobId, int? pageSize, RequestOptions options)
     {
-        return new AsyncFineTuningJobCollectionResult(this, _pipeline, options, limit, after);
+        return new AsyncFineTuningJobCollectionResult(this, _pipeline, options, pageSize, afterJobId);
     }
+
 
     // CUSTOM:
     // - Renamed.
     // - Edited doc comment.
     /// <summary>
-    /// [Protocol Method] List your organization's fine-tuning jobs
+    /// [Protocol Method] List all of your your organization's fine-tuning jobs
     /// </summary>
     /// <param name="after"> Identifier for the last job from the previous pagination request. </param>
-    /// <param name="limit"> Number of fine-tuning jobs to retrieve. </param>
+    /// <param name="pageSize"> Number of fine-tuning jobs to retrieve at a time. Collection will iterate until _all_ jobs are fetched. </param>
     /// <param name="options"> The request options, which can override default behaviors of the client pipeline on a per-call basis. </param>
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> The response returned from the service. </returns>
-    public virtual CollectionResult GetJobs(string after, int? limit, RequestOptions options)
+    public virtual CollectionResult GetJobs(string after, int? pageSize, RequestOptions options)
     {
-        return new FineTuningJobCollectionResult(this, _pipeline, options, limit, after);
+        return new FineTuningJobCollectionResult(this, _pipeline, options, pageSize, after);
     }
 
     // CUSTOM:

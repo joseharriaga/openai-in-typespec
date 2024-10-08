@@ -4,6 +4,7 @@
 
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 
 namespace OpenAI.Moderations
 {
@@ -17,5 +18,7 @@ namespace OpenAI.Moderations
         protected ModerationClient()
         {
         }
+
+        public ClientPipeline Pipeline { get; }
     }
 }

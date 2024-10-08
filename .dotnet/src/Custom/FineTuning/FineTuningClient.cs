@@ -82,12 +82,12 @@ public partial class FineTuningClient
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
     internal virtual FineTuningJobOperation CreateCreateJobOperation(string jobId, string status, PipelineResponse response)
     {
-        return new FineTuningJobOperation(_pipeline, _endpoint, jobId, status, response);
+        return new FineTuningJobOperation(Pipeline, _endpoint, jobId, status, response);
     }
 }

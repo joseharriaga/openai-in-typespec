@@ -24,7 +24,7 @@ namespace OpenAI.FineTuning
             writer.WriteEndObject();
         }
 
-        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        private void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
@@ -77,7 +77,7 @@ namespace OpenAI.FineTuning
 
         FineTuningJobHyperparameters IJsonModel<FineTuningJobHyperparameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
-        protected virtual FineTuningJobHyperparameters JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        private FineTuningJobHyperparameters JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
@@ -92,7 +92,7 @@ namespace OpenAI.FineTuning
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
-                return null;
+                return default;
             }
             BinaryData nEpochs = default;
             BinaryData batchSize = default;
@@ -125,7 +125,7 @@ namespace OpenAI.FineTuning
 
         BinaryData IPersistableModel<FineTuningJobHyperparameters>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
-        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        private BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
@@ -139,7 +139,7 @@ namespace OpenAI.FineTuning
 
         FineTuningJobHyperparameters IPersistableModel<FineTuningJobHyperparameters>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
-        protected virtual FineTuningJobHyperparameters PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        private FineTuningJobHyperparameters PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<FineTuningJobHyperparameters>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)

@@ -4,6 +4,7 @@
 
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 
 namespace OpenAI.Embeddings
 {
@@ -17,5 +18,7 @@ namespace OpenAI.Embeddings
         protected EmbeddingClient()
         {
         }
+
+        public ClientPipeline Pipeline { get; }
     }
 }

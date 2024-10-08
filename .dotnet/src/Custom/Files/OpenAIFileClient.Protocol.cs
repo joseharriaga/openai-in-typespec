@@ -44,7 +44,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
 
         using PipelineMessage message = CreateCreateFileRequest(content, contentType, options);
-        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNullOrEmpty(contentType, nameof(contentType));
 
         using PipelineMessage message = CreateCreateFileRequest(content, contentType, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public partial class OpenAIFileClient
     public virtual async Task<ClientResult> GetFilesAsync(string purpose, RequestOptions options)
     {
         using PipelineMessage message = CreateListFilesRequest(purpose, options);
-        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     /// <summary>
@@ -100,7 +100,7 @@ public partial class OpenAIFileClient
     public virtual ClientResult GetFiles(string purpose, RequestOptions options)
     {
         using PipelineMessage message = CreateListFilesRequest(purpose, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
     /// <summary>
@@ -118,7 +118,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         using PipelineMessage message = CreateRetrieveFileRequest(fileId, options);
-        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     /// <summary>
@@ -136,7 +136,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         using PipelineMessage message = CreateRetrieveFileRequest(fileId, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
     /// <summary>
@@ -154,7 +154,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         using PipelineMessage message = CreateDeleteFileRequest(fileId, options);
-        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     /// <summary>
@@ -172,7 +172,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         using PipelineMessage message = CreateDeleteFileRequest(fileId, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
     /// <summary>
@@ -190,7 +190,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         using PipelineMessage message = CreateDownloadFileRequest(fileId, options);
-        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     /// <summary>
@@ -208,7 +208,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         using PipelineMessage message = CreateDownloadFileRequest(fileId, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
     /// <summary>

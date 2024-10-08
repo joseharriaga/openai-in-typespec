@@ -22,12 +22,6 @@ namespace OpenAI.Models;
 
 public partial class OpenAIModelClient
 {
-    // CUSTOM: Remove virtual keyword.
-    /// <summary>
-    /// The HTTP pipeline for sending and receiving REST requests and responses.
-    /// </summary>
-    public ClientPipeline Pipeline => _pipeline;
-
     // CUSTOM: Added as a convenience.
     /// <summary> Initializes a new instance of <see cref="OpenAIModelClient"/>. </summary>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
@@ -58,7 +52,7 @@ public partial class OpenAIModelClient
         Argument.AssertNotNull(credential, nameof(credential));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -75,7 +69,7 @@ public partial class OpenAIModelClient
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -84,7 +78,7 @@ public partial class OpenAIModelClient
     public virtual async Task<ClientResult<OpenAIModelCollection>> GetModelsAsync(CancellationToken cancellationToken = default)
     {
         ClientResult result = await GetModelsAsync(cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(OpenAIModelCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIModelCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Gets basic information about each of the models that are currently available, such as their corresponding owner and availability. </summary>
@@ -92,7 +86,7 @@ public partial class OpenAIModelClient
     public virtual ClientResult<OpenAIModelCollection> GetModels(CancellationToken cancellationToken = default)
     {
         ClientResult result = GetModels(cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(OpenAIModelCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIModelCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Gets basic information about the specified model, such as its owner and availability. </summary>
@@ -105,7 +99,7 @@ public partial class OpenAIModelClient
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
         ClientResult result = await GetModelAsync(model, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(OpenAIModel.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIModel)result, result.GetRawResponse());
     }
 
     /// <summary> Gets basic information about the specified model, such as its owner and availability. </summary>
@@ -118,7 +112,7 @@ public partial class OpenAIModelClient
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
         ClientResult result = GetModel(model, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(OpenAIModel.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIModel)result, result.GetRawResponse());
     }
 
     /// <summary> Deletes the specified fine-tuned model. </summary>
@@ -132,7 +126,7 @@ public partial class OpenAIModelClient
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
         ClientResult result = await DeleteModelAsync(model, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(ModelDeletionResult.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((ModelDeletionResult)result, result.GetRawResponse());
     }
 
     /// <summary> Deletes the specified fine-tuned model. </summary>
@@ -146,6 +140,6 @@ public partial class OpenAIModelClient
         Argument.AssertNotNullOrEmpty(model, nameof(model));
 
         ClientResult result = DeleteModel(model, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(ModelDeletionResult.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((ModelDeletionResult)result, result.GetRawResponse());
     }
 }

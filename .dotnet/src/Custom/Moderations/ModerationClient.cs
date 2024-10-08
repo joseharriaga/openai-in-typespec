@@ -21,12 +21,6 @@ public partial class ModerationClient
 {
     private readonly string _model;
 
-    // CUSTOM: Remove virtual keyword.
-    /// <summary>
-    /// The HTTP pipeline for sending and receiving REST requests and responses.
-    /// </summary>
-    public ClientPipeline Pipeline => _pipeline;
-
     // CUSTOM: Added as a convenience.
     /// <summary> Initializes a new instance of <see cref="ModerationClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
@@ -78,7 +72,7 @@ public partial class ModerationClient
         options ??= new OpenAIClientOptions();
 
         _model = model;
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -100,7 +94,7 @@ public partial class ModerationClient
         options ??= new OpenAIClientOptions();
 
         _model = model;
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -116,9 +110,9 @@ public partial class ModerationClient
         ModerationOptions options = new();
         CreateModerationOptions(BinaryData.FromObjectAsJson(input), ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = await ClassifyTextAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(ModerationResultCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((ModerationResultCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Classifies if the text input is potentially harmful across several categories. </summary>
@@ -133,9 +127,9 @@ public partial class ModerationClient
         ModerationOptions options = new();
         CreateModerationOptions(BinaryData.FromObjectAsJson(input), ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = ClassifyText(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(ModerationResultCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((ModerationResultCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Classifies if the text inputs are potentially harmful across several categories. </summary>
@@ -150,9 +144,9 @@ public partial class ModerationClient
         ModerationOptions options = new();
         CreateModerationOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = await ClassifyTextAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(ModerationResultCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((ModerationResultCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Classifies if the text inputs are potentially harmful across several categories. </summary>
@@ -167,9 +161,9 @@ public partial class ModerationClient
         ModerationOptions options = new();
         CreateModerationOptions(BinaryData.FromObjectAsJson(inputs), ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = ClassifyText(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(ModerationResultCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((ModerationResultCollection)result, result.GetRawResponse());
     }
 
     private void CreateModerationOptions(BinaryData input, ref ModerationOptions options)

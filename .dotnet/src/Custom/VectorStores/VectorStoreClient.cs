@@ -43,12 +43,6 @@ namespace OpenAI.VectorStores;
 [CodeGenSuppress("GetFilesInVectorStoreBatches", typeof(string), typeof(string), typeof(int?), typeof(InternalListFilesInVectorStoreBatchRequestOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?))]
 public partial class VectorStoreClient
 {
-    // CUSTOM: Remove virtual keyword.
-    /// <summary>
-    /// The HTTP pipeline for sending and receiving REST requests and responses.
-    /// </summary>
-    public ClientPipeline Pipeline => _pipeline;
-
     // CUSTOM: Added as a convenience.
     /// <summary> Initializes a new instance of <see cref="VectorStoreClient"/>. </summary>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
@@ -87,7 +81,7 @@ public partial class VectorStoreClient
         Argument.AssertNotNull(credential, nameof(credential));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -104,13 +98,13 @@ public partial class VectorStoreClient
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
     internal virtual CreateVectorStoreOperation CreateCreateVectorStoreOperation(ClientResult<VectorStore> result)
     {
-        return new CreateVectorStoreOperation(_pipeline, _endpoint, result);
+        return new CreateVectorStoreOperation(Pipeline, _endpoint, result);
     }
 
     internal virtual AddFileToVectorStoreOperation CreateAddFileToVectorStoreOperation(ClientResult<VectorStoreFileAssociation> result)
@@ -135,7 +129,7 @@ public partial class VectorStoreClient
     /// the vector store creation to complete. </returns>
     public virtual async Task<CreateVectorStoreOperation> CreateVectorStoreAsync(bool waitUntilCompleted, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
     {
-        using BinaryContent content = vectorStore?.ToBinaryContent();
+        using BinaryContent content = vectorStore;
         return await CreateVectorStoreAsync(content, waitUntilCompleted, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
     }
 
@@ -151,7 +145,7 @@ public partial class VectorStoreClient
     /// the vector store creation to complete. </returns>
     public virtual CreateVectorStoreOperation CreateVectorStore(bool waitUntilCompleted, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
     {
-        using BinaryContent content = vectorStore?.ToBinaryContent();
+        using BinaryContent content = vectorStore;
         return CreateVectorStore(content, waitUntilCompleted, cancellationToken.ToRequestOptions());
     }
 
@@ -168,7 +162,7 @@ public partial class VectorStoreClient
         ClientResult result
             = await GetVectorStoreAsync(vectorStoreId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return ClientResult.FromValue(
-            VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+            (VectorStore)result, result.GetRawResponse());
     }
 
     /// <summary>
@@ -182,7 +176,7 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
         ClientResult result = GetVectorStore(vectorStoreId, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((VectorStore)result, result.GetRawResponse());
     }
 
     /// <summary>
@@ -197,9 +191,9 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(vectorStore, nameof(vectorStore));
 
-        using BinaryContent content = vectorStore.ToBinaryContent();
+        using BinaryContent content = vectorStore;
         ClientResult result = await ModifyVectorStoreAsync(vectorStoreId, content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((VectorStore)result, result.GetRawResponse());
     }
 
     /// <summary>
@@ -214,9 +208,9 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNull(vectorStore, nameof(vectorStore));
 
-        using BinaryContent content = vectorStore.ToBinaryContent();
+        using BinaryContent content = vectorStore;
         ClientResult result = ModifyVectorStore(vectorStoreId, content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(VectorStore.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((VectorStore)result, result.GetRawResponse());
     }
 
     /// <summary>
@@ -231,7 +225,7 @@ public partial class VectorStoreClient
 
         ClientResult protocolResult = await DeleteVectorStoreAsync(vectorStoreId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse rawProtocolResponse = protocolResult?.GetRawResponse();
-        VectorStoreDeletionResult value = VectorStoreDeletionResult.FromResponse(rawProtocolResponse);
+        VectorStoreDeletionResult value = (VectorStoreDeletionResult)protocolResult;
         return ClientResult.FromValue(value, rawProtocolResponse);
     }
 
@@ -247,7 +241,7 @@ public partial class VectorStoreClient
 
         ClientResult protocolResult = DeleteVectorStore(vectorStoreId, cancellationToken.ToRequestOptions());
         PipelineResponse rawProtocolResponse = protocolResult?.GetRawResponse();
-        VectorStoreDeletionResult value = VectorStoreDeletionResult.FromResponse(rawProtocolResponse);
+        VectorStoreDeletionResult value = (VectorStoreDeletionResult)protocolResult;
         return ClientResult.FromValue(value, rawProtocolResponse);
     }
 
@@ -332,7 +326,7 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
-        return await AddFileToVectorStoreAsync(vectorStoreId, internalRequest.ToBinaryContent(), waitUntilCompleted, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        return await AddFileToVectorStoreAsync(vectorStoreId, internalRequest, waitUntilCompleted, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -354,7 +348,7 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         InternalCreateVectorStoreFileRequest internalRequest = new(fileId);
-        return AddFileToVectorStore(vectorStoreId, internalRequest.ToBinaryContent(), waitUntilCompleted, cancellationToken.ToRequestOptions());
+        return AddFileToVectorStore(vectorStoreId, internalRequest, waitUntilCompleted, cancellationToken.ToRequestOptions());
     }
 
     /// <summary>
@@ -451,7 +445,7 @@ public partial class VectorStoreClient
 
         ClientResult result = await GetFileAssociationAsync(vectorStoreId, fileId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result?.GetRawResponse();
-        VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
+        VectorStoreFileAssociation value = (VectorStoreFileAssociation)result;
         return ClientResult.FromValue(value, response);
     }
 
@@ -473,7 +467,7 @@ public partial class VectorStoreClient
 
         ClientResult result = GetFileAssociation(vectorStoreId, fileId, cancellationToken.ToRequestOptions());
         PipelineResponse response = result?.GetRawResponse();
-        VectorStoreFileAssociation value = VectorStoreFileAssociation.FromResponse(response);
+        VectorStoreFileAssociation value = (VectorStoreFileAssociation)result;
         return ClientResult.FromValue(value, response);
     }
 
@@ -492,7 +486,7 @@ public partial class VectorStoreClient
     {
         ClientResult protocolResult = await RemoveFileFromStoreAsync(vectorStoreId, fileId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
-        FileFromStoreRemovalResult value = FileFromStoreRemovalResult.FromResponse(protocolResponse);
+        FileFromStoreRemovalResult value = (FileFromStoreRemovalResult)protocolResult;
         return ClientResult.FromValue(value, protocolResponse);
     }
 
@@ -511,7 +505,7 @@ public partial class VectorStoreClient
     {
         ClientResult protocolResult = RemoveFileFromStore(vectorStoreId, fileId, cancellationToken.ToRequestOptions());
         PipelineResponse protocolResponse = protocolResult?.GetRawResponse();
-        FileFromStoreRemovalResult value = FileFromStoreRemovalResult.FromResponse(protocolResponse);
+        FileFromStoreRemovalResult value = (FileFromStoreRemovalResult)protocolResult;
         return ClientResult.FromValue(value, protocolResponse);
     }
 
@@ -536,7 +530,7 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileIds, nameof(fileIds));
 
-        BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds).ToBinaryContent();
+        BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds);
         RequestOptions options = cancellationToken.ToRequestOptions();
 
         return await CreateBatchFileJobAsync(vectorStoreId, content, waitUntilCompleted, options).ConfigureAwait(false);
@@ -563,7 +557,7 @@ public partial class VectorStoreClient
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(fileIds, nameof(fileIds));
 
-        BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds).ToBinaryContent();
+        BinaryContent content = new InternalCreateVectorStoreFileBatchRequest(fileIds);
         RequestOptions options = cancellationToken.ToRequestOptions();
 
         return CreateBatchFileJob(vectorStoreId, content, waitUntilCompleted, options);
@@ -716,7 +710,7 @@ public partial class VectorStoreClient
 
         ClientResult result = await GetBatchFileJobAsync(vectorStoreId, batchJobId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result?.GetRawResponse();
-        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
+        VectorStoreBatchFileJob value = (VectorStoreBatchFileJob)result;
         return ClientResult.FromValue(value, response);
     }
 
@@ -734,7 +728,7 @@ public partial class VectorStoreClient
 
         ClientResult result = GetBatchFileJob(vectorStoreId, batchJobId, cancellationToken.ToRequestOptions());
         PipelineResponse response = result?.GetRawResponse();
-        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
+        VectorStoreBatchFileJob value = (VectorStoreBatchFileJob)result;
         return ClientResult.FromValue(value, response);
     }
 
@@ -756,7 +750,7 @@ public partial class VectorStoreClient
 
         ClientResult result = await CancelBatchFileJobAsync(vectorStoreId, batchJobId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         PipelineResponse response = result?.GetRawResponse();
-        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
+        VectorStoreBatchFileJob value = (VectorStoreBatchFileJob)result;
         return ClientResult.FromValue(value, response);
     }
 
@@ -778,7 +772,7 @@ public partial class VectorStoreClient
 
         ClientResult result = CancelBatchFileJob(vectorStoreId, batchJobId, cancellationToken.ToRequestOptions());
         PipelineResponse response = result?.GetRawResponse();
-        VectorStoreBatchFileJob value = VectorStoreBatchFileJob.FromResponse(response);
+        VectorStoreBatchFileJob value = (VectorStoreBatchFileJob)result;
         return ClientResult.FromValue(value, response);
     }
 }

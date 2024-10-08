@@ -20,6 +20,8 @@ namespace OpenAI.Models
         {
         }
 
+        public ClientPipeline Pipeline { get; }
+
         public virtual ClientResult ListModels(RequestOptions options)
         {
             using PipelineMessage message = CreateListModelsRequest(options);

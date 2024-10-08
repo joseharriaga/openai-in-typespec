@@ -24,7 +24,7 @@ namespace OpenAI.Audio
             writer.WriteEndObject();
         }
 
-        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        private void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<TranscribedSegment>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
@@ -75,7 +75,7 @@ namespace OpenAI.Audio
 
         TranscribedSegment IJsonModel<TranscribedSegment>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
-        protected virtual TranscribedSegment JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        private TranscribedSegment JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<TranscribedSegment>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
@@ -90,7 +90,7 @@ namespace OpenAI.Audio
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
-                return null;
+                return default;
             }
             int id = default;
             string text = default;
@@ -185,7 +185,7 @@ namespace OpenAI.Audio
 
         BinaryData IPersistableModel<TranscribedSegment>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
-        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        private BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<TranscribedSegment>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
@@ -199,7 +199,7 @@ namespace OpenAI.Audio
 
         TranscribedSegment IPersistableModel<TranscribedSegment>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
-        protected virtual TranscribedSegment PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        private TranscribedSegment PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<TranscribedSegment>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)

@@ -21,6 +21,8 @@ namespace OpenAI.VectorStores
         {
         }
 
+        public ClientPipeline Pipeline { get; }
+
         public virtual ClientResult ListVectorStores(int? limit, string order, string after, string before, RequestOptions options)
         {
             using PipelineMessage message = CreateListVectorStoresRequest(limit, order, after, before, options);

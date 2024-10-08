@@ -9,8 +9,6 @@ namespace OpenAI.Images;
 [CodeGenSuppress("op_Implicit", typeof(string))]
 public readonly partial struct GeneratedImageSize : IEquatable<GeneratedImageSize>
 {
-    private readonly string _value;
-
     /// <summary> Initializes a new instance of <see cref="GeneratedImageSize"/>. </summary>
     /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
     internal GeneratedImageSize(string value)

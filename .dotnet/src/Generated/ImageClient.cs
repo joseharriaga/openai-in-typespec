@@ -4,6 +4,7 @@
 
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 
 namespace OpenAI.Images
 {
@@ -17,5 +18,7 @@ namespace OpenAI.Images
         protected ImageClient()
         {
         }
+
+        public ClientPipeline Pipeline { get; }
     }
 }

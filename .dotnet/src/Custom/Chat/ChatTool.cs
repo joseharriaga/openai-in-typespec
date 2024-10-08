@@ -131,6 +131,6 @@ public partial class ChatTool
         return new(
             kind: ChatToolKind.Function,
             function: function,
-            serializedAdditionalRawData: null);
+            additionalBinaryDataProperties: null);
     }
 }

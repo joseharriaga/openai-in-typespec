@@ -20,7 +20,6 @@ public partial class RealtimeConversationClient
     public event EventHandler<BinaryData> OnSendingCommand;
     public event EventHandler<BinaryData> OnReceivingCommand;
 
-    private readonly Uri _endpoint;
     private readonly ApiKeyCredential _credential;
 
     /// <summary>

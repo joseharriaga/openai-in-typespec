@@ -24,7 +24,7 @@ namespace OpenAI.Audio
             writer.WriteEndObject();
         }
 
-        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        private void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<TranscribedWord>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
@@ -56,7 +56,7 @@ namespace OpenAI.Audio
 
         TranscribedWord IJsonModel<TranscribedWord>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
-        protected virtual TranscribedWord JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        private TranscribedWord JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<TranscribedWord>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
@@ -71,7 +71,7 @@ namespace OpenAI.Audio
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
-                return null;
+                return default;
             }
             string word = default;
             TimeSpan startTime = default;
@@ -104,7 +104,7 @@ namespace OpenAI.Audio
 
         BinaryData IPersistableModel<TranscribedWord>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
-        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        private BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<TranscribedWord>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
@@ -118,7 +118,7 @@ namespace OpenAI.Audio
 
         TranscribedWord IPersistableModel<TranscribedWord>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
-        protected virtual TranscribedWord PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        private TranscribedWord PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<TranscribedWord>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)

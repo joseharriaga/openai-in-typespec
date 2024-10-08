@@ -20,6 +20,8 @@ namespace OpenAI.Files
         {
         }
 
+        public ClientPipeline Pipeline { get; }
+
         public virtual ClientResult ListFiles(string purpose, RequestOptions options)
         {
             using PipelineMessage message = CreateListFilesRequest(purpose, options);

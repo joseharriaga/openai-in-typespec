@@ -4,7 +4,6 @@
 
 using System;
 using System.ClientModel.Primitives;
-using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
@@ -12,13 +11,13 @@ namespace OpenAI.RealtimeConversation
     {
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier _pipelineMessageClassifier204;
-        private static OpenAI.RealtimeConversationClient.Classifier2xxAnd4xx _pipelineMessageClassifier2xxAnd4xx;
+        private static Classifier2xxAnd4xx _pipelineMessageClassifier2xxAnd4xx;
 
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 = PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 
         private static PipelineMessageClassifier PipelineMessageClassifier204 => _pipelineMessageClassifier204 = PipelineMessageClassifier.Create(stackalloc ushort[] { 204 });
 
-        private static OpenAI.RealtimeConversationClient.Classifier2xxAnd4xx PipelineMessageClassifier2xxAnd4xx => _pipelineMessageClassifier2xxAnd4xx ??= new OpenAI.RealtimeConversationClient.Classifier2xxAnd4xx();
+        private static Classifier2xxAnd4xx PipelineMessageClassifier2xxAnd4xx => _pipelineMessageClassifier2xxAnd4xx ??= new Classifier2xxAnd4xx();
 
         private class Classifier2xxAnd4xx : PipelineMessageClassifier
         {

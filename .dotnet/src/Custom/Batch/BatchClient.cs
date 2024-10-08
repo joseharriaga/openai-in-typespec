@@ -24,8 +24,8 @@ namespace OpenAI.Batch;
 [CodeGenSuppress("CancelBatchAsync", typeof(string))]
 [CodeGenSuppress("CancelBatch", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("CancelBatchAsync", typeof(string), typeof(RequestOptions))]
-[CodeGenSuppress("GetBatches", typeof(string), typeof(int?))]
-[CodeGenSuppress("GetBatchesAsync", typeof(string), typeof(int?))]
+[CodeGenSuppress("ListBatches", typeof(string), typeof(int?))]
+[CodeGenSuppress("ListBatchesAsync", typeof(string), typeof(int?))]
 public partial class BatchClient
 {
     // CUSTOM: Added as a convenience.
@@ -66,7 +66,7 @@ public partial class BatchClient
         Argument.AssertNotNull(credential, nameof(credential));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -83,12 +83,12 @@ public partial class BatchClient
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
     internal virtual CreateBatchOperation CreateCreateBatchOperation(string batchId, string status, PipelineResponse response)
     {
-        return new CreateBatchOperation(_pipeline, _endpoint, batchId, status, response);
+        return new CreateBatchOperation(Pipeline, _endpoint, batchId, status, response);
     }
 }

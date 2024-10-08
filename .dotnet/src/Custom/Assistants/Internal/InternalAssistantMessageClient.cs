@@ -18,12 +18,6 @@ namespace OpenAI.Assistants;
 [CodeGenSuppress("DeleteMessage", typeof(string), typeof(string))]
 internal partial class InternalAssistantMessageClient
 {
-    // CUSTOM: Remove virtual keyword.
-    /// <summary>
-    /// The HTTP pipeline for sending and receiving REST requests and responses.
-    /// </summary>
-    public ClientPipeline Pipeline => _pipeline;
-
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
@@ -46,7 +40,7 @@ internal partial class InternalAssistantMessageClient
         Argument.AssertNotNull(credential, nameof(credential));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -63,7 +57,7 @@ internal partial class InternalAssistantMessageClient
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 }

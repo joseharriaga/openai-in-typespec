@@ -34,12 +34,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("file_id"u8);
             writer.WriteStringValue(FileId);
             writer.WritePropertyName("tools"u8);
-            writer.WriteStartArray();
-            foreach (ToolDefinition item in Tools)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
+            this.SerializeTools(writer, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -88,12 +83,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("tools"u8))
                 {
-                    List<ToolDefinition> array = new List<ToolDefinition>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        array.Add(ToolDefinition.DeserializeToolDefinition(item, options));
-                    }
-                    tools = array;
+                    DeserializeTools(prop, ref tools);
                     continue;
                 }
                 if (options.Format != "W")

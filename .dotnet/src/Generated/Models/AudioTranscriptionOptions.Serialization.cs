@@ -47,13 +47,29 @@ namespace OpenAI.Audio
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
             }
+            writer.WritePropertyName("file"u8);
+            writer.WriteBase64StringValue(File.ToArray(), "D");
+            writer.WritePropertyName("model"u8);
+            writer.WriteObjectValue<InternalCreateTranscriptionRequestModel>(Model, options);
             if (Optional.IsCollectionDefined(InternalTimestampGranularities))
             {
                 writer.WritePropertyName("timestamp_granularities"u8);
                 writer.WriteStartArray();
                 foreach (BinaryData item in InternalTimestampGranularities)
                 {
-                    writer.WriteObjectValue(item, options);
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
+#if NET6_0_OR_GREATER
+                    writer.WriteRawValue(item);
+#else
+                    using (JsonDocument document = JsonDocument.Parse(item))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
+#endif
                 }
                 writer.WriteEndArray();
             }
@@ -97,6 +113,8 @@ namespace OpenAI.Audio
             string prompt = default;
             AudioTranscriptionFormat? responseFormat = default;
             float? temperature = default;
+            BinaryData @file = default;
+            InternalCreateTranscriptionRequestModel model = default;
             IList<BinaryData> internalTimestampGranularities = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -141,6 +159,16 @@ namespace OpenAI.Audio
                     temperature = prop.Value.GetSingle();
                     continue;
                 }
+                if (prop.NameEquals("file"u8))
+                {
+                    @file = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
+                    continue;
+                }
+                if (prop.NameEquals("model"u8))
+                {
+                    model = InternalCreateTranscriptionRequestModel.DeserializeInternalCreateTranscriptionRequestModel(prop.Value, options);
+                    continue;
+                }
                 if (prop.NameEquals("timestamp_granularities"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -150,7 +178,14 @@ namespace OpenAI.Audio
                     List<BinaryData> array = new List<BinaryData>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(BinaryData.DeserializeBinaryData(item, options));
+                        if (item.ValueKind == JsonValueKind.Null)
+                        {
+                            array.Add(null);
+                        }
+                        else
+                        {
+                            array.Add(BinaryData.FromString(item.GetRawText()));
+                        }
                     }
                     internalTimestampGranularities = array;
                     continue;
@@ -165,6 +200,8 @@ namespace OpenAI.Audio
                 prompt,
                 responseFormat,
                 temperature,
+                @file,
+                model,
                 internalTimestampGranularities ?? new ChangeTrackingList<BinaryData>(),
                 additionalBinaryDataProperties);
         }

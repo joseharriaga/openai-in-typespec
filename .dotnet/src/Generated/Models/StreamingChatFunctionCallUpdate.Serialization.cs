@@ -35,7 +35,7 @@ namespace OpenAI.Chat
             if (Optional.IsDefined(FunctionArgumentsUpdate))
             {
                 writer.WritePropertyName("arguments"u8);
-                writer.WriteObjectValue<BinaryData>(FunctionArgumentsUpdate, options);
+                this.SerializeFunctionArgumentsUpdateValue(writer, options);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -80,6 +80,11 @@ namespace OpenAI.Chat
             {
                 if (prop.NameEquals("name"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        functionName = null;
+                        continue;
+                    }
                     functionName = prop.Value.GetString();
                     continue;
                 }
@@ -87,9 +92,10 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        functionArgumentsUpdate = null;
                         continue;
                     }
-                    functionArgumentsUpdate = BinaryData.DeserializeBinaryData(prop.Value, options);
+                    DeserializeFunctionArgumentsUpdateValue(prop, ref functionArgumentsUpdate);
                     continue;
                 }
                 if (options.Format != "W")

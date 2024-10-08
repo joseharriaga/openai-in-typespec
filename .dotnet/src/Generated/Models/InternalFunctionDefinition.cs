@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.Chat;
 
 namespace OpenAI
 {
@@ -19,20 +18,18 @@ namespace OpenAI
             Name = name;
         }
 
-        internal InternalFunctionDefinition(string description, string name, InternalFunctionParameters parameters, bool? strict, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalFunctionDefinition(string description, string name, bool? strict, BinaryData parameters, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Description = description;
             Name = name;
-            Parameters = parameters;
             Strict = strict;
+            Parameters = parameters;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public string Description { get; set; }
 
         public string Name { get; set; }
-
-        public InternalFunctionParameters Parameters { get; set; }
 
         public bool? Strict { get; set; }
     }

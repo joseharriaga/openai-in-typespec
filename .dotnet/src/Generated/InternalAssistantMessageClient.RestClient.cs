@@ -9,7 +9,7 @@ using OpenAI;
 
 namespace OpenAI.Assistants
 {
-    public partial class InternalAssistantMessageClient
+    internal partial class InternalAssistantMessageClient
     {
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier _pipelineMessageClassifier204;

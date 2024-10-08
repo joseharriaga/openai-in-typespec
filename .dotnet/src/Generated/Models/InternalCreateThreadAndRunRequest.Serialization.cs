@@ -167,6 +167,54 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("parallel_tool_calls"u8);
                 writer.WriteBooleanValue(ParallelToolCalls.Value);
             }
+            if (Optional.IsDefined(Model))
+            {
+                if (Model != null)
+                {
+                    writer.WritePropertyName("model"u8);
+                    writer.WriteStringValue(Model);
+                }
+                else
+                {
+                    writer.WriteNull("model"u8);
+                }
+            }
+            if (Optional.IsDefined(ToolResources))
+            {
+                if (ToolResources != null)
+                {
+                    writer.WritePropertyName("tool_resources"u8);
+                    writer.WriteObjectValue(ToolResources, options);
+                }
+                else
+                {
+                    writer.WriteNull("toolResources"u8);
+                }
+            }
+            if (Optional.IsDefined(ResponseFormat))
+            {
+                if (ResponseFormat != null)
+                {
+                    writer.WritePropertyName("response_format"u8);
+                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
+                }
+                else
+                {
+                    writer.WriteNull("responseFormat"u8);
+                }
+            }
+            if (Optional.IsDefined(ToolChoice))
+            {
+                if (ToolChoice != null)
+                {
+                    writer.WritePropertyName("tool_choice"u8);
+                    writer.WriteObjectValue<ToolConstraint>(ToolChoice, options);
+                }
+                else
+                {
+                    writer.WriteNull("toolChoice"u8);
+                }
+            }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -215,6 +263,10 @@ namespace OpenAI.Assistants
             int? maxCompletionTokens = default;
             RunTruncationStrategy truncationStrategy = default;
             bool? parallelToolCalls = default;
+            string model = default;
+            ToolResources toolResources = default;
+            AssistantResponseFormat responseFormat = default;
+            ToolConstraint toolChoice = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -348,6 +400,46 @@ namespace OpenAI.Assistants
                     parallelToolCalls = prop.Value.GetBoolean();
                     continue;
                 }
+                if (prop.NameEquals("model"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        model = null;
+                        continue;
+                    }
+                    model = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("tool_resources"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        toolResources = null;
+                        continue;
+                    }
+                    toolResources = ToolResources.DeserializeToolResources(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("response_format"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        responseFormat = null;
+                        continue;
+                    }
+                    responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("tool_choice"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        toolChoice = null;
+                        continue;
+                    }
+                    toolChoice = ToolConstraint.DeserializeToolConstraint(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -366,6 +458,10 @@ namespace OpenAI.Assistants
                 maxCompletionTokens,
                 truncationStrategy,
                 parallelToolCalls,
+                model,
+                toolResources,
+                responseFormat,
+                toolChoice,
                 additionalBinaryDataProperties);
         }
 

@@ -97,6 +97,7 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        function = null;
                         continue;
                     }
                     function = InternalChatCompletionMessageToolCallChunkFunction.DeserializeInternalChatCompletionMessageToolCallChunkFunction(prop.Value, options);
@@ -106,6 +107,7 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        kind = null;
                         continue;
                     }
                     kind = prop.Value.GetInt32().ToChatToolCallKind();
@@ -113,6 +115,11 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("id"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        toolCallId = null;
+                        continue;
+                    }
                     toolCallId = prop.Value.GetString();
                     continue;
                 }

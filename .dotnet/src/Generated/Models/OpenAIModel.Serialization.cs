@@ -35,6 +35,8 @@ namespace OpenAI.Models
             writer.WriteStringValue(Id);
             writer.WritePropertyName("owned_by"u8);
             writer.WriteStringValue(OwnedBy);
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalModelObject>(Object, options);
             writer.WritePropertyName("created"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
@@ -75,6 +77,7 @@ namespace OpenAI.Models
             }
             string id = default;
             string ownedBy = default;
+            InternalModelObject @object = default;
             DateTimeOffset createdAt = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -89,6 +92,11 @@ namespace OpenAI.Models
                     ownedBy = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("object"u8))
+                {
+                    @object = InternalModelObject.DeserializeInternalModelObject(prop.Value, options);
+                    continue;
+                }
                 if (prop.NameEquals("created"u8))
                 {
                     createdAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
@@ -99,7 +107,7 @@ namespace OpenAI.Models
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new OpenAIModel(id, ownedBy, createdAt, additionalBinaryDataProperties);
+            return new OpenAIModel(id, ownedBy, @object, createdAt, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<OpenAIModel>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

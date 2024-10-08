@@ -11,8 +11,14 @@ namespace OpenAI.Files
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal OpenAIFileCollection(IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal OpenAIFileCollection(InternalListFilesResponseObject @object)
         {
+            Object = @object;
+        }
+
+        internal OpenAIFileCollection(InternalListFilesResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        {
+            Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

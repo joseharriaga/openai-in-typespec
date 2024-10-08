@@ -34,7 +34,16 @@ namespace OpenAI.Embeddings
             writer.WritePropertyName("index"u8);
             writer.WriteNumberValue(Index);
             writer.WritePropertyName("embedding"u8);
-            writer.WriteObjectValue<BinaryData>(EmbeddingProperty, options);
+#if NET6_0_OR_GREATER
+            writer.WriteRawValue(EmbeddingProperty);
+#else
+            using (JsonDocument document = JsonDocument.Parse(EmbeddingProperty))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalEmbeddingObject>(Object, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -73,6 +82,7 @@ namespace OpenAI.Embeddings
             }
             int index = default;
             BinaryData embeddingProperty = default;
+            InternalEmbeddingObject @object = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -83,7 +93,12 @@ namespace OpenAI.Embeddings
                 }
                 if (prop.NameEquals("embedding"u8))
                 {
-                    embeddingProperty = BinaryData.DeserializeBinaryData(prop.Value, options);
+                    embeddingProperty = BinaryData.FromString(prop.Value.GetRawText());
+                    continue;
+                }
+                if (prop.NameEquals("object"u8))
+                {
+                    @object = InternalEmbeddingObject.DeserializeInternalEmbeddingObject(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -91,7 +106,7 @@ namespace OpenAI.Embeddings
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new OpenAIEmbedding(index, embeddingProperty, additionalBinaryDataProperties);
+            return new OpenAIEmbedding(index, embeddingProperty, @object, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<OpenAIEmbedding>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -14,13 +14,7 @@ namespace OpenAI.LegacyCompletions;
 internal partial class LegacyCompletionClient
 {
     private readonly string _model;
-
-    // CUSTOM: Remove virtual keyword.
-    /// <summary>
-    /// The HTTP pipeline for sending and receiving REST requests and responses.
-    /// </summary>
-    public ClientPipeline Pipeline => _pipeline;
-
+    
     // CUSTOM: Added as a convenience.
     /// <summary> Initializes a new instance of <see cref="LegacyCompletionClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
@@ -72,7 +66,7 @@ internal partial class LegacyCompletionClient
         options ??= new OpenAIClientOptions();
 
         _model = model;
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -94,7 +88,7 @@ internal partial class LegacyCompletionClient
         options ??= new OpenAIClientOptions();
 
         _model = model;
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 }

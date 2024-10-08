@@ -11,12 +11,18 @@ namespace OpenAI.FineTuning
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal FineTuningJobHyperparameters()
+        internal FineTuningJobHyperparameters(BinaryData nEpochs, BinaryData batchSize, BinaryData learningRateMultiplier)
         {
+            NEpochs = nEpochs;
+            BatchSize = batchSize;
+            LearningRateMultiplier = learningRateMultiplier;
         }
 
-        internal FineTuningJobHyperparameters(IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal FineTuningJobHyperparameters(BinaryData nEpochs, BinaryData batchSize, BinaryData learningRateMultiplier, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
+            NEpochs = nEpochs;
+            BatchSize = batchSize;
+            LearningRateMultiplier = learningRateMultiplier;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

@@ -32,6 +32,22 @@ namespace OpenAI.Embeddings
                 writer.WritePropertyName("dimensions"u8);
                 writer.WriteNumberValue(Dimensions.Value);
             }
+            writer.WritePropertyName("input"u8);
+#if NET6_0_OR_GREATER
+            writer.WriteRawValue(Input);
+#else
+            using (JsonDocument document = JsonDocument.Parse(Input))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
+            writer.WritePropertyName("model"u8);
+            writer.WriteObjectValue<InternalCreateEmbeddingRequestModel>(Model, options);
+            if (Optional.IsDefined(EncodingFormat))
+            {
+                writer.WritePropertyName("encoding_format"u8);
+                writer.WriteObjectValue<Embeddings.OpenAI.Embeddings.InternalCreateEmbeddingRequestEncodingFormat<InternalCreateEmbeddingRequestEncodingFormat>?>(EncodingFormat, options);
+            }
             if (Optional.IsDefined(EndUserId))
             {
                 writer.WritePropertyName("user"u8);
@@ -74,6 +90,9 @@ namespace OpenAI.Embeddings
                 return null;
             }
             int? dimensions = default;
+            BinaryData input = default;
+            InternalCreateEmbeddingRequestModel model = default;
+            Embeddings.OpenAI.Embeddings.InternalCreateEmbeddingRequestEncodingFormat<InternalCreateEmbeddingRequestEncodingFormat>? encodingFormat = default;
             string endUserId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -88,8 +107,33 @@ namespace OpenAI.Embeddings
                     dimensions = prop.Value.GetInt32();
                     continue;
                 }
+                if (prop.NameEquals("input"u8))
+                {
+                    input = BinaryData.FromString(prop.Value.GetRawText());
+                    continue;
+                }
+                if (prop.NameEquals("model"u8))
+                {
+                    model = InternalCreateEmbeddingRequestModel.DeserializeInternalCreateEmbeddingRequestModel(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("encoding_format"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        encodingFormat = null;
+                        continue;
+                    }
+                    encodingFormat = Embeddings.OpenAI.Embeddings.InternalCreateEmbeddingRequestEncodingFormat<InternalCreateEmbeddingRequestEncodingFormat>?.DeserializeOpenAI.Embeddings.InternalCreateEmbeddingRequestEncodingFormat(prop.Value, options);
+                    continue;
+                }
                 if (prop.NameEquals("user"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        endUserId = null;
+                        continue;
+                    }
                     endUserId = prop.Value.GetString();
                     continue;
                 }
@@ -98,7 +142,13 @@ namespace OpenAI.Embeddings
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new EmbeddingGenerationOptions(dimensions, endUserId, additionalBinaryDataProperties);
+            return new EmbeddingGenerationOptions(
+                dimensions,
+                input,
+                model,
+                encodingFormat,
+                endUserId,
+                additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<EmbeddingGenerationOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

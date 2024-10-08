@@ -27,6 +27,10 @@ namespace OpenAI.VectorStores
             {
                 throw new FormatException($"The model {nameof(VectorStoreExpirationPolicy)} does not support writing '{format}' format.");
             }
+            writer.WritePropertyName("anchor"u8);
+            writer.WriteNumberValue((int)Anchor);
+            writer.WritePropertyName("days"u8);
+            writer.WriteNumberValue(Days);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -63,15 +67,27 @@ namespace OpenAI.VectorStores
             {
                 return null;
             }
+            VectorStores.VectorStoreExpirationAnchor anchor = default;
+            int days = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("anchor"u8))
+                {
+                    anchor = prop.Value.GetInt32().ToVectorStoreExpirationAnchor();
+                    continue;
+                }
+                if (prop.NameEquals("days"u8))
+                {
+                    days = prop.Value.GetInt32();
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new VectorStoreExpirationPolicy(additionalBinaryDataProperties);
+            return new VectorStoreExpirationPolicy(anchor, days, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<VectorStoreExpirationPolicy>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

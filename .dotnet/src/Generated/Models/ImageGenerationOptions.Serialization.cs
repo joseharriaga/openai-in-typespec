@@ -68,6 +68,32 @@ namespace OpenAI.Images
                     writer.WriteNull("style"u8);
                 }
             }
+            if (Optional.IsDefined(Model))
+            {
+                if (Model != null)
+                {
+                    writer.WritePropertyName("model"u8);
+                    writer.WriteObjectValue<Images.OpenAI.Images.InternalCreateImageRequestModel<InternalCreateImageRequestModel>?>(Model, options);
+                }
+                else
+                {
+                    writer.WriteNull("model"u8);
+                }
+            }
+            writer.WritePropertyName("prompt"u8);
+            writer.WriteStringValue(Prompt);
+            if (Optional.IsDefined(N))
+            {
+                if (N != null)
+                {
+                    writer.WritePropertyName("n"u8);
+                    writer.WriteNumberValue(N.Value);
+                }
+                else
+                {
+                    writer.WriteNull("n"u8);
+                }
+            }
             if (Optional.IsDefined(EndUserId))
             {
                 writer.WritePropertyName("user"u8);
@@ -113,6 +139,9 @@ namespace OpenAI.Images
             GeneratedImageFormat? responseFormat = default;
             GeneratedImageSize? size = default;
             GeneratedImageStyle? style = default;
+            Images.OpenAI.Images.InternalCreateImageRequestModel<InternalCreateImageRequestModel>? model = default;
+            string prompt = default;
+            long? n = default;
             string endUserId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -157,8 +186,38 @@ namespace OpenAI.Images
                     style = new GeneratedImageStyle(prop.Value.GetString());
                     continue;
                 }
+                if (prop.NameEquals("model"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        model = null;
+                        continue;
+                    }
+                    model = Images.OpenAI.Images.InternalCreateImageRequestModel<InternalCreateImageRequestModel>?.DeserializeOpenAI.Images.InternalCreateImageRequestModel(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("prompt"u8))
+                {
+                    prompt = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("n"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        n = null;
+                        continue;
+                    }
+                    n = prop.Value.GetInt64();
+                    continue;
+                }
                 if (prop.NameEquals("user"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        endUserId = null;
+                        continue;
+                    }
                     endUserId = prop.Value.GetString();
                     continue;
                 }
@@ -172,6 +231,9 @@ namespace OpenAI.Images
                 responseFormat,
                 size,
                 style,
+                model,
+                prompt,
+                n,
                 endUserId,
                 additionalBinaryDataProperties);
         }

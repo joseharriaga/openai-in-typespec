@@ -35,6 +35,8 @@ namespace OpenAI.VectorStores
             writer.WriteBooleanValue(Deleted);
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(VectorStoreId);
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalDeleteVectorStoreResponseObject>(Object, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -73,6 +75,7 @@ namespace OpenAI.VectorStores
             }
             bool deleted = default;
             string vectorStoreId = default;
+            InternalDeleteVectorStoreResponseObject @object = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -86,12 +89,17 @@ namespace OpenAI.VectorStores
                     vectorStoreId = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("object"u8))
+                {
+                    @object = InternalDeleteVectorStoreResponseObject.DeserializeInternalDeleteVectorStoreResponseObject(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new VectorStoreDeletionResult(deleted, vectorStoreId, additionalBinaryDataProperties);
+            return new VectorStoreDeletionResult(deleted, vectorStoreId, @object, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<VectorStoreDeletionResult>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

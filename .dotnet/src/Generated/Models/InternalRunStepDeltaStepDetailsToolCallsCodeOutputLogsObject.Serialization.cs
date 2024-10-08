@@ -73,6 +73,11 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("logs"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        internalLogs = null;
+                        continue;
+                    }
                     internalLogs = prop.Value.GetString();
                     continue;
                 }

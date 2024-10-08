@@ -11,7 +11,7 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal RunCreationOptions(string assistantId, bool? stream, AssistantResponseFormat responseFormat, string modelOverride, string instructionsOverride, string additionalInstructions, IList<MessageCreationOptions> internalMessages, bool? allowParallelToolCalls, IList<ToolDefinition> toolsOverride, float? nucleusSamplingFactor, int? maxInputTokenCount, int? maxOutputTokenCount, ToolConstraint toolConstraint, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal RunCreationOptions(string assistantId, bool? stream, AssistantResponseFormat responseFormat, string modelOverride, string instructionsOverride, string additionalInstructions, IList<MessageCreationOptions> internalMessages, bool? allowParallelToolCalls, IList<ToolDefinition> toolsOverride, IDictionary<string, string> metadata, float? temperature, float? nucleusSamplingFactor, int? maxInputTokenCount, int? maxOutputTokenCount, RunTruncationStrategy truncationStrategy, ToolConstraint toolConstraint, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             AssistantId = assistantId;
             Stream = stream;
@@ -22,9 +22,12 @@ namespace OpenAI.Assistants
             InternalMessages = internalMessages;
             AllowParallelToolCalls = allowParallelToolCalls;
             ToolsOverride = toolsOverride;
+            Metadata = metadata;
+            Temperature = temperature;
             NucleusSamplingFactor = nucleusSamplingFactor;
             MaxInputTokenCount = maxInputTokenCount;
             MaxOutputTokenCount = maxOutputTokenCount;
+            TruncationStrategy = truncationStrategy;
             ToolConstraint = toolConstraint;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }

@@ -16,6 +16,7 @@ using OpenAI.Images;
 using OpenAI.LegacyCompletions;
 using OpenAI.Models;
 using OpenAI.Moderations;
+using OpenAI.RealtimeConversation;
 using OpenAI.VectorStores;
 
 namespace OpenAI
@@ -38,6 +39,7 @@ namespace OpenAI
         private InternalAssistantMessageClient _cachedInternalAssistantMessageClient;
         private OpenAIModelClient _cachedOpenAIModelClient;
         private ModerationClient _cachedModerationClient;
+        private RealtimeConversationClient _cachedRealtimeConversationClient;
         private InternalAssistantThreadClient _cachedInternalAssistantThreadClient;
         private InternalAssistantRunClient _cachedInternalAssistantRunClient;
         private VectorStoreClient _cachedVectorStoreClient;
@@ -105,6 +107,11 @@ namespace OpenAI
         public virtual ModerationClient GetModerationClientClient()
         {
             return Volatile.Read(ref _cachedModerationClient) ?? Interlocked.CompareExchange(ref _cachedModerationClient, new ModerationClient(_keyCredential, _endpoint), null) ?? _cachedModerationClient;
+        }
+
+        public virtual RealtimeConversationClient GetRealtimeConversationClientClient()
+        {
+            return Volatile.Read(ref _cachedRealtimeConversationClient) ?? Interlocked.CompareExchange(ref _cachedRealtimeConversationClient, new RealtimeConversationClient(_keyCredential, _endpoint), null) ?? _cachedRealtimeConversationClient;
         }
 
         public virtual InternalAssistantThreadClient GetInternalAssistantThreadClientClient()

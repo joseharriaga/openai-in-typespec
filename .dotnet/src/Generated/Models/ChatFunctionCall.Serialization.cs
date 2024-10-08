@@ -34,7 +34,7 @@ namespace OpenAI.Chat
             writer.WritePropertyName("name"u8);
             writer.WriteStringValue(FunctionName);
             writer.WritePropertyName("arguments"u8);
-            writer.WriteObjectValue<BinaryData>(FunctionArguments, options);
+            this.SerializeFunctionArgumentsValue(writer, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -83,7 +83,7 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("arguments"u8))
                 {
-                    functionArguments = BinaryData.DeserializeBinaryData(prop.Value, options);
+                    DeserializeFunctionArgumentsValue(prop, ref functionArguments);
                     continue;
                 }
                 if (options.Format != "W")

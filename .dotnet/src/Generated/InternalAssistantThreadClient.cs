@@ -4,10 +4,11 @@
 
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 
 namespace OpenAI.Assistants
 {
-    public partial class InternalAssistantThreadClient
+    internal partial class InternalAssistantThreadClient
     {
         private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
@@ -17,5 +18,7 @@ namespace OpenAI.Assistants
         protected InternalAssistantThreadClient()
         {
         }
+
+        public ClientPipeline Pipeline { get; }
     }
 }

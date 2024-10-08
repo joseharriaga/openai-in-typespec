@@ -6,6 +6,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using OpenAI;
 
@@ -27,6 +28,17 @@ namespace OpenAI.Files
             {
                 throw new FormatException($"The model {nameof(InternalFileUploadOptions)} does not support writing '{format}' format.");
             }
+            writer.WritePropertyName("file"u8);
+#if NET6_0_OR_GREATER
+            writer.WriteRawValue(global::System.BinaryData.FromStream(File));
+#else
+            using (JsonDocument document = JsonDocument.Parse(BinaryData.FromStream(File)))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
+            writer.WritePropertyName("purpose"u8);
+            writer.WriteObjectValue<FileUploadPurpose>(Purpose, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -63,15 +75,27 @@ namespace OpenAI.Files
             {
                 return null;
             }
+            Stream @file = default;
+            FileUploadPurpose purpose = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("file"u8))
+                {
+                    @file = BinaryData.FromString(prop.Value.GetRawText()).ToStream();
+                    continue;
+                }
+                if (prop.NameEquals("purpose"u8))
+                {
+                    purpose = FileUploadPurpose.DeserializeFileUploadPurpose(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalFileUploadOptions(additionalBinaryDataProperties);
+            return new InternalFileUploadOptions(@file, purpose, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalFileUploadOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

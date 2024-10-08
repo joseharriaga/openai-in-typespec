@@ -20,6 +20,8 @@ namespace OpenAI.Assistants
         {
         }
 
+        public ClientPipeline Pipeline { get; }
+
         public virtual ClientResult ListAssistants(int? limit, string order, string after, string before, RequestOptions options)
         {
             using PipelineMessage message = CreateListAssistantsRequest(limit, order, after, before, options);

@@ -9,7 +9,7 @@ using OpenAI;
 
 namespace OpenAI.LegacyCompletions
 {
-    public partial class LegacyCompletionClient
+    internal partial class LegacyCompletionClient
     {
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier _pipelineMessageClassifier204;

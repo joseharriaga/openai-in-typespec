@@ -10,7 +10,7 @@ using OpenAI;
 
 namespace OpenAI.Files
 {
-    public partial class InternalUploadsClient
+    internal partial class InternalUploadsClient
     {
         private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
@@ -20,6 +20,8 @@ namespace OpenAI.Files
         protected InternalUploadsClient()
         {
         }
+
+        public ClientPipeline Pipeline { get; }
 
         public virtual ClientResult CreateUpload(BinaryContent content, RequestOptions options)
         {

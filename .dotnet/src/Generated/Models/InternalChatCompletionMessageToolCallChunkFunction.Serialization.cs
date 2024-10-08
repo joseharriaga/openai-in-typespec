@@ -32,6 +32,11 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(Name);
             }
+            if (Optional.IsDefined(Arguments))
+            {
+                writer.WritePropertyName("arguments"u8);
+                this.SerializeArgumentsValue(writer, options);
+            }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -69,6 +74,7 @@ namespace OpenAI.Chat
                 return null;
             }
             string name = default;
+            BinaryData arguments = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -82,12 +88,22 @@ namespace OpenAI.Chat
                     name = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("arguments"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        arguments = null;
+                        continue;
+                    }
+                    DeserializeArgumentsValue(prop, ref arguments);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalChatCompletionMessageToolCallChunkFunction(name, additionalBinaryDataProperties);
+            return new InternalChatCompletionMessageToolCallChunkFunction(name, arguments, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalChatCompletionMessageToolCallChunkFunction>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -128,6 +128,7 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        toolResources = null;
                         continue;
                     }
                     toolResources = ToolResources.DeserializeToolResources(prop.Value, options);

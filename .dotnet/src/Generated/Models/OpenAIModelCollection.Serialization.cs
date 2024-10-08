@@ -19,6 +19,8 @@ namespace OpenAI.Models
             {
                 throw new FormatException($"The model {nameof(OpenAIModelCollection)} does not support writing '{format}' format.");
             }
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalListModelsResponseObject>(Object, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

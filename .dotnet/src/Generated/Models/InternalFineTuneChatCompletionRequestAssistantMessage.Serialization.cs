@@ -29,21 +29,6 @@ namespace OpenAI.FineTuning
                 throw new FormatException($"The model {nameof(InternalFineTuneChatCompletionRequestAssistantMessage)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
-            {
-                foreach (var item in _additionalBinaryDataProperties)
-                {
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-                    writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-            }
         }
 
         InternalFineTuneChatCompletionRequestAssistantMessage IJsonModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalFineTuneChatCompletionRequestAssistantMessage)JsonModelCreateCore(ref reader, options);
@@ -69,9 +54,9 @@ namespace OpenAI.FineTuning
             string refusal = default;
             string participantName = default;
             IList<ChatToolCall> toolCalls = default;
+            ChatFunctionCall functionCall = default;
             Chat.ChatMessageRole role = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            IDictionary<string, BinaryData> additionalBinaryDataProperties0 = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("content"u8))
@@ -96,6 +81,11 @@ namespace OpenAI.FineTuning
                 }
                 if (prop.NameEquals("name"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        participantName = null;
+                        continue;
+                    }
                     participantName = prop.Value.GetString();
                     continue;
                 }
@@ -113,6 +103,16 @@ namespace OpenAI.FineTuning
                     toolCalls = array;
                     continue;
                 }
+                if (prop.NameEquals("function_call"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        functionCall = null;
+                        continue;
+                    }
+                    functionCall = ChatFunctionCall.DeserializeChatFunctionCall(prop.Value, options);
+                    continue;
+                }
                 if (prop.NameEquals("role"u8))
                 {
                     role = prop.Value.GetInt32().ToChatMessageRole();
@@ -120,7 +120,7 @@ namespace OpenAI.FineTuning
                 }
                 if (options.Format != "W")
                 {
-                    additionalBinaryDataProperties0.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
             return new InternalFineTuneChatCompletionRequestAssistantMessage(
@@ -128,9 +128,9 @@ namespace OpenAI.FineTuning
                 refusal,
                 participantName,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
+                functionCall,
                 role,
-                additionalBinaryDataProperties,
-                additionalBinaryDataProperties0);
+                additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

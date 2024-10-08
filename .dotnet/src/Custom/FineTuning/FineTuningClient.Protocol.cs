@@ -49,7 +49,7 @@ public partial class FineTuningClient
         Argument.AssertNotNull(content, nameof(content));
 
         using PipelineMessage message = CreateCreateFineTuningJobRequest(content, options);
-        PipelineResponse response = await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
+        PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
 
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string jobId = doc.RootElement.GetProperty("id"u8).GetString();

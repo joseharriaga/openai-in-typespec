@@ -35,7 +35,7 @@ namespace OpenAI.Images
             if (Optional.IsDefined(ImageBytes))
             {
                 writer.WritePropertyName("b64_json"u8);
-                writer.WriteObjectValue<BinaryData>(ImageBytes, options);
+                writer.WriteBase64StringValue(ImageBytes.ToArray(), "D");
             }
             if (Optional.IsDefined(ImageUri))
             {
@@ -98,15 +98,17 @@ namespace OpenAI.Images
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        imageBytes = null;
                         continue;
                     }
-                    imageBytes = BinaryData.DeserializeBinaryData(prop.Value, options);
+                    imageBytes = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
                     continue;
                 }
                 if (prop.NameEquals("url"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        imageUri = null;
                         continue;
                     }
                     imageUri = Uri.DeserializeUri(prop.Value, options);

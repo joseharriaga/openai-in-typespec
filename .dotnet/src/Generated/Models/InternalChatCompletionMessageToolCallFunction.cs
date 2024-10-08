@@ -12,16 +12,19 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public InternalChatCompletionMessageToolCallFunction(string name)
+        public InternalChatCompletionMessageToolCallFunction(string name, BinaryData arguments)
         {
             Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(arguments, nameof(arguments));
 
             Name = name;
+            Arguments = arguments;
         }
 
-        internal InternalChatCompletionMessageToolCallFunction(string name, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalChatCompletionMessageToolCallFunction(string name, BinaryData arguments, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Name = name;
+            Arguments = arguments;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

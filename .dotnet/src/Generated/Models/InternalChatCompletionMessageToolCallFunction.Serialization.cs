@@ -33,6 +33,8 @@ namespace OpenAI.Chat
             }
             writer.WritePropertyName("name"u8);
             writer.WriteStringValue(Name);
+            writer.WritePropertyName("arguments"u8);
+            this.SerializeArgumentsValue(writer, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -70,6 +72,7 @@ namespace OpenAI.Chat
                 return null;
             }
             string name = default;
+            BinaryData arguments = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -78,12 +81,17 @@ namespace OpenAI.Chat
                     name = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("arguments"u8))
+                {
+                    DeserializeArgumentsValue(prop, ref arguments);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalChatCompletionMessageToolCallFunction(name, additionalBinaryDataProperties);
+            return new InternalChatCompletionMessageToolCallFunction(name, arguments, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalChatCompletionMessageToolCallFunction>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

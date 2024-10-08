@@ -45,12 +45,7 @@ namespace OpenAI.Assistants
             if (Optional.IsCollectionDefined(NewVectorStores))
             {
                 writer.WritePropertyName("vector_stores"u8);
-                writer.WriteStartArray();
-                foreach (VectorStoreCreationHelper item in NewVectorStores)
-                {
-                    writer.WriteObjectValue(item, options);
-                }
-                writer.WriteEndArray();
+                this.SerializeNewVectorStores(writer, options);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {

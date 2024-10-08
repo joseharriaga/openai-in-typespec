@@ -70,12 +70,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("role"u8);
             writer.WriteNumberValue((int)Role);
             writer.WritePropertyName("content"u8);
-            writer.WriteStartArray();
-            foreach (MessageContent item in Content)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
+            this.SerializeContent(writer, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

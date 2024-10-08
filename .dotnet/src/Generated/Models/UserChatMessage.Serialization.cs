@@ -73,6 +73,11 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("name"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        participantName = null;
+                        continue;
+                    }
                     participantName = prop.Value.GetString();
                     continue;
                 }

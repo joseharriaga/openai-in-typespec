@@ -19,6 +19,8 @@ namespace OpenAI.Files
             {
                 throw new FormatException($"The model {nameof(OpenAIFileCollection)} does not support writing '{format}' format.");
             }
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalListFilesResponseObject>(Object, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

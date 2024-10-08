@@ -27,6 +27,39 @@ namespace OpenAI.Images
             {
                 throw new FormatException($"The model {nameof(ImageEditOptions)} does not support writing '{format}' format.");
             }
+            if (Optional.IsDefined(Model))
+            {
+                if (Model != null)
+                {
+                    writer.WritePropertyName("model"u8);
+                    writer.WriteObjectValue<Images.OpenAI.Images.InternalCreateImageEditRequestModel<InternalCreateImageEditRequestModel>?>(Model, options);
+                }
+                else
+                {
+                    writer.WriteNull("model"u8);
+                }
+            }
+            writer.WritePropertyName("image"u8);
+            writer.WriteBase64StringValue(Image.ToArray(), "D");
+            writer.WritePropertyName("prompt"u8);
+            writer.WriteStringValue(Prompt);
+            if (Optional.IsDefined(Mask))
+            {
+                writer.WritePropertyName("mask"u8);
+                writer.WriteBase64StringValue(Mask.ToArray(), "D");
+            }
+            if (Optional.IsDefined(N))
+            {
+                if (N != null)
+                {
+                    writer.WritePropertyName("n"u8);
+                    writer.WriteNumberValue(N.Value);
+                }
+                else
+                {
+                    writer.WriteNull("n"u8);
+                }
+            }
             if (Optional.IsDefined(Size))
             {
                 if (Size != null)
@@ -92,12 +125,57 @@ namespace OpenAI.Images
             {
                 return null;
             }
+            Images.OpenAI.Images.InternalCreateImageEditRequestModel<InternalCreateImageEditRequestModel>? model = default;
+            BinaryData image = default;
+            string prompt = default;
+            BinaryData mask = default;
+            long? n = default;
             Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>? size = default;
             Images.OpenAI.Images.GeneratedImageFormat<GeneratedImageFormat>? responseFormat = default;
             string endUserId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("model"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        model = null;
+                        continue;
+                    }
+                    model = Images.OpenAI.Images.InternalCreateImageEditRequestModel<InternalCreateImageEditRequestModel>?.DeserializeOpenAI.Images.InternalCreateImageEditRequestModel(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("image"u8))
+                {
+                    image = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
+                    continue;
+                }
+                if (prop.NameEquals("prompt"u8))
+                {
+                    prompt = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("mask"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        mask = null;
+                        continue;
+                    }
+                    mask = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
+                    continue;
+                }
+                if (prop.NameEquals("n"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        n = null;
+                        continue;
+                    }
+                    n = prop.Value.GetInt64();
+                    continue;
+                }
                 if (prop.NameEquals("size"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -120,6 +198,11 @@ namespace OpenAI.Images
                 }
                 if (prop.NameEquals("user"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        endUserId = null;
+                        continue;
+                    }
                     endUserId = prop.Value.GetString();
                     continue;
                 }
@@ -128,7 +211,16 @@ namespace OpenAI.Images
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ImageEditOptions(size, responseFormat, endUserId, additionalBinaryDataProperties);
+            return new ImageEditOptions(
+                model,
+                image,
+                prompt,
+                mask,
+                n,
+                size,
+                responseFormat,
+                endUserId,
+                additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ImageEditOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

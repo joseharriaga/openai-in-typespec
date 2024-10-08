@@ -20,14 +20,14 @@ public readonly partial struct AudioTranscriptionFormat
     // - Added custom doc comments.
     /// <summary> Plain text only. </summary>
     [CodeGenMember("Json")]
-    public static AudioTranscriptionFormat Simple { get; } = new AudioTranscriptionFormat(SimpleValue);
+    public static AudioTranscriptionFormat Simple { get; } = new AudioTranscriptionFormat(JsonValue);
 
     // CUSTOM:
     // - Renamed.
     // - Added custom doc comments.
     /// <summary> Plain text provided with additional metadata, such as duration and timestamps. </summary>
     [CodeGenMember("VerboseJson")]
-    public static AudioTranscriptionFormat Verbose { get; } = new AudioTranscriptionFormat(VerboseValue);
+    public static AudioTranscriptionFormat Verbose { get; } = new AudioTranscriptionFormat(VerboseJsonValue);
 
     // CUSTOM: Added custom doc comments.
     /// <summary> Text formatted as SubRip (.srt) file. </summary>

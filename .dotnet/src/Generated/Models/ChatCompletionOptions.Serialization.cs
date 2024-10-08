@@ -103,12 +103,7 @@ namespace OpenAI.Chat
                 writer.WriteEndArray();
             }
             writer.WritePropertyName("messages"u8);
-            writer.WriteStartArray();
-            foreach (ChatMessage item in Messages)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
+            this.SerializeMessagesValue(writer, options);
             writer.WritePropertyName("model"u8);
             writer.WriteObjectValue<InternalCreateChatCompletionRequestModel>(Model, options);
             if (Optional.IsDefined(N))
@@ -176,17 +171,7 @@ namespace OpenAI.Chat
                 if (StopSequences != null)
                 {
                     writer.WritePropertyName("stop"u8);
-                    writer.WriteStartArray();
-                    foreach (string item in StopSequences)
-                    {
-                        if (item == null)
-                        {
-                            writer.WriteNullValue();
-                            continue;
-                        }
-                        writer.WriteStringValue(item);
-                    }
-                    writer.WriteEndArray();
+                    this.SerializeStopSequencesValue(writer, options);
                 }
                 else
                 {
@@ -198,13 +183,7 @@ namespace OpenAI.Chat
                 if (LogitBiases != null)
                 {
                     writer.WritePropertyName("logit_bias"u8);
-                    writer.WriteStartObject();
-                    foreach (var item in LogitBiases)
-                    {
-                        writer.WritePropertyName(item.Key);
-                        writer.WriteNumberValue(item.Value);
-                    }
-                    writer.WriteEndObject();
+                    this.SerializeLogitBiasesValue(writer, options);
                 }
                 else
                 {
@@ -231,6 +210,18 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("user"u8);
                 writer.WriteStringValue(EndUserId);
             }
+            if (Optional.IsDefined(Seed))
+            {
+                if (Seed != null)
+                {
+                    writer.WritePropertyName("seed"u8);
+                    writer.WriteNumberValue(Seed.Value);
+                }
+                else
+                {
+                    writer.WriteNull("seed"u8);
+                }
+            }
             if (Optional.IsDefined(_deprecatedMaxTokens))
             {
                 if (_deprecatedMaxTokens != null)
@@ -254,6 +245,16 @@ namespace OpenAI.Chat
                 {
                     writer.WriteNull("maxCompletionTokens"u8);
                 }
+            }
+            if (Optional.IsCollectionDefined(Functions))
+            {
+                writer.WritePropertyName("functions"u8);
+                writer.WriteStartArray();
+                foreach (ChatFunction item in Functions)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -311,8 +312,10 @@ namespace OpenAI.Chat
             ChatFunctionChoice functionChoice = default;
             bool? allowParallelToolCalls = default;
             string endUserId = default;
+            long? seed = default;
             int? deprecatedMaxTokens = default;
             int? maxOutputTokenCount = default;
+            IList<ChatFunction> functions = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -429,6 +432,7 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        streamOptions = null;
                         continue;
                     }
                     streamOptions = InternalChatCompletionStreamOptions.DeserializeInternalChatCompletionStreamOptions(prop.Value, options);
@@ -460,19 +464,7 @@ namespace OpenAI.Chat
                     {
                         continue;
                     }
-                    List<string> array = new List<string>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        if (item.ValueKind == JsonValueKind.Null)
-                        {
-                            array.Add(null);
-                        }
-                        else
-                        {
-                            array.Add(item.GetString());
-                        }
-                    }
-                    stopSequences = array;
+                    DeserializeStopSequencesValue(prop, ref stopSequences);
                     continue;
                 }
                 if (prop.NameEquals("logit_bias"u8))
@@ -481,18 +473,14 @@ namespace OpenAI.Chat
                     {
                         continue;
                     }
-                    Dictionary<int, int> dictionary = new Dictionary<int, int>();
-                    foreach (var prop0 in prop.Value.EnumerateObject())
-                    {
-                        dictionary.Add(prop0.Name, prop0.Value.GetInt32());
-                    }
-                    logitBiases = dictionary;
+                    DeserializeLogitBiasesValue(prop, ref logitBiases);
                     continue;
                 }
                 if (prop.NameEquals("tool_choice"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        toolChoice = null;
                         continue;
                     }
                     toolChoice = ChatToolChoice.DeserializeChatToolChoice(prop.Value, options);
@@ -502,6 +490,7 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        functionChoice = null;
                         continue;
                     }
                     functionChoice = ChatFunctionChoice.DeserializeChatFunctionChoice(prop.Value, options);
@@ -519,7 +508,22 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("user"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        endUserId = null;
+                        continue;
+                    }
                     endUserId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("seed"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        seed = null;
+                        continue;
+                    }
+                    seed = prop.Value.GetInt64();
                     continue;
                 }
                 if (prop.NameEquals("max_tokens"u8))
@@ -540,6 +544,20 @@ namespace OpenAI.Chat
                         continue;
                     }
                     maxOutputTokenCount = prop.Value.GetInt32();
+                    continue;
+                }
+                if (prop.NameEquals("functions"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<ChatFunction> array = new List<ChatFunction>();
+                    foreach (var item in prop.Value.EnumerateArray())
+                    {
+                        array.Add(ChatFunction.DeserializeChatFunction(item, options));
+                    }
+                    functions = array;
                     continue;
                 }
                 if (options.Format != "W")
@@ -568,8 +586,10 @@ namespace OpenAI.Chat
                 functionChoice,
                 allowParallelToolCalls,
                 endUserId,
+                seed,
                 deprecatedMaxTokens,
                 maxOutputTokenCount,
+                functions ?? new ChangeTrackingList<ChatFunction>(),
                 additionalBinaryDataProperties);
         }
 

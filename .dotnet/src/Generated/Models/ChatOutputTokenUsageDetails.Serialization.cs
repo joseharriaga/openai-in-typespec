@@ -73,6 +73,7 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        reasoningTokenCount = null;
                         continue;
                     }
                     reasoningTokenCount = prop.Value.GetInt32();

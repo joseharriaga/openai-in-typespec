@@ -115,6 +115,20 @@ namespace OpenAI.Assistants
             writer.WriteObjectValue<InternalMessageObjectObject>(Object, options);
             writer.WritePropertyName("role"u8);
             writer.WriteNumberValue((int)Role);
+            if (Attachments != null && Optional.IsCollectionDefined(Attachments))
+            {
+                writer.WritePropertyName("attachments"u8);
+                writer.WriteStartArray();
+                foreach (MessageCreationAttachment item in Attachments)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
+            }
+            else
+            {
+                writer.WriteNull("attachments"u8);
+            }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -164,6 +178,7 @@ namespace OpenAI.Assistants
             IDictionary<string, string> metadata = default;
             InternalMessageObjectObject @object = default;
             Assistants.MessageRole role = default;
+            IReadOnlyList<MessageCreationAttachment> attachments = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -279,6 +294,16 @@ namespace OpenAI.Assistants
                     role = prop.Value.GetInt32().ToMessageRole();
                     continue;
                 }
+                if (prop.NameEquals("attachments"u8))
+                {
+                    List<MessageCreationAttachment> array = new List<MessageCreationAttachment>();
+                    foreach (var item in prop.Value.EnumerateArray())
+                    {
+                        array.Add(MessageCreationAttachment.DeserializeMessageCreationAttachment(item, options));
+                    }
+                    attachments = array;
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -298,6 +323,7 @@ namespace OpenAI.Assistants
                 metadata,
                 @object,
                 role,
+                attachments,
                 additionalBinaryDataProperties);
         }
 

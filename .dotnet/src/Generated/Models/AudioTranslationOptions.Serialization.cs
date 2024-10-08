@@ -42,6 +42,10 @@ namespace OpenAI.Audio
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
             }
+            writer.WritePropertyName("file"u8);
+            writer.WriteBase64StringValue(File.ToArray(), "D");
+            writer.WritePropertyName("model"u8);
+            writer.WriteObjectValue<InternalCreateTranslationRequestModel>(Model, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -81,6 +85,8 @@ namespace OpenAI.Audio
             string prompt = default;
             AudioTranslationFormat? responseFormat = default;
             float? temperature = default;
+            BinaryData @file = default;
+            InternalCreateTranslationRequestModel model = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -114,12 +120,28 @@ namespace OpenAI.Audio
                     temperature = prop.Value.GetSingle();
                     continue;
                 }
+                if (prop.NameEquals("file"u8))
+                {
+                    @file = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
+                    continue;
+                }
+                if (prop.NameEquals("model"u8))
+                {
+                    model = InternalCreateTranslationRequestModel.DeserializeInternalCreateTranslationRequestModel(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new AudioTranslationOptions(prompt, responseFormat, temperature, additionalBinaryDataProperties);
+            return new AudioTranslationOptions(
+                prompt,
+                responseFormat,
+                temperature,
+                @file,
+                model,
+                additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<AudioTranslationOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -41,6 +41,8 @@ namespace OpenAI.VectorStores
             writer.WriteStringValue(Status.ToString());
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(BatchId);
+            writer.WritePropertyName("file_counts"u8);
+            writer.WriteObjectValue<VectorStoreFileCounts>(FileCounts, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -82,6 +84,7 @@ namespace OpenAI.VectorStores
             string vectorStoreId = default;
             VectorStoreBatchFileJobStatus status = default;
             string batchId = default;
+            VectorStoreFileCounts fileCounts = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -110,6 +113,11 @@ namespace OpenAI.VectorStores
                     batchId = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("file_counts"u8))
+                {
+                    fileCounts = VectorStoreFileCounts.DeserializeVectorStoreFileCounts(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -121,6 +129,7 @@ namespace OpenAI.VectorStores
                 vectorStoreId,
                 status,
                 batchId,
+                fileCounts,
                 additionalBinaryDataProperties);
         }
 

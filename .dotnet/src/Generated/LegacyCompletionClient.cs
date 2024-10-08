@@ -10,7 +10,7 @@ using OpenAI;
 
 namespace OpenAI.LegacyCompletions
 {
-    public partial class LegacyCompletionClient
+    internal partial class LegacyCompletionClient
     {
         private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
@@ -20,6 +20,8 @@ namespace OpenAI.LegacyCompletions
         protected LegacyCompletionClient()
         {
         }
+
+        public ClientPipeline Pipeline { get; }
 
         public virtual ClientResult CreateCompletion(BinaryContent content, RequestOptions options)
         {

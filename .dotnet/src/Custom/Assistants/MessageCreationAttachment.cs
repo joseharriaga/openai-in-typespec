@@ -39,7 +39,7 @@ public partial class MessageCreationAttachment
             List<ToolDefinition> deserializedTools = [];
             foreach (JsonElement toolElement in property.Value.EnumerateArray())
             {
-                deserializedTools.Add(ToolDefinition.DeserializeToolDefinition(toolElement));
+                deserializedTools.Add(ToolDefinition.DeserializeToolDefinition(toolElement, null));
             }
             tools = deserializedTools;
         }

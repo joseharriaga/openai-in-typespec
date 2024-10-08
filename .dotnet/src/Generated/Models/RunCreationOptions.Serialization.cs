@@ -128,6 +128,41 @@ namespace OpenAI.Assistants
                     writer.WriteNull("tools"u8);
                 }
             }
+            if (Optional.IsCollectionDefined(Metadata))
+            {
+                if (Metadata != null)
+                {
+                    writer.WritePropertyName("metadata"u8);
+                    writer.WriteStartObject();
+                    foreach (var item in Metadata)
+                    {
+                        writer.WritePropertyName(item.Key);
+                        if (item.Value == null)
+                        {
+                            writer.WriteNullValue();
+                            continue;
+                        }
+                        writer.WriteStringValue(item.Value);
+                    }
+                    writer.WriteEndObject();
+                }
+                else
+                {
+                    writer.WriteNull("metadata"u8);
+                }
+            }
+            if (Optional.IsDefined(Temperature))
+            {
+                if (Temperature != null)
+                {
+                    writer.WritePropertyName("temperature"u8);
+                    writer.WriteNumberValue(Temperature.Value);
+                }
+                else
+                {
+                    writer.WriteNull("temperature"u8);
+                }
+            }
             if (Optional.IsDefined(NucleusSamplingFactor))
             {
                 if (NucleusSamplingFactor != null)
@@ -164,12 +199,24 @@ namespace OpenAI.Assistants
                     writer.WriteNull("maxCompletionTokens"u8);
                 }
             }
+            if (Optional.IsDefined(TruncationStrategy))
+            {
+                if (TruncationStrategy != null)
+                {
+                    writer.WritePropertyName("truncation_strategy"u8);
+                    writer.WriteObjectValue<RunTruncationStrategy>(TruncationStrategy, options);
+                }
+                else
+                {
+                    writer.WriteNull("truncationStrategy"u8);
+                }
+            }
             if (Optional.IsDefined(ToolConstraint))
             {
                 if (ToolConstraint != null)
                 {
                     writer.WritePropertyName("tool_choice"u8);
-                    writer.WriteObjectValue(ToolConstraint, options);
+                    this.SerializeToolConstraint(writer, options);
                 }
                 else
                 {
@@ -221,9 +268,12 @@ namespace OpenAI.Assistants
             IList<MessageCreationOptions> internalMessages = default;
             bool? allowParallelToolCalls = default;
             IList<ToolDefinition> toolsOverride = default;
+            IDictionary<string, string> metadata = default;
+            float? temperature = default;
             float? nucleusSamplingFactor = default;
             int? maxInputTokenCount = default;
             int? maxOutputTokenCount = default;
+            RunTruncationStrategy truncationStrategy = default;
             ToolConstraint toolConstraint = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -247,6 +297,7 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        responseFormat = null;
                         continue;
                     }
                     responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(prop.Value, options);
@@ -254,16 +305,31 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("model"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        modelOverride = null;
+                        continue;
+                    }
                     modelOverride = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("instructions"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        instructionsOverride = null;
+                        continue;
+                    }
                     instructionsOverride = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("additional_instructions"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        additionalInstructions = null;
+                        continue;
+                    }
                     additionalInstructions = prop.Value.GetString();
                     continue;
                 }
@@ -305,6 +371,37 @@ namespace OpenAI.Assistants
                     toolsOverride = array;
                     continue;
                 }
+                if (prop.NameEquals("metadata"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    Dictionary<string, string> dictionary = new Dictionary<string, string>();
+                    foreach (var prop0 in prop.Value.EnumerateObject())
+                    {
+                        if (prop0.Value.ValueKind == JsonValueKind.Null)
+                        {
+                            dictionary.Add(prop0.Name, null);
+                        }
+                        else
+                        {
+                            dictionary.Add(prop0.Name, prop0.Value.GetString());
+                        }
+                    }
+                    metadata = dictionary;
+                    continue;
+                }
+                if (prop.NameEquals("temperature"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        temperature = null;
+                        continue;
+                    }
+                    temperature = prop.Value.GetSingle();
+                    continue;
+                }
                 if (prop.NameEquals("top_p"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -335,10 +432,21 @@ namespace OpenAI.Assistants
                     maxOutputTokenCount = prop.Value.GetInt32();
                     continue;
                 }
+                if (prop.NameEquals("truncation_strategy"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        truncationStrategy = null;
+                        continue;
+                    }
+                    truncationStrategy = RunTruncationStrategy.DeserializeRunTruncationStrategy(prop.Value, options);
+                    continue;
+                }
                 if (prop.NameEquals("tool_choice"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        toolConstraint = null;
                         continue;
                     }
                     toolConstraint = ToolConstraint.DeserializeToolConstraint(prop.Value, options);
@@ -359,9 +467,12 @@ namespace OpenAI.Assistants
                 internalMessages ?? new ChangeTrackingList<MessageCreationOptions>(),
                 allowParallelToolCalls,
                 toolsOverride ?? new ChangeTrackingList<ToolDefinition>(),
+                metadata ?? new ChangeTrackingDictionary<string, string>(),
+                temperature,
                 nucleusSamplingFactor,
                 maxInputTokenCount,
                 maxOutputTokenCount,
+                truncationStrategy,
                 toolConstraint,
                 additionalBinaryDataProperties);
         }

@@ -55,7 +55,7 @@ namespace OpenAI.Chat
             if (Content != null)
             {
                 writer.WritePropertyName("content"u8);
-                writer.WriteObjectValue<Chat.ChatMessageContent>(Content, options);
+                this.SerializeContentValue(writer, options);
             }
             else
             {
@@ -105,7 +105,7 @@ namespace OpenAI.Chat
             string refusal = default;
             IList<ChatToolCall> toolCalls = default;
             Chat.ChatMessageRole role = default;
-            Chat.ChatMessageContent content = default;
+            ChatMessageContent content = default;
             ChatFunctionCall functionCall = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -141,13 +141,14 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("content"u8))
                 {
-                    content = Chat.ChatMessageContent.DeserializeChatMessageContent(prop.Value, options);
+                    DeserializeContentValue(prop, ref content);
                     continue;
                 }
                 if (prop.NameEquals("function_call"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        functionCall = null;
                         continue;
                     }
                     functionCall = ChatFunctionCall.DeserializeChatFunctionCall(prop.Value, options);

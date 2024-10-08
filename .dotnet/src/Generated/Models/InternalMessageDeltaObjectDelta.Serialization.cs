@@ -98,6 +98,7 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        role = null;
                         continue;
                     }
                     role = prop.Value.GetInt32().ToMessageRole();

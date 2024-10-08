@@ -13,6 +13,10 @@ namespace OpenAI.FineTuning
 {
     internal readonly partial struct FineTuningJobHyperparameters : IJsonModel<FineTuningJobHyperparameters>, IJsonModel<object>
     {
+        public FineTuningJobHyperparameters()
+        {
+        }
+
         void IJsonModel<FineTuningJobHyperparameters>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -27,6 +31,33 @@ namespace OpenAI.FineTuning
             {
                 throw new FormatException($"The model {nameof(FineTuningJobHyperparameters)} does not support writing '{format}' format.");
             }
+            writer.WritePropertyName("n_epochs"u8);
+#if NET6_0_OR_GREATER
+            writer.WriteRawValue(NEpochs);
+#else
+            using (JsonDocument document = JsonDocument.Parse(NEpochs))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
+            writer.WritePropertyName("batch_size"u8);
+#if NET6_0_OR_GREATER
+            writer.WriteRawValue(BatchSize);
+#else
+            using (JsonDocument document = JsonDocument.Parse(BatchSize))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
+            writer.WritePropertyName("learning_rate_multiplier"u8);
+#if NET6_0_OR_GREATER
+            writer.WriteRawValue(LearningRateMultiplier);
+#else
+            using (JsonDocument document = JsonDocument.Parse(LearningRateMultiplier))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
+            }
+#endif
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -63,15 +94,33 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
+            BinaryData nEpochs = default;
+            BinaryData batchSize = default;
+            BinaryData learningRateMultiplier = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("n_epochs"u8))
+                {
+                    nEpochs = BinaryData.FromString(prop.Value.GetRawText());
+                    continue;
+                }
+                if (prop.NameEquals("batch_size"u8))
+                {
+                    batchSize = BinaryData.FromString(prop.Value.GetRawText());
+                    continue;
+                }
+                if (prop.NameEquals("learning_rate_multiplier"u8))
+                {
+                    learningRateMultiplier = BinaryData.FromString(prop.Value.GetRawText());
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new FineTuningJobHyperparameters(additionalBinaryDataProperties);
+            return new FineTuningJobHyperparameters(nEpochs, batchSize, learningRateMultiplier, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<FineTuningJobHyperparameters>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -67,6 +67,18 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
+            if (Optional.IsDefined(FunctionCall))
+            {
+                if (FunctionCall != null)
+                {
+                    writer.WritePropertyName("function_call"u8);
+                    writer.WriteObjectValue<ChatFunctionCall>(FunctionCall, options);
+                }
+                else
+                {
+                    writer.WriteNull("functionCall"u8);
+                }
+            }
         }
 
         AssistantChatMessage IJsonModel<AssistantChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (AssistantChatMessage)JsonModelCreateCore(ref reader, options);
@@ -92,6 +104,7 @@ namespace OpenAI.Chat
             string refusal = default;
             string participantName = default;
             IList<ChatToolCall> toolCalls = default;
+            ChatFunctionCall functionCall = default;
             Chat.ChatMessageRole role = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -118,6 +131,11 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("name"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        participantName = null;
+                        continue;
+                    }
                     participantName = prop.Value.GetString();
                     continue;
                 }
@@ -135,6 +153,16 @@ namespace OpenAI.Chat
                     toolCalls = array;
                     continue;
                 }
+                if (prop.NameEquals("function_call"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        functionCall = null;
+                        continue;
+                    }
+                    functionCall = ChatFunctionCall.DeserializeChatFunctionCall(prop.Value, options);
+                    continue;
+                }
                 if (prop.NameEquals("role"u8))
                 {
                     role = prop.Value.GetInt32().ToChatMessageRole();
@@ -150,6 +178,7 @@ namespace OpenAI.Chat
                 refusal,
                 participantName,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
+                functionCall,
                 role,
                 additionalBinaryDataProperties);
         }

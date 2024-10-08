@@ -10,7 +10,7 @@ using OpenAI;
 
 namespace OpenAI.Assistants
 {
-    public partial class InternalAssistantRunClient
+    internal partial class InternalAssistantRunClient
     {
         private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";

@@ -27,6 +27,32 @@ namespace OpenAI.Images
             {
                 throw new FormatException($"The model {nameof(ImageVariationOptions)} does not support writing '{format}' format.");
             }
+            if (Optional.IsDefined(Model))
+            {
+                if (Model != null)
+                {
+                    writer.WritePropertyName("model"u8);
+                    writer.WriteObjectValue<Images.OpenAI.Images.InternalCreateImageVariationRequestModel<InternalCreateImageVariationRequestModel>?>(Model, options);
+                }
+                else
+                {
+                    writer.WriteNull("model"u8);
+                }
+            }
+            writer.WritePropertyName("image"u8);
+            writer.WriteBase64StringValue(Image.ToArray(), "D");
+            if (Optional.IsDefined(N))
+            {
+                if (N != null)
+                {
+                    writer.WritePropertyName("n"u8);
+                    writer.WriteNumberValue(N.Value);
+                }
+                else
+                {
+                    writer.WriteNull("n"u8);
+                }
+            }
             if (Optional.IsDefined(Size))
             {
                 if (Size != null)
@@ -92,12 +118,40 @@ namespace OpenAI.Images
             {
                 return null;
             }
+            Images.OpenAI.Images.InternalCreateImageVariationRequestModel<InternalCreateImageVariationRequestModel>? model = default;
+            BinaryData image = default;
+            long? n = default;
             Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>? size = default;
             Images.OpenAI.Images.GeneratedImageFormat<GeneratedImageFormat>? responseFormat = default;
             string endUserId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("model"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        model = null;
+                        continue;
+                    }
+                    model = Images.OpenAI.Images.InternalCreateImageVariationRequestModel<InternalCreateImageVariationRequestModel>?.DeserializeOpenAI.Images.InternalCreateImageVariationRequestModel(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("image"u8))
+                {
+                    image = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
+                    continue;
+                }
+                if (prop.NameEquals("n"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        n = null;
+                        continue;
+                    }
+                    n = prop.Value.GetInt64();
+                    continue;
+                }
                 if (prop.NameEquals("size"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -120,6 +174,11 @@ namespace OpenAI.Images
                 }
                 if (prop.NameEquals("user"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        endUserId = null;
+                        continue;
+                    }
                     endUserId = prop.Value.GetString();
                     continue;
                 }
@@ -128,7 +187,14 @@ namespace OpenAI.Images
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ImageVariationOptions(size, responseFormat, endUserId, additionalBinaryDataProperties);
+            return new ImageVariationOptions(
+                model,
+                image,
+                n,
+                size,
+                responseFormat,
+                endUserId,
+                additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ImageVariationOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

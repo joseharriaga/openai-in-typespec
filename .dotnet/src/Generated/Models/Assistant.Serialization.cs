@@ -117,6 +117,18 @@ namespace OpenAI.Assistants
             }
             writer.WritePropertyName("object"u8);
             writer.WriteObjectValue<InternalAssistantObjectObject>(Object, options);
+            if (Optional.IsDefined(ResponseFormat))
+            {
+                if (ResponseFormat != null)
+                {
+                    writer.WritePropertyName("response_format"u8);
+                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
+                }
+                else
+                {
+                    writer.WriteNull("responseFormat"u8);
+                }
+            }
             if (Optional.IsDefined(NucleusSamplingFactor))
             {
                 if (NucleusSamplingFactor != null)
@@ -176,6 +188,7 @@ namespace OpenAI.Assistants
             IDictionary<string, string> metadata = default;
             float? temperature = default;
             InternalAssistantObjectObject @object = default;
+            AssistantResponseFormat responseFormat = default;
             float? nucleusSamplingFactor = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -282,6 +295,16 @@ namespace OpenAI.Assistants
                     @object = InternalAssistantObjectObject.DeserializeInternalAssistantObjectObject(prop.Value, options);
                     continue;
                 }
+                if (prop.NameEquals("response_format"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        responseFormat = null;
+                        continue;
+                    }
+                    responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(prop.Value, options);
+                    continue;
+                }
                 if (prop.NameEquals("top_p"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -309,6 +332,7 @@ namespace OpenAI.Assistants
                 metadata,
                 temperature,
                 @object,
+                responseFormat,
                 nucleusSamplingFactor,
                 additionalBinaryDataProperties);
         }

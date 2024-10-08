@@ -11,7 +11,7 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatCompletionOptions(float? frequencyPenalty, float? presencePenalty, ChatResponseFormat responseFormat, InternalCreateChatCompletionRequestServiceTier? serviceTier, float? temperature, float? topP, IList<ChatTool> tools, IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, int? n, bool? stream, InternalChatCompletionStreamOptions streamOptions, bool? includeLogProbabilities, int? topLogProbabilityCount, IList<string> stopSequences, IDictionary<int, int> logitBiases, ChatToolChoice toolChoice, ChatFunctionChoice functionChoice, bool? allowParallelToolCalls, string endUserId, int? deprecatedMaxTokens, int? maxOutputTokenCount, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatCompletionOptions(float? frequencyPenalty, float? presencePenalty, ChatResponseFormat responseFormat, InternalCreateChatCompletionRequestServiceTier? serviceTier, float? temperature, float? topP, IList<ChatTool> tools, IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, int? n, bool? stream, InternalChatCompletionStreamOptions streamOptions, bool? includeLogProbabilities, int? topLogProbabilityCount, IList<string> stopSequences, IDictionary<int, int> logitBiases, ChatToolChoice toolChoice, ChatFunctionChoice functionChoice, bool? allowParallelToolCalls, string endUserId, long? seed, int? deprecatedMaxTokens, int? maxOutputTokenCount, IList<ChatFunction> functions, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             FrequencyPenalty = frequencyPenalty;
             PresencePenalty = presencePenalty;
@@ -33,8 +33,10 @@ namespace OpenAI.Chat
             FunctionChoice = functionChoice;
             AllowParallelToolCalls = allowParallelToolCalls;
             EndUserId = endUserId;
+            Seed = seed;
             _deprecatedMaxTokens = deprecatedMaxTokens;
             MaxOutputTokenCount = maxOutputTokenCount;
+            Functions = functions;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

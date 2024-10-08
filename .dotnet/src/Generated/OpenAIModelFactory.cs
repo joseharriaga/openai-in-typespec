@@ -13,13 +13,14 @@ using OpenAI.Files;
 using OpenAI.Images;
 using OpenAI.Models;
 using OpenAI.Moderations;
+using OpenAI.RealtimeConversation;
 using OpenAI.VectorStores;
 
 namespace OpenAI
 {
     public static partial class OpenAIModelFactory
     {
-        public static OpenAIFile OpenAIFile(string id = default, DateTimeOffset createdAt = default, string filename = default, Files.FilePurpose purpose = default, int? sizeInBytes = default)
+        public static OpenAIFile OpenAIFile(string id = default, DateTimeOffset createdAt = default, string filename = default, Files.FilePurpose purpose = default, InternalOpenAIFileObject @object = default, int? sizeInBytes = default, Files.FileStatus status = default, string statusDetails = default)
         {
 
             return new OpenAIFile(
@@ -27,7 +28,10 @@ namespace OpenAI
                 createdAt,
                 filename,
                 purpose,
+                @object,
                 sizeInBytes,
+                status,
+                statusDetails,
                 null);
         }
 
@@ -62,10 +66,10 @@ namespace OpenAI
                 null);
         }
 
-        public static VectorStoreExpirationPolicy VectorStoreExpirationPolicy()
+        public static VectorStoreExpirationPolicy VectorStoreExpirationPolicy(VectorStores.VectorStoreExpirationAnchor anchor = default, int days = default)
         {
 
-            return new VectorStoreExpirationPolicy(null);
+            return new VectorStoreExpirationPolicy(anchor, days, null);
         }
 
         public static VectorStoreCreationOptions VectorStoreCreationOptions(IEnumerable<string> fileIds = default, string name = default, IDictionary<string, string> metadata = default, VectorStoreExpirationPolicy expirationPolicy = default, FileChunkingStrategy chunkingStrategy = default)
@@ -89,10 +93,10 @@ namespace OpenAI
             return new VectorStoreModificationOptions(name, metadata, expirationPolicy, null);
         }
 
-        public static VectorStoreDeletionResult VectorStoreDeletionResult(bool deleted = default, string vectorStoreId = default)
+        public static VectorStoreDeletionResult VectorStoreDeletionResult(bool deleted = default, string vectorStoreId = default, InternalDeleteVectorStoreResponseObject @object = default)
         {
 
-            return new VectorStoreDeletionResult(deleted, vectorStoreId, null);
+            return new VectorStoreDeletionResult(deleted, vectorStoreId, @object, null);
         }
 
         public static VectorStoreFileAssociation VectorStoreFileAssociation(DateTimeOffset createdAt = default, string vectorStoreId = default, VectorStores.VectorStoreFileAssociationStatus status = default, VectorStoreFileAssociationError lastError = default, InternalVectorStoreFileObjectObject @object = default, string fileId = default, int size = default, FileChunkingStrategy chunkingStrategy = default)
@@ -134,7 +138,7 @@ namespace OpenAI
             return new FileFromStoreRemovalResult(fileId, removed, @object, null);
         }
 
-        public static VectorStoreBatchFileJob VectorStoreBatchFileJob(InternalVectorStoreFileBatchObjectObject @object = default, DateTimeOffset createdAt = default, string vectorStoreId = default, VectorStoreBatchFileJobStatus status = default, string batchId = default)
+        public static VectorStoreBatchFileJob VectorStoreBatchFileJob(InternalVectorStoreFileBatchObjectObject @object = default, DateTimeOffset createdAt = default, string vectorStoreId = default, VectorStoreBatchFileJobStatus status = default, string batchId = default, VectorStoreFileCounts fileCounts = default)
         {
 
             return new VectorStoreBatchFileJob(
@@ -143,6 +147,7 @@ namespace OpenAI
                 vectorStoreId,
                 status,
                 batchId,
+                fileCounts,
                 null);
         }
 
@@ -194,10 +199,10 @@ namespace OpenAI
             return new FileSearchToolDefinition(fileSearch, "file_search", null);
         }
 
-        public static FileSearchRankingOptions FileSearchRankingOptions(FileSearchRanker? ranker = default)
+        public static FileSearchRankingOptions FileSearchRankingOptions(FileSearchRanker? ranker = default, float scoreThreshold = default)
         {
 
-            return new FileSearchRankingOptions(ranker, null);
+            return new FileSearchRankingOptions(ranker, scoreThreshold, null);
         }
 
         public static FunctionToolDefinition FunctionToolDefinition(InternalFunctionDefinition function = default)
@@ -288,10 +293,11 @@ namespace OpenAI
             return new RunTokenUsage(outputTokenCount, inputTokenCount, totalTokenCount, null);
         }
 
-        public static RunCreationOptions RunCreationOptions(string assistantId = default, bool? stream = default, AssistantResponseFormat responseFormat = default, string modelOverride = default, string instructionsOverride = default, string additionalInstructions = default, IEnumerable<MessageCreationOptions> internalMessages = default, bool? allowParallelToolCalls = default, IEnumerable<ToolDefinition> toolsOverride = default, float? nucleusSamplingFactor = default, int? maxInputTokenCount = default, int? maxOutputTokenCount = default, ToolConstraint toolConstraint = default)
+        public static RunCreationOptions RunCreationOptions(string assistantId = default, bool? stream = default, AssistantResponseFormat responseFormat = default, string modelOverride = default, string instructionsOverride = default, string additionalInstructions = default, IEnumerable<MessageCreationOptions> internalMessages = default, bool? allowParallelToolCalls = default, IEnumerable<ToolDefinition> toolsOverride = default, IDictionary<string, string> metadata = default, float? temperature = default, float? nucleusSamplingFactor = default, int? maxInputTokenCount = default, int? maxOutputTokenCount = default, RunTruncationStrategy truncationStrategy = default, ToolConstraint toolConstraint = default)
         {
             internalMessages ??= new ChangeTrackingList<MessageCreationOptions>();
             toolsOverride ??= new ChangeTrackingList<ToolDefinition>();
+            metadata ??= new ChangeTrackingDictionary<string, string>();
 
             return new RunCreationOptions(
                 assistantId,
@@ -303,9 +309,12 @@ namespace OpenAI
                 internalMessages?.ToList(),
                 allowParallelToolCalls,
                 toolsOverride?.ToList(),
+                metadata,
+                temperature,
                 nucleusSamplingFactor,
                 maxInputTokenCount,
                 maxOutputTokenCount,
+                truncationStrategy,
                 toolConstraint,
                 null);
         }
@@ -384,11 +393,17 @@ namespace OpenAI
             return new RunStepTokenUsage(outputTokenCount, inputTokenCount, totalTokenCount, null);
         }
 
-        public static AssistantThread AssistantThread(string id = default, DateTimeOffset createdAt = default, IDictionary<string, string> metadata = default, InternalThreadObjectObject @object = default)
+        public static AssistantThread AssistantThread(string id = default, DateTimeOffset createdAt = default, IDictionary<string, string> metadata = default, InternalThreadObjectObject @object = default, ToolResources toolResources = default)
         {
             metadata ??= new ChangeTrackingDictionary<string, string>();
 
-            return new AssistantThread(id, createdAt, metadata, @object, null);
+            return new AssistantThread(
+                id,
+                createdAt,
+                metadata,
+                @object,
+                toolResources,
+                null);
         }
 
         public static ThreadModificationOptions ThreadModificationOptions(IDictionary<string, string> metadata = default, ToolResources toolResources = default)
@@ -404,6 +419,371 @@ namespace OpenAI
             return new ThreadDeletionResult(deleted, threadId, @object, null);
         }
 
+        public static ConversationSessionOptions ConversationSessionOptions(IEnumerable<InternalRealtimeRequestSessionUpdateCommandSessionModality> modalities = default, ConversationVoice? voice = default, string instructions = default, ConversationAudioFormat? inputAudioFormat = default, ConversationAudioFormat? outputAudioFormat = default, IEnumerable<ConversationTool> tools = default, float? temperature = default, string model = default, RealtimeConversation.ConversationToolChoice toolChoice = default, RealtimeConversation.ConversationMaxTokensChoice maxResponseOutputTokens = default, ConversationTurnDetectionOptions turnDetectionOptions = default, ConversationInputTranscriptionOptions inputTranscriptionOptions = default)
+        {
+            modalities ??= new ChangeTrackingList<InternalRealtimeRequestSessionUpdateCommandSessionModality>();
+            tools ??= new ChangeTrackingList<ConversationTool>();
+
+            return new ConversationSessionOptions(
+                modalities?.ToList(),
+                voice,
+                instructions,
+                inputAudioFormat,
+                outputAudioFormat,
+                tools?.ToList(),
+                temperature,
+                model,
+                toolChoice,
+                maxResponseOutputTokens,
+                turnDetectionOptions,
+                inputTranscriptionOptions,
+                null);
+        }
+
+        public static ConversationInputTranscriptionOptions ConversationInputTranscriptionOptions(ConversationTranscriptionModel? model = default)
+        {
+
+            return new ConversationInputTranscriptionOptions(model, null);
+        }
+
+        public static ConversationTurnDetectionOptions ConversationTurnDetectionOptions(RealtimeConversation.ConversationTurnDetectionKind kind = default)
+        {
+
+            return new UnknownRealtimeTurnDetection(kind, null);
+        }
+
+        public static ConversationTool ConversationTool(ConversationToolKind kind = default)
+        {
+
+            return new UnknownRealtimeTool(kind, null);
+        }
+
+        public static ConversationFunctionTool ConversationFunctionTool(string name = default, string description = default, BinaryData parameters = default, ConversationToolKind kind = default)
+        {
+
+            return new ConversationFunctionTool(name, description, parameters, kind, null);
+        }
+
+        public static ConversationItem ConversationItem(string @type = default, string id = default)
+        {
+
+            return new UnknownRealtimeRequestItem(new InternalRealtimeRequestItemType(@type), id, null);
+        }
+
+        public static ConversationContentPart ConversationContentPart(string @type = default)
+        {
+
+            return new UnknownRealtimeContentPart(new ConversationContentPartKind(@type), null);
+        }
+
+        public static ConversationUpdate ConversationUpdate(string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new UnknownRealtimeResponseCommand(eventId, kind, null);
+        }
+
+        public static ConversationSessionStartedUpdate ConversationSessionStartedUpdate(InternalRealtimeResponseSession session = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationSessionStartedUpdate(session, eventId, kind, null);
+        }
+
+        public static ConversationSessionConfiguredUpdate ConversationSessionConfiguredUpdate(InternalRealtimeResponseSession session = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationSessionConfiguredUpdate(session, eventId, kind, null);
+        }
+
+        public static ConversationItemAcknowledgedUpdate ConversationItemAcknowledgedUpdate(ConversationItem item = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationItemAcknowledgedUpdate(item, eventId, kind, null);
+        }
+
+        public static ConversationItemDeletedUpdate ConversationItemDeletedUpdate(string itemId = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationItemDeletedUpdate(itemId, eventId, kind, null);
+        }
+
+        public static ConversationItemTruncatedUpdate ConversationItemTruncatedUpdate(string itemId = default, int audioEndMs = default, int index = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationItemTruncatedUpdate(
+                itemId,
+                audioEndMs,
+                index,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationResponseStartedUpdate ConversationResponseStartedUpdate(InternalRealtimeResponse response = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationResponseStartedUpdate(response, eventId, kind, null);
+        }
+
+        public static ConversationTokenUsage ConversationTokenUsage(int totalTokens = default, int inputTokens = default, int outputTokens = default, ConversationInputTokenUsageDetails inputTokenDetails = default, ConversationOutputTokenUsageDetails outputTokenDetails = default)
+        {
+
+            return new ConversationTokenUsage(
+                totalTokens,
+                inputTokens,
+                outputTokens,
+                inputTokenDetails,
+                outputTokenDetails,
+                null);
+        }
+
+        public static ConversationInputTokenUsageDetails ConversationInputTokenUsageDetails(int cachedTokens = default, int textTokens = default, int audioTokens = default)
+        {
+
+            return new ConversationInputTokenUsageDetails(cachedTokens, textTokens, audioTokens, null);
+        }
+
+        public static ConversationOutputTokenUsageDetails ConversationOutputTokenUsageDetails(int textTokens = default, int audioTokens = default)
+        {
+
+            return new ConversationOutputTokenUsageDetails(textTokens, audioTokens, null);
+        }
+
+        public static ConversationResponseFinishedUpdate ConversationResponseFinishedUpdate(InternalRealtimeResponse response = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationResponseFinishedUpdate(response, eventId, kind, null);
+        }
+
+        public static ConversationRateLimitsUpdatedUpdate ConversationRateLimitsUpdatedUpdate(IEnumerable<ConversationRateLimitDetailsItem> rateLimits = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+            rateLimits ??= new ChangeTrackingList<ConversationRateLimitDetailsItem>();
+
+            return new ConversationRateLimitsUpdatedUpdate(rateLimits?.ToList(), eventId, kind, null);
+        }
+
+        public static ConversationRateLimitDetailsItem ConversationRateLimitDetailsItem(string name = default, int limit = default, int remaining = default, float resetSeconds = default)
+        {
+
+            return new ConversationRateLimitDetailsItem(name, limit, remaining, resetSeconds, null);
+        }
+
+        public static ConversationItemStartedUpdate ConversationItemStartedUpdate(string responseId = default, int outputIndex = default, InternalRealtimeResponseItem item = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationItemStartedUpdate(
+                responseId,
+                outputIndex,
+                item,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationItemFinishedUpdate ConversationItemFinishedUpdate(string responseId = default, int outputIndex = default, InternalRealtimeResponseItem item = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationItemFinishedUpdate(
+                responseId,
+                outputIndex,
+                item,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationContentPartStartedUpdate ConversationContentPartStartedUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, ConversationContentPart part = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationContentPartStartedUpdate(
+                responseId,
+                itemId,
+                outputIndex,
+                contentIndex,
+                part,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationContentPartFinishedUpdate ConversationContentPartFinishedUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, ConversationContentPart part = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationContentPartFinishedUpdate(
+                responseId,
+                itemId,
+                outputIndex,
+                contentIndex,
+                part,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationAudioDeltaUpdate ConversationAudioDeltaUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, BinaryData delta = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationAudioDeltaUpdate(
+                responseId,
+                itemId,
+                outputIndex,
+                contentIndex,
+                delta,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationAudioDoneUpdate ConversationAudioDoneUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationAudioDoneUpdate(
+                responseId,
+                itemId,
+                outputIndex,
+                contentIndex,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationOutputTranscriptionDeltaUpdate ConversationOutputTranscriptionDeltaUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string delta = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationOutputTranscriptionDeltaUpdate(
+                responseId,
+                itemId,
+                outputIndex,
+                contentIndex,
+                delta,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationOutputTranscriptionFinishedUpdate ConversationOutputTranscriptionFinishedUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationOutputTranscriptionFinishedUpdate(
+                responseId,
+                itemId,
+                outputIndex,
+                contentIndex,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationTextDeltaUpdate ConversationTextDeltaUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string delta = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationTextDeltaUpdate(
+                responseId,
+                itemId,
+                outputIndex,
+                contentIndex,
+                delta,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationTextDoneUpdate ConversationTextDoneUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string value = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationTextDoneUpdate(
+                responseId,
+                itemId,
+                outputIndex,
+                contentIndex,
+                value,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationFunctionCallArgumentsDeltaUpdate ConversationFunctionCallArgumentsDeltaUpdate(string responseId = default, string itemId = default, int outputIndex = default, string callId = default, string delta = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationFunctionCallArgumentsDeltaUpdate(
+                responseId,
+                itemId,
+                outputIndex,
+                callId,
+                delta,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationFunctionCallArgumentsDoneUpdate ConversationFunctionCallArgumentsDoneUpdate(string responseId = default, string itemId = default, int outputIndex = default, string callId = default, string name = default, string arguments = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationFunctionCallArgumentsDoneUpdate(
+                responseId,
+                itemId,
+                outputIndex,
+                callId,
+                name,
+                arguments,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationInputSpeechStartedUpdate ConversationInputSpeechStartedUpdate(int audioStartMs = default, string itemId = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationInputSpeechStartedUpdate(audioStartMs, itemId, eventId, kind, null);
+        }
+
+        public static ConversationInputSpeechFinishedUpdate ConversationInputSpeechFinishedUpdate(int audioEndMs = default, string itemId = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationInputSpeechFinishedUpdate(audioEndMs, itemId, eventId, kind, null);
+        }
+
+        public static ConversationInputTranscriptionFinishedUpdate ConversationInputTranscriptionFinishedUpdate(string itemId = default, int contentIndex = default, string transcript = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationInputTranscriptionFinishedUpdate(
+                itemId,
+                contentIndex,
+                transcript,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationInputTranscriptionFailedUpdate ConversationInputTranscriptionFailedUpdate(string itemId = default, int contentIndex = default, InternalRealtimeResponseApiError error = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationInputTranscriptionFailedUpdate(
+                itemId,
+                contentIndex,
+                error,
+                eventId,
+                kind,
+                null);
+        }
+
+        public static ConversationInputAudioBufferCommittedUpdate ConversationInputAudioBufferCommittedUpdate(string itemId = default, string previousItemId = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationInputAudioBufferCommittedUpdate(itemId, previousItemId, eventId, kind, null);
+        }
+
+        public static ConversationInputAudioBufferClearedUpdate ConversationInputAudioBufferClearedUpdate(string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationInputAudioBufferClearedUpdate(eventId, kind, null);
+        }
+
+        public static ConversationErrorUpdate ConversationErrorUpdate(InternalRealtimeResponseError error = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        {
+
+            return new ConversationErrorUpdate(error, eventId, kind, null);
+        }
+
         public static ModerationResultCollection ModerationResultCollection(string id = default, string model = default)
         {
 
@@ -416,16 +796,16 @@ namespace OpenAI
             return new ModerationResult(flagged, null);
         }
 
-        public static OpenAIModelCollection OpenAIModelCollection()
+        public static OpenAIModelCollection OpenAIModelCollection(InternalListModelsResponseObject @object = default)
         {
 
-            return new OpenAIModelCollection(null);
+            return new OpenAIModelCollection(@object, null);
         }
 
-        public static OpenAIModel OpenAIModel(string id = default, string ownedBy = default, DateTimeOffset createdAt = default)
+        public static OpenAIModel OpenAIModel(string id = default, string ownedBy = default, InternalModelObject @object = default, DateTimeOffset createdAt = default)
         {
 
-            return new OpenAIModel(id, ownedBy, createdAt, null);
+            return new OpenAIModel(id, ownedBy, @object, createdAt, null);
         }
 
         public static ModelDeletionResult ModelDeletionResult(bool deleted = default, string modelId = default, InternalDeleteModelResponseObject @object = default)
@@ -434,10 +814,11 @@ namespace OpenAI
             return new ModelDeletionResult(deleted, modelId, @object, null);
         }
 
-        public static ThreadMessage ThreadMessage(string id = default, DateTimeOffset createdAt = default, string threadId = default, MessageStatus status = default, MessageFailureDetails incompleteDetails = default, DateTimeOffset? completedAt = default, DateTimeOffset? incompleteAt = default, IEnumerable<MessageContent> content = default, string assistantId = default, string runId = default, IDictionary<string, string> metadata = default, InternalMessageObjectObject @object = default, Assistants.MessageRole role = default)
+        public static ThreadMessage ThreadMessage(string id = default, DateTimeOffset createdAt = default, string threadId = default, MessageStatus status = default, MessageFailureDetails incompleteDetails = default, DateTimeOffset? completedAt = default, DateTimeOffset? incompleteAt = default, IEnumerable<MessageContent> content = default, string assistantId = default, string runId = default, IDictionary<string, string> metadata = default, InternalMessageObjectObject @object = default, Assistants.MessageRole role = default, IEnumerable<MessageCreationAttachment> attachments = default)
         {
             content ??= new ChangeTrackingList<MessageContent>();
             metadata ??= new ChangeTrackingDictionary<string, string>();
+            attachments ??= new ChangeTrackingList<MessageCreationAttachment>();
 
             return new ThreadMessage(
                 id,
@@ -453,6 +834,7 @@ namespace OpenAI
                 metadata,
                 @object,
                 role,
+                attachments?.ToList(),
                 null);
         }
 
@@ -475,7 +857,7 @@ namespace OpenAI
             return new MessageDeletionResult(deleted, messageId, @object, null);
         }
 
-        public static ImageGenerationOptions ImageGenerationOptions(GeneratedImageQuality? quality = default, GeneratedImageFormat? responseFormat = default, GeneratedImageSize? size = default, GeneratedImageStyle? style = default, string endUserId = default)
+        public static ImageGenerationOptions ImageGenerationOptions(GeneratedImageQuality? quality = default, GeneratedImageFormat? responseFormat = default, GeneratedImageSize? size = default, GeneratedImageStyle? style = default, Images.OpenAI.Images.InternalCreateImageRequestModel<InternalCreateImageRequestModel>? model = default, string prompt = default, long? n = default, string endUserId = default)
         {
 
             return new ImageGenerationOptions(
@@ -483,6 +865,9 @@ namespace OpenAI
                 responseFormat,
                 size,
                 style,
+                model,
+                prompt,
+                n,
                 endUserId,
                 null);
         }
@@ -499,22 +884,38 @@ namespace OpenAI
             return new GeneratedImage(revisedPrompt, imageBytes, imageUri, null);
         }
 
-        public static ImageEditOptions ImageEditOptions(Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>? size = default, Images.OpenAI.Images.GeneratedImageFormat<GeneratedImageFormat>? responseFormat = default, string endUserId = default)
+        public static ImageEditOptions ImageEditOptions(Images.OpenAI.Images.InternalCreateImageEditRequestModel<InternalCreateImageEditRequestModel>? model = default, BinaryData image = default, string prompt = default, BinaryData mask = default, long? n = default, Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>? size = default, Images.OpenAI.Images.GeneratedImageFormat<GeneratedImageFormat>? responseFormat = default, string endUserId = default)
         {
 
-            return new ImageEditOptions(size, responseFormat, endUserId, null);
+            return new ImageEditOptions(
+                model,
+                image,
+                prompt,
+                mask,
+                n,
+                size,
+                responseFormat,
+                endUserId,
+                null);
         }
 
-        public static ImageVariationOptions ImageVariationOptions(Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>? size = default, Images.OpenAI.Images.GeneratedImageFormat<GeneratedImageFormat>? responseFormat = default, string endUserId = default)
+        public static ImageVariationOptions ImageVariationOptions(Images.OpenAI.Images.InternalCreateImageVariationRequestModel<InternalCreateImageVariationRequestModel>? model = default, BinaryData image = default, long? n = default, Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>? size = default, Images.OpenAI.Images.GeneratedImageFormat<GeneratedImageFormat>? responseFormat = default, string endUserId = default)
         {
 
-            return new ImageVariationOptions(size, responseFormat, endUserId, null);
+            return new ImageVariationOptions(
+                model,
+                image,
+                n,
+                size,
+                responseFormat,
+                endUserId,
+                null);
         }
 
-        public static OpenAIFileCollection OpenAIFileCollection()
+        public static OpenAIFileCollection OpenAIFileCollection(InternalListFilesResponseObject @object = default)
         {
 
-            return new OpenAIFileCollection(null);
+            return new OpenAIFileCollection(@object, null);
         }
 
         public static FileDeletionResult FileDeletionResult(bool deleted = default, string fileId = default, InternalDeleteFileResponseObject @object = default)
@@ -523,10 +924,16 @@ namespace OpenAI
             return new FileDeletionResult(deleted, fileId, @object, null);
         }
 
-        public static EmbeddingGenerationOptions EmbeddingGenerationOptions(int? dimensions = default, string endUserId = default)
+        public static EmbeddingGenerationOptions EmbeddingGenerationOptions(int? dimensions = default, BinaryData input = default, InternalCreateEmbeddingRequestModel model = default, Embeddings.OpenAI.Embeddings.InternalCreateEmbeddingRequestEncodingFormat<InternalCreateEmbeddingRequestEncodingFormat>? encodingFormat = default, string endUserId = default)
         {
 
-            return new EmbeddingGenerationOptions(dimensions, endUserId, null);
+            return new EmbeddingGenerationOptions(
+                dimensions,
+                input,
+                model,
+                encodingFormat,
+                endUserId,
+                null);
         }
 
         public static OpenAIEmbeddingCollection OpenAIEmbeddingCollection(string model = default, EmbeddingTokenUsage usage = default, InternalCreateEmbeddingResponseObject @object = default)
@@ -535,10 +942,10 @@ namespace OpenAI
             return new OpenAIEmbeddingCollection(model, usage, @object, null);
         }
 
-        public static OpenAIEmbedding OpenAIEmbedding(int index = default, BinaryData embeddingProperty = default)
+        public static OpenAIEmbedding OpenAIEmbedding(int index = default, BinaryData embeddingProperty = default, InternalEmbeddingObject @object = default)
         {
 
-            return new OpenAIEmbedding(index, embeddingProperty, null);
+            return new OpenAIEmbedding(index, embeddingProperty, @object, null);
         }
 
         public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokenCount = default, int totalTokenCount = default)
@@ -559,12 +966,13 @@ namespace OpenAI
             return new ChatOutputTokenUsageDetails(reasoningTokenCount, null);
         }
 
-        public static ChatCompletionOptions ChatCompletionOptions(float? frequencyPenalty = default, float? presencePenalty = default, ChatResponseFormat responseFormat = default, InternalCreateChatCompletionRequestServiceTier? serviceTier = default, float? temperature = default, float? topP = default, IEnumerable<ChatTool> tools = default, IEnumerable<ChatMessage> messages = default, InternalCreateChatCompletionRequestModel model = default, int? n = default, bool? stream = default, InternalChatCompletionStreamOptions streamOptions = default, bool? includeLogProbabilities = default, int? topLogProbabilityCount = default, IEnumerable<string> stopSequences = default, IDictionary<int, int> logitBiases = default, ChatToolChoice toolChoice = default, ChatFunctionChoice functionChoice = default, bool? allowParallelToolCalls = default, string endUserId = default, int? deprecatedMaxTokens = default, int? maxOutputTokenCount = default)
+        public static ChatCompletionOptions ChatCompletionOptions(float? frequencyPenalty = default, float? presencePenalty = default, ChatResponseFormat responseFormat = default, InternalCreateChatCompletionRequestServiceTier? serviceTier = default, float? temperature = default, float? topP = default, IEnumerable<ChatTool> tools = default, IEnumerable<ChatMessage> messages = default, InternalCreateChatCompletionRequestModel model = default, int? n = default, bool? stream = default, InternalChatCompletionStreamOptions streamOptions = default, bool? includeLogProbabilities = default, int? topLogProbabilityCount = default, IEnumerable<string> stopSequences = default, IDictionary<int, int> logitBiases = default, ChatToolChoice toolChoice = default, ChatFunctionChoice functionChoice = default, bool? allowParallelToolCalls = default, string endUserId = default, long? seed = default, int? deprecatedMaxTokens = default, int? maxOutputTokenCount = default, IEnumerable<ChatFunction> functions = default)
         {
             tools ??= new ChangeTrackingList<ChatTool>();
             messages ??= new ChangeTrackingList<ChatMessage>();
             stopSequences ??= new ChangeTrackingList<string>();
             logitBiases ??= new ChangeTrackingDictionary<int, int>();
+            functions ??= new ChangeTrackingList<ChatFunction>();
 
             return new ChatCompletionOptions(
                 frequencyPenalty,
@@ -587,8 +995,10 @@ namespace OpenAI
                 functionChoice,
                 allowParallelToolCalls,
                 endUserId,
+                seed,
                 deprecatedMaxTokens,
                 maxOutputTokenCount,
+                functions?.ToList(),
                 null);
         }
 
@@ -610,7 +1020,7 @@ namespace OpenAI
             return new UserChatMessage(content, participantName, role, null);
         }
 
-        public static AssistantChatMessage AssistantChatMessage(BinaryData content = default, string refusal = default, string participantName = default, IEnumerable<ChatToolCall> toolCalls = default, Chat.ChatMessageRole role = default)
+        public static AssistantChatMessage AssistantChatMessage(BinaryData content = default, string refusal = default, string participantName = default, IEnumerable<ChatToolCall> toolCalls = default, ChatFunctionCall functionCall = default, Chat.ChatMessageRole role = default)
         {
             toolCalls ??= new ChangeTrackingList<ChatToolCall>();
 
@@ -619,6 +1029,7 @@ namespace OpenAI
                 refusal,
                 participantName,
                 toolCalls?.ToList(),
+                functionCall,
                 role,
                 null);
         }
@@ -696,7 +1107,7 @@ namespace OpenAI
             return new ChatTokenTopLogProbabilityDetails(token, logProbability, utf8Bytes?.ToList(), null);
         }
 
-        public static AssistantCreationOptions AssistantCreationOptions(string name = default, string description = default, string instructions = default, IDictionary<string, string> metadata = default, float? temperature = default, IEnumerable<ToolDefinition> tools = default, ToolResources toolResources = default, AssistantResponseFormat responseFormat = default, float? nucleusSamplingFactor = default)
+        public static AssistantCreationOptions AssistantCreationOptions(string name = default, string description = default, string instructions = default, IDictionary<string, string> metadata = default, float? temperature = default, string model = default, IEnumerable<ToolDefinition> tools = default, ToolResources toolResources = default, AssistantResponseFormat responseFormat = default, float? nucleusSamplingFactor = default)
         {
             metadata ??= new ChangeTrackingDictionary<string, string>();
             tools ??= new ChangeTrackingList<ToolDefinition>();
@@ -707,6 +1118,7 @@ namespace OpenAI
                 instructions,
                 metadata,
                 temperature,
+                model,
                 tools?.ToList(),
                 toolResources,
                 responseFormat,
@@ -714,7 +1126,7 @@ namespace OpenAI
                 null);
         }
 
-        public static Assistant Assistant(string id = default, DateTimeOffset createdAt = default, string name = default, string description = default, string model = default, string instructions = default, IEnumerable<ToolDefinition> tools = default, ToolResources toolResources = default, IDictionary<string, string> metadata = default, float? temperature = default, InternalAssistantObjectObject @object = default, float? nucleusSamplingFactor = default)
+        public static Assistant Assistant(string id = default, DateTimeOffset createdAt = default, string name = default, string description = default, string model = default, string instructions = default, IEnumerable<ToolDefinition> tools = default, ToolResources toolResources = default, IDictionary<string, string> metadata = default, float? temperature = default, InternalAssistantObjectObject @object = default, AssistantResponseFormat responseFormat = default, float? nucleusSamplingFactor = default)
         {
             tools ??= new ChangeTrackingList<ToolDefinition>();
             metadata ??= new ChangeTrackingDictionary<string, string>();
@@ -731,23 +1143,25 @@ namespace OpenAI
                 metadata,
                 temperature,
                 @object,
+                responseFormat,
                 nucleusSamplingFactor,
                 null);
         }
 
-        public static ToolResources ToolResources()
+        public static ToolResources ToolResources(CodeInterpreterToolResources codeInterpreter = default, FileSearchToolResources fileSearch = default)
         {
 
-            return new ToolResources(null);
+            return new ToolResources(codeInterpreter, fileSearch, null);
         }
 
-        public static CodeInterpreterToolResources CodeInterpreterToolResources()
+        public static CodeInterpreterToolResources CodeInterpreterToolResources(IEnumerable<string> fileIds = default)
         {
+            fileIds ??= new ChangeTrackingList<string>();
 
-            return new CodeInterpreterToolResources(null);
+            return new CodeInterpreterToolResources(fileIds?.ToList(), null);
         }
 
-        public static AssistantModificationOptions AssistantModificationOptions(string name = default, string description = default, string instructions = default, IDictionary<string, string> metadata = default, float? temperature = default, IEnumerable<ToolDefinition> defaultTools = default, ToolResources toolResources = default, AssistantResponseFormat responseFormat = default, float? nucleusSamplingFactor = default)
+        public static AssistantModificationOptions AssistantModificationOptions(string name = default, string description = default, string instructions = default, IDictionary<string, string> metadata = default, float? temperature = default, string model = default, IEnumerable<ToolDefinition> defaultTools = default, ToolResources toolResources = default, AssistantResponseFormat responseFormat = default, float? nucleusSamplingFactor = default)
         {
             metadata ??= new ChangeTrackingDictionary<string, string>();
             defaultTools ??= new ChangeTrackingList<ToolDefinition>();
@@ -758,6 +1172,7 @@ namespace OpenAI
                 instructions,
                 metadata,
                 temperature,
+                model,
                 defaultTools?.ToList(),
                 toolResources,
                 responseFormat,
@@ -783,7 +1198,7 @@ namespace OpenAI
                 null);
         }
 
-        public static AudioTranscriptionOptions AudioTranscriptionOptions(string language = default, string prompt = default, AudioTranscriptionFormat? responseFormat = default, float? temperature = default, IEnumerable<BinaryData> internalTimestampGranularities = default)
+        public static AudioTranscriptionOptions AudioTranscriptionOptions(string language = default, string prompt = default, AudioTranscriptionFormat? responseFormat = default, float? temperature = default, BinaryData @file = default, InternalCreateTranscriptionRequestModel model = default, IEnumerable<BinaryData> internalTimestampGranularities = default)
         {
             internalTimestampGranularities ??= new ChangeTrackingList<BinaryData>();
 
@@ -792,16 +1207,25 @@ namespace OpenAI
                 prompt,
                 responseFormat,
                 temperature,
+                @file,
+                model,
                 internalTimestampGranularities?.ToList(),
                 null);
         }
 
-        public static AudioTranscription AudioTranscription(string language = default, string text = default, IEnumerable<TranscribedWord> words = default, IEnumerable<TranscribedSegment> segments = default)
+        public static AudioTranscription AudioTranscription(string language = default, string text = default, IEnumerable<TranscribedWord> words = default, IEnumerable<TranscribedSegment> segments = default, InternalCreateTranscriptionResponseVerboseJsonTask task = default, TimeSpan? duration = default)
         {
             words ??= new ChangeTrackingList<TranscribedWord>();
             segments ??= new ChangeTrackingList<TranscribedSegment>();
 
-            return new AudioTranscription(language, text, words?.ToList(), segments?.ToList(), null);
+            return new AudioTranscription(
+                language,
+                text,
+                words?.ToList(),
+                segments?.ToList(),
+                task,
+                duration,
+                null);
         }
 
         public static TranscribedWord TranscribedWord(string word = default, TimeSpan startTime = default, TimeSpan endTime = default)
@@ -828,17 +1252,29 @@ namespace OpenAI
                 null);
         }
 
-        public static AudioTranslationOptions AudioTranslationOptions(string prompt = default, AudioTranslationFormat? responseFormat = default, float? temperature = default)
+        public static AudioTranslationOptions AudioTranslationOptions(string prompt = default, AudioTranslationFormat? responseFormat = default, float? temperature = default, BinaryData @file = default, InternalCreateTranslationRequestModel model = default)
         {
 
-            return new AudioTranslationOptions(prompt, responseFormat, temperature, null);
+            return new AudioTranslationOptions(
+                prompt,
+                responseFormat,
+                temperature,
+                @file,
+                model,
+                null);
         }
 
-        public static AudioTranslation AudioTranslation(string language = default, string text = default, IEnumerable<TranscribedSegment> segments = default)
+        public static AudioTranslation AudioTranslation(string language = default, string text = default, IEnumerable<TranscribedSegment> segments = default, InternalCreateTranslationResponseVerboseJsonTask task = default, TimeSpan? duration = default)
         {
             segments ??= new ChangeTrackingList<TranscribedSegment>();
 
-            return new AudioTranslation(language, text, segments?.ToList(), null);
+            return new AudioTranslation(
+                language,
+                text,
+                segments?.ToList(),
+                task,
+                duration,
+                null);
         }
 
         public static AssistantResponseFormat AssistantResponseFormat(string @type = default)
@@ -857,6 +1293,12 @@ namespace OpenAI
         {
 
             return new ChatToolChoice(null);
+        }
+
+        public static ChatMessageContent ChatMessageContent()
+        {
+
+            return new ChatMessageContent(null);
         }
 
         public static ChatMessageContentPart ChatMessageContentPart()

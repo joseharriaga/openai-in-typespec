@@ -86,6 +86,11 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("detail"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        detail = null;
+                        continue;
+                    }
                     detail = prop.Value.GetString();
                     continue;
                 }

@@ -39,6 +39,8 @@ namespace OpenAI.Files
             writer.WriteStringValue(Filename);
             writer.WritePropertyName("purpose"u8);
             writer.WriteStringValue(Purpose.ToSerialString());
+            writer.WritePropertyName("object"u8);
+            writer.WriteObjectValue<InternalOpenAIFileObject>(Object, options);
             if (SizeInBytes != null)
             {
                 writer.WritePropertyName("bytes"u8);
@@ -47,6 +49,13 @@ namespace OpenAI.Files
             else
             {
                 writer.WriteNull("bytes"u8);
+            }
+            writer.WritePropertyName("status"u8);
+            writer.WriteNumberValue((int)Status);
+            if (Optional.IsDefined(StatusDetails))
+            {
+                writer.WritePropertyName("status_details"u8);
+                writer.WriteStringValue(StatusDetails);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -88,7 +97,10 @@ namespace OpenAI.Files
             DateTimeOffset createdAt = default;
             string filename = default;
             Files.FilePurpose purpose = default;
+            InternalOpenAIFileObject @object = default;
             int? sizeInBytes = default;
+            Files.FileStatus status = default;
+            string statusDetails = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -112,6 +124,11 @@ namespace OpenAI.Files
                     purpose = prop.Value.GetString().ToFilePurpose();
                     continue;
                 }
+                if (prop.NameEquals("object"u8))
+                {
+                    @object = InternalOpenAIFileObject.DeserializeInternalOpenAIFileObject(prop.Value, options);
+                    continue;
+                }
                 if (prop.NameEquals("bytes"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -120,6 +137,21 @@ namespace OpenAI.Files
                         continue;
                     }
                     sizeInBytes = prop.Value.GetInt32();
+                    continue;
+                }
+                if (prop.NameEquals("status"u8))
+                {
+                    status = prop.Value.GetInt32().ToFileStatus();
+                    continue;
+                }
+                if (prop.NameEquals("status_details"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        statusDetails = null;
+                        continue;
+                    }
+                    statusDetails = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
@@ -132,7 +164,10 @@ namespace OpenAI.Files
                 createdAt,
                 filename,
                 purpose,
+                @object,
                 sizeInBytes,
+                status,
+                statusDetails,
                 additionalBinaryDataProperties);
         }
 

@@ -9,7 +9,7 @@ using OpenAI;
 
 namespace OpenAI.Files
 {
-    public partial class InternalUploadsClient
+    internal partial class InternalUploadsClient
     {
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
         private static PipelineMessageClassifier _pipelineMessageClassifier204;

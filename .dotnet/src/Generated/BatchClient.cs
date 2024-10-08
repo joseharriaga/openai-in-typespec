@@ -5,9 +5,7 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using OpenAI;
 
 namespace OpenAI.Batch
 {
@@ -22,23 +20,7 @@ namespace OpenAI.Batch
         {
         }
 
-        public virtual ClientResult<InternalBatchJob> CreateBatch(string inputFileId, InternalCreateBatchRequestEndpoint endpoint, InternalBatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata = default)
-        {
-            Argument.AssertNotNull(inputFileId, nameof(inputFileId));
-
-            InternalCreateBatchRequest spreadModel = new InternalCreateBatchRequest(null, endpoint, null, metadata, null);
-            ClientResult result = this.CreateBatch(spreadModel, null);
-            return ClientResult.FromValue((InternalBatchJob)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<InternalBatchJob>> CreateBatchAsync(string inputFileId, InternalCreateBatchRequestEndpoint endpoint, InternalBatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata = default)
-        {
-            Argument.AssertNotNull(inputFileId, nameof(inputFileId));
-
-            InternalCreateBatchRequest spreadModel = new InternalCreateBatchRequest(null, endpoint, null, metadata, null);
-            ClientResult result = await this.CreateBatchAsync(spreadModel, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalBatchJob)result, result.GetRawResponse());
-        }
+        public ClientPipeline Pipeline { get; }
 
         public virtual ClientResult ListBatches(string after, int? limit, RequestOptions options)
         {

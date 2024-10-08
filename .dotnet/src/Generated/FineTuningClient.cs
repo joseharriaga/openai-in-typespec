@@ -21,6 +21,8 @@ namespace OpenAI.FineTuning
         {
         }
 
+        public ClientPipeline Pipeline { get; }
+
         public virtual ClientResult ListPaginatedFineTuningJobs(string after, int? limit, RequestOptions options)
         {
             using PipelineMessage message = CreateListPaginatedFineTuningJobsRequest(after, limit, options);

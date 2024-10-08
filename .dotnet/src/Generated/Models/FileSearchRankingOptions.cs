@@ -11,12 +11,6 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal FileSearchRankingOptions(FileSearchRanker? ranker, IDictionary<string, BinaryData> additionalBinaryDataProperties)
-        {
-            Ranker = ranker;
-            _additionalBinaryDataProperties = additionalBinaryDataProperties;
-        }
-
         public FileSearchRanker? Ranker { get; set; }
     }
 }

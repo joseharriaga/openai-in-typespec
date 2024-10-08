@@ -27,6 +27,16 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(ToolResources)} does not support writing '{format}' format.");
             }
+            if (Optional.IsDefined(CodeInterpreter))
+            {
+                writer.WritePropertyName("code_interpreter"u8);
+                writer.WriteObjectValue<CodeInterpreterToolResources>(CodeInterpreter, options);
+            }
+            if (Optional.IsDefined(FileSearch))
+            {
+                writer.WritePropertyName("file_search"u8);
+                this.SerializeFileSearch(writer, options);
+            }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -63,15 +73,37 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
+            CodeInterpreterToolResources codeInterpreter = default;
+            FileSearchToolResources fileSearch = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("code_interpreter"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        codeInterpreter = null;
+                        continue;
+                    }
+                    codeInterpreter = CodeInterpreterToolResources.DeserializeCodeInterpreterToolResources(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("file_search"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        fileSearch = null;
+                        continue;
+                    }
+                    fileSearch = FileSearchToolResources.DeserializeFileSearchToolResources(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ToolResources(additionalBinaryDataProperties);
+            return new ToolResources(codeInterpreter, fileSearch, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ToolResources>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

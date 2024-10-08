@@ -98,6 +98,11 @@ namespace OpenAI.Assistants
                     writer.WriteNull("temperature"u8);
                 }
             }
+            if (Optional.IsDefined(Model))
+            {
+                writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model);
+            }
             if (Optional.IsCollectionDefined(DefaultTools))
             {
                 writer.WritePropertyName("tools"u8);
@@ -185,6 +190,7 @@ namespace OpenAI.Assistants
             string instructions = default;
             IDictionary<string, string> metadata = default;
             float? temperature = default;
+            string model = default;
             IList<ToolDefinition> defaultTools = default;
             ToolResources toolResources = default;
             AssistantResponseFormat responseFormat = default;
@@ -253,6 +259,16 @@ namespace OpenAI.Assistants
                     temperature = prop.Value.GetSingle();
                     continue;
                 }
+                if (prop.NameEquals("model"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        model = null;
+                        continue;
+                    }
+                    model = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("tools"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -271,6 +287,7 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        toolResources = null;
                         continue;
                     }
                     toolResources = ToolResources.DeserializeToolResources(prop.Value, options);
@@ -280,6 +297,7 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        responseFormat = null;
                         continue;
                     }
                     responseFormat = AssistantResponseFormat.DeserializeAssistantResponseFormat(prop.Value, options);
@@ -306,6 +324,7 @@ namespace OpenAI.Assistants
                 instructions,
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
                 temperature,
+                model,
                 defaultTools ?? new ChangeTrackingList<ToolDefinition>(),
                 toolResources,
                 responseFormat,

@@ -10,7 +10,7 @@ using OpenAI;
 
 namespace OpenAI.Assistants
 {
-    public partial class InternalAssistantMessageClient
+    internal partial class InternalAssistantMessageClient
     {
         private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
@@ -20,6 +20,8 @@ namespace OpenAI.Assistants
         protected InternalAssistantMessageClient()
         {
         }
+
+        public ClientPipeline Pipeline { get; }
 
         public virtual ClientResult ListMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options)
         {

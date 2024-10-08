@@ -57,6 +57,15 @@ namespace OpenAI.Assistants
             }
             writer.WritePropertyName("object"u8);
             writer.WriteObjectValue<InternalThreadObjectObject>(Object, options);
+            if (ToolResources != null)
+            {
+                writer.WritePropertyName("tool_resources"u8);
+                writer.WriteObjectValue(ToolResources, options);
+            }
+            else
+            {
+                writer.WriteNull("toolResources"u8);
+            }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -97,6 +106,7 @@ namespace OpenAI.Assistants
             DateTimeOffset createdAt = default;
             IDictionary<string, string> metadata = default;
             InternalThreadObjectObject @object = default;
+            ToolResources toolResources = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -137,12 +147,23 @@ namespace OpenAI.Assistants
                     @object = InternalThreadObjectObject.DeserializeInternalThreadObjectObject(prop.Value, options);
                     continue;
                 }
+                if (prop.NameEquals("tool_resources"u8))
+                {
+                    toolResources = ToolResources.DeserializeToolResources(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new AssistantThread(id, createdAt, metadata, @object, additionalBinaryDataProperties);
+            return new AssistantThread(
+                id,
+                createdAt,
+                metadata,
+                @object,
+                toolResources,
+                additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<AssistantThread>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -11,11 +11,11 @@ namespace OpenAI.Embeddings
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal OpenAIEmbedding(int index, BinaryData embeddingProperty, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal OpenAIEmbedding(int index, BinaryData embeddingProperty, InternalEmbeddingObject @object)
         {
             Index = index;
             EmbeddingProperty = embeddingProperty;
-            _additionalBinaryDataProperties = additionalBinaryDataProperties;
+            Object = @object;
         }
 
         public int Index { get; set; }

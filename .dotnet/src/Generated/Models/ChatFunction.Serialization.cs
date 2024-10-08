@@ -41,7 +41,14 @@ namespace OpenAI.Chat
             if (Optional.IsDefined(FunctionParameters))
             {
                 writer.WritePropertyName("parameters"u8);
-                writer.WriteObjectValue<BinaryData>(FunctionParameters, options);
+#if NET6_0_OR_GREATER
+                writer.WriteRawValue(FunctionParameters);
+#else
+                using (JsonDocument document = JsonDocument.Parse(FunctionParameters))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -92,6 +99,11 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("description"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        functionDescription = null;
+                        continue;
+                    }
                     functionDescription = prop.Value.GetString();
                     continue;
                 }
@@ -99,9 +111,10 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        functionParameters = null;
                         continue;
                     }
-                    functionParameters = BinaryData.DeserializeBinaryData(prop.Value, options);
+                    functionParameters = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
                 if (options.Format != "W")

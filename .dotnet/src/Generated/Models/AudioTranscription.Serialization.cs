@@ -55,6 +55,10 @@ namespace OpenAI.Audio
                 }
                 writer.WriteEndArray();
             }
+            writer.WritePropertyName("task"u8);
+            writer.WriteObjectValue<InternalCreateTranscriptionResponseVerboseJsonTask>(Task, options);
+            writer.WritePropertyName("duration"u8);
+            writer.WriteNumberValue(Convert.ToDouble(Duration.Value.ToString("s\\.FFF")));
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -95,6 +99,8 @@ namespace OpenAI.Audio
             string text = default;
             IList<TranscribedWord> words = default;
             IList<TranscribedSegment> segments = default;
+            InternalCreateTranscriptionResponseVerboseJsonTask task = default;
+            TimeSpan? duration = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -136,12 +142,34 @@ namespace OpenAI.Audio
                     segments = array;
                     continue;
                 }
+                if (prop.NameEquals("task"u8))
+                {
+                    task = InternalCreateTranscriptionResponseVerboseJsonTask.DeserializeInternalCreateTranscriptionResponseVerboseJsonTask(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("duration"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        duration = null;
+                        continue;
+                    }
+                    duration = TimeSpan.FromSeconds(prop.Value.GetDouble());
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new AudioTranscription(language, text, words ?? new ChangeTrackingList<TranscribedWord>(), segments ?? new ChangeTrackingList<TranscribedSegment>(), additionalBinaryDataProperties);
+            return new AudioTranscription(
+                language,
+                text,
+                words ?? new ChangeTrackingList<TranscribedWord>(),
+                segments ?? new ChangeTrackingList<TranscribedSegment>(),
+                task,
+                duration,
+                additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<AudioTranscription>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

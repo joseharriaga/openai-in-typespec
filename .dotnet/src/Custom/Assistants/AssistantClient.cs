@@ -30,12 +30,6 @@ public partial class AssistantClient
     private readonly InternalAssistantRunClient _runSubClient;
     private readonly InternalAssistantThreadClient _threadSubClient;
 
-    // CUSTOM: Remove virtual keyword.
-    /// <summary>
-    /// The HTTP pipeline for sending and receiving REST requests and responses.
-    /// </summary>
-    public ClientPipeline Pipeline => _pipeline;
-
     // CUSTOM: Added as a convenience.
     /// <summary> Initializes a new instance of <see cref="AssistantClient"/>. </summary>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
@@ -77,9 +71,9 @@ public partial class AssistantClient
 
         Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
-        _messageSubClient = new(_pipeline, options);
-        _runSubClient = new(_pipeline, options);
-        _threadSubClient = new(_pipeline, options);
+        _messageSubClient = new(Pipeline, options);
+        _runSubClient = new(Pipeline, options);
+        _threadSubClient = new(Pipeline, options);
     }
 
     // CUSTOM:
@@ -95,11 +89,11 @@ public partial class AssistantClient
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
-        _messageSubClient = new(_pipeline, options);
-        _runSubClient = new(_pipeline, options);
-        _threadSubClient = new(_pipeline, options);
+        _messageSubClient = new(Pipeline, options);
+        _runSubClient = new(Pipeline, options);
+        _threadSubClient = new(Pipeline, options);
     }
 
     /// <summary> Creates a new assistant. </summary>
@@ -113,7 +107,7 @@ public partial class AssistantClient
         options ??= new();
         options.Model = model;
 
-        ClientResult protocolResult = await CreateAssistantAsync(options?.ToBinaryContent(), cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        ClientResult protocolResult = await CreateAssistantAsync(options, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return CreateResultFromProtocol(protocolResult, Assistant.FromResponse);
     }
 
@@ -128,7 +122,7 @@ public partial class AssistantClient
         options ??= new();
         options.Model = model;
 
-        ClientResult protocolResult = CreateAssistant(options?.ToBinaryContent(), cancellationToken.ToRequestOptions());
+        ClientResult protocolResult = CreateAssistant(options, cancellationToken.ToRequestOptions());
         return CreateResultFromProtocol(protocolResult, Assistant.FromResponse);
     }
 
@@ -258,7 +252,7 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
         Argument.AssertNotNull(options, nameof(options));
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult protocolResult
             = await ModifyAssistantAsync(assistantId, content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return CreateResultFromProtocol(protocolResult, Assistant.FromResponse);

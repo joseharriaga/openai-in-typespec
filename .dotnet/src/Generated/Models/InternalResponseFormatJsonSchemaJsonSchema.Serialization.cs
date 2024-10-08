@@ -53,7 +53,14 @@ namespace OpenAI.Internal
             if (Optional.IsDefined(Schema))
             {
                 writer.WritePropertyName("schema"u8);
-                writer.WriteObjectValue<BinaryData>(Schema, options);
+#if NET6_0_OR_GREATER
+                writer.WriteRawValue(Schema);
+#else
+                using (JsonDocument document = JsonDocument.Parse(Schema))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -127,9 +134,10 @@ namespace OpenAI.Internal
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        schema = null;
                         continue;
                     }
-                    schema = BinaryData.DeserializeBinaryData(prop.Value, options);
+                    schema = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
                 if (options.Format != "W")

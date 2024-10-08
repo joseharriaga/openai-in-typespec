@@ -15,9 +15,10 @@ namespace OpenAI.Chat
         {
         }
 
-        internal InternalChatCompletionMessageToolCallChunkFunction(string name, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalChatCompletionMessageToolCallChunkFunction(string name, BinaryData arguments, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Name = name;
+            Arguments = arguments;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

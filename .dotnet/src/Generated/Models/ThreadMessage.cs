@@ -12,7 +12,7 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, IEnumerable<MessageContent> content, string assistantId, string runId, IDictionary<string, string> metadata, InternalMessageObjectObject @object, Assistants.MessageRole role)
+        internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, IEnumerable<MessageContent> content, string assistantId, string runId, IDictionary<string, string> metadata, InternalMessageObjectObject @object, Assistants.MessageRole role, IEnumerable<MessageCreationAttachment> attachments)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -27,9 +27,10 @@ namespace OpenAI.Assistants
             Metadata = metadata;
             Object = @object;
             Role = role;
+            Attachments = attachments.ToList();
         }
 
-        internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, IList<MessageContent> content, string assistantId, string runId, IDictionary<string, string> metadata, InternalMessageObjectObject @object, Assistants.MessageRole role, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, IList<MessageContent> content, string assistantId, string runId, IDictionary<string, string> metadata, InternalMessageObjectObject @object, Assistants.MessageRole role, IReadOnlyList<MessageCreationAttachment> attachments, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -44,6 +45,7 @@ namespace OpenAI.Assistants
             Metadata = metadata;
             Object = @object;
             Role = role;
+            Attachments = attachments;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

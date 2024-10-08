@@ -12,7 +12,7 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalChatCompletionResponseMessage(string refusal, Chat.ChatMessageRole role, Chat.ChatMessageContent content)
+        internal InternalChatCompletionResponseMessage(string refusal, Chat.ChatMessageRole role, ChatMessageContent content)
         {
             Refusal = refusal;
             ToolCalls = new ChangeTrackingList<ChatToolCall>();
@@ -20,7 +20,7 @@ namespace OpenAI.Chat
             Content = content;
         }
 
-        internal InternalChatCompletionResponseMessage(string refusal, IList<ChatToolCall> toolCalls, Chat.ChatMessageRole role, Chat.ChatMessageContent content, ChatFunctionCall functionCall, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalChatCompletionResponseMessage(string refusal, IList<ChatToolCall> toolCalls, Chat.ChatMessageRole role, ChatMessageContent content, ChatFunctionCall functionCall, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Refusal = refusal;
             ToolCalls = toolCalls;

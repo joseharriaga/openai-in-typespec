@@ -11,13 +11,14 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal AssistantCreationOptions(string name, string description, string instructions, IDictionary<string, string> metadata, float? temperature, IList<ToolDefinition> tools, ToolResources toolResources, AssistantResponseFormat responseFormat, float? nucleusSamplingFactor, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal AssistantCreationOptions(string name, string description, string instructions, IDictionary<string, string> metadata, float? temperature, string model, IList<ToolDefinition> tools, ToolResources toolResources, AssistantResponseFormat responseFormat, float? nucleusSamplingFactor, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Name = name;
             Description = description;
             Instructions = instructions;
             Metadata = metadata;
             Temperature = temperature;
+            Model = model;
             Tools = tools;
             ToolResources = toolResources;
             ResponseFormat = responseFormat;

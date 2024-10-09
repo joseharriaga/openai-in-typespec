@@ -14,11 +14,8 @@ namespace OpenAI.RealtimeConversation
             Kind = InternalRealtimeClientEventType.InputAudioBufferClear;
         }
 
-        internal InternalRealtimeClientEventInputAudioBufferClear(InternalRealtimeClientEventType kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId) : base(kind, serializedAdditionalRawData)
+        internal InternalRealtimeClientEventInputAudioBufferClear(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
         {
-            EventId = eventId;
         }
-
-        public string EventId { get; set; }
     }
 }

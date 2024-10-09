@@ -26,6 +26,11 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Kind.ToString());
             }
+            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true && Optional.IsDefined(EventId))
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
             if (SerializedAdditionalRawData != null)
             {
                 foreach (var item in SerializedAdditionalRawData)

@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class UnknownRealtimeClientEvent : InternalRealtimeClientEvent
     {
-        internal UnknownRealtimeClientEvent(InternalRealtimeClientEventType kind, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, serializedAdditionalRawData)
+        internal UnknownRealtimeClientEvent(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
         {
         }
 

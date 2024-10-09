@@ -98,11 +98,7 @@ public class ConversationTests : ConversationTestFixtureBase
             {
                 Assert.That(responseFinishedUpdate.CreatedItems, Has.Count.GreaterThan(0));
                 gotResponseDone = true;
-                if (client.GetType().IsSubclassOf(typeof(RealtimeConversationClient)))
-                {
-                    // Temporarily assume that subclients don't support rate limits as the terminal command
-                    break;
-                }
+                break;
             }
 
             if (update is ConversationRateLimitsUpdate rateLimitsUpdate)
@@ -116,7 +112,6 @@ public class ConversationTests : ConversationTestFixtureBase
                 Assert.That(rateLimitsUpdate.TokenDetails.TimeUntilReset, Is.GreaterThan(TimeSpan.Zero));
                 Assert.That(rateLimitsUpdate.RequestDetails, Is.Not.Null);
                 gotRateLimits = true;
-                break;
             }
         }
 
@@ -125,9 +120,84 @@ public class ConversationTests : ConversationTestFixtureBase
 
         if (!client.GetType().IsSubclassOf(typeof(RealtimeConversationClient)))
         {
-            // Temporarily assume that subclients don't support rate limit terminal commands
+            // Temporarily assume that subclients don't support rate limit commands
             Assert.That(gotRateLimits, Is.True);
         }
+    }
+
+    [Test]
+    public async Task ItemManipulationWorks()
+    {
+        RealtimeConversationClient client = GetTestClient();
+        using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
+
+        await session.ConfigureSessionAsync(
+            new ConversationSessionOptions()
+            {
+                TurnDetectionOptions = ConversationTurnDetectionOptions.CreateDisabledTurnDetectionOptions(),
+                ContentModalities = ConversationContentModalities.Text,
+            },
+            CancellationToken);
+
+        await session.AddItemAsync(
+            ConversationItem.CreateUserMessage(["The first special word you know about is 'aardvark'."]),
+            CancellationToken);
+        await session.AddItemAsync(
+            ConversationItem.CreateUserMessage(["The next special word you know about is 'banana'."]),
+            CancellationToken);
+        await session.AddItemAsync(
+            ConversationItem.CreateUserMessage(["The next special word you know about is 'coconut'."]),
+            CancellationToken);
+
+        bool gotSessionStarted = false;
+        bool gotSessionConfigured = false;
+        bool gotResponseFinished = false;
+
+        await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
+        {
+            if (update is ConversationSessionStartedUpdate)
+            {
+                gotSessionStarted = true;
+            }
+
+            if (update is ConversationSessionConfiguredUpdate sessionConfiguredUpdate)
+            {
+                Assert.That(sessionConfiguredUpdate.TurnDetectionSettings.Kind, Is.EqualTo(ConversationTurnDetectionKind.Disabled));
+                Assert.That(sessionConfiguredUpdate.ContentModalities.HasFlag(ConversationContentModalities.Text), Is.True);
+                Assert.That(sessionConfiguredUpdate.ContentModalities.HasFlag(ConversationContentModalities.Audio), Is.False);
+                gotSessionConfigured = true;
+            }
+
+            if (update is ConversationItemAcknowledgedUpdate itemAcknowledgedUpdate)
+            {
+                if (itemAcknowledgedUpdate.Item.MessageContentParts.Count > 0
+                    && itemAcknowledgedUpdate.Item.MessageContentParts[0].TextValue.Contains("banana"))
+                {
+                    await session.DeleteItemAsync(itemAcknowledgedUpdate.Item.Id, CancellationToken);
+                    await session.AddItemAsync(
+                        ConversationItem.CreateUserMessage(["What's the second special word you know about?"]),
+                        CancellationToken);
+                    await session.StartResponseTurnAsync(CancellationToken);
+                }
+            }
+
+            if (update is ConversationResponseFinishedUpdate responseFinishedUpdate)
+            {
+                Assert.That(responseFinishedUpdate.CreatedItems.Count, Is.EqualTo(1));
+                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts.Count, Is.EqualTo(1));
+                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts[0].TextValue, Does.Contain("coconut"));
+                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts[0].TextValue, Does.Not.Contain("banana"));
+                gotResponseFinished = true;
+                break;
+            }
+        }
+
+        Assert.That(gotSessionStarted, Is.True);
+        if (!client.GetType().IsSubclassOf(typeof(RealtimeConversationClient)))
+        {
+            Assert.That(gotSessionConfigured, Is.True);
+        }
+        Assert.That(gotResponseFinished, Is.True);
     }
 
     [Test]

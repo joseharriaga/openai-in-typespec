@@ -11,6 +11,8 @@ public partial class ConversationItemFinishedUpdate
     [CodeGenMember("Item")]
     private readonly InternalRealtimeResponseItem _internalItem;
 
+    public string NewItemId => _internalItem.Id;
+
     public ConversationMessageRole? MessageRole => _internalItem.MessageRole;
 
     public IReadOnlyList<ConversationContentPart> MessageContentParts => _internalItem.MessageContentParts;

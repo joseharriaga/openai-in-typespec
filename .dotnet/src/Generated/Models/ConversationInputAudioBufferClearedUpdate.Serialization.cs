@@ -21,15 +21,15 @@ namespace OpenAI.RealtimeConversation
             }
 
             writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
-            {
-                writer.WritePropertyName("event_id"u8);
-                writer.WriteStringValue(EventId);
-            }
             if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Kind.ToSerialString());
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -73,20 +73,20 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string eventId = default;
             ConversationUpdateKind type = default;
+            string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("event_id"u8))
-                {
-                    eventId = property.Value.GetString();
-                    continue;
-                }
                 if (property.NameEquals("type"u8))
                 {
                     type = property.Value.GetString().ToConversationUpdateKind();
+                    continue;
+                }
+                if (property.NameEquals("event_id"u8))
+                {
+                    eventId = property.Value.GetString();
                     continue;
                 }
                 if (true)
@@ -96,7 +96,7 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ConversationInputAudioBufferClearedUpdate(type, serializedAdditionalRawData, eventId);
+            return new ConversationInputAudioBufferClearedUpdate(type, eventId, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<ConversationInputAudioBufferClearedUpdate>.Write(ModelReaderWriterOptions options)

@@ -14,12 +14,14 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        internal InternalRealtimeClientEvent(InternalRealtimeClientEventType kind, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRealtimeClientEvent(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Kind = kind;
+            EventId = eventId;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         internal InternalRealtimeClientEventType Kind { get; set; }
+        public string EventId { get; set; }
     }
 }

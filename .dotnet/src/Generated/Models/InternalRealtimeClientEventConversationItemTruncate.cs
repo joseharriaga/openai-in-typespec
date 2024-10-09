@@ -19,9 +19,8 @@ namespace OpenAI.RealtimeConversation
             AudioEndMs = audioEndMs;
         }
 
-        internal InternalRealtimeClientEventConversationItemTruncate(InternalRealtimeClientEventType kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, string itemId, int contentIndex, int audioEndMs) : base(kind, serializedAdditionalRawData)
+        internal InternalRealtimeClientEventConversationItemTruncate(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId, int contentIndex, int audioEndMs) : base(kind, eventId, serializedAdditionalRawData)
         {
-            EventId = eventId;
             ItemId = itemId;
             ContentIndex = contentIndex;
             AudioEndMs = audioEndMs;
@@ -31,7 +30,6 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        public string EventId { get; set; }
         public string ItemId { get; }
         public int ContentIndex { get; }
         public int AudioEndMs { get; }

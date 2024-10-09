@@ -21,15 +21,15 @@ namespace OpenAI.RealtimeConversation
             }
 
             writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true && Optional.IsDefined(EventId))
-            {
-                writer.WritePropertyName("event_id"u8);
-                writer.WriteStringValue(EventId);
-            }
             if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Kind.ToString());
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true && Optional.IsDefined(EventId))
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -73,20 +73,20 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string eventId = default;
             InternalRealtimeClientEventType type = default;
+            string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("event_id"u8))
-                {
-                    eventId = property.Value.GetString();
-                    continue;
-                }
                 if (property.NameEquals("type"u8))
                 {
                     type = new InternalRealtimeClientEventType(property.Value.GetString());
+                    continue;
+                }
+                if (property.NameEquals("event_id"u8))
+                {
+                    eventId = property.Value.GetString();
                     continue;
                 }
                 if (true)
@@ -96,7 +96,7 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalRealtimeClientEventInputAudioBufferClear(type, serializedAdditionalRawData, eventId);
+            return new InternalRealtimeClientEventInputAudioBufferClear(type, eventId, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<InternalRealtimeClientEventInputAudioBufferClear>.Write(ModelReaderWriterOptions options)

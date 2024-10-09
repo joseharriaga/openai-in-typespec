@@ -8941,6 +8941,8 @@ components:
       properties:
         type:
           $ref: '#/components/schemas/RealtimeClientEventType'
+        event_id:
+          type: string
       discriminator:
         propertyName: type
         mapping:
@@ -9736,9 +9738,12 @@ components:
       type: object
       required:
         - type
+        - event_id
       properties:
         type:
           $ref: '#/components/schemas/RealtimeServerEventType'
+        event_id:
+          type: string
       discriminator:
         propertyName: type
         mapping:

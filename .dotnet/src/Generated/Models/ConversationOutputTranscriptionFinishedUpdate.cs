@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationOutputTranscriptionFinishedUpdate : ConversationUpdate
     {
-        internal ConversationOutputTranscriptionFinishedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string transcript)
+        internal ConversationOutputTranscriptionFinishedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string transcript) : base(eventId)
         {
             Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(responseId, nameof(responseId));
@@ -17,7 +17,6 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(transcript, nameof(transcript));
 
             Kind = ConversationUpdateKind.ResponseAudioTranscriptDone;
-            EventId = eventId;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -25,9 +24,8 @@ namespace OpenAI.RealtimeConversation
             Transcript = transcript;
         }
 
-        internal ConversationOutputTranscriptionFinishedUpdate(ConversationUpdateKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string transcript) : base(kind, serializedAdditionalRawData)
+        internal ConversationOutputTranscriptionFinishedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, string transcript) : base(kind, eventId, serializedAdditionalRawData)
         {
-            EventId = eventId;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -39,7 +37,6 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        public string EventId { get; }
         public string ResponseId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }

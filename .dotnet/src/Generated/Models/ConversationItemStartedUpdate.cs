@@ -9,22 +9,20 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationItemStartedUpdate : ConversationUpdate
     {
-        internal ConversationItemStartedUpdate(string eventId, string responseId, int outputIndex, InternalRealtimeResponseItem internalItem)
+        internal ConversationItemStartedUpdate(string eventId, string responseId, int outputIndex, InternalRealtimeResponseItem internalItem) : base(eventId)
         {
             Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(internalItem, nameof(internalItem));
 
             Kind = ConversationUpdateKind.ItemStarted;
-            EventId = eventId;
             ResponseId = responseId;
             OutputIndex = outputIndex;
             _internalItem = internalItem;
         }
 
-        internal ConversationItemStartedUpdate(ConversationUpdateKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, string responseId, int outputIndex, InternalRealtimeResponseItem internalItem) : base(kind, serializedAdditionalRawData)
+        internal ConversationItemStartedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, int outputIndex, InternalRealtimeResponseItem internalItem) : base(kind, eventId, serializedAdditionalRawData)
         {
-            EventId = eventId;
             ResponseId = responseId;
             OutputIndex = outputIndex;
             _internalItem = internalItem;
@@ -34,7 +32,6 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        public string EventId { get; }
         public string ResponseId { get; }
         public int OutputIndex { get; }
     }

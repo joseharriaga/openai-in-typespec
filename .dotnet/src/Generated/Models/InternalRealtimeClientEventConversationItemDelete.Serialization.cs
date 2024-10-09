@@ -21,11 +21,6 @@ namespace OpenAI.RealtimeConversation
             }
 
             writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true && Optional.IsDefined(EventId))
-            {
-                writer.WritePropertyName("event_id"u8);
-                writer.WriteStringValue(EventId);
-            }
             if (SerializedAdditionalRawData?.ContainsKey("item_id") != true)
             {
                 writer.WritePropertyName("item_id"u8);
@@ -35,6 +30,11 @@ namespace OpenAI.RealtimeConversation
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Kind.ToString());
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true && Optional.IsDefined(EventId))
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -78,18 +78,13 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string eventId = default;
             string itemId = default;
             InternalRealtimeClientEventType type = default;
+            string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("event_id"u8))
-                {
-                    eventId = property.Value.GetString();
-                    continue;
-                }
                 if (property.NameEquals("item_id"u8))
                 {
                     itemId = property.Value.GetString();
@@ -100,6 +95,11 @@ namespace OpenAI.RealtimeConversation
                     type = new InternalRealtimeClientEventType(property.Value.GetString());
                     continue;
                 }
+                if (property.NameEquals("event_id"u8))
+                {
+                    eventId = property.Value.GetString();
+                    continue;
+                }
                 if (true)
                 {
                     rawDataDictionary ??= new Dictionary<string, BinaryData>();
@@ -107,7 +107,7 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalRealtimeClientEventConversationItemDelete(type, serializedAdditionalRawData, eventId, itemId);
+            return new InternalRealtimeClientEventConversationItemDelete(type, eventId, serializedAdditionalRawData, itemId);
         }
 
         BinaryData IPersistableModel<InternalRealtimeClientEventConversationItemDelete>.Write(ModelReaderWriterOptions options)

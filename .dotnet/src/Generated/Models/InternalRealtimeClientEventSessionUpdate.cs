@@ -17,9 +17,8 @@ namespace OpenAI.RealtimeConversation
             Session = session;
         }
 
-        internal InternalRealtimeClientEventSessionUpdate(InternalRealtimeClientEventType kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, ConversationSessionOptions session) : base(kind, serializedAdditionalRawData)
+        internal InternalRealtimeClientEventSessionUpdate(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, ConversationSessionOptions session) : base(kind, eventId, serializedAdditionalRawData)
         {
-            EventId = eventId;
             Session = session;
         }
 
@@ -27,7 +26,6 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        public string EventId { get; set; }
         public ConversationSessionOptions Session { get; }
     }
 }

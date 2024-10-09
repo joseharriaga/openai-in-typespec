@@ -14,11 +14,8 @@ namespace OpenAI.RealtimeConversation
             Kind = InternalRealtimeClientEventType.InputAudioBufferCommit;
         }
 
-        internal InternalRealtimeClientEventInputAudioBufferCommit(InternalRealtimeClientEventType kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId) : base(kind, serializedAdditionalRawData)
+        internal InternalRealtimeClientEventInputAudioBufferCommit(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
         {
-            EventId = eventId;
         }
-
-        public string EventId { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationTextDoneUpdate : ConversationUpdate
     {
-        internal ConversationTextDoneUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string text)
+        internal ConversationTextDoneUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string text) : base(eventId)
         {
             Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(responseId, nameof(responseId));
@@ -17,7 +17,6 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(text, nameof(text));
 
             Kind = ConversationUpdateKind.ResponseTextDone;
-            EventId = eventId;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -25,9 +24,8 @@ namespace OpenAI.RealtimeConversation
             Text = text;
         }
 
-        internal ConversationTextDoneUpdate(ConversationUpdateKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string text) : base(kind, serializedAdditionalRawData)
+        internal ConversationTextDoneUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, string text) : base(kind, eventId, serializedAdditionalRawData)
         {
-            EventId = eventId;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -39,7 +37,6 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        public string EventId { get; }
         public string ResponseId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }

@@ -9,21 +9,19 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationItemAcknowledgedUpdate : ConversationUpdate
     {
-        internal ConversationItemAcknowledgedUpdate(string eventId, string previousItemId, ConversationItem item)
+        internal ConversationItemAcknowledgedUpdate(string eventId, string previousItemId, ConversationItem item) : base(eventId)
         {
             Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(previousItemId, nameof(previousItemId));
             Argument.AssertNotNull(item, nameof(item));
 
             Kind = ConversationUpdateKind.ItemAcknowledged;
-            EventId = eventId;
             PreviousItemId = previousItemId;
             Item = item;
         }
 
-        internal ConversationItemAcknowledgedUpdate(ConversationUpdateKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, string previousItemId, ConversationItem item) : base(kind, serializedAdditionalRawData)
+        internal ConversationItemAcknowledgedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string previousItemId, ConversationItem item) : base(kind, eventId, serializedAdditionalRawData)
         {
-            EventId = eventId;
             PreviousItemId = previousItemId;
             Item = item;
         }
@@ -32,7 +30,6 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        public string EventId { get; }
         public string PreviousItemId { get; }
     }
 }

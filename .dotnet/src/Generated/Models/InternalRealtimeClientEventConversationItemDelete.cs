@@ -17,9 +17,8 @@ namespace OpenAI.RealtimeConversation
             ItemId = itemId;
         }
 
-        internal InternalRealtimeClientEventConversationItemDelete(InternalRealtimeClientEventType kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, string itemId) : base(kind, serializedAdditionalRawData)
+        internal InternalRealtimeClientEventConversationItemDelete(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId) : base(kind, eventId, serializedAdditionalRawData)
         {
-            EventId = eventId;
             ItemId = itemId;
         }
 
@@ -27,7 +26,6 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        public string EventId { get; set; }
         public string ItemId { get; }
     }
 }

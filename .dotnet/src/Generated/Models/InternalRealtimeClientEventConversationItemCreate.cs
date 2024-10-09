@@ -17,9 +17,8 @@ namespace OpenAI.RealtimeConversation
             Item = item;
         }
 
-        internal InternalRealtimeClientEventConversationItemCreate(InternalRealtimeClientEventType kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, string previousItemId, ConversationItem item) : base(kind, serializedAdditionalRawData)
+        internal InternalRealtimeClientEventConversationItemCreate(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string previousItemId, ConversationItem item) : base(kind, eventId, serializedAdditionalRawData)
         {
-            EventId = eventId;
             PreviousItemId = previousItemId;
             Item = item;
         }
@@ -28,7 +27,6 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        public string EventId { get; set; }
         public string PreviousItemId { get; set; }
         public ConversationItem Item { get; }
     }

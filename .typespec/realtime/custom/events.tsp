@@ -50,9 +50,11 @@ union RealtimeServerEventType {
 @discriminator("type")
 model RealtimeClientEvent {
   type: RealtimeClientEventType;
+  event_id?: string;
 }
 
 @discriminator("type")
 model RealtimeServerEvent {
   type: RealtimeServerEventType;
+  event_id: string;
 }

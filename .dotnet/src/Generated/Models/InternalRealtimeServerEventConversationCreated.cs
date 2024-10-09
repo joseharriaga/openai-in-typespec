@@ -9,19 +9,17 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeServerEventConversationCreated : ConversationUpdate
     {
-        internal InternalRealtimeServerEventConversationCreated(string eventId, InternalRealtimeServerEventConversationCreatedConversation conversation)
+        internal InternalRealtimeServerEventConversationCreated(string eventId, InternalRealtimeServerEventConversationCreatedConversation conversation) : base(eventId)
         {
             Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(conversation, nameof(conversation));
 
             Kind = ConversationUpdateKind.ConversationCreated;
-            EventId = eventId;
             Conversation = conversation;
         }
 
-        internal InternalRealtimeServerEventConversationCreated(ConversationUpdateKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string eventId, InternalRealtimeServerEventConversationCreatedConversation conversation) : base(kind, serializedAdditionalRawData)
+        internal InternalRealtimeServerEventConversationCreated(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeServerEventConversationCreatedConversation conversation) : base(kind, eventId, serializedAdditionalRawData)
         {
-            EventId = eventId;
             Conversation = conversation;
         }
 
@@ -29,7 +27,6 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        public string EventId { get; }
         public InternalRealtimeServerEventConversationCreatedConversation Conversation { get; }
     }
 }

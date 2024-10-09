@@ -9,7 +9,8 @@ namespace OpenAI.Moderations
 {
     internal partial class InternalModerationCategoryScores
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic)
         {
             Hate = hate;
@@ -25,7 +26,7 @@ namespace OpenAI.Moderations
             ViolenceGraphic = violenceGraphic;
         }
 
-        internal InternalModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -38,23 +39,29 @@ namespace OpenAI.Moderations
             SexualMinors = sexualMinors;
             Violence = violence;
             ViolenceGraphic = violenceGraphic;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalModerationCategoryScores()
-        {
-        }
+        public float Hate { get; set; }
 
-        public float Hate { get; }
-        public float HateThreatening { get; }
-        public float Harassment { get; }
-        public float HarassmentThreatening { get; }
-        public float SelfHarm { get; }
-        public float SelfHarmIntent { get; }
-        public float SelfHarmInstructions { get; }
-        public float Sexual { get; }
-        public float SexualMinors { get; }
-        public float Violence { get; }
-        public float ViolenceGraphic { get; }
+        public float HateThreatening { get; set; }
+
+        public float Harassment { get; set; }
+
+        public float HarassmentThreatening { get; set; }
+
+        public float SelfHarm { get; set; }
+
+        public float SelfHarmIntent { get; set; }
+
+        public float SelfHarmInstructions { get; set; }
+
+        public float Sexual { get; set; }
+
+        public float SexualMinors { get; set; }
+
+        public float Violence { get; set; }
+
+        public float ViolenceGraphic { get; set; }
     }
 }

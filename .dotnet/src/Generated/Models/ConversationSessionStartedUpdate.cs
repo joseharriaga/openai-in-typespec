@@ -9,21 +9,16 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationSessionStartedUpdate : ConversationUpdate
     {
-        internal ConversationSessionStartedUpdate(string eventId, InternalRealtimeResponseSession internalSession) : base(eventId)
+        internal ConversationSessionStartedUpdate(InternalRealtimeResponseSession session, string eventId) : base(eventId)
         {
-            Argument.AssertNotNull(internalSession, nameof(internalSession));
-
-            Kind = ConversationUpdateKind.SessionStarted;
-            _internalSession = internalSession;
+            Session = session;
         }
 
-        internal ConversationSessionStartedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeResponseSession internalSession) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationSessionStartedUpdate(InternalRealtimeResponseSession session, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
-            _internalSession = internalSession;
+            Session = session;
         }
 
-        internal ConversationSessionStartedUpdate()
-        {
-        }
+        public InternalRealtimeResponseSession Session { get; set; }
     }
 }

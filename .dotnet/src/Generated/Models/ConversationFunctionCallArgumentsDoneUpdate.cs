@@ -9,24 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationFunctionCallArgumentsDoneUpdate : ConversationUpdate
     {
-        internal ConversationFunctionCallArgumentsDoneUpdate(string eventId, string responseId, string itemId, int outputIndex, string callId, string name, string arguments) : base(eventId)
-        {
-            Argument.AssertNotNull(responseId, nameof(responseId));
-            Argument.AssertNotNull(itemId, nameof(itemId));
-            Argument.AssertNotNull(callId, nameof(callId));
-            Argument.AssertNotNull(name, nameof(name));
-            Argument.AssertNotNull(arguments, nameof(arguments));
-
-            Kind = ConversationUpdateKind.ResponseFunctionCallArgumentsDone;
-            ResponseId = responseId;
-            ItemId = itemId;
-            OutputIndex = outputIndex;
-            CallId = callId;
-            Name = name;
-            Arguments = arguments;
-        }
-
-        internal ConversationFunctionCallArgumentsDoneUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, string callId, string name, string arguments) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationFunctionCallArgumentsDoneUpdate(string responseId, string itemId, int outputIndex, string callId, string name, string arguments, string eventId) : base(eventId)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -36,15 +19,26 @@ namespace OpenAI.RealtimeConversation
             Arguments = arguments;
         }
 
-        internal ConversationFunctionCallArgumentsDoneUpdate()
+        internal ConversationFunctionCallArgumentsDoneUpdate(string responseId, string itemId, int outputIndex, string callId, string name, string arguments, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
+            ResponseId = responseId;
+            ItemId = itemId;
+            OutputIndex = outputIndex;
+            CallId = callId;
+            Name = name;
+            Arguments = arguments;
         }
 
-        public string ResponseId { get; }
-        public string ItemId { get; }
-        public int OutputIndex { get; }
-        public string CallId { get; }
-        public string Name { get; }
-        public string Arguments { get; }
+        public string ResponseId { get; set; }
+
+        public string ItemId { get; set; }
+
+        public int OutputIndex { get; set; }
+
+        public string CallId { get; set; }
+
+        public string Name { get; set; }
+
+        public string Arguments { get; set; }
     }
 }

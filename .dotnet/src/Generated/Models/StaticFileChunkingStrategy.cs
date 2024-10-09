@@ -9,13 +9,11 @@ namespace OpenAI.VectorStores
 {
     public partial class StaticFileChunkingStrategy : FileChunkingStrategy
     {
-        internal StaticFileChunkingStrategy(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalStaticChunkingStrategyDetails internalDetails) : base(type, serializedAdditionalRawData)
+        internal StaticFileChunkingStrategy(InternalStaticChunkingStrategyDetails @static, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
-            _internalDetails = internalDetails;
+            Static = @static;
         }
 
-        internal StaticFileChunkingStrategy()
-        {
-        }
+        public InternalStaticChunkingStrategyDetails Static { get; set; }
     }
 }

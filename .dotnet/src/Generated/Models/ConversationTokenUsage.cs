@@ -9,12 +9,10 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationTokenUsage
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal ConversationTokenUsage(int totalTokens, int inputTokens, int outputTokens, ConversationInputTokenUsageDetails inputTokenDetails, ConversationOutputTokenUsageDetails outputTokenDetails)
         {
-            Argument.AssertNotNull(inputTokenDetails, nameof(inputTokenDetails));
-            Argument.AssertNotNull(outputTokenDetails, nameof(outputTokenDetails));
-
             TotalTokens = totalTokens;
             InputTokens = inputTokens;
             OutputTokens = outputTokens;
@@ -22,24 +20,24 @@ namespace OpenAI.RealtimeConversation
             OutputTokenDetails = outputTokenDetails;
         }
 
-        internal ConversationTokenUsage(int totalTokens, int inputTokens, int outputTokens, ConversationInputTokenUsageDetails inputTokenDetails, ConversationOutputTokenUsageDetails outputTokenDetails, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ConversationTokenUsage(int totalTokens, int inputTokens, int outputTokens, ConversationInputTokenUsageDetails inputTokenDetails, ConversationOutputTokenUsageDetails outputTokenDetails, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             TotalTokens = totalTokens;
             InputTokens = inputTokens;
             OutputTokens = outputTokens;
             InputTokenDetails = inputTokenDetails;
             OutputTokenDetails = outputTokenDetails;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal ConversationTokenUsage()
-        {
-        }
+        public int TotalTokens { get; set; }
 
-        public int TotalTokens { get; }
-        public int InputTokens { get; }
-        public int OutputTokens { get; }
-        public ConversationInputTokenUsageDetails InputTokenDetails { get; }
-        public ConversationOutputTokenUsageDetails OutputTokenDetails { get; }
+        public int InputTokens { get; set; }
+
+        public int OutputTokens { get; set; }
+
+        public ConversationInputTokenUsageDetails InputTokenDetails { get; set; }
+
+        public ConversationOutputTokenUsageDetails OutputTokenDetails { get; set; }
     }
 }

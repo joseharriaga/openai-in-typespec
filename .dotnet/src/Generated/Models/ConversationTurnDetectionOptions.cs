@@ -9,15 +9,17 @@ namespace OpenAI.RealtimeConversation
 {
     public abstract partial class ConversationTurnDetectionOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        protected ConversationTurnDetectionOptions()
-        {
-        }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ConversationTurnDetectionOptions(ConversationTurnDetectionKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        private protected ConversationTurnDetectionOptions(RealtimeConversation.ConversationTurnDetectionKind kind)
         {
             Kind = kind;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+        }
+
+        internal ConversationTurnDetectionOptions(RealtimeConversation.ConversationTurnDetectionKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        {
+            Kind = kind;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }
 }

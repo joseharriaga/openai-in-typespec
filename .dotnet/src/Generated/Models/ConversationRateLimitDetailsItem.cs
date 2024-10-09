@@ -9,33 +9,31 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationRateLimitDetailsItem
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal ConversationRateLimitDetailsItem(string name, int limit, int remaining, float resetSeconds)
         {
-            Argument.AssertNotNull(name, nameof(name));
-
             Name = name;
             Limit = limit;
             Remaining = remaining;
             ResetSeconds = resetSeconds;
         }
 
-        internal ConversationRateLimitDetailsItem(string name, int limit, int remaining, float resetSeconds, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ConversationRateLimitDetailsItem(string name, int limit, int remaining, float resetSeconds, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Name = name;
             Limit = limit;
             Remaining = remaining;
             ResetSeconds = resetSeconds;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal ConversationRateLimitDetailsItem()
-        {
-        }
+        public string Name { get; set; }
 
-        public string Name { get; }
-        public int Limit { get; }
-        public int Remaining { get; }
-        public float ResetSeconds { get; }
+        public int Limit { get; set; }
+
+        public int Remaining { get; set; }
+
+        public float ResetSeconds { get; set; }
     }
 }

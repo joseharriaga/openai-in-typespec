@@ -9,7 +9,8 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationInputTokenUsageDetails
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal ConversationInputTokenUsageDetails(int cachedTokens, int textTokens, int audioTokens)
         {
             CachedTokens = cachedTokens;
@@ -17,20 +18,18 @@ namespace OpenAI.RealtimeConversation
             AudioTokens = audioTokens;
         }
 
-        internal ConversationInputTokenUsageDetails(int cachedTokens, int textTokens, int audioTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ConversationInputTokenUsageDetails(int cachedTokens, int textTokens, int audioTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             CachedTokens = cachedTokens;
             TextTokens = textTokens;
             AudioTokens = audioTokens;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal ConversationInputTokenUsageDetails()
-        {
-        }
+        public int CachedTokens { get; set; }
 
-        public int CachedTokens { get; }
-        public int TextTokens { get; }
-        public int AudioTokens { get; }
+        public int TextTokens { get; set; }
+
+        public int AudioTokens { get; set; }
     }
 }

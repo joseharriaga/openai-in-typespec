@@ -9,34 +9,31 @@ namespace OpenAI.Assistants
 {
     public partial class AssistantThread
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal AssistantThread(string id, DateTimeOffset createdAt, ToolResources toolResources, IReadOnlyDictionary<string, string> metadata)
-        {
-            Argument.AssertNotNull(id, nameof(id));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
+        internal AssistantThread(string id, DateTimeOffset createdAt, IDictionary<string, string> metadata, InternalThreadObjectObject @object, ToolResources toolResources)
+        {
             Id = id;
             CreatedAt = createdAt;
-            ToolResources = toolResources;
             Metadata = metadata;
-        }
-
-        internal AssistantThread(string id, InternalThreadObjectObject @object, DateTimeOffset createdAt, ToolResources toolResources, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
-        {
-            Id = id;
             Object = @object;
-            CreatedAt = createdAt;
             ToolResources = toolResources;
-            Metadata = metadata;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal AssistantThread()
+        internal AssistantThread(string id, DateTimeOffset createdAt, IDictionary<string, string> metadata, InternalThreadObjectObject @object, ToolResources toolResources, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
+            Id = id;
+            CreatedAt = createdAt;
+            Metadata = metadata;
+            Object = @object;
+            ToolResources = toolResources;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; }
+        public string Id { get; set; }
 
-        public DateTimeOffset CreatedAt { get; }
-        public IReadOnlyDictionary<string, string> Metadata { get; }
+        public DateTimeOffset CreatedAt { get; set; }
+
+        public IDictionary<string, string> Metadata { get; set; }
     }
 }

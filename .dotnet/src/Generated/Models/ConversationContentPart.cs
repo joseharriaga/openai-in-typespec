@@ -9,15 +9,19 @@ namespace OpenAI.RealtimeConversation
 {
     public abstract partial class ConversationContentPart
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        protected ConversationContentPart()
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        private protected ConversationContentPart(ConversationContentPartKind @type)
         {
+            Type = @type;
         }
 
-        internal ConversationContentPart(ConversationContentPartKind type, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ConversationContentPart(ConversationContentPartKind @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = type;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            Type = @type;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
+
+        internal ConversationContentPartKind Type { get; set; }
     }
 }

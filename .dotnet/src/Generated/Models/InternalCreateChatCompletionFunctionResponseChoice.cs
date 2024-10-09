@@ -9,30 +9,27 @@ namespace OpenAI.Chat
 {
     internal partial class InternalCreateChatCompletionFunctionResponseChoice
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalCreateChatCompletionFunctionResponseChoice(InternalCreateChatCompletionFunctionResponseChoiceFinishReason finishReason, int index, InternalChatCompletionResponseMessage message)
         {
-            Argument.AssertNotNull(message, nameof(message));
-
             FinishReason = finishReason;
             Index = index;
             Message = message;
         }
 
-        internal InternalCreateChatCompletionFunctionResponseChoice(InternalCreateChatCompletionFunctionResponseChoiceFinishReason finishReason, int index, InternalChatCompletionResponseMessage message, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateChatCompletionFunctionResponseChoice(InternalCreateChatCompletionFunctionResponseChoiceFinishReason finishReason, int index, InternalChatCompletionResponseMessage message, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             FinishReason = finishReason;
             Index = index;
             Message = message;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalCreateChatCompletionFunctionResponseChoice()
-        {
-        }
+        public InternalCreateChatCompletionFunctionResponseChoiceFinishReason FinishReason { get; set; }
 
-        public InternalCreateChatCompletionFunctionResponseChoiceFinishReason FinishReason { get; }
-        public int Index { get; }
-        public InternalChatCompletionResponseMessage Message { get; }
+        public int Index { get; set; }
+
+        public InternalChatCompletionResponseMessage Message { get; set; }
     }
 }

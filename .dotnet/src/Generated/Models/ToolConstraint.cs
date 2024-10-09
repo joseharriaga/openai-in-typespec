@@ -9,15 +9,20 @@ namespace OpenAI.Assistants
 {
     public partial class ToolConstraint
     {
-        internal ToolConstraint(string objectType, InternalAssistantsNamedToolChoiceFunction function, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        public ToolConstraint(InternalAssistantsNamedToolChoiceType @type)
         {
-            _objectType = objectType;
-            Function = function;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            Type = @type;
         }
 
-        internal ToolConstraint()
+        internal ToolConstraint(InternalAssistantsNamedToolChoiceType @type, InternalAssistantsNamedToolChoiceFunction function, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
+            Type = @type;
+            Function = function;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
+
+        public InternalAssistantsNamedToolChoiceType Type { get; set; }
     }
 }

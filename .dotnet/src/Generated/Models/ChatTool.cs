@@ -4,22 +4,27 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
     public partial class ChatTool
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatTool(ChatToolKind kind, InternalFunctionDefinition function, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        public ChatTool(InternalFunctionDefinition function, Chat.ChatToolKind kind)
         {
-            Kind = kind;
+            Argument.AssertNotNull(function, nameof(function));
+
             Function = function;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            Kind = kind;
         }
 
-        internal ChatTool()
+        internal ChatTool(InternalFunctionDefinition function, Chat.ChatToolKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
+            Function = function;
+            Kind = kind;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }
 }

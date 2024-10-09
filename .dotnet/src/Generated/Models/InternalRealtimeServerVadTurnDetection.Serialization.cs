@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
@@ -14,71 +15,51 @@ namespace OpenAI.RealtimeConversation
     {
         void IJsonModel<InternalRealtimeServerVadTurnDetection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeServerVadTurnDetection>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeServerVadTurnDetection>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeServerVadTurnDetection)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("threshold") != true && Optional.IsDefined(Threshold))
+            base.JsonModelWriteCore(writer, options);
+            if (Optional.IsDefined(Threshold))
             {
                 writer.WritePropertyName("threshold"u8);
                 writer.WriteNumberValue(Threshold.Value);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("prefix_padding_ms") != true && Optional.IsDefined(PrefixPaddingMs))
+            if (Optional.IsDefined(PrefixPaddingMs))
             {
                 writer.WritePropertyName("prefix_padding_ms"u8);
-                SerializePrefixPaddingMs(writer, options);
+                this.SerializePrefixPaddingMs(writer, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("silence_duration_ms") != true && Optional.IsDefined(SilenceDurationMs))
+            if (Optional.IsDefined(SilenceDurationMs))
             {
                 writer.WritePropertyName("silence_duration_ms"u8);
-                SerializeSilenceDurationMs(writer, options);
+                this.SerializeSilenceDurationMs(writer, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
-            {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Kind.ToSerialString());
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-            }
-            writer.WriteEndObject();
         }
 
-        InternalRealtimeServerVadTurnDetection IJsonModel<InternalRealtimeServerVadTurnDetection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalRealtimeServerVadTurnDetection IJsonModel<InternalRealtimeServerVadTurnDetection>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeServerVadTurnDetection)JsonModelCreateCore(ref reader, options);
+
+        protected override ConversationTurnDetectionOptions JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeServerVadTurnDetection>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeServerVadTurnDetection>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeServerVadTurnDetection)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalRealtimeServerVadTurnDetection(document.RootElement, options);
         }
 
-        internal static InternalRealtimeServerVadTurnDetection DeserializeInternalRealtimeServerVadTurnDetection(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalRealtimeServerVadTurnDetection DeserializeInternalRealtimeServerVadTurnDetection(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
@@ -86,49 +67,58 @@ namespace OpenAI.RealtimeConversation
             float? threshold = default;
             TimeSpan? prefixPaddingMs = default;
             TimeSpan? silenceDurationMs = default;
-            ConversationTurnDetectionKind type = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            RealtimeConversation.ConversationTurnDetectionKind kind = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("threshold"u8))
+                if (prop.NameEquals("threshold"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        threshold = null;
                         continue;
                     }
-                    threshold = property.Value.GetSingle();
+                    threshold = prop.Value.GetSingle();
                     continue;
                 }
-                if (property.NameEquals("prefix_padding_ms"u8))
+                if (prop.NameEquals("prefix_padding_ms"u8))
                 {
-                    DeserializeMillisecondDuration(property, ref prefixPaddingMs);
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        prefixPaddingMs = null;
+                        continue;
+                    }
+                    DeserializeMillisecondDuration(prop, ref prefixPaddingMs);
                     continue;
                 }
-                if (property.NameEquals("silence_duration_ms"u8))
+                if (prop.NameEquals("silence_duration_ms"u8))
                 {
-                    DeserializeMillisecondDuration(property, ref silenceDurationMs);
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        silenceDurationMs = null;
+                        continue;
+                    }
+                    DeserializeMillisecondDuration(prop, ref silenceDurationMs);
                     continue;
                 }
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    type = property.Value.GetString().ToConversationTurnDetectionKind();
+                    kind = prop.Value.GetInt32().ToConversationTurnDetectionKind();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalRealtimeServerVadTurnDetection(type, serializedAdditionalRawData, threshold, prefixPaddingMs, silenceDurationMs);
+            return new InternalRealtimeServerVadTurnDetection(threshold, prefixPaddingMs, silenceDurationMs, kind, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalRealtimeServerVadTurnDetection>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeServerVadTurnDetection>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalRealtimeServerVadTurnDetection>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeServerVadTurnDetection>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -138,15 +128,16 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        InternalRealtimeServerVadTurnDetection IPersistableModel<InternalRealtimeServerVadTurnDetection>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeServerVadTurnDetection>)this).GetFormatFromOptions(options) : options.Format;
+        InternalRealtimeServerVadTurnDetection IPersistableModel<InternalRealtimeServerVadTurnDetection>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalRealtimeServerVadTurnDetection)PersistableModelCreateCore(data, options);
 
+        protected override ConversationTurnDetectionOptions PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeServerVadTurnDetection>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalRealtimeServerVadTurnDetection(document.RootElement, options);
                     }
                 default:
@@ -156,15 +147,16 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<InternalRealtimeServerVadTurnDetection>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new InternalRealtimeServerVadTurnDetection FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalRealtimeServerVadTurnDetection internalRealtimeServerVadTurnDetection)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalRealtimeServerVadTurnDetection(document.RootElement);
+            return BinaryContent.Create(internalRealtimeServerVadTurnDetection, ModelSerializationExtensions.WireOptions);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        public static explicit operator InternalRealtimeServerVadTurnDetection(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalRealtimeServerVadTurnDetection(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

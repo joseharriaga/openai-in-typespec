@@ -9,27 +9,23 @@ namespace OpenAI.Assistants
 {
     public partial class RunStepError
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal RunStepError(RunStepErrorCode code, string message)
         {
-            Argument.AssertNotNull(message, nameof(message));
-
             Code = code;
             Message = message;
         }
 
-        internal RunStepError(RunStepErrorCode code, string message, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunStepError(RunStepErrorCode code, string message, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Code = code;
             Message = message;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal RunStepError()
-        {
-        }
+        public RunStepErrorCode Code { get; set; }
 
-        public RunStepErrorCode Code { get; }
-        public string Message { get; }
+        public string Message { get; set; }
     }
 }

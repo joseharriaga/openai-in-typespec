@@ -4,38 +4,36 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Batch
 {
     internal partial class InternalCreateBatchRequest
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalCreateBatchRequest(string inputFileId, InternalCreateBatchRequestEndpoint endpoint)
         {
-            Argument.AssertNotNull(inputFileId, nameof(inputFileId));
-
             InputFileId = inputFileId;
             Endpoint = endpoint;
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        internal InternalCreateBatchRequest(string inputFileId, InternalCreateBatchRequestEndpoint endpoint, InternalBatchCompletionTimeframe completionWindow, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateBatchRequest(string inputFileId, InternalCreateBatchRequestEndpoint endpoint, InternalBatchCompletionTimeframe completionWindow, IDictionary<string, string> metadata, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             InputFileId = inputFileId;
             Endpoint = endpoint;
             CompletionWindow = completionWindow;
             Metadata = metadata;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalCreateBatchRequest()
-        {
-        }
+        public string InputFileId { get; set; }
 
-        public string InputFileId { get; }
-        public InternalCreateBatchRequestEndpoint Endpoint { get; }
-        public InternalBatchCompletionTimeframe CompletionWindow { get; } = InternalBatchCompletionTimeframe._24h;
+        public InternalCreateBatchRequestEndpoint Endpoint { get; set; }
 
-        public IReadOnlyDictionary<string, string> Metadata { get; }
+        public InternalBatchCompletionTimeframe CompletionWindow { get; } = "24h";
+
+        public IDictionary<string, string> Metadata { get; set; }
     }
 }

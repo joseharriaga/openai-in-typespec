@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class FileSearchRankingOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public FileSearchRanker? Ranker { get; set; }
     }

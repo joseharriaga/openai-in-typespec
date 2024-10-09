@@ -10,38 +10,34 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalListThreadsResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalListThreadsResponse(IEnumerable<AssistantThread> data, string firstId, string lastId, bool hasMore)
         {
-            Argument.AssertNotNull(data, nameof(data));
-            Argument.AssertNotNull(firstId, nameof(firstId));
-            Argument.AssertNotNull(lastId, nameof(lastId));
-
             Data = data.ToList();
             FirstId = firstId;
             LastId = lastId;
             HasMore = hasMore;
         }
 
-        internal InternalListThreadsResponse(InternalListThreadsResponseObject @object, IReadOnlyList<AssistantThread> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalListThreadsResponse(InternalListThreadsResponseObject @object, IList<AssistantThread> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Object = @object;
             Data = data;
             FirstId = firstId;
             LastId = lastId;
             HasMore = hasMore;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalListThreadsResponse()
-        {
-        }
+        public InternalListThreadsResponseObject Object { get; } = "list";
 
-        public InternalListThreadsResponseObject Object { get; } = InternalListThreadsResponseObject.List;
+        public IList<AssistantThread> Data { get; }
 
-        public IReadOnlyList<AssistantThread> Data { get; }
-        public string FirstId { get; }
-        public string LastId { get; }
-        public bool HasMore { get; }
+        public string FirstId { get; set; }
+
+        public string LastId { get; set; }
+
+        public bool HasMore { get; set; }
     }
 }

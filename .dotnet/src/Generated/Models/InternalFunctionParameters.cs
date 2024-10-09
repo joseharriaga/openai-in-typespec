@@ -4,21 +4,24 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
     internal partial class InternalFunctionParameters
     {
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         public InternalFunctionParameters()
         {
-            AdditionalProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            _additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
         }
 
         internal InternalFunctionParameters(IDictionary<string, BinaryData> additionalProperties)
         {
-            AdditionalProperties = additionalProperties;
+            _additionalBinaryDataProperties = additionalProperties;
         }
 
-        public IDictionary<string, BinaryData> AdditionalProperties { get; }
+        public IDictionary<string, BinaryData> AdditionalProperties => _additionalBinaryDataProperties;
     }
 }

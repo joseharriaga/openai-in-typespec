@@ -9,26 +9,23 @@ namespace OpenAI.Assistants
 {
     public partial class MessageDeletionResult
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal MessageDeletionResult(string messageId, bool deleted)
-        {
-            Argument.AssertNotNull(messageId, nameof(messageId));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-            MessageId = messageId;
-            Deleted = deleted;
-        }
-
-        internal MessageDeletionResult(string messageId, bool deleted, InternalDeleteMessageResponseObject @object, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageDeletionResult(bool deleted, string messageId, InternalDeleteMessageResponseObject @object)
         {
-            MessageId = messageId;
             Deleted = deleted;
+            MessageId = messageId;
             Object = @object;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal MessageDeletionResult()
+        internal MessageDeletionResult(bool deleted, string messageId, InternalDeleteMessageResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
+            Deleted = deleted;
+            MessageId = messageId;
+            Object = @object;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
-        public bool Deleted { get; }
+
+        public bool Deleted { get; set; }
     }
 }

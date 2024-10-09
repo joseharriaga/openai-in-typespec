@@ -7,114 +7,94 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponseAudioContentPart : IJsonModel<InternalRealtimeResponseAudioContentPart>
     {
+        internal InternalRealtimeResponseAudioContentPart()
+        {
+        }
+
         void IJsonModel<InternalRealtimeResponseAudioContentPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseAudioContentPart>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseAudioContentPart>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeResponseAudioContentPart)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("transcript") != true)
+            base.JsonModelWriteCore(writer, options);
+            if (Transcript != null)
             {
-                if (Transcript != null)
-                {
-                    writer.WritePropertyName("transcript"u8);
-                    writer.WriteStringValue(Transcript);
-                }
-                else
-                {
-                    writer.WriteNull("transcript");
-                }
+                writer.WritePropertyName("transcript"u8);
+                writer.WriteStringValue(Transcript);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
+            else
             {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type.ToString());
+                writer.WriteNull("transcript"u8);
             }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-            }
-            writer.WriteEndObject();
         }
 
-        InternalRealtimeResponseAudioContentPart IJsonModel<InternalRealtimeResponseAudioContentPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalRealtimeResponseAudioContentPart IJsonModel<InternalRealtimeResponseAudioContentPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeResponseAudioContentPart)JsonModelCreateCore(ref reader, options);
+
+        protected override ConversationContentPart JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseAudioContentPart>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseAudioContentPart>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeResponseAudioContentPart)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalRealtimeResponseAudioContentPart(document.RootElement, options);
         }
 
-        internal static InternalRealtimeResponseAudioContentPart DeserializeInternalRealtimeResponseAudioContentPart(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalRealtimeResponseAudioContentPart DeserializeInternalRealtimeResponseAudioContentPart(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             string transcript = default;
-            ConversationContentPartKind type = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            ConversationContentPartKind @type = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("transcript"u8))
+                if (prop.NameEquals("transcript"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         transcript = null;
                         continue;
                     }
-                    transcript = property.Value.GetString();
+                    transcript = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    type = new ConversationContentPartKind(property.Value.GetString());
+                    @type = new ConversationContentPartKind(prop.Value.GetString());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalRealtimeResponseAudioContentPart(type, serializedAdditionalRawData, transcript);
+            return new InternalRealtimeResponseAudioContentPart(transcript, @type, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalRealtimeResponseAudioContentPart>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseAudioContentPart>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalRealtimeResponseAudioContentPart>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseAudioContentPart>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -124,15 +104,16 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        InternalRealtimeResponseAudioContentPart IPersistableModel<InternalRealtimeResponseAudioContentPart>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseAudioContentPart>)this).GetFormatFromOptions(options) : options.Format;
+        InternalRealtimeResponseAudioContentPart IPersistableModel<InternalRealtimeResponseAudioContentPart>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalRealtimeResponseAudioContentPart)PersistableModelCreateCore(data, options);
 
+        protected override ConversationContentPart PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseAudioContentPart>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalRealtimeResponseAudioContentPart(document.RootElement, options);
                     }
                 default:
@@ -142,15 +123,16 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<InternalRealtimeResponseAudioContentPart>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new InternalRealtimeResponseAudioContentPart FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalRealtimeResponseAudioContentPart internalRealtimeResponseAudioContentPart)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalRealtimeResponseAudioContentPart(document.RootElement);
+            return BinaryContent.Create(internalRealtimeResponseAudioContentPart, ModelSerializationExtensions.WireOptions);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        public static explicit operator InternalRealtimeResponseAudioContentPart(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalRealtimeResponseAudioContentPart(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

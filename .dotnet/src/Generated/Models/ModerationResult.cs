@@ -9,6 +9,19 @@ namespace OpenAI.Moderations
 {
     public partial class ModerationResult
     {
-        public bool Flagged { get; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        internal ModerationResult(bool flagged)
+        {
+            Flagged = flagged;
+        }
+
+        internal ModerationResult(bool flagged, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        {
+            Flagged = flagged;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
+
+        public bool Flagged { get; set; }
     }
 }

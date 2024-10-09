@@ -9,21 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationTextDoneUpdate : ConversationUpdate
     {
-        internal ConversationTextDoneUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string value) : base(eventId)
-        {
-            Argument.AssertNotNull(responseId, nameof(responseId));
-            Argument.AssertNotNull(itemId, nameof(itemId));
-            Argument.AssertNotNull(value, nameof(value));
-
-            Kind = ConversationUpdateKind.ResponseTextDone;
-            ResponseId = responseId;
-            ItemId = itemId;
-            OutputIndex = outputIndex;
-            ContentIndex = contentIndex;
-            Value = value;
-        }
-
-        internal ConversationTextDoneUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, string value) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationTextDoneUpdate(string responseId, string itemId, int outputIndex, int contentIndex, string value, string eventId) : base(eventId)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -32,14 +18,23 @@ namespace OpenAI.RealtimeConversation
             Value = value;
         }
 
-        internal ConversationTextDoneUpdate()
+        internal ConversationTextDoneUpdate(string responseId, string itemId, int outputIndex, int contentIndex, string value, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
+            ResponseId = responseId;
+            ItemId = itemId;
+            OutputIndex = outputIndex;
+            ContentIndex = contentIndex;
+            Value = value;
         }
 
-        public string ResponseId { get; }
-        public string ItemId { get; }
-        public int OutputIndex { get; }
-        public int ContentIndex { get; }
-        public string Value { get; }
+        public string ResponseId { get; set; }
+
+        public string ItemId { get; set; }
+
+        public int OutputIndex { get; set; }
+
+        public int ContentIndex { get; set; }
+
+        public string Value { get; set; }
     }
 }

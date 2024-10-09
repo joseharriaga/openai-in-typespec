@@ -9,19 +9,19 @@ namespace OpenAI.Images
 {
     public partial class ImageEditOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ImageEditOptions(BinaryData image, string prompt, BinaryData mask, InternalCreateImageEditRequestModel? model, long? n, GeneratedImageSize? size, GeneratedImageFormat? responseFormat, string endUserId, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ImageEditOptions(Images.OpenAI.Images.InternalCreateImageEditRequestModel<InternalCreateImageEditRequestModel>? model, BinaryData image, string prompt, BinaryData mask, long? n, Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>? size, Images.OpenAI.Images.GeneratedImageFormat<GeneratedImageFormat>? responseFormat, string endUserId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
+            Model = model;
             Image = image;
             Prompt = prompt;
             Mask = mask;
-            Model = model;
             N = n;
             Size = size;
             ResponseFormat = responseFormat;
             EndUserId = endUserId;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }
 }

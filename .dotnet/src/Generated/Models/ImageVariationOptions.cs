@@ -9,17 +9,17 @@ namespace OpenAI.Images
 {
     public partial class ImageVariationOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ImageVariationOptions(BinaryData image, InternalCreateImageVariationRequestModel? model, long? n, GeneratedImageFormat? responseFormat, GeneratedImageSize? size, string endUserId, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ImageVariationOptions(Images.OpenAI.Images.InternalCreateImageVariationRequestModel<InternalCreateImageVariationRequestModel>? model, BinaryData image, long? n, Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>? size, Images.OpenAI.Images.GeneratedImageFormat<GeneratedImageFormat>? responseFormat, string endUserId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Image = image;
             Model = model;
+            Image = image;
             N = n;
-            ResponseFormat = responseFormat;
             Size = size;
+            ResponseFormat = responseFormat;
             EndUserId = endUserId;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }
 }

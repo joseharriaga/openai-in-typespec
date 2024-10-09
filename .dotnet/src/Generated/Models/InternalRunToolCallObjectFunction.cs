@@ -9,28 +9,23 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunToolCallObjectFunction
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalRunToolCallObjectFunction(string name, string arguments)
         {
-            Argument.AssertNotNull(name, nameof(name));
-            Argument.AssertNotNull(arguments, nameof(arguments));
-
             Name = name;
             Arguments = arguments;
         }
 
-        internal InternalRunToolCallObjectFunction(string name, string arguments, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRunToolCallObjectFunction(string name, string arguments, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Name = name;
             Arguments = arguments;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalRunToolCallObjectFunction()
-        {
-        }
+        public string Name { get; set; }
 
-        public string Name { get; }
-        public string Arguments { get; }
+        public string Arguments { get; set; }
     }
 }

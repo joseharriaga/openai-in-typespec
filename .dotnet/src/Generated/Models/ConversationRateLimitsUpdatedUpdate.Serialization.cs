@@ -7,135 +7,103 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationRateLimitsUpdatedUpdate : IJsonModel<ConversationRateLimitsUpdatedUpdate>
     {
+        internal ConversationRateLimitsUpdatedUpdate()
+        {
+        }
+
         void IJsonModel<ConversationRateLimitsUpdatedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdatedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdatedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ConversationRateLimitsUpdatedUpdate)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("rate_limits") != true)
+            base.JsonModelWriteCore(writer, options);
+            writer.WritePropertyName("rate_limits"u8);
+            writer.WriteStartArray();
+            foreach (ConversationRateLimitDetailsItem item in RateLimits)
             {
-                writer.WritePropertyName("rate_limits"u8);
-                writer.WriteStartArray();
-                foreach (var item in RateLimits)
-                {
-                    writer.WriteObjectValue(item, options);
-                }
-                writer.WriteEndArray();
+                writer.WriteObjectValue(item, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
-            {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Kind.ToSerialString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
-            {
-                if (EventId != null)
-                {
-                    writer.WritePropertyName("event_id"u8);
-                    writer.WriteStringValue(EventId);
-                }
-                else
-                {
-                    writer.WriteNull("event_id");
-                }
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-            }
-            writer.WriteEndObject();
+            writer.WriteEndArray();
         }
 
-        ConversationRateLimitsUpdatedUpdate IJsonModel<ConversationRateLimitsUpdatedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ConversationRateLimitsUpdatedUpdate IJsonModel<ConversationRateLimitsUpdatedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationRateLimitsUpdatedUpdate)JsonModelCreateCore(ref reader, options);
+
+        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdatedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdatedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ConversationRateLimitsUpdatedUpdate)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeConversationRateLimitsUpdatedUpdate(document.RootElement, options);
         }
 
-        internal static ConversationRateLimitsUpdatedUpdate DeserializeConversationRateLimitsUpdatedUpdate(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ConversationRateLimitsUpdatedUpdate DeserializeConversationRateLimitsUpdatedUpdate(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            IReadOnlyList<ConversationRateLimitDetailsItem> rateLimits = default;
-            ConversationUpdateKind type = default;
+            IList<ConversationRateLimitDetailsItem> rateLimits = default;
             string eventId = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            RealtimeConversation.ConversationUpdateKind kind = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("rate_limits"u8))
+                if (prop.NameEquals("rate_limits"u8))
                 {
                     List<ConversationRateLimitDetailsItem> array = new List<ConversationRateLimitDetailsItem>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
                         array.Add(ConversationRateLimitDetailsItem.DeserializeConversationRateLimitDetailsItem(item, options));
                     }
                     rateLimits = array;
                     continue;
                 }
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("event_id"u8))
                 {
-                    type = property.Value.GetString().ToConversationUpdateKind();
-                    continue;
-                }
-                if (property.NameEquals("event_id"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         eventId = null;
                         continue;
                     }
-                    eventId = property.Value.GetString();
+                    eventId = prop.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (prop.NameEquals("type"u8))
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    kind = prop.Value.GetInt32().ToConversationUpdateKind();
+                    continue;
+                }
+                if (options.Format != "W")
+                {
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new ConversationRateLimitsUpdatedUpdate(type, eventId, serializedAdditionalRawData, rateLimits);
+            return new ConversationRateLimitsUpdatedUpdate(rateLimits, eventId, kind, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<ConversationRateLimitsUpdatedUpdate>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdatedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<ConversationRateLimitsUpdatedUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdatedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -145,15 +113,16 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        ConversationRateLimitsUpdatedUpdate IPersistableModel<ConversationRateLimitsUpdatedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdatedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+        ConversationRateLimitsUpdatedUpdate IPersistableModel<ConversationRateLimitsUpdatedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options) => (ConversationRateLimitsUpdatedUpdate)PersistableModelCreateCore(data, options);
 
+        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationRateLimitsUpdatedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeConversationRateLimitsUpdatedUpdate(document.RootElement, options);
                     }
                 default:
@@ -163,15 +132,16 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<ConversationRateLimitsUpdatedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new ConversationRateLimitsUpdatedUpdate FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(ConversationRateLimitsUpdatedUpdate conversationRateLimitsUpdatedUpdate)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeConversationRateLimitsUpdatedUpdate(document.RootElement);
+            return BinaryContent.Create(conversationRateLimitsUpdatedUpdate, ModelSerializationExtensions.WireOptions);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        public static explicit operator ConversationRateLimitsUpdatedUpdate(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeConversationRateLimitsUpdatedUpdate(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

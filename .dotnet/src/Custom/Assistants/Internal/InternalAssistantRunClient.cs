@@ -35,7 +35,7 @@ internal partial class InternalAssistantRunClient
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="InternalAssistantRunClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="InternalAssistantRunClient"/>. </summary>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
     public InternalAssistantRunClient(ApiKeyCredential credential) : this(credential, new OpenAIClientOptions())
@@ -45,7 +45,7 @@ internal partial class InternalAssistantRunClient
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="InternalAssistantRunClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="InternalAssistantRunClient"/>. </summary>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
@@ -62,7 +62,7 @@ internal partial class InternalAssistantRunClient
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
     // - Made protected.
-    /// <summary> Initializes a new instance of <see cref="InternalAssistantRunClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="InternalAssistantRunClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline to send and receive REST requests and responses. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="pipeline"/> is null. </exception>

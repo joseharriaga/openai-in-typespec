@@ -9,24 +9,19 @@ namespace OpenAI.Audio
 {
     internal partial class InternalCreateTranslationResponseJson
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalCreateTranslationResponseJson(string text)
         {
-            Argument.AssertNotNull(text, nameof(text));
-
             Text = text;
         }
 
-        internal InternalCreateTranslationResponseJson(string text, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateTranslationResponseJson(string text, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Text = text;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalCreateTranslationResponseJson()
-        {
-        }
-
-        public string Text { get; }
+        public string Text { get; set; }
     }
 }

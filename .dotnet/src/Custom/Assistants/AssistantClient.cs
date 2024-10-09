@@ -30,24 +30,27 @@ public partial class AssistantClient
     private readonly InternalAssistantRunClient _runSubClient;
     private readonly InternalAssistantThreadClient _threadSubClient;
 
-    // CUSTOM: Remove virtual keyword.
-    /// <summary>
-    /// The HTTP pipeline for sending and receiving REST requests and responses.
-    /// </summary>
-    public ClientPipeline Pipeline => _pipeline;
-
     // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="AssistantClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="AssistantClient"/>. </summary>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="apiKey"/> is null. </exception>
     public AssistantClient(string apiKey) : this(new ApiKeyCredential(apiKey), new OpenAIClientOptions())
     {
     }
 
+    // CUSTOM: Added as a convenience.
+    /// <summary> Initializes a new instance of <see cref="AssistantClient"/>. </summary>
+    /// <param name="apiKey"> The API key to authenticate with the service. </param>
+    /// <param name="options"> The options to configure the client. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="apiKey"/> is null. </exception>
+    public AssistantClient(string apiKey, OpenAIClientOptions options) : this(new ApiKeyCredential(apiKey), options)
+    {
+    }
+
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="AssistantClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="AssistantClient"/>. </summary>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
     public AssistantClient(ApiKeyCredential credential) : this(credential, new OpenAIClientOptions())
@@ -57,7 +60,7 @@ public partial class AssistantClient
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="AssistantClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="AssistantClient"/>. </summary>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
@@ -66,18 +69,18 @@ public partial class AssistantClient
         Argument.AssertNotNull(credential, nameof(credential));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
-        _messageSubClient = new(_pipeline, options);
-        _runSubClient = new(_pipeline, options);
-        _threadSubClient = new(_pipeline, options);
+        _messageSubClient = new(Pipeline, options);
+        _runSubClient = new(Pipeline, options);
+        _threadSubClient = new(Pipeline, options);
     }
 
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
     // - Made protected.
-    /// <summary> Initializes a new instance of <see cref="AssistantClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="AssistantClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline to send and receive REST requests and responses. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="pipeline"/> is null. </exception>
@@ -86,11 +89,11 @@ public partial class AssistantClient
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
-        _messageSubClient = new(_pipeline, options);
-        _runSubClient = new(_pipeline, options);
-        _threadSubClient = new(_pipeline, options);
+        _messageSubClient = new(Pipeline, options);
+        _runSubClient = new(Pipeline, options);
+        _threadSubClient = new(Pipeline, options);
     }
 
     /// <summary> Creates a new assistant. </summary>
@@ -104,7 +107,7 @@ public partial class AssistantClient
         options ??= new();
         options.Model = model;
 
-        ClientResult protocolResult = await CreateAssistantAsync(options?.ToBinaryContent(), cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        ClientResult protocolResult = await CreateAssistantAsync(options, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return CreateResultFromProtocol(protocolResult, Assistant.FromResponse);
     }
 
@@ -119,7 +122,7 @@ public partial class AssistantClient
         options ??= new();
         options.Model = model;
 
-        ClientResult protocolResult = CreateAssistant(options?.ToBinaryContent(), cancellationToken.ToRequestOptions());
+        ClientResult protocolResult = CreateAssistant(options, cancellationToken.ToRequestOptions());
         return CreateResultFromProtocol(protocolResult, Assistant.FromResponse);
     }
 
@@ -249,7 +252,7 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
         Argument.AssertNotNull(options, nameof(options));
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult protocolResult
             = await ModifyAssistantAsync(assistantId, content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return CreateResultFromProtocol(protocolResult, Assistant.FromResponse);

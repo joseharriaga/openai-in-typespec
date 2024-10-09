@@ -10,17 +10,10 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponseSession
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalRealtimeResponseSession(string id, string model, IEnumerable<InternalRealtimeRequestSessionUpdateCommandSessionModality> modalities, string instructions, ConversationVoice voice, ConversationAudioFormat inputAudioFormat, ConversationAudioFormat outputAudioFormat, ConversationInputTranscriptionOptions inputAudioTranscription, ConversationTurnDetectionOptions turnDetection, IEnumerable<ConversationTool> tools, BinaryData toolChoice, float temperature, BinaryData maxResponseOutputTokens)
-        {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(model, nameof(model));
-            Argument.AssertNotNull(modalities, nameof(modalities));
-            Argument.AssertNotNull(instructions, nameof(instructions));
-            Argument.AssertNotNull(turnDetection, nameof(turnDetection));
-            Argument.AssertNotNull(tools, nameof(tools));
-            Argument.AssertNotNull(toolChoice, nameof(toolChoice));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
+        internal InternalRealtimeResponseSession(string id, string model, IEnumerable<InternalRealtimeRequestSessionUpdateCommandSessionModality> modalities, string instructions, ConversationVoice voice, ConversationAudioFormat inputAudioFormat, ConversationAudioFormat outputAudioFormat, ConversationInputTranscriptionOptions inputAudioTranscription, ConversationTurnDetectionOptions turnDetection, IEnumerable<ConversationTool> tools, BinaryData toolChoice, float temperature, RealtimeConversation.ConversationMaxTokensChoice maxResponseOutputTokens)
+        {
             Id = id;
             Model = model;
             Modalities = modalities.ToList();
@@ -33,10 +26,10 @@ namespace OpenAI.RealtimeConversation
             Tools = tools.ToList();
             ToolChoice = toolChoice;
             Temperature = temperature;
-            _maxResponseOutputTokens = maxResponseOutputTokens;
+            MaxResponseOutputTokens = maxResponseOutputTokens;
         }
 
-        internal InternalRealtimeResponseSession(InternalRealtimeResponseSessionObject @object, string id, string model, IReadOnlyList<InternalRealtimeRequestSessionUpdateCommandSessionModality> modalities, string instructions, ConversationVoice voice, ConversationAudioFormat inputAudioFormat, ConversationAudioFormat outputAudioFormat, ConversationInputTranscriptionOptions inputAudioTranscription, ConversationTurnDetectionOptions turnDetection, IReadOnlyList<ConversationTool> tools, BinaryData toolChoice, float temperature, BinaryData maxResponseOutputTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRealtimeResponseSession(InternalRealtimeResponseSessionObject @object, string id, string model, IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> modalities, string instructions, ConversationVoice voice, ConversationAudioFormat inputAudioFormat, ConversationAudioFormat outputAudioFormat, ConversationInputTranscriptionOptions inputAudioTranscription, ConversationTurnDetectionOptions turnDetection, IList<ConversationTool> tools, BinaryData toolChoice, float temperature, RealtimeConversation.ConversationMaxTokensChoice maxResponseOutputTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Object = @object;
             Id = id;
@@ -51,27 +44,34 @@ namespace OpenAI.RealtimeConversation
             Tools = tools;
             ToolChoice = toolChoice;
             Temperature = temperature;
-            _maxResponseOutputTokens = maxResponseOutputTokens;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            MaxResponseOutputTokens = maxResponseOutputTokens;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalRealtimeResponseSession()
-        {
-        }
+        public InternalRealtimeResponseSessionObject Object { get; } = "realtime.session";
 
-        public InternalRealtimeResponseSessionObject Object { get; } = InternalRealtimeResponseSessionObject.RealtimeSession;
+        public string Id { get; set; }
 
-        public string Id { get; }
-        public string Model { get; }
-        public IReadOnlyList<InternalRealtimeRequestSessionUpdateCommandSessionModality> Modalities { get; }
-        public string Instructions { get; }
-        public ConversationVoice Voice { get; }
-        public ConversationAudioFormat InputAudioFormat { get; }
-        public ConversationAudioFormat OutputAudioFormat { get; }
-        public ConversationInputTranscriptionOptions InputAudioTranscription { get; }
-        public ConversationTurnDetectionOptions TurnDetection { get; }
-        public IReadOnlyList<ConversationTool> Tools { get; }
-        public BinaryData ToolChoice { get; }
-        public float Temperature { get; }
+        public string Model { get; set; }
+
+        public IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> Modalities { get; }
+
+        public string Instructions { get; set; }
+
+        public ConversationVoice Voice { get; set; }
+
+        public ConversationAudioFormat InputAudioFormat { get; set; }
+
+        public ConversationAudioFormat OutputAudioFormat { get; set; }
+
+        public ConversationInputTranscriptionOptions InputAudioTranscription { get; set; }
+
+        public ConversationTurnDetectionOptions TurnDetection { get; set; }
+
+        public IList<ConversationTool> Tools { get; }
+
+        public BinaryData ToolChoice { get; set; }
+
+        public float Temperature { get; set; }
     }
 }

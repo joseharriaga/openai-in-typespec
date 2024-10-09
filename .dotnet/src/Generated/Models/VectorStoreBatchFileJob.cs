@@ -9,37 +9,34 @@ namespace OpenAI.VectorStores
 {
     public partial class VectorStoreBatchFileJob
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal VectorStoreBatchFileJob(string batchId, DateTimeOffset createdAt, string vectorStoreId, VectorStoreBatchFileJobStatus status, VectorStoreFileCounts fileCounts)
-        {
-            Argument.AssertNotNull(batchId, nameof(batchId));
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-            Argument.AssertNotNull(fileCounts, nameof(fileCounts));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-            BatchId = batchId;
+        internal VectorStoreBatchFileJob(DateTimeOffset createdAt, string vectorStoreId, VectorStoreBatchFileJobStatus status, string batchId, VectorStoreFileCounts fileCounts)
+        {
             CreatedAt = createdAt;
             VectorStoreId = vectorStoreId;
             Status = status;
+            BatchId = batchId;
             FileCounts = fileCounts;
         }
 
-        internal VectorStoreBatchFileJob(string batchId, object @object, DateTimeOffset createdAt, string vectorStoreId, VectorStoreBatchFileJobStatus status, VectorStoreFileCounts fileCounts, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStoreBatchFileJob(InternalVectorStoreFileBatchObjectObject @object, DateTimeOffset createdAt, string vectorStoreId, VectorStoreBatchFileJobStatus status, string batchId, VectorStoreFileCounts fileCounts, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            BatchId = batchId;
             Object = @object;
             CreatedAt = createdAt;
             VectorStoreId = vectorStoreId;
             Status = status;
+            BatchId = batchId;
             FileCounts = fileCounts;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal VectorStoreBatchFileJob()
-        {
-        }
+        public InternalVectorStoreFileBatchObjectObject Object { get; } = "vector_store.files_batch";
 
-        public DateTimeOffset CreatedAt { get; }
-        public string VectorStoreId { get; }
-        public VectorStoreBatchFileJobStatus Status { get; }
+        public DateTimeOffset CreatedAt { get; set; }
+
+        public string VectorStoreId { get; set; }
+
+        public VectorStoreBatchFileJobStatus Status { get; set; }
     }
 }

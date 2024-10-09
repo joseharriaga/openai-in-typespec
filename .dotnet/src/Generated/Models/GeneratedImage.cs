@@ -9,18 +9,20 @@ namespace OpenAI.Images
 {
     public partial class GeneratedImage
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal GeneratedImage()
         {
         }
 
-        internal GeneratedImage(BinaryData imageBytes, Uri imageUri, string revisedPrompt, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal GeneratedImage(string revisedPrompt, BinaryData imageBytes, Uri imageUri, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
+            RevisedPrompt = revisedPrompt;
             ImageBytes = imageBytes;
             ImageUri = imageUri;
-            RevisedPrompt = revisedPrompt;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
-        public string RevisedPrompt { get; }
+
+        public string RevisedPrompt { get; set; }
     }
 }

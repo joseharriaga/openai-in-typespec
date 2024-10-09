@@ -9,19 +9,21 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDetailsToolCallsFileSearchResultObjectContent
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalRunStepDetailsToolCallsFileSearchResultObjectContent()
         {
         }
 
-        internal InternalRunStepDetailsToolCallsFileSearchResultObjectContent(InternalRunStepDetailsToolCallsFileSearchResultObjectContentType? type, string text, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRunStepDetailsToolCallsFileSearchResultObjectContent(InternalRunStepDetailsToolCallsFileSearchResultObjectContentType? @type, string text, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = type;
+            Type = @type;
             Text = text;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public InternalRunStepDetailsToolCallsFileSearchResultObjectContentType? Type { get; }
-        public string Text { get; }
+        public InternalRunStepDetailsToolCallsFileSearchResultObjectContentType? Type { get; set; }
+
+        public string Text { get; set; }
     }
 }

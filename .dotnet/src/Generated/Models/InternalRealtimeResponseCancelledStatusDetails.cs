@@ -9,21 +9,16 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponseCancelledStatusDetails : InternalRealtimeResponseStatusDetails
     {
-        internal InternalRealtimeResponseCancelledStatusDetails(InternalRealtimeResponseCancelledStatusDetailsReason reason)
-        {
-            Type = ConversationStatus.Cancelled;
-            Reason = reason;
-        }
-
-        internal InternalRealtimeResponseCancelledStatusDetails(ConversationStatus type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeResponseCancelledStatusDetailsReason reason) : base(type, serializedAdditionalRawData)
+        internal InternalRealtimeResponseCancelledStatusDetails(InternalRealtimeResponseCancelledStatusDetailsReason reason) : base(ConversationStatus.Cancelled)
         {
             Reason = reason;
         }
 
-        internal InternalRealtimeResponseCancelledStatusDetails()
+        internal InternalRealtimeResponseCancelledStatusDetails(InternalRealtimeResponseCancelledStatusDetailsReason reason, ConversationStatus @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
+            Reason = reason;
         }
 
-        public InternalRealtimeResponseCancelledStatusDetailsReason Reason { get; }
+        public InternalRealtimeResponseCancelledStatusDetailsReason Reason { get; set; }
     }
 }

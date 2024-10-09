@@ -49,7 +49,7 @@ public partial class ChatToolChoice
         _predefinedValue = predefinedValue;
         _type = type;
         _function = function;
-        SerializedAdditionalRawData = serializedAdditionalRawData;
+        _additionalBinaryDataProperties = serializedAdditionalRawData;
     }
 
     /// <summary>

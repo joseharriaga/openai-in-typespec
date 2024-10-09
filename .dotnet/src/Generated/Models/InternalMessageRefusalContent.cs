@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
@@ -16,14 +17,12 @@ namespace OpenAI.Assistants
             InternalRefusal = internalRefusal;
         }
 
-        internal InternalMessageRefusalContent(IDictionary<string, BinaryData> serializedAdditionalRawData, string type, string internalRefusal) : base(serializedAdditionalRawData)
+        internal InternalMessageRefusalContent(InternalMessageContentRefusalObjectType @type, string internalRefusal, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
         {
-            _type = type;
+            Type = @type;
             InternalRefusal = internalRefusal;
         }
 
-        internal InternalMessageRefusalContent()
-        {
-        }
+        public InternalMessageContentRefusalObjectType Type { get; } = "refusal";
     }
 }

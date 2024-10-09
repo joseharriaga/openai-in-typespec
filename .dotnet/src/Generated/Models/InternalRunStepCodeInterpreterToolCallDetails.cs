@@ -9,26 +9,20 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepCodeInterpreterToolCallDetails : RunStepToolCall
     {
-        internal InternalRunStepCodeInterpreterToolCallDetails(string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter)
-        {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(codeInterpreter, nameof(codeInterpreter));
-
-            Type = "code_interpreter";
-            Id = id;
-            _codeInterpreter = codeInterpreter;
-        }
-
-        internal InternalRunStepCodeInterpreterToolCallDetails(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter) : base(type, serializedAdditionalRawData)
+        internal InternalRunStepCodeInterpreterToolCallDetails(string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter) : base("code_interpreter")
         {
             Id = id;
-            _codeInterpreter = codeInterpreter;
+            CodeInterpreter = codeInterpreter;
         }
 
-        internal InternalRunStepCodeInterpreterToolCallDetails()
+        internal InternalRunStepCodeInterpreterToolCallDetails(string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
+            Id = id;
+            CodeInterpreter = codeInterpreter;
         }
 
-        public string Id { get; }
+        public string Id { get; set; }
+
+        public InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter CodeInterpreter { get; set; }
     }
 }

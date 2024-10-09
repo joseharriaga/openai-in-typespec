@@ -4,33 +4,40 @@
 
 using System;
 using System.ComponentModel;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     internal readonly partial struct InternalRealtimeResponseCancelledStatusDetailsReason : IEquatable<InternalRealtimeResponseCancelledStatusDetailsReason>
     {
         private readonly string _value;
-
-        public InternalRealtimeResponseCancelledStatusDetailsReason(string value)
-        {
-            _value = value ?? throw new ArgumentNullException(nameof(value));
-        }
-
         private const string TurnDetectedValue = "turn_detected";
         private const string ClientCancelledValue = "client_cancelled";
 
+        public InternalRealtimeResponseCancelledStatusDetailsReason(string value)
+        {
+            Argument.AssertNotNull(value, nameof(value));
+
+            _value = value;
+        }
+
         public static InternalRealtimeResponseCancelledStatusDetailsReason TurnDetected { get; } = new InternalRealtimeResponseCancelledStatusDetailsReason(TurnDetectedValue);
+
         public static InternalRealtimeResponseCancelledStatusDetailsReason ClientCancelled { get; } = new InternalRealtimeResponseCancelledStatusDetailsReason(ClientCancelledValue);
+
         public static bool operator ==(InternalRealtimeResponseCancelledStatusDetailsReason left, InternalRealtimeResponseCancelledStatusDetailsReason right) => left.Equals(right);
+
         public static bool operator !=(InternalRealtimeResponseCancelledStatusDetailsReason left, InternalRealtimeResponseCancelledStatusDetailsReason right) => !left.Equals(right);
+
         public static implicit operator InternalRealtimeResponseCancelledStatusDetailsReason(string value) => new InternalRealtimeResponseCancelledStatusDetailsReason(value);
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalRealtimeResponseCancelledStatusDetailsReason other && Equals(other);
+
         public bool Equals(InternalRealtimeResponseCancelledStatusDetailsReason other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(_value) : 0;
+
         public override string ToString() => _value;
     }
 }

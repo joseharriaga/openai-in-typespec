@@ -4,12 +4,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace OpenAI.Images
 {
-    public partial class GeneratedImageCollection : ReadOnlyCollection<GeneratedImage>
+    public partial class GeneratedImageCollection
     {
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        internal GeneratedImageCollection(IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        {
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
     }
 }

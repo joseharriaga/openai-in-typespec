@@ -9,11 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class UnknownRealtimeResponseStatusDetails : InternalRealtimeResponseStatusDetails
     {
-        internal UnknownRealtimeResponseStatusDetails(ConversationStatus type, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, serializedAdditionalRawData)
-        {
-        }
-
-        internal UnknownRealtimeResponseStatusDetails()
+        internal UnknownRealtimeResponseStatusDetails(ConversationStatus @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type != default ? @type : "unknown", additionalBinaryDataProperties)
         {
         }
     }

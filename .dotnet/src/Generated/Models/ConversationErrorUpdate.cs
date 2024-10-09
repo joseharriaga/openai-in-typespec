@@ -9,21 +9,16 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationErrorUpdate : ConversationUpdate
     {
-        internal ConversationErrorUpdate(string eventId, InternalRealtimeResponseError error) : base(eventId)
+        internal ConversationErrorUpdate(InternalRealtimeResponseError error, string eventId) : base(eventId)
         {
-            Argument.AssertNotNull(error, nameof(error));
-
-            Kind = ConversationUpdateKind.Error;
-            _error = error;
+            Error = error;
         }
 
-        internal ConversationErrorUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeResponseError error) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationErrorUpdate(InternalRealtimeResponseError error, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
-            _error = error;
+            Error = error;
         }
 
-        internal ConversationErrorUpdate()
-        {
-        }
+        public InternalRealtimeResponseError Error { get; set; }
     }
 }

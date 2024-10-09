@@ -9,7 +9,8 @@ namespace OpenAI.VectorStores
 {
     internal partial class InternalVectorStoreFileBatchObjectFileCounts
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalVectorStoreFileBatchObjectFileCounts(int inProgress, int completed, int failed, int cancelled, int total)
         {
             InProgress = inProgress;
@@ -19,24 +20,24 @@ namespace OpenAI.VectorStores
             Total = total;
         }
 
-        internal InternalVectorStoreFileBatchObjectFileCounts(int inProgress, int completed, int failed, int cancelled, int total, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalVectorStoreFileBatchObjectFileCounts(int inProgress, int completed, int failed, int cancelled, int total, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             InProgress = inProgress;
             Completed = completed;
             Failed = failed;
             Cancelled = cancelled;
             Total = total;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalVectorStoreFileBatchObjectFileCounts()
-        {
-        }
+        public int InProgress { get; set; }
 
-        public int InProgress { get; }
-        public int Completed { get; }
-        public int Failed { get; }
-        public int Cancelled { get; }
-        public int Total { get; }
+        public int Completed { get; set; }
+
+        public int Failed { get; set; }
+
+        public int Cancelled { get; set; }
+
+        public int Total { get; set; }
     }
 }

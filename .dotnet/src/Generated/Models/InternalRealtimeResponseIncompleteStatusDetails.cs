@@ -9,21 +9,16 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponseIncompleteStatusDetails : InternalRealtimeResponseStatusDetails
     {
-        internal InternalRealtimeResponseIncompleteStatusDetails(InternalRealtimeResponseIncompleteStatusDetailsReason reason)
-        {
-            Type = ConversationStatus.Incomplete;
-            Reason = reason;
-        }
-
-        internal InternalRealtimeResponseIncompleteStatusDetails(ConversationStatus type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeResponseIncompleteStatusDetailsReason reason) : base(type, serializedAdditionalRawData)
+        internal InternalRealtimeResponseIncompleteStatusDetails(InternalRealtimeResponseIncompleteStatusDetailsReason reason) : base(ConversationStatus.Incomplete)
         {
             Reason = reason;
         }
 
-        internal InternalRealtimeResponseIncompleteStatusDetails()
+        internal InternalRealtimeResponseIncompleteStatusDetails(InternalRealtimeResponseIncompleteStatusDetailsReason reason, ConversationStatus @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
+            Reason = reason;
         }
 
-        public InternalRealtimeResponseIncompleteStatusDetailsReason Reason { get; }
+        public InternalRealtimeResponseIncompleteStatusDetailsReason Reason { get; set; }
     }
 }

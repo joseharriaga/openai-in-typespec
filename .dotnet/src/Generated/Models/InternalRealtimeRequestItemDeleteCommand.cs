@@ -4,28 +4,24 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestItemDeleteCommand : InternalRealtimeRequestCommand
     {
-        public InternalRealtimeRequestItemDeleteCommand(string itemId)
+        public InternalRealtimeRequestItemDeleteCommand(string itemId) : base(InternalRealtimeRequestCommandType.ItemDelete)
         {
             Argument.AssertNotNull(itemId, nameof(itemId));
 
-            Kind = InternalRealtimeRequestCommandType.ItemDelete;
             ItemId = itemId;
         }
 
-        internal InternalRealtimeRequestItemDeleteCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId) : base(kind, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestItemDeleteCommand(string itemId, InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
         {
             ItemId = itemId;
         }
 
-        internal InternalRealtimeRequestItemDeleteCommand()
-        {
-        }
-
-        public string ItemId { get; }
+        public string ItemId { get; set; }
     }
 }

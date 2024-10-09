@@ -9,36 +9,32 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationContentPartFinishedUpdate : ConversationUpdate
     {
-        internal ConversationContentPartFinishedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(eventId)
-        {
-            Argument.AssertNotNull(responseId, nameof(responseId));
-            Argument.AssertNotNull(itemId, nameof(itemId));
-            Argument.AssertNotNull(internalContentPart, nameof(internalContentPart));
-
-            Kind = ConversationUpdateKind.ContentPartFinished;
-            ResponseId = responseId;
-            ItemId = itemId;
-            OutputIndex = outputIndex;
-            ContentIndex = contentIndex;
-            _internalContentPart = internalContentPart;
-        }
-
-        internal ConversationContentPartFinishedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationContentPartFinishedUpdate(string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart part, string eventId) : base(eventId)
         {
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
             ContentIndex = contentIndex;
-            _internalContentPart = internalContentPart;
+            Part = part;
         }
 
-        internal ConversationContentPartFinishedUpdate()
+        internal ConversationContentPartFinishedUpdate(string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart part, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
+            ResponseId = responseId;
+            ItemId = itemId;
+            OutputIndex = outputIndex;
+            ContentIndex = contentIndex;
+            Part = part;
         }
 
-        public string ResponseId { get; }
-        public string ItemId { get; }
-        public int OutputIndex { get; }
-        public int ContentIndex { get; }
+        public string ResponseId { get; set; }
+
+        public string ItemId { get; set; }
+
+        public int OutputIndex { get; set; }
+
+        public int ContentIndex { get; set; }
+
+        public ConversationContentPart Part { get; set; }
     }
 }

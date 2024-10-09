@@ -10,14 +10,12 @@ namespace OpenAI.Moderations
     internal partial class InternalModerationCategoryScores
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float illicit, float illicitViolent, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic)
+        internal InternalModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
             Harassment = harassment;
             HarassmentThreatening = harassmentThreatening;
-            Illicit = illicit;
-            IllicitViolent = illicitViolent;
             SelfHarm = selfHarm;
             SelfHarmIntent = selfHarmIntent;
             SelfHarmInstructions = selfHarmInstructions;
@@ -27,7 +25,7 @@ namespace OpenAI.Moderations
             ViolenceGraphic = violenceGraphic;
         }
 
-        internal InternalModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float illicit, float illicitViolent, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float? illicit, float? illicitViolent, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -53,8 +51,8 @@ namespace OpenAI.Moderations
         public float HateThreatening { get; }
         public float Harassment { get; }
         public float HarassmentThreatening { get; }
-        public float Illicit { get; }
-        public float IllicitViolent { get; }
+        public float? Illicit { get; }
+        public float? IllicitViolent { get; }
         public float SelfHarm { get; }
         public float SelfHarmIntent { get; }
         public float SelfHarmInstructions { get; }

@@ -61,25 +61,39 @@ namespace OpenAI.Moderations
                 }
                 writer.WriteEndArray();
             }
-            if (SerializedAdditionalRawData?.ContainsKey("illicit") != true)
+            if (SerializedAdditionalRawData?.ContainsKey("illicit") != true && Optional.IsCollectionDefined(Illicit))
             {
-                writer.WritePropertyName("illicit"u8);
-                writer.WriteStartArray();
-                foreach (var item in Illicit)
+                if (Illicit != null)
                 {
-                    writer.WriteStringValue(item);
+                    writer.WritePropertyName("illicit"u8);
+                    writer.WriteStartArray();
+                    foreach (var item in Illicit)
+                    {
+                        writer.WriteStringValue(item);
+                    }
+                    writer.WriteEndArray();
                 }
-                writer.WriteEndArray();
+                else
+                {
+                    writer.WriteNull("illicit");
+                }
             }
-            if (SerializedAdditionalRawData?.ContainsKey("illicit/violent") != true)
+            if (SerializedAdditionalRawData?.ContainsKey("illicit/violent") != true && Optional.IsCollectionDefined(IllicitViolent))
             {
-                writer.WritePropertyName("illicit/violent"u8);
-                writer.WriteStartArray();
-                foreach (var item in IllicitViolent)
+                if (IllicitViolent != null)
                 {
-                    writer.WriteStringValue(item);
+                    writer.WritePropertyName("illicit/violent"u8);
+                    writer.WriteStartArray();
+                    foreach (var item in IllicitViolent)
+                    {
+                        writer.WriteStringValue(item);
+                    }
+                    writer.WriteEndArray();
                 }
-                writer.WriteEndArray();
+                else
+                {
+                    writer.WriteNull("illicit/violent");
+                }
             }
             if (SerializedAdditionalRawData?.ContainsKey("self-harm") != true)
             {
@@ -252,6 +266,10 @@ namespace OpenAI.Moderations
                 }
                 if (property.NameEquals("illicit"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
@@ -262,6 +280,10 @@ namespace OpenAI.Moderations
                 }
                 if (property.NameEquals("illicit/violent"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
@@ -352,8 +374,8 @@ namespace OpenAI.Moderations
                 hateThreatening,
                 harassment,
                 harassmentThreatening,
-                illicit,
-                illicitViolent,
+                illicit ?? new ChangeTrackingList<string>(),
+                illicitViolent ?? new ChangeTrackingList<string>(),
                 selfHarm,
                 selfHarmIntent,
                 selfHarmInstructions,

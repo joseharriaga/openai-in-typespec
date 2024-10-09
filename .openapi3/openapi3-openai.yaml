@@ -4610,7 +4610,7 @@ components:
           nullable: true
           description: |-
             Developer-defined tags and values used for filtering completions
-            in the [dashboard](https://platform.openai.com/completions).
+            in the [dashboard](https://platform.openai.com/chat-completions).
         frequency_penalty:
           type: number
           format: float
@@ -5859,9 +5859,11 @@ components:
                     description: Harassment content that also includes violence or serious harm towards any target.
                   illicit:
                     type: boolean
+                    nullable: true
                     description: Content that includes instructions or advice that facilitate the planning or execution of wrongdoing, or that gives advice or instruction on how to commit illicit acts. For example, "how to shoplift" would fit this category.
                   illicit/violent:
                     type: boolean
+                    nullable: true
                     description: Content that includes instructions or advice that facilitate the planning or execution of wrongdoing that also includes violence, or that gives advice or instruction on the procurement of any weapon.
                   self-harm:
                     type: boolean
@@ -5889,8 +5891,6 @@ components:
                   - hate/threatening
                   - harassment
                   - harassment/threatening
-                  - illicit
-                  - illicit/violent
                   - self-harm
                   - self-harm/intent
                   - self-harm/instructions
@@ -5921,10 +5921,12 @@ components:
                   illicit:
                     type: number
                     format: float
+                    nullable: true
                     description: The score for the category 'illicit'.
                   illicit/violent:
                     type: number
                     format: float
+                    nullable: true
                     description: The score for the category 'illicit/violent'.
                   self-harm:
                     type: number
@@ -5959,8 +5961,6 @@ components:
                   - hate/threatening
                   - harassment
                   - harassment/threatening
-                  - illicit
-                  - illicit/violent
                   - self-harm
                   - self-harm/intent
                   - self-harm/instructions
@@ -6006,6 +6006,7 @@ components:
                       type: string
                       enum:
                         - text
+                    nullable: true
                     description: The applied input type(s) for the category 'illicit'.
                   illicit/violent:
                     type: array
@@ -6013,6 +6014,7 @@ components:
                       type: string
                       enum:
                         - text
+                    nullable: true
                     description: The applied input type(s) for the category 'illicit/violent'.
                   self-harm:
                     type: array
@@ -6074,8 +6076,6 @@ components:
                   - hate/threatening
                   - harassment
                   - harassment/threatening
-                  - illicit
-                  - illicit/violent
                   - self-harm
                   - self-harm/intent
                   - self-harm/instructions

@@ -11,14 +11,12 @@ namespace OpenAI.Moderations
     internal partial class InternalCreateModerationResponseResultCategoryAppliedInputTypes
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalCreateModerationResponseResultCategoryAppliedInputTypes(IEnumerable<string> hate, IEnumerable<string> hateThreatening, IEnumerable<string> harassment, IEnumerable<string> harassmentThreatening, IEnumerable<string> illicit, IEnumerable<string> illicitViolent, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1> selfHarm, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent> selfHarmIntent, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction> selfHarmInstructions, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual> sexual, IEnumerable<string> sexualMinors, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence> violence, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic> violenceGraphic)
+        internal InternalCreateModerationResponseResultCategoryAppliedInputTypes(IEnumerable<string> hate, IEnumerable<string> hateThreatening, IEnumerable<string> harassment, IEnumerable<string> harassmentThreatening, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1> selfHarm, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent> selfHarmIntent, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction> selfHarmInstructions, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual> sexual, IEnumerable<string> sexualMinors, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence> violence, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic> violenceGraphic)
         {
             Argument.AssertNotNull(hate, nameof(hate));
             Argument.AssertNotNull(hateThreatening, nameof(hateThreatening));
             Argument.AssertNotNull(harassment, nameof(harassment));
             Argument.AssertNotNull(harassmentThreatening, nameof(harassmentThreatening));
-            Argument.AssertNotNull(illicit, nameof(illicit));
-            Argument.AssertNotNull(illicitViolent, nameof(illicitViolent));
             Argument.AssertNotNull(selfHarm, nameof(selfHarm));
             Argument.AssertNotNull(selfHarmIntent, nameof(selfHarmIntent));
             Argument.AssertNotNull(selfHarmInstructions, nameof(selfHarmInstructions));
@@ -31,8 +29,8 @@ namespace OpenAI.Moderations
             HateThreatening = hateThreatening.ToList();
             Harassment = harassment.ToList();
             HarassmentThreatening = harassmentThreatening.ToList();
-            Illicit = illicit.ToList();
-            IllicitViolent = illicitViolent.ToList();
+            Illicit = new ChangeTrackingList<string>();
+            IllicitViolent = new ChangeTrackingList<string>();
             SelfHarm = selfHarm.ToList();
             SelfHarmIntent = selfHarmIntent.ToList();
             SelfHarmInstructions = selfHarmInstructions.ToList();

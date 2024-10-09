@@ -62,7 +62,7 @@ model CreateChatCompletionRequest {
 
   /**
    * Developer-defined tags and values used for filtering completions
-   * in the [dashboard](https://platform.openai.com/completions).
+   * in the [dashboard](https://platform.openai.com/chat-completions).
    */
   metadata?: Record<string> | null;
 

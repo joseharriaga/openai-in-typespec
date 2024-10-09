@@ -6,7 +6,7 @@ namespace OpenAI.Moderations;
 
 internal static partial class ModerationInputKindsExtensions
 {
-    internal static IList<string> ToInternalInputKinds(this ModerationInputKinds inputKinds)
+    internal static IReadOnlyList<string> ToInternalInputKinds(this ModerationInputKinds inputKinds)
     {
         List<string> internalInputKinds = [];
         if (inputKinds.HasFlag(ModerationInputKinds.Text))

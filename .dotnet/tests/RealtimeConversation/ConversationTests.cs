@@ -1,10 +1,12 @@
 ﻿using NUnit.Framework;
 using OpenAI.RealtimeConversation;
 using System;
+using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -343,5 +345,35 @@ public class ConversationTests : ConversationTestFixtureBase
                 break;
             }
         }
+    }
+
+    [Test]
+    public async Task BadCommandProvidesError()
+    {
+        RealtimeConversationClient client = GetTestClient();
+        using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
+
+        await session.SendCommandAsync(
+            BinaryData.FromString("""
+                {
+                  "type": "this_is_not_a_real_command_type",
+                  "event_id": "event_fabricated_1234abcd"
+                }
+                """),
+            CancellationOptions);
+
+        bool gotErrorUpdate = false;
+
+        await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
+        {
+            if (update is ConversationErrorUpdate errorUpdate)
+            {
+                Assert.That(errorUpdate.ErrorEventId, Is.EqualTo("event_fabricated_1234abcd"));
+                gotErrorUpdate = true;
+                break;
+            }
+        }
+
+        Assert.That(gotErrorUpdate, Is.True);
     }
 }

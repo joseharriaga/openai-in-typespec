@@ -1,5 +1,4 @@
-import "./models/requests.tsp";
-import "./models/responses.tsp";
+import "./models.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.OpenAPI;
@@ -11,6 +10,6 @@ interface Realtime {
   @tag("Realtime")
   @summary("Starts a real-time conversation session.")
   startRealtimeSession(
-    @body requestMessages: RealtimeRequestCommand[],
-  ): RealtimeResponseCommand[];
+    @body requestMessages: RealtimeClientEvent[],
+  ): RealtimeServerEvent[];
 }

@@ -9,24 +9,28 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationOutputTranscriptionFinishedUpdate : ConversationUpdate
     {
-        internal ConversationOutputTranscriptionFinishedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex) : base(eventId)
+        internal ConversationOutputTranscriptionFinishedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string transcript) : base(eventId)
         {
+            Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(itemId, nameof(itemId));
+            Argument.AssertNotNull(transcript, nameof(transcript));
 
-            Kind = ConversationUpdateKind.ResponseAudioTranscriptDone;
+            Kind = ConversationUpdateKind.OutputTranscriptionFinished;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
             ContentIndex = contentIndex;
+            Transcript = transcript;
         }
 
-        internal ConversationOutputTranscriptionFinishedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationOutputTranscriptionFinishedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, string transcript) : base(kind, eventId, serializedAdditionalRawData)
         {
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
             ContentIndex = contentIndex;
+            Transcript = transcript;
         }
 
         internal ConversationOutputTranscriptionFinishedUpdate()
@@ -37,5 +41,6 @@ namespace OpenAI.RealtimeConversation
         public string ItemId { get; }
         public int OutputIndex { get; }
         public int ContentIndex { get; }
+        public string Transcript { get; }
     }
 }

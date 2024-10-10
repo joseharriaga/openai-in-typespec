@@ -11,6 +11,7 @@ namespace OpenAI.RealtimeConversation
     {
         internal ConversationItemFinishedUpdate(string eventId, string responseId, int outputIndex, InternalRealtimeResponseItem internalItem) : base(eventId)
         {
+            Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(internalItem, nameof(internalItem));
 

@@ -61,28 +61,54 @@ namespace OpenAI
 
         public static ConversationUpdate ConversationUpdate(string eventId = null)
         {
-            return new UnknownRealtimeResponseCommand(default, eventId, serializedAdditionalRawData: null);
+            return new UnknownRealtimeServerEvent(default, eventId, serializedAdditionalRawData: null);
         }
 
-        public static ConversationItemAcknowledgedUpdate ConversationItemAcknowledgedUpdate(string eventId = null, ConversationItem item = null)
+        public static ConversationInputAudioCommittedUpdate ConversationInputAudioCommittedUpdate(string eventId = null, string previousItemId = null, string itemId = null)
         {
-            return new ConversationItemAcknowledgedUpdate(ConversationUpdateKind.ItemAcknowledged, eventId, serializedAdditionalRawData: null, item);
+            return new ConversationInputAudioCommittedUpdate(ConversationUpdateKind.InputAudioCommitted, eventId, serializedAdditionalRawData: null, previousItemId, itemId);
         }
 
-        public static ConversationItemDeletedUpdate ConversationItemDeletedUpdate(string eventId = null, string itemId = null)
+        public static ConversationInputAudioClearedUpdate ConversationInputAudioClearedUpdate(string eventId = null)
         {
-            return new ConversationItemDeletedUpdate(ConversationUpdateKind.ItemDeleted, eventId, serializedAdditionalRawData: null, itemId);
+            return new ConversationInputAudioClearedUpdate(ConversationUpdateKind.InputAudioCleared, eventId, serializedAdditionalRawData: null);
         }
 
-        public static ConversationItemTruncatedUpdate ConversationItemTruncatedUpdate(string eventId = null, string itemId = null, int audioEndMs = default, int index = default)
+        public static ConversationInputSpeechStartedUpdate ConversationInputSpeechStartedUpdate(string eventId = null, int audioStartMs = default, string itemId = null)
+        {
+            return new ConversationInputSpeechStartedUpdate(ConversationUpdateKind.InputSpeechStarted, eventId, serializedAdditionalRawData: null, audioStartMs, itemId);
+        }
+
+        public static ConversationInputSpeechFinishedUpdate ConversationInputSpeechFinishedUpdate(string eventId = null, int audioEndMs = default, string itemId = null)
+        {
+            return new ConversationInputSpeechFinishedUpdate(ConversationUpdateKind.InputSpeechStopped, eventId, serializedAdditionalRawData: null, audioEndMs, itemId);
+        }
+
+        public static ConversationInputTranscriptionFinishedUpdate ConversationInputTranscriptionFinishedUpdate(string eventId = null, string itemId = null, int contentIndex = default, string transcript = null)
+        {
+            return new ConversationInputTranscriptionFinishedUpdate(
+                ConversationUpdateKind.InputTranscriptionFinished,
+                eventId,
+                serializedAdditionalRawData: null,
+                itemId,
+                contentIndex,
+                transcript);
+        }
+
+        public static ConversationItemTruncatedUpdate ConversationItemTruncatedUpdate(string eventId = null, string itemId = null, int contentIndex = default, int audioEndMs = default)
         {
             return new ConversationItemTruncatedUpdate(
                 ConversationUpdateKind.ItemTruncated,
                 eventId,
                 serializedAdditionalRawData: null,
                 itemId,
-                audioEndMs,
-                index);
+                contentIndex,
+                audioEndMs);
+        }
+
+        public static ConversationItemDeletedUpdate ConversationItemDeletedUpdate(string eventId = null, string itemId = null)
+        {
+            return new ConversationItemDeletedUpdate(ConversationUpdateKind.ItemDeleted, eventId, serializedAdditionalRawData: null, itemId);
         }
 
         public static ConversationTokenUsage ConversationTokenUsage(int totalTokens = default, int inputTokens = default, int outputTokens = default, ConversationInputTokenUsageDetails inputTokenDetails = null, ConversationOutputTokenUsageDetails outputTokenDetails = null)
@@ -106,22 +132,10 @@ namespace OpenAI
             return new ConversationOutputTokenUsageDetails(textTokens, audioTokens, serializedAdditionalRawData: null);
         }
 
-        public static ConversationRateLimitsUpdatedUpdate ConversationRateLimitsUpdatedUpdate(string eventId = null, IEnumerable<ConversationRateLimitDetailsItem> rateLimits = null)
+        public static ConversationTextContentDeltaUpdate ConversationTextContentDeltaUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, int contentIndex = default, string delta = null)
         {
-            rateLimits ??= new List<ConversationRateLimitDetailsItem>();
-
-            return new ConversationRateLimitsUpdatedUpdate(ConversationUpdateKind.RateLimitsUpdated, eventId, serializedAdditionalRawData: null, rateLimits?.ToList());
-        }
-
-        public static ConversationRateLimitDetailsItem ConversationRateLimitDetailsItem(string name = null, int limit = default, int remaining = default, float resetSeconds = default)
-        {
-            return new ConversationRateLimitDetailsItem(name, limit, remaining, resetSeconds, serializedAdditionalRawData: null);
-        }
-
-        public static ConversationAudioDeltaUpdate ConversationAudioDeltaUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, int contentIndex = default, BinaryData delta = null)
-        {
-            return new ConversationAudioDeltaUpdate(
-                ConversationUpdateKind.ResponseAudioDelta,
+            return new ConversationTextContentDeltaUpdate(
+                ConversationUpdateKind.TextContentDelta,
                 eventId,
                 serializedAdditionalRawData: null,
                 responseId,
@@ -129,12 +143,25 @@ namespace OpenAI
                 outputIndex,
                 contentIndex,
                 delta);
+        }
+
+        public static ConversationTextContentFinishedUpdate ConversationTextContentFinishedUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, int contentIndex = default, string text = null)
+        {
+            return new ConversationTextContentFinishedUpdate(
+                ConversationUpdateKind.TextContentFinished,
+                eventId,
+                serializedAdditionalRawData: null,
+                responseId,
+                itemId,
+                outputIndex,
+                contentIndex,
+                text);
         }
 
         public static ConversationOutputTranscriptionDeltaUpdate ConversationOutputTranscriptionDeltaUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, int contentIndex = default, string delta = null)
         {
             return new ConversationOutputTranscriptionDeltaUpdate(
-                ConversationUpdateKind.ResponseAudioTranscriptDelta,
+                ConversationUpdateKind.OutputTranscriptionDelta,
                 eventId,
                 serializedAdditionalRawData: null,
                 responseId,
@@ -144,10 +171,36 @@ namespace OpenAI
                 delta);
         }
 
-        public static ConversationOutputTranscriptionFinishedUpdate ConversationOutputTranscriptionFinishedUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, int contentIndex = default)
+        public static ConversationOutputTranscriptionFinishedUpdate ConversationOutputTranscriptionFinishedUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, int contentIndex = default, string transcript = null)
         {
             return new ConversationOutputTranscriptionFinishedUpdate(
-                ConversationUpdateKind.ResponseAudioTranscriptDone,
+                ConversationUpdateKind.OutputTranscriptionFinished,
+                eventId,
+                serializedAdditionalRawData: null,
+                responseId,
+                itemId,
+                outputIndex,
+                contentIndex,
+                transcript);
+        }
+
+        public static ConversationAudioContentDeltaUpdate ConversationAudioContentDeltaUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, int contentIndex = default, BinaryData delta = null)
+        {
+            return new ConversationAudioContentDeltaUpdate(
+                ConversationUpdateKind.AudioContentDelta,
+                eventId,
+                serializedAdditionalRawData: null,
+                responseId,
+                itemId,
+                outputIndex,
+                contentIndex,
+                delta);
+        }
+
+        public static ConversationAudioContentFinishedUpdate ConversationAudioContentFinishedUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, int contentIndex = default)
+        {
+            return new ConversationAudioContentFinishedUpdate(
+                ConversationUpdateKind.AudioContentFinished,
                 eventId,
                 serializedAdditionalRawData: null,
                 responseId,
@@ -156,36 +209,10 @@ namespace OpenAI
                 contentIndex);
         }
 
-        public static ConversationTextDeltaUpdate ConversationTextDeltaUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, int contentIndex = default, string delta = null)
-        {
-            return new ConversationTextDeltaUpdate(
-                ConversationUpdateKind.ResponseTextDelta,
-                eventId,
-                serializedAdditionalRawData: null,
-                responseId,
-                itemId,
-                outputIndex,
-                contentIndex,
-                delta);
-        }
-
-        public static ConversationTextDoneUpdate ConversationTextDoneUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, int contentIndex = default, string value = null)
-        {
-            return new ConversationTextDoneUpdate(
-                ConversationUpdateKind.ResponseTextDone,
-                eventId,
-                serializedAdditionalRawData: null,
-                responseId,
-                itemId,
-                outputIndex,
-                contentIndex,
-                value);
-        }
-
         public static ConversationFunctionCallArgumentsDeltaUpdate ConversationFunctionCallArgumentsDeltaUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, string callId = null, string delta = null)
         {
             return new ConversationFunctionCallArgumentsDeltaUpdate(
-                ConversationUpdateKind.ResponseFunctionCallArgumentsDelta,
+                ConversationUpdateKind.FunctionCallArgumentsDelta,
                 eventId,
                 serializedAdditionalRawData: null,
                 responseId,
@@ -195,49 +222,29 @@ namespace OpenAI
                 delta);
         }
 
-        public static ConversationFunctionCallArgumentsDoneUpdate ConversationFunctionCallArgumentsDoneUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, string callId = null, string name = null, string arguments = null)
+        public static ConversationFunctionCallArgumentsFinishedUpdate ConversationFunctionCallArgumentsFinishedUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, string callId = null, string arguments = null)
         {
-            return new ConversationFunctionCallArgumentsDoneUpdate(
-                ConversationUpdateKind.ResponseFunctionCallArgumentsDone,
+            return new ConversationFunctionCallArgumentsFinishedUpdate(
+                ConversationUpdateKind.FunctionCallArgumentsFinished,
                 eventId,
                 serializedAdditionalRawData: null,
                 responseId,
                 itemId,
                 outputIndex,
                 callId,
-                name,
                 arguments);
         }
 
-        public static ConversationInputSpeechStartedUpdate ConversationInputSpeechStartedUpdate(string eventId = null, int audioStartMs = default, string itemId = null)
+        public static ConversationRateLimitsUpdate ConversationRateLimitsUpdate(string eventId = null, IEnumerable<ConversationRateLimitDetailsItem> allDetails = null)
         {
-            return new ConversationInputSpeechStartedUpdate(ConversationUpdateKind.InputAudioBufferSpeechStarted, eventId, serializedAdditionalRawData: null, audioStartMs, itemId);
+            allDetails ??= new List<ConversationRateLimitDetailsItem>();
+
+            return new ConversationRateLimitsUpdate(ConversationUpdateKind.RateLimitsUpdated, eventId, serializedAdditionalRawData: null, allDetails?.ToList());
         }
 
-        public static ConversationInputSpeechFinishedUpdate ConversationInputSpeechFinishedUpdate(string eventId = null, int audioEndMs = default, string itemId = null)
+        public static ConversationRateLimitDetailsItem ConversationRateLimitDetailsItem(string name = null, int maximumCount = default, int remainingCount = default, TimeSpan timeUntilReset = default)
         {
-            return new ConversationInputSpeechFinishedUpdate(ConversationUpdateKind.InputAudioBufferSpeechStopped, eventId, serializedAdditionalRawData: null, audioEndMs, itemId);
-        }
-
-        public static ConversationInputTranscriptionFinishedUpdate ConversationInputTranscriptionFinishedUpdate(string eventId = null, string itemId = null, int contentIndex = default, string transcript = null)
-        {
-            return new ConversationInputTranscriptionFinishedUpdate(
-                ConversationUpdateKind.ItemInputAudioTranscriptionCompleted,
-                eventId,
-                serializedAdditionalRawData: null,
-                itemId,
-                contentIndex,
-                transcript);
-        }
-
-        public static ConversationInputAudioBufferCommittedUpdate ConversationInputAudioBufferCommittedUpdate(string eventId = null, string itemId = null, string previousItemId = null)
-        {
-            return new ConversationInputAudioBufferCommittedUpdate(ConversationUpdateKind.InputAudioBufferCommitted, eventId, serializedAdditionalRawData: null, itemId, previousItemId);
-        }
-
-        public static ConversationInputAudioBufferClearedUpdate ConversationInputAudioBufferClearedUpdate(string eventId = null)
-        {
-            return new ConversationInputAudioBufferClearedUpdate(ConversationUpdateKind.InputAudioBufferCleared, eventId, serializedAdditionalRawData: null);
+            return new ConversationRateLimitDetailsItem(name, maximumCount, remainingCount, timeUntilReset, serializedAdditionalRawData: null);
         }
 
         public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> results = null)
@@ -269,14 +276,25 @@ namespace OpenAI
             return new EmbeddingTokenUsage(inputTokenCount, totalTokenCount, serializedAdditionalRawData: null);
         }
 
-        public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = default, int inputTokenCount = default, int totalTokenCount = default, ChatOutputTokenUsageDetails outputTokenDetails = null)
+        public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = default, int inputTokenCount = default, int totalTokenCount = default, ChatOutputTokenUsageDetails outputTokenDetails = null, ChatInputTokenUsageDetails inputTokenDetails = null)
         {
-            return new ChatTokenUsage(outputTokenCount, inputTokenCount, totalTokenCount, outputTokenDetails, serializedAdditionalRawData: null);
+            return new ChatTokenUsage(
+                outputTokenCount,
+                inputTokenCount,
+                totalTokenCount,
+                outputTokenDetails,
+                inputTokenDetails,
+                serializedAdditionalRawData: null);
         }
 
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default)
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int? audioTokenCount = null, int reasoningTokenCount = default)
         {
-            return new ChatOutputTokenUsageDetails(reasoningTokenCount, serializedAdditionalRawData: null);
+            return new ChatOutputTokenUsageDetails(audioTokenCount, reasoningTokenCount, serializedAdditionalRawData: null);
+        }
+
+        public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int? audioTokenCount = null, int? cachedTokenCount = null)
+        {
+            return new ChatInputTokenUsageDetails(audioTokenCount, cachedTokenCount, serializedAdditionalRawData: null);
         }
 
         public static ChatMessage ChatMessage(ChatMessageContent content = null)
@@ -356,9 +374,9 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = null, BinaryData functionArgumentsUpdate = null)
+        public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(BinaryData functionArgumentsUpdate = null, string functionName = null)
         {
-            return new StreamingChatFunctionCallUpdate(functionName, functionArgumentsUpdate, serializedAdditionalRawData: null);
+            return new StreamingChatFunctionCallUpdate(functionArgumentsUpdate, functionName, serializedAdditionalRawData: null);
         }
     }
 }

@@ -41,6 +41,11 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("content_index"u8);
                 writer.WriteNumberValue(ContentIndex);
             }
+            if (SerializedAdditionalRawData?.ContainsKey("transcript") != true)
+            {
+                writer.WritePropertyName("transcript"u8);
+                writer.WriteStringValue(Transcript);
+            }
             if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
@@ -48,15 +53,8 @@ namespace OpenAI.RealtimeConversation
             }
             if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
             {
-                if (EventId != null)
-                {
-                    writer.WritePropertyName("event_id"u8);
-                    writer.WriteStringValue(EventId);
-                }
-                else
-                {
-                    writer.WriteNull("event_id");
-                }
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -104,6 +102,7 @@ namespace OpenAI.RealtimeConversation
             string itemId = default;
             int outputIndex = default;
             int contentIndex = default;
+            string transcript = default;
             ConversationUpdateKind type = default;
             string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -130,6 +129,11 @@ namespace OpenAI.RealtimeConversation
                     contentIndex = property.Value.GetInt32();
                     continue;
                 }
+                if (property.NameEquals("transcript"u8))
+                {
+                    transcript = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("type"u8))
                 {
                     type = property.Value.GetString().ToConversationUpdateKind();
@@ -137,11 +141,6 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (property.NameEquals("event_id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
                     eventId = property.Value.GetString();
                     continue;
                 }
@@ -159,7 +158,8 @@ namespace OpenAI.RealtimeConversation
                 responseId,
                 itemId,
                 outputIndex,
-                contentIndex);
+                contentIndex,
+                transcript);
         }
 
         BinaryData IPersistableModel<ConversationOutputTranscriptionFinishedUpdate>.Write(ModelReaderWriterOptions options)

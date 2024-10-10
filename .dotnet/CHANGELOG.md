@@ -1,5 +1,23 @@
 # Release History
 
+## 2.1.0-beta.2 (Unreleased)
+
+### Features added
+
+- `ChatCompletionOptions` now has an `EnableOutputStorage` property (reflecting [the REST `store` property](https://platform.openai.com/docs/api-reference/chat/create#chat-create-store)) as well as a `Metadata` property ([`metadata` in REST](https://platform.openai.com/docs/api-reference/chat/create#chat-create-metadata))
+- `ChatTokenUsage` (`Usage` on `ChatCompletion`) has been expanded:
+  - A new `InputTokenDetails` property (of new type `ChatInputTokenUsageDetails`) has been added, containing breakdowns of `AudioTokenCount` and `CachedTokenCount` for usage with supported models
+  - The existing `OutputTokenDetails` has been expanded to include `AudioTokenCount` for supported models
+- `ModerationResult` now includes `Illicit` and `IllictViolent` categories
+- `ModerationCategory` now includes a (bitmasked flag enum) `InputKinds` property, representing applied input modalities for the category
+
+**Realtime**
+
+***Note**: the `/realtime` area is under rapid development and not all changes may be reflected here.*
+
+- `ConversationRateLimitsUpdate` (previously `ConversationRateLimitsUpdatedUpdate`) now includes named `RequestDetails` and `TokenDetails` properties, mapping to the corresponding named items in the underlying `rate_limits` command payload
+- Several types have been renamed for consistency and clarity
+
 ## 2.1.0-beta.1 (2024-10-01)
 
 With this updated preview library release, we're excited to bring early support for the newly-announced `/realtime` beta API. You can read more about `/realtime` here: https://openai.com/index/introducing-the-realtime-api/

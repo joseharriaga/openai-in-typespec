@@ -4,14 +4,21 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.RealtimeConversation;
 
+/// <summary>
+/// The update (response command) of type <c>response.content_part.added</c>, which is received when a response turn
+/// has begun emission of a content part within a conversation item. This will be followed by some number of
+/// <c>*delta</c> commands (e.g. <see cref="ConversationTextContentDeltaUpdate"/> or
+/// <see cref="ConversationOutputTranscriptionDeltaUpdate"/>) before finalization via a
+/// <see cref="ConversationContentPartFinishedUpdate"/> command (<c>response.content_part.done</c>).
+/// </summary>
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeResponseContentPartAddedCommand")]
+[CodeGenModel("RealtimeServerEventResponseContentPartAdded")]
 public partial class ConversationContentPartStartedUpdate
 {
     [CodeGenMember("Part")]
     private readonly ConversationContentPart _internalContentPart;
 
-    public ConversationContentPartKind ContentKind => _internalContentPart switch
+    public ConversationContentPartKind ContentPartKind => _internalContentPart switch
     {
         InternalRealtimeResponseTextContentPart => ConversationContentPartKind.InputText,
         InternalRealtimeResponseAudioContentPart => ConversationContentPartKind.InputAudio,

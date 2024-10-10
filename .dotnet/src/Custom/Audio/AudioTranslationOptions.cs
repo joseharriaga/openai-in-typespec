@@ -7,6 +7,14 @@ namespace OpenAI.Audio;
 [CodeGenSuppress("AudioTranslationOptions", typeof(BinaryData), typeof(InternalCreateTranslationRequestModel))]
 public partial class AudioTranslationOptions
 {
+    [CodeGenMember("ResponseFormat")]
+    private InternalAudioResponseFormat? _responseFormat;
+    public AudioTranslationFormat? ResponseFormat
+    {
+        get => _responseFormat.HasValue ? new(_responseFormat.Value) : null;
+        set => _responseFormat = value?._internalAudioResponseFormat;
+    }
+
     // CUSTOM: Made internal. This value comes from a parameter on the client method.
     internal BinaryData File { get; }
 

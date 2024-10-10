@@ -4,8 +4,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.RealtimeConversation;
 
+/// <summary>
+/// The update (response command) of type <c>response.output_item.added</c>, which is received when a response turn
+/// has begun generation of a new conversation item. This new item will have content streamed via <c>*delta</c>
+/// commands and paired with an ending <c>response.output_item.done</c> update.
+/// </summary>
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeResponseOutputItemAddedCommand")]
+[CodeGenModel("RealtimeServerEventResponseOutputItemAdded")]
 public partial class ConversationItemStartedUpdate
 {
     [CodeGenMember("Item")]

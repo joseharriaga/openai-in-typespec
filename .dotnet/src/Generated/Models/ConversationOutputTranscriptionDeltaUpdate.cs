@@ -11,11 +11,12 @@ namespace OpenAI.RealtimeConversation
     {
         internal ConversationOutputTranscriptionDeltaUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string delta) : base(eventId)
         {
+            Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(itemId, nameof(itemId));
             Argument.AssertNotNull(delta, nameof(delta));
 
-            Kind = ConversationUpdateKind.ResponseAudioTranscriptDelta;
+            Kind = ConversationUpdateKind.OutputTranscriptionDelta;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;

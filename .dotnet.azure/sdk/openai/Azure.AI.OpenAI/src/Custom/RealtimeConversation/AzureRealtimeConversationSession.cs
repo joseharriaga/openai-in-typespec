@@ -55,19 +55,32 @@ internal partial class AzureRealtimeConversationSession : RealtimeConversationSe
         _clientWebSocket.Options.SetRequestHeader("x-ms-client-request-id", _clientRequestId);
     }
 
-    internal override async Task SendCommandAsync(InternalRealtimeRequestCommand command, CancellationToken cancellationToken = default)
+    internal override async Task SendCommandAsync(InternalRealtimeClientEvent command, CancellationToken cancellationToken = default)
+    {
+        BinaryData requestData = GetAdjustedRequestCommandBytes(command);
+        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
+        await SendCommandAsync(requestData, cancellationOptions).ConfigureAwait(false);
+    }
+
+    internal override void SendCommand(InternalRealtimeClientEvent command, CancellationToken cancellationToken = default)
+    {
+        BinaryData requestData = GetAdjustedRequestCommandBytes(command);
+        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
+        SendCommand(requestData, cancellationOptions);
+    }
+
+    private BinaryData GetAdjustedRequestCommandBytes(InternalRealtimeClientEvent command)
     {
         BinaryData requestData = ModelReaderWriter.Write(command);
 
         // Temporary backcompat quirk
-        if (command is InternalRealtimeRequestSessionUpdateCommand sessionUpdateCommand
+        if (command is InternalRealtimeClientEventSessionUpdate sessionUpdateCommand
             && sessionUpdateCommand.Session?.TurnDetectionOptions is InternalRealtimeNoTurnDetection)
         {
             requestData = BinaryData.FromString(requestData.ToString()
                 .Replace(@"""turn_detection"":null", @"""turn_detection"":{""type"":""none""}"));
         }
 
-        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
-        await SendCommandAsync(requestData, cancellationOptions).ConfigureAwait(false);
+        return requestData;
     }
 }

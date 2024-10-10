@@ -11,12 +11,13 @@ namespace OpenAI.RealtimeConversation
     {
         internal ConversationFunctionCallArgumentsDeltaUpdate(string eventId, string responseId, string itemId, int outputIndex, string callId, string delta) : base(eventId)
         {
+            Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(itemId, nameof(itemId));
             Argument.AssertNotNull(callId, nameof(callId));
             Argument.AssertNotNull(delta, nameof(delta));
 
-            Kind = ConversationUpdateKind.ResponseFunctionCallArgumentsDelta;
+            Kind = ConversationUpdateKind.FunctionCallArgumentsDelta;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;

@@ -4,8 +4,15 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.RealtimeConversation;
 
+/// <summary>
+/// The update (response command) of type <c>session.updated</c>, which is received when a preceding
+/// <c>session.update</c> request command
+/// (<see cref="RealtimeConversationSession.ConfigureSessionAsync(OpenAI.RealtimeConversation.ConversationSessionOptions, System.Threading.CancellationToken)"/>)
+/// has been applied to the session. New session configuration related to response generation will not take effect
+/// until the next response; shared session configuration, such as input audio format, will apply immediately.
+/// </summary>
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeResponseSessionUpdatedCommand")]
+[CodeGenModel("RealtimeServerEventSessionUpdated")]
 public partial class ConversationSessionConfiguredUpdate
 {
     [CodeGenMember("Session")]

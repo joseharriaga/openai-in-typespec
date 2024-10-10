@@ -68,15 +68,6 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            if (element.TryGetProperty("type", out JsonElement discriminator))
-            {
-                switch (discriminator.GetString())
-                {
-                    case "cancelled": return InternalRealtimeResponseCancelledStatusDetails.DeserializeInternalRealtimeResponseCancelledStatusDetails(element, options);
-                    case "failed": return RealtimeResponseFailedStatusDetails.DeserializeRealtimeResponseFailedStatusDetails(element, options);
-                    case "incomplete": return InternalRealtimeResponseIncompleteStatusDetails.DeserializeInternalRealtimeResponseIncompleteStatusDetails(element, options);
-                }
-            }
             return UnknownRealtimeResponseStatusDetails.DeserializeUnknownRealtimeResponseStatusDetails(element, options);
         }
 

@@ -2292,7 +2292,7 @@ namespace OpenAI.RealtimeConversation {
     public class ConversationContentPartFinishedUpdate : ConversationUpdate, IJsonModel<ConversationContentPartFinishedUpdate>, IPersistableModel<ConversationContentPartFinishedUpdate> {
         public string AudioTranscript { get; }
         public int ContentIndex { get; }
-        public ConversationContentPartKind ContentKind { get; }
+        public ConversationContentPartKind ContentPartKind { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
@@ -2324,7 +2324,7 @@ namespace OpenAI.RealtimeConversation {
     public class ConversationContentPartStartedUpdate : ConversationUpdate, IJsonModel<ConversationContentPartStartedUpdate>, IPersistableModel<ConversationContentPartStartedUpdate> {
         public string AudioTranscript { get; }
         public int ContentIndex { get; }
-        public ConversationContentPartKind ContentKind { get; }
+        public ConversationContentPartKind ContentPartKind { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
@@ -2358,17 +2358,17 @@ namespace OpenAI.RealtimeConversation {
         string IPersistableModel<ConversationFunctionCallArgumentsDeltaUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<ConversationFunctionCallArgumentsDeltaUpdate>.Write(ModelReaderWriterOptions options);
     }
-    public class ConversationFunctionCallArgumentsDoneUpdate : ConversationUpdate, IJsonModel<ConversationFunctionCallArgumentsDoneUpdate>, IPersistableModel<ConversationFunctionCallArgumentsDoneUpdate> {
+    public class ConversationFunctionCallArgumentsFinishedUpdate : ConversationUpdate, IJsonModel<ConversationFunctionCallArgumentsFinishedUpdate>, IPersistableModel<ConversationFunctionCallArgumentsFinishedUpdate> {
         public string Arguments { get; }
         public string CallId { get; }
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
-        ConversationFunctionCallArgumentsDoneUpdate IJsonModel<ConversationFunctionCallArgumentsDoneUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ConversationFunctionCallArgumentsDoneUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ConversationFunctionCallArgumentsDoneUpdate IPersistableModel<ConversationFunctionCallArgumentsDoneUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ConversationFunctionCallArgumentsDoneUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ConversationFunctionCallArgumentsDoneUpdate>.Write(ModelReaderWriterOptions options);
+        ConversationFunctionCallArgumentsFinishedUpdate IJsonModel<ConversationFunctionCallArgumentsFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<ConversationFunctionCallArgumentsFinishedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        ConversationFunctionCallArgumentsFinishedUpdate IPersistableModel<ConversationFunctionCallArgumentsFinishedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<ConversationFunctionCallArgumentsFinishedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<ConversationFunctionCallArgumentsFinishedUpdate>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationFunctionTool : ConversationTool, IJsonModel<ConversationFunctionTool>, IPersistableModel<ConversationFunctionTool> {
         public ConversationFunctionTool();
@@ -2476,7 +2476,13 @@ namespace OpenAI.RealtimeConversation {
         BinaryData IPersistableModel<ConversationItem>.Write(ModelReaderWriterOptions options);
     }
     public class ConversationItemAcknowledgedUpdate : ConversationUpdate, IJsonModel<ConversationItemAcknowledgedUpdate>, IPersistableModel<ConversationItemAcknowledgedUpdate> {
-        public ConversationItem Item { get; }
+        public string FunctionCallArguments { get; }
+        public string FunctionCallId { get; }
+        public string FunctionCallOutput { get; }
+        public string FunctionName { get; }
+        public IReadOnlyList<ConversationContentPart> MessageContentParts { get; }
+        public ConversationMessageRole? MessageRole { get; }
+        public string NewItemId { get; }
         public string PreviousItemId { get; }
         ConversationItemAcknowledgedUpdate IJsonModel<ConversationItemAcknowledgedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationItemAcknowledgedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -2676,7 +2682,7 @@ namespace OpenAI.RealtimeConversation {
         public ConversationAudioFormat? InputAudioFormat { get; set; }
         public ConversationInputTranscriptionOptions InputTranscriptionOptions { get; set; }
         public string Instructions { get; set; }
-        public ConversationMaxTokensChoice MaxResponseOutputTokens { get; set; }
+        public ConversationMaxTokensChoice MaxOutputTokens { get; set; }
         public ConversationAudioFormat? OutputAudioFormat { get; set; }
         public float? Temperature { get; set; }
         public ConversationToolChoice ToolChoice { get; set; }
@@ -2910,30 +2916,44 @@ namespace OpenAI.RealtimeConversation {
     public class RealtimeConversationSession : IDisposable {
         protected Net.WebSockets.ClientWebSocket _clientWebSocket;
         protected internal RealtimeConversationSession(RealtimeConversationClient parentClient, Uri endpoint, ApiKeyCredential credential);
-        public Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
-        public Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default);
+        public virtual void AddItem(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
+        public virtual void AddItem(ConversationItem item, CancellationToken cancellationToken = default);
+        public virtual Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
+        public virtual Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default);
+        public void CancelResponseTurn(CancellationToken cancellationToken = default);
         public Task CancelResponseTurnAsync(CancellationToken cancellationToken = default);
+        public virtual void ClearInputAudio(CancellationToken cancellationToken = default);
+        public virtual Task ClearInputAudioAsync(CancellationToken cancellationToken = default);
+        public virtual void CommitPendingAudio(CancellationToken cancellationToken = default);
         public Task CommitPendingAudioAsync(CancellationToken cancellationToken = default);
-        public Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
+        public virtual void ConfigureSession(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
+        public virtual Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected internal virtual void Connect(RequestOptions options);
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected internal virtual Task ConnectAsync(RequestOptions options);
-        public Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default);
+        public virtual void DeleteItem(string itemId, CancellationToken cancellationToken = default);
+        public virtual Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default);
         public void Dispose();
-        public Task InterruptTurnAsync(CancellationToken cancellationToken = default);
+        public virtual void InterruptTurn(CancellationToken cancellationToken = default);
+        public virtual Task InterruptTurnAsync(CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual IEnumerable<ClientResult> ReceiveUpdates(RequestOptions options);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual IAsyncEnumerable<ClientResult> ReceiveUpdatesAsync(RequestOptions options);
         public IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync(CancellationToken cancellationToken = default);
-        public Task SendAudioAsync(BinaryData audio, CancellationToken cancellationToken = default);
-        public Task SendAudioAsync(Stream audio, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual void SendCommand(BinaryData data, RequestOptions options);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task SendCommandAsync(BinaryData data, RequestOptions options);
-        public Task StartResponseTurnAsync(CancellationToken cancellationToken = default);
+        public virtual void SendInputAudio(BinaryData audio, CancellationToken cancellationToken = default);
+        public virtual void SendInputAudio(Stream audio, CancellationToken cancellationToken = default);
+        public virtual Task SendInputAudioAsync(BinaryData audio, CancellationToken cancellationToken = default);
+        public virtual Task SendInputAudioAsync(Stream audio, CancellationToken cancellationToken = default);
+        public virtual void StartResponseTurn(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default);
+        public virtual void StartResponseTurn(CancellationToken cancellationToken = default);
+        public virtual Task StartResponseTurnAsync(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default);
+        public virtual Task StartResponseTurnAsync(CancellationToken cancellationToken = default);
     }
 }
 namespace OpenAI.VectorStores {

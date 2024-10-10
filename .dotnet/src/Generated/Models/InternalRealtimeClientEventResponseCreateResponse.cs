@@ -16,7 +16,7 @@ namespace OpenAI.RealtimeConversation
             Tools = new ChangeTrackingList<ConversationTool>();
         }
 
-        internal InternalRealtimeClientEventResponseCreateResponse(IList<string> modalities, string instructions, string voice, string outputAudioFormat, IList<ConversationTool> tools, string toolChoice, float? temperature, BinaryData maxOutputTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRealtimeClientEventResponseCreateResponse(IList<string> modalities, string instructions, string voice, string outputAudioFormat, IList<ConversationTool> tools, BinaryData toolChoice, float? temperature, BinaryData maxOutputTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Modalities = modalities;
             Instructions = instructions;
@@ -34,7 +34,6 @@ namespace OpenAI.RealtimeConversation
         public string Voice { get; set; }
         public string OutputAudioFormat { get; set; }
         public IList<ConversationTool> Tools { get; }
-        public string ToolChoice { get; set; }
         public float? Temperature { get; set; }
         public BinaryData MaxOutputTokens { get; set; }
     }

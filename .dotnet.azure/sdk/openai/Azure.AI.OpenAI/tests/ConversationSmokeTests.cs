@@ -36,7 +36,7 @@ public class ConversationSmokeTests : ConversationTestFixtureBase
                 Model = "whisper-1",
             },
             Instructions = "test instructions",
-            MaxResponseOutputTokens = 42,
+            MaxOutputTokens = 42,
             OutputAudioFormat = ConversationAudioFormat.G711Ulaw,
             Temperature = 0.42f,
             ToolChoice = ConversationToolChoice.CreateFunctionToolChoice("test-function"),
@@ -83,7 +83,7 @@ public class ConversationSmokeTests : ConversationTestFixtureBase
         Assert.That(deserializedOptions.InputAudioFormat, Is.EqualTo(ConversationAudioFormat.G711Alaw));
         Assert.That(deserializedOptions.InputTranscriptionOptions?.Model, Is.EqualTo(ConversationTranscriptionModel.Whisper1));
         Assert.That(deserializedOptions.Instructions, Is.EqualTo("test instructions"));
-        Assert.That(deserializedOptions.MaxResponseOutputTokens.NumericValue, Is.EqualTo(42));
+        Assert.That(deserializedOptions.MaxOutputTokens.NumericValue, Is.EqualTo(42));
         Assert.That(deserializedOptions.OutputAudioFormat, Is.EqualTo(ConversationAudioFormat.G711Ulaw));
         Assert.That(deserializedOptions.Tools, Has.Count.EqualTo(1));
         Assert.That(deserializedOptions.Tools[0].Kind, Is.EqualTo(ConversationToolKind.Function));

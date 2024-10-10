@@ -18,7 +18,6 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("RealtimeRequestFunctionCallOutputItem")] internal partial class InternalRealtimeRequestFunctionCallOutputItem { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeRequestMessageItem")] internal partial class InternalRealtimeRequestMessageItem { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeRequestModel")] internal readonly partial struct InternalRealtimeRequestModel { }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeClientEventResponseCreateResponse")] internal partial class InternalRealtimeClientEventResponseCreateResponse { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeRequestSessionModality")] internal readonly partial struct InternalRealtimeClientEventSessionUpdateSessionModality { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeRequestTextContentPart")] internal partial class InternalRealtimeRequestTextContentPart { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventConversationItemInputAudioTranscriptionFailedError")] internal partial class InternalRealtimeServerEventConversationItemInputAudioTranscriptionFailedError { }

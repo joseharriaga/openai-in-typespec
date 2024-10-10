@@ -6,6 +6,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.RealtimeConversation;
 
+/// <summary>
+/// The update (response command) of type <c>error</c>, which is received when a problem is encountered while
+/// processing a request command or generating another response command.
+/// </summary>
 [Experimental("OPENAI002")]
 [CodeGenModel("RealtimeServerEventError")]
 public partial class ConversationErrorUpdate

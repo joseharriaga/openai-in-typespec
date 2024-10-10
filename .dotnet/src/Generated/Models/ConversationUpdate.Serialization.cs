@@ -98,7 +98,7 @@ namespace OpenAI.RealtimeConversation
                     case "response.created": return ConversationResponseStartedUpdate.DeserializeConversationResponseStartedUpdate(element, options);
                     case "response.done": return ConversationResponseFinishedUpdate.DeserializeConversationResponseFinishedUpdate(element, options);
                     case "response.function_call_arguments.delta": return ConversationFunctionCallArgumentsDeltaUpdate.DeserializeConversationFunctionCallArgumentsDeltaUpdate(element, options);
-                    case "response.function_call_arguments.done": return ConversationFunctionCallArgumentsDoneUpdate.DeserializeConversationFunctionCallArgumentsDoneUpdate(element, options);
+                    case "response.function_call_arguments.done": return ConversationFunctionCallArgumentsFinishedUpdate.DeserializeConversationFunctionCallArgumentsFinishedUpdate(element, options);
                     case "response.output_item.added": return ConversationItemStartedUpdate.DeserializeConversationItemStartedUpdate(element, options);
                     case "response.output_item.done": return ConversationItemFinishedUpdate.DeserializeConversationItemFinishedUpdate(element, options);
                     case "response.text.delta": return ConversationTextDeltaUpdate.DeserializeConversationTextDeltaUpdate(element, options);

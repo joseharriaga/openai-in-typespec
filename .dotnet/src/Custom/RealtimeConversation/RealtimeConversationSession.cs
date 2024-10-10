@@ -5,6 +5,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -48,7 +49,7 @@ public partial class RealtimeConversationSession : IDisposable
     /// <param name="audio"> The audio stream to transmit. </param>
     /// <param name="cancellationToken"> An optional cancellation token. </param>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task SendAudioAsync(Stream audio, CancellationToken cancellationToken = default)
+    public virtual async Task SendInputAudioAsync(Stream audio, CancellationToken cancellationToken = default)
     {
         lock (_sendingAudioLock)
         {
@@ -85,6 +86,12 @@ public partial class RealtimeConversationSession : IDisposable
         }
     }
 
+    public virtual void SendInputAudio(Stream audio, CancellationToken cancellationToken = default)
+    {
+        // TODO: direct impl
+        SendInputAudioAsync(audio, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
+    }
+
     /// <summary>
     /// Transmits a single chunk of audio.
     /// </summary>
@@ -92,7 +99,7 @@ public partial class RealtimeConversationSession : IDisposable
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task SendAudioAsync(BinaryData audio, CancellationToken cancellationToken = default)
+    public virtual async Task SendInputAudioAsync(BinaryData audio, CancellationToken cancellationToken = default)
     {
         lock (_sendingAudioLock)
         {
@@ -108,16 +115,60 @@ public partial class RealtimeConversationSession : IDisposable
         await SendCommandAsync(requestData, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
     }
 
-    public async Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Transmits a single chunk of audio.
+    /// </summary>
+    /// <param name="audio"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public virtual void SendInputAudio(BinaryData audio, CancellationToken cancellationToken = default)
+    {
+        lock (_sendingAudioLock)
+        {
+            if (_isSendingAudio)
+            {
+                throw new InvalidOperationException($"Cannot send a standalone audio chunk while a stream is already in progress.");
+            }
+            _isSendingAudio = true;
+        }
+        // TODO: consider automatically limiting/breaking size of chunk (as with streaming)
+        InternalRealtimeClientEventInputAudioBufferAppend internalCommand = new(audio);
+        BinaryData requestData = ModelReaderWriter.Write(internalCommand);
+        SendCommand(requestData, cancellationToken.ToRequestOptions());
+    }
+
+    public virtual async Task ClearInputAudioAsync(CancellationToken cancellationToken = default)
+    {
+        InternalRealtimeClientEventInputAudioBufferClear internalCommand = new();
+        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+    }
+
+    public virtual void ClearInputAudio(CancellationToken cancellationToken = default)
+    {
+        InternalRealtimeClientEventInputAudioBufferClear internalCommand = new();
+        SendCommand(internalCommand, cancellationToken);
+    }
+
+    public virtual async Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default)
     {
         InternalRealtimeClientEventSessionUpdate internalCommand = new(sessionOptions);
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default)
+    public virtual void ConfigureSession(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default)
+    {
+        InternalRealtimeClientEventSessionUpdate internalCommand = new(sessionOptions);
+        SendCommand(internalCommand, cancellationToken);
+    }
+
+    public virtual async Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default)
         => await AddItemAsync(item, null, cancellationToken).ConfigureAwait(false);
 
-    public async Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default)
+    public virtual void AddItem(ConversationItem item, CancellationToken cancellationToken = default)
+        => AddItem(item, null, cancellationToken);
+
+    public virtual async Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default)
     {
         InternalRealtimeClientEventConversationItemCreate internalCommand = new(item)
         {
@@ -126,26 +177,103 @@ public partial class RealtimeConversationSession : IDisposable
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default)
+    public virtual void AddItem(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default)
+    {
+        InternalRealtimeClientEventConversationItemCreate internalCommand = new(item)
+        {
+            PreviousItemId = previousItemId,
+        };
+        SendCommand(internalCommand, cancellationToken);
+    }
+
+    public virtual async Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(itemId, nameof(itemId));
-        await SendCommandAsync(new InternalRealtimeClientEventConversationItemDelete(itemId), cancellationToken).ConfigureAwait(false);
+        InternalRealtimeClientEventConversationItemDelete internalCommand = new(itemId);
+        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+    }
+
+    public virtual void DeleteItem(string itemId, CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(itemId, nameof(itemId));
+        InternalRealtimeClientEventConversationItemDelete internalCommand = new(itemId);
+        SendCommand(internalCommand, cancellationToken);
+    }
+
+    public virtual async Task TruncateItemAsync(string itemId, int contentPartIndex, TimeSpan audioDuration, CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(itemId, nameof(itemId));
+        InternalRealtimeClientEventConversationItemTruncate internalCommand = new(
+            itemId: itemId,
+            contentIndex: contentPartIndex,
+            audioEndMs: (int)audioDuration.TotalMilliseconds);
+        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+    }
+
+    public virtual void TruncateItem(string itemId, int contentPartIndex, TimeSpan audioDuration, CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(itemId, nameof(itemId));
+        InternalRealtimeClientEventConversationItemTruncate internalCommand = new(
+            itemId: itemId,
+            contentIndex: contentPartIndex,
+            audioEndMs: (int)audioDuration.TotalMilliseconds);
+        SendCommand(internalCommand, cancellationToken);
     }
 
     public async Task CommitPendingAudioAsync(CancellationToken cancellationToken = default)
     {
-        await SendCommandAsync(new InternalRealtimeClientEventInputAudioBufferCommit(), cancellationToken).ConfigureAwait(false);
-    }
-
-    public async Task InterruptTurnAsync(CancellationToken cancellationToken = default)
-    {
-        await SendCommandAsync(new InternalRealtimeClientEventResponseCancel(), cancellationToken).ConfigureAwait(false);
-    }
-
-    public async Task StartResponseTurnAsync(CancellationToken cancellationToken = default)
-    {
-        InternalRealtimeClientEventResponseCreate internalCommand = new(new());
+        InternalRealtimeClientEventInputAudioBufferCommit internalCommand = new();
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+    }
+
+    public virtual void CommitPendingAudio(CancellationToken cancellationToken = default)
+    {
+        InternalRealtimeClientEventInputAudioBufferCommit internalCommand = new();
+        SendCommand(internalCommand, cancellationToken);
+    }
+
+    public virtual async Task InterruptTurnAsync(CancellationToken cancellationToken = default)
+    {
+        InternalRealtimeClientEventResponseCancel internalCommand = new();
+        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+    }
+
+    public virtual void InterruptTurn(CancellationToken cancellationToken = default)
+    {
+        InternalRealtimeClientEventResponseCancel internalCommand = new();
+        SendCommand(internalCommand, cancellationToken);
+    }
+
+    public virtual async Task StartResponseTurnAsync(CancellationToken cancellationToken = default)
+    {
+        InternalRealtimeClientEventResponseCreateResponse internalOptions = new();
+        InternalRealtimeClientEventResponseCreate internalCommand = new(internalOptions);
+        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+    }
+
+    public virtual void StartResponseTurn(CancellationToken cancellationToken = default)
+    {
+        InternalRealtimeClientEventResponseCreateResponse internalOptions = new();
+        InternalRealtimeClientEventResponseCreate internalCommand = new(internalOptions);
+        SendCommand(internalCommand, cancellationToken);
+    }
+
+    public virtual async Task StartResponseTurnAsync(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(sessionOptionOverrides, nameof(sessionOptionOverrides));
+        InternalRealtimeClientEventResponseCreateResponse internalOptions
+            = InternalRealtimeClientEventResponseCreateResponse.FromSessionOptions(sessionOptionOverrides);
+        InternalRealtimeClientEventResponseCreate internalCommand = new(internalOptions);
+        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+    }
+
+    public virtual void StartResponseTurn(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(sessionOptionOverrides, nameof(sessionOptionOverrides));
+        InternalRealtimeClientEventResponseCreateResponse internalOptions
+            = InternalRealtimeClientEventResponseCreateResponse.FromSessionOptions(sessionOptionOverrides);
+        InternalRealtimeClientEventResponseCreate internalCommand = new(internalOptions);
+        SendCommand(internalCommand, cancellationToken);
     }
 
     public async Task CancelResponseTurnAsync(CancellationToken cancellationToken = default)
@@ -154,11 +282,10 @@ public partial class RealtimeConversationSession : IDisposable
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
-    internal virtual async Task SendCommandAsync(InternalRealtimeClientEvent command, CancellationToken cancellationToken = default)
+    public void CancelResponseTurn(CancellationToken cancellationToken = default)
     {
-        BinaryData requestData = ModelReaderWriter.Write(command);
-        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
-        await SendCommandAsync(requestData, cancellationOptions).ConfigureAwait(false);
+        InternalRealtimeClientEventResponseCancel internalCommand = new();
+        SendCommand(internalCommand, cancellationToken);
     }
 
     public async IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -168,6 +295,20 @@ public partial class RealtimeConversationSession : IDisposable
             ConversationUpdate nextUpdate = ConversationUpdate.FromResponse(protocolEvent.GetRawResponse());
             yield return nextUpdate;
         }
+    }
+
+    internal virtual async Task SendCommandAsync(InternalRealtimeClientEvent command, CancellationToken cancellationToken = default)
+    {
+        BinaryData requestData = ModelReaderWriter.Write(command);
+        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
+        await SendCommandAsync(requestData, cancellationOptions).ConfigureAwait(false);
+    }
+
+    internal virtual void SendCommand(InternalRealtimeClientEvent command, CancellationToken cancellationToken = default)
+    {
+        BinaryData requestData = ModelReaderWriter.Write(command);
+        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
+        SendCommand(requestData, cancellationOptions);
     }
 
     public void Dispose()

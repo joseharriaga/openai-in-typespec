@@ -33,7 +33,7 @@ public partial class ConversationSessionOptions
     [CodeGenMember("MaxResponseOutputTokens")]
     private BinaryData _maxResponseOutputTokens;
 
-    public ConversationMaxTokensChoice MaxResponseOutputTokens
+    public ConversationMaxTokensChoice MaxOutputTokens
     {
         get => ConversationMaxTokensChoice.FromBinaryData(_maxResponseOutputTokens);
         set

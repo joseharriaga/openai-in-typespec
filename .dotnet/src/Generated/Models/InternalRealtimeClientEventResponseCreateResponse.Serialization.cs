@@ -59,7 +59,14 @@ namespace OpenAI.RealtimeConversation
             if (SerializedAdditionalRawData?.ContainsKey("tool_choice") != true && Optional.IsDefined(ToolChoice))
             {
                 writer.WritePropertyName("tool_choice"u8);
-                writer.WriteStringValue(ToolChoice);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(ToolChoice);
+#else
+                using (JsonDocument document = JsonDocument.Parse(ToolChoice))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
             }
             if (SerializedAdditionalRawData?.ContainsKey("temperature") != true && Optional.IsDefined(Temperature))
             {
@@ -125,7 +132,7 @@ namespace OpenAI.RealtimeConversation
             string voice = default;
             string outputAudioFormat = default;
             IList<ConversationTool> tools = default;
-            string toolChoice = default;
+            BinaryData toolChoice = default;
             float? temperature = default;
             BinaryData maxOutputTokens = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -177,7 +184,11 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (property.NameEquals("tool_choice"u8))
                 {
-                    toolChoice = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    toolChoice = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
                 if (property.NameEquals("temperature"u8))

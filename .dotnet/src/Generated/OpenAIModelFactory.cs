@@ -84,11 +84,6 @@ namespace OpenAI
             return new ConversationInputSpeechFinishedUpdate(ConversationUpdateKind.InputAudioBufferSpeechStopped, eventId, serializedAdditionalRawData: null, audioEndMs, itemId);
         }
 
-        public static ConversationItemAcknowledgedUpdate ConversationItemAcknowledgedUpdate(string eventId = null, string previousItemId = null, ConversationItem item = null)
-        {
-            return new ConversationItemAcknowledgedUpdate(ConversationUpdateKind.ItemAcknowledged, eventId, serializedAdditionalRawData: null, previousItemId, item);
-        }
-
         public static ConversationInputTranscriptionFinishedUpdate ConversationInputTranscriptionFinishedUpdate(string eventId = null, string itemId = null, int contentIndex = default, string transcript = null)
         {
             return new ConversationInputTranscriptionFinishedUpdate(
@@ -227,9 +222,9 @@ namespace OpenAI
                 delta);
         }
 
-        public static ConversationFunctionCallArgumentsDoneUpdate ConversationFunctionCallArgumentsDoneUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, string callId = null, string arguments = null)
+        public static ConversationFunctionCallArgumentsFinishedUpdate ConversationFunctionCallArgumentsFinishedUpdate(string eventId = null, string responseId = null, string itemId = null, int outputIndex = default, string callId = null, string arguments = null)
         {
-            return new ConversationFunctionCallArgumentsDoneUpdate(
+            return new ConversationFunctionCallArgumentsFinishedUpdate(
                 ConversationUpdateKind.ResponseFunctionCallArgumentsDone,
                 eventId,
                 serializedAdditionalRawData: null,

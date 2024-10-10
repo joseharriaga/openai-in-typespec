@@ -4,6 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.RealtimeConversation;
 
+/// <summary>
+/// The update (response command) of type <c>response.done</c>, which is received when a model response turn has
+/// completed and no further content part or item information will be transmitted.
+/// </summary>
 [Experimental("OPENAI002")]
 [CodeGenModel("RealtimeServerEventResponseDone")]
 public partial class ConversationResponseFinishedUpdate

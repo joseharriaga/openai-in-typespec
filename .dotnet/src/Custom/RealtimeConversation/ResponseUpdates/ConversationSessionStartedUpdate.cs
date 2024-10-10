@@ -4,6 +4,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.RealtimeConversation;
 
+/// <summary>
+/// The update (response command) of type <c>session.created</c>, which is received when a new session has been
+/// established. This is typically received immediately following connection and the <c>session</c> properties reflect
+/// the initial, default state of the session. Configuration changes can be made via the <c>session.update</c> request
+/// command
+/// (<see cref="RealtimeConversationSession.ConfigureSessionAsync(OpenAI.RealtimeConversation.ConversationSessionOptions, System.Threading.CancellationToken)"/>).
+/// </summary>
 [Experimental("OPENAI002")]
 [CodeGenModel("RealtimeServerEventSessionCreated")]
 public partial class ConversationSessionStartedUpdate

@@ -26,7 +26,6 @@ internal partial class AzureRealtimeConversationSession : RealtimeConversationSe
         {
             _keyCredential.Deconstruct(out string dangerousCredential);
             _clientWebSocket.Options.SetRequestHeader("api-key", dangerousCredential);
-            // uriBuilder.AppendQuery("api-key", dangerousCredential, escape: false);
         }
 
         Uri endpoint = uriBuilder.ToUri();
@@ -36,8 +35,9 @@ internal partial class AzureRealtimeConversationSession : RealtimeConversationSe
             await _clientWebSocket.ConnectAsync(endpoint, options?.CancellationToken ?? default)
                 .ConfigureAwait(false);
         }
-        catch (WebSocketException)
+        catch (WebSocketException webSocketException)
         {
+            Console.WriteLine(webSocketException.ErrorCode);
             throw;
         }
     }

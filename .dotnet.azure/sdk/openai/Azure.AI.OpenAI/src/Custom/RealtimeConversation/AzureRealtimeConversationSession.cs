@@ -57,6 +57,20 @@ internal partial class AzureRealtimeConversationSession : RealtimeConversationSe
 
     internal override async Task SendCommandAsync(InternalRealtimeClientEvent command, CancellationToken cancellationToken = default)
     {
+        BinaryData requestData = GetAdjustedRequestCommandBytes(command);
+        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
+        await SendCommandAsync(requestData, cancellationOptions).ConfigureAwait(false);
+    }
+
+    internal override void SendCommand(InternalRealtimeClientEvent command, CancellationToken cancellationToken = default)
+    {
+        BinaryData requestData = GetAdjustedRequestCommandBytes(command);
+        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
+        SendCommand(requestData, cancellationOptions);
+    }
+
+    private BinaryData GetAdjustedRequestCommandBytes(InternalRealtimeClientEvent command)
+    {
         BinaryData requestData = ModelReaderWriter.Write(command);
 
         // Temporary backcompat quirk
@@ -67,7 +81,6 @@ internal partial class AzureRealtimeConversationSession : RealtimeConversationSe
                 .Replace(@"""turn_detection"":null", @"""turn_detection"":{""type"":""none""}"));
         }
 
-        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
-        await SendCommandAsync(requestData, cancellationOptions).ConfigureAwait(false);
+        return requestData;
     }
 }

@@ -27,29 +27,50 @@ public class ConversationTests : ConversationTestFixtureBase
         RealtimeConversationClient client = GetTestClient();
         using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
 
-        await session.ConfigureSessionAsync(
-            new ConversationSessionOptions()
-            {
-                Instructions = "You are a helpful assistant.",
-                TurnDetectionOptions = ConversationTurnDetectionOptions.CreateDisabledTurnDetectionOptions(),
-                OutputAudioFormat = ConversationAudioFormat.G711Ulaw
-            },
-            CancellationToken);
+        ConversationSessionOptions sessionOptions = new()
+        {
+            Instructions = "You are a helpful assistant.",
+            TurnDetectionOptions = ConversationTurnDetectionOptions.CreateDisabledTurnDetectionOptions(),
+            OutputAudioFormat = ConversationAudioFormat.G711Ulaw,
+            MaxOutputTokens = 2048,
+        };
 
-        await session.StartResponseTurnAsync(CancellationToken);
+        await session.ConfigureSessionAsync(sessionOptions, CancellationToken);
+        ConversationSessionOptions responseOverrideOptions = new()
+        {
+            ContentModalities = ConversationContentModalities.Text,
+        };
+        if (!client.GetType().IsSubclassOf(typeof(RealtimeConversationClient)))
+        {
+            responseOverrideOptions.MaxOutputTokens = ConversationMaxTokensChoice.CreateInfiniteMaxTokensChoice();
+        }
+        await session.AddItemAsync(
+            ConversationItem.CreateUserMessage(["Hello, assistant!"]),
+            CancellationToken);
+        await session.StartResponseTurnAsync(responseOverrideOptions, CancellationToken);
 
         List<ConversationUpdate> receivedUpdates = [];
 
         await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
         {
             receivedUpdates.Add(update);
-            
+
             if (update is ConversationErrorUpdate errorUpdate)
             {
                 Assert.That(errorUpdate.Kind, Is.EqualTo(ConversationUpdateKind.Error));
                 Assert.Fail($"Error: {ModelReaderWriter.Write(errorUpdate)}");
             }
-            else if (update is ConversationResponseFinishedUpdate)
+            else if (update is ConversationAudioContentDeltaUpdate or ConversationAudioContentFinishedUpdate)
+            {
+                Assert.Fail($"Audio content streaming unexpected after configuring response-level text-only modalities");
+            }
+            else if (update is ConversationSessionConfiguredUpdate sessionConfiguredUpdate)
+            {
+                Assert.That(sessionConfiguredUpdate.OutputAudioFormat == sessionOptions.OutputAudioFormat);
+                Assert.That(sessionConfiguredUpdate.TurnDetectionSettings.Kind, Is.EqualTo(ConversationTurnDetectionKind.Disabled));
+                Assert.That(sessionConfiguredUpdate.MaxOutputTokens.NumericValue, Is.EqualTo(sessionOptions.MaxOutputTokens.NumericValue));
+            }
+            else if (update is ConversationResponseFinishedUpdate turnFinishedUpdate)
             {
                 break;
             }
@@ -87,25 +108,35 @@ public class ConversationTests : ConversationTestFixtureBase
             {
                 Assert.That(sessionStartedUpdate.SessionId, Is.Not.Null.And.Not.Empty);
             }
-            if (update is ConversationTextDeltaUpdate textDeltaUpdate)
+            if (update is ConversationTextContentDeltaUpdate textDeltaUpdate)
             {
                 responseBuilder.Append(textDeltaUpdate.Delta);
             }
 
-            if (update is ConversationItemAcknowledgedUpdate itemAddedUpdate)
+            if (update is ConversationItemAcknowledgedUpdate itemAcknowledgedUpdate)
             {
-                // Assert.That(itemAddedUpdate.is not null);
+                if (itemAcknowledgedUpdate.MessageRole == ConversationMessageRole.Assistant)
+                {
+                    // The assistant-created item should be streamed and should not have content yet when acknowledged
+                    Assert.That(itemAcknowledgedUpdate.MessageContentParts, Has.Count.EqualTo(0));
+                }
+                else if (itemAcknowledgedUpdate.MessageRole == ConversationMessageRole.User)
+                {
+                    // When acknowledging an item added by the client (user), the text should already be there
+                    Assert.That(itemAcknowledgedUpdate.MessageContentParts, Has.Count.EqualTo(1));
+                    Assert.That(itemAcknowledgedUpdate.MessageContentParts[0].TextValue, Is.EqualTo("Hello, world!"));
+                }
+                else
+                {
+                    Assert.Fail($"Test didn't expect an acknowledged item with role: {itemAcknowledgedUpdate.MessageRole}");
+                }
             }
 
             if (update is ConversationResponseFinishedUpdate responseFinishedUpdate)
             {
                 Assert.That(responseFinishedUpdate.CreatedItems, Has.Count.GreaterThan(0));
                 gotResponseDone = true;
-                if (client.GetType().IsSubclassOf(typeof(RealtimeConversationClient)))
-                {
-                    // Temporarily assume that subclients don't support rate limits as the terminal command
-                    break;
-                }
+                break;
             }
 
             if (update is ConversationRateLimitsUpdate rateLimitsUpdate)
@@ -119,7 +150,6 @@ public class ConversationTests : ConversationTestFixtureBase
                 Assert.That(rateLimitsUpdate.TokenDetails.TimeUntilReset, Is.GreaterThan(TimeSpan.Zero));
                 Assert.That(rateLimitsUpdate.RequestDetails, Is.Not.Null);
                 gotRateLimits = true;
-                break;
             }
         }
 
@@ -128,7 +158,7 @@ public class ConversationTests : ConversationTestFixtureBase
 
         if (!client.GetType().IsSubclassOf(typeof(RealtimeConversationClient)))
         {
-            // Temporarily assume that subclients don't support rate limit terminal commands
+            // Temporarily assume that subclients don't support rate limit commands
             Assert.That(gotRateLimits, Is.True);
         }
     }

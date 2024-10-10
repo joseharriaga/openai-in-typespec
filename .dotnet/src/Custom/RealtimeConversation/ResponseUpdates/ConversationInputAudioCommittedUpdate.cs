@@ -14,5 +14,5 @@ namespace OpenAI.RealtimeConversation;
 /// </summary>
 [Experimental("OPENAI002")]
 [CodeGenModel("RealtimeServerEventInputAudioBufferCommitted")]
-public partial class ConversationInputAudioBufferCommittedUpdate
+public partial class ConversationInputAudioCommittedUpdate
 { }

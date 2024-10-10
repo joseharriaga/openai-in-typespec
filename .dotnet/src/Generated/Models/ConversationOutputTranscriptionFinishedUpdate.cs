@@ -16,7 +16,7 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(itemId, nameof(itemId));
             Argument.AssertNotNull(transcript, nameof(transcript));
 
-            Kind = ConversationUpdateKind.ResponseAudioTranscriptDone;
+            Kind = ConversationUpdateKind.OutputTranscriptionFinished;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;

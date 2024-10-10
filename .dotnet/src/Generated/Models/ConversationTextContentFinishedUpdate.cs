@@ -7,16 +7,16 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationTextDoneUpdate : ConversationUpdate
+    public partial class ConversationTextContentFinishedUpdate : ConversationUpdate
     {
-        internal ConversationTextDoneUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string text) : base(eventId)
+        internal ConversationTextContentFinishedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string text) : base(eventId)
         {
             Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(itemId, nameof(itemId));
             Argument.AssertNotNull(text, nameof(text));
 
-            Kind = ConversationUpdateKind.ResponseTextDone;
+            Kind = ConversationUpdateKind.TextContentFinished;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -24,7 +24,7 @@ namespace OpenAI.RealtimeConversation
             Text = text;
         }
 
-        internal ConversationTextDoneUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, string text) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationTextContentFinishedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, string text) : base(kind, eventId, serializedAdditionalRawData)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -33,7 +33,7 @@ namespace OpenAI.RealtimeConversation
             Text = text;
         }
 
-        internal ConversationTextDoneUpdate()
+        internal ConversationTextContentFinishedUpdate()
         {
         }
 

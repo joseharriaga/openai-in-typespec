@@ -94,5 +94,92 @@ public class ConversationSmokeTests : ConversationTestFixtureBase
         Assert.That(deserializedOptions.ToolChoice?.FunctionName, Is.EqualTo("test-function"));
         Assert.That(deserializedOptions.TurnDetectionOptions?.Kind, Is.EqualTo(ConversationTurnDetectionKind.ServerVoiceActivityDetection));
         Assert.That(deserializedOptions.Voice, Is.EqualTo(ConversationVoice.Echo));
+
+        ConversationSessionOptions emptyOptions = new();
+        Assert.That(emptyOptions.ContentModalities.HasFlag(ConversationContentModalities.Audio), Is.False);
+        Assert.That(ModelReaderWriter.Write(emptyOptions).ToString(), Does.Not.Contain("modal"));
+        emptyOptions.ContentModalities |= ConversationContentModalities.Audio;
+        Assert.That(emptyOptions.ContentModalities.HasFlag(ConversationContentModalities.Audio), Is.True);
+        Assert.That(emptyOptions.ContentModalities.HasFlag(ConversationContentModalities.Text), Is.False);
+        Assert.That(ModelReaderWriter.Write(emptyOptions).ToString(), Does.Contain("modal"));
+    }
+
+    [Test]
+    public void MaxTokensSerializationWorks()
+    {
+        // Implicit omission
+        ConversationSessionOptions options = new() { };
+        BinaryData serializedOptions = ModelReaderWriter.Write(options);
+        Assert.That(serializedOptions.ToString(), Does.Not.Contain("max_response_output_tokens"));
+
+        // Explicit omission
+        options = new()
+        {
+            MaxOutputTokens = null
+        };
+        serializedOptions = ModelReaderWriter.Write(options);
+        Assert.That(serializedOptions.ToString(), Does.Not.Contain("max_response_output_tokens"));
+
+        // Explicit default (null)
+        options = new()
+        {
+            MaxOutputTokens = ConversationMaxTokensChoice.CreateDefaultMaxTokensChoice()
+        };
+        serializedOptions = ModelReaderWriter.Write(options);
+        Assert.That(serializedOptions.ToString(), Does.Contain(@"""max_response_output_tokens"":null"));
+
+        // Numeric literal
+        options = new()
+        {
+            MaxOutputTokens = 42,
+        };
+        serializedOptions = ModelReaderWriter.Write(options);
+        Assert.That(serializedOptions.ToString(), Does.Contain(@"""max_response_output_tokens"":42"));
+
+        // Numeric by factory
+        options = new()
+        {
+            MaxOutputTokens = ConversationMaxTokensChoice.CreateNumericMaxTokensChoice(42)
+        };
+        serializedOptions = ModelReaderWriter.Write(options);
+        Assert.That(serializedOptions.ToString(), Does.Contain(@"""max_response_output_tokens"":42"));
+    }
+
+    [Test]
+    public void TurnDetectionSerializationWorks()
+    {
+        // Implicit omission
+        ConversationSessionOptions sessionOptions = new();
+        BinaryData serializedOptions = ModelReaderWriter.Write(sessionOptions);
+        Assert.That(serializedOptions.ToString(), Does.Not.Contain("turn_detection"));
+
+        sessionOptions = new()
+        {
+            TurnDetectionOptions = ConversationTurnDetectionOptions.CreateDisabledTurnDetectionOptions(),
+        };
+        serializedOptions = ModelReaderWriter.Write(sessionOptions);
+        Assert.That(serializedOptions.ToString(), Does.Contain(@"""turn_detection"":null"));
+
+        sessionOptions = new()
+        {
+            TurnDetectionOptions = ConversationTurnDetectionOptions.CreateServerVoiceActivityTurnDetectionOptions(
+                detectionThreshold: 0.42f)
+        };
+        serializedOptions = ModelReaderWriter.Write(sessionOptions);
+        JsonNode serializedNode = JsonNode.Parse(serializedOptions);
+        Assert.That(serializedNode["turn_detection"]?["type"]?.GetValue<string>(), Is.EqualTo("server_vad"));
+        Assert.That(serializedNode["turn_detection"]?["threshold"]?.GetValue<float>(), Is.EqualTo(0.42f));
+    }
+
+    [Test]
+    public void UnknownCommandSerializationWorks()
+    {
+        BinaryData serializedUnknownCommand = BinaryData.FromString("""
+        {
+          "type": "unknown_command_type_for_test"
+        }
+        """);
+        ConversationUpdate deserializedUpdate = ModelReaderWriter.Read<ConversationUpdate>(serializedUnknownCommand);
+        Assert.That(deserializedUpdate, Is.Not.Null);
     }
 }

@@ -8,6 +8,9 @@ namespace OpenAI.RealtimeConversation;
 [CodeGenModel("RealtimeServerEventType")]
 public enum ConversationUpdateKind
 {
+    /// <summary>
+    /// A response command that does not map to a <c>type</c> currently handled by the library.
+    /// </summary>
     Unknown,
     /// <summary>
     /// The <c>session.created</c> response command.
@@ -19,8 +22,17 @@ public enum ConversationUpdateKind
     /// </summary>
     [CodeGenMember("SessionUpdated")]
     SessionConfigured,
+    /// <summary>
+    /// The <c>conversation.item.created</c> response command.
+    /// </summary>
     [CodeGenMember("ConversationItemCreated")]
     ItemAcknowledged,
+    /// <summary>
+    /// The <c>conversation.c.reated</c> response command.
+    /// </summary>
+    /// <remarks>
+    /// This update kind is currently unused.
+    /// </remarks>
     ConversationCreated,
     /// <summary>
     /// The <c>conversation.item.deleted</c> response command.
@@ -42,6 +54,9 @@ public enum ConversationUpdateKind
     /// </summary>
     [CodeGenMember("ResponseDone")]
     ResponseFinished,
+    /// <summary>
+    /// The <c>rate_limits.updated</c> response command.
+    /// </summary>
     [CodeGenMember("RateLimitsUpdated")]
     RateLimitsUpdated,
     /// <summary>
@@ -64,34 +79,79 @@ public enum ConversationUpdateKind
     /// </summary>
     [CodeGenMember("ResponseContentPartDone")]
     ContentPartFinished,
+    /// <summary>
+    /// The <c>response.audio.delta</c> response command.
+    /// </summary>
     [CodeGenMember("ResponseAudioDelta")]
-    ResponseAudioDelta,
+    AudioContentDelta,
+    /// <summary>
+    /// The <c>response.audio.done</c> response command.
+    /// </summary>
     [CodeGenMember("ResponseAudioDone")]
-    ResponseAudioDone,
+    AudioContentFinished,
+    /// <summary>
+    /// The <c>response.audio_transcript.delta</c> response command.
+    /// </summary>
     [CodeGenMember("ResponseAudioTranscriptDelta")]
-    ResponseAudioTranscriptDelta,
+    OutputTranscriptionDelta,
+    /// <summary>
+    /// The <c>response.audio_transcript.done</c> response command.
+    /// </summary>
     [CodeGenMember("ResponseAudioTranscriptDone")]
-    ResponseAudioTranscriptDone,
+    OutputTranscriptionFinished,
+    /// <summary>
+    /// The <c>response.text.delta</c> response command.
+    /// </summary>
     [CodeGenMember("ResponseTextDelta")]
-    ResponseTextDelta,
+    TextContentDelta,
+    /// <summary>
+    /// The <c>response.text.done</c> response command.
+    /// </summary>
     [CodeGenMember("ResponseTextDone")]
-    ResponseTextDone,
+    TextContentFinished,
+    /// <summary>
+    /// The <c>response.function_call_arguments.delta</c> response command.
+    /// </summary>
     [CodeGenMember("ResponseFunctionCallArgumentsDelta")]
-    ResponseFunctionCallArgumentsDelta,
+    FunctionCallArgumentsDelta,
+    /// <summary>
+    /// The <c>response.function_call_arguments.done</c> response command.
+    /// </summary>
     [CodeGenMember("ResponseFunctionCallArgumentsDone")]
-    ResponseFunctionCallArgumentsDone,
+    FunctionCallArgumentsFinished,
+    /// <summary>
+    /// The <c>input_audio_buffer.speech_started</c> response command.
+    /// </summary>
     [CodeGenMember("InputAudioBufferSpeechStarted")]
-    InputAudioBufferSpeechStarted,
+    InputSpeechStarted,
+    /// <summary>
+    /// The <c>input_audio_buffer.speech_stopped</c> response command.
+    /// </summary>
     [CodeGenMember("InputAudioBufferSpeechStopped")]
-    InputAudioBufferSpeechStopped,
+    InputSpeechStopped,
+    /// <summary>
+    /// The <c>conversation.item.input_audio_transcription.completed</c> response command.
+    /// </summary>
     [CodeGenMember("ConversationItemInputAudioTranscriptionCompleted")]
-    ItemInputAudioTranscriptionCompleted,
+    InputTranscriptionFinished,
+    /// <summary>
+    /// The <c>conversation.item.input_audio_transcription.failed</c> response command.
+    /// </summary>
     [CodeGenMember("ConversationItemInputAudioTranscriptionFailed")]
-    ItemInputAudioTranscriptionFailed,
+    InputTranscriptionFailed,
+    /// <summary>
+    /// The <c>input_audio_buffer.committed</c> response command.
+    /// </summary>
     [CodeGenMember("InputAudioBufferCommitted")]
-    InputAudioBufferCommitted,
+    InputAudioCommitted,
+    /// <summary>
+    /// The <c>input_audio_buffer.cleared</c> response command.
+    /// </summary>
     [CodeGenMember("InputAudioBufferCleared")]
-    InputAudioBufferCleared,
+    InputAudioCleared,
+    /// <summary>
+    /// The <c>error</c> response command.
+    /// </summary>
     [CodeGenMember("Error")]
     Error
 }

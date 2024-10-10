@@ -10,7 +10,7 @@ namespace OpenAI.RealtimeConversation;
 public partial class ConversationSessionOptions
 {
     [CodeGenMember("Modalities")]
-    private IList<InternalRealtimeClientEventSessionUpdateSessionModality> _internalModalities;
+    private IList<InternalRealtimeRequestSessionModality> _internalModalities;
 
     public ConversationContentModalities ContentModalities
     {

@@ -37,8 +37,15 @@ public class ConversationTests : ConversationTestFixtureBase
         await session.ConfigureSessionAsync(sessionOptions, CancellationToken);
         ConversationSessionOptions responseOverrideOptions = new()
         {
-            MaxOutputTokens = ConversationMaxTokensChoice.CreateInfiniteMaxTokensChoice(),
+            ContentModalities = ConversationContentModalities.Text,
         };
+        if (!client.GetType().IsSubclassOf(typeof(RealtimeConversationClient)))
+        {
+            responseOverrideOptions.MaxOutputTokens = ConversationMaxTokensChoice.CreateInfiniteMaxTokensChoice();
+        }
+        await session.AddItemAsync(
+            ConversationItem.CreateUserMessage(["Hello, assistant!"]),
+            CancellationToken);
         await session.StartResponseTurnAsync(responseOverrideOptions, CancellationToken);
 
         List<ConversationUpdate> receivedUpdates = [];
@@ -51,6 +58,10 @@ public class ConversationTests : ConversationTestFixtureBase
             {
                 Assert.That(errorUpdate.Kind, Is.EqualTo(ConversationUpdateKind.Error));
                 Assert.Fail($"Error: {ModelReaderWriter.Write(errorUpdate)}");
+            }
+            else if (update is ConversationAudioContentDeltaUpdate or ConversationAudioContentFinishedUpdate)
+            {
+                Assert.Fail($"Audio content streaming unexpected after configuring response-level text-only modalities");
             }
             else if (update is ConversationSessionConfiguredUpdate sessionConfiguredUpdate)
             {
@@ -96,7 +107,7 @@ public class ConversationTests : ConversationTestFixtureBase
             {
                 Assert.That(sessionStartedUpdate.SessionId, Is.Not.Null.And.Not.Empty);
             }
-            if (update is ConversationTextDeltaUpdate textDeltaUpdate)
+            if (update is ConversationTextContentDeltaUpdate textDeltaUpdate)
             {
                 responseBuilder.Append(textDeltaUpdate.Delta);
             }

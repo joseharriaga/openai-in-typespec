@@ -26,7 +26,7 @@ internal partial class InternalRealtimeClientEventResponseCreateResponse
         BinaryData maxTokensChoice = Optional.IsDefined(sessionOptions.MaxOutputTokens)
             ? ModelReaderWriter.Write(sessionOptions.MaxOutputTokens)
             : null;
-        IList<InternalRealtimeClientEventSessionUpdateSessionModality> internalModalities
+        IList<InternalRealtimeRequestSessionModality> internalModalities
             = sessionOptions.ContentModalities.ToInternalModalities();
         IList<string> rawModalities = internalModalities.Count > 0
             ? internalModalities.Select(modality => modality.ToString()).ToList()

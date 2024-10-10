@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationAudioDeltaUpdate : IJsonModel<ConversationAudioDeltaUpdate>
+    public partial class ConversationAudioContentDeltaUpdate : IJsonModel<ConversationAudioContentDeltaUpdate>
     {
-        void IJsonModel<ConversationAudioDeltaUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ConversationAudioContentDeltaUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationAudioDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationAudioContentDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationAudioDeltaUpdate)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationAudioContentDeltaUpdate)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -78,19 +78,19 @@ namespace OpenAI.RealtimeConversation
             writer.WriteEndObject();
         }
 
-        ConversationAudioDeltaUpdate IJsonModel<ConversationAudioDeltaUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ConversationAudioContentDeltaUpdate IJsonModel<ConversationAudioContentDeltaUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationAudioDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationAudioContentDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationAudioDeltaUpdate)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationAudioContentDeltaUpdate)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeConversationAudioDeltaUpdate(document.RootElement, options);
+            return DeserializeConversationAudioContentDeltaUpdate(document.RootElement, options);
         }
 
-        internal static ConversationAudioDeltaUpdate DeserializeConversationAudioDeltaUpdate(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ConversationAudioContentDeltaUpdate DeserializeConversationAudioContentDeltaUpdate(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -151,7 +151,7 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ConversationAudioDeltaUpdate(
+            return new ConversationAudioContentDeltaUpdate(
                 type,
                 eventId,
                 serializedAdditionalRawData,
@@ -162,41 +162,41 @@ namespace OpenAI.RealtimeConversation
                 delta);
         }
 
-        BinaryData IPersistableModel<ConversationAudioDeltaUpdate>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ConversationAudioContentDeltaUpdate>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationAudioDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationAudioContentDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ConversationAudioDeltaUpdate)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationAudioContentDeltaUpdate)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ConversationAudioDeltaUpdate IPersistableModel<ConversationAudioDeltaUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ConversationAudioContentDeltaUpdate IPersistableModel<ConversationAudioContentDeltaUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationAudioDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationAudioContentDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeConversationAudioDeltaUpdate(document.RootElement, options);
+                        return DeserializeConversationAudioContentDeltaUpdate(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ConversationAudioDeltaUpdate)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationAudioContentDeltaUpdate)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ConversationAudioDeltaUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ConversationAudioContentDeltaUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new ConversationAudioDeltaUpdate FromResponse(PipelineResponse response)
+        internal static new ConversationAudioContentDeltaUpdate FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeConversationAudioDeltaUpdate(document.RootElement);
+            return DeserializeConversationAudioContentDeltaUpdate(document.RootElement);
         }
 
         internal override BinaryContent ToBinaryContent()

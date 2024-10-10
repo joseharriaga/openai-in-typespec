@@ -10,36 +10,26 @@ using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationAudioDoneUpdate : IJsonModel<ConversationAudioDoneUpdate>
+    public partial class ConversationInputAudioCommittedUpdate : IJsonModel<ConversationInputAudioCommittedUpdate>
     {
-        void IJsonModel<ConversationAudioDoneUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ConversationInputAudioCommittedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationAudioDoneUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioCommittedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationAudioDoneUpdate)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationInputAudioCommittedUpdate)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("response_id") != true)
+            if (SerializedAdditionalRawData?.ContainsKey("previous_item_id") != true)
             {
-                writer.WritePropertyName("response_id"u8);
-                writer.WriteStringValue(ResponseId);
+                writer.WritePropertyName("previous_item_id"u8);
+                writer.WriteStringValue(PreviousItemId);
             }
             if (SerializedAdditionalRawData?.ContainsKey("item_id") != true)
             {
                 writer.WritePropertyName("item_id"u8);
                 writer.WriteStringValue(ItemId);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("output_index") != true)
-            {
-                writer.WritePropertyName("output_index"u8);
-                writer.WriteNumberValue(OutputIndex);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("content_index") != true)
-            {
-                writer.WritePropertyName("content_index"u8);
-                writer.WriteNumberValue(ContentIndex);
             }
             if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
@@ -73,19 +63,19 @@ namespace OpenAI.RealtimeConversation
             writer.WriteEndObject();
         }
 
-        ConversationAudioDoneUpdate IJsonModel<ConversationAudioDoneUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ConversationInputAudioCommittedUpdate IJsonModel<ConversationInputAudioCommittedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationAudioDoneUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioCommittedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationAudioDoneUpdate)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationInputAudioCommittedUpdate)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeConversationAudioDoneUpdate(document.RootElement, options);
+            return DeserializeConversationInputAudioCommittedUpdate(document.RootElement, options);
         }
 
-        internal static ConversationAudioDoneUpdate DeserializeConversationAudioDoneUpdate(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ConversationInputAudioCommittedUpdate DeserializeConversationInputAudioCommittedUpdate(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -93,34 +83,22 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string responseId = default;
+            string previousItemId = default;
             string itemId = default;
-            int outputIndex = default;
-            int contentIndex = default;
             ConversationUpdateKind type = default;
             string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("response_id"u8))
+                if (property.NameEquals("previous_item_id"u8))
                 {
-                    responseId = property.Value.GetString();
+                    previousItemId = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("item_id"u8))
                 {
                     itemId = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("output_index"u8))
-                {
-                    outputIndex = property.Value.GetInt32();
-                    continue;
-                }
-                if (property.NameEquals("content_index"u8))
-                {
-                    contentIndex = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("type"u8))
@@ -140,51 +118,44 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ConversationAudioDoneUpdate(
-                type,
-                eventId,
-                serializedAdditionalRawData,
-                responseId,
-                itemId,
-                outputIndex,
-                contentIndex);
+            return new ConversationInputAudioCommittedUpdate(type, eventId, serializedAdditionalRawData, previousItemId, itemId);
         }
 
-        BinaryData IPersistableModel<ConversationAudioDoneUpdate>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ConversationInputAudioCommittedUpdate>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationAudioDoneUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioCommittedUpdate>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ConversationAudioDoneUpdate)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationInputAudioCommittedUpdate)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ConversationAudioDoneUpdate IPersistableModel<ConversationAudioDoneUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ConversationInputAudioCommittedUpdate IPersistableModel<ConversationInputAudioCommittedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationAudioDoneUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioCommittedUpdate>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeConversationAudioDoneUpdate(document.RootElement, options);
+                        return DeserializeConversationInputAudioCommittedUpdate(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ConversationAudioDoneUpdate)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationInputAudioCommittedUpdate)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ConversationAudioDoneUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ConversationInputAudioCommittedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new ConversationAudioDoneUpdate FromResponse(PipelineResponse response)
+        internal static new ConversationInputAudioCommittedUpdate FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeConversationAudioDoneUpdate(document.RootElement);
+            return DeserializeConversationInputAudioCommittedUpdate(document.RootElement);
         }
 
         internal override BinaryContent ToBinaryContent()

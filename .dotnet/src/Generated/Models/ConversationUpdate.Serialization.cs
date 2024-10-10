@@ -84,15 +84,15 @@ namespace OpenAI.RealtimeConversation
                     case "conversation.item.input_audio_transcription.failed": return ConversationInputTranscriptionFailedUpdate.DeserializeConversationInputTranscriptionFailedUpdate(element, options);
                     case "conversation.item.truncated": return ConversationItemTruncatedUpdate.DeserializeConversationItemTruncatedUpdate(element, options);
                     case "error": return ConversationErrorUpdate.DeserializeConversationErrorUpdate(element, options);
-                    case "input_audio_buffer.cleared": return ConversationInputAudioBufferClearedUpdate.DeserializeConversationInputAudioBufferClearedUpdate(element, options);
-                    case "input_audio_buffer.committed": return ConversationInputAudioBufferCommittedUpdate.DeserializeConversationInputAudioBufferCommittedUpdate(element, options);
+                    case "input_audio_buffer.cleared": return ConversationInputAudioClearedUpdate.DeserializeConversationInputAudioClearedUpdate(element, options);
+                    case "input_audio_buffer.committed": return ConversationInputAudioCommittedUpdate.DeserializeConversationInputAudioCommittedUpdate(element, options);
                     case "input_audio_buffer.speech_started": return ConversationInputSpeechStartedUpdate.DeserializeConversationInputSpeechStartedUpdate(element, options);
                     case "input_audio_buffer.speech_stopped": return ConversationInputSpeechFinishedUpdate.DeserializeConversationInputSpeechFinishedUpdate(element, options);
                     case "rate_limits.updated": return ConversationRateLimitsUpdate.DeserializeConversationRateLimitsUpdate(element, options);
                     case "response.audio_transcript.delta": return ConversationOutputTranscriptionDeltaUpdate.DeserializeConversationOutputTranscriptionDeltaUpdate(element, options);
                     case "response.audio_transcript.done": return ConversationOutputTranscriptionFinishedUpdate.DeserializeConversationOutputTranscriptionFinishedUpdate(element, options);
-                    case "response.audio.delta": return ConversationAudioDeltaUpdate.DeserializeConversationAudioDeltaUpdate(element, options);
-                    case "response.audio.done": return ConversationAudioDoneUpdate.DeserializeConversationAudioDoneUpdate(element, options);
+                    case "response.audio.delta": return ConversationAudioContentDeltaUpdate.DeserializeConversationAudioContentDeltaUpdate(element, options);
+                    case "response.audio.done": return ConversationAudioContentFinishedUpdate.DeserializeConversationAudioContentFinishedUpdate(element, options);
                     case "response.content_part.added": return ConversationContentPartStartedUpdate.DeserializeConversationContentPartStartedUpdate(element, options);
                     case "response.content_part.done": return ConversationContentPartFinishedUpdate.DeserializeConversationContentPartFinishedUpdate(element, options);
                     case "response.created": return ConversationResponseStartedUpdate.DeserializeConversationResponseStartedUpdate(element, options);
@@ -101,8 +101,8 @@ namespace OpenAI.RealtimeConversation
                     case "response.function_call_arguments.done": return ConversationFunctionCallArgumentsFinishedUpdate.DeserializeConversationFunctionCallArgumentsFinishedUpdate(element, options);
                     case "response.output_item.added": return ConversationItemStartedUpdate.DeserializeConversationItemStartedUpdate(element, options);
                     case "response.output_item.done": return ConversationItemFinishedUpdate.DeserializeConversationItemFinishedUpdate(element, options);
-                    case "response.text.delta": return ConversationTextDeltaUpdate.DeserializeConversationTextDeltaUpdate(element, options);
-                    case "response.text.done": return ConversationTextDoneUpdate.DeserializeConversationTextDoneUpdate(element, options);
+                    case "response.text.delta": return ConversationTextContentDeltaUpdate.DeserializeConversationTextContentDeltaUpdate(element, options);
+                    case "response.text.done": return ConversationTextContentFinishedUpdate.DeserializeConversationTextContentFinishedUpdate(element, options);
                     case "session.created": return ConversationSessionStartedUpdate.DeserializeConversationSessionStartedUpdate(element, options);
                     case "session.updated": return ConversationSessionConfiguredUpdate.DeserializeConversationSessionConfiguredUpdate(element, options);
                 }

@@ -12,11 +12,11 @@ namespace OpenAI.RealtimeConversation
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         public ConversationSessionOptions()
         {
-            _internalModalities = new ChangeTrackingList<InternalRealtimeClientEventSessionUpdateSessionModality>();
+            _internalModalities = new ChangeTrackingList<InternalRealtimeRequestSessionModality>();
             Tools = new ChangeTrackingList<ConversationTool>();
         }
 
-        internal ConversationSessionOptions(IList<InternalRealtimeClientEventSessionUpdateSessionModality> internalModalities, string instructions, ConversationVoice? voice, ConversationAudioFormat? inputAudioFormat, ConversationAudioFormat? outputAudioFormat, ConversationInputTranscriptionOptions inputTranscriptionOptions, ConversationTurnDetectionOptions turnDetectionOptions, IList<ConversationTool> tools, BinaryData internalToolChoice, float? temperature, BinaryData maxResponseOutputTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ConversationSessionOptions(IList<InternalRealtimeRequestSessionModality> internalModalities, string instructions, ConversationVoice? voice, ConversationAudioFormat? inputAudioFormat, ConversationAudioFormat? outputAudioFormat, ConversationInputTranscriptionOptions inputTranscriptionOptions, ConversationTurnDetectionOptions turnDetectionOptions, IList<ConversationTool> tools, BinaryData internalToolChoice, float? temperature, BinaryData maxResponseOutputTokens, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             _internalModalities = internalModalities;
             Instructions = instructions;

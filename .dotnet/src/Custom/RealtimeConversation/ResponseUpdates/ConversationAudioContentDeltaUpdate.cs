@@ -15,5 +15,5 @@ namespace OpenAI.RealtimeConversation;
 /// </summary>
 [Experimental("OPENAI002")]
 [CodeGenModel("RealtimeServerEventResponseAudioDelta")]
-public partial class ConversationAudioDeltaUpdate
+public partial class ConversationAudioContentDeltaUpdate
 { }

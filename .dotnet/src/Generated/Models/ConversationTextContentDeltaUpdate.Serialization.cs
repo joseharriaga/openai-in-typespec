@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationTextDoneUpdate : IJsonModel<ConversationTextDoneUpdate>
+    public partial class ConversationTextContentDeltaUpdate : IJsonModel<ConversationTextContentDeltaUpdate>
     {
-        void IJsonModel<ConversationTextDoneUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ConversationTextContentDeltaUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationTextDoneUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationTextContentDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationTextDoneUpdate)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationTextContentDeltaUpdate)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -41,10 +41,10 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("content_index"u8);
                 writer.WriteNumberValue(ContentIndex);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("text") != true)
+            if (SerializedAdditionalRawData?.ContainsKey("delta") != true)
             {
-                writer.WritePropertyName("text"u8);
-                writer.WriteStringValue(Text);
+                writer.WritePropertyName("delta"u8);
+                writer.WriteStringValue(Delta);
             }
             if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
@@ -78,19 +78,19 @@ namespace OpenAI.RealtimeConversation
             writer.WriteEndObject();
         }
 
-        ConversationTextDoneUpdate IJsonModel<ConversationTextDoneUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ConversationTextContentDeltaUpdate IJsonModel<ConversationTextContentDeltaUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationTextDoneUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationTextContentDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationTextDoneUpdate)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationTextContentDeltaUpdate)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeConversationTextDoneUpdate(document.RootElement, options);
+            return DeserializeConversationTextContentDeltaUpdate(document.RootElement, options);
         }
 
-        internal static ConversationTextDoneUpdate DeserializeConversationTextDoneUpdate(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ConversationTextContentDeltaUpdate DeserializeConversationTextContentDeltaUpdate(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -102,7 +102,7 @@ namespace OpenAI.RealtimeConversation
             string itemId = default;
             int outputIndex = default;
             int contentIndex = default;
-            string text = default;
+            string delta = default;
             ConversationUpdateKind type = default;
             string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -129,9 +129,9 @@ namespace OpenAI.RealtimeConversation
                     contentIndex = property.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("text"u8))
+                if (property.NameEquals("delta"u8))
                 {
-                    text = property.Value.GetString();
+                    delta = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("type"u8))
@@ -151,7 +151,7 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ConversationTextDoneUpdate(
+            return new ConversationTextContentDeltaUpdate(
                 type,
                 eventId,
                 serializedAdditionalRawData,
@@ -159,44 +159,44 @@ namespace OpenAI.RealtimeConversation
                 itemId,
                 outputIndex,
                 contentIndex,
-                text);
+                delta);
         }
 
-        BinaryData IPersistableModel<ConversationTextDoneUpdate>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ConversationTextContentDeltaUpdate>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationTextDoneUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationTextContentDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ConversationTextDoneUpdate)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationTextContentDeltaUpdate)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ConversationTextDoneUpdate IPersistableModel<ConversationTextDoneUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ConversationTextContentDeltaUpdate IPersistableModel<ConversationTextContentDeltaUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationTextDoneUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationTextContentDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeConversationTextDoneUpdate(document.RootElement, options);
+                        return DeserializeConversationTextContentDeltaUpdate(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ConversationTextDoneUpdate)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationTextContentDeltaUpdate)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ConversationTextDoneUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ConversationTextContentDeltaUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new ConversationTextDoneUpdate FromResponse(PipelineResponse response)
+        internal static new ConversationTextContentDeltaUpdate FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeConversationTextDoneUpdate(document.RootElement);
+            return DeserializeConversationTextContentDeltaUpdate(document.RootElement);
         }
 
         internal override BinaryContent ToBinaryContent()

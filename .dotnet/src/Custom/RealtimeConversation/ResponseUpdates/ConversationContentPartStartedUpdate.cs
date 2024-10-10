@@ -7,7 +7,7 @@ namespace OpenAI.RealtimeConversation;
 /// <summary>
 /// The update (response command) of type <c>response.content_part.added</c>, which is received when a response turn
 /// has begun emission of a content part within a conversation item. This will be followed by some number of
-/// <c>*delta</c> commands (e.g. <see cref="ConversationTextDeltaUpdate"/> or
+/// <c>*delta</c> commands (e.g. <see cref="ConversationTextContentDeltaUpdate"/> or
 /// <see cref="ConversationOutputTranscriptionDeltaUpdate"/>) before finalization via a
 /// <see cref="ConversationContentPartFinishedUpdate"/> command (<c>response.content_part.done</c>).
 /// </summary>

@@ -15,7 +15,7 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(itemId, nameof(itemId));
             Argument.AssertNotNull(error, nameof(error));
 
-            Kind = ConversationUpdateKind.ItemInputAudioTranscriptionFailed;
+            Kind = ConversationUpdateKind.InputTranscriptionFailed;
             ItemId = itemId;
             ContentIndex = contentIndex;
             _error = error;

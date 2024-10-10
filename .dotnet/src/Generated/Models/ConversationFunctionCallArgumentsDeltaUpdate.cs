@@ -17,7 +17,7 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(callId, nameof(callId));
             Argument.AssertNotNull(delta, nameof(delta));
 
-            Kind = ConversationUpdateKind.ResponseFunctionCallArgumentsDelta;
+            Kind = ConversationUpdateKind.FunctionCallArgumentsDelta;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;

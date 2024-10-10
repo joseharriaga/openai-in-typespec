@@ -9,8 +9,6 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("RealtimeItemStatus")] public readonly partial struct ConversationItemStatus { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeMessageRole")] public readonly partial struct ConversationMessageRole { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatus")] public readonly partial struct ConversationStatus { }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventResponseTextDelta")] public partial class ConversationTextDeltaUpdate { }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventResponseTextDone")] public partial class ConversationTextDoneUpdate { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseUsage")] public partial class ConversationTokenUsage { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseUsageInputTokenDetails")] public partial class ConversationInputTokenUsageDetails { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseUsageOutputTokenDetails")] public partial class ConversationOutputTokenUsageDetails { }

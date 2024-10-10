@@ -156,7 +156,7 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            IList<InternalRealtimeClientEventSessionUpdateSessionModality> modalities = default;
+            IList<InternalRealtimeRequestSessionModality> modalities = default;
             string instructions = default;
             ConversationVoice? voice = default;
             ConversationAudioFormat? inputAudioFormat = default;
@@ -177,10 +177,10 @@ namespace OpenAI.RealtimeConversation
                     {
                         continue;
                     }
-                    List<InternalRealtimeClientEventSessionUpdateSessionModality> array = new List<InternalRealtimeClientEventSessionUpdateSessionModality>();
+                    List<InternalRealtimeRequestSessionModality> array = new List<InternalRealtimeRequestSessionModality>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(new InternalRealtimeClientEventSessionUpdateSessionModality(item.GetString()));
+                        array.Add(new InternalRealtimeRequestSessionModality(item.GetString()));
                     }
                     modalities = array;
                     continue;
@@ -286,7 +286,7 @@ namespace OpenAI.RealtimeConversation
             }
             serializedAdditionalRawData = rawDataDictionary;
             return new ConversationSessionOptions(
-                modalities ?? new ChangeTrackingList<InternalRealtimeClientEventSessionUpdateSessionModality>(),
+                modalities ?? new ChangeTrackingList<InternalRealtimeRequestSessionModality>(),
                 instructions,
                 voice,
                 inputAudioFormat,

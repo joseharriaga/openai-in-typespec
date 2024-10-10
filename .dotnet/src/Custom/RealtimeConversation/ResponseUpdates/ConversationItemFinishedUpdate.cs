@@ -8,7 +8,7 @@ namespace OpenAI.RealtimeConversation;
 /// The update (response command) of type <c>response.output_item.done</c>, which is received when a new item that was
 /// added to a conversation by the model has finished streaming all of its content parts and other data. This update
 /// is preceded by a <see cref="ConversationItemStartedUpdate"/> and some number of <c>*delta</c> commands (such as
-/// <see cref="ConversationTextDeltaUpdate"/>).
+/// <see cref="ConversationTextContentDeltaUpdate"/>).
 /// </summary>
 [Experimental("OPENAI002")]
 [CodeGenModel("RealtimeServerEventResponseOutputItemDone")]

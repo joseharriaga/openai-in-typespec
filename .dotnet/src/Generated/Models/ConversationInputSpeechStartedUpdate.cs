@@ -14,7 +14,7 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(eventId, nameof(eventId));
             Argument.AssertNotNull(itemId, nameof(itemId));
 
-            Kind = ConversationUpdateKind.InputAudioBufferSpeechStarted;
+            Kind = ConversationUpdateKind.InputSpeechStarted;
             AudioStartMs = audioStartMs;
             ItemId = itemId;
         }

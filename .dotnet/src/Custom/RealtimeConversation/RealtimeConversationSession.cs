@@ -5,10 +5,8 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +15,8 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")]
 public partial class RealtimeConversationSession : IDisposable
 {
+    public WebSocket WebSocket { get; protected set; }
+
     private readonly RealtimeConversationClient _parentClient;
     private readonly Uri _endpoint;
     private readonly ApiKeyCredential _credential;
@@ -36,11 +36,6 @@ public partial class RealtimeConversationSession : IDisposable
         _parentClient = parentClient;
         _endpoint = endpoint;
         _credential = credential;
-        _clientWebSocket = new ClientWebSocket();
-
-        _credential.Deconstruct(out string dangerousCredential);
-        _clientWebSocket.Options.SetRequestHeader("openai-beta", $"realtime=v1");
-        _clientWebSocket.Options.SetRequestHeader("Authorization", $"Bearer {dangerousCredential}");
     }
 
     /// <summary>
@@ -51,6 +46,7 @@ public partial class RealtimeConversationSession : IDisposable
     /// <exception cref="InvalidOperationException"></exception>
     public virtual async Task SendInputAudioAsync(Stream audio, CancellationToken cancellationToken = default)
     {
+        Argument.AssertNotNull(audio, nameof(audio));
         lock (_sendingAudioLock)
         {
             if (_isSendingAudio)
@@ -88,8 +84,40 @@ public partial class RealtimeConversationSession : IDisposable
 
     public virtual void SendInputAudio(Stream audio, CancellationToken cancellationToken = default)
     {
-        // TODO: direct impl
-        SendInputAudioAsync(audio, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
+        Argument.AssertNotNull(audio, nameof(audio));
+        lock (_sendingAudioLock)
+        {
+            if (_isSendingAudio)
+            {
+                throw new InvalidOperationException($"Only one stream of audio may be sent at once.");
+            }
+            _isSendingAudio = true;
+        }
+        try
+        {
+            byte[] buffer = ArrayPool<byte>.Shared.Rent(1024 * 16);
+            while (true)
+            {
+                int bytesRead = audio.Read(buffer, 0, buffer.Length);
+                if (bytesRead == 0)
+                {
+                    break;
+                }
+
+                ReadOnlyMemory<byte> audioMemory = buffer.AsMemory(0, bytesRead);
+                BinaryData audioData = BinaryData.FromBytes(audioMemory);
+                InternalRealtimeClientEventInputAudioBufferAppend internalCommand = new(audioData);
+                BinaryData requestData = ModelReaderWriter.Write(internalCommand);
+                SendCommand(requestData, cancellationToken.ToRequestOptions());
+            }
+        }
+        finally
+        {
+            lock (_sendingAudioLock)
+            {
+                _isSendingAudio = false;
+            }
+        }
     }
 
     /// <summary>
@@ -101,6 +129,7 @@ public partial class RealtimeConversationSession : IDisposable
     /// <exception cref="InvalidOperationException"></exception>
     public virtual async Task SendInputAudioAsync(BinaryData audio, CancellationToken cancellationToken = default)
     {
+        Argument.AssertNotNull(audio, nameof(audio));
         lock (_sendingAudioLock)
         {
             if (_isSendingAudio)
@@ -124,6 +153,7 @@ public partial class RealtimeConversationSession : IDisposable
     /// <exception cref="InvalidOperationException"></exception>
     public virtual void SendInputAudio(BinaryData audio, CancellationToken cancellationToken = default)
     {
+        Argument.AssertNotNull(audio, nameof(audio));
         lock (_sendingAudioLock)
         {
             if (_isSendingAudio)
@@ -152,24 +182,27 @@ public partial class RealtimeConversationSession : IDisposable
 
     public virtual async Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default)
     {
+        Argument.AssertNotNull(sessionOptions, nameof(sessionOptions));
         InternalRealtimeClientEventSessionUpdate internalCommand = new(sessionOptions);
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
     public virtual void ConfigureSession(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default)
     {
+        Argument.AssertNotNull(sessionOptions, nameof(sessionOptions));
         InternalRealtimeClientEventSessionUpdate internalCommand = new(sessionOptions);
         SendCommand(internalCommand, cancellationToken);
     }
 
     public virtual async Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default)
-        => await AddItemAsync(item, null, cancellationToken).ConfigureAwait(false);
+        => await AddItemAsync(item, previousItemId: null, cancellationToken).ConfigureAwait(false);
 
     public virtual void AddItem(ConversationItem item, CancellationToken cancellationToken = default)
-        => AddItem(item, null, cancellationToken);
+        => AddItem(item, previousItemId: null, cancellationToken);
 
     public virtual async Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default)
     {
+        Argument.AssertNotNull(item, nameof(item));
         InternalRealtimeClientEventConversationItemCreate internalCommand = new(item)
         {
             PreviousItemId = previousItemId,
@@ -179,6 +212,7 @@ public partial class RealtimeConversationSession : IDisposable
 
     public virtual void AddItem(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default)
     {
+        Argument.AssertNotNull(item, nameof(item));
         InternalRealtimeClientEventConversationItemCreate internalCommand = new(item)
         {
             PreviousItemId = previousItemId,
@@ -220,7 +254,7 @@ public partial class RealtimeConversationSession : IDisposable
         SendCommand(internalCommand, cancellationToken);
     }
 
-    public async Task CommitPendingAudioAsync(CancellationToken cancellationToken = default)
+    public virtual async Task CommitPendingAudioAsync(CancellationToken cancellationToken = default)
     {
         InternalRealtimeClientEventInputAudioBufferCommit internalCommand = new();
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
@@ -276,19 +310,19 @@ public partial class RealtimeConversationSession : IDisposable
         SendCommand(internalCommand, cancellationToken);
     }
 
-    public async Task CancelResponseTurnAsync(CancellationToken cancellationToken = default)
+    public virtual async Task CancelResponseTurnAsync(CancellationToken cancellationToken = default)
     {
         InternalRealtimeClientEventResponseCancel internalCommand = new();
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
-    public void CancelResponseTurn(CancellationToken cancellationToken = default)
+    public virtual void CancelResponseTurn(CancellationToken cancellationToken = default)
     {
         InternalRealtimeClientEventResponseCancel internalCommand = new();
         SendCommand(internalCommand, cancellationToken);
     }
 
-    public async IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public virtual async IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         await foreach (ClientResult protocolEvent in ReceiveUpdatesAsync(cancellationToken.ToRequestOptions()))
         {
@@ -297,7 +331,7 @@ public partial class RealtimeConversationSession : IDisposable
         }
     }
 
-    public IEnumerable<ConversationUpdate> ReceiveUpdates(CancellationToken cancellationToken = default)
+    public virtual IEnumerable<ConversationUpdate> ReceiveUpdates(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
@@ -318,6 +352,6 @@ public partial class RealtimeConversationSession : IDisposable
 
     public void Dispose()
     {
-        _clientWebSocket?.Dispose();
+        WebSocket?.Dispose();
     }
 }

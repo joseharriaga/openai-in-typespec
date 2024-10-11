@@ -59,7 +59,8 @@ public class ConversationTests : ConversationTestFixtureBase
                 Assert.That(errorUpdate.Kind, Is.EqualTo(ConversationUpdateKind.Error));
                 Assert.Fail($"Error: {ModelReaderWriter.Write(errorUpdate)}");
             }
-            else if (update is ConversationAudioContentDeltaUpdate or ConversationAudioContentFinishedUpdate)
+            else if ((update is ConversationItemStreamingPartDeltaUpdate deltaUpdate && deltaUpdate.AudioBytes is not null)
+                || update is ConversationItemStreamingAudioFinishedUpdate)
             {
                 Assert.Fail($"Audio content streaming unexpected after configuring response-level text-only modalities");
             }
@@ -83,8 +84,8 @@ public class ConversationTests : ConversationTestFixtureBase
         Assert.That(GetReceivedUpdates<ConversationSessionStartedUpdate>(), Has.Count.EqualTo(1));
         Assert.That(GetReceivedUpdates<ConversationResponseStartedUpdate>(), Has.Count.EqualTo(1));
         Assert.That(GetReceivedUpdates<ConversationResponseFinishedUpdate>(), Has.Count.EqualTo(1));
-        Assert.That(GetReceivedUpdates<ConversationItemStartedUpdate>(), Has.Count.EqualTo(1));
-        Assert.That(GetReceivedUpdates<ConversationItemFinishedUpdate>(), Has.Count.EqualTo(1));
+        Assert.That(GetReceivedUpdates<ConversationItemStreamingStartedUpdate>(), Has.Count.EqualTo(1));
+        Assert.That(GetReceivedUpdates<ConversationItemStreamingFinishedUpdate>(), Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -107,27 +108,27 @@ public class ConversationTests : ConversationTestFixtureBase
             {
                 Assert.That(sessionStartedUpdate.SessionId, Is.Not.Null.And.Not.Empty);
             }
-            if (update is ConversationTextContentDeltaUpdate textDeltaUpdate)
+            if (update is ConversationItemStreamingPartDeltaUpdate deltaUpdate)
             {
-                responseBuilder.Append(textDeltaUpdate.Delta);
+                responseBuilder.Append(deltaUpdate.AudioTranscript);
             }
 
-            if (update is ConversationItemAcknowledgedUpdate itemAcknowledgedUpdate)
+            if (update is ConversationItemCreatedUpdate itemCreatedUpdate)
             {
-                if (itemAcknowledgedUpdate.MessageRole == ConversationMessageRole.Assistant)
+                if (itemCreatedUpdate.MessageRole == ConversationMessageRole.Assistant)
                 {
                     // The assistant-created item should be streamed and should not have content yet when acknowledged
-                    Assert.That(itemAcknowledgedUpdate.MessageContentParts, Has.Count.EqualTo(0));
+                    Assert.That(itemCreatedUpdate.MessageContentParts, Has.Count.EqualTo(0));
                 }
-                else if (itemAcknowledgedUpdate.MessageRole == ConversationMessageRole.User)
+                else if (itemCreatedUpdate.MessageRole == ConversationMessageRole.User)
                 {
                     // When acknowledging an item added by the client (user), the text should already be there
-                    Assert.That(itemAcknowledgedUpdate.MessageContentParts, Has.Count.EqualTo(1));
-                    Assert.That(itemAcknowledgedUpdate.MessageContentParts[0].TextValue, Is.EqualTo("Hello, world!"));
+                    Assert.That(itemCreatedUpdate.MessageContentParts, Has.Count.EqualTo(1));
+                    Assert.That(itemCreatedUpdate.MessageContentParts[0].TextValue, Is.EqualTo("Hello, world!"));
                 }
                 else
                 {
-                    Assert.Fail($"Test didn't expect an acknowledged item with role: {itemAcknowledgedUpdate.MessageRole}");
+                    Assert.Fail($"Test didn't expect an acknowledged item with role: {itemCreatedUpdate.MessageRole}");
                 }
             }
 
@@ -205,12 +206,12 @@ public class ConversationTests : ConversationTestFixtureBase
                 gotSessionConfigured = true;
             }
 
-            if (update is ConversationItemAcknowledgedUpdate itemAcknowledgedUpdate)
+            if (update is ConversationItemCreatedUpdate itemCreatedUpdate)
             {
-                if (itemAcknowledgedUpdate.MessageContentParts.Count > 0
-                    && itemAcknowledgedUpdate.MessageContentParts[0].TextValue.Contains("banana"))
+                if (itemCreatedUpdate.MessageContentParts.Count > 0
+                    && itemCreatedUpdate.MessageContentParts[0].TextValue.Contains("banana"))
                 {
-                    await session.DeleteItemAsync(itemAcknowledgedUpdate.NewItemId, CancellationToken);
+                    await session.DeleteItemAsync(itemCreatedUpdate.NewItemId, CancellationToken);
                     await session.AddItemAsync(
                         ConversationItem.CreateUserMessage(["What's the second special word you know about?"]),
                         CancellationToken);
@@ -306,7 +307,7 @@ public class ConversationTests : ConversationTestFixtureBase
                 userTranscript = inputTranscriptionCompletedUpdate.Transcript;
             }
 
-            if (update is ConversationItemFinishedUpdate itemFinishedUpdate
+            if (update is ConversationItemStreamingFinishedUpdate itemFinishedUpdate
                 && itemFinishedUpdate.FunctionCallId is not null)
             {
                 Assert.That(itemFinishedUpdate.FunctionName, Is.EqualTo(getWeatherTool.Name));
@@ -374,8 +375,8 @@ public class ConversationTests : ConversationTestFixtureBase
                 Assert.Fail($"Shouldn't receive any VAD events or response creation!");
             }
 
-            if (update is ConversationItemAcknowledgedUpdate itemAcknowledgedUpdate
-                && itemAcknowledgedUpdate.MessageRole == ConversationMessageRole.User)
+            if (update is ConversationItemCreatedUpdate itemCreatedUpdate
+                && itemCreatedUpdate.MessageRole == ConversationMessageRole.User)
             {
                 break;
             }

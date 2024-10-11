@@ -8,24 +8,24 @@ internal static partial class ConversationUpdateKindExtensions
         ConversationUpdateKind.SessionStarted => "session.created",
         ConversationUpdateKind.SessionConfigured => "session.updated",
         // ConversationUpdateKind.ConversationCreated => "conversation.created",
-        ConversationUpdateKind.ItemAcknowledged => "conversation.item.created",
+        ConversationUpdateKind.ItemCreated => "conversation.item.created",
         ConversationUpdateKind.ItemDeleted => "conversation.item.deleted",
         ConversationUpdateKind.ItemTruncated => "conversation.item.truncated",
         ConversationUpdateKind.ResponseStarted => "response.created",
         ConversationUpdateKind.ResponseFinished => "response.done",
         ConversationUpdateKind.RateLimitsUpdated => "rate_limits.updated",
-        ConversationUpdateKind.ItemStarted => "response.output_item.added",
-        ConversationUpdateKind.ItemFinished => "response.output_item.done",
-        ConversationUpdateKind.ContentPartStarted => "response.content_part.added",
-        ConversationUpdateKind.ContentPartFinished => "response.content_part.done",
-        ConversationUpdateKind.AudioContentDelta => "response.audio.delta",
-        ConversationUpdateKind.AudioContentFinished => "response.audio.done",
-        ConversationUpdateKind.OutputTranscriptionDelta => "response.audio_transcript.delta",
-        ConversationUpdateKind.OutputTranscriptionFinished => "response.audio_transcript.done",
-        ConversationUpdateKind.TextContentDelta => "response.text.delta",
-        ConversationUpdateKind.TextContentFinished => "response.text.done",
-        ConversationUpdateKind.FunctionCallArgumentsDelta => "response.function_call_arguments.delta",
-        ConversationUpdateKind.FunctionCallArgumentsFinished => "response.function_call_arguments.done",
+        ConversationUpdateKind.ItemStreamingStarted => "response.output_item.added",
+        ConversationUpdateKind.ItemStreamingFinished => "response.output_item.done",
+        ConversationUpdateKind.ItemContentPartStarted => "response.content_part.added",
+        ConversationUpdateKind.ItemContentPartFinished => "response.content_part.done",
+        ConversationUpdateKind.ItemStreamingPartAudioDelta => "response.audio.delta",
+        ConversationUpdateKind.ItemStreamingPartAudioFinished => "response.audio.done",
+        ConversationUpdateKind.ItemStreamingPartAudioTranscriptionDelta => "response.audio_transcript.delta",
+        ConversationUpdateKind.ItemStreamingPartAudioTranscriptionFinished => "response.audio_transcript.done",
+        ConversationUpdateKind.ItemStreamingPartTextDelta => "response.text.delta",
+        ConversationUpdateKind.ItemStreamingPartTextFinished => "response.text.done",
+        ConversationUpdateKind.ItemStreamingFunctionCallArgumentsDelta => "response.function_call_arguments.delta",
+        ConversationUpdateKind.ItemStreamingFunctionCallArgumentsFinished => "response.function_call_arguments.done",
         ConversationUpdateKind.InputSpeechStarted => "input_audio_buffer.speech_started",
         ConversationUpdateKind.InputSpeechStopped => "input_audio_buffer.speech_stopped",
         ConversationUpdateKind.InputTranscriptionFinished => "conversation.item.input_audio_transcription.completed",
@@ -41,24 +41,24 @@ internal static partial class ConversationUpdateKindExtensions
         if (StringComparer.OrdinalIgnoreCase.Equals(value, "session.created")) return ConversationUpdateKind.SessionStarted;
         if (StringComparer.OrdinalIgnoreCase.Equals(value, "session.updated")) return ConversationUpdateKind.SessionConfigured;
         // if (StringComparer.OrdinalIgnoreCase.Equals(value, "conversation.created")) return ConversationUpdateKind.ConversationCreated;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "conversation.item.created")) return ConversationUpdateKind.ItemAcknowledged;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "conversation.item.created")) return ConversationUpdateKind.ItemCreated;
         if (StringComparer.OrdinalIgnoreCase.Equals(value, "conversation.item.deleted")) return ConversationUpdateKind.ItemDeleted;
         if (StringComparer.OrdinalIgnoreCase.Equals(value, "conversation.item.truncated")) return ConversationUpdateKind.ItemTruncated;
         if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.created")) return ConversationUpdateKind.ResponseStarted;
         if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.done")) return ConversationUpdateKind.ResponseFinished;
         if (StringComparer.OrdinalIgnoreCase.Equals(value, "rate_limits.updated")) return ConversationUpdateKind.RateLimitsUpdated;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.output_item.added")) return ConversationUpdateKind.ItemStarted;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.output_item.done")) return ConversationUpdateKind.ItemFinished;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.content_part.added")) return ConversationUpdateKind.ContentPartStarted;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.content_part.done")) return ConversationUpdateKind.ContentPartFinished;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.audio.delta")) return ConversationUpdateKind.AudioContentDelta;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.audio.done")) return ConversationUpdateKind.AudioContentFinished;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.audio_transcript.delta")) return ConversationUpdateKind.OutputTranscriptionDelta;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.audio_transcript.done")) return ConversationUpdateKind.OutputTranscriptionFinished;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.text.delta")) return ConversationUpdateKind.TextContentDelta;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.text.done")) return ConversationUpdateKind.TextContentFinished;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.function_call_arguments.delta")) return ConversationUpdateKind.FunctionCallArgumentsDelta;
-        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.function_call_arguments.done")) return ConversationUpdateKind.FunctionCallArgumentsFinished;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.output_item.added")) return ConversationUpdateKind.ItemStreamingStarted;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.output_item.done")) return ConversationUpdateKind.ItemStreamingFinished;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.content_part.added")) return ConversationUpdateKind.ItemContentPartStarted;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.content_part.done")) return ConversationUpdateKind.ItemContentPartFinished;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.audio.delta")) return ConversationUpdateKind.ItemStreamingPartAudioDelta;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.audio.done")) return ConversationUpdateKind.ItemStreamingPartAudioFinished;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.audio_transcript.delta")) return ConversationUpdateKind.ItemStreamingPartAudioTranscriptionDelta;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.audio_transcript.done")) return ConversationUpdateKind.ItemStreamingPartAudioTranscriptionFinished;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.text.delta")) return ConversationUpdateKind.ItemStreamingPartTextDelta;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.text.done")) return ConversationUpdateKind.ItemStreamingPartTextFinished;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.function_call_arguments.delta")) return ConversationUpdateKind.ItemStreamingFunctionCallArgumentsDelta;
+        if (StringComparer.OrdinalIgnoreCase.Equals(value, "response.function_call_arguments.done")) return ConversationUpdateKind.ItemStreamingFunctionCallArgumentsFinished;
         if (StringComparer.OrdinalIgnoreCase.Equals(value, "input_audio_buffer.speech_started")) return ConversationUpdateKind.InputSpeechStarted;
         if (StringComparer.OrdinalIgnoreCase.Equals(value, "input_audio_buffer.speech_stopped")) return ConversationUpdateKind.InputSpeechStopped;
         if (StringComparer.OrdinalIgnoreCase.Equals(value, "conversation.item.input_audio_transcription.completed")) return ConversationUpdateKind.InputTranscriptionFinished;

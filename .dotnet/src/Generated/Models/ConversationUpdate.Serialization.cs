@@ -65,51 +65,6 @@ namespace OpenAI.RealtimeConversation
             return DeserializeConversationUpdate(document.RootElement, options);
         }
 
-        internal static ConversationUpdate DeserializeConversationUpdate(JsonElement element, ModelReaderWriterOptions options = null)
-        {
-            options ??= ModelSerializationExtensions.WireOptions;
-
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-            if (element.TryGetProperty("type", out JsonElement discriminator))
-            {
-                switch (discriminator.GetString())
-                {
-                    case "conversation.created": return InternalRealtimeServerEventConversationCreated.DeserializeInternalRealtimeServerEventConversationCreated(element, options);
-                    case "conversation.item.created": return ConversationItemAcknowledgedUpdate.DeserializeConversationItemAcknowledgedUpdate(element, options);
-                    case "conversation.item.deleted": return ConversationItemDeletedUpdate.DeserializeConversationItemDeletedUpdate(element, options);
-                    case "conversation.item.input_audio_transcription.completed": return ConversationInputTranscriptionFinishedUpdate.DeserializeConversationInputTranscriptionFinishedUpdate(element, options);
-                    case "conversation.item.input_audio_transcription.failed": return ConversationInputTranscriptionFailedUpdate.DeserializeConversationInputTranscriptionFailedUpdate(element, options);
-                    case "conversation.item.truncated": return ConversationItemTruncatedUpdate.DeserializeConversationItemTruncatedUpdate(element, options);
-                    case "error": return ConversationErrorUpdate.DeserializeConversationErrorUpdate(element, options);
-                    case "input_audio_buffer.cleared": return ConversationInputAudioClearedUpdate.DeserializeConversationInputAudioClearedUpdate(element, options);
-                    case "input_audio_buffer.committed": return ConversationInputAudioCommittedUpdate.DeserializeConversationInputAudioCommittedUpdate(element, options);
-                    case "input_audio_buffer.speech_started": return ConversationInputSpeechStartedUpdate.DeserializeConversationInputSpeechStartedUpdate(element, options);
-                    case "input_audio_buffer.speech_stopped": return ConversationInputSpeechFinishedUpdate.DeserializeConversationInputSpeechFinishedUpdate(element, options);
-                    case "rate_limits.updated": return ConversationRateLimitsUpdate.DeserializeConversationRateLimitsUpdate(element, options);
-                    case "response.audio_transcript.delta": return ConversationOutputTranscriptionDeltaUpdate.DeserializeConversationOutputTranscriptionDeltaUpdate(element, options);
-                    case "response.audio_transcript.done": return ConversationOutputTranscriptionFinishedUpdate.DeserializeConversationOutputTranscriptionFinishedUpdate(element, options);
-                    case "response.audio.delta": return ConversationAudioContentDeltaUpdate.DeserializeConversationAudioContentDeltaUpdate(element, options);
-                    case "response.audio.done": return ConversationAudioContentFinishedUpdate.DeserializeConversationAudioContentFinishedUpdate(element, options);
-                    case "response.content_part.added": return ConversationContentPartStartedUpdate.DeserializeConversationContentPartStartedUpdate(element, options);
-                    case "response.content_part.done": return ConversationContentPartFinishedUpdate.DeserializeConversationContentPartFinishedUpdate(element, options);
-                    case "response.created": return ConversationResponseStartedUpdate.DeserializeConversationResponseStartedUpdate(element, options);
-                    case "response.done": return ConversationResponseFinishedUpdate.DeserializeConversationResponseFinishedUpdate(element, options);
-                    case "response.function_call_arguments.delta": return ConversationFunctionCallArgumentsDeltaUpdate.DeserializeConversationFunctionCallArgumentsDeltaUpdate(element, options);
-                    case "response.function_call_arguments.done": return ConversationFunctionCallArgumentsFinishedUpdate.DeserializeConversationFunctionCallArgumentsFinishedUpdate(element, options);
-                    case "response.output_item.added": return ConversationItemStartedUpdate.DeserializeConversationItemStartedUpdate(element, options);
-                    case "response.output_item.done": return ConversationItemFinishedUpdate.DeserializeConversationItemFinishedUpdate(element, options);
-                    case "response.text.delta": return ConversationTextContentDeltaUpdate.DeserializeConversationTextContentDeltaUpdate(element, options);
-                    case "response.text.done": return ConversationTextContentFinishedUpdate.DeserializeConversationTextContentFinishedUpdate(element, options);
-                    case "session.created": return ConversationSessionStartedUpdate.DeserializeConversationSessionStartedUpdate(element, options);
-                    case "session.updated": return ConversationSessionConfiguredUpdate.DeserializeConversationSessionConfiguredUpdate(element, options);
-                }
-            }
-            return UnknownRealtimeServerEvent.DeserializeUnknownRealtimeServerEvent(element, options);
-        }
-
         BinaryData IPersistableModel<ConversationUpdate>.Write(ModelReaderWriterOptions options)
         {
             var format = options.Format == "W" ? ((IPersistableModel<ConversationUpdate>)this).GetFormatFromOptions(options) : options.Format;

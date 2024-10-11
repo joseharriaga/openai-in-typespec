@@ -26,7 +26,7 @@ public enum ConversationUpdateKind
     /// The <c>conversation.item.created</c> response command.
     /// </summary>
     [CodeGenMember("ConversationItemCreated")]
-    ItemAcknowledged,
+    ItemCreated,
     /// <summary>
     /// The <c>conversation.c.reated</c> response command.
     /// </summary>
@@ -63,62 +63,62 @@ public enum ConversationUpdateKind
     /// The <c>response.output_item.added</c> response command.
     /// </summary>
     [CodeGenMember("ResponseOutputItemAdded")]
-    ItemStarted,
+    ItemStreamingStarted,
     /// <summary>
     /// The <c>response.output_item.done</c> response command.
     /// </summary>
     [CodeGenMember("ResponseOutputItemDone")]
-    ItemFinished,
+    ItemStreamingFinished,
     /// <summary>
     /// The <c>response.content_part.added</c> response command.
     /// </summary>
     [CodeGenMember("ResponseContentPartAdded")]
-    ContentPartStarted,
+    ItemContentPartStarted,
     /// <summary>
     /// The <c>response.content_part.done</c> response command.
     /// </summary>
     [CodeGenMember("ResponseContentPartDone")]
-    ContentPartFinished,
+    ItemContentPartFinished,
     /// <summary>
     /// The <c>response.audio.delta</c> response command.
     /// </summary>
     [CodeGenMember("ResponseAudioDelta")]
-    AudioContentDelta,
+    ItemStreamingPartAudioDelta,
     /// <summary>
     /// The <c>response.audio.done</c> response command.
     /// </summary>
     [CodeGenMember("ResponseAudioDone")]
-    AudioContentFinished,
+    ItemStreamingPartAudioFinished,
     /// <summary>
     /// The <c>response.audio_transcript.delta</c> response command.
     /// </summary>
     [CodeGenMember("ResponseAudioTranscriptDelta")]
-    OutputTranscriptionDelta,
+    ItemStreamingPartAudioTranscriptionDelta,
     /// <summary>
     /// The <c>response.audio_transcript.done</c> response command.
     /// </summary>
     [CodeGenMember("ResponseAudioTranscriptDone")]
-    OutputTranscriptionFinished,
+    ItemStreamingPartAudioTranscriptionFinished,
     /// <summary>
     /// The <c>response.text.delta</c> response command.
     /// </summary>
     [CodeGenMember("ResponseTextDelta")]
-    TextContentDelta,
+    ItemStreamingPartTextDelta,
     /// <summary>
     /// The <c>response.text.done</c> response command.
     /// </summary>
     [CodeGenMember("ResponseTextDone")]
-    TextContentFinished,
+    ItemStreamingPartTextFinished,
     /// <summary>
     /// The <c>response.function_call_arguments.delta</c> response command.
     /// </summary>
     [CodeGenMember("ResponseFunctionCallArgumentsDelta")]
-    FunctionCallArgumentsDelta,
+    ItemStreamingFunctionCallArgumentsDelta,
     /// <summary>
     /// The <c>response.function_call_arguments.done</c> response command.
     /// </summary>
     [CodeGenMember("ResponseFunctionCallArgumentsDone")]
-    FunctionCallArgumentsFinished,
+    ItemStreamingFunctionCallArgumentsFinished,
     /// <summary>
     /// The <c>input_audio_buffer.speech_started</c> response command.
     /// </summary>

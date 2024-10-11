@@ -297,6 +297,11 @@ public partial class RealtimeConversationSession : IDisposable
         }
     }
 
+    public IEnumerable<ConversationUpdate> ReceiveUpdates(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     internal virtual async Task SendCommandAsync(InternalRealtimeClientEvent command, CancellationToken cancellationToken = default)
     {
         BinaryData requestData = ModelReaderWriter.Write(command);

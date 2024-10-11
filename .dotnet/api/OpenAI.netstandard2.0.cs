@@ -2858,18 +2858,18 @@ namespace OpenAI.RealtimeConversation {
         public virtual Task<RealtimeConversationSession> StartConversationSessionAsync(CancellationToken cancellationToken = default);
     }
     public class RealtimeConversationSession : IDisposable {
-        protected Net.WebSockets.ClientWebSocket _clientWebSocket;
         protected internal RealtimeConversationSession(RealtimeConversationClient parentClient, Uri endpoint, ApiKeyCredential credential);
+        public Net.WebSockets.WebSocket WebSocket { get; protected set; }
         public virtual void AddItem(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
         public virtual void AddItem(ConversationItem item, CancellationToken cancellationToken = default);
         public virtual Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
         public virtual Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default);
-        public void CancelResponseTurn(CancellationToken cancellationToken = default);
-        public Task CancelResponseTurnAsync(CancellationToken cancellationToken = default);
+        public virtual void CancelResponseTurn(CancellationToken cancellationToken = default);
+        public virtual Task CancelResponseTurnAsync(CancellationToken cancellationToken = default);
         public virtual void ClearInputAudio(CancellationToken cancellationToken = default);
         public virtual Task ClearInputAudioAsync(CancellationToken cancellationToken = default);
         public virtual void CommitPendingAudio(CancellationToken cancellationToken = default);
-        public Task CommitPendingAudioAsync(CancellationToken cancellationToken = default);
+        public virtual Task CommitPendingAudioAsync(CancellationToken cancellationToken = default);
         public virtual void ConfigureSession(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
         public virtual Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -2883,10 +2883,10 @@ namespace OpenAI.RealtimeConversation {
         public virtual Task InterruptTurnAsync(CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual IEnumerable<ClientResult> ReceiveUpdates(RequestOptions options);
-        public IEnumerable<ConversationUpdate> ReceiveUpdates(CancellationToken cancellationToken = default);
+        public virtual IEnumerable<ConversationUpdate> ReceiveUpdates(CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual IAsyncEnumerable<ClientResult> ReceiveUpdatesAsync(RequestOptions options);
-        public IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync(CancellationToken cancellationToken = default);
+        public virtual IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync(CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual void SendCommand(BinaryData data, RequestOptions options);
         [EditorBrowsable(EditorBrowsableState.Never)]

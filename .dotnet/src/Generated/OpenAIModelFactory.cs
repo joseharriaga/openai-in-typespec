@@ -74,16 +74,6 @@ namespace OpenAI
             return new ConversationInputAudioClearedUpdate(ConversationUpdateKind.InputAudioCleared, eventId, serializedAdditionalRawData: null);
         }
 
-        public static ConversationInputSpeechStartedUpdate ConversationInputSpeechStartedUpdate(string eventId = null, int audioStartMs = default, string itemId = null)
-        {
-            return new ConversationInputSpeechStartedUpdate(ConversationUpdateKind.InputSpeechStarted, eventId, serializedAdditionalRawData: null, audioStartMs, itemId);
-        }
-
-        public static ConversationInputSpeechFinishedUpdate ConversationInputSpeechFinishedUpdate(string eventId = null, int audioEndMs = default, string itemId = null)
-        {
-            return new ConversationInputSpeechFinishedUpdate(ConversationUpdateKind.InputSpeechStopped, eventId, serializedAdditionalRawData: null, audioEndMs, itemId);
-        }
-
         public static ConversationInputTranscriptionFinishedUpdate ConversationInputTranscriptionFinishedUpdate(string eventId = null, string itemId = null, int contentIndex = default, string transcript = null)
         {
             return new ConversationInputTranscriptionFinishedUpdate(

@@ -5,7 +5,6 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("RealtimeAudioFormat")] public readonly partial struct ConversationAudioFormat { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeAudioInputTranscriptionModel")] public readonly partial struct ConversationTranscriptionModel { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeAudioInputTranscriptionSettings")] public partial class ConversationInputTranscriptionOptions { }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeContentPartType")] public readonly partial struct ConversationContentPartKind { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeItemStatus")] public readonly partial struct ConversationItemStatus { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeMessageRole")] public readonly partial struct ConversationMessageRole { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatus")] public readonly partial struct ConversationStatus { }

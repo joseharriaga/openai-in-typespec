@@ -278,21 +278,21 @@ public partial class RealtimeConversationSession : IDisposable
         SendCommand(internalCommand, cancellationToken);
     }
 
-    public virtual async Task StartResponseTurnAsync(CancellationToken cancellationToken = default)
+    public virtual async Task StartResponseAsync(CancellationToken cancellationToken = default)
     {
         InternalRealtimeClientEventResponseCreateResponse internalOptions = new();
         InternalRealtimeClientEventResponseCreate internalCommand = new(internalOptions);
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
-    public virtual void StartResponseTurn(CancellationToken cancellationToken = default)
+    public virtual void StartResponse(CancellationToken cancellationToken = default)
     {
         InternalRealtimeClientEventResponseCreateResponse internalOptions = new();
         InternalRealtimeClientEventResponseCreate internalCommand = new(internalOptions);
         SendCommand(internalCommand, cancellationToken);
     }
 
-    public virtual async Task StartResponseTurnAsync(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default)
+    public virtual async Task StartResponseAsync(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(sessionOptionOverrides, nameof(sessionOptionOverrides));
         InternalRealtimeClientEventResponseCreateResponse internalOptions
@@ -301,7 +301,7 @@ public partial class RealtimeConversationSession : IDisposable
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
-    public virtual void StartResponseTurn(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default)
+    public virtual void StartResponse(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNull(sessionOptionOverrides, nameof(sessionOptionOverrides));
         InternalRealtimeClientEventResponseCreateResponse internalOptions

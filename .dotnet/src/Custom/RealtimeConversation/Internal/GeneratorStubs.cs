@@ -25,8 +25,6 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseItemObject")] internal readonly partial struct InternalRealtimeResponseItemObject { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseObject")] internal readonly partial struct InternalRealtimeResponseObject { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseSessionObject")] internal readonly partial struct InternalRealtimeResponseSessionObject { }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatusDetails")] internal partial class InternalRealtimeResponseStatusDetails { }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatusDetailsType")] internal readonly partial struct InternalRealtimeResponseStatusDetailsType { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseTextContentPart")] internal partial class InternalRealtimeResponseTextContentPart { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventConversationCreated")] internal partial class InternalRealtimeServerEventConversationCreated { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventConversationCreatedConversation")] internal partial class InternalRealtimeServerEventConversationCreatedConversation { }

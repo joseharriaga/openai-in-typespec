@@ -64,13 +64,13 @@ public partial class RealtimeExamples
             if (update is ConversationInputSpeechStartedUpdate speechStartedUpdate)
             {
                 Console.WriteLine(
-                    $"  -- Voice activity detection started at {speechStartedUpdate.AudioStartMs} ms");
+                    $"  -- Voice activity detection started at {speechStartedUpdate.AudioStartTime}");
             }
 
             if (update is ConversationInputSpeechFinishedUpdate speechFinishedUpdate)
             {
                 Console.WriteLine(
-                    $"  -- Voice activity detection ended at {speechFinishedUpdate.AudioEndMs} ms");
+                    $"  -- Voice activity detection ended at {speechFinishedUpdate.AudioEndTime}");
             }
 
             // Item started updates notify that the model generation process will insert a new item into
@@ -126,7 +126,7 @@ public partial class RealtimeExamples
                     Console.Write($"    + [{itemStreamingFinishedUpdate.MessageRole}]: ");
                     foreach (ConversationContentPart contentPart in itemStreamingFinishedUpdate.MessageContentParts)
                     {
-                        Console.Write(contentPart.AudioTranscriptValue);
+                        Console.Write(contentPart.AudioTranscript);
                     }
                     Console.WriteLine();
                 }
@@ -149,7 +149,7 @@ public partial class RealtimeExamples
                 if (turnFinishedUpdate.CreatedItems.Any(item => item.FunctionName?.Length > 0))
                 {
                     Console.WriteLine($"  -- Ending client turn for pending tool responses");
-                    await session.StartResponseTurnAsync();
+                    await session.StartResponseAsync();
                 }
                 else
                 {
@@ -160,7 +160,7 @@ public partial class RealtimeExamples
             if (update is ConversationErrorUpdate errorUpdate)
             {
                 Console.WriteLine();
-                Console.WriteLine($"ERROR: {errorUpdate.ErrorMessage}");
+                Console.WriteLine($"ERROR: {errorUpdate.Message}");
                 break;
             }
         }

@@ -8932,8 +8932,6 @@ components:
           allOf:
             - $ref: '#/components/schemas/RealtimeAudioInputTranscriptionModel'
           default: whisper-1
-        enabled:
-          type: boolean
     RealtimeClientEvent:
       type: object
       required:

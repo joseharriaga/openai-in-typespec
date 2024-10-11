@@ -79,6 +79,7 @@ using OpenAI;
   "csharp"
 );
 @@clientName(RealtimeServerEventRateLimitsUpdated.type, "Kind", "csharp");
-
 @@clientName(RealtimeTurnDetection.type, "Kind", "csharp");
 @@clientName(RealtimeServerVadTurnDetection.type, "Kind", "csharp");
+@@clientName(RealtimeContentPart.type, "Kind", "csharp");
+@@clientName(RealtimeResponseStatusDetails.type, "Kind", "csharp");

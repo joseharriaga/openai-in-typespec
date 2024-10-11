@@ -15,4 +15,10 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")]
 [CodeGenModel("RealtimeServerEventInputAudioBufferSpeechStopped")]
 public partial class ConversationInputSpeechFinishedUpdate
-{ }
+{
+    [CodeGenMember("AudioEndMs")]
+    private readonly int _audioEndMs;
+
+    public TimeSpan AudioEndTime => _audioEndTime ??= TimeSpan.FromMilliseconds(_audioEndMs);
+    private TimeSpan? _audioEndTime;
+}

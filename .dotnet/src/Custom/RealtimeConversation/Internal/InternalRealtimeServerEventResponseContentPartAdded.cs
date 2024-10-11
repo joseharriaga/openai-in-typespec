@@ -25,6 +25,6 @@ internal partial class InternalRealtimeServerEventResponseContentPartAdded
         _ => null,
     };
 
-    public string Text => (_internalContentPart as InternalRealtimeResponseTextContentPart)?.Text;
-    public string AudioTranscript => (_internalContentPart as InternalRealtimeResponseAudioContentPart)?.Transcript;
+    public string Text => (_internalContentPart as InternalRealtimeResponseTextContentPart)?.InternalTextValue;
+    public string AudioTranscript => (_internalContentPart as InternalRealtimeResponseAudioContentPart)?.InternalTranscriptValue;
 }

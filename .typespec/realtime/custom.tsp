@@ -82,7 +82,6 @@ union RealtimeAudioInputTranscriptionModel {
 
 model RealtimeAudioInputTranscriptionSettings {
   `model`?: RealtimeAudioInputTranscriptionModel = RealtimeAudioInputTranscriptionModel.whisper_1;
-  enabled?: boolean;
 }
 
 alias RealtimeModalities = ("text" | "audio")[];

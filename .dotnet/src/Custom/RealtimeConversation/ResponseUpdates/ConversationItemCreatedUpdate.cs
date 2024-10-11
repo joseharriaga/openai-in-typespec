@@ -19,7 +19,7 @@ public partial class ConversationItemCreatedUpdate
     [CodeGenMember("Item")]
     private readonly InternalRealtimeResponseItem _internalItem;
 
-    public string NewItemId => _internalItem.Id;
+    public string ItemId => _internalItem.Id;
 
     public ConversationMessageRole? MessageRole => _internalItem.MessageRole;
 

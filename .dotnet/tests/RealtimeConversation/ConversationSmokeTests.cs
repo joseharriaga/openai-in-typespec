@@ -23,7 +23,7 @@ public class ConversationSmokeTests : ConversationTestFixtureBase
     {
         ConversationItem messageItem = ConversationItem.CreateUserMessage(["Hello, world!"]);
         Assert.That(messageItem?.MessageContentParts?.Count, Is.EqualTo(1));
-        Assert.That(messageItem.MessageContentParts[0].TextValue, Is.EqualTo("Hello, world!"));
+        Assert.That(messageItem.MessageContentParts[0].Text, Is.EqualTo("Hello, world!"));
     }
 
     [Test]

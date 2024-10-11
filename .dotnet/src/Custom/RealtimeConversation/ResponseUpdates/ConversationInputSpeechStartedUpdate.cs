@@ -16,4 +16,10 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")]
 [CodeGenModel("RealtimeServerEventInputAudioBufferSpeechStarted")]
 public partial class ConversationInputSpeechStartedUpdate
-{ }
+{
+    [CodeGenMember("AudioStartMs")]
+    private readonly int _audioStartMs;
+
+    public TimeSpan AudioStartTime => _audioStartTime ??= TimeSpan.FromMilliseconds(_audioStartMs);
+    private TimeSpan? _audioStartTime;
+}

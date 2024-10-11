@@ -7,19 +7,17 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public abstract partial class ConversationContentPart
+    public abstract partial class ConversationStatusDetails
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        protected ConversationContentPart()
+        protected ConversationStatusDetails()
         {
         }
 
-        internal ConversationContentPart(ConversationContentPartKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ConversationStatusDetails(ConversationStatus statusKind, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
-            Kind = kind;
+            StatusKind = statusKind;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
-
-        internal ConversationContentPartKind Kind { get; set; }
     }
 }

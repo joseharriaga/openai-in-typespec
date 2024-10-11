@@ -32,8 +32,8 @@ public partial class ConversationSessionConfiguredUpdate
     public ConversationAudioFormat InputAudioFormat => _internalSession.InputAudioFormat;
     public ConversationAudioFormat OutputAudioFormat => _internalSession.OutputAudioFormat;
 
-    public ConversationInputTranscriptionOptions TranscriptionSettings => _internalSession.InputAudioTranscription;
-    public ConversationTurnDetectionOptions TurnDetectionSettings => _internalSession.TurnDetection;
+    public ConversationInputTranscriptionOptions InputTranscriptionOptions => _internalSession.InputAudioTranscription;
+    public ConversationTurnDetectionOptions TurnDetectionOptions => _internalSession.TurnDetection;
     public IReadOnlyList<ConversationTool> Tools => _internalSession.Tools;
     public ConversationToolChoice ToolChoice => ConversationToolChoice.FromBinaryData(_internalSession.ToolChoice);
     public float Temperature => _internalSession.Temperature;

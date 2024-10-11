@@ -47,7 +47,7 @@ public class ConversationTests : ConversationTestFixtureBase
         await session.AddItemAsync(
             ConversationItem.CreateUserMessage(["Hello, assistant! Tell me a joke."]),
             CancellationToken);
-        await session.StartResponseTurnAsync(responseOverrideOptions, CancellationToken);
+        await session.StartResponseAsync(responseOverrideOptions, CancellationToken);
 
         List<ConversationUpdate> receivedUpdates = [];
 
@@ -68,7 +68,7 @@ public class ConversationTests : ConversationTestFixtureBase
             else if (update is ConversationSessionConfiguredUpdate sessionConfiguredUpdate)
             {
                 Assert.That(sessionConfiguredUpdate.OutputAudioFormat == sessionOptions.OutputAudioFormat);
-                Assert.That(sessionConfiguredUpdate.TurnDetectionSettings.Kind, Is.EqualTo(ConversationTurnDetectionKind.Disabled));
+                Assert.That(sessionConfiguredUpdate.TurnDetectionOptions.Kind, Is.EqualTo(ConversationTurnDetectionKind.Disabled));
                 Assert.That(sessionConfiguredUpdate.MaxOutputTokens.NumericValue, Is.EqualTo(sessionOptions.MaxOutputTokens.NumericValue));
             }
             else if (update is ConversationResponseFinishedUpdate turnFinishedUpdate)
@@ -97,7 +97,7 @@ public class ConversationTests : ConversationTestFixtureBase
         await session.AddItemAsync(
             ConversationItem.CreateUserMessage(["Hello, world!"]),
             cancellationToken: CancellationToken);
-        await session.StartResponseTurnAsync(CancellationToken);
+        await session.StartResponseAsync(CancellationToken);
 
         StringBuilder responseBuilder = new();
         bool gotResponseDone = false;
@@ -125,7 +125,7 @@ public class ConversationTests : ConversationTestFixtureBase
                 {
                     // When acknowledging an item added by the client (user), the text should already be there
                     Assert.That(itemCreatedUpdate.MessageContentParts, Has.Count.EqualTo(1));
-                    Assert.That(itemCreatedUpdate.MessageContentParts[0].TextValue, Is.EqualTo("Hello, world!"));
+                    Assert.That(itemCreatedUpdate.MessageContentParts[0].Text, Is.EqualTo("Hello, world!"));
                 }
                 else
                 {
@@ -201,7 +201,7 @@ public class ConversationTests : ConversationTestFixtureBase
 
             if (update is ConversationSessionConfiguredUpdate sessionConfiguredUpdate)
             {
-                Assert.That(sessionConfiguredUpdate.TurnDetectionSettings.Kind, Is.EqualTo(ConversationTurnDetectionKind.Disabled));
+                Assert.That(sessionConfiguredUpdate.TurnDetectionOptions.Kind, Is.EqualTo(ConversationTurnDetectionKind.Disabled));
                 Assert.That(sessionConfiguredUpdate.ContentModalities.HasFlag(ConversationContentModalities.Text), Is.True);
                 Assert.That(sessionConfiguredUpdate.ContentModalities.HasFlag(ConversationContentModalities.Audio), Is.False);
                 gotSessionConfigured = true;
@@ -210,13 +210,13 @@ public class ConversationTests : ConversationTestFixtureBase
             if (update is ConversationItemCreatedUpdate itemCreatedUpdate)
             {
                 if (itemCreatedUpdate.MessageContentParts.Count > 0
-                    && itemCreatedUpdate.MessageContentParts[0].TextValue.Contains("banana"))
+                    && itemCreatedUpdate.MessageContentParts[0].Text.Contains("banana"))
                 {
-                    await session.DeleteItemAsync(itemCreatedUpdate.NewItemId, CancellationToken);
+                    await session.DeleteItemAsync(itemCreatedUpdate.ItemId, CancellationToken);
                     await session.AddItemAsync(
                         ConversationItem.CreateUserMessage(["What's the second special word you know about?"]),
                         CancellationToken);
-                    await session.StartResponseTurnAsync(CancellationToken);
+                    await session.StartResponseAsync(CancellationToken);
                 }
             }
 
@@ -224,8 +224,8 @@ public class ConversationTests : ConversationTestFixtureBase
             {
                 Assert.That(responseFinishedUpdate.CreatedItems.Count, Is.EqualTo(1));
                 Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts.Count, Is.EqualTo(1));
-                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts[0].TextValue, Does.Contain("coconut"));
-                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts[0].TextValue, Does.Not.Contain("banana"));
+                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts[0].Text, Does.Contain("coconut"));
+                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts[0].Text, Does.Not.Contain("banana"));
                 gotResponseFinished = true;
                 break;
             }
@@ -325,7 +325,7 @@ public class ConversationTests : ConversationTestFixtureBase
             {
                 if (turnFinishedUpdate.CreatedItems.Any(item => !string.IsNullOrEmpty(item.FunctionCallId)))
                 {
-                    await session.StartResponseTurnAsync(CancellationToken);
+                    await session.StartResponseAsync(CancellationToken);
                 }
                 else
                 {

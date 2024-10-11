@@ -15,21 +15,19 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(itemId, nameof(itemId));
 
             Kind = ConversationUpdateKind.InputSpeechStopped;
-            AudioEndMs = audioEndMs;
+            _audioEndMs = audioEndMs;
             ItemId = itemId;
         }
 
         internal ConversationInputSpeechFinishedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, int audioEndMs, string itemId) : base(kind, eventId, serializedAdditionalRawData)
         {
-            AudioEndMs = audioEndMs;
+            _audioEndMs = audioEndMs;
             ItemId = itemId;
         }
 
         internal ConversationInputSpeechFinishedUpdate()
         {
         }
-
-        public int AudioEndMs { get; }
         public string ItemId { get; }
     }
 }

@@ -18,7 +18,10 @@ public partial class ConversationErrorUpdate
     private readonly InternalRealtimeServerEventErrorError _error;
 
     public string ErrorCode => _error?.Code;
-    public string ErrorMessage => _error?.Message;
-    public string ErrorParameterName => _error?.Param;
+    /// <summary>
+    /// Gets the identifier that correlates to a prior event associated with this error.
+    /// </summary>
     public string ErrorEventId => _error?.EventId;
+    public string Message => _error?.Message;
+    public string ParameterName => _error?.Param;
 }

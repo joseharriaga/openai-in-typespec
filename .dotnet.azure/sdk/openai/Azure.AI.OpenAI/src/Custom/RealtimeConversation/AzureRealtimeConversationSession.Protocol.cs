@@ -40,6 +40,10 @@ internal partial class AzureRealtimeConversationSession : RealtimeConversationSe
                 {
                     await Task.Delay(timeBetweenRateLimitRetries).ConfigureAwait(false);
                 }
+                else
+                {
+                    throw;
+                }
             }
         } while (shouldRetryOnFailure);
     }

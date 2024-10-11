@@ -15,12 +15,14 @@ public partial class ConversationResponseFinishedUpdate
     [CodeGenMember("Response")]
     internal readonly InternalRealtimeResponse _internalResponse;
 
-    public string Id => _internalResponse?.Id;
+    public string ResponseId => _internalResponse?.Id;
+
     public ConversationStatus? Status => _internalResponse?.Status;
 
-    // TODO
-    internal InternalRealtimeResponseStatusDetails StatusDetails { get; }
+    public ConversationStatusDetails StatusDetails => _internalResponse.StatusDetails;
 
     [CodeGenMember("Output")]
     public IReadOnlyList<ConversationItem> CreatedItems => _internalResponse?.Output ?? [];
+
+    public ConversationTokenUsage Usage => _internalResponse.Usage;
 }

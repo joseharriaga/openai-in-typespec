@@ -5,12 +5,12 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class UnknownRealtimeResponseStatusDetails : IJsonModel<ConversationStatusDetails>
+    [PersistableModelProxy(typeof(UnknownRealtimeResponseStatusDetails))]
+    public partial class ConversationStatusDetails : IJsonModel<ConversationStatusDetails>
     {
         void IJsonModel<ConversationStatusDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -60,7 +60,7 @@ namespace OpenAI.RealtimeConversation
             return DeserializeConversationStatusDetails(document.RootElement, options);
         }
 
-        internal static UnknownRealtimeResponseStatusDetails DeserializeUnknownRealtimeResponseStatusDetails(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ConversationStatusDetails DeserializeConversationStatusDetails(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -68,24 +68,7 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            ConversationStatus type = "Unknown";
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
-            {
-                if (property.NameEquals("type"u8))
-                {
-                    type = new ConversationStatus(property.Value.GetString());
-                    continue;
-                }
-                if (true)
-                {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
-                }
-            }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new UnknownRealtimeResponseStatusDetails(type, serializedAdditionalRawData);
+            return UnknownRealtimeResponseStatusDetails.DeserializeUnknownRealtimeResponseStatusDetails(element, options);
         }
 
         BinaryData IPersistableModel<ConversationStatusDetails>.Write(ModelReaderWriterOptions options)
@@ -119,15 +102,15 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<ConversationStatusDetails>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new UnknownRealtimeResponseStatusDetails FromResponse(PipelineResponse response)
+        internal static ConversationStatusDetails FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeUnknownRealtimeResponseStatusDetails(document.RootElement);
+            return DeserializeConversationStatusDetails(document.RootElement);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create<ConversationStatusDetails>(this, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

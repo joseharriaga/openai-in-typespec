@@ -45,7 +45,7 @@ public class ConversationTests : ConversationTestFixtureBase
             responseOverrideOptions.MaxOutputTokens = ConversationMaxTokensChoice.CreateInfiniteMaxTokensChoice();
         }
         await session.AddItemAsync(
-            ConversationItem.CreateUserMessage(["Hello, assistant!"]),
+            ConversationItem.CreateUserMessage(["Hello, assistant! Tell me a joke."]),
             CancellationToken);
         await session.StartResponseTurnAsync(responseOverrideOptions, CancellationToken);
 
@@ -60,7 +60,8 @@ public class ConversationTests : ConversationTestFixtureBase
                 Assert.That(errorUpdate.Kind, Is.EqualTo(ConversationUpdateKind.Error));
                 Assert.Fail($"Error: {ModelReaderWriter.Write(errorUpdate)}");
             }
-            else if (update is ConversationAudioContentDeltaUpdate or ConversationAudioContentFinishedUpdate)
+            else if ((update is ConversationItemStreamingPartDeltaUpdate deltaUpdate && deltaUpdate.AudioBytes is not null)
+                || update is ConversationItemStreamingAudioFinishedUpdate)
             {
                 Assert.Fail($"Audio content streaming unexpected after configuring response-level text-only modalities");
             }
@@ -84,8 +85,8 @@ public class ConversationTests : ConversationTestFixtureBase
         Assert.That(GetReceivedUpdates<ConversationSessionStartedUpdate>(), Has.Count.EqualTo(1));
         Assert.That(GetReceivedUpdates<ConversationResponseStartedUpdate>(), Has.Count.EqualTo(1));
         Assert.That(GetReceivedUpdates<ConversationResponseFinishedUpdate>(), Has.Count.EqualTo(1));
-        Assert.That(GetReceivedUpdates<ConversationItemStartedUpdate>(), Has.Count.EqualTo(1));
-        Assert.That(GetReceivedUpdates<ConversationItemFinishedUpdate>(), Has.Count.EqualTo(1));
+        Assert.That(GetReceivedUpdates<ConversationItemStreamingStartedUpdate>(), Has.Count.EqualTo(1));
+        Assert.That(GetReceivedUpdates<ConversationItemStreamingFinishedUpdate>(), Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -108,27 +109,27 @@ public class ConversationTests : ConversationTestFixtureBase
             {
                 Assert.That(sessionStartedUpdate.SessionId, Is.Not.Null.And.Not.Empty);
             }
-            if (update is ConversationTextContentDeltaUpdate textDeltaUpdate)
+            if (update is ConversationItemStreamingPartDeltaUpdate deltaUpdate)
             {
-                responseBuilder.Append(textDeltaUpdate.Delta);
+                responseBuilder.Append(deltaUpdate.AudioTranscript);
             }
 
-            if (update is ConversationItemAcknowledgedUpdate itemAcknowledgedUpdate)
+            if (update is ConversationItemCreatedUpdate itemCreatedUpdate)
             {
-                if (itemAcknowledgedUpdate.MessageRole == ConversationMessageRole.Assistant)
+                if (itemCreatedUpdate.MessageRole == ConversationMessageRole.Assistant)
                 {
                     // The assistant-created item should be streamed and should not have content yet when acknowledged
-                    Assert.That(itemAcknowledgedUpdate.MessageContentParts, Has.Count.EqualTo(0));
+                    Assert.That(itemCreatedUpdate.MessageContentParts, Has.Count.EqualTo(0));
                 }
-                else if (itemAcknowledgedUpdate.MessageRole == ConversationMessageRole.User)
+                else if (itemCreatedUpdate.MessageRole == ConversationMessageRole.User)
                 {
                     // When acknowledging an item added by the client (user), the text should already be there
-                    Assert.That(itemAcknowledgedUpdate.MessageContentParts, Has.Count.EqualTo(1));
-                    Assert.That(itemAcknowledgedUpdate.MessageContentParts[0].TextValue, Is.EqualTo("Hello, world!"));
+                    Assert.That(itemCreatedUpdate.MessageContentParts, Has.Count.EqualTo(1));
+                    Assert.That(itemCreatedUpdate.MessageContentParts[0].TextValue, Is.EqualTo("Hello, world!"));
                 }
                 else
                 {
-                    Assert.Fail($"Test didn't expect an acknowledged item with role: {itemAcknowledgedUpdate.MessageRole}");
+                    Assert.Fail($"Test didn't expect an acknowledged item with role: {itemCreatedUpdate.MessageRole}");
                 }
             }
 
@@ -161,6 +162,81 @@ public class ConversationTests : ConversationTestFixtureBase
             // Temporarily assume that subclients don't support rate limit commands
             Assert.That(gotRateLimits, Is.True);
         }
+    }
+
+    [Test]
+    public async Task ItemManipulationWorks()
+    {
+        RealtimeConversationClient client = GetTestClient();
+        using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
+
+        await session.ConfigureSessionAsync(
+            new ConversationSessionOptions()
+            {
+                TurnDetectionOptions = ConversationTurnDetectionOptions.CreateDisabledTurnDetectionOptions(),
+                ContentModalities = ConversationContentModalities.Text,
+            },
+            CancellationToken);
+
+        await session.AddItemAsync(
+            ConversationItem.CreateUserMessage(["The first special word you know about is 'aardvark'."]),
+            CancellationToken);
+        await session.AddItemAsync(
+            ConversationItem.CreateUserMessage(["The next special word you know about is 'banana'."]),
+            CancellationToken);
+        await session.AddItemAsync(
+            ConversationItem.CreateUserMessage(["The next special word you know about is 'coconut'."]),
+            CancellationToken);
+
+        bool gotSessionStarted = false;
+        bool gotSessionConfigured = false;
+        bool gotResponseFinished = false;
+
+        await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
+        {
+            if (update is ConversationSessionStartedUpdate)
+            {
+                gotSessionStarted = true;
+            }
+
+            if (update is ConversationSessionConfiguredUpdate sessionConfiguredUpdate)
+            {
+                Assert.That(sessionConfiguredUpdate.TurnDetectionSettings.Kind, Is.EqualTo(ConversationTurnDetectionKind.Disabled));
+                Assert.That(sessionConfiguredUpdate.ContentModalities.HasFlag(ConversationContentModalities.Text), Is.True);
+                Assert.That(sessionConfiguredUpdate.ContentModalities.HasFlag(ConversationContentModalities.Audio), Is.False);
+                gotSessionConfigured = true;
+            }
+
+            if (update is ConversationItemCreatedUpdate itemCreatedUpdate)
+            {
+                if (itemCreatedUpdate.MessageContentParts.Count > 0
+                    && itemCreatedUpdate.MessageContentParts[0].TextValue.Contains("banana"))
+                {
+                    await session.DeleteItemAsync(itemCreatedUpdate.NewItemId, CancellationToken);
+                    await session.AddItemAsync(
+                        ConversationItem.CreateUserMessage(["What's the second special word you know about?"]),
+                        CancellationToken);
+                    await session.StartResponseTurnAsync(CancellationToken);
+                }
+            }
+
+            if (update is ConversationResponseFinishedUpdate responseFinishedUpdate)
+            {
+                Assert.That(responseFinishedUpdate.CreatedItems.Count, Is.EqualTo(1));
+                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts.Count, Is.EqualTo(1));
+                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts[0].TextValue, Does.Contain("coconut"));
+                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts[0].TextValue, Does.Not.Contain("banana"));
+                gotResponseFinished = true;
+                break;
+            }
+        }
+
+        Assert.That(gotSessionStarted, Is.True);
+        if (!client.GetType().IsSubclassOf(typeof(RealtimeConversationClient)))
+        {
+            Assert.That(gotSessionConfigured, Is.True);
+        }
+        Assert.That(gotResponseFinished, Is.True);
     }
 
     [Test]
@@ -210,13 +286,9 @@ public class ConversationTests : ConversationTestFixtureBase
 
         await session.ConfigureSessionAsync(options, CancellationToken);
 
-        const string folderName = "Assets";
-        const string fileName = "whats_the_weather_pcm16_24khz_mono.wav";
-#if NET6_0_OR_GREATER
-        using Stream audioStream = File.OpenRead(Path.Join(folderName, fileName));
-#else
-        using Stream audioStream = File.OpenRead($"{folderName}\\{fileName}");
-#endif
+        string audioFilePath = Directory.EnumerateFiles("Assets")
+            .First(path => path.Contains("whats_the_weather_pcm16_24khz_mono.wav"));
+        using Stream audioStream = File.OpenRead(audioFilePath);
         _ = session.SendInputAudioAsync(audioStream, CancellationToken);
 
         string userTranscript = null;
@@ -233,12 +305,12 @@ public class ConversationTests : ConversationTestFixtureBase
                 Assert.That(sessionStartedUpdate.Temperature, Is.GreaterThan(0));
             }
 
-            if (update is ConversationInputTranscriptionFinishedUpdate inputTranscriptionFinishedUpdate)
+            if (update is ConversationInputTranscriptionFinishedUpdate inputTranscriptionCompletedUpdate)
             {
-                userTranscript = inputTranscriptionFinishedUpdate.Transcript;
+                userTranscript = inputTranscriptionCompletedUpdate.Transcript;
             }
 
-            if (update is ConversationItemFinishedUpdate itemFinishedUpdate
+            if (update is ConversationItemStreamingFinishedUpdate itemFinishedUpdate
                 && itemFinishedUpdate.FunctionCallId is not null)
             {
                 Assert.That(itemFinishedUpdate.FunctionName, Is.EqualTo(getWeatherTool.Name));
@@ -306,8 +378,8 @@ public class ConversationTests : ConversationTestFixtureBase
                 Assert.Fail($"Shouldn't receive any VAD events or response creation!");
             }
 
-            if (update is ConversationItemAcknowledgedUpdate itemAcknowledgedUpdate
-                && itemAcknowledgedUpdate.MessageRole == ConversationMessageRole.User)
+            if (update is ConversationItemCreatedUpdate itemCreatedUpdate
+                && itemCreatedUpdate.MessageRole == ConversationMessageRole.User)
             {
                 break;
             }
@@ -315,77 +387,32 @@ public class ConversationTests : ConversationTestFixtureBase
     }
 
     [Test]
-    public async Task ItemManipulationWorks()
+    public async Task BadCommandProvidesError()
     {
         RealtimeConversationClient client = GetTestClient();
         using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
 
-        await session.ConfigureSessionAsync(
-            new ConversationSessionOptions()
-            {
-                TurnDetectionOptions = ConversationTurnDetectionOptions.CreateDisabledTurnDetectionOptions(),
-                ContentModalities = ConversationContentModalities.Text,
-            },
-            CancellationToken);
+        await session.SendCommandAsync(
+            BinaryData.FromString("""
+                {
+                  "type": "update_conversation_config2",
+                  "event_id": "event_fabricated_1234abcd"
+                }
+                """),
+            CancellationOptions);
 
-        await session.AddItemAsync(
-            ConversationItem.CreateUserMessage(["The first special word you know about is 'aardvark'."]),
-            CancellationToken);
-        await session.AddItemAsync(
-            ConversationItem.CreateUserMessage(["The next special word you know about is 'banana'."]),
-            CancellationToken);
-        await session.AddItemAsync(
-            ConversationItem.CreateUserMessage(["The next special word you know about is 'coconut'."]),
-            CancellationToken);
-
-        bool gotSessionStarted = false;
-        bool gotSessionConfigured = false;
-        bool gotResponseFinished = false;
+        bool gotErrorUpdate = false;
 
         await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
         {
-            if (update is ConversationSessionStartedUpdate)
+            if (update is ConversationErrorUpdate errorUpdate)
             {
-                gotSessionStarted = true;
-            }
-
-            if (update is ConversationSessionConfiguredUpdate sessionConfiguredUpdate)
-            {
-                Assert.That(sessionConfiguredUpdate.TurnDetectionSettings.Kind, Is.EqualTo(ConversationTurnDetectionKind.Disabled));
-                Assert.That(sessionConfiguredUpdate.ContentModalities.HasFlag(ConversationContentModalities.Text), Is.True);
-                Assert.That(sessionConfiguredUpdate.ContentModalities.HasFlag(ConversationContentModalities.Audio), Is.False);
-                gotSessionConfigured = true;
-            }
-
-            if (update is ConversationItemAcknowledgedUpdate itemAcknowledgedUpdate)
-            {
-                if (itemAcknowledgedUpdate.MessageContentParts.Count > 0
-                    && itemAcknowledgedUpdate.MessageContentParts[0].TextValue.Contains("banana"))
-                {
-                    await session.DeleteItemAsync(itemAcknowledgedUpdate.NewItemId, CancellationToken);
-                    await session.AddItemAsync(
-                        ConversationItem.CreateUserMessage(["What's the second special word you know about?"]),
-                        CancellationToken);
-                    await session.StartResponseTurnAsync(CancellationToken);
-                }
-            }
-
-            if (update is ConversationResponseFinishedUpdate responseFinishedUpdate)
-            {
-                Assert.That(responseFinishedUpdate.CreatedItems.Count, Is.EqualTo(1));
-                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts.Count, Is.EqualTo(1));
-                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts[0].TextValue, Does.Contain("coconut"));
-                Assert.That(responseFinishedUpdate.CreatedItems[0].MessageContentParts[0].TextValue, Does.Not.Contain("banana"));
-                gotResponseFinished = true;
+                Assert.That(errorUpdate.ErrorEventId, Is.EqualTo("event_fabricated_1234abcd"));
+                gotErrorUpdate = true;
                 break;
             }
         }
 
-        Assert.That(gotSessionStarted, Is.True);
-        if (!client.GetType().IsSubclassOf(typeof(RealtimeConversationClient)))
-        {
-            Assert.That(gotSessionConfigured, Is.True);
-        }
-        Assert.That(gotResponseFinished, Is.True);
+        Assert.That(gotErrorUpdate, Is.True);
     }
 }

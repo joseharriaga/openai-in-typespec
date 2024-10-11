@@ -44,7 +44,7 @@ public class ConversationTests : ConversationTestFixtureBase
             responseOverrideOptions.MaxOutputTokens = ConversationMaxTokensChoice.CreateInfiniteMaxTokensChoice();
         }
         await session.AddItemAsync(
-            ConversationItem.CreateUserMessage(["Hello, assistant!"]),
+            ConversationItem.CreateUserMessage(["Hello, assistant! Tell me a joke."]),
             CancellationToken);
         await session.StartResponseTurnAsync(responseOverrideOptions, CancellationToken);
 

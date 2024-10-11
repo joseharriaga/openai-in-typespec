@@ -3,11 +3,8 @@
 
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Net;
 using Azure.Core;
-using OpenAI.RealtimeConversation;
 
 namespace Azure.AI.OpenAI.RealtimeConversation;
 
@@ -51,7 +48,14 @@ internal partial class AzureRealtimeConversationSession : RealtimeConversationSe
 
         _endpoint = endpoint;
         _clientWebSocket.Options.AddSubProtocol("realtime");
-        _clientWebSocket.Options.SetRequestHeader("User-Agent", userAgent);
+        try
+        {
+            _clientWebSocket.Options.SetRequestHeader("User-Agent", userAgent);
+        }
+        catch (ArgumentException argumentException)
+        {
+            throw new PlatformNotSupportedException($"{nameof(RealtimeConversationClient)} is not yet supported on older .NET framework targets.", argumentException);
+        }
         _clientWebSocket.Options.SetRequestHeader("x-ms-client-request-id", _clientRequestId);
     }
 

@@ -2170,8 +2170,8 @@ namespace OpenAI.RealtimeConversation {
         public virtual void AddItem(ConversationItem item, CancellationToken cancellationToken = default);
         public virtual Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
         public virtual Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default);
-        public virtual void CancelResponseTurn(CancellationToken cancellationToken = default);
-        public virtual Task CancelResponseTurnAsync(CancellationToken cancellationToken = default);
+        public virtual void CancelResponse(CancellationToken cancellationToken = default);
+        public virtual Task CancelResponseAsync(CancellationToken cancellationToken = default);
         public virtual void ClearInputAudio(CancellationToken cancellationToken = default);
         public virtual Task ClearInputAudioAsync(CancellationToken cancellationToken = default);
         public virtual void CommitPendingAudio(CancellationToken cancellationToken = default);
@@ -2185,8 +2185,8 @@ namespace OpenAI.RealtimeConversation {
         public virtual void DeleteItem(string itemId, CancellationToken cancellationToken = default);
         public virtual Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default);
         public void Dispose();
-        public virtual void InterruptTurn(CancellationToken cancellationToken = default);
-        public virtual Task InterruptTurnAsync(CancellationToken cancellationToken = default);
+        public virtual void InterruptResponse(CancellationToken cancellationToken = default);
+        public virtual Task InterruptResponseAsync(CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual IEnumerable<ClientResult> ReceiveUpdates(RequestOptions options);
         public virtual IEnumerable<ConversationUpdate> ReceiveUpdates(CancellationToken cancellationToken = default);

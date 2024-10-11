@@ -266,13 +266,13 @@ public partial class RealtimeConversationSession : IDisposable
         SendCommand(internalCommand, cancellationToken);
     }
 
-    public virtual async Task InterruptTurnAsync(CancellationToken cancellationToken = default)
+    public virtual async Task InterruptResponseAsync(CancellationToken cancellationToken = default)
     {
         InternalRealtimeClientEventResponseCancel internalCommand = new();
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
-    public virtual void InterruptTurn(CancellationToken cancellationToken = default)
+    public virtual void InterruptResponse(CancellationToken cancellationToken = default)
     {
         InternalRealtimeClientEventResponseCancel internalCommand = new();
         SendCommand(internalCommand, cancellationToken);
@@ -310,13 +310,13 @@ public partial class RealtimeConversationSession : IDisposable
         SendCommand(internalCommand, cancellationToken);
     }
 
-    public virtual async Task CancelResponseTurnAsync(CancellationToken cancellationToken = default)
+    public virtual async Task CancelResponseAsync(CancellationToken cancellationToken = default)
     {
         InternalRealtimeClientEventResponseCancel internalCommand = new();
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
-    public virtual void CancelResponseTurn(CancellationToken cancellationToken = default)
+    public virtual void CancelResponse(CancellationToken cancellationToken = default)
     {
         InternalRealtimeClientEventResponseCancel internalCommand = new();
         SendCommand(internalCommand, cancellationToken);

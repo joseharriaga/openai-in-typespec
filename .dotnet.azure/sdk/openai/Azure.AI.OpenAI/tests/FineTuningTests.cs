@@ -24,10 +24,16 @@ using Azure.AI.OpenAI.FineTuning;
 
 namespace Azure.AI.OpenAI.Tests;
 
+[Category("FineTuning")]
 public class FineTuningTests : AoaiTestBase<FineTuningClient>
 {
     public FineTuningTests(bool isAsync) : base(isAsync)
-    { }
+    {
+        if (Mode == RecordedTestMode.Playback)
+        {
+            Assert.Inconclusive("Playback for fine-tuning temporarily disabled");
+        }
+    }
 
 #if !AZURE_OPENAI_GA
     [Test]
@@ -223,7 +229,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         }
         catch (ClientResultException e)
         {
-            if (e.Message.Contains("ResourceNotFound"))
+            if(e.Message.Contains("ResourceNotFound"))
             {
                 // upload training data
                 uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);

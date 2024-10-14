@@ -1,5 +1,16 @@
 # Release History
 
+## 2.1.0-beta.2 (Unreleased)
+
+This update brings compatibility with the Azure OpenAI `2024-09-01-preview` service API version as well as the `2.1.0-beta.2` release of the `OpenAI` library.
+
+### Features Added
+
+- `2024-09-01-preview` brings AOAI support for streaming token usage in chat completions; `Usage` is now automatically populated in `StreamingChatCompletionUpdate` instances.
+  - Note 1: this feature is not yet compatible when using On Your Data features (after invoking the `.AddDataSource()` extension method on `ChatCompletionOptions`)
+  - Note 2: this feature is not yet compatible when using image input (a `ChatMessageContentPart` of `Kind` `Image`)
+
+
 ## 2.0.0 (2024-09-30)
 
 This update marks the first stable library version for `Azure.AI.OpenAI`. It snaps its dependency to `OpenAI`'s matched `2.0.0` stable version and targets the latest Azure OpenAI Service stable `api-version` label of `2024-06-01`. As a GA label, the `2.0.0` stable version exposes a subset of preview features, with preview library labels continuing to support preview features.

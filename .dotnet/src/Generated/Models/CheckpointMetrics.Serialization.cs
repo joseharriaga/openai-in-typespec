@@ -10,31 +10,31 @@ using System.Text.Json;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class InternalFineTuningJobCheckpointMetrics : IJsonModel<InternalFineTuningJobCheckpointMetrics>
+    public partial class CheckpointMetrics : IJsonModel<CheckpointMetrics>
     {
-        void IJsonModel<InternalFineTuningJobCheckpointMetrics>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<CheckpointMetrics>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningJobCheckpointMetrics>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CheckpointMetrics>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalFineTuningJobCheckpointMetrics)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(CheckpointMetrics)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("step") != true && Optional.IsDefined(Step))
+            if (SerializedAdditionalRawData?.ContainsKey("step") != true)
             {
                 writer.WritePropertyName("step"u8);
-                writer.WriteNumberValue(Step.Value);
+                writer.WriteNumberValue(Step);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("train_loss") != true && Optional.IsDefined(TrainLoss))
+            if (SerializedAdditionalRawData?.ContainsKey("train_loss") != true)
             {
                 writer.WritePropertyName("train_loss"u8);
-                writer.WriteNumberValue(TrainLoss.Value);
+                writer.WriteNumberValue(TrainLoss);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("train_mean_token_accuracy") != true && Optional.IsDefined(TrainMeanTokenAccuracy))
+            if (SerializedAdditionalRawData?.ContainsKey("train_mean_token_accuracy") != true)
             {
                 writer.WritePropertyName("train_mean_token_accuracy"u8);
-                writer.WriteNumberValue(TrainMeanTokenAccuracy.Value);
+                writer.WriteNumberValue(TrainMeanTokenAccuracy);
             }
             if (SerializedAdditionalRawData?.ContainsKey("valid_loss") != true && Optional.IsDefined(ValidLoss))
             {
@@ -78,19 +78,19 @@ namespace OpenAI.FineTuning
             writer.WriteEndObject();
         }
 
-        InternalFineTuningJobCheckpointMetrics IJsonModel<InternalFineTuningJobCheckpointMetrics>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        CheckpointMetrics IJsonModel<CheckpointMetrics>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningJobCheckpointMetrics>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CheckpointMetrics>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalFineTuningJobCheckpointMetrics)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(CheckpointMetrics)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalFineTuningJobCheckpointMetrics(document.RootElement, options);
+            return DeserializeCheckpointMetrics(document.RootElement, options);
         }
 
-        internal static InternalFineTuningJobCheckpointMetrics DeserializeInternalFineTuningJobCheckpointMetrics(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static CheckpointMetrics DeserializeCheckpointMetrics(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -98,9 +98,9 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            float? step = default;
-            float? trainLoss = default;
-            float? trainMeanTokenAccuracy = default;
+            int step = default;
+            float trainLoss = default;
+            float trainMeanTokenAccuracy = default;
             float? validLoss = default;
             float? validMeanTokenAccuracy = default;
             float? fullValidLoss = default;
@@ -111,28 +111,16 @@ namespace OpenAI.FineTuning
             {
                 if (property.NameEquals("step"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    step = property.Value.GetSingle();
+                    step = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("train_loss"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     trainLoss = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("train_mean_token_accuracy"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     trainMeanTokenAccuracy = property.Value.GetSingle();
                     continue;
                 }
@@ -179,7 +167,7 @@ namespace OpenAI.FineTuning
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalFineTuningJobCheckpointMetrics(
+            return new CheckpointMetrics(
                 step,
                 trainLoss,
                 trainMeanTokenAccuracy,
@@ -190,41 +178,41 @@ namespace OpenAI.FineTuning
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<InternalFineTuningJobCheckpointMetrics>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<CheckpointMetrics>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningJobCheckpointMetrics>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CheckpointMetrics>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalFineTuningJobCheckpointMetrics)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(CheckpointMetrics)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalFineTuningJobCheckpointMetrics IPersistableModel<InternalFineTuningJobCheckpointMetrics>.Create(BinaryData data, ModelReaderWriterOptions options)
+        CheckpointMetrics IPersistableModel<CheckpointMetrics>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningJobCheckpointMetrics>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<CheckpointMetrics>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalFineTuningJobCheckpointMetrics(document.RootElement, options);
+                        return DeserializeCheckpointMetrics(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalFineTuningJobCheckpointMetrics)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(CheckpointMetrics)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalFineTuningJobCheckpointMetrics>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<CheckpointMetrics>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalFineTuningJobCheckpointMetrics FromResponse(PipelineResponse response)
+        internal static CheckpointMetrics FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalFineTuningJobCheckpointMetrics(document.RootElement);
+            return DeserializeCheckpointMetrics(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

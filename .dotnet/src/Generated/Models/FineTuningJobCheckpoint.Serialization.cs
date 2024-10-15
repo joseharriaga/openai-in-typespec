@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class InternalFineTuningJobCheckpoint : IJsonModel<InternalFineTuningJobCheckpoint>
+    public partial class FineTuningJobCheckpoint : IJsonModel<FineTuningJobCheckpoint>
     {
-        void IJsonModel<InternalFineTuningJobCheckpoint>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<FineTuningJobCheckpoint>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningJobCheckpoint>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FineTuningJobCheckpoint>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalFineTuningJobCheckpoint)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(FineTuningJobCheckpoint)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -34,7 +34,7 @@ namespace OpenAI.FineTuning
             if (SerializedAdditionalRawData?.ContainsKey("fine_tuned_model_checkpoint") != true)
             {
                 writer.WritePropertyName("fine_tuned_model_checkpoint"u8);
-                writer.WriteStringValue(FineTunedModelCheckpoint);
+                writer.WriteStringValue(FineTunedModelCheckpointId);
             }
             if (SerializedAdditionalRawData?.ContainsKey("step_number") != true)
             {
@@ -44,17 +44,17 @@ namespace OpenAI.FineTuning
             if (SerializedAdditionalRawData?.ContainsKey("metrics") != true)
             {
                 writer.WritePropertyName("metrics"u8);
-                writer.WriteObjectValue(Metrics, options);
+                writer.WriteObjectValue<CheckpointMetrics>(Metrics, options);
             }
             if (SerializedAdditionalRawData?.ContainsKey("fine_tuning_job_id") != true)
             {
                 writer.WritePropertyName("fine_tuning_job_id"u8);
-                writer.WriteStringValue(FineTuningJobId);
+                writer.WriteStringValue(JobId);
             }
             if (SerializedAdditionalRawData?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(Object.ToString());
+                writer.WriteStringValue(_object);
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -78,19 +78,19 @@ namespace OpenAI.FineTuning
             writer.WriteEndObject();
         }
 
-        InternalFineTuningJobCheckpoint IJsonModel<InternalFineTuningJobCheckpoint>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        FineTuningJobCheckpoint IJsonModel<FineTuningJobCheckpoint>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningJobCheckpoint>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FineTuningJobCheckpoint>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalFineTuningJobCheckpoint)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(FineTuningJobCheckpoint)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalFineTuningJobCheckpoint(document.RootElement, options);
+            return DeserializeFineTuningJobCheckpoint(document.RootElement, options);
         }
 
-        internal static InternalFineTuningJobCheckpoint DeserializeInternalFineTuningJobCheckpoint(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static FineTuningJobCheckpoint DeserializeFineTuningJobCheckpoint(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -102,9 +102,9 @@ namespace OpenAI.FineTuning
             DateTimeOffset createdAt = default;
             string fineTunedModelCheckpoint = default;
             int stepNumber = default;
-            InternalFineTuningJobCheckpointMetrics metrics = default;
+            CheckpointMetrics metrics = default;
             string fineTuningJobId = default;
-            InternalFineTuningJobCheckpointObject @object = default;
+            string @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -131,7 +131,7 @@ namespace OpenAI.FineTuning
                 }
                 if (property.NameEquals("metrics"u8))
                 {
-                    metrics = InternalFineTuningJobCheckpointMetrics.DeserializeInternalFineTuningJobCheckpointMetrics(property.Value, options);
+                    metrics = CheckpointMetrics.DeserializeCheckpointMetrics(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("fine_tuning_job_id"u8))
@@ -141,7 +141,7 @@ namespace OpenAI.FineTuning
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new InternalFineTuningJobCheckpointObject(property.Value.GetString());
+                    @object = property.Value.GetString();
                     continue;
                 }
                 if (true)
@@ -151,7 +151,7 @@ namespace OpenAI.FineTuning
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalFineTuningJobCheckpoint(
+            return new FineTuningJobCheckpoint(
                 id,
                 createdAt,
                 fineTunedModelCheckpoint,
@@ -162,41 +162,41 @@ namespace OpenAI.FineTuning
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<InternalFineTuningJobCheckpoint>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<FineTuningJobCheckpoint>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningJobCheckpoint>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FineTuningJobCheckpoint>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalFineTuningJobCheckpoint)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(FineTuningJobCheckpoint)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalFineTuningJobCheckpoint IPersistableModel<InternalFineTuningJobCheckpoint>.Create(BinaryData data, ModelReaderWriterOptions options)
+        FineTuningJobCheckpoint IPersistableModel<FineTuningJobCheckpoint>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalFineTuningJobCheckpoint>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<FineTuningJobCheckpoint>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalFineTuningJobCheckpoint(document.RootElement, options);
+                        return DeserializeFineTuningJobCheckpoint(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalFineTuningJobCheckpoint)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(FineTuningJobCheckpoint)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalFineTuningJobCheckpoint>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<FineTuningJobCheckpoint>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalFineTuningJobCheckpoint FromResponse(PipelineResponse response)
+        internal static FineTuningJobCheckpoint FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalFineTuningJobCheckpoint(document.RootElement);
+            return DeserializeFineTuningJobCheckpoint(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

@@ -1,8 +1,3 @@
-/*
- * This file was automatically generated from an OpenAPI .yaml file.
- * Edits made directly to this file will be lost.
- */
-
 import "../chat";
 import "../common";
 import "./custom.tsp";
@@ -94,9 +89,9 @@ model ListPaginatedFineTuningJobsResponse {
 
 // Tool customization: Include spec-omitted 'has_more' property
 model ListFineTuningJobEventsResponse {
-  has_more: boolean;
   data: FineTuningJobEvent[];
   object: "list";
+  has_more: boolean;
 }
 
 model ListFineTuningJobCheckpointsResponse {
@@ -149,7 +144,7 @@ model FineTuningJob {
 
   // Tool customization: reflect observed wire truth (learning_rate_multiplier, n_epochs) for hyperparameters in ft responses
   /** The hyperparameters used for the fine-tuning job. See the [fine-tuning guide](/docs/guides/fine-tuning) for more details. */
-  hyperparameters: FineTuningJobHyperparameters;
+  hyperparameters?: FineTuningJobHyperparameters;
 
   /** The base model that is being fine-tuned. */
   `model`: string;
@@ -259,9 +254,9 @@ model FineTuningJobCheckpoint {
 
   /** Metrics at the step number during the fine-tuning job. */
   metrics: {
-    step?: float32;
-    train_loss?: float32;
-    train_mean_token_accuracy?: float32;
+    step: int32;
+    train_loss: float32;
+    train_mean_token_accuracy: float32;
     valid_loss?: float32;
     valid_mean_token_accuracy?: float32;
     full_valid_loss?: float32;

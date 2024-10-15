@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class FineTuningJob : IJsonModel<FineTuningJob>
+    public partial class FineTuningJob : IJsonModel<FineTuningJob>
     {
         void IJsonModel<FineTuningJob>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -36,7 +36,7 @@ namespace OpenAI.FineTuning
             if (SerializedAdditionalRawData?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
-                writer.WriteStringValue(Id);
+                writer.WriteStringValue(JobId);
             }
             if (SerializedAdditionalRawData?.ContainsKey("created_at") != true)
             {
@@ -82,17 +82,17 @@ namespace OpenAI.FineTuning
             if (SerializedAdditionalRawData?.ContainsKey("hyperparameters") != true)
             {
                 writer.WritePropertyName("hyperparameters"u8);
-                writer.WriteObjectValue(Hyperparameters, options);
+                writer.WriteObjectValue<FineTuningJobHyperparameters>(Hyperparameters, options);
             }
             if (SerializedAdditionalRawData?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model);
+                writer.WriteStringValue(BaseModel);
             }
             if (SerializedAdditionalRawData?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(Object.ToString());
+                writer.WriteStringValue(_object);
             }
             if (SerializedAdditionalRawData?.ContainsKey("organization_id") != true)
             {
@@ -103,7 +103,7 @@ namespace OpenAI.FineTuning
             {
                 writer.WritePropertyName("result_files"u8);
                 writer.WriteStartArray();
-                foreach (var item in ResultFiles)
+                foreach (var item in ResultFileIds)
                 {
                     writer.WriteStringValue(item);
                 }
@@ -116,10 +116,10 @@ namespace OpenAI.FineTuning
             }
             if (SerializedAdditionalRawData?.ContainsKey("trained_tokens") != true)
             {
-                if (TrainedTokens != null)
+                if (BillableTrainedTokens != null)
                 {
                     writer.WritePropertyName("trained_tokens"u8);
-                    writer.WriteNumberValue(TrainedTokens.Value);
+                    writer.WriteNumberValue(BillableTrainedTokens.Value);
                 }
                 else
                 {
@@ -129,14 +129,14 @@ namespace OpenAI.FineTuning
             if (SerializedAdditionalRawData?.ContainsKey("training_file") != true)
             {
                 writer.WritePropertyName("training_file"u8);
-                writer.WriteStringValue(TrainingFile);
+                writer.WriteStringValue(TrainingFileId);
             }
             if (SerializedAdditionalRawData?.ContainsKey("validation_file") != true)
             {
-                if (ValidationFile != null)
+                if (ValidationFileId != null)
                 {
                     writer.WritePropertyName("validation_file"u8);
-                    writer.WriteStringValue(ValidationFile);
+                    writer.WriteStringValue(ValidationFileId);
                 }
                 else
                 {
@@ -151,7 +151,7 @@ namespace OpenAI.FineTuning
                     writer.WriteStartArray();
                     foreach (var item in Integrations)
                     {
-                        writer.WriteObjectValue(item, options);
+                        writer.WriteObjectValue<FineTuningIntegration>(item, options);
                     }
                     writer.WriteEndArray();
                 }
@@ -165,12 +165,12 @@ namespace OpenAI.FineTuning
                 writer.WritePropertyName("seed"u8);
                 writer.WriteNumberValue(Seed);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("estimated_finish") != true && Optional.IsDefined(EstimatedFinish))
+            if (SerializedAdditionalRawData?.ContainsKey("estimated_finish") != true && Optional.IsDefined(EstimatedFinishAt))
             {
-                if (EstimatedFinish != null)
+                if (EstimatedFinishAt != null)
                 {
                     writer.WritePropertyName("estimated_finish"u8);
-                    writer.WriteNumberValue(EstimatedFinish.Value, "U");
+                    writer.WriteNumberValue(EstimatedFinishAt.Value, "U");
                 }
                 else
                 {
@@ -222,19 +222,19 @@ namespace OpenAI.FineTuning
             string userProvidedSuffix = default;
             string id = default;
             DateTimeOffset createdAt = default;
-            FineTuningJobError error = default;
+            JobError error = default;
             string fineTunedModel = default;
             DateTimeOffset? finishedAt = default;
             FineTuningJobHyperparameters hyperparameters = default;
             string model = default;
-            InternalFineTuningJobObject @object = default;
+            string @object = default;
             string organizationId = default;
             IReadOnlyList<string> resultFiles = default;
             FineTuningJobStatus status = default;
             int? trainedTokens = default;
             string trainingFile = default;
             string validationFile = default;
-            IReadOnlyList<InternalFineTuningIntegration> integrations = default;
+            IReadOnlyList<FineTuningIntegration> integrations = default;
             int seed = default;
             DateTimeOffset? estimatedFinish = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -268,7 +268,7 @@ namespace OpenAI.FineTuning
                         error = null;
                         continue;
                     }
-                    error = FineTuningJobError.DeserializeFineTuningJobError(property.Value, options);
+                    error = JobError.DeserializeJobError(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("fine_tuned_model"u8))
@@ -293,6 +293,10 @@ namespace OpenAI.FineTuning
                 }
                 if (property.NameEquals("hyperparameters"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     hyperparameters = FineTuningJobHyperparameters.DeserializeFineTuningJobHyperparameters(property.Value, options);
                     continue;
                 }
@@ -303,7 +307,7 @@ namespace OpenAI.FineTuning
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new InternalFineTuningJobObject(property.Value.GetString());
+                    @object = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("organization_id"u8))
@@ -357,10 +361,10 @@ namespace OpenAI.FineTuning
                     {
                         continue;
                     }
-                    List<InternalFineTuningIntegration> array = new List<InternalFineTuningIntegration>();
+                    List<FineTuningIntegration> array = new List<FineTuningIntegration>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(InternalFineTuningIntegration.DeserializeInternalFineTuningIntegration(item, options));
+                        array.Add(FineTuningIntegration.DeserializeFineTuningIntegration(item, options));
                     }
                     integrations = array;
                     continue;
@@ -403,7 +407,7 @@ namespace OpenAI.FineTuning
                 trainedTokens,
                 trainingFile,
                 validationFile,
-                integrations ?? new ChangeTrackingList<InternalFineTuningIntegration>(),
+                integrations ?? new ChangeTrackingList<FineTuningIntegration>(),
                 seed,
                 estimatedFinish,
                 serializedAdditionalRawData);

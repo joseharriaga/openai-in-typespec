@@ -1,10 +1,8 @@
 ﻿using NUnit.Framework;
-using OpenAI.Files;
 using OpenAI.FineTuning;
 using OpenAI.Tests.Utility;
 using System;
 using System.ClientModel;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using static OpenAI.Tests.TestHelpers;
@@ -71,7 +69,7 @@ internal class FineTuningTests : SyncAsyncTestBase
 
         FineTuningClient client = GetTestClient<FineTuningClient>(TestScenario.FineTuning);
 
-        await foreach (ClientResult result in client.GetJobsAsync(after: null, limit: null, options: null).GetRawPagesAsync())
+        await foreach (ClientResult result in client.GetJobsAsync(afterJobId: null, pageSize: null, options: null).GetRawPagesAsync())
         {
             BinaryData response = result.GetRawResponse().Content;
             JsonDocument jsonDocument = JsonDocument.Parse(response);
@@ -89,7 +87,7 @@ internal class FineTuningTests : SyncAsyncTestBase
 
         FineTuningClient client = GetTestClient<FineTuningClient>(TestScenario.FineTuning);
 
-        foreach (ClientResult result in client.GetJobs(after: null, limit: null, options: null).GetRawPages())
+        foreach (ClientResult result in client.GetJobs(after: null, pageSize: null, options: null).GetRawPages())
         {
             BinaryData response = result.GetRawResponse().Content;
             JsonDocument jsonDocument = JsonDocument.Parse(response);

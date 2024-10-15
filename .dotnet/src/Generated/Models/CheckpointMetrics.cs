@@ -7,14 +7,17 @@ using System.Collections.Generic;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class InternalFineTuningJobCheckpointMetrics
+    public partial class CheckpointMetrics
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalFineTuningJobCheckpointMetrics()
+        internal CheckpointMetrics(int step, float trainLoss, float trainMeanTokenAccuracy)
         {
+            Step = step;
+            TrainLoss = trainLoss;
+            TrainMeanTokenAccuracy = trainMeanTokenAccuracy;
         }
 
-        internal InternalFineTuningJobCheckpointMetrics(float? step, float? trainLoss, float? trainMeanTokenAccuracy, float? validLoss, float? validMeanTokenAccuracy, float? fullValidLoss, float? fullValidMeanTokenAccuracy, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal CheckpointMetrics(int step, float trainLoss, float trainMeanTokenAccuracy, float? validLoss, float? validMeanTokenAccuracy, float? fullValidLoss, float? fullValidMeanTokenAccuracy, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Step = step;
             TrainLoss = trainLoss;
@@ -26,9 +29,13 @@ namespace OpenAI.FineTuning
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        public float? Step { get; }
-        public float? TrainLoss { get; }
-        public float? TrainMeanTokenAccuracy { get; }
+        internal CheckpointMetrics()
+        {
+        }
+
+        public int Step { get; }
+        public float TrainLoss { get; }
+        public float TrainMeanTokenAccuracy { get; }
         public float? ValidLoss { get; }
         public float? ValidMeanTokenAccuracy { get; }
         public float? FullValidLoss { get; }

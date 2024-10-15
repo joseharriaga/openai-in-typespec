@@ -33,10 +33,10 @@ namespace OpenAI.Assistants
             }
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(Object.ToString());
             writer.WritePropertyName("delta"u8);
             writer.WriteObjectValue(Delta, options);
+            writer.WritePropertyName("object"u8);
+            writer.WriteStringValue(this.Object.ToSerialString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -74,8 +74,8 @@ namespace OpenAI.Assistants
                 return null;
             }
             string id = default;
-            InternalRunStepDeltaObjectObject @object = default;
             InternalRunStepDeltaObjectDelta delta = default;
+            object @object = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -84,14 +84,14 @@ namespace OpenAI.Assistants
                     id = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("object"u8))
-                {
-                    @object = new InternalRunStepDeltaObjectObject(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("delta"u8))
                 {
                     delta = InternalRunStepDeltaObjectDelta.DeserializeInternalRunStepDeltaObjectDelta(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("object"u8))
+                {
+                    @object = prop.Value.GetString().ToObject();
                     continue;
                 }
                 if (options.Format != "W")
@@ -99,7 +99,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunStepDelta(id, @object, delta, additionalBinaryDataProperties);
+            return new InternalRunStepDelta(id, delta, @object, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalRunStepDelta>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -15,7 +15,7 @@ namespace OpenAI.Models
         {
             Id = id;
             OwnedBy = ownedBy;
-            Object = @object;
+            this.Object = @object;
             CreatedAt = createdAt;
         }
 
@@ -23,7 +23,7 @@ namespace OpenAI.Models
         {
             Id = id;
             OwnedBy = ownedBy;
-            Object = @object;
+            this.Object = @object;
             CreatedAt = createdAt;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }

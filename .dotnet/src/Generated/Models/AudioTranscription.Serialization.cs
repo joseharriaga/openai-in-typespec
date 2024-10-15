@@ -56,7 +56,7 @@ namespace OpenAI.Audio
                 writer.WriteEndArray();
             }
             writer.WritePropertyName("task"u8);
-            writer.WriteObjectValue<InternalCreateTranscriptionResponseVerboseJsonTask>(Task, options);
+            writer.WriteStringValue(Task.ToString());
             writer.WritePropertyName("duration"u8);
             writer.WriteNumberValue(Convert.ToDouble(Duration.Value.ToString("s\\.FFF")));
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
@@ -144,7 +144,7 @@ namespace OpenAI.Audio
                 }
                 if (prop.NameEquals("task"u8))
                 {
-                    task = InternalCreateTranscriptionResponseVerboseJsonTask.DeserializeInternalCreateTranscriptionResponseVerboseJsonTask(prop.Value, options);
+                    task = new InternalCreateTranscriptionResponseVerboseJsonTask(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("duration"u8))

@@ -31,10 +31,10 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalRunRequiredAction)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type.ToString());
             writer.WritePropertyName("submit_tool_outputs"u8);
             writer.WriteObjectValue(SubmitToolOutputs, options);
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Type.ToSerialString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -71,19 +71,19 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            InternalRunObjectRequiredActionType @type = default;
             InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs = default;
+            object @type = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = new InternalRunObjectRequiredActionType(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("submit_tool_outputs"u8))
                 {
                     submitToolOutputs = InternalRunObjectRequiredActionSubmitToolOutputs.DeserializeInternalRunObjectRequiredActionSubmitToolOutputs(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString().ToObject();
                     continue;
                 }
                 if (options.Format != "W")
@@ -91,7 +91,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunRequiredAction(@type, submitToolOutputs, additionalBinaryDataProperties);
+            return new InternalRunRequiredAction(submitToolOutputs, @type, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalRunRequiredAction>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

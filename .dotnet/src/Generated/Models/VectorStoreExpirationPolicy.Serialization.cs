@@ -28,9 +28,9 @@ namespace OpenAI.VectorStores
                 throw new FormatException($"The model {nameof(VectorStoreExpirationPolicy)} does not support writing '{format}' format.");
             }
             writer.WritePropertyName("anchor"u8);
-            writer.WriteNumberValue((int)Anchor);
+            writer.WriteStringValue(_anchor.ToSerialString());
             writer.WritePropertyName("days"u8);
-            writer.WriteNumberValue(Days);
+            writer.WriteNumberValue(_days);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -74,7 +74,7 @@ namespace OpenAI.VectorStores
             {
                 if (prop.NameEquals("anchor"u8))
                 {
-                    anchor = prop.Value.GetInt32().ToVectorStoreExpirationAnchor();
+                    anchor = prop.Value.GetString().ToVectorStoreExpirationAnchor();
                     continue;
                 }
                 if (prop.NameEquals("days"u8))

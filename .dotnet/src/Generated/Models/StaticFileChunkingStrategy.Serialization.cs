@@ -33,7 +33,7 @@ namespace OpenAI.VectorStores
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("static"u8);
-            writer.WriteObjectValue(Static, options);
+            writer.WriteObjectValue<InternalStaticChunkingStrategyDetails>(_internalDetails, options);
         }
 
         StaticFileChunkingStrategy IJsonModel<StaticFileChunkingStrategy>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (StaticFileChunkingStrategy)JsonModelCreateCore(ref reader, options);
@@ -55,14 +55,14 @@ namespace OpenAI.VectorStores
             {
                 return null;
             }
-            InternalStaticChunkingStrategyDetails @static = default;
+            InternalStaticChunkingStrategyDetails internalDetails = default;
             string @type = "static";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("static"u8))
                 {
-                    @static = InternalStaticChunkingStrategyDetails.DeserializeInternalStaticChunkingStrategyDetails(prop.Value, options);
+                    internalDetails = InternalStaticChunkingStrategyDetails.DeserializeInternalStaticChunkingStrategyDetails(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
@@ -75,7 +75,7 @@ namespace OpenAI.VectorStores
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new StaticFileChunkingStrategy(@static, @type, additionalBinaryDataProperties);
+            return new StaticFileChunkingStrategy(internalDetails, @type, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<StaticFileChunkingStrategy>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

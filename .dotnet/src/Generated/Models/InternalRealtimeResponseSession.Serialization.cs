@@ -81,10 +81,17 @@ namespace OpenAI.RealtimeConversation
 #endif
             writer.WritePropertyName("temperature"u8);
             writer.WriteNumberValue(Temperature);
-            if (MaxResponseOutputTokens != null)
+            if (_maxResponseOutputTokens != null)
             {
                 writer.WritePropertyName("max_response_output_tokens"u8);
-                writer.WriteObjectValue<RealtimeConversation.ConversationMaxTokensChoice>(MaxResponseOutputTokens, options);
+#if NET6_0_OR_GREATER
+                writer.WriteRawValue(_maxResponseOutputTokens);
+#else
+                using (JsonDocument document = JsonDocument.Parse(_maxResponseOutputTokens))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
             }
             else
             {
@@ -139,7 +146,7 @@ namespace OpenAI.RealtimeConversation
             IList<ConversationTool> tools = default;
             BinaryData toolChoice = default;
             float temperature = default;
-            RealtimeConversation.ConversationMaxTokensChoice maxResponseOutputTokens = default;
+            BinaryData maxResponseOutputTokens = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -225,7 +232,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("max_response_output_tokens"u8))
                 {
-                    maxResponseOutputTokens = RealtimeConversation.ConversationMaxTokensChoice.DeserializeConversationMaxTokensChoice(prop.Value, options);
+                    maxResponseOutputTokens = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
                 if (options.Format != "W")

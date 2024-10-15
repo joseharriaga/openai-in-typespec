@@ -15,14 +15,14 @@ namespace OpenAI.Files
         {
             Deleted = deleted;
             FileId = fileId;
-            Object = @object;
+            this.Object = @object;
         }
 
         internal FileDeletionResult(bool deleted, string fileId, InternalDeleteFileResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Deleted = deleted;
             FileId = fileId;
-            Object = @object;
+            this.Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

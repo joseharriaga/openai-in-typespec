@@ -16,18 +16,18 @@ namespace OpenAI.Chat
         {
             Id = id;
             Model = model;
-            Object = @object;
+            this.Object = @object;
             Choices = choices.ToList();
             CreatedAt = createdAt;
         }
 
-        internal ChatCompletion(string id, string model, string systemFingerprint, ChatTokenUsage usage, InternalCreateChatCompletionResponseObject @object, Chat.OpenAI.Chat.InternalCreateChatCompletionResponseServiceTier<InternalCreateChatCompletionResponseServiceTier>? serviceTier, IReadOnlyList<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset createdAt, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatCompletion(string id, string model, string systemFingerprint, ChatTokenUsage usage, InternalCreateChatCompletionResponseObject @object, InternalCreateChatCompletionResponseServiceTier? serviceTier, IReadOnlyList<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset createdAt, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             Model = model;
             SystemFingerprint = systemFingerprint;
             Usage = usage;
-            Object = @object;
+            this.Object = @object;
             ServiceTier = serviceTier;
             Choices = choices;
             CreatedAt = createdAt;

@@ -99,7 +99,7 @@ namespace OpenAI.Assistants
                 }
             }
             writer.WritePropertyName("model"u8);
-            writer.WriteStringValue(Model);
+            writer.WriteStringValue(Model.ToSerialString());
             if (Optional.IsCollectionDefined(Tools))
             {
                 writer.WritePropertyName("tools"u8);
@@ -143,7 +143,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("topP"u8);
+                    writer.WriteNull("nucleusSamplingFactor"u8);
                 }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
@@ -258,7 +258,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("model"u8))
                 {
-                    model = prop.Value.GetString();
+                    model = prop.Value.GetString().ToString();
                     continue;
                 }
                 if (prop.NameEquals("tools"u8))

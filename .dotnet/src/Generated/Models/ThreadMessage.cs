@@ -25,7 +25,7 @@ namespace OpenAI.Assistants
             AssistantId = assistantId;
             RunId = runId;
             Metadata = metadata;
-            Object = @object;
+            this.Object = @object;
             Role = role;
             Attachments = attachments.ToList();
         }
@@ -43,7 +43,7 @@ namespace OpenAI.Assistants
             AssistantId = assistantId;
             RunId = runId;
             Metadata = metadata;
-            Object = @object;
+            this.Object = @object;
             Role = role;
             Attachments = attachments;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;

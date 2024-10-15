@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("image"u8);
-            writer.WriteObjectValue(Image, options);
+            writer.WriteObjectValue<InternalRunStepDetailsToolCallsCodeOutputImageObjectImage>(_image, options);
         }
 
         InternalRunStepDetailsToolCallsCodeOutputImageObject IJsonModel<InternalRunStepDetailsToolCallsCodeOutputImageObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepDetailsToolCallsCodeOutputImageObject)JsonModelCreateCore(ref reader, options);

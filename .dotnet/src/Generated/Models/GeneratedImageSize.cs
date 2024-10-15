@@ -16,16 +16,6 @@ namespace OpenAI.Images
         private const string _1792x1024Value = "1792x1024";
         private const string _1024x1792Value = "1024x1792";
 
-        public static GeneratedImageSize _256x256 { get; } = new GeneratedImageSize(_256x256Value);
-
-        public static GeneratedImageSize _512x512 { get; } = new GeneratedImageSize(_512x512Value);
-
-        public static GeneratedImageSize _1024x1024 { get; } = new GeneratedImageSize(_1024x1024Value);
-
-        public static GeneratedImageSize _1792x1024 { get; } = new GeneratedImageSize(_1792x1024Value);
-
-        public static GeneratedImageSize _1024x1792 { get; } = new GeneratedImageSize(_1024x1792Value);
-
         public static bool operator ==(GeneratedImageSize left, GeneratedImageSize right) => left.Equals(right);
 
         public static bool operator !=(GeneratedImageSize left, GeneratedImageSize right) => !left.Equals(right);

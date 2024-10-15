@@ -39,7 +39,7 @@ namespace OpenAI.Chat
                 writer.WriteObjectValue<InternalChatCompletionMessageToolCallChunkFunction>(Function, options);
             }
             writer.WritePropertyName("type"u8);
-            writer.WriteNumberValue((int)Kind);
+            writer.WriteStringValue(Kind.ToSerialString());
             if (Optional.IsDefined(ToolCallId))
             {
                 writer.WritePropertyName("id"u8);
@@ -110,7 +110,7 @@ namespace OpenAI.Chat
                         kind = null;
                         continue;
                     }
-                    kind = prop.Value.GetInt32().ToChatToolCallKind();
+                    kind = prop.Value.GetString().ToChatToolCallKind();
                     continue;
                 }
                 if (prop.NameEquals("id"u8))

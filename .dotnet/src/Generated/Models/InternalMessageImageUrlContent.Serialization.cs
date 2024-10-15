@@ -26,9 +26,9 @@ namespace OpenAI.Assistants
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type.ToString());
+            writer.WriteStringValue(_type.ToSerialString());
             writer.WritePropertyName("image_url"u8);
-            writer.WriteObjectValue(ImageUrl, options);
+            writer.WriteObjectValue<InternalMessageContentImageUrlObjectImageUrl>(_imageUrl, options);
         }
 
         InternalMessageImageUrlContent IJsonModel<InternalMessageImageUrlContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalMessageImageUrlContent)JsonModelCreateCore(ref reader, options);
@@ -50,14 +50,14 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            InternalMessageContentImageUrlObjectType @type = default;
+            string @type = default;
             InternalMessageContentImageUrlObjectImageUrl imageUrl = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = new InternalMessageContentImageUrlObjectType(prop.Value.GetString());
+                    @type = prop.Value.GetString().ToString();
                     continue;
                 }
                 if (prop.NameEquals("image_url"u8))

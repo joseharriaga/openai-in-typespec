@@ -146,7 +146,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("topP"u8);
+                    writer.WriteNull("nucleusSamplingFactor"u8);
                 }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)

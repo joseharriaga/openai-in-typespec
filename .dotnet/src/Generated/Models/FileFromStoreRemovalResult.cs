@@ -15,14 +15,14 @@ namespace OpenAI.VectorStores
         {
             FileId = fileId;
             Removed = removed;
-            Object = @object;
+            this.Object = @object;
         }
 
         internal FileFromStoreRemovalResult(string fileId, bool removed, InternalDeleteVectorStoreFileResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             FileId = fileId;
             Removed = removed;
-            Object = @object;
+            this.Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

@@ -10,19 +10,17 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalMessageRefusalContent : MessageContent
     {
-        public InternalMessageRefusalContent(string internalRefusal)
+        public InternalMessageRefusalContent(string internalRefusal, string @type)
         {
             Argument.AssertNotNull(internalRefusal, nameof(internalRefusal));
+            Argument.AssertNotNull(@type, nameof(@type));
 
             InternalRefusal = internalRefusal;
         }
 
-        internal InternalMessageRefusalContent(InternalMessageContentRefusalObjectType @type, string internalRefusal, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
+        internal InternalMessageRefusalContent(string internalRefusal, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
         {
-            Type = @type;
             InternalRefusal = internalRefusal;
         }
-
-        public InternalMessageContentRefusalObjectType Type { get; } = "refusal";
     }
 }

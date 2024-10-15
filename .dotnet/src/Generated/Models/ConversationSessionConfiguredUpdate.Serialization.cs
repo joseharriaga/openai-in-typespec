@@ -33,7 +33,7 @@ namespace OpenAI.RealtimeConversation
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("session"u8);
-            writer.WriteObjectValue(Session, options);
+            writer.WriteObjectValue<InternalRealtimeResponseSession>(_internalSession, options);
         }
 
         ConversationSessionConfiguredUpdate IJsonModel<ConversationSessionConfiguredUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationSessionConfiguredUpdate)JsonModelCreateCore(ref reader, options);
@@ -55,7 +55,7 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            InternalRealtimeResponseSession session = default;
+            InternalRealtimeResponseSession internalSession = default;
             string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
@@ -63,7 +63,7 @@ namespace OpenAI.RealtimeConversation
             {
                 if (prop.NameEquals("session"u8))
                 {
-                    session = InternalRealtimeResponseSession.DeserializeInternalRealtimeResponseSession(prop.Value, options);
+                    internalSession = InternalRealtimeResponseSession.DeserializeInternalRealtimeResponseSession(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("event_id"u8))
@@ -78,7 +78,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    kind = prop.Value.GetInt32().ToConversationUpdateKind();
+                    kind = prop.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
                 if (options.Format != "W")
@@ -86,7 +86,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationSessionConfiguredUpdate(session, eventId, kind, additionalBinaryDataProperties);
+            return new ConversationSessionConfiguredUpdate(internalSession, eventId, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ConversationSessionConfiguredUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

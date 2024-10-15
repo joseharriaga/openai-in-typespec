@@ -15,7 +15,7 @@ namespace OpenAI.Embeddings
         {
             Index = index;
             EmbeddingProperty = embeddingProperty;
-            Object = @object;
+            this.Object = @object;
         }
 
         public int Index { get; set; }

@@ -9,24 +9,20 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationInputTranscriptionFailedUpdate : ConversationUpdate
     {
-        internal ConversationInputTranscriptionFailedUpdate(string itemId, int contentIndex, InternalRealtimeResponseApiError error, string eventId) : base(eventId)
+        internal ConversationInputTranscriptionFailedUpdate(string itemId, int contentIndex, InternalRealtimeResponseApiError error, string eventId, RealtimeConversation.ConversationUpdateKind kind) : base(eventId, kind)
         {
             ItemId = itemId;
             ContentIndex = contentIndex;
-            Error = error;
         }
 
         internal ConversationInputTranscriptionFailedUpdate(string itemId, int contentIndex, InternalRealtimeResponseApiError error, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
             ItemId = itemId;
             ContentIndex = contentIndex;
-            Error = error;
         }
 
         public string ItemId { get; set; }
 
         public int ContentIndex { get; set; }
-
-        public InternalRealtimeResponseApiError Error { get; set; }
     }
 }

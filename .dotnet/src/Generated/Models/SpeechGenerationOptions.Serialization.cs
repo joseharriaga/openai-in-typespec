@@ -33,7 +33,7 @@ namespace OpenAI.Audio
                 writer.WriteStringValue(ResponseFormat.Value.ToString());
             }
             writer.WritePropertyName("model"u8);
-            writer.WriteObjectValue<InternalCreateSpeechRequestModel>(Model, options);
+            writer.WriteStringValue(Model.ToString());
             writer.WritePropertyName("input"u8);
             writer.WriteStringValue(Input);
             writer.WritePropertyName("voice"u8);
@@ -99,7 +99,7 @@ namespace OpenAI.Audio
                 }
                 if (prop.NameEquals("model"u8))
                 {
-                    model = InternalCreateSpeechRequestModel.DeserializeInternalCreateSpeechRequestModel(prop.Value, options);
+                    model = new InternalCreateSpeechRequestModel(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("input"u8))

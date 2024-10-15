@@ -4,16 +4,20 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationFunctionTool : ConversationTool
     {
+        public ConversationFunctionTool(string name, ConversationToolKind kind) : base(kind)
+        {
+            Argument.AssertNotNull(name, nameof(name));
+
+        }
+
         internal ConversationFunctionTool(string name, string description, BinaryData parameters, ConversationToolKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, additionalBinaryDataProperties)
         {
-            Name = name;
-            Description = description;
-            Parameters = parameters;
         }
     }
 }

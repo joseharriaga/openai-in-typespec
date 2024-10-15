@@ -11,19 +11,16 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalRunRequiredAction(InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs)
+        internal InternalRunRequiredAction(InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs, object @type)
         {
             SubmitToolOutputs = submitToolOutputs;
         }
 
-        internal InternalRunRequiredAction(InternalRunObjectRequiredActionType @type, InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRunRequiredAction(InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs, object @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = @type;
             SubmitToolOutputs = submitToolOutputs;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
-
-        public InternalRunObjectRequiredActionType Type { get; } = "submit_tool_outputs";
 
         public InternalRunObjectRequiredActionSubmitToolOutputs SubmitToolOutputs { get; set; }
     }

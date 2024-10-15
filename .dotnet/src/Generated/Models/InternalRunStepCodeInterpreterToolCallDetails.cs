@@ -12,17 +12,13 @@ namespace OpenAI.Assistants
         internal InternalRunStepCodeInterpreterToolCallDetails(string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter) : base("code_interpreter")
         {
             Id = id;
-            CodeInterpreter = codeInterpreter;
         }
 
         internal InternalRunStepCodeInterpreterToolCallDetails(string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
             Id = id;
-            CodeInterpreter = codeInterpreter;
         }
 
         public string Id { get; set; }
-
-        public InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter CodeInterpreter { get; set; }
     }
 }

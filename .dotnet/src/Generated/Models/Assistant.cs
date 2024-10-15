@@ -22,7 +22,7 @@ namespace OpenAI.Assistants
             Instructions = instructions;
             Tools = tools.ToList();
             Metadata = metadata;
-            Object = @object;
+            this.Object = @object;
         }
 
         internal Assistant(string id, DateTimeOffset createdAt, string name, string description, string model, string instructions, IList<ToolDefinition> tools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, InternalAssistantObjectObject @object, AssistantResponseFormat responseFormat, float? nucleusSamplingFactor, IDictionary<string, BinaryData> additionalBinaryDataProperties)
@@ -37,7 +37,7 @@ namespace OpenAI.Assistants
             ToolResources = toolResources;
             Metadata = metadata;
             Temperature = temperature;
-            Object = @object;
+            this.Object = @object;
             ResponseFormat = responseFormat;
             NucleusSamplingFactor = nucleusSamplingFactor;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;

@@ -73,7 +73,7 @@ namespace OpenAI.Images
                 if (Model != null)
                 {
                     writer.WritePropertyName("model"u8);
-                    writer.WriteObjectValue<Images.OpenAI.Images.InternalCreateImageRequestModel<InternalCreateImageRequestModel>?>(Model, options);
+                    writer.WriteObjectValue<InternalCreateImageRequestModel?>(Model, options);
                 }
                 else
                 {
@@ -139,7 +139,7 @@ namespace OpenAI.Images
             GeneratedImageFormat? responseFormat = default;
             GeneratedImageSize? size = default;
             GeneratedImageStyle? style = default;
-            Images.OpenAI.Images.InternalCreateImageRequestModel<InternalCreateImageRequestModel>? model = default;
+            InternalCreateImageRequestModel? model = default;
             string prompt = default;
             long? n = default;
             string endUserId = default;
@@ -193,7 +193,7 @@ namespace OpenAI.Images
                         model = null;
                         continue;
                     }
-                    model = Images.OpenAI.Images.InternalCreateImageRequestModel<InternalCreateImageRequestModel>?.DeserializeOpenAI.Images.InternalCreateImageRequestModel(prop.Value, options);
+                    model = Images.InternalCreateImageRequestModel?.DeserializeInternalCreateImageRequestModel(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("prompt"u8))

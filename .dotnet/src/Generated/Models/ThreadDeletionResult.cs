@@ -15,14 +15,14 @@ namespace OpenAI.Assistants
         {
             Deleted = deleted;
             ThreadId = threadId;
-            Object = @object;
+            this.Object = @object;
         }
 
         internal ThreadDeletionResult(bool deleted, string threadId, InternalDeleteThreadResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Deleted = deleted;
             ThreadId = threadId;
-            Object = @object;
+            this.Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

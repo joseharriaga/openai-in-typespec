@@ -6,6 +6,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Threading.Tasks;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
@@ -34,16 +35,20 @@ namespace OpenAI.Assistants
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult<InternalListAssistantsResponse> ListAssistants(int? limit, AssistantCollectionOrder? order, string after, string before)
+        public virtual ClientResult<Assistant> GetAssistant(string assistantId)
         {
-            ClientResult result = ListAssistants(limit, order.ToString(), after, before, null);
-            return ClientResult.FromValue((InternalListAssistantsResponse)result, result.GetRawResponse());
+            Argument.AssertNotNull(assistantId, nameof(assistantId));
+
+            ClientResult result = this.GetAssistant(assistantId, null);
+            return ClientResult.FromValue((Assistant)result, result.GetRawResponse());
         }
 
-        public virtual async Task<ClientResult<InternalListAssistantsResponse>> ListAssistantsAsync(int? limit, AssistantCollectionOrder? order, string after, string before)
+        public virtual async Task<ClientResult<Assistant>> GetAssistantAsync(string assistantId)
         {
-            ClientResult result = await ListAssistantsAsync(limit, order.ToString(), after, before, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListAssistantsResponse)result, result.GetRawResponse());
+            Argument.AssertNotNull(assistantId, nameof(assistantId));
+
+            ClientResult result = await this.GetAssistantAsync(assistantId, null).ConfigureAwait(false);
+            return ClientResult.FromValue((Assistant)result, result.GetRawResponse());
         }
     }
 }

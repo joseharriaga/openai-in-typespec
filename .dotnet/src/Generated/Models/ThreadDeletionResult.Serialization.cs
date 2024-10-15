@@ -36,7 +36,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(ThreadId);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalDeleteThreadResponseObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -91,7 +91,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalDeleteThreadResponseObject.DeserializeInternalDeleteThreadResponseObject(prop.Value, options);
+                    @object = new InternalDeleteThreadResponseObject(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

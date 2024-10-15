@@ -21,10 +21,10 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(FileSearchToolDefinition)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (Optional.IsDefined(FileSearch))
+            if (Optional.IsDefined(_fileSearch))
             {
                 writer.WritePropertyName("file_search"u8);
-                writer.WriteObjectValue(FileSearch, options);
+                writer.WriteObjectValue<InternalAssistantToolsFileSearchFileSearch>(_fileSearch, options);
             }
         }
 

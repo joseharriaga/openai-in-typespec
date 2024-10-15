@@ -4,6 +4,7 @@
 
 using System;
 using System.ClientModel;
+using System.ClientModel.Primitives;
 
 namespace OpenAI.Chat
 {
@@ -17,5 +18,7 @@ namespace OpenAI.Chat
         protected ChatClient()
         {
         }
+
+        public ClientPipeline Pipeline { get; }
     }
 }

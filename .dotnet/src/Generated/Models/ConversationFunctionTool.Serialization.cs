@@ -29,19 +29,19 @@ namespace OpenAI.RealtimeConversation
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(Name);
-            if (Optional.IsDefined(Description))
+            writer.WriteStringValue(_name);
+            if (Optional.IsDefined(_description))
             {
                 writer.WritePropertyName("description"u8);
-                writer.WriteStringValue(Description);
+                writer.WriteStringValue(_description);
             }
-            if (Optional.IsDefined(Parameters))
+            if (Optional.IsDefined(_parameters))
             {
                 writer.WritePropertyName("parameters"u8);
 #if NET6_0_OR_GREATER
-                writer.WriteRawValue(Parameters);
+                writer.WriteRawValue(_parameters);
 #else
-                using (JsonDocument document = JsonDocument.Parse(Parameters))
+                using (JsonDocument document = JsonDocument.Parse(_parameters))
                 {
                     JsonSerializer.Serialize(writer, document.RootElement);
                 }
@@ -102,7 +102,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    kind = ConversationToolKind.DeserializeConversationToolKind(prop.Value, options);
+                    kind = new ConversationToolKind(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

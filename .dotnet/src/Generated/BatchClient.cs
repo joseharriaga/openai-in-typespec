@@ -33,17 +33,5 @@ namespace OpenAI.Batch
             using PipelineMessage message = CreateListBatchesRequest(after, limit, options);
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
-
-        public virtual ClientResult<InternalListBatchesResponse> ListBatches(string after, int? limit)
-        {
-            ClientResult result = ListBatches(after, limit, null);
-            return ClientResult.FromValue((InternalListBatchesResponse)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<InternalListBatchesResponse>> ListBatchesAsync(string after, int? limit)
-        {
-            ClientResult result = await ListBatchesAsync(after, limit, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListBatchesResponse)result, result.GetRawResponse());
-        }
     }
 }

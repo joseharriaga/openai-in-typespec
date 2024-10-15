@@ -120,7 +120,7 @@ namespace OpenAI.Assistants
                 writer.WriteNull("usage"u8);
             }
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalRunStepObjectObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             writer.WritePropertyName("step_details"u8);
             writer.WriteObjectValue<RunStepDetails>(Details, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
@@ -297,7 +297,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalRunStepObjectObject.DeserializeInternalRunStepObjectObject(prop.Value, options);
+                    @object = new InternalRunStepObjectObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("step_details"u8))

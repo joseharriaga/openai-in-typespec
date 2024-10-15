@@ -11,18 +11,10 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public ToolConstraint(InternalAssistantsNamedToolChoiceType @type)
+        internal ToolConstraint(InternalAssistantsNamedToolChoiceFunction function, string objectType, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = @type;
-        }
-
-        internal ToolConstraint(InternalAssistantsNamedToolChoiceType @type, InternalAssistantsNamedToolChoiceFunction function, IDictionary<string, BinaryData> additionalBinaryDataProperties)
-        {
-            Type = @type;
             Function = function;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
-
-        public InternalAssistantsNamedToolChoiceType Type { get; set; }
     }
 }

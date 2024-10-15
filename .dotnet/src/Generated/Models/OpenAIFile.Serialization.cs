@@ -40,7 +40,7 @@ namespace OpenAI.Files
             writer.WritePropertyName("purpose"u8);
             writer.WriteStringValue(Purpose.ToSerialString());
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalOpenAIFileObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             if (SizeInBytes != null)
             {
                 writer.WritePropertyName("bytes"u8);
@@ -48,7 +48,7 @@ namespace OpenAI.Files
             }
             else
             {
-                writer.WriteNull("bytes"u8);
+                writer.WriteNull("sizeInBytes"u8);
             }
             writer.WritePropertyName("status"u8);
             writer.WriteNumberValue((int)Status);
@@ -126,7 +126,7 @@ namespace OpenAI.Files
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalOpenAIFileObject.DeserializeInternalOpenAIFileObject(prop.Value, options);
+                    @object = new InternalOpenAIFileObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("bytes"u8))

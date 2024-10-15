@@ -33,7 +33,7 @@ namespace OpenAI.RealtimeConversation
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("error"u8);
-            writer.WriteObjectValue(Error, options);
+            writer.WriteObjectValue<InternalRealtimeResponseError>(_error, options);
         }
 
         ConversationErrorUpdate IJsonModel<ConversationErrorUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationErrorUpdate)JsonModelCreateCore(ref reader, options);
@@ -78,7 +78,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    kind = prop.Value.GetInt32().ToConversationUpdateKind();
+                    kind = prop.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
                 if (options.Format != "W")

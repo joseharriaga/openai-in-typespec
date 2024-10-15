@@ -32,7 +32,7 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationTool)} does not support writing '{format}' format.");
             }
             writer.WritePropertyName("type"u8);
-            writer.WriteObjectValue<ConversationToolKind>(Kind, options);
+            writer.WriteStringValue(Kind.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

@@ -39,7 +39,7 @@ namespace OpenAI.Moderations
             if (Optional.IsDefined(Model))
             {
                 writer.WritePropertyName("model"u8);
-                writer.WriteObjectValue<Moderations.OpenAI.Moderations.InternalCreateModerationRequestModel<InternalCreateModerationRequestModel>?>(Model, options);
+                writer.WriteStringValue(Model.Value.ToString());
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -78,7 +78,7 @@ namespace OpenAI.Moderations
                 return null;
             }
             BinaryData input = default;
-            Moderations.OpenAI.Moderations.InternalCreateModerationRequestModel<InternalCreateModerationRequestModel>? model = default;
+            InternalCreateModerationRequestModel? model = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -94,7 +94,7 @@ namespace OpenAI.Moderations
                         model = null;
                         continue;
                     }
-                    model = Moderations.OpenAI.Moderations.InternalCreateModerationRequestModel<InternalCreateModerationRequestModel>?.DeserializeOpenAI.Moderations.InternalCreateModerationRequestModel(prop.Value, options);
+                    model = new InternalCreateModerationRequestModel(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

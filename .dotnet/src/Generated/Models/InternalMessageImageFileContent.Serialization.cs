@@ -26,9 +26,9 @@ namespace OpenAI.Assistants
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type.ToString());
+            writer.WriteStringValue(_type.ToSerialString());
             writer.WritePropertyName("image_file"u8);
-            writer.WriteObjectValue(ImageFile, options);
+            writer.WriteObjectValue<InternalMessageContentItemFileObjectImageFile>(_imageFile, options);
         }
 
         InternalMessageImageFileContent IJsonModel<InternalMessageImageFileContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalMessageImageFileContent)JsonModelCreateCore(ref reader, options);
@@ -50,14 +50,14 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            InternalMessageContentImageFileObjectType @type = default;
+            string @type = default;
             InternalMessageContentItemFileObjectImageFile imageFile = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = new InternalMessageContentImageFileObjectType(prop.Value.GetString());
+                    @type = prop.Value.GetString().ToString();
                     continue;
                 }
                 if (prop.NameEquals("image_file"u8))

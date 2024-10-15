@@ -35,18 +35,6 @@ namespace OpenAI.FineTuning
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult<InternalListPaginatedFineTuningJobsResponse> ListPaginatedFineTuningJobs(string after, int? limit)
-        {
-            ClientResult result = ListPaginatedFineTuningJobs(after, limit, null);
-            return ClientResult.FromValue((InternalListPaginatedFineTuningJobsResponse)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<InternalListPaginatedFineTuningJobsResponse>> ListPaginatedFineTuningJobsAsync(string after, int? limit)
-        {
-            ClientResult result = await ListPaginatedFineTuningJobsAsync(after, limit, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListPaginatedFineTuningJobsResponse)result, result.GetRawResponse());
-        }
-
         public virtual ClientResult ListFineTuningJobCheckpoints(string fineTuningJobId, string after, int? limit, RequestOptions options)
         {
             Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
@@ -63,22 +51,6 @@ namespace OpenAI.FineTuning
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult<InternalListFineTuningJobCheckpointsResponse> ListFineTuningJobCheckpoints(string fineTuningJobId, string after, int? limit)
-        {
-            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
-
-            ClientResult result = ListFineTuningJobCheckpoints(fineTuningJobId, after, limit, null);
-            return ClientResult.FromValue((InternalListFineTuningJobCheckpointsResponse)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<InternalListFineTuningJobCheckpointsResponse>> ListFineTuningJobCheckpointsAsync(string fineTuningJobId, string after, int? limit)
-        {
-            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
-
-            ClientResult result = await ListFineTuningJobCheckpointsAsync(fineTuningJobId, after, limit, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListFineTuningJobCheckpointsResponse)result, result.GetRawResponse());
-        }
-
         public virtual ClientResult ListFineTuningEvents(string fineTuningJobId, string after, int? limit, RequestOptions options)
         {
             Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
@@ -93,22 +65,6 @@ namespace OpenAI.FineTuning
 
             using PipelineMessage message = CreateListFineTuningEventsRequest(fineTuningJobId, after, limit, options);
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult<InternalListFineTuningJobEventsResponse> ListFineTuningEvents(string fineTuningJobId, string after, int? limit)
-        {
-            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
-
-            ClientResult result = ListFineTuningEvents(fineTuningJobId, after, limit, null);
-            return ClientResult.FromValue((InternalListFineTuningJobEventsResponse)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<InternalListFineTuningJobEventsResponse>> ListFineTuningEventsAsync(string fineTuningJobId, string after, int? limit)
-        {
-            Argument.AssertNotNull(fineTuningJobId, nameof(fineTuningJobId));
-
-            ClientResult result = await ListFineTuningEventsAsync(fineTuningJobId, after, limit, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListFineTuningJobEventsResponse)result, result.GetRawResponse());
         }
     }
 }

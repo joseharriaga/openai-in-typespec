@@ -15,14 +15,14 @@ namespace OpenAI.Embeddings
         {
             Model = model;
             Usage = usage;
-            Object = @object;
+            this.Object = @object;
         }
 
         internal OpenAIEmbeddingCollection(string model, EmbeddingTokenUsage usage, InternalCreateEmbeddingResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Model = model;
             Usage = usage;
-            Object = @object;
+            this.Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

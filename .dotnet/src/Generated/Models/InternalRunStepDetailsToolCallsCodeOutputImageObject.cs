@@ -11,14 +11,10 @@ namespace OpenAI.Assistants
     {
         internal InternalRunStepDetailsToolCallsCodeOutputImageObject(InternalRunStepDetailsToolCallsCodeOutputImageObjectImage image) : base("image")
         {
-            Image = image;
         }
 
         internal InternalRunStepDetailsToolCallsCodeOutputImageObject(InternalRunStepDetailsToolCallsCodeOutputImageObjectImage image, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
-            Image = image;
         }
-
-        public InternalRunStepDetailsToolCallsCodeOutputImageObjectImage Image { get; set; }
     }
 }

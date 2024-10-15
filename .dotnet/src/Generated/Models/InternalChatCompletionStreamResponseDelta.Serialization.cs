@@ -57,7 +57,7 @@ namespace OpenAI.Chat
             if (Optional.IsDefined(Role))
             {
                 writer.WritePropertyName("role"u8);
-                writer.WriteObjectValue<Chat.OpenAI.Chat.ChatMessageRole<Chat.ChatMessageRole>?>(Role, options);
+                writer.WriteNumberValue((int)Role.Value);
             }
             if (Optional.IsDefined(Content))
             {
@@ -110,7 +110,7 @@ namespace OpenAI.Chat
             StreamingChatFunctionCallUpdate functionCall = default;
             IList<StreamingChatToolCallUpdate> toolCalls = default;
             string refusal = default;
-            Chat.OpenAI.Chat.ChatMessageRole<Chat.ChatMessageRole>? role = default;
+            Chat.ChatMessageRole? role = default;
             ChatMessageContent content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -156,7 +156,7 @@ namespace OpenAI.Chat
                         role = null;
                         continue;
                     }
-                    role = Chat.OpenAI.Chat.ChatMessageRole<Chat.ChatMessageRole>?.DeserializeOpenAI.Chat.ChatMessageRole(prop.Value, options);
+                    role = prop.Value.GetInt32().ToChatMessageRole();
                     continue;
                 }
                 if (prop.NameEquals("content"u8))

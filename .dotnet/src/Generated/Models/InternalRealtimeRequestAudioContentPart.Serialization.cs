@@ -13,6 +13,10 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestAudioContentPart : IJsonModel<InternalRealtimeRequestAudioContentPart>
     {
+        internal InternalRealtimeRequestAudioContentPart()
+        {
+        }
+
         void IJsonModel<InternalRealtimeRequestAudioContentPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();

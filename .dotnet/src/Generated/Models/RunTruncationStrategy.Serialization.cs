@@ -31,8 +31,6 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(RunTruncationStrategy)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type.ToString());
             if (Optional.IsDefined(LastMessages))
             {
                 if (LastMessages != null)
@@ -45,6 +43,8 @@ namespace OpenAI.Assistants
                     writer.WriteNull("lastMessages"u8);
                 }
             }
+            writer.WritePropertyName("type"u8);
+            writer.WriteObjectValue<InternalTruncationObjectType>(_type, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -81,16 +81,11 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            InternalTruncationObjectType @type = default;
             int? lastMessages = default;
+            InternalTruncationObjectType @type = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = new InternalTruncationObjectType(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("last_messages"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -101,12 +96,17 @@ namespace OpenAI.Assistants
                     lastMessages = prop.Value.GetInt32();
                     continue;
                 }
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = InternalTruncationObjectType.DeserializeInternalTruncationObjectType(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new RunTruncationStrategy(@type, lastMessages, additionalBinaryDataProperties);
+            return new RunTruncationStrategy(lastMessages, @type, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<RunTruncationStrategy>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

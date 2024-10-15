@@ -15,14 +15,14 @@ namespace OpenAI.Models
         {
             Deleted = deleted;
             ModelId = modelId;
-            Object = @object;
+            this.Object = @object;
         }
 
         internal ModelDeletionResult(bool deleted, string modelId, InternalDeleteModelResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Deleted = deleted;
             ModelId = modelId;
-            Object = @object;
+            this.Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

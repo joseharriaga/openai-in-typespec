@@ -47,7 +47,7 @@ namespace OpenAI.VectorStores
                 writer.WriteNull("lastError"u8);
             }
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalVectorStoreFileObjectObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(FileId);
             writer.WritePropertyName("usage_bytes"u8);
@@ -131,7 +131,7 @@ namespace OpenAI.VectorStores
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalVectorStoreFileObjectObject.DeserializeInternalVectorStoreFileObjectObject(prop.Value, options);
+                    @object = new InternalVectorStoreFileObjectObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("id"u8))

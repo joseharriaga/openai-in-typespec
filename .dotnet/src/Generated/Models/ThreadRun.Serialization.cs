@@ -41,15 +41,6 @@ namespace OpenAI.Assistants
             writer.WriteStringValue(AssistantId);
             writer.WritePropertyName("status"u8);
             writer.WriteStringValue(Status.ToString());
-            if (RequiredAction != null)
-            {
-                writer.WritePropertyName("required_action"u8);
-                writer.WriteObjectValue(RequiredAction, options);
-            }
-            else
-            {
-                writer.WriteNull("requiredAction"u8);
-            }
             if (LastError != null)
             {
                 writer.WritePropertyName("last_error"u8);
@@ -175,7 +166,7 @@ namespace OpenAI.Assistants
                 writer.WriteNull("truncationStrategy"u8);
             }
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalRunObjectObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             if (ResponseFormat != null)
             {
                 writer.WritePropertyName("response_format"u8);
@@ -192,7 +183,7 @@ namespace OpenAI.Assistants
             }
             else
             {
-                writer.WriteNull("toolChoice"u8);
+                writer.WriteNull("toolConstraint"u8);
             }
             if (Optional.IsDefined(NucleusSamplingFactor))
             {
@@ -203,7 +194,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("topP"u8);
+                    writer.WriteNull("nucleusSamplingFactor"u8);
                 }
             }
             writer.WritePropertyName("parallel_tool_calls"u8);
@@ -215,7 +206,7 @@ namespace OpenAI.Assistants
             }
             else
             {
-                writer.WriteNull("maxPromptTokens"u8);
+                writer.WriteNull("maxInputTokenCount"u8);
             }
             if (MaxOutputTokenCount != null)
             {
@@ -224,7 +215,16 @@ namespace OpenAI.Assistants
             }
             else
             {
-                writer.WriteNull("maxCompletionTokens"u8);
+                writer.WriteNull("maxOutputTokenCount"u8);
+            }
+            if (_internalRequiredAction != null)
+            {
+                writer.WritePropertyName("required_action"u8);
+                writer.WriteObjectValue<InternalRunRequiredAction>(_internalRequiredAction, options);
+            }
+            else
+            {
+                writer.WriteNull("internalRequiredAction"u8);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -267,7 +267,6 @@ namespace OpenAI.Assistants
             string threadId = default;
             string assistantId = default;
             RunStatus status = default;
-            InternalRunRequiredAction requiredAction = default;
             RunError lastError = default;
             DateTimeOffset? expiresAt = default;
             DateTimeOffset? startedAt = default;
@@ -289,6 +288,7 @@ namespace OpenAI.Assistants
             bool? allowParallelToolCalls = default;
             int? maxInputTokenCount = default;
             int? maxOutputTokenCount = default;
+            InternalRunRequiredAction internalRequiredAction = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -315,16 +315,6 @@ namespace OpenAI.Assistants
                 if (prop.NameEquals("status"u8))
                 {
                     status = new RunStatus(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("required_action"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        requiredAction = null;
-                        continue;
-                    }
-                    requiredAction = InternalRunRequiredAction.DeserializeInternalRunRequiredAction(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("last_error"u8))
@@ -471,7 +461,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalRunObjectObject.DeserializeInternalRunObjectObject(prop.Value, options);
+                    @object = new InternalRunObjectObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("response_format"u8))
@@ -524,6 +514,11 @@ namespace OpenAI.Assistants
                     maxOutputTokenCount = prop.Value.GetInt32();
                     continue;
                 }
+                if (prop.NameEquals("required_action"u8))
+                {
+                    internalRequiredAction = InternalRunRequiredAction.DeserializeInternalRunRequiredAction(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -535,7 +530,6 @@ namespace OpenAI.Assistants
                 threadId,
                 assistantId,
                 status,
-                requiredAction,
                 lastError,
                 expiresAt,
                 startedAt,
@@ -557,6 +551,7 @@ namespace OpenAI.Assistants
                 allowParallelToolCalls,
                 maxInputTokenCount,
                 maxOutputTokenCount,
+                internalRequiredAction,
                 additionalBinaryDataProperties);
         }
 

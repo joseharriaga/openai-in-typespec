@@ -15,14 +15,14 @@ namespace OpenAI.Assistants
         {
             Deleted = deleted;
             MessageId = messageId;
-            Object = @object;
+            this.Object = @object;
         }
 
         internal MessageDeletionResult(bool deleted, string messageId, InternalDeleteMessageResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Deleted = deleted;
             MessageId = messageId;
-            Object = @object;
+            this.Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

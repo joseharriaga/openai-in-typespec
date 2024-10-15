@@ -116,7 +116,7 @@ namespace OpenAI.Assistants
                 }
             }
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalAssistantObjectObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             if (Optional.IsDefined(ResponseFormat))
             {
                 if (ResponseFormat != null)
@@ -138,7 +138,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("topP"u8);
+                    writer.WriteNull("nucleusSamplingFactor"u8);
                 }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
@@ -292,7 +292,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalAssistantObjectObject.DeserializeInternalAssistantObjectObject(prop.Value, options);
+                    @object = new InternalAssistantObjectObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("response_format"u8))

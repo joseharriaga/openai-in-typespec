@@ -43,7 +43,7 @@ namespace OpenAI.Embeddings
             }
 #endif
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalEmbeddingObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -98,7 +98,7 @@ namespace OpenAI.Embeddings
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalEmbeddingObject.DeserializeInternalEmbeddingObject(prop.Value, options);
+                    @object = new InternalEmbeddingObject(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

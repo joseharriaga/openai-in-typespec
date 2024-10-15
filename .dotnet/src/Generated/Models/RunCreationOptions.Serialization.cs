@@ -62,7 +62,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("model"u8);
+                    writer.WriteNull("modelOverride"u8);
                 }
             }
             if (Optional.IsDefined(InstructionsOverride))
@@ -74,7 +74,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("instructions"u8);
+                    writer.WriteNull("instructionsOverride"u8);
                 }
             }
             if (Optional.IsDefined(AdditionalInstructions))
@@ -89,15 +89,15 @@ namespace OpenAI.Assistants
                     writer.WriteNull("additionalInstructions"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(InternalMessages))
+            if (Optional.IsCollectionDefined(AdditionalMessages))
             {
-                if (InternalMessages != null)
+                if (AdditionalMessages != null)
                 {
                     writer.WritePropertyName("additional_messages"u8);
                     writer.WriteStartArray();
-                    foreach (MessageCreationOptions item in InternalMessages)
+                    foreach (Assistants.ThreadInitializationMessage item in AdditionalMessages)
                     {
-                        writer.WriteObjectValue(item, options);
+                        writer.WriteObjectValue<Assistants.ThreadInitializationMessage>(item, options);
                     }
                     writer.WriteEndArray();
                 }
@@ -125,7 +125,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("tools"u8);
+                    writer.WriteNull("toolsOverride"u8);
                 }
             }
             if (Optional.IsCollectionDefined(Metadata))
@@ -172,7 +172,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("topP"u8);
+                    writer.WriteNull("nucleusSamplingFactor"u8);
                 }
             }
             if (Optional.IsDefined(MaxInputTokenCount))
@@ -184,7 +184,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("maxPromptTokens"u8);
+                    writer.WriteNull("maxInputTokenCount"u8);
                 }
             }
             if (Optional.IsDefined(MaxOutputTokenCount))
@@ -196,7 +196,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("maxCompletionTokens"u8);
+                    writer.WriteNull("maxOutputTokenCount"u8);
                 }
             }
             if (Optional.IsDefined(TruncationStrategy))
@@ -220,7 +220,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("toolChoice"u8);
+                    writer.WriteNull("toolConstraint"u8);
                 }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
@@ -265,7 +265,7 @@ namespace OpenAI.Assistants
             string modelOverride = default;
             string instructionsOverride = default;
             string additionalInstructions = default;
-            IList<MessageCreationOptions> internalMessages = default;
+            IList<Assistants.ThreadInitializationMessage> additionalMessages = default;
             bool? allowParallelToolCalls = default;
             IList<ToolDefinition> toolsOverride = default;
             IDictionary<string, string> metadata = default;
@@ -339,12 +339,12 @@ namespace OpenAI.Assistants
                     {
                         continue;
                     }
-                    List<MessageCreationOptions> array = new List<MessageCreationOptions>();
+                    List<Assistants.ThreadInitializationMessage> array = new List<Assistants.ThreadInitializationMessage>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(MessageCreationOptions.DeserializeMessageCreationOptions(item, options));
+                        array.Add(Assistants.ThreadInitializationMessage.DeserializeThreadInitializationMessage(item, options));
                     }
-                    internalMessages = array;
+                    additionalMessages = array;
                     continue;
                 }
                 if (prop.NameEquals("parallel_tool_calls"u8))
@@ -464,7 +464,7 @@ namespace OpenAI.Assistants
                 modelOverride,
                 instructionsOverride,
                 additionalInstructions,
-                internalMessages ?? new ChangeTrackingList<MessageCreationOptions>(),
+                additionalMessages ?? new ChangeTrackingList<Assistants.ThreadInitializationMessage>(),
                 allowParallelToolCalls,
                 toolsOverride ?? new ChangeTrackingList<ToolDefinition>(),
                 metadata ?? new ChangeTrackingDictionary<string, string>(),

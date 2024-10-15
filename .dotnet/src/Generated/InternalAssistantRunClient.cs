@@ -21,6 +21,8 @@ namespace OpenAI.Assistants
         {
         }
 
+        public ClientPipeline Pipeline { get; }
+
         public virtual ClientResult ListRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options)
         {
             Argument.AssertNotNull(threadId, nameof(threadId));

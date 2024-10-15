@@ -25,15 +25,6 @@ namespace OpenAI.Chat
                 throw new FormatException($"The model {nameof(ToolChatMessage)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("content"u8);
-#if NET6_0_OR_GREATER
-            writer.WriteRawValue(Content);
-#else
-            using (JsonDocument document = JsonDocument.Parse(Content))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
-#endif
             writer.WritePropertyName("tool_call_id"u8);
             writer.WriteStringValue(ToolCallId);
         }
@@ -57,17 +48,12 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            BinaryData content = default;
             string toolCallId = default;
             Chat.ChatMessageRole role = default;
+            ChatMessageContent content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("content"u8))
-                {
-                    content = BinaryData.FromString(prop.Value.GetRawText());
-                    continue;
-                }
                 if (prop.NameEquals("tool_call_id"u8))
                 {
                     toolCallId = prop.Value.GetString();
@@ -78,12 +64,22 @@ namespace OpenAI.Chat
                     role = prop.Value.GetInt32().ToChatMessageRole();
                     continue;
                 }
+                if (prop.NameEquals("content"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        content = null;
+                        continue;
+                    }
+                    DeserializeContentValue(prop, ref content);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ToolChatMessage(content, toolCallId, role, additionalBinaryDataProperties);
+            return new ToolChatMessage(toolCallId, role, content, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ToolChatMessage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

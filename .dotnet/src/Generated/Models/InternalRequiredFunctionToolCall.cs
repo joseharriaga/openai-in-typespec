@@ -11,24 +11,17 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalRequiredFunctionToolCall(string id, InternalRunToolCallObjectFunction function)
+        internal InternalRequiredFunctionToolCall(string id, object @type, InternalRunToolCallObjectFunction internalFunction)
         {
             Id = id;
-            Function = function;
         }
 
-        internal InternalRequiredFunctionToolCall(string id, InternalRunToolCallObjectType @type, InternalRunToolCallObjectFunction function, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRequiredFunctionToolCall(string id, object @type, InternalRunToolCallObjectFunction internalFunction, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Type = @type;
-            Function = function;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public string Id { get; set; }
-
-        public InternalRunToolCallObjectType Type { get; } = "function";
-
-        public InternalRunToolCallObjectFunction Function { get; set; }
     }
 }

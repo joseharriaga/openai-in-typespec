@@ -10,9 +10,10 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestTextContentPart : ConversationContentPart
     {
-        public InternalRealtimeRequestTextContentPart(string text) : base(ConversationContentPartKind.InputText)
+        public InternalRealtimeRequestTextContentPart(string text, ConversationContentPartKind @type) : base(@type)
         {
             Argument.AssertNotNull(text, nameof(text));
+            Argument.AssertNotNull(@type, nameof(@type));
 
             Text = text;
         }

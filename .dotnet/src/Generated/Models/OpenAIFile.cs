@@ -17,7 +17,7 @@ namespace OpenAI.Files
             CreatedAt = createdAt;
             Filename = filename;
             Purpose = purpose;
-            Object = @object;
+            this.Object = @object;
             SizeInBytes = sizeInBytes;
             Status = status;
         }
@@ -28,7 +28,7 @@ namespace OpenAI.Files
             CreatedAt = createdAt;
             Filename = filename;
             Purpose = purpose;
-            Object = @object;
+            this.Object = @object;
             SizeInBytes = sizeInBytes;
             Status = status;
             StatusDetails = statusDetails;

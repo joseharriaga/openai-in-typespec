@@ -11,12 +11,11 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatCompletionOptions(float? frequencyPenalty, float? presencePenalty, ChatResponseFormat responseFormat, InternalCreateChatCompletionRequestServiceTier? serviceTier, float? temperature, float? topP, IList<ChatTool> tools, IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, int? n, bool? stream, InternalChatCompletionStreamOptions streamOptions, bool? includeLogProbabilities, int? topLogProbabilityCount, IList<string> stopSequences, IDictionary<int, int> logitBiases, ChatToolChoice toolChoice, ChatFunctionChoice functionChoice, bool? allowParallelToolCalls, string endUserId, long? seed, int? deprecatedMaxTokens, int? maxOutputTokenCount, IList<ChatFunction> functions, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatCompletionOptions(float? frequencyPenalty, float? presencePenalty, ChatResponseFormat responseFormat, float? temperature, float? topP, IList<ChatTool> tools, IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, int? n, bool? stream, InternalChatCompletionStreamOptions streamOptions, bool? includeLogProbabilities, int? topLogProbabilityCount, IList<string> stopSequences, IDictionary<int, int> logitBiases, ChatToolChoice toolChoice, ChatFunctionChoice functionChoice, bool? allowParallelToolCalls, string endUserId, long? seed, int? deprecatedMaxTokens, int? maxOutputTokenCount, IList<ChatFunction> functions, InternalCreateChatCompletionRequestServiceTier? serviceTier, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             FrequencyPenalty = frequencyPenalty;
             PresencePenalty = presencePenalty;
             ResponseFormat = responseFormat;
-            ServiceTier = serviceTier;
             Temperature = temperature;
             TopP = topP;
             Tools = tools;
@@ -45,8 +44,6 @@ namespace OpenAI.Chat
         public float? PresencePenalty { get; set; }
 
         public ChatResponseFormat ResponseFormat { get; set; }
-
-        public InternalCreateChatCompletionRequestServiceTier? ServiceTier { get; set; }
 
         public float? Temperature { get; set; }
 

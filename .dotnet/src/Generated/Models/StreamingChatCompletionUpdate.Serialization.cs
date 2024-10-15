@@ -39,7 +39,7 @@ namespace OpenAI.Chat
                 writer.WriteStringValue(SystemFingerprint);
             }
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalCreateChatCompletionStreamResponseObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(CompletionId);
             if (Optional.IsDefined(ServiceTier))
@@ -47,7 +47,7 @@ namespace OpenAI.Chat
                 if (ServiceTier != null)
                 {
                     writer.WritePropertyName("service_tier"u8);
-                    writer.WriteObjectValue<Chat.OpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier<InternalCreateChatCompletionStreamResponseServiceTier>?>(ServiceTier, options);
+                    writer.WriteObjectValue<InternalCreateChatCompletionStreamResponseServiceTier?>(ServiceTier, options);
                 }
                 else
                 {
@@ -108,7 +108,7 @@ namespace OpenAI.Chat
             string systemFingerprint = default;
             InternalCreateChatCompletionStreamResponseObject @object = default;
             string completionId = default;
-            Chat.OpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier<InternalCreateChatCompletionStreamResponseServiceTier>? serviceTier = default;
+            InternalCreateChatCompletionStreamResponseServiceTier? serviceTier = default;
             IReadOnlyList<InternalCreateChatCompletionStreamResponseChoice> choices = default;
             DateTimeOffset createdAt = default;
             ChatTokenUsage usage = default;
@@ -132,7 +132,7 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalCreateChatCompletionStreamResponseObject.DeserializeInternalCreateChatCompletionStreamResponseObject(prop.Value, options);
+                    @object = new InternalCreateChatCompletionStreamResponseObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("id"u8))
@@ -147,7 +147,7 @@ namespace OpenAI.Chat
                         serviceTier = null;
                         continue;
                     }
-                    serviceTier = Chat.OpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier<InternalCreateChatCompletionStreamResponseServiceTier>?.DeserializeOpenAI.Chat.InternalCreateChatCompletionStreamResponseServiceTier(prop.Value, options);
+                    serviceTier = Chat.InternalCreateChatCompletionStreamResponseServiceTier?.DeserializeInternalCreateChatCompletionStreamResponseServiceTier(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("choices"u8))

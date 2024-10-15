@@ -50,7 +50,7 @@ namespace OpenAI.Audio
             writer.WritePropertyName("file"u8);
             writer.WriteBase64StringValue(File.ToArray(), "D");
             writer.WritePropertyName("model"u8);
-            writer.WriteObjectValue<InternalCreateTranscriptionRequestModel>(Model, options);
+            writer.WriteStringValue(Model.ToString());
             if (Optional.IsCollectionDefined(InternalTimestampGranularities))
             {
                 writer.WritePropertyName("timestamp_granularities"u8);
@@ -166,7 +166,7 @@ namespace OpenAI.Audio
                 }
                 if (prop.NameEquals("model"u8))
                 {
-                    model = InternalCreateTranscriptionRequestModel.DeserializeInternalCreateTranscriptionRequestModel(prop.Value, options);
+                    model = new InternalCreateTranscriptionRequestModel(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("timestamp_granularities"u8))

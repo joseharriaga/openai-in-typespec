@@ -11,13 +11,10 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal RunTruncationStrategy(InternalTruncationObjectType @type, int? lastMessages, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal RunTruncationStrategy(int? lastMessages, InternalTruncationObjectType @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = @type;
             LastMessages = lastMessages;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
-
-        public InternalTruncationObjectType Type { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace OpenAI.Assistants
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("function"u8);
-            writer.WriteObjectValue(Function, options);
+            writer.WriteObjectValue<InternalFunctionDefinition>(_internalFunction, options);
         }
 
         FunctionToolDefinition IJsonModel<FunctionToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (FunctionToolDefinition)JsonModelCreateCore(ref reader, options);
@@ -44,14 +44,14 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            InternalFunctionDefinition function = default;
+            InternalFunctionDefinition internalFunction = default;
             string @type = "function";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("function"u8))
                 {
-                    function = InternalFunctionDefinition.DeserializeInternalFunctionDefinition(prop.Value, options);
+                    internalFunction = InternalFunctionDefinition.DeserializeInternalFunctionDefinition(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
@@ -64,7 +64,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new FunctionToolDefinition(function, @type, additionalBinaryDataProperties);
+            return new FunctionToolDefinition(internalFunction, @type, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<FunctionToolDefinition>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -24,7 +24,7 @@ namespace OpenAI.Embeddings
             writer.WritePropertyName("usage"u8);
             writer.WriteObjectValue(Usage, options);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalCreateEmbeddingResponseObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

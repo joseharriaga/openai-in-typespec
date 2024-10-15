@@ -58,7 +58,7 @@ namespace OpenAI.RealtimeConversation
             {
                 if (prop.NameEquals("type"u8))
                 {
-                    kind = prop.Value.GetInt32().ToConversationTurnDetectionKind();
+                    kind = prop.Value.GetString().ToConversationTurnDetectionKind();
                     continue;
                 }
                 if (options.Format != "W")

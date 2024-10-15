@@ -13,12 +13,12 @@ namespace OpenAI.Files
 
         internal OpenAIFileCollection(InternalListFilesResponseObject @object)
         {
-            Object = @object;
+            this.Object = @object;
         }
 
         internal OpenAIFileCollection(InternalListFilesResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Object = @object;
+            this.Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

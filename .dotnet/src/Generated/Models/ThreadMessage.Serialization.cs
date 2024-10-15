@@ -112,7 +112,7 @@ namespace OpenAI.Assistants
                 writer.WriteNull("metadata"u8);
             }
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalMessageObjectObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             writer.WritePropertyName("role"u8);
             writer.WriteNumberValue((int)Role);
             if (Attachments != null && Optional.IsCollectionDefined(Attachments))
@@ -286,7 +286,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalMessageObjectObject.DeserializeInternalMessageObjectObject(prop.Value, options);
+                    @object = new InternalMessageObjectObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("role"u8))

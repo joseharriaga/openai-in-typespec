@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponseAudioContentPart : ConversationContentPart
     {
-        internal InternalRealtimeResponseAudioContentPart(string transcript) : base(ConversationContentPartKind.Audio)
+        internal InternalRealtimeResponseAudioContentPart(string transcript, ConversationContentPartKind @type) : base(@type)
         {
             Transcript = transcript;
         }

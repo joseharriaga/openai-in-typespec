@@ -4,19 +4,21 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalMessageImageFileContent : MessageContent
     {
-        internal InternalMessageImageFileContent(InternalMessageContentImageFileObjectType @type, InternalMessageContentItemFileObjectImageFile imageFile, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
+        public InternalMessageImageFileContent(string @type, InternalMessageContentItemFileObjectImageFile imageFile)
         {
-            Type = @type;
-            ImageFile = imageFile;
+            Argument.AssertNotNull(@type, nameof(@type));
+            Argument.AssertNotNull(imageFile, nameof(imageFile));
+
         }
 
-        public InternalMessageContentImageFileObjectType Type { get; } = "image_file";
-
-        public InternalMessageContentItemFileObjectImageFile ImageFile { get; set; }
+        internal InternalMessageImageFileContent(string @type, InternalMessageContentItemFileObjectImageFile imageFile, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
+        {
+        }
     }
 }

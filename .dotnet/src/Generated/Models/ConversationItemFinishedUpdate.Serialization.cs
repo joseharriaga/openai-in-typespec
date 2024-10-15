@@ -37,7 +37,7 @@ namespace OpenAI.RealtimeConversation
             writer.WritePropertyName("output_index"u8);
             writer.WriteNumberValue(OutputIndex);
             writer.WritePropertyName("item"u8);
-            writer.WriteObjectValue(Item, options);
+            writer.WriteObjectValue<InternalRealtimeResponseItem>(_internalItem, options);
         }
 
         ConversationItemFinishedUpdate IJsonModel<ConversationItemFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationItemFinishedUpdate)JsonModelCreateCore(ref reader, options);
@@ -61,7 +61,7 @@ namespace OpenAI.RealtimeConversation
             }
             string responseId = default;
             int outputIndex = default;
-            InternalRealtimeResponseItem item = default;
+            InternalRealtimeResponseItem internalItem = default;
             string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
@@ -79,7 +79,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("item"u8))
                 {
-                    item = InternalRealtimeResponseItem.DeserializeInternalRealtimeResponseItem(prop.Value, options);
+                    internalItem = InternalRealtimeResponseItem.DeserializeInternalRealtimeResponseItem(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("event_id"u8))
@@ -94,7 +94,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    kind = prop.Value.GetInt32().ToConversationUpdateKind();
+                    kind = prop.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
                 if (options.Format != "W")
@@ -105,7 +105,7 @@ namespace OpenAI.RealtimeConversation
             return new ConversationItemFinishedUpdate(
                 responseId,
                 outputIndex,
-                item,
+                internalItem,
                 eventId,
                 kind,
                 additionalBinaryDataProperties);

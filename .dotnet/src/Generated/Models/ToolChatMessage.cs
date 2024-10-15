@@ -10,22 +10,17 @@ namespace OpenAI.Chat
 {
     public partial class ToolChatMessage : ChatMessage
     {
-        public ToolChatMessage(BinaryData content, string toolCallId)
+        public ToolChatMessage(string toolCallId, Chat.ChatMessageRole role) : base(role)
         {
-            Argument.AssertNotNull(content, nameof(content));
             Argument.AssertNotNull(toolCallId, nameof(toolCallId));
 
-            Content = content;
             ToolCallId = toolCallId;
         }
 
-        internal ToolChatMessage(BinaryData content, string toolCallId, Chat.ChatMessageRole role, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, additionalBinaryDataProperties)
+        internal ToolChatMessage(string toolCallId, Chat.ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, content, additionalBinaryDataProperties)
         {
-            Content = content;
             ToolCallId = toolCallId;
         }
-
-        public BinaryData Content { get; set; }
 
         public string ToolCallId { get; set; }
     }

@@ -25,15 +25,6 @@ namespace OpenAI.Chat
                 throw new FormatException($"The model {nameof(FunctionChatMessage)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (Content != null)
-            {
-                writer.WritePropertyName("content"u8);
-                writer.WriteStringValue(Content);
-            }
-            else
-            {
-                writer.WriteNull("content"u8);
-            }
             writer.WritePropertyName("name"u8);
             writer.WriteStringValue(FunctionName);
         }
@@ -57,22 +48,12 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            string content = default;
             string functionName = default;
             Chat.ChatMessageRole role = default;
+            ChatMessageContent content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("content"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        content = null;
-                        continue;
-                    }
-                    content = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("name"u8))
                 {
                     functionName = prop.Value.GetString();
@@ -83,12 +64,22 @@ namespace OpenAI.Chat
                     role = prop.Value.GetInt32().ToChatMessageRole();
                     continue;
                 }
+                if (prop.NameEquals("content"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        content = null;
+                        continue;
+                    }
+                    DeserializeContentValue(prop, ref content);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new FunctionChatMessage(content, functionName, role, additionalBinaryDataProperties);
+            return new FunctionChatMessage(functionName, role, content, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<FunctionChatMessage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

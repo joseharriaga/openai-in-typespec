@@ -34,7 +34,7 @@ namespace OpenAI.Chat
             writer.WritePropertyName("function"u8);
             writer.WriteObjectValue<InternalFunctionDefinition>(Function, options);
             writer.WritePropertyName("type"u8);
-            writer.WriteNumberValue((int)Kind);
+            writer.WriteStringValue(Kind.ToSerialString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -83,7 +83,7 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    kind = prop.Value.GetInt32().ToChatToolKind();
+                    kind = prop.Value.GetString().ToChatToolKind();
                     continue;
                 }
                 if (options.Format != "W")

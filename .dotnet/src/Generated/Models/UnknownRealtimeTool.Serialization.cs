@@ -58,7 +58,7 @@ namespace OpenAI.RealtimeConversation
             {
                 if (prop.NameEquals("type"u8))
                 {
-                    kind = ConversationToolKind.DeserializeConversationToolKind(prop.Value, options);
+                    kind = new ConversationToolKind(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

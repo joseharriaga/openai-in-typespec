@@ -14,13 +14,11 @@ namespace OpenAI.RealtimeConversation
 
         public ConversationSessionOptions()
         {
-            Modalities = new ChangeTrackingList<InternalRealtimeRequestSessionUpdateCommandSessionModality>();
             Tools = new ChangeTrackingList<ConversationTool>();
         }
 
-        internal ConversationSessionOptions(IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> modalities, ConversationVoice? voice, string instructions, ConversationAudioFormat? inputAudioFormat, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, string model, RealtimeConversation.ConversationToolChoice toolChoice, RealtimeConversation.ConversationMaxTokensChoice maxResponseOutputTokens, ConversationTurnDetectionOptions turnDetectionOptions, ConversationInputTranscriptionOptions inputTranscriptionOptions, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ConversationSessionOptions(ConversationVoice? voice, string instructions, ConversationAudioFormat? inputAudioFormat, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, string model, ConversationTurnDetectionOptions turnDetectionOptions, ConversationInputTranscriptionOptions inputTranscriptionOptions, IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> internalModalities, BinaryData internalToolChoice, BinaryData maxResponseOutputTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Modalities = modalities;
             Voice = voice;
             Instructions = instructions;
             InputAudioFormat = inputAudioFormat;
@@ -28,14 +26,10 @@ namespace OpenAI.RealtimeConversation
             Tools = tools;
             Temperature = temperature;
             Model = model;
-            ToolChoice = toolChoice;
-            MaxResponseOutputTokens = maxResponseOutputTokens;
             TurnDetectionOptions = turnDetectionOptions;
             InputTranscriptionOptions = inputTranscriptionOptions;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
-
-        public IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> Modalities { get; }
 
         public ConversationVoice? Voice { get; set; }
 

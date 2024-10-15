@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationItemAcknowledgedUpdate : ConversationUpdate
     {
-        internal ConversationItemAcknowledgedUpdate(ConversationItem item, string eventId) : base(eventId)
+        internal ConversationItemAcknowledgedUpdate(ConversationItem item, string eventId, RealtimeConversation.ConversationUpdateKind kind) : base(eventId, kind)
         {
             Item = item;
         }

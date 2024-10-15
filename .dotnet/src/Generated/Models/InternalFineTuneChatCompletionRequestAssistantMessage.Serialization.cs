@@ -50,25 +50,15 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            BinaryData content = default;
             string refusal = default;
             string participantName = default;
             IList<ChatToolCall> toolCalls = default;
             ChatFunctionCall functionCall = default;
             Chat.ChatMessageRole role = default;
+            ChatMessageContent content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("content"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        content = null;
-                        continue;
-                    }
-                    content = BinaryData.FromString(prop.Value.GetRawText());
-                    continue;
-                }
                 if (prop.NameEquals("refusal"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -118,18 +108,28 @@ namespace OpenAI.FineTuning
                     role = prop.Value.GetInt32().ToChatMessageRole();
                     continue;
                 }
+                if (prop.NameEquals("content"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        content = null;
+                        continue;
+                    }
+                    DeserializeContentValue(prop, ref content);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
             return new InternalFineTuneChatCompletionRequestAssistantMessage(
-                content,
                 refusal,
                 participantName,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
                 functionCall,
                 role,
+                content,
                 additionalBinaryDataProperties);
         }
 

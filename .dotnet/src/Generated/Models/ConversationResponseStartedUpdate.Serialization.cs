@@ -33,7 +33,7 @@ namespace OpenAI.RealtimeConversation
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("response"u8);
-            writer.WriteObjectValue(Response, options);
+            writer.WriteObjectValue<InternalRealtimeResponse>(_internalResponse, options);
         }
 
         ConversationResponseStartedUpdate IJsonModel<ConversationResponseStartedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationResponseStartedUpdate)JsonModelCreateCore(ref reader, options);
@@ -55,7 +55,7 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            InternalRealtimeResponse response = default;
+            InternalRealtimeResponse internalResponse = default;
             string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
@@ -63,7 +63,7 @@ namespace OpenAI.RealtimeConversation
             {
                 if (prop.NameEquals("response"u8))
                 {
-                    response = InternalRealtimeResponse.DeserializeInternalRealtimeResponse(prop.Value, options);
+                    internalResponse = InternalRealtimeResponse.DeserializeInternalRealtimeResponse(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("event_id"u8))
@@ -78,7 +78,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    kind = prop.Value.GetInt32().ToConversationUpdateKind();
+                    kind = prop.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
                 if (options.Format != "W")
@@ -86,7 +86,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationResponseStartedUpdate(response, eventId, kind, additionalBinaryDataProperties);
+            return new ConversationResponseStartedUpdate(internalResponse, eventId, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ConversationResponseStartedUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

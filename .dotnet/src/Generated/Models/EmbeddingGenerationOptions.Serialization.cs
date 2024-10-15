@@ -42,11 +42,11 @@ namespace OpenAI.Embeddings
             }
 #endif
             writer.WritePropertyName("model"u8);
-            writer.WriteObjectValue<InternalCreateEmbeddingRequestModel>(Model, options);
+            writer.WriteStringValue(Model.ToString());
             if (Optional.IsDefined(EncodingFormat))
             {
                 writer.WritePropertyName("encoding_format"u8);
-                writer.WriteObjectValue<Embeddings.OpenAI.Embeddings.InternalCreateEmbeddingRequestEncodingFormat<InternalCreateEmbeddingRequestEncodingFormat>?>(EncodingFormat, options);
+                writer.WriteObjectValue<InternalCreateEmbeddingRequestEncodingFormat?>(EncodingFormat, options);
             }
             if (Optional.IsDefined(EndUserId))
             {
@@ -92,7 +92,7 @@ namespace OpenAI.Embeddings
             int? dimensions = default;
             BinaryData input = default;
             InternalCreateEmbeddingRequestModel model = default;
-            Embeddings.OpenAI.Embeddings.InternalCreateEmbeddingRequestEncodingFormat<InternalCreateEmbeddingRequestEncodingFormat>? encodingFormat = default;
+            InternalCreateEmbeddingRequestEncodingFormat? encodingFormat = default;
             string endUserId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -114,7 +114,7 @@ namespace OpenAI.Embeddings
                 }
                 if (prop.NameEquals("model"u8))
                 {
-                    model = InternalCreateEmbeddingRequestModel.DeserializeInternalCreateEmbeddingRequestModel(prop.Value, options);
+                    model = new InternalCreateEmbeddingRequestModel(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("encoding_format"u8))
@@ -124,7 +124,7 @@ namespace OpenAI.Embeddings
                         encodingFormat = null;
                         continue;
                     }
-                    encodingFormat = Embeddings.OpenAI.Embeddings.InternalCreateEmbeddingRequestEncodingFormat<InternalCreateEmbeddingRequestEncodingFormat>?.DeserializeOpenAI.Embeddings.InternalCreateEmbeddingRequestEncodingFormat(prop.Value, options);
+                    encodingFormat = Embeddings.InternalCreateEmbeddingRequestEncodingFormat?.DeserializeInternalCreateEmbeddingRequestEncodingFormat(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("user"u8))

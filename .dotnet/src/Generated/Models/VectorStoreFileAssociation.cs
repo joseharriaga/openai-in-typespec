@@ -17,7 +17,7 @@ namespace OpenAI.VectorStores
             VectorStoreId = vectorStoreId;
             Status = status;
             LastError = lastError;
-            Object = @object;
+            this.Object = @object;
             FileId = fileId;
             Size = size;
         }
@@ -28,7 +28,7 @@ namespace OpenAI.VectorStores
             VectorStoreId = vectorStoreId;
             Status = status;
             LastError = lastError;
-            Object = @object;
+            this.Object = @object;
             FileId = fileId;
             Size = size;
             ChunkingStrategy = chunkingStrategy;

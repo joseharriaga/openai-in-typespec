@@ -11,14 +11,10 @@ namespace OpenAI.Assistants
     {
         internal InternalRunStepDetailsMessageCreationObject(InternalRunStepDetailsMessageCreationObjectMessageCreation messageCreation) : base("message_creation")
         {
-            MessageCreation = messageCreation;
         }
 
         internal InternalRunStepDetailsMessageCreationObject(InternalRunStepDetailsMessageCreationObjectMessageCreation messageCreation, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
-            MessageCreation = messageCreation;
         }
-
-        public InternalRunStepDetailsMessageCreationObjectMessageCreation MessageCreation { get; set; }
     }
 }

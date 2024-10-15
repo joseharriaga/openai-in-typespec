@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
                 writer.WriteStringValue(Ranker.Value.ToString());
             }
             writer.WritePropertyName("score_threshold"u8);
-            writer.WriteNumberValue(ScoreThreshold);
+            writer.WriteNumberValue(_scoreThreshold);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

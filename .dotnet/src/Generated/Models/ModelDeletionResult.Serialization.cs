@@ -36,7 +36,7 @@ namespace OpenAI.Models
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(ModelId);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalDeleteModelResponseObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -91,7 +91,7 @@ namespace OpenAI.Models
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalDeleteModelResponseObject.DeserializeInternalDeleteModelResponseObject(prop.Value, options);
+                    @object = new InternalDeleteModelResponseObject(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

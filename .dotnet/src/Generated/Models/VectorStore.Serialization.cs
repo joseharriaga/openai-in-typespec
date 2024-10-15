@@ -85,7 +85,7 @@ namespace OpenAI.VectorStores
                 writer.WriteNull("metadata"u8);
             }
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalVectorStoreObjectObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             if (Optional.IsDefined(ExpirationPolicy))
             {
                 writer.WritePropertyName("expires_after"u8);
@@ -215,7 +215,7 @@ namespace OpenAI.VectorStores
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalVectorStoreObjectObject.DeserializeInternalVectorStoreObjectObject(prop.Value, options);
+                    @object = new InternalVectorStoreObjectObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("expires_after"u8))

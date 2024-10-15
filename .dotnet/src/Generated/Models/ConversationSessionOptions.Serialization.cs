@@ -27,16 +27,6 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(ConversationSessionOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsCollectionDefined(Modalities))
-            {
-                writer.WritePropertyName("modalities"u8);
-                writer.WriteStartArray();
-                foreach (InternalRealtimeRequestSessionUpdateCommandSessionModality item in Modalities)
-                {
-                    writer.WriteStringValue(item.ToString());
-                }
-                writer.WriteEndArray();
-            }
             if (Optional.IsDefined(Voice))
             {
                 writer.WritePropertyName("voice"u8);
@@ -75,17 +65,7 @@ namespace OpenAI.RealtimeConversation
             if (Optional.IsDefined(Model))
             {
                 writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model);
-            }
-            if (Optional.IsDefined(ToolChoice))
-            {
-                writer.WritePropertyName("tool_choice"u8);
-                writer.WriteObjectValue<RealtimeConversation.ConversationToolChoice>(ToolChoice, options);
-            }
-            if (Optional.IsDefined(MaxResponseOutputTokens))
-            {
-                writer.WritePropertyName("max_response_output_tokens"u8);
-                writer.WriteObjectValue<RealtimeConversation.ConversationMaxTokensChoice>(MaxResponseOutputTokens, options);
+                writer.WriteStringValue(Model.ToSerialString());
             }
             if (Optional.IsDefined(TurnDetectionOptions))
             {
@@ -96,6 +76,40 @@ namespace OpenAI.RealtimeConversation
             {
                 writer.WritePropertyName("input_audio_transcription"u8);
                 writer.WriteObjectValue<ConversationInputTranscriptionOptions>(InputTranscriptionOptions, options);
+            }
+            if (Optional.IsCollectionDefined(_internalModalities))
+            {
+                writer.WritePropertyName("modalities"u8);
+                writer.WriteStartArray();
+                foreach (InternalRealtimeRequestSessionUpdateCommandSessionModality item in _internalModalities)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
+            }
+            if (Optional.IsDefined(_internalToolChoice))
+            {
+                writer.WritePropertyName("tool_choice"u8);
+#if NET6_0_OR_GREATER
+                writer.WriteRawValue(_internalToolChoice);
+#else
+                using (JsonDocument document = JsonDocument.Parse(_internalToolChoice))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
+            }
+            if (Optional.IsDefined(_maxResponseOutputTokens))
+            {
+                writer.WritePropertyName("max_response_output_tokens"u8);
+#if NET6_0_OR_GREATER
+                writer.WriteRawValue(_maxResponseOutputTokens);
+#else
+                using (JsonDocument document = JsonDocument.Parse(_maxResponseOutputTokens))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -133,7 +147,6 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> modalities = default;
             ConversationVoice? voice = default;
             string instructions = default;
             ConversationAudioFormat? inputAudioFormat = default;
@@ -141,27 +154,14 @@ namespace OpenAI.RealtimeConversation
             IList<ConversationTool> tools = default;
             float? temperature = default;
             string model = default;
-            RealtimeConversation.ConversationToolChoice toolChoice = default;
-            RealtimeConversation.ConversationMaxTokensChoice maxResponseOutputTokens = default;
             ConversationTurnDetectionOptions turnDetectionOptions = default;
             ConversationInputTranscriptionOptions inputTranscriptionOptions = default;
+            IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> internalModalities = default;
+            BinaryData internalToolChoice = default;
+            BinaryData maxResponseOutputTokens = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("modalities"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    List<InternalRealtimeRequestSessionUpdateCommandSessionModality> array = new List<InternalRealtimeRequestSessionUpdateCommandSessionModality>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        array.Add(new InternalRealtimeRequestSessionUpdateCommandSessionModality(item.GetString()));
-                    }
-                    modalities = array;
-                    continue;
-                }
                 if (prop.NameEquals("voice"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -233,27 +233,7 @@ namespace OpenAI.RealtimeConversation
                         model = null;
                         continue;
                     }
-                    model = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("tool_choice"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        toolChoice = null;
-                        continue;
-                    }
-                    toolChoice = RealtimeConversation.ConversationToolChoice.DeserializeConversationToolChoice(prop.Value, options);
-                    continue;
-                }
-                if (prop.NameEquals("max_response_output_tokens"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        maxResponseOutputTokens = null;
-                        continue;
-                    }
-                    maxResponseOutputTokens = RealtimeConversation.ConversationMaxTokensChoice.DeserializeConversationMaxTokensChoice(prop.Value, options);
+                    model = prop.Value.GetString().ToString();
                     continue;
                 }
                 if (prop.NameEquals("turn_detection"u8))
@@ -276,13 +256,46 @@ namespace OpenAI.RealtimeConversation
                     inputTranscriptionOptions = ConversationInputTranscriptionOptions.DeserializeConversationInputTranscriptionOptions(prop.Value, options);
                     continue;
                 }
+                if (prop.NameEquals("modalities"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<InternalRealtimeRequestSessionUpdateCommandSessionModality> array = new List<InternalRealtimeRequestSessionUpdateCommandSessionModality>();
+                    foreach (var item in prop.Value.EnumerateArray())
+                    {
+                        array.Add(InternalRealtimeRequestSessionUpdateCommandSessionModality.DeserializeInternalRealtimeRequestSessionUpdateCommandSessionModality(item, options));
+                    }
+                    internalModalities = array;
+                    continue;
+                }
+                if (prop.NameEquals("tool_choice"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        internalToolChoice = null;
+                        continue;
+                    }
+                    internalToolChoice = BinaryData.FromString(prop.Value.GetRawText());
+                    continue;
+                }
+                if (prop.NameEquals("max_response_output_tokens"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        maxResponseOutputTokens = null;
+                        continue;
+                    }
+                    maxResponseOutputTokens = BinaryData.FromString(prop.Value.GetRawText());
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
             return new ConversationSessionOptions(
-                modalities ?? new ChangeTrackingList<InternalRealtimeRequestSessionUpdateCommandSessionModality>(),
                 voice,
                 instructions,
                 inputAudioFormat,
@@ -290,10 +303,11 @@ namespace OpenAI.RealtimeConversation
                 tools ?? new ChangeTrackingList<ConversationTool>(),
                 temperature,
                 model,
-                toolChoice,
-                maxResponseOutputTokens,
                 turnDetectionOptions,
                 inputTranscriptionOptions,
+                internalModalities,
+                internalToolChoice,
+                maxResponseOutputTokens,
                 additionalBinaryDataProperties);
         }
 

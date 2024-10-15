@@ -32,7 +32,7 @@ namespace OpenAI.Images
                 if (Model != null)
                 {
                     writer.WritePropertyName("model"u8);
-                    writer.WriteObjectValue<Images.OpenAI.Images.InternalCreateImageEditRequestModel<InternalCreateImageEditRequestModel>?>(Model, options);
+                    writer.WriteObjectValue<InternalCreateImageEditRequestModel?>(Model, options);
                 }
                 else
                 {
@@ -65,7 +65,7 @@ namespace OpenAI.Images
                 if (Size != null)
                 {
                     writer.WritePropertyName("size"u8);
-                    writer.WriteObjectValue<Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>?>(Size, options);
+                    writer.WriteObjectValue<GeneratedImageSize?>(Size, options);
                 }
                 else
                 {
@@ -77,7 +77,7 @@ namespace OpenAI.Images
                 if (ResponseFormat != null)
                 {
                     writer.WritePropertyName("response_format"u8);
-                    writer.WriteObjectValue<Images.OpenAI.Images.GeneratedImageFormat<GeneratedImageFormat>?>(ResponseFormat, options);
+                    writer.WriteObjectValue<GeneratedImageFormat?>(ResponseFormat, options);
                 }
                 else
                 {
@@ -125,13 +125,13 @@ namespace OpenAI.Images
             {
                 return null;
             }
-            Images.OpenAI.Images.InternalCreateImageEditRequestModel<InternalCreateImageEditRequestModel>? model = default;
+            InternalCreateImageEditRequestModel? model = default;
             BinaryData image = default;
             string prompt = default;
             BinaryData mask = default;
             long? n = default;
-            Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>? size = default;
-            Images.OpenAI.Images.GeneratedImageFormat<GeneratedImageFormat>? responseFormat = default;
+            GeneratedImageSize? size = default;
+            GeneratedImageFormat? responseFormat = default;
             string endUserId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -143,7 +143,7 @@ namespace OpenAI.Images
                         model = null;
                         continue;
                     }
-                    model = Images.OpenAI.Images.InternalCreateImageEditRequestModel<InternalCreateImageEditRequestModel>?.DeserializeOpenAI.Images.InternalCreateImageEditRequestModel(prop.Value, options);
+                    model = Images.InternalCreateImageEditRequestModel?.DeserializeInternalCreateImageEditRequestModel(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("image"u8))
@@ -183,7 +183,7 @@ namespace OpenAI.Images
                         size = null;
                         continue;
                     }
-                    size = Images.OpenAI.Images.GeneratedImageSize<GeneratedImageSize>?.DeserializeOpenAI.Images.GeneratedImageSize(prop.Value, options);
+                    size = Images.GeneratedImageSize?.DeserializeGeneratedImageSize(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("response_format"u8))
@@ -193,7 +193,7 @@ namespace OpenAI.Images
                         responseFormat = null;
                         continue;
                     }
-                    responseFormat = Images.OpenAI.Images.GeneratedImageFormat<GeneratedImageFormat>?.DeserializeOpenAI.Images.GeneratedImageFormat(prop.Value, options);
+                    responseFormat = Images.GeneratedImageFormat?.DeserializeGeneratedImageFormat(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("user"u8))

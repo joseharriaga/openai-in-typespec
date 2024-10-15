@@ -56,18 +56,6 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("response_format"u8);
                 writer.WriteObjectValue(ResponseFormat, options);
             }
-            if (Optional.IsDefined(ServiceTier))
-            {
-                if (ServiceTier != null)
-                {
-                    writer.WritePropertyName("service_tier"u8);
-                    writer.WriteStringValue(ServiceTier.Value.ToString());
-                }
-                else
-                {
-                    writer.WriteNull("serviceTier"u8);
-                }
-            }
             if (Optional.IsDefined(Temperature))
             {
                 if (Temperature != null)
@@ -105,7 +93,7 @@ namespace OpenAI.Chat
             writer.WritePropertyName("messages"u8);
             this.SerializeMessagesValue(writer, options);
             writer.WritePropertyName("model"u8);
-            writer.WriteObjectValue<InternalCreateChatCompletionRequestModel>(Model, options);
+            writer.WriteStringValue(Model.ToString());
             if (Optional.IsDefined(N))
             {
                 if (N != null)
@@ -151,7 +139,7 @@ namespace OpenAI.Chat
                 }
                 else
                 {
-                    writer.WriteNull("logprobs"u8);
+                    writer.WriteNull("includeLogProbabilities"u8);
                 }
             }
             if (Optional.IsDefined(TopLogProbabilityCount))
@@ -163,7 +151,7 @@ namespace OpenAI.Chat
                 }
                 else
                 {
-                    writer.WriteNull("topLogprobs"u8);
+                    writer.WriteNull("topLogProbabilityCount"u8);
                 }
             }
             if (Optional.IsCollectionDefined(StopSequences))
@@ -175,7 +163,7 @@ namespace OpenAI.Chat
                 }
                 else
                 {
-                    writer.WriteNull("stop"u8);
+                    writer.WriteNull("stopSequences"u8);
                 }
             }
             if (Optional.IsCollectionDefined(LogitBiases))
@@ -187,7 +175,7 @@ namespace OpenAI.Chat
                 }
                 else
                 {
-                    writer.WriteNull("logitBias"u8);
+                    writer.WriteNull("logitBiases"u8);
                 }
             }
             if (Optional.IsDefined(ToolChoice))
@@ -231,7 +219,7 @@ namespace OpenAI.Chat
                 }
                 else
                 {
-                    writer.WriteNull("maxTokens"u8);
+                    writer.WriteNull("deprecatedMaxTokens"u8);
                 }
             }
             if (Optional.IsDefined(MaxOutputTokenCount))
@@ -243,7 +231,7 @@ namespace OpenAI.Chat
                 }
                 else
                 {
-                    writer.WriteNull("maxCompletionTokens"u8);
+                    writer.WriteNull("maxOutputTokenCount"u8);
                 }
             }
             if (Optional.IsCollectionDefined(Functions))
@@ -255,6 +243,18 @@ namespace OpenAI.Chat
                     writer.WriteObjectValue(item, options);
                 }
                 writer.WriteEndArray();
+            }
+            if (Optional.IsDefined(_serviceTier))
+            {
+                if (_serviceTier != null)
+                {
+                    writer.WritePropertyName("service_tier"u8);
+                    writer.WriteObjectValue<InternalCreateChatCompletionRequestServiceTier?>(_serviceTier, options);
+                }
+                else
+                {
+                    writer.WriteNull("serviceTier"u8);
+                }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -295,7 +295,6 @@ namespace OpenAI.Chat
             float? frequencyPenalty = default;
             float? presencePenalty = default;
             ChatResponseFormat responseFormat = default;
-            InternalCreateChatCompletionRequestServiceTier? serviceTier = default;
             float? temperature = default;
             float? topP = default;
             IList<ChatTool> tools = default;
@@ -316,6 +315,7 @@ namespace OpenAI.Chat
             int? deprecatedMaxTokens = default;
             int? maxOutputTokenCount = default;
             IList<ChatFunction> functions = default;
+            InternalCreateChatCompletionRequestServiceTier? serviceTier = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -347,16 +347,6 @@ namespace OpenAI.Chat
                         continue;
                     }
                     responseFormat = ChatResponseFormat.DeserializeChatResponseFormat(prop.Value, options);
-                    continue;
-                }
-                if (prop.NameEquals("service_tier"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        serviceTier = null;
-                        continue;
-                    }
-                    serviceTier = new InternalCreateChatCompletionRequestServiceTier(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("temperature"u8))
@@ -405,7 +395,7 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("model"u8))
                 {
-                    model = InternalCreateChatCompletionRequestModel.DeserializeInternalCreateChatCompletionRequestModel(prop.Value, options);
+                    model = new InternalCreateChatCompletionRequestModel(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("n"u8))
@@ -560,6 +550,16 @@ namespace OpenAI.Chat
                     functions = array;
                     continue;
                 }
+                if (prop.NameEquals("service_tier"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        serviceTier = null;
+                        continue;
+                    }
+                    serviceTier = Chat.InternalCreateChatCompletionRequestServiceTier?.DeserializeInternalCreateChatCompletionRequestServiceTier(prop.Value, options);
+                    continue;
+                }
                 if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -569,7 +569,6 @@ namespace OpenAI.Chat
                 frequencyPenalty,
                 presencePenalty,
                 responseFormat,
-                serviceTier,
                 temperature,
                 topP,
                 tools ?? new ChangeTrackingList<ChatTool>(),
@@ -590,6 +589,7 @@ namespace OpenAI.Chat
                 deprecatedMaxTokens,
                 maxOutputTokenCount,
                 functions ?? new ChangeTrackingList<ChatFunction>(),
+                serviceTier,
                 additionalBinaryDataProperties);
         }
 

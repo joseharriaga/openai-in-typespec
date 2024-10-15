@@ -19,6 +19,8 @@ namespace OpenAI.Images
             {
                 throw new FormatException($"The model {nameof(GeneratedImageCollection)} does not support writing '{format}' format.");
             }
+            writer.WritePropertyName("created"u8);
+            writer.WriteNumberValue(CreatedAt, "U");
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

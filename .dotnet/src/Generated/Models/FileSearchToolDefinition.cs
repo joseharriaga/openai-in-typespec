@@ -11,9 +11,6 @@ namespace OpenAI.Assistants
     {
         internal FileSearchToolDefinition(InternalAssistantToolsFileSearchFileSearch fileSearch, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
-            FileSearch = fileSearch;
         }
-
-        public InternalAssistantToolsFileSearchFileSearch FileSearch { get; set; }
     }
 }

@@ -15,14 +15,14 @@ namespace OpenAI.VectorStores
         {
             Deleted = deleted;
             VectorStoreId = vectorStoreId;
-            Object = @object;
+            this.Object = @object;
         }
 
         internal VectorStoreDeletionResult(bool deleted, string vectorStoreId, InternalDeleteVectorStoreResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Deleted = deleted;
             VectorStoreId = vectorStoreId;
-            Object = @object;
+            this.Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

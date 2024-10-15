@@ -34,9 +34,9 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type.ToString());
+            writer.WriteStringValue(_type.ToSerialString());
             writer.WritePropertyName("function"u8);
-            writer.WriteObjectValue(Function, options);
+            writer.WriteObjectValue<InternalRunToolCallObjectFunction>(_internalFunction, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -74,8 +74,8 @@ namespace OpenAI.Assistants
                 return null;
             }
             string id = default;
-            InternalRunToolCallObjectType @type = default;
-            InternalRunToolCallObjectFunction function = default;
+            object @type = default;
+            InternalRunToolCallObjectFunction internalFunction = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -86,12 +86,12 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = new InternalRunToolCallObjectType(prop.Value.GetString());
+                    @type = prop.Value.GetString().ToObject();
                     continue;
                 }
                 if (prop.NameEquals("function"u8))
                 {
-                    function = InternalRunToolCallObjectFunction.DeserializeInternalRunToolCallObjectFunction(prop.Value, options);
+                    internalFunction = InternalRunToolCallObjectFunction.DeserializeInternalRunToolCallObjectFunction(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
@@ -99,7 +99,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRequiredFunctionToolCall(id, @type, function, additionalBinaryDataProperties);
+            return new InternalRequiredFunctionToolCall(id, @type, internalFunction, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalRequiredFunctionToolCall>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

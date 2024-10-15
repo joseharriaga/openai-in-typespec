@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             CompletedAt = completedAt;
             Metadata = metadata;
             Usage = usage;
-            Object = @object;
+            this.Object = @object;
             Details = details;
         }
 
@@ -47,7 +47,7 @@ namespace OpenAI.Assistants
             CompletedAt = completedAt;
             Metadata = metadata;
             Usage = usage;
-            Object = @object;
+            this.Object = @object;
             Details = details;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }

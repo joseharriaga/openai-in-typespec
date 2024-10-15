@@ -13,12 +13,12 @@ namespace OpenAI.Models
 
         internal OpenAIModelCollection(InternalListModelsResponseObject @object)
         {
-            Object = @object;
+            this.Object = @object;
         }
 
         internal OpenAIModelCollection(InternalListModelsResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Object = @object;
+            this.Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

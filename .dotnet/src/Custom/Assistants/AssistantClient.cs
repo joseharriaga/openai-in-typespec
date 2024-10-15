@@ -16,14 +16,14 @@ namespace OpenAI.Assistants;
 [CodeGenSuppress("AssistantClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateAssistantAsync", typeof(AssistantCreationOptions))]
 [CodeGenSuppress("CreateAssistant", typeof(AssistantCreationOptions))]
-[CodeGenSuppress("GetAssistantAsync", typeof(string))]
-[CodeGenSuppress("GetAssistant", typeof(string))]
+[CodeGenSuppress("ListAssistantAsync", typeof(string))]
+[CodeGenSuppress("ListAssistant", typeof(string))]
 [CodeGenSuppress("ModifyAssistantAsync", typeof(string), typeof(AssistantModificationOptions))]
 [CodeGenSuppress("ModifyAssistant", typeof(string), typeof(AssistantModificationOptions))]
 [CodeGenSuppress("DeleteAssistantAsync", typeof(string))]
 [CodeGenSuppress("DeleteAssistant", typeof(string))]
-[CodeGenSuppress("GetAssistantsAsync", typeof(int?), typeof(AssistantCollectionOrder?), typeof(string), typeof(string))]
-[CodeGenSuppress("GetAssistants", typeof(int?), typeof(AssistantCollectionOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("ListAssistantsAsync", typeof(int?), typeof(AssistantCollectionOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("ListAssistants", typeof(int?), typeof(AssistantCollectionOrder?), typeof(string), typeof(string))]
 public partial class AssistantClient
 {
     private readonly InternalAssistantMessageClient _messageSubClient;

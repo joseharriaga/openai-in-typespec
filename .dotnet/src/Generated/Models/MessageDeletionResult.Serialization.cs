@@ -36,7 +36,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(MessageId);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalDeleteMessageResponseObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -91,7 +91,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalDeleteMessageResponseObject.DeserializeInternalDeleteMessageResponseObject(prop.Value, options);
+                    @object = new InternalDeleteMessageResponseObject(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

@@ -15,16 +15,16 @@ namespace OpenAI.FineTuning;
 [CodeGenSuppress("FineTuningClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateFineTuningJobAsync", typeof(FineTuningOptions))]
 [CodeGenSuppress("CreateFineTuningJob", typeof(FineTuningOptions))]
-[CodeGenSuppress("GetPaginatedFineTuningJobsAsync", typeof(string), typeof(int?))]
-[CodeGenSuppress("GetPaginatedFineTuningJobs", typeof(string), typeof(int?))]
+[CodeGenSuppress("ListPaginatedFineTuningJobsAsync", typeof(string), typeof(int?))]
+[CodeGenSuppress("ListPaginatedFineTuningJobs", typeof(string), typeof(int?))]
 [CodeGenSuppress("RetrieveFineTuningJobAsync", typeof(string))]
 [CodeGenSuppress("RetrieveFineTuningJob", typeof(string))]
 [CodeGenSuppress("CancelFineTuningJobAsync", typeof(string))]
 [CodeGenSuppress("CancelFineTuningJob", typeof(string))]
-[CodeGenSuppress("GetFineTuningEventsAsync", typeof(string), typeof(string), typeof(int?))]
-[CodeGenSuppress("GetFineTuningEvents", typeof(string), typeof(string), typeof(int?))]
-[CodeGenSuppress("GetFineTuningJobCheckpointsAsync", typeof(string), typeof(string), typeof(int?))]
-[CodeGenSuppress("GetFineTuningJobCheckpoints", typeof(string), typeof(string), typeof(int?))]
+[CodeGenSuppress("ListFineTuningEventsAsync", typeof(string), typeof(string), typeof(int?))]
+[CodeGenSuppress("ListFineTuningEvents", typeof(string), typeof(string), typeof(int?))]
+[CodeGenSuppress("ListFineTuningJobCheckpointsAsync", typeof(string), typeof(string), typeof(int?))]
+[CodeGenSuppress("ListFineTuningJobCheckpoints", typeof(string), typeof(string), typeof(int?))]
 public partial class FineTuningClient
 {
     // CUSTOM: Added as a convenience.

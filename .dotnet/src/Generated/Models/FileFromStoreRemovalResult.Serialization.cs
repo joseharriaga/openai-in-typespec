@@ -36,7 +36,7 @@ namespace OpenAI.VectorStores
             writer.WritePropertyName("deleted"u8);
             writer.WriteBooleanValue(Removed);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalDeleteVectorStoreFileResponseObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -91,7 +91,7 @@ namespace OpenAI.VectorStores
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalDeleteVectorStoreFileResponseObject.DeserializeInternalDeleteVectorStoreFileResponseObject(prop.Value, options);
+                    @object = new InternalDeleteVectorStoreFileResponseObject(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

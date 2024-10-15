@@ -56,7 +56,7 @@ namespace OpenAI.Assistants
                 writer.WriteNull("metadata"u8);
             }
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalThreadObjectObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             if (ToolResources != null)
             {
                 writer.WritePropertyName("tool_resources"u8);
@@ -144,7 +144,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalThreadObjectObject.DeserializeInternalThreadObjectObject(prop.Value, options);
+                    @object = new InternalThreadObjectObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("tool_resources"u8))

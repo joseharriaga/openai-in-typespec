@@ -36,7 +36,7 @@ namespace OpenAI.Models
             writer.WritePropertyName("owned_by"u8);
             writer.WriteStringValue(OwnedBy);
             writer.WritePropertyName("object"u8);
-            writer.WriteObjectValue<InternalModelObject>(Object, options);
+            writer.WriteStringValue(this.Object.ToString());
             writer.WritePropertyName("created"u8);
             writer.WriteNumberValue(CreatedAt, "U");
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
@@ -94,7 +94,7 @@ namespace OpenAI.Models
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = InternalModelObject.DeserializeInternalModelObject(prop.Value, options);
+                    @object = new InternalModelObject(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("created"u8))

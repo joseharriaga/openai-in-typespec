@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("message_creation"u8);
-            writer.WriteObjectValue(MessageCreation, options);
+            writer.WriteObjectValue<InternalRunStepDetailsMessageCreationObjectMessageCreation>(_messageCreation, options);
         }
 
         InternalRunStepDetailsMessageCreationObject IJsonModel<InternalRunStepDetailsMessageCreationObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepDetailsMessageCreationObject)JsonModelCreateCore(ref reader, options);

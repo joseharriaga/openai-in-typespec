@@ -41,7 +41,7 @@ namespace OpenAI.RealtimeConversation
             writer.WritePropertyName("content_index"u8);
             writer.WriteNumberValue(ContentIndex);
             writer.WritePropertyName("part"u8);
-            writer.WriteObjectValue(Part, options);
+            writer.WriteObjectValue<ConversationContentPart>(_internalContentPart, options);
         }
 
         ConversationContentPartFinishedUpdate IJsonModel<ConversationContentPartFinishedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationContentPartFinishedUpdate)JsonModelCreateCore(ref reader, options);
@@ -67,7 +67,7 @@ namespace OpenAI.RealtimeConversation
             string itemId = default;
             int outputIndex = default;
             int contentIndex = default;
-            ConversationContentPart part = default;
+            ConversationContentPart internalContentPart = default;
             string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
@@ -95,7 +95,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("part"u8))
                 {
-                    part = ConversationContentPart.DeserializeConversationContentPart(prop.Value, options);
+                    internalContentPart = ConversationContentPart.DeserializeConversationContentPart(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("event_id"u8))
@@ -110,7 +110,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    kind = prop.Value.GetInt32().ToConversationUpdateKind();
+                    kind = prop.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
                 if (options.Format != "W")
@@ -123,7 +123,7 @@ namespace OpenAI.RealtimeConversation
                 itemId,
                 outputIndex,
                 contentIndex,
-                part,
+                internalContentPart,
                 eventId,
                 kind,
                 additionalBinaryDataProperties);

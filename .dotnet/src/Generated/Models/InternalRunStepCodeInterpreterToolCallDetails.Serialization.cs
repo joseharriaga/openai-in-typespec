@@ -35,7 +35,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("code_interpreter"u8);
-            writer.WriteObjectValue(CodeInterpreter, options);
+            writer.WriteObjectValue<InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter>(_codeInterpreter, options);
         }
 
         InternalRunStepCodeInterpreterToolCallDetails IJsonModel<InternalRunStepCodeInterpreterToolCallDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepCodeInterpreterToolCallDetails)JsonModelCreateCore(ref reader, options);

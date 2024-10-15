@@ -26,9 +26,9 @@ namespace OpenAI.Assistants
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type.ToString());
+            writer.WriteStringValue(_type.ToSerialString());
             writer.WritePropertyName("text"u8);
-            writer.WriteObjectValue(Text, options);
+            writer.WriteObjectValue<InternalMessageContentTextObjectText>(_text, options);
         }
 
         InternalResponseMessageTextContent IJsonModel<InternalResponseMessageTextContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalResponseMessageTextContent)JsonModelCreateCore(ref reader, options);
@@ -50,14 +50,14 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            InternalMessageContentTextObjectType @type = default;
+            string @type = default;
             InternalMessageContentTextObjectText text = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = new InternalMessageContentTextObjectType(prop.Value.GetString());
+                    @type = prop.Value.GetString().ToString();
                     continue;
                 }
                 if (prop.NameEquals("text"u8))

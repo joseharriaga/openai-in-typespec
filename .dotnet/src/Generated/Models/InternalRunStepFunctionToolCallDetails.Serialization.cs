@@ -35,7 +35,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("function"u8);
-            writer.WriteObjectValue(Function, options);
+            writer.WriteObjectValue<InternalRunStepDetailsToolCallsFunctionObjectFunction>(_internalFunction, options);
         }
 
         InternalRunStepFunctionToolCallDetails IJsonModel<InternalRunStepFunctionToolCallDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepFunctionToolCallDetails)JsonModelCreateCore(ref reader, options);
@@ -58,7 +58,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             string id = default;
-            InternalRunStepDetailsToolCallsFunctionObjectFunction function = default;
+            InternalRunStepDetailsToolCallsFunctionObjectFunction internalFunction = default;
             string @type = "function";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -70,7 +70,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("function"u8))
                 {
-                    function = InternalRunStepDetailsToolCallsFunctionObjectFunction.DeserializeInternalRunStepDetailsToolCallsFunctionObjectFunction(prop.Value, options);
+                    internalFunction = InternalRunStepDetailsToolCallsFunctionObjectFunction.DeserializeInternalRunStepDetailsToolCallsFunctionObjectFunction(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
@@ -83,7 +83,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunStepFunctionToolCallDetails(id, function, @type, additionalBinaryDataProperties);
+            return new InternalRunStepFunctionToolCallDetails(id, internalFunction, @type, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalRunStepFunctionToolCallDetails>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

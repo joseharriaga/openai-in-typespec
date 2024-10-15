@@ -42,7 +42,7 @@ namespace OpenAI.RealtimeConversation
             writer.WritePropertyName("status"u8);
             writer.WriteStringValue(Status.ToString());
             writer.WritePropertyName("role"u8);
-            writer.WriteObjectValue<ConversationMessageRole>(Role, options);
+            writer.WriteStringValue(Role.ToString());
         }
 
         InternalRealtimeResponseMessageItem IJsonModel<InternalRealtimeResponseMessageItem>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeResponseMessageItem)JsonModelCreateCore(ref reader, options);
@@ -90,7 +90,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("role"u8))
                 {
-                    role = ConversationMessageRole.DeserializeConversationMessageRole(prop.Value, options);
+                    role = new ConversationMessageRole(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("object"u8))

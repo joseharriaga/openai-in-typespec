@@ -45,7 +45,7 @@ namespace OpenAI.Audio
             writer.WritePropertyName("file"u8);
             writer.WriteBase64StringValue(File.ToArray(), "D");
             writer.WritePropertyName("model"u8);
-            writer.WriteObjectValue<InternalCreateTranslationRequestModel>(Model, options);
+            writer.WriteStringValue(Model.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -127,7 +127,7 @@ namespace OpenAI.Audio
                 }
                 if (prop.NameEquals("model"u8))
                 {
-                    model = InternalCreateTranslationRequestModel.DeserializeInternalCreateTranslationRequestModel(prop.Value, options);
+                    model = new InternalCreateTranslationRequestModel(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

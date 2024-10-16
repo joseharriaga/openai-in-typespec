@@ -42,8 +42,8 @@ namespace Azure.AI.OpenAI
         /// </summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="ContentFilterProtectedMaterialResult"/>. </summary>
-        /// <param name="filtered"> Whether the content detection resulted in a content filtering action. </param>
-        /// <param name="detected"> Whether the labeled content category was detected in the content. </param>
+        /// <param name="filtered"></param>
+        /// <param name="detected"></param>
         internal ContentFilterProtectedMaterialResult(bool filtered, bool detected)
         {
             Filtered = filtered;
@@ -51,9 +51,9 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterProtectedMaterialResult"/>. </summary>
-        /// <param name="filtered"> Whether the content detection resulted in a content filtering action. </param>
-        /// <param name="detected"> Whether the labeled content category was detected in the content. </param>
-        /// <param name="citation"> If available, the citation details describing the associated license and its location. </param>
+        /// <param name="filtered"></param>
+        /// <param name="detected"></param>
+        /// <param name="citation"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ContentFilterProtectedMaterialResult(bool filtered, bool detected, ContentFilterProtectedMaterialCitationResult citation, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -68,11 +68,11 @@ namespace Azure.AI.OpenAI
         {
         }
 
-        /// <summary> Whether the content detection resulted in a content filtering action. </summary>
+        /// <summary> Gets the filtered. </summary>
         public bool Filtered { get; }
-        /// <summary> Whether the labeled content category was detected in the content. </summary>
+        /// <summary> Gets the detected. </summary>
         public bool Detected { get; }
-        /// <summary> If available, the citation details describing the associated license and its location. </summary>
+        /// <summary> Gets the citation. </summary>
         public ContentFilterProtectedMaterialCitationResult Citation { get; }
     }
 }

@@ -42,25 +42,18 @@ namespace Azure.AI.OpenAI.Chat
         /// </summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="InternalMongoDBChatDataSourceParameters"/>. </summary>
-        /// <param name="endpoint"> The name of the MongoDB cluster endpoint. </param>
-        /// <param name="databaseName"> The name of the MongoDB database. </param>
-        /// <param name="collectionName"> The name of the MongoDB collection. </param>
-        /// <param name="appName"> The name of the MongoDB application. </param>
-        /// <param name="indexName"> The name of the MongoDB index. </param>
+        /// <param name="endpoint"></param>
+        /// <param name="databaseName"></param>
+        /// <param name="collectionName"></param>
+        /// <param name="appName"></param>
+        /// <param name="indexName"></param>
         /// <param name="authentication">
-        /// The authentication mechanism to use with Pinecone.
-        /// Supported authentication mechanisms for Pinecone include: username and password.
         /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="embeddingDependency">
-        /// The vectorization source to use as an embedding dependency for the MongoDB data source.
-        /// Supported vectorization sources for MongoDB include: endpoint, deployment name.
         /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
-        /// <param name="fieldMappings">
-        /// Field mappings to apply to data used by the MongoDB data source.
-        /// Note that content and vector field mappings are required for MongoDB.
-        /// </param>
+        /// <param name="fieldMappings"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="endpoint"/>, <paramref name="databaseName"/>, <paramref name="collectionName"/>, <paramref name="appName"/>, <paramref name="indexName"/>, <paramref name="authentication"/>, <paramref name="embeddingDependency"/> or <paramref name="fieldMappings"/> is null. </exception>
         public InternalMongoDBChatDataSourceParameters(string endpoint, string databaseName, string collectionName, string appName, string indexName, DataSourceAuthentication authentication, DataSourceVectorizer embeddingDependency, DataSourceFieldMappings fieldMappings)
         {
@@ -85,43 +78,24 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalMongoDBChatDataSourceParameters"/>. </summary>
-        /// <param name="topNDocuments"> The configured number of documents to feature in the query. </param>
-        /// <param name="inScope"> Whether queries should be restricted to use of the indexed data. </param>
-        /// <param name="strictness">
-        /// The configured strictness of the search relevance filtering.
-        /// Higher strictness will increase precision but lower recall of the answer.
-        /// </param>
-        /// <param name="maxSearchQueries">
-        /// The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-        /// By default, the system will make an automatic determination.
-        /// </param>
-        /// <param name="allowPartialResult">
-        /// If set to true, the system will allow partial search results to be used and the request will fail if all
-        /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-        /// </param>
-        /// <param name="internalIncludeContexts">
-        /// The output context properties to include on the response.
-        /// By default, citations and intent will be requested.
-        /// </param>
-        /// <param name="endpoint"> The name of the MongoDB cluster endpoint. </param>
-        /// <param name="databaseName"> The name of the MongoDB database. </param>
-        /// <param name="collectionName"> The name of the MongoDB collection. </param>
-        /// <param name="appName"> The name of the MongoDB application. </param>
-        /// <param name="indexName"> The name of the MongoDB index. </param>
+        /// <param name="topNDocuments"></param>
+        /// <param name="inScope"></param>
+        /// <param name="strictness"></param>
+        /// <param name="maxSearchQueries"></param>
+        /// <param name="allowPartialResult"></param>
+        /// <param name="internalIncludeContexts"></param>
+        /// <param name="endpoint"></param>
+        /// <param name="databaseName"></param>
+        /// <param name="collectionName"></param>
+        /// <param name="appName"></param>
+        /// <param name="indexName"></param>
         /// <param name="authentication">
-        /// The authentication mechanism to use with Pinecone.
-        /// Supported authentication mechanisms for Pinecone include: username and password.
         /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="embeddingDependency">
-        /// The vectorization source to use as an embedding dependency for the MongoDB data source.
-        /// Supported vectorization sources for MongoDB include: endpoint, deployment name.
         /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
-        /// <param name="fieldMappings">
-        /// Field mappings to apply to data used by the MongoDB data source.
-        /// Note that content and vector field mappings are required for MongoDB.
-        /// </param>
+        /// <param name="fieldMappings"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalMongoDBChatDataSourceParameters(int? topNDocuments, bool? inScope, int? strictness, int? maxSearchQueries, bool? allowPartialResult, IList<string> internalIncludeContexts, string endpoint, string databaseName, string collectionName, string appName, string indexName, DataSourceAuthentication authentication, DataSourceVectorizer embeddingDependency, DataSourceFieldMappings fieldMappings, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -147,34 +121,25 @@ namespace Azure.AI.OpenAI.Chat
         {
         }
 
-        /// <summary> The configured number of documents to feature in the query. </summary>
+        /// <summary> Gets or sets the top n documents. </summary>
         public int? TopNDocuments { get; set; }
-        /// <summary> Whether queries should be restricted to use of the indexed data. </summary>
+        /// <summary> Gets or sets the in scope. </summary>
         public bool? InScope { get; set; }
-        /// <summary>
-        /// The configured strictness of the search relevance filtering.
-        /// Higher strictness will increase precision but lower recall of the answer.
-        /// </summary>
+        /// <summary> Gets or sets the strictness. </summary>
         public int? Strictness { get; set; }
-        /// <summary>
-        /// The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-        /// By default, the system will make an automatic determination.
-        /// </summary>
+        /// <summary> Gets or sets the max search queries. </summary>
         public int? MaxSearchQueries { get; set; }
-        /// <summary>
-        /// If set to true, the system will allow partial search results to be used and the request will fail if all
-        /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-        /// </summary>
+        /// <summary> Gets or sets the allow partial result. </summary>
         public bool? AllowPartialResult { get; set; }
-        /// <summary> The name of the MongoDB cluster endpoint. </summary>
+        /// <summary> Gets the endpoint. </summary>
         internal string Endpoint { get; set; }
-        /// <summary> The name of the MongoDB database. </summary>
+        /// <summary> Gets the database name. </summary>
         internal string DatabaseName { get; set; }
-        /// <summary> The name of the MongoDB collection. </summary>
+        /// <summary> Gets the collection name. </summary>
         internal string CollectionName { get; set; }
-        /// <summary> The name of the MongoDB application. </summary>
+        /// <summary> Gets the app name. </summary>
         internal string AppName { get; set; }
-        /// <summary> The name of the MongoDB index. </summary>
+        /// <summary> Gets the index name. </summary>
         internal string IndexName { get; set; }
     }
 }

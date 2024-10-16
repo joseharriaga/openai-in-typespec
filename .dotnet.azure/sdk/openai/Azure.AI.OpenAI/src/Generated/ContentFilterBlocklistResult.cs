@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary> A collection of true/false filtering results for configured custom blocklists. </summary>
+    /// <summary> The AzureContentFilterBlocklistResult. </summary>
     public partial class ContentFilterBlocklistResult
     {
         /// <summary>
@@ -42,7 +42,7 @@ namespace Azure.AI.OpenAI
         /// </summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="ContentFilterBlocklistResult"/>. </summary>
-        /// <param name="filtered"> A value indicating whether any of the detailed blocklists resulted in a filtering action. </param>
+        /// <param name="filtered"></param>
         internal ContentFilterBlocklistResult(bool filtered)
         {
             Filtered = filtered;
@@ -50,8 +50,8 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterBlocklistResult"/>. </summary>
-        /// <param name="filtered"> A value indicating whether any of the detailed blocklists resulted in a filtering action. </param>
-        /// <param name="internalDetails"> The pairs of individual blocklist IDs and whether they resulted in a filtering action. </param>
+        /// <param name="filtered"></param>
+        /// <param name="internalDetails"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ContentFilterBlocklistResult(bool filtered, IReadOnlyList<InternalAzureContentFilterBlocklistResultDetail> internalDetails, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -65,7 +65,7 @@ namespace Azure.AI.OpenAI
         {
         }
 
-        /// <summary> A value indicating whether any of the detailed blocklists resulted in a filtering action. </summary>
+        /// <summary> Gets the filtered. </summary>
         public bool Filtered { get; }
     }
 }

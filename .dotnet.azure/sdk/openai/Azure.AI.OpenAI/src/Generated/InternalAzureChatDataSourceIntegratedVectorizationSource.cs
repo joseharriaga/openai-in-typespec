@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> Represents an integrated vectorization source as defined within the supporting search resource. </summary>
+    /// <summary> The AzureChatDataSourceIntegratedVectorizationSource. </summary>
     internal partial class InternalAzureChatDataSourceIntegratedVectorizationSource : DataSourceVectorizer
     {
         /// <summary> Initializes a new instance of <see cref="InternalAzureChatDataSourceIntegratedVectorizationSource"/>. </summary>
@@ -17,7 +17,7 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureChatDataSourceIntegratedVectorizationSource"/>. </summary>
-        /// <param name="type"> The differentiating identifier for the concrete vectorization source. </param>
+        /// <param name="type"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalAzureChatDataSourceIntegratedVectorizationSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, serializedAdditionalRawData)
         {

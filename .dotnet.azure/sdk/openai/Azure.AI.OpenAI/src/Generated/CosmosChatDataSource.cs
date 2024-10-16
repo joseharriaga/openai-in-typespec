@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> Represents a data source configuration that will use an Azure CosmosDB resource. </summary>
+    /// <summary> The AzureCosmosDBChatDataSource. </summary>
     public partial class CosmosChatDataSource : ChatDataSource
     {
     }

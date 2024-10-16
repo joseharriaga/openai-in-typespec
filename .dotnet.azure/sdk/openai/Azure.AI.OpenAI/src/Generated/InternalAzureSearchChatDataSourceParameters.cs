@@ -42,10 +42,9 @@ namespace Azure.AI.OpenAI.Chat
         /// </summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="InternalAzureSearchChatDataSourceParameters"/>. </summary>
-        /// <param name="endpoint"> The absolute endpoint path for the Azure Search resource to use. </param>
-        /// <param name="indexName"> The name of the index to use, as specified in the Azure Search resource. </param>
+        /// <param name="endpoint"></param>
+        /// <param name="indexName"></param>
         /// <param name="authentication">
-        /// The authentication mechanism to use with Azure Search.
         /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="endpoint"/>, <paramref name="indexName"/> or <paramref name="authentication"/> is null. </exception>
@@ -62,37 +61,22 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureSearchChatDataSourceParameters"/>. </summary>
-        /// <param name="topNDocuments"> The configured number of documents to feature in the query. </param>
-        /// <param name="inScope"> Whether queries should be restricted to use of the indexed data. </param>
-        /// <param name="strictness">
-        /// The configured strictness of the search relevance filtering.
-        /// Higher strictness will increase precision but lower recall of the answer.
-        /// </param>
-        /// <param name="maxSearchQueries">
-        /// The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-        /// By default, the system will make an automatic determination.
-        /// </param>
-        /// <param name="allowPartialResult">
-        /// If set to true, the system will allow partial search results to be used and the request will fail if all
-        /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-        /// </param>
-        /// <param name="internalIncludeContexts">
-        /// The output context properties to include on the response.
-        /// By default, citations and intent will be requested.
-        /// </param>
-        /// <param name="endpoint"> The absolute endpoint path for the Azure Search resource to use. </param>
-        /// <param name="indexName"> The name of the index to use, as specified in the Azure Search resource. </param>
+        /// <param name="topNDocuments"></param>
+        /// <param name="inScope"></param>
+        /// <param name="strictness"></param>
+        /// <param name="maxSearchQueries"></param>
+        /// <param name="allowPartialResult"></param>
+        /// <param name="internalIncludeContexts"></param>
+        /// <param name="endpoint"></param>
+        /// <param name="indexName"></param>
         /// <param name="authentication">
-        /// The authentication mechanism to use with Azure Search.
         /// Please note <see cref="DataSourceAuthentication"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
-        /// <param name="fieldMappings"> The field mappings to use with the Azure Search resource. </param>
-        /// <param name="queryType"> The query type for the Azure Search resource to use. </param>
-        /// <param name="semanticConfiguration"> Additional semantic configuration for the query. </param>
-        /// <param name="filter"> A filter to apply to the search. </param>
+        /// <param name="fieldMappings"></param>
+        /// <param name="queryType"></param>
+        /// <param name="semanticConfiguration"></param>
+        /// <param name="filter"></param>
         /// <param name="vectorizationSource">
-        /// The vectorization source to use with Azure Search.
-        /// Supported sources for Azure Search include endpoint, deployment name, and integrated.
         /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
         /// </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
@@ -120,32 +104,23 @@ namespace Azure.AI.OpenAI.Chat
         {
         }
 
-        /// <summary> The configured number of documents to feature in the query. </summary>
+        /// <summary> Gets or sets the top n documents. </summary>
         public int? TopNDocuments { get; set; }
-        /// <summary> Whether queries should be restricted to use of the indexed data. </summary>
+        /// <summary> Gets or sets the in scope. </summary>
         public bool? InScope { get; set; }
-        /// <summary>
-        /// The configured strictness of the search relevance filtering.
-        /// Higher strictness will increase precision but lower recall of the answer.
-        /// </summary>
+        /// <summary> Gets or sets the strictness. </summary>
         public int? Strictness { get; set; }
-        /// <summary>
-        /// The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-        /// By default, the system will make an automatic determination.
-        /// </summary>
+        /// <summary> Gets or sets the max search queries. </summary>
         public int? MaxSearchQueries { get; set; }
-        /// <summary>
-        /// If set to true, the system will allow partial search results to be used and the request will fail if all
-        /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-        /// </summary>
+        /// <summary> Gets or sets the allow partial result. </summary>
         public bool? AllowPartialResult { get; set; }
-        /// <summary> The absolute endpoint path for the Azure Search resource to use. </summary>
+        /// <summary> Gets the endpoint. </summary>
         internal Uri Endpoint { get; set; }
-        /// <summary> The name of the index to use, as specified in the Azure Search resource. </summary>
+        /// <summary> Gets the index name. </summary>
         internal string IndexName { get; set; }
-        /// <summary> Additional semantic configuration for the query. </summary>
+        /// <summary> Gets or sets the semantic configuration. </summary>
         public string SemanticConfiguration { get; set; }
-        /// <summary> A filter to apply to the search. </summary>
+        /// <summary> Gets or sets the filter. </summary>
         public string Filter { get; set; }
     }
 }

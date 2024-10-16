@@ -8,10 +8,7 @@ using System.Collections.Generic;
 namespace Azure.AI.OpenAI.Chat
 {
     /// <summary>
-    /// A representation of configuration data for a single Azure OpenAI chat data source.
-    /// This will be used by a chat completions request that should use Azure OpenAI chat extensions to augment the
-    /// response behavior.
-    /// The use of this configuration is compatible only with Azure OpenAI.
+    /// The AzureChatDataSource.
     /// Please note <see cref="ChatDataSource"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
     /// The available derived classes include <see cref="CosmosChatDataSource"/>, <see cref="AzureSearchChatDataSource"/>, <see cref="ElasticsearchChatDataSource"/>, <see cref="MongoDBChatDataSource"/> and <see cref="PineconeChatDataSource"/>.
     /// </summary>
@@ -54,7 +51,7 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="ChatDataSource"/>. </summary>
-        /// <param name="type"> The differentiating type identifier for the data source. </param>
+        /// <param name="type"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ChatDataSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -62,7 +59,7 @@ namespace Azure.AI.OpenAI.Chat
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> The differentiating type identifier for the data source. </summary>
+        /// <summary> Gets or sets the type. </summary>
         internal string Type { get; set; }
     }
 }

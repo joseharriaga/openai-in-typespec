@@ -52,27 +52,17 @@ namespace AzureOpenAI;
  */
 enum AzureOpenAIServiceApiVersion {
   /**
-   * The 2024-04-01-preview service API version label.
-   */
-  v2024_04_01_preview: "2024-04-01-preview",
-
-  /**
-   * The 2024-05-01-preview service API version label.
-   */
-  v2024_05_01_preview: "2024-05-01-preview",
-
-  /**
    * The 2024-06-01 (stable) service API version label.
    */
   v2024_06_01: "2024-06-01",
 
   /**
-   * The 2024-07-01-preview service API version label.
-   */
-  v2024_07_01_preview: "2024-07-01-preview",
-
-  /**
    * The 2024-08-01-preview service API version label.
    */
   v2024_08_01_preview: "2024-08-01-preview",
+
+  /**
+   * The 2024-09-01-preview service API version label.
+   */
+  v2024_09_01_preview: "2024-09-01-preview",
 }

@@ -47,8 +47,8 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterProtectedMaterialCitationResult"/>. </summary>
-        /// <param name="license"> The name or identifier of the license associated with the detection. </param>
-        /// <param name="uri"> The URL associated with the license. </param>
+        /// <param name="license"></param>
+        /// <param name="uri"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ContentFilterProtectedMaterialCitationResult(string license, Uri uri, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -57,7 +57,7 @@ namespace Azure.AI.OpenAI
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> The name or identifier of the license associated with the detection. </summary>
+        /// <summary> Gets the license. </summary>
         public string License { get; }
     }
 }

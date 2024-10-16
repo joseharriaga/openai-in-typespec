@@ -7,18 +7,11 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary>
-    /// Represents a vectorization source that makes internal service calls against an Azure OpenAI embedding model
-    /// deployment. In contrast with the endpoint-based vectorization source, a deployment-name-based vectorization source
-    /// must be part of the same Azure OpenAI resource but can be used even in private networks.
-    /// </summary>
+    /// <summary> The AzureChatDataSourceDeploymentNameVectorizationSource. </summary>
     internal partial class InternalAzureChatDataSourceDeploymentNameVectorizationSource : DataSourceVectorizer
     {
         /// <summary> Initializes a new instance of <see cref="InternalAzureChatDataSourceDeploymentNameVectorizationSource"/>. </summary>
-        /// <param name="deploymentName">
-        /// The embedding model deployment to use for vectorization. This deployment must exist within the same Azure OpenAI
-        /// resource as the model deployment being used for chat completions.
-        /// </param>
+        /// <param name="deploymentName"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="deploymentName"/> is null. </exception>
         public InternalAzureChatDataSourceDeploymentNameVectorizationSource(string deploymentName)
         {
@@ -29,16 +22,10 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureChatDataSourceDeploymentNameVectorizationSource"/>. </summary>
-        /// <param name="type"> The differentiating identifier for the concrete vectorization source. </param>
+        /// <param name="type"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="deploymentName">
-        /// The embedding model deployment to use for vectorization. This deployment must exist within the same Azure OpenAI
-        /// resource as the model deployment being used for chat completions.
-        /// </param>
-        /// <param name="dimensions">
-        /// The number of dimensions to request on embeddings.
-        /// Only supported in 'text-embedding-3' and later models.
-        /// </param>
+        /// <param name="deploymentName"></param>
+        /// <param name="dimensions"></param>
         internal InternalAzureChatDataSourceDeploymentNameVectorizationSource(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string deploymentName, int? dimensions) : base(type, serializedAdditionalRawData)
         {
             DeploymentName = deploymentName;
@@ -50,15 +37,9 @@ namespace Azure.AI.OpenAI.Chat
         {
         }
 
-        /// <summary>
-        /// The embedding model deployment to use for vectorization. This deployment must exist within the same Azure OpenAI
-        /// resource as the model deployment being used for chat completions.
-        /// </summary>
+        /// <summary> Gets the deployment name. </summary>
         internal string DeploymentName { get; set; }
-        /// <summary>
-        /// The number of dimensions to request on embeddings.
-        /// Only supported in 'text-embedding-3' and later models.
-        /// </summary>
+        /// <summary> Gets or sets the dimensions. </summary>
         public int? Dimensions { get; set; }
     }
 }

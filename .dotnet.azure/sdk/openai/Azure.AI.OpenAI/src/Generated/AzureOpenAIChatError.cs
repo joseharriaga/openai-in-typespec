@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary> The structured representation of an error from an Azure OpenAI chat completion request. </summary>
+    /// <summary> The AzureOpenAIChatError. </summary>
     internal partial class AzureOpenAIChatError
     {
         /// <summary>
@@ -47,11 +47,11 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="AzureOpenAIChatError"/>. </summary>
-        /// <param name="code"> The distinct, machine-generated identifier for the error. </param>
-        /// <param name="message"> A human-readable message associated with the error. </param>
-        /// <param name="param"> If applicable, the request input parameter associated with the error. </param>
-        /// <param name="type"> If applicable, the input line number associated with the error. </param>
-        /// <param name="innerError"> If applicable, an upstream error that originated this error. </param>
+        /// <param name="code"></param>
+        /// <param name="message"></param>
+        /// <param name="param"></param>
+        /// <param name="type"></param>
+        /// <param name="innerError"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal AzureOpenAIChatError(string code, string message, string param, string type, InternalAzureOpenAIChatErrorInnerError innerError, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -63,15 +63,15 @@ namespace Azure.AI.OpenAI
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> The distinct, machine-generated identifier for the error. </summary>
+        /// <summary> Gets the code. </summary>
         public string Code { get; }
-        /// <summary> A human-readable message associated with the error. </summary>
+        /// <summary> Gets the message. </summary>
         public string Message { get; }
-        /// <summary> If applicable, the request input parameter associated with the error. </summary>
+        /// <summary> Gets the param. </summary>
         public string Param { get; }
-        /// <summary> If applicable, the input line number associated with the error. </summary>
+        /// <summary> Gets the type. </summary>
         public string Type { get; }
-        /// <summary> If applicable, an upstream error that originated this error. </summary>
+        /// <summary> Gets the inner error. </summary>
         public InternalAzureOpenAIChatErrorInnerError InnerError { get; }
     }
 }

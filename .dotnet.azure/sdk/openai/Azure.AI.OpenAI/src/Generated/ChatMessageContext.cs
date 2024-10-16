@@ -7,10 +7,7 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary>
-    /// An additional property, added to chat completion response messages, produced by the Azure OpenAI service when using
-    /// extension behavior. This includes intent and citation information from the On Your Data feature.
-    /// </summary>
+    /// <summary> The AzureChatMessageContext. </summary>
     public partial class ChatMessageContext
     {
         /// <summary>
@@ -51,9 +48,9 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="ChatMessageContext"/>. </summary>
-        /// <param name="intent"> The detected intent from the chat history, which is used to carry conversation context between interactions. </param>
-        /// <param name="citations"> The citations produced by the data retrieval. </param>
-        /// <param name="retrievedDocuments"> Summary information about documents retrieved by the data retrieval operation. </param>
+        /// <param name="intent"></param>
+        /// <param name="citations"></param>
+        /// <param name="retrievedDocuments"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ChatMessageContext(string intent, IReadOnlyList<ChatCitation> citations, ChatRetrievedDocument retrievedDocuments, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -63,9 +60,9 @@ namespace Azure.AI.OpenAI.Chat
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> The detected intent from the chat history, which is used to carry conversation context between interactions. </summary>
+        /// <summary> Gets the intent. </summary>
         public string Intent { get; }
-        /// <summary> The citations produced by the data retrieval. </summary>
+        /// <summary> Gets the citations. </summary>
         public IReadOnlyList<ChatCitation> Citations { get; }
     }
 }

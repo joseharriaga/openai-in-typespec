@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Azure.AI.OpenAI.Chat
 {
     /// <summary>
-    /// A representation of a data vectorization source usable as an embedding resource with a data source.
+    /// The AzureChatDataSourceVectorizationSource.
     /// Please note <see cref="DataSourceVectorizer"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes..
     /// </summary>
     public abstract partial class DataSourceVectorizer
@@ -50,7 +50,7 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="DataSourceVectorizer"/>. </summary>
-        /// <param name="type"> The differentiating identifier for the concrete vectorization source. </param>
+        /// <param name="type"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal DataSourceVectorizer(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -58,7 +58,7 @@ namespace Azure.AI.OpenAI.Chat
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> The differentiating identifier for the concrete vectorization source. </summary>
+        /// <summary> Gets or sets the type. </summary>
         internal string Type { get; set; }
     }
 }

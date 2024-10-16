@@ -7,10 +7,7 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary>
-    /// A labeled content filter result item that indicates whether the content was detected and whether the content was
-    /// filtered.
-    /// </summary>
+    /// <summary> The AzureContentFilterDetectionResult. </summary>
     public partial class ContentFilterDetectionResult
     {
         /// <summary>
@@ -45,8 +42,8 @@ namespace Azure.AI.OpenAI
         /// </summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="ContentFilterDetectionResult"/>. </summary>
-        /// <param name="filtered"> Whether the content detection resulted in a content filtering action. </param>
-        /// <param name="detected"> Whether the labeled content category was detected in the content. </param>
+        /// <param name="filtered"></param>
+        /// <param name="detected"></param>
         internal ContentFilterDetectionResult(bool filtered, bool detected)
         {
             Filtered = filtered;
@@ -54,8 +51,8 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="ContentFilterDetectionResult"/>. </summary>
-        /// <param name="filtered"> Whether the content detection resulted in a content filtering action. </param>
-        /// <param name="detected"> Whether the labeled content category was detected in the content. </param>
+        /// <param name="filtered"></param>
+        /// <param name="detected"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ContentFilterDetectionResult(bool filtered, bool detected, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -69,9 +66,9 @@ namespace Azure.AI.OpenAI
         {
         }
 
-        /// <summary> Whether the content detection resulted in a content filtering action. </summary>
+        /// <summary> Gets the filtered. </summary>
         public bool Filtered { get; }
-        /// <summary> Whether the labeled content category was detected in the content. </summary>
+        /// <summary> Gets the detected. </summary>
         public bool Detected { get; }
     }
 }

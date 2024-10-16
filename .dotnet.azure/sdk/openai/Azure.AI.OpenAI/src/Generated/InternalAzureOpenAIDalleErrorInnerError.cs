@@ -47,9 +47,9 @@ namespace Azure.AI.OpenAI
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalAzureOpenAIDalleErrorInnerError"/>. </summary>
-        /// <param name="code"> The code associated with the inner error. </param>
-        /// <param name="revisedPrompt"> If applicable, the modified prompt used for generation. </param>
-        /// <param name="contentFilterResults"> The content filter result details associated with the inner error. </param>
+        /// <param name="code"></param>
+        /// <param name="revisedPrompt"></param>
+        /// <param name="contentFilterResults"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal InternalAzureOpenAIDalleErrorInnerError(InternalAzureOpenAIDalleErrorInnerErrorCode? code, string revisedPrompt, RequestImageContentFilterResult contentFilterResults, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -59,11 +59,11 @@ namespace Azure.AI.OpenAI
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        /// <summary> The code associated with the inner error. </summary>
+        /// <summary> Gets the code. </summary>
         internal InternalAzureOpenAIDalleErrorInnerErrorCode? Code { get; set; }
-        /// <summary> If applicable, the modified prompt used for generation. </summary>
+        /// <summary> Gets the revised prompt. </summary>
         internal string RevisedPrompt { get; set; }
-        /// <summary> The content filter result details associated with the inner error. </summary>
+        /// <summary> Gets the content filter results. </summary>
         internal RequestImageContentFilterResult ContentFilterResults { get; set; }
     }
 }

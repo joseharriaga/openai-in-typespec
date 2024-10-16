@@ -61,24 +61,12 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="InternalElasticsearchChatDataSourceParameters"/>. </summary>
-        /// <param name="topNDocuments"> The configured number of documents to feature in the query. </param>
-        /// <param name="inScope"> Whether queries should be restricted to use of the indexed data. </param>
-        /// <param name="strictness">
-        /// The configured strictness of the search relevance filtering.
-        /// Higher strictness will increase precision but lower recall of the answer.
-        /// </param>
-        /// <param name="maxSearchQueries">
-        /// The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-        /// By default, the system will make an automatic determination.
-        /// </param>
-        /// <param name="allowPartialResult">
-        /// If set to true, the system will allow partial search results to be used and the request will fail if all
-        /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-        /// </param>
-        /// <param name="internalIncludeContexts">
-        /// The output context properties to include on the response.
-        /// By default, citations and intent will be requested.
-        /// </param>
+        /// <param name="topNDocuments"></param>
+        /// <param name="inScope"></param>
+        /// <param name="strictness"></param>
+        /// <param name="maxSearchQueries"></param>
+        /// <param name="allowPartialResult"></param>
+        /// <param name="internalIncludeContexts"></param>
         /// <param name="endpoint"></param>
         /// <param name="indexName"></param>
         /// <param name="authentication">
@@ -112,24 +100,15 @@ namespace Azure.AI.OpenAI.Chat
         {
         }
 
-        /// <summary> The configured number of documents to feature in the query. </summary>
+        /// <summary> Gets or sets the top n documents. </summary>
         public int? TopNDocuments { get; set; }
-        /// <summary> Whether queries should be restricted to use of the indexed data. </summary>
+        /// <summary> Gets or sets the in scope. </summary>
         public bool? InScope { get; set; }
-        /// <summary>
-        /// The configured strictness of the search relevance filtering.
-        /// Higher strictness will increase precision but lower recall of the answer.
-        /// </summary>
+        /// <summary> Gets or sets the strictness. </summary>
         public int? Strictness { get; set; }
-        /// <summary>
-        /// The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-        /// By default, the system will make an automatic determination.
-        /// </summary>
+        /// <summary> Gets or sets the max search queries. </summary>
         public int? MaxSearchQueries { get; set; }
-        /// <summary>
-        /// If set to true, the system will allow partial search results to be used and the request will fail if all
-        /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-        /// </summary>
+        /// <summary> Gets or sets the allow partial result. </summary>
         public bool? AllowPartialResult { get; set; }
         /// <summary> Gets the endpoint. </summary>
         internal Uri Endpoint { get; set; }

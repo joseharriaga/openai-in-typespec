@@ -42,7 +42,7 @@ namespace Azure.AI.OpenAI.Chat
         /// </summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
         /// <summary> Initializes a new instance of <see cref="ChatCitation"/>. </summary>
-        /// <param name="content"> The content of the citation. </param>
+        /// <param name="content"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
         internal ChatCitation(string content)
         {
@@ -52,12 +52,12 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         /// <summary> Initializes a new instance of <see cref="ChatCitation"/>. </summary>
-        /// <param name="content"> The content of the citation. </param>
-        /// <param name="title"> The title for the citation. </param>
-        /// <param name="uri"> The URL of the citation. </param>
-        /// <param name="filePath"> The file path for the citation. </param>
-        /// <param name="chunkId"> The chunk ID for the citation. </param>
-        /// <param name="rerankScore"> The rerank score for the retrieval. </param>
+        /// <param name="content"></param>
+        /// <param name="title"></param>
+        /// <param name="uri"></param>
+        /// <param name="filePath"></param>
+        /// <param name="chunkId"></param>
+        /// <param name="rerankScore"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
         internal ChatCitation(string content, string title, Uri uri, string filePath, string chunkId, double? rerankScore, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
@@ -75,13 +75,13 @@ namespace Azure.AI.OpenAI.Chat
         {
         }
 
-        /// <summary> The content of the citation. </summary>
+        /// <summary> Gets the content. </summary>
         public string Content { get; }
-        /// <summary> The title for the citation. </summary>
+        /// <summary> Gets the title. </summary>
         public string Title { get; }
-        /// <summary> The chunk ID for the citation. </summary>
+        /// <summary> Gets the chunk id. </summary>
         public string ChunkId { get; }
-        /// <summary> The rerank score for the retrieval. </summary>
+        /// <summary> Gets the rerank score. </summary>
         public double? RerankScore { get; }
     }
 }

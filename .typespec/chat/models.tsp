@@ -14,7 +14,7 @@ namespace OpenAI;
 model ChatCompletionTokenLogprobBytes is int32[];
 
 model CreateChatCompletionRequest {
-  /** A list of messages comprising the conversation so far. Depending on the [model](/docs/models) you use, different message types (modalities) are supported, like [text](/docs/guides/text-generation), [images](/docs/guides/vision), and [audio](/docs/guides/audio). */
+  /** A list of messages comprising the conversation so far. Depending on the [model](/docs/models) you use, different message types (modalities) are supported, like [text](/docs/guides/text-generation), [images](/docs/guides/vision), and audio. */
   @minItems(1)
   messages: ChatCompletionRequestMessage[];
 
@@ -140,8 +140,8 @@ model CreateChatCompletionRequest {
     If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
     Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
     """)
-  @minValue(-9223372036854775808)
-  @maxValue(9223372036854775807)
+  @minValue(-9223372036854776000)
+  @maxValue(9223372036854776000)
   seed?: int64 | null;
 
   @doc("""
@@ -153,7 +153,7 @@ model CreateChatCompletionRequest {
     
       When this parameter is set, the response body will include the `service_tier` utilized.
     """)
-  service_tier?: "auto" | "default" | null = null;
+  service_tier?: "auto" | "default" | null = "auto";
 
   /** Up to 4 sequences where the API will stop generating further tokens. */
   stop?: string | string[] | null = null;

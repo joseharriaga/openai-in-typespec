@@ -41,29 +41,15 @@ namespace OpenAI.Moderations
                 writer.WritePropertyName("harassment/threatening"u8);
                 writer.WriteBooleanValue(HarassmentThreatening);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("illicit") != true && Optional.IsDefined(Illicit))
+            if (SerializedAdditionalRawData?.ContainsKey("illicit") != true)
             {
-                if (Illicit != null)
-                {
-                    writer.WritePropertyName("illicit"u8);
-                    writer.WriteBooleanValue(Illicit.Value);
-                }
-                else
-                {
-                    writer.WriteNull("illicit");
-                }
+                writer.WritePropertyName("illicit"u8);
+                writer.WriteBooleanValue(Illicit);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("illicit/violent") != true && Optional.IsDefined(IllicitViolent))
+            if (SerializedAdditionalRawData?.ContainsKey("illicit/violent") != true)
             {
-                if (IllicitViolent != null)
-                {
-                    writer.WritePropertyName("illicit/violent"u8);
-                    writer.WriteBooleanValue(IllicitViolent.Value);
-                }
-                else
-                {
-                    writer.WriteNull("illicit/violent");
-                }
+                writer.WritePropertyName("illicit/violent"u8);
+                writer.WriteBooleanValue(IllicitViolent);
             }
             if (SerializedAdditionalRawData?.ContainsKey("self-harm") != true)
             {
@@ -146,8 +132,8 @@ namespace OpenAI.Moderations
             bool hateThreatening = default;
             bool harassment = default;
             bool harassmentThreatening = default;
-            bool? illicit = default;
-            bool? illicitViolent = default;
+            bool illicit = default;
+            bool illicitViolent = default;
             bool selfHarm = default;
             bool selfHarmIntent = default;
             bool selfHarmInstructions = default;
@@ -181,21 +167,11 @@ namespace OpenAI.Moderations
                 }
                 if (property.NameEquals("illicit"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        illicit = null;
-                        continue;
-                    }
                     illicit = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("illicit/violent"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        illicitViolent = null;
-                        continue;
-                    }
                     illicitViolent = property.Value.GetBoolean();
                     continue;
                 }

@@ -43,8 +43,8 @@ model CreateSpeechRequest {
     The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default.
     """)
   @minValue(0.25)
-  @maxValue(4.0)
-  speed?: float32 = 1.0;
+  @maxValue(4)
+  speed?: float32 = 1;
 }
 
 model CreateTranscriptionRequest {

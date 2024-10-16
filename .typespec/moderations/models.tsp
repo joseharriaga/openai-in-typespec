@@ -76,10 +76,10 @@ model CreateModerationResponse {
       `harassment/threatening`: boolean;
 
       /** Content that includes instructions or advice that facilitate the planning or execution of wrongdoing, or that gives advice or instruction on how to commit illicit acts. For example, "how to shoplift" would fit this category. */
-      illicit?: boolean | null;
+      illicit: boolean;
 
       /** Content that includes instructions or advice that facilitate the planning or execution of wrongdoing that also includes violence, or that gives advice or instruction on the procurement of any weapon. */
-      `illicit/violent`?: boolean | null;
+      `illicit/violent`: boolean;
 
       /** Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders. */
       `self-harm`: boolean;
@@ -118,10 +118,10 @@ model CreateModerationResponse {
       `harassment/threatening`: float32;
 
       /** The score for the category 'illicit'. */
-      illicit?: float32 | null;
+      illicit: float32;
 
       /** The score for the category 'illicit/violent'. */
-      `illicit/violent`?: float32 | null;
+      `illicit/violent`: float32;
 
       /** The score for the category 'self-harm'. */
       `self-harm`: float32;
@@ -160,10 +160,10 @@ model CreateModerationResponse {
       `harassment/threatening`: "text"[];
 
       /** The applied input type(s) for the category 'illicit'. */
-      illicit?: ("text")[] | null;
+      illicit: "text"[];
 
       /** The applied input type(s) for the category 'illicit/violent'. */
-      `illicit/violent`?: ("text")[] | null;
+      `illicit/violent`: "text"[];
 
       /** The applied input type(s) for the category 'self-harm'. */
       `self-harm`: ("text" | "image")[];

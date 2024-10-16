@@ -41,29 +41,15 @@ namespace OpenAI.Moderations
                 writer.WritePropertyName("harassment/threatening"u8);
                 writer.WriteNumberValue(HarassmentThreatening);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("illicit") != true && Optional.IsDefined(Illicit))
+            if (SerializedAdditionalRawData?.ContainsKey("illicit") != true)
             {
-                if (Illicit != null)
-                {
-                    writer.WritePropertyName("illicit"u8);
-                    writer.WriteNumberValue(Illicit.Value);
-                }
-                else
-                {
-                    writer.WriteNull("illicit");
-                }
+                writer.WritePropertyName("illicit"u8);
+                writer.WriteNumberValue(Illicit);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("illicit/violent") != true && Optional.IsDefined(IllicitViolent))
+            if (SerializedAdditionalRawData?.ContainsKey("illicit/violent") != true)
             {
-                if (IllicitViolent != null)
-                {
-                    writer.WritePropertyName("illicit/violent"u8);
-                    writer.WriteNumberValue(IllicitViolent.Value);
-                }
-                else
-                {
-                    writer.WriteNull("illicit/violent");
-                }
+                writer.WritePropertyName("illicit/violent"u8);
+                writer.WriteNumberValue(IllicitViolent);
             }
             if (SerializedAdditionalRawData?.ContainsKey("self-harm") != true)
             {
@@ -146,8 +132,8 @@ namespace OpenAI.Moderations
             float hateThreatening = default;
             float harassment = default;
             float harassmentThreatening = default;
-            float? illicit = default;
-            float? illicitViolent = default;
+            float illicit = default;
+            float illicitViolent = default;
             float selfHarm = default;
             float selfHarmIntent = default;
             float selfHarmInstructions = default;
@@ -181,21 +167,11 @@ namespace OpenAI.Moderations
                 }
                 if (property.NameEquals("illicit"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        illicit = null;
-                        continue;
-                    }
                     illicit = property.Value.GetSingle();
                     continue;
                 }
                 if (property.NameEquals("illicit/violent"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        illicitViolent = null;
-                        continue;
-                    }
                     illicitViolent = property.Value.GetSingle();
                     continue;
                 }

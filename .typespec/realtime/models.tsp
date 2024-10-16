@@ -132,7 +132,9 @@ model RealtimeClientEventResponseCreate extends RealtimeClientEvent {
     /** Instructions for the model. */
     instructions?: string;
 
-    /** The voice the model uses to respond. */
+    @doc("""
+      The voice the model uses to respond - one of `alloy`, `echo`, or `shimmer`.
+      """)
     voice?: string;
 
     /** The format of output audio. */

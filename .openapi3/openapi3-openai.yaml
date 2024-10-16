@@ -4557,7 +4557,7 @@ components:
           items:
             $ref: '#/components/schemas/ChatCompletionRequestMessage'
           minItems: 1
-          description: A list of messages comprising the conversation so far. Depending on the [model](/docs/models) you use, different message types (modalities) are supported, like [text](/docs/guides/text-generation), [images](/docs/guides/vision), and [audio](/docs/guides/audio).
+          description: A list of messages comprising the conversation so far. Depending on the [model](/docs/models) you use, different message types (modalities) are supported, like [text](/docs/guides/text-generation), [images](/docs/guides/vision), and audio.
         model:
           anyOf:
             - type: string
@@ -4695,6 +4695,8 @@ components:
           type: integer
           format: int64
           nullable: true
+          minimum: -9223372036854776000
+          maximum: 9223372036854776000
           description: |-
             This feature is in Beta.
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
@@ -4713,7 +4715,7 @@ components:
               - When not set, the default behavior is 'auto'.
 
               When this parameter is set, the response body will include the `service_tier` utilized.
-          default: null
+          default: auto
         stop:
           anyOf:
             - type: string
@@ -5127,6 +5129,8 @@ components:
           type: integer
           format: int64
           nullable: true
+          minimum: -9223372036854776000
+          maximum: 9223372036854776000
           description: |-
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
 
@@ -5859,11 +5863,9 @@ components:
                     description: Harassment content that also includes violence or serious harm towards any target.
                   illicit:
                     type: boolean
-                    nullable: true
                     description: Content that includes instructions or advice that facilitate the planning or execution of wrongdoing, or that gives advice or instruction on how to commit illicit acts. For example, "how to shoplift" would fit this category.
                   illicit/violent:
                     type: boolean
-                    nullable: true
                     description: Content that includes instructions or advice that facilitate the planning or execution of wrongdoing that also includes violence, or that gives advice or instruction on the procurement of any weapon.
                   self-harm:
                     type: boolean
@@ -5891,6 +5893,8 @@ components:
                   - hate/threatening
                   - harassment
                   - harassment/threatening
+                  - illicit
+                  - illicit/violent
                   - self-harm
                   - self-harm/intent
                   - self-harm/instructions
@@ -5921,12 +5925,10 @@ components:
                   illicit:
                     type: number
                     format: float
-                    nullable: true
                     description: The score for the category 'illicit'.
                   illicit/violent:
                     type: number
                     format: float
-                    nullable: true
                     description: The score for the category 'illicit/violent'.
                   self-harm:
                     type: number
@@ -5961,6 +5963,8 @@ components:
                   - hate/threatening
                   - harassment
                   - harassment/threatening
+                  - illicit
+                  - illicit/violent
                   - self-harm
                   - self-harm/intent
                   - self-harm/instructions
@@ -6006,7 +6010,6 @@ components:
                       type: string
                       enum:
                         - text
-                    nullable: true
                     description: The applied input type(s) for the category 'illicit'.
                   illicit/violent:
                     type: array
@@ -6014,7 +6017,6 @@ components:
                       type: string
                       enum:
                         - text
-                    nullable: true
                     description: The applied input type(s) for the category 'illicit/violent'.
                   self-harm:
                     type: array
@@ -6076,6 +6078,8 @@ components:
                   - hate/threatening
                   - harassment
                   - harassment/threatening
+                  - illicit
+                  - illicit/violent
                   - self-harm
                   - self-harm/intent
                   - self-harm/instructions
@@ -9123,7 +9127,7 @@ components:
               description: Instructions for the model.
             voice:
               type: string
-              description: The voice the model uses to respond.
+              description: The voice the model uses to respond - one of `alloy`, `echo`, or `shimmer`.
             output_audio_format:
               type: string
               description: The format of output audio.

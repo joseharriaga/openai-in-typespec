@@ -21,6 +21,6 @@ namespace OpenAI.Assistants
             _internalFunction = internalFunction;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
     }
 }

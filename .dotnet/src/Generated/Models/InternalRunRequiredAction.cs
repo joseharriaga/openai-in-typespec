@@ -24,6 +24,6 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public InternalRunObjectRequiredActionSubmitToolOutputs SubmitToolOutputs { get; set; }
+        public InternalRunObjectRequiredActionSubmitToolOutputs SubmitToolOutputs { get; }
     }
 }

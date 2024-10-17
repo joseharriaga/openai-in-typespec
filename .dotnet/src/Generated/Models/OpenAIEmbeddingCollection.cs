@@ -26,8 +26,8 @@ namespace OpenAI.Embeddings
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Model { get; set; }
+        public string Model { get; }
 
-        public EmbeddingTokenUsage Usage { get; set; }
+        public EmbeddingTokenUsage Usage { get; }
     }
 }

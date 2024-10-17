@@ -24,12 +24,12 @@ namespace OpenAI.Batch
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Code { get; set; }
+        public string Code { get; }
 
-        public string Message { get; set; }
+        public string Message { get; }
 
-        public string Param { get; set; }
+        public string Param { get; }
 
-        public int? Line { get; set; }
+        public int? Line { get; }
     }
 }

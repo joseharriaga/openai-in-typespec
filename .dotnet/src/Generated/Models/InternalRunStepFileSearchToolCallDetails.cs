@@ -21,8 +21,8 @@ namespace OpenAI.Assistants
             FileSearch = fileSearch;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public InternalRunStepDetailsToolCallsFileSearchObjectFileSearch FileSearch { get; set; }
+        public InternalRunStepDetailsToolCallsFileSearchObjectFileSearch FileSearch { get; }
     }
 }

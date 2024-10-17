@@ -19,6 +19,6 @@ namespace OpenAI.RealtimeConversation
             Reason = reason;
         }
 
-        public InternalRealtimeResponseCancelledStatusDetailsReason Reason { get; set; }
+        public InternalRealtimeResponseCancelledStatusDetailsReason Reason { get; }
     }
 }

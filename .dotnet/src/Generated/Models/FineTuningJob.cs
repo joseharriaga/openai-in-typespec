@@ -55,40 +55,40 @@ namespace OpenAI.FineTuning
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string UserProvidedSuffix { get; set; }
+        public string UserProvidedSuffix { get; }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; }
 
-        public FineTuningJobError Error { get; set; }
+        public FineTuningJobError Error { get; }
 
-        public string FineTunedModel { get; set; }
+        public string FineTunedModel { get; }
 
-        public DateTimeOffset? FinishedAt { get; set; }
+        public DateTimeOffset? FinishedAt { get; }
 
-        public FineTuningJobHyperparameters Hyperparameters { get; set; }
+        public FineTuningJobHyperparameters Hyperparameters { get; }
 
-        public string Model { get; set; }
+        public string Model { get; }
 
         public InternalFineTuningJobObject Object { get; } = "fine_tuning.job";
 
-        public string OrganizationId { get; set; }
+        public string OrganizationId { get; }
 
         public IList<string> ResultFiles { get; }
 
-        public FineTuningJobStatus Status { get; set; }
+        public FineTuningJobStatus Status { get; }
 
-        public int? TrainedTokens { get; set; }
+        public int? TrainedTokens { get; }
 
-        public string TrainingFile { get; set; }
+        public string TrainingFile { get; }
 
-        public string ValidationFile { get; set; }
+        public string ValidationFile { get; }
 
-        public IList<InternalFineTuningIntegration> Integrations { get; set; }
+        public IList<InternalFineTuningIntegration> Integrations { get; }
 
-        public int Seed { get; set; }
+        public int Seed { get; }
 
-        public DateTimeOffset? EstimatedFinish { get; set; }
+        public DateTimeOffset? EstimatedFinish { get; }
     }
 }

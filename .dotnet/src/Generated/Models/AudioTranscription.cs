@@ -33,9 +33,9 @@ namespace OpenAI.Audio
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Language { get; set; }
+        public string Language { get; }
 
-        public string Text { get; set; }
+        public string Text { get; }
 
         public IList<TranscribedWord> Words { get; }
 

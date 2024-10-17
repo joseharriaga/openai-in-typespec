@@ -20,8 +20,8 @@ namespace OpenAI.Assistants
             Refusal = refusal;
         }
 
-        public int Index { get; set; }
+        public int Index { get; }
 
-        public string Refusal { get; set; }
+        public string Refusal { get; }
     }
 }

@@ -24,7 +24,7 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Input { get; set; }
+        public string Input { get; }
 
         public IList<RunStepUpdateCodeInterpreterOutput> Outputs { get; }
     }

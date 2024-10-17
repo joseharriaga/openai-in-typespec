@@ -22,6 +22,6 @@ namespace OpenAI.Internal
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public OpenAIError Error { get; set; }
+        public OpenAIError Error { get; }
     }
 }

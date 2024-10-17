@@ -27,18 +27,18 @@ namespace OpenAI.FineTuning
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public float? Step { get; set; }
+        public float? Step { get; }
 
-        public float? TrainLoss { get; set; }
+        public float? TrainLoss { get; }
 
-        public float? TrainMeanTokenAccuracy { get; set; }
+        public float? TrainMeanTokenAccuracy { get; }
 
-        public float? ValidLoss { get; set; }
+        public float? ValidLoss { get; }
 
-        public float? ValidMeanTokenAccuracy { get; set; }
+        public float? ValidMeanTokenAccuracy { get; }
 
-        public float? FullValidLoss { get; set; }
+        public float? FullValidLoss { get; }
 
-        public float? FullValidMeanTokenAccuracy { get; set; }
+        public float? FullValidMeanTokenAccuracy { get; }
     }
 }

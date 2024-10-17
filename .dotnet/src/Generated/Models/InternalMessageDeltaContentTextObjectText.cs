@@ -24,7 +24,7 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Value { get; set; }
+        public string Value { get; }
 
         public IList<InternalMessageDeltaTextContentAnnotation> Annotations { get; }
     }

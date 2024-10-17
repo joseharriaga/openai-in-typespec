@@ -48,44 +48,44 @@ namespace OpenAI.Batch
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
         public InternalBatchObject Object { get; } = "batch";
 
-        public string Endpoint { get; set; }
+        public string Endpoint { get; }
 
-        public InternalBatchErrors Errors { get; set; }
+        public InternalBatchErrors Errors { get; }
 
-        public string InputFileId { get; set; }
+        public string InputFileId { get; }
 
-        public string CompletionWindow { get; set; }
+        public string CompletionWindow { get; }
 
-        public InternalBatchStatus Status { get; set; }
+        public InternalBatchStatus Status { get; }
 
-        public string OutputFileId { get; set; }
+        public string OutputFileId { get; }
 
-        public string ErrorFileId { get; set; }
+        public string ErrorFileId { get; }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; }
 
-        public DateTimeOffset? InProgressAt { get; set; }
+        public DateTimeOffset? InProgressAt { get; }
 
-        public DateTimeOffset? ExpiresAt { get; set; }
+        public DateTimeOffset? ExpiresAt { get; }
 
-        public DateTimeOffset? FinalizingAt { get; set; }
+        public DateTimeOffset? FinalizingAt { get; }
 
-        public DateTimeOffset? CompletedAt { get; set; }
+        public DateTimeOffset? CompletedAt { get; }
 
-        public DateTimeOffset? FailedAt { get; set; }
+        public DateTimeOffset? FailedAt { get; }
 
-        public DateTimeOffset? ExpiredAt { get; set; }
+        public DateTimeOffset? ExpiredAt { get; }
 
-        public DateTimeOffset? CancellingAt { get; set; }
+        public DateTimeOffset? CancellingAt { get; }
 
-        public DateTimeOffset? CancelledAt { get; set; }
+        public DateTimeOffset? CancelledAt { get; }
 
-        public InternalBatchRequestCounts RequestCounts { get; set; }
+        public InternalBatchRequestCounts RequestCounts { get; }
 
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
     }
 }

@@ -43,24 +43,24 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public string Description { get; set; }
+        public string Description { get; }
 
-        public string Model { get; set; }
+        public string Model { get; }
 
-        public string Instructions { get; set; }
+        public string Instructions { get; }
 
         public IList<ToolDefinition> Tools { get; }
 
-        public ToolResources ToolResources { get; set; }
+        public ToolResources ToolResources { get; }
 
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
 
-        public float? Temperature { get; set; }
+        public float? Temperature { get; }
     }
 }

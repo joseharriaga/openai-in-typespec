@@ -26,10 +26,10 @@ namespace OpenAI.Batch
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public int Total { get; set; }
+        public int Total { get; }
 
-        public int Completed { get; set; }
+        public int Completed { get; }
 
-        public int Failed { get; set; }
+        public int Failed { get; }
     }
 }

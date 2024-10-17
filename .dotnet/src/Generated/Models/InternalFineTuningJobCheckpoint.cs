@@ -33,17 +33,17 @@ namespace OpenAI.FineTuning
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; }
 
-        public string FineTunedModelCheckpoint { get; set; }
+        public string FineTunedModelCheckpoint { get; }
 
-        public int StepNumber { get; set; }
+        public int StepNumber { get; }
 
-        public InternalFineTuningJobCheckpointMetrics Metrics { get; set; }
+        public InternalFineTuningJobCheckpointMetrics Metrics { get; }
 
-        public string FineTuningJobId { get; set; }
+        public string FineTuningJobId { get; }
 
         public InternalFineTuningJobCheckpointObject Object { get; } = "fine_tuning.job.checkpoint";
     }

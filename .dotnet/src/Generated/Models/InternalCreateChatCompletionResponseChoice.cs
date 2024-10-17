@@ -28,12 +28,12 @@ namespace OpenAI.Chat
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public Chat.ChatFinishReason FinishReason { get; set; }
+        public Chat.ChatFinishReason FinishReason { get; }
 
-        public int Index { get; set; }
+        public int Index { get; }
 
-        public InternalChatCompletionResponseMessage Message { get; set; }
+        public InternalChatCompletionResponseMessage Message { get; }
 
-        public InternalCreateChatCompletionResponseChoiceLogprobs Logprobs { get; set; }
+        public InternalCreateChatCompletionResponseChoiceLogprobs Logprobs { get; }
     }
 }

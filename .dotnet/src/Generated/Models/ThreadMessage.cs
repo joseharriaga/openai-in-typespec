@@ -49,26 +49,26 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; }
 
-        public string ThreadId { get; set; }
+        public string ThreadId { get; }
 
-        public MessageStatus Status { get; set; }
+        public MessageStatus Status { get; }
 
-        public MessageFailureDetails IncompleteDetails { get; set; }
+        public MessageFailureDetails IncompleteDetails { get; }
 
-        public DateTimeOffset? CompletedAt { get; set; }
+        public DateTimeOffset? CompletedAt { get; }
 
-        public DateTimeOffset? IncompleteAt { get; set; }
+        public DateTimeOffset? IncompleteAt { get; }
 
         public IList<MessageContent> Content { get; }
 
-        public string AssistantId { get; set; }
+        public string AssistantId { get; }
 
-        public string RunId { get; set; }
+        public string RunId { get; }
 
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
     }
 }

@@ -40,22 +40,22 @@ namespace OpenAI.VectorStores
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public int UsageBytes { get; set; }
+        public int UsageBytes { get; }
 
-        public VectorStoreFileCounts FileCounts { get; set; }
+        public VectorStoreFileCounts FileCounts { get; }
 
-        public VectorStores.VectorStoreStatus Status { get; set; }
+        public VectorStores.VectorStoreStatus Status { get; }
 
-        public DateTimeOffset? ExpiresAt { get; set; }
+        public DateTimeOffset? ExpiresAt { get; }
 
-        public DateTimeOffset? LastActiveAt { get; set; }
+        public DateTimeOffset? LastActiveAt { get; }
 
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
     }
 }

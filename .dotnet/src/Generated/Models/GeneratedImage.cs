@@ -23,6 +23,6 @@ namespace OpenAI.Images
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string RevisedPrompt { get; set; }
+        public string RevisedPrompt { get; }
     }
 }

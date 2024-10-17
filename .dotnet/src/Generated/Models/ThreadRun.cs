@@ -73,42 +73,42 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; }
 
-        public string ThreadId { get; set; }
+        public string ThreadId { get; }
 
-        public string AssistantId { get; set; }
+        public string AssistantId { get; }
 
-        public RunStatus Status { get; set; }
+        public RunStatus Status { get; }
 
-        public RunError LastError { get; set; }
+        public RunError LastError { get; }
 
-        public DateTimeOffset? ExpiresAt { get; set; }
+        public DateTimeOffset? ExpiresAt { get; }
 
-        public DateTimeOffset? StartedAt { get; set; }
+        public DateTimeOffset? StartedAt { get; }
 
-        public DateTimeOffset? CancelledAt { get; set; }
+        public DateTimeOffset? CancelledAt { get; }
 
-        public DateTimeOffset? FailedAt { get; set; }
+        public DateTimeOffset? FailedAt { get; }
 
-        public DateTimeOffset? CompletedAt { get; set; }
+        public DateTimeOffset? CompletedAt { get; }
 
-        public RunIncompleteDetails IncompleteDetails { get; set; }
+        public RunIncompleteDetails IncompleteDetails { get; }
 
-        public string Model { get; set; }
+        public string Model { get; }
 
-        public string Instructions { get; set; }
+        public string Instructions { get; }
 
         public IList<ToolDefinition> Tools { get; }
 
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
 
-        public RunTokenUsage Usage { get; set; }
+        public RunTokenUsage Usage { get; }
 
-        public float? Temperature { get; set; }
+        public float? Temperature { get; }
 
-        public RunTruncationStrategy TruncationStrategy { get; set; }
+        public RunTruncationStrategy TruncationStrategy { get; }
     }
 }

@@ -19,6 +19,6 @@ namespace OpenAI.RealtimeConversation
             Reason = reason;
         }
 
-        public InternalRealtimeResponseIncompleteStatusDetailsReason Reason { get; set; }
+        public InternalRealtimeResponseIncompleteStatusDetailsReason Reason { get; }
     }
 }

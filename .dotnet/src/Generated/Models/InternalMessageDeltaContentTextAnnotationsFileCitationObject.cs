@@ -23,14 +23,14 @@ namespace OpenAI.Assistants
             EndIndex = endIndex;
         }
 
-        public int Index { get; set; }
+        public int Index { get; }
 
-        public string Text { get; set; }
+        public string Text { get; }
 
-        public InternalMessageDeltaContentTextAnnotationsFileCitationObjectFileCitation FileCitation { get; set; }
+        public InternalMessageDeltaContentTextAnnotationsFileCitationObjectFileCitation FileCitation { get; }
 
-        public int? StartIndex { get; set; }
+        public int? StartIndex { get; }
 
-        public int? EndIndex { get; set; }
+        public int? EndIndex { get; }
     }
 }

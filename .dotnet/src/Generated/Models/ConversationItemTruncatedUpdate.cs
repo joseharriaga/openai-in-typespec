@@ -23,10 +23,10 @@ namespace OpenAI.RealtimeConversation
             Index = index;
         }
 
-        public string ItemId { get; set; }
+        public string ItemId { get; }
 
-        public int AudioEndMs { get; set; }
+        public int AudioEndMs { get; }
 
-        public int Index { get; set; }
+        public int Index { get; }
     }
 }

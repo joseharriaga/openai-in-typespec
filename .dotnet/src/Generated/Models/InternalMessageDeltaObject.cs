@@ -25,10 +25,10 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
         public InternalMessageDeltaObjectObject Object { get; } = "thread.message.delta";
 
-        public InternalMessageDeltaObjectDelta Delta { get; set; }
+        public InternalMessageDeltaObjectDelta Delta { get; }
     }
 }

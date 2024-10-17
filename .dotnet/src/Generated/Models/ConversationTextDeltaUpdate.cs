@@ -27,14 +27,14 @@ namespace OpenAI.RealtimeConversation
             Delta = delta;
         }
 
-        public string ResponseId { get; set; }
+        public string ResponseId { get; }
 
-        public string ItemId { get; set; }
+        public string ItemId { get; }
 
-        public int OutputIndex { get; set; }
+        public int OutputIndex { get; }
 
-        public int ContentIndex { get; set; }
+        public int ContentIndex { get; }
 
-        public string Delta { get; set; }
+        public string Delta { get; }
     }
 }

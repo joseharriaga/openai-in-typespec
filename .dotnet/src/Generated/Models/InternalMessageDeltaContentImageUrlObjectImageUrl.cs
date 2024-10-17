@@ -22,6 +22,6 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public Uri Url { get; set; }
+        public Uri Url { get; }
     }
 }

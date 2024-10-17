@@ -24,8 +24,8 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public RunStepErrorCode Code { get; set; }
+        public RunStepErrorCode Code { get; }
 
-        public string Message { get; set; }
+        public string Message { get; }
     }
 }

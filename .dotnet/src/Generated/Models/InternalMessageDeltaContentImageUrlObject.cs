@@ -20,8 +20,8 @@ namespace OpenAI.Assistants
             ImageUrl = imageUrl;
         }
 
-        public int Index { get; set; }
+        public int Index { get; }
 
-        public InternalMessageDeltaContentImageUrlObjectImageUrl ImageUrl { get; set; }
+        public InternalMessageDeltaContentImageUrlObjectImageUrl ImageUrl { get; }
     }
 }

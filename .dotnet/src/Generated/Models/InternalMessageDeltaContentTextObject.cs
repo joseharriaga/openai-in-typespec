@@ -20,8 +20,8 @@ namespace OpenAI.Assistants
             Text = text;
         }
 
-        public int Index { get; set; }
+        public int Index { get; }
 
-        public InternalMessageDeltaContentTextObjectText Text { get; set; }
+        public InternalMessageDeltaContentTextObjectText Text { get; }
     }
 }

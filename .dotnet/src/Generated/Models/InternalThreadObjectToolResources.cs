@@ -22,8 +22,8 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public InternalThreadObjectToolResourcesCodeInterpreter CodeInterpreter { get; set; }
+        public InternalThreadObjectToolResourcesCodeInterpreter CodeInterpreter { get; }
 
-        public InternalThreadObjectToolResourcesFileSearch FileSearch { get; set; }
+        public InternalThreadObjectToolResourcesFileSearch FileSearch { get; }
     }
 }

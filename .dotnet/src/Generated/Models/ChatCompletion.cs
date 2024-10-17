@@ -34,12 +34,12 @@ namespace OpenAI.Chat
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public string Model { get; set; }
+        public string Model { get; }
 
-        public string SystemFingerprint { get; set; }
+        public string SystemFingerprint { get; }
 
-        public ChatTokenUsage Usage { get; set; }
+        public ChatTokenUsage Usage { get; }
     }
 }

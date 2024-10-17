@@ -34,10 +34,10 @@ namespace OpenAI.Assistants
 
         public IList<ThreadRun> Data { get; }
 
-        public string FirstId { get; set; }
+        public string FirstId { get; }
 
-        public string LastId { get; set; }
+        public string LastId { get; }
 
-        public bool HasMore { get; set; }
+        public bool HasMore { get; }
     }
 }

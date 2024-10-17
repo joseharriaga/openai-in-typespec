@@ -22,8 +22,8 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public InternalRunStepDetailsToolCallsFileSearchResultObjectContentType? Type { get; set; }
+        public InternalRunStepDetailsToolCallsFileSearchResultObjectContentType? Type { get; }
 
-        public string Text { get; set; }
+        public string Text { get; }
     }
 }

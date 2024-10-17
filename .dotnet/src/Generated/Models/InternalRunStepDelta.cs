@@ -26,8 +26,8 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public InternalRunStepDeltaObjectDelta Delta { get; set; }
+        public InternalRunStepDeltaObjectDelta Delta { get; }
     }
 }

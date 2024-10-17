@@ -26,10 +26,10 @@ namespace OpenAI.Batch
 
         public string Id { get; }
 
-        public string CustomId { get; set; }
+        public string CustomId { get; }
 
-        public InternalBatchRequestOutputResponse Response { get; set; }
+        public InternalBatchRequestOutputResponse Response { get; }
 
-        public InternalBatchRequestOutputError Error { get; set; }
+        public InternalBatchRequestOutputError Error { get; }
     }
 }

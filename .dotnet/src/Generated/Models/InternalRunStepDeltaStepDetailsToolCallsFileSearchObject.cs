@@ -22,9 +22,9 @@ namespace OpenAI.Assistants
             FileSearch = fileSearch;
         }
 
-        public int Index { get; set; }
+        public int Index { get; }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
         public IDictionary<string, BinaryData> FileSearch { get; }
     }

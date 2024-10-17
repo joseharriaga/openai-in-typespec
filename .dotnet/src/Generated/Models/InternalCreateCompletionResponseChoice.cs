@@ -28,12 +28,12 @@ namespace OpenAI.LegacyCompletions
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public InternalCreateCompletionResponseChoiceFinishReason FinishReason { get; set; }
+        public InternalCreateCompletionResponseChoiceFinishReason FinishReason { get; }
 
-        public int Index { get; set; }
+        public int Index { get; }
 
-        public InternalCreateCompletionResponseChoiceLogprobs Logprobs { get; set; }
+        public InternalCreateCompletionResponseChoiceLogprobs Logprobs { get; }
 
-        public string Text { get; set; }
+        public string Text { get; }
     }
 }

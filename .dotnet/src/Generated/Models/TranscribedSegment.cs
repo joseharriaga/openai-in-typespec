@@ -40,12 +40,12 @@ namespace OpenAI.Audio
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public int Id { get; set; }
+        public int Id { get; }
 
-        public string Text { get; set; }
+        public string Text { get; }
 
-        public float Temperature { get; set; }
+        public float Temperature { get; }
 
-        public float CompressionRatio { get; set; }
+        public float CompressionRatio { get; }
     }
 }

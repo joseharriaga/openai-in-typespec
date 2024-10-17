@@ -28,12 +28,12 @@ namespace OpenAI.Batch
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string InputFileId { get; set; }
+        public string InputFileId { get; }
 
-        public InternalCreateBatchRequestEndpoint Endpoint { get; set; }
+        public InternalCreateBatchRequestEndpoint Endpoint { get; }
 
         public InternalBatchCompletionTimeframe CompletionWindow { get; } = "24h";
 
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
     }
 }

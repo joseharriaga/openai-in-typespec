@@ -26,7 +26,7 @@ namespace OpenAI.FineTuning
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public bool HasMore { get; set; }
+        public bool HasMore { get; }
 
         public IList<FineTuningJobEvent> Data { get; }
 

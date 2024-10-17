@@ -42,26 +42,26 @@ namespace OpenAI.Moderations
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public float Hate { get; set; }
+        public float Hate { get; }
 
-        public float HateThreatening { get; set; }
+        public float HateThreatening { get; }
 
-        public float Harassment { get; set; }
+        public float Harassment { get; }
 
-        public float HarassmentThreatening { get; set; }
+        public float HarassmentThreatening { get; }
 
-        public float SelfHarm { get; set; }
+        public float SelfHarm { get; }
 
-        public float SelfHarmIntent { get; set; }
+        public float SelfHarmIntent { get; }
 
-        public float SelfHarmInstructions { get; set; }
+        public float SelfHarmInstructions { get; }
 
-        public float Sexual { get; set; }
+        public float Sexual { get; }
 
-        public float SexualMinors { get; set; }
+        public float SexualMinors { get; }
 
-        public float Violence { get; set; }
+        public float Violence { get; }
 
-        public float ViolenceGraphic { get; set; }
+        public float ViolenceGraphic { get; }
     }
 }

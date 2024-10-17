@@ -21,10 +21,10 @@ namespace OpenAI.Assistants
             Function = function;
         }
 
-        public int Index { get; set; }
+        public int Index { get; }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public InternalRunStepDeltaStepDetailsToolCallsFunctionObjectFunction Function { get; set; }
+        public InternalRunStepDeltaStepDetailsToolCallsFunctionObjectFunction Function { get; }
     }
 }

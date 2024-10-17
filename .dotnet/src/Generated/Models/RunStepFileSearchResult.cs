@@ -29,10 +29,10 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string FileId { get; set; }
+        public string FileId { get; }
 
-        public string FileName { get; set; }
+        public string FileName { get; }
 
-        public float Score { get; set; }
+        public float Score { get; }
     }
 }

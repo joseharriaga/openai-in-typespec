@@ -35,12 +35,12 @@ namespace OpenAI.Files
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; }
 
-        public string Filename { get; set; }
+        public string Filename { get; }
 
-        public Files.FilePurpose Purpose { get; set; }
+        public Files.FilePurpose Purpose { get; }
     }
 }

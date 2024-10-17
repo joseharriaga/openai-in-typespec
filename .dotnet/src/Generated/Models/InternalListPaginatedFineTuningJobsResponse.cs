@@ -28,7 +28,7 @@ namespace OpenAI.FineTuning
 
         public IList<FineTuningJob> Data { get; }
 
-        public bool HasMore { get; set; }
+        public bool HasMore { get; }
 
         public InternalListPaginatedFineTuningJobsResponseObject Object { get; } = "list";
     }

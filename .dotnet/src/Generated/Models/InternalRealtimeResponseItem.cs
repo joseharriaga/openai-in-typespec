@@ -29,6 +29,6 @@ namespace OpenAI.RealtimeConversation
 
         internal InternalRealtimeRequestItemType Type { get; set; }
 
-        public string Id { get; set; }
+        public string Id { get; }
     }
 }

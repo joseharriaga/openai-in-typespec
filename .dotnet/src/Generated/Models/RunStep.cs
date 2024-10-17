@@ -52,32 +52,32 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; }
 
-        public string AssistantId { get; set; }
+        public string AssistantId { get; }
 
-        public string ThreadId { get; set; }
+        public string ThreadId { get; }
 
-        public string RunId { get; set; }
+        public string RunId { get; }
 
-        public RunStepType Type { get; set; }
+        public RunStepType Type { get; }
 
-        public RunStepStatus Status { get; set; }
+        public RunStepStatus Status { get; }
 
-        public RunStepError LastError { get; set; }
+        public RunStepError LastError { get; }
 
-        public DateTimeOffset? ExpiredAt { get; set; }
+        public DateTimeOffset? ExpiredAt { get; }
 
-        public DateTimeOffset? CancelledAt { get; set; }
+        public DateTimeOffset? CancelledAt { get; }
 
-        public DateTimeOffset? FailedAt { get; set; }
+        public DateTimeOffset? FailedAt { get; }
 
-        public DateTimeOffset? CompletedAt { get; set; }
+        public DateTimeOffset? CompletedAt { get; }
 
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
 
-        public RunStepTokenUsage Usage { get; set; }
+        public RunStepTokenUsage Usage { get; }
     }
 }

@@ -21,10 +21,10 @@ namespace OpenAI.Assistants
             CodeInterpreter = codeInterpreter;
         }
 
-        public int Index { get; set; }
+        public int Index { get; }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public InternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter CodeInterpreter { get; set; }
+        public InternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter CodeInterpreter { get; }
     }
 }

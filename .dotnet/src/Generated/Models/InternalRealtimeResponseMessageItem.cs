@@ -26,6 +26,6 @@ namespace OpenAI.RealtimeConversation
 
         public IList<ConversationContentPart> Content { get; }
 
-        public ConversationItemStatus Status { get; set; }
+        public ConversationItemStatus Status { get; }
     }
 }

@@ -29,16 +29,16 @@ namespace OpenAI.RealtimeConversation
             Arguments = arguments;
         }
 
-        public string ResponseId { get; set; }
+        public string ResponseId { get; }
 
-        public string ItemId { get; set; }
+        public string ItemId { get; }
 
-        public int OutputIndex { get; set; }
+        public int OutputIndex { get; }
 
-        public string CallId { get; set; }
+        public string CallId { get; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public string Arguments { get; set; }
+        public string Arguments { get; }
     }
 }

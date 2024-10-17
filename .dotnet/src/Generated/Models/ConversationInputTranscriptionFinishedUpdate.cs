@@ -23,10 +23,10 @@ namespace OpenAI.RealtimeConversation
             Transcript = transcript;
         }
 
-        public string ItemId { get; set; }
+        public string ItemId { get; }
 
-        public int ContentIndex { get; set; }
+        public int ContentIndex { get; }
 
-        public string Transcript { get; set; }
+        public string Transcript { get; }
     }
 }

@@ -25,12 +25,12 @@ namespace OpenAI.RealtimeConversation
             Status = status;
         }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public string CallId { get; set; }
+        public string CallId { get; }
 
-        public string Arguments { get; set; }
+        public string Arguments { get; }
 
-        public ConversationItemStatus Status { get; set; }
+        public ConversationItemStatus Status { get; }
     }
 }

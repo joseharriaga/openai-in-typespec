@@ -28,12 +28,12 @@ namespace OpenAI.RealtimeConversation
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public int Limit { get; set; }
+        public int Limit { get; }
 
-        public int Remaining { get; set; }
+        public int Remaining { get; }
 
-        public float ResetSeconds { get; set; }
+        public float ResetSeconds { get; }
     }
 }

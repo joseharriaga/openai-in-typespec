@@ -24,7 +24,7 @@ namespace OpenAI.Batch
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public InternalBatchErrorsObject? Object { get; set; }
+        public InternalBatchErrorsObject? Object { get; }
 
         public IList<InternalBatchError> Data { get; }
     }

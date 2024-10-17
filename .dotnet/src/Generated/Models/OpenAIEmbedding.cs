@@ -18,6 +18,6 @@ namespace OpenAI.Embeddings
             this.Object = @object;
         }
 
-        public int Index { get; set; }
+        public int Index { get; }
     }
 }

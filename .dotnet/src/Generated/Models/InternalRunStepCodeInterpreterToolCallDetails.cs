@@ -21,6 +21,6 @@ namespace OpenAI.Assistants
             _codeInterpreter = codeInterpreter;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
     }
 }

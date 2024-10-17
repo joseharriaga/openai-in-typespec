@@ -23,8 +23,8 @@ namespace OpenAI.RealtimeConversation
             _error = error;
         }
 
-        public string ItemId { get; set; }
+        public string ItemId { get; }
 
-        public int ContentIndex { get; set; }
+        public int ContentIndex { get; }
     }
 }

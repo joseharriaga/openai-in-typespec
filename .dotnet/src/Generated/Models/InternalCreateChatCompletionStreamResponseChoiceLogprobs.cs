@@ -25,8 +25,8 @@ namespace OpenAI.Chat
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public IList<ChatTokenLogProbabilityDetails> Content { get; set; }
+        public IList<ChatTokenLogProbabilityDetails> Content { get; }
 
-        public IList<ChatTokenLogProbabilityDetails> Refusal { get; set; }
+        public IList<ChatTokenLogProbabilityDetails> Refusal { get; }
     }
 }

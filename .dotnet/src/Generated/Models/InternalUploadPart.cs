@@ -27,11 +27,11 @@ namespace OpenAI.Files
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; }
 
-        public string UploadId { get; set; }
+        public string UploadId { get; }
 
         public InternalUploadPartObject Object { get; } = "upload.part";
     }

@@ -21,10 +21,10 @@ namespace OpenAI.Chat
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public StreamingChatFunctionCallUpdate FunctionCall { get; set; }
+        public StreamingChatFunctionCallUpdate FunctionCall { get; }
 
         public IList<StreamingChatToolCallUpdate> ToolCalls { get; }
 
-        public string Refusal { get; set; }
+        public string Refusal { get; }
     }
 }

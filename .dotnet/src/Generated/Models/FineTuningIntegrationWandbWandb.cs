@@ -27,11 +27,11 @@ namespace OpenAI.FineTuning
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Project { get; set; }
+        public string Project { get; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public string Entity { get; set; }
+        public string Entity { get; }
 
         public IList<string> Tags { get; }
     }

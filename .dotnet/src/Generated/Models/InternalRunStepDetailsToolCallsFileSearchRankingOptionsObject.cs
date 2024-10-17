@@ -25,6 +25,6 @@ namespace OpenAI.Assistants
 
         public InternalRunStepDetailsToolCallsFileSearchRankingOptionsObjectRanker Ranker { get; } = "default_2024_08_21";
 
-        public float ScoreThreshold { get; set; }
+        public float ScoreThreshold { get; }
     }
 }

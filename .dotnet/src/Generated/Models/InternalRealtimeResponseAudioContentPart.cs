@@ -19,6 +19,6 @@ namespace OpenAI.RealtimeConversation
             Transcript = transcript;
         }
 
-        public string Transcript { get; set; }
+        public string Transcript { get; }
     }
 }

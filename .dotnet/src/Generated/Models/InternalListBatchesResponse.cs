@@ -30,11 +30,11 @@ namespace OpenAI.Batch
 
         public IList<InternalBatchJob> Data { get; }
 
-        public string FirstId { get; set; }
+        public string FirstId { get; }
 
-        public string LastId { get; set; }
+        public string LastId { get; }
 
-        public bool HasMore { get; set; }
+        public bool HasMore { get; }
 
         public InternalListBatchesResponseObject Object { get; } = "list";
     }

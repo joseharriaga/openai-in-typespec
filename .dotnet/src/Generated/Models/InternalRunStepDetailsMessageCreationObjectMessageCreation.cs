@@ -22,6 +22,6 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string MessageId { get; set; }
+        public string MessageId { get; }
     }
 }

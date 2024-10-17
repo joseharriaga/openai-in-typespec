@@ -19,6 +19,6 @@ namespace OpenAI.FineTuning
             Wandb = wandb;
         }
 
-        public FineTuningIntegrationWandbWandb Wandb { get; set; }
+        public FineTuningIntegrationWandbWandb Wandb { get; }
     }
 }

@@ -21,6 +21,6 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public RunIncompleteReason? Reason { get; set; }
+        public RunIncompleteReason? Reason { get; }
     }
 }

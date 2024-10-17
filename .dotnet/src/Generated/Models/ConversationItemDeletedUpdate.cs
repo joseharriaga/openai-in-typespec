@@ -19,6 +19,6 @@ namespace OpenAI.RealtimeConversation
             ItemId = itemId;
         }
 
-        public string ItemId { get; set; }
+        public string ItemId { get; }
     }
 }

@@ -18,6 +18,6 @@ namespace OpenAI.Assistants
             MessageCreation = messageCreation;
         }
 
-        public InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation MessageCreation { get; set; }
+        public InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation MessageCreation { get; }
     }
 }

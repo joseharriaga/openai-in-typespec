@@ -29,13 +29,13 @@ namespace OpenAI.FineTuning
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; }
 
-        public FineTuning.FineTuningJobEventLevel Level { get; set; }
+        public FineTuning.FineTuningJobEventLevel Level { get; }
 
-        public string Message { get; set; }
+        public string Message { get; }
 
         public InternalFineTuningJobEventObject Object { get; } = "fine_tuning.job.event";
     }

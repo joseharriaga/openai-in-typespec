@@ -30,7 +30,7 @@ namespace OpenAI.Chat
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Refusal { get; set; }
+        public string Refusal { get; }
 
         public IList<ChatToolCall> ToolCalls { get; }
     }

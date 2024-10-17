@@ -22,6 +22,6 @@ namespace OpenAI.Audio
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Text { get; set; }
+        public string Text { get; }
     }
 }

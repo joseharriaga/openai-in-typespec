@@ -20,6 +20,6 @@ namespace OpenAI.Assistants
             InternalLogs = internalLogs;
         }
 
-        public int Index { get; set; }
+        public int Index { get; }
     }
 }

@@ -20,8 +20,8 @@ namespace OpenAI.Assistants
             Image = image;
         }
 
-        public int Index { get; set; }
+        public int Index { get; }
 
-        public InternalRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage Image { get; set; }
+        public InternalRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage Image { get; }
     }
 }

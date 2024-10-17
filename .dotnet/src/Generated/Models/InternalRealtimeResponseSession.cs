@@ -50,28 +50,28 @@ namespace OpenAI.RealtimeConversation
 
         public InternalRealtimeResponseSessionObject Object { get; } = "realtime.session";
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public string Model { get; set; }
+        public string Model { get; }
 
         public IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> Modalities { get; }
 
-        public string Instructions { get; set; }
+        public string Instructions { get; }
 
-        public ConversationVoice Voice { get; set; }
+        public ConversationVoice Voice { get; }
 
-        public ConversationAudioFormat InputAudioFormat { get; set; }
+        public ConversationAudioFormat InputAudioFormat { get; }
 
-        public ConversationAudioFormat OutputAudioFormat { get; set; }
+        public ConversationAudioFormat OutputAudioFormat { get; }
 
-        public ConversationInputTranscriptionOptions InputAudioTranscription { get; set; }
+        public ConversationInputTranscriptionOptions InputAudioTranscription { get; }
 
-        public ConversationTurnDetectionOptions TurnDetection { get; set; }
+        public ConversationTurnDetectionOptions TurnDetection { get; }
 
         public IList<ConversationTool> Tools { get; }
 
-        public BinaryData ToolChoice { get; set; }
+        public BinaryData ToolChoice { get; }
 
-        public float Temperature { get; set; }
+        public float Temperature { get; }
     }
 }

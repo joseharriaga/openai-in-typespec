@@ -34,12 +34,12 @@ namespace OpenAI.RealtimeConversation
 
         public InternalRealtimeResponseObject Object { get; } = "realtime.response";
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public ConversationStatus Status { get; set; }
+        public ConversationStatus Status { get; }
 
-        public InternalRealtimeResponseStatusDetails StatusDetails { get; set; }
+        public InternalRealtimeResponseStatusDetails StatusDetails { get; }
 
-        public ConversationTokenUsage Usage { get; set; }
+        public ConversationTokenUsage Usage { get; }
     }
 }

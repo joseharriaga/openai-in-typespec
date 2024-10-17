@@ -30,14 +30,14 @@ namespace OpenAI.RealtimeConversation
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public int TotalTokens { get; set; }
+        public int TotalTokens { get; }
 
-        public int InputTokens { get; set; }
+        public int InputTokens { get; }
 
-        public int OutputTokens { get; set; }
+        public int OutputTokens { get; }
 
-        public ConversationInputTokenUsageDetails InputTokenDetails { get; set; }
+        public ConversationInputTokenUsageDetails InputTokenDetails { get; }
 
-        public ConversationOutputTokenUsageDetails OutputTokenDetails { get; set; }
+        public ConversationOutputTokenUsageDetails OutputTokenDetails { get; }
     }
 }

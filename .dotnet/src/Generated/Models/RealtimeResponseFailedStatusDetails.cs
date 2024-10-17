@@ -19,6 +19,6 @@ namespace OpenAI.RealtimeConversation
             Error = error;
         }
 
-        public BinaryData Error { get; set; }
+        public BinaryData Error { get; }
     }
 }

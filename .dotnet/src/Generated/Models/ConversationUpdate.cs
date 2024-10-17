@@ -24,6 +24,6 @@ namespace OpenAI.RealtimeConversation
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string EventId { get; set; }
+        public string EventId { get; }
     }
 }

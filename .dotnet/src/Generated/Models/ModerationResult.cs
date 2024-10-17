@@ -22,6 +22,6 @@ namespace OpenAI.Moderations
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public bool Flagged { get; set; }
+        public bool Flagged { get; }
     }
 }

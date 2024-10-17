@@ -32,18 +32,18 @@ namespace OpenAI.Chat
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
         public IList<InternalCreateChatCompletionFunctionResponseChoice> Choices { get; }
 
-        public DateTimeOffset Created { get; set; }
+        public DateTimeOffset Created { get; }
 
-        public string Model { get; set; }
+        public string Model { get; }
 
-        public string SystemFingerprint { get; set; }
+        public string SystemFingerprint { get; }
 
         public InternalCreateChatCompletionFunctionResponseObject Object { get; } = "chat.completion";
 
-        public ChatTokenUsage Usage { get; set; }
+        public ChatTokenUsage Usage { get; }
     }
 }

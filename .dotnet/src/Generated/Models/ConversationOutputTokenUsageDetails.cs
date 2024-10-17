@@ -24,8 +24,8 @@ namespace OpenAI.RealtimeConversation
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public int TextTokens { get; set; }
+        public int TextTokens { get; }
 
-        public int AudioTokens { get; set; }
+        public int AudioTokens { get; }
     }
 }

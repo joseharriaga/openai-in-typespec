@@ -20,6 +20,6 @@ namespace OpenAI.Chat
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public int Index { get; set; }
+        public int Index { get; }
     }
 }

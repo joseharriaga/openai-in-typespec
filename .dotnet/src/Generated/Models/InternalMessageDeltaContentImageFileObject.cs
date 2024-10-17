@@ -20,8 +20,8 @@ namespace OpenAI.Assistants
             ImageFile = imageFile;
         }
 
-        public int Index { get; set; }
+        public int Index { get; }
 
-        public InternalMessageDeltaContentImageFileObjectImageFile ImageFile { get; set; }
+        public InternalMessageDeltaContentImageFileObjectImageFile ImageFile { get; }
     }
 }

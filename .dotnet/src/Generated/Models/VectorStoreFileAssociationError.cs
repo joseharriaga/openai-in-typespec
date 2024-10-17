@@ -24,8 +24,8 @@ namespace OpenAI.VectorStores
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public VectorStoreFileAssociationErrorCode Code { get; set; }
+        public VectorStoreFileAssociationErrorCode Code { get; }
 
-        public string Message { get; set; }
+        public string Message { get; }
     }
 }

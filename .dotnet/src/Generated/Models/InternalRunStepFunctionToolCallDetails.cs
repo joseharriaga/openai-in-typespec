@@ -12,11 +12,13 @@ namespace OpenAI.Assistants
         internal InternalRunStepFunctionToolCallDetails(string id, InternalRunStepDetailsToolCallsFunctionObjectFunction internalFunction) : base("function")
         {
             Id = id;
+            _internalFunction = internalFunction;
         }
 
         internal InternalRunStepFunctionToolCallDetails(string id, InternalRunStepDetailsToolCallsFunctionObjectFunction internalFunction, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
             Id = id;
+            _internalFunction = internalFunction;
         }
 
         public string Id { get; set; }

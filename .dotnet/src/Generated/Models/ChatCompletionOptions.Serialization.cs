@@ -139,7 +139,7 @@ namespace OpenAI.Chat
                 }
                 else
                 {
-                    writer.WriteNull("includeLogProbabilities"u8);
+                    writer.WriteNull("logprobs"u8);
                 }
             }
             if (Optional.IsDefined(TopLogProbabilityCount))
@@ -151,7 +151,7 @@ namespace OpenAI.Chat
                 }
                 else
                 {
-                    writer.WriteNull("topLogProbabilityCount"u8);
+                    writer.WriteNull("topLogprobs"u8);
                 }
             }
             if (Optional.IsCollectionDefined(StopSequences))
@@ -163,7 +163,7 @@ namespace OpenAI.Chat
                 }
                 else
                 {
-                    writer.WriteNull("stopSequences"u8);
+                    writer.WriteNull("stop"u8);
                 }
             }
             if (Optional.IsCollectionDefined(LogitBiases))
@@ -175,7 +175,7 @@ namespace OpenAI.Chat
                 }
                 else
                 {
-                    writer.WriteNull("logitBiases"u8);
+                    writer.WriteNull("logitBias"u8);
                 }
             }
             if (Optional.IsDefined(ToolChoice))
@@ -219,7 +219,7 @@ namespace OpenAI.Chat
                 }
                 else
                 {
-                    writer.WriteNull("deprecatedMaxTokens"u8);
+                    writer.WriteNull("maxTokens"u8);
                 }
             }
             if (Optional.IsDefined(MaxOutputTokenCount))
@@ -231,7 +231,7 @@ namespace OpenAI.Chat
                 }
                 else
                 {
-                    writer.WriteNull("maxOutputTokenCount"u8);
+                    writer.WriteNull("maxCompletionTokens"u8);
                 }
             }
             if (Optional.IsCollectionDefined(Functions))
@@ -249,7 +249,7 @@ namespace OpenAI.Chat
                 if (_serviceTier != null)
                 {
                     writer.WritePropertyName("service_tier"u8);
-                    writer.WriteObjectValue<InternalCreateChatCompletionRequestServiceTier?>(_serviceTier, options);
+                    writer.WriteStringValue(_serviceTier.Value.ToString());
                 }
                 else
                 {
@@ -557,7 +557,7 @@ namespace OpenAI.Chat
                         serviceTier = null;
                         continue;
                     }
-                    serviceTier = Chat.InternalCreateChatCompletionRequestServiceTier?.DeserializeInternalCreateChatCompletionRequestServiceTier(prop.Value, options);
+                    serviceTier = new InternalCreateChatCompletionRequestServiceTier(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

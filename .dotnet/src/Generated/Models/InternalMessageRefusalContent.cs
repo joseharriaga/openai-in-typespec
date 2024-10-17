@@ -16,11 +16,13 @@ namespace OpenAI.Assistants
             Argument.AssertNotNull(@type, nameof(@type));
 
             InternalRefusal = internalRefusal;
+            _type = @type;
         }
 
         internal InternalMessageRefusalContent(string internalRefusal, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
         {
             InternalRefusal = internalRefusal;
+            _type = @type;
         }
     }
 }

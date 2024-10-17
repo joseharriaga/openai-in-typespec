@@ -47,7 +47,7 @@ namespace OpenAI.Chat
             }
             else
             {
-                writer.WriteNull("utf8Bytes"u8);
+                writer.WriteNull("bytes"u8);
             }
             writer.WritePropertyName("top_logprobs"u8);
             writer.WriteStartArray();

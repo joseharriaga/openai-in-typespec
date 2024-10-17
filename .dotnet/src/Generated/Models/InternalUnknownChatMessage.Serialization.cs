@@ -52,7 +52,7 @@ namespace OpenAI.Chat
             {
                 if (prop.NameEquals("role"u8))
                 {
-                    role = prop.Value.GetInt32().ToChatMessageRole();
+                    role = prop.Value.GetString().ToChatMessageRole();
                     continue;
                 }
                 if (prop.NameEquals("content"u8))

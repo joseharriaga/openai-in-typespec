@@ -38,7 +38,7 @@ namespace OpenAI.Assistants
                 writer.WriteEndArray();
             }
             writer.WritePropertyName("role"u8);
-            writer.WriteNumberValue((int)Role);
+            writer.WriteStringValue(Role.ToSerialString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -101,7 +101,7 @@ namespace OpenAI.Assistants
                         role = null;
                         continue;
                     }
-                    role = prop.Value.GetInt32().ToMessageRole();
+                    role = prop.Value.GetString().ToMessageRole();
                     continue;
                 }
                 if (options.Format != "W")

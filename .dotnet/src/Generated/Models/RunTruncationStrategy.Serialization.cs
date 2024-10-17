@@ -44,7 +44,7 @@ namespace OpenAI.Assistants
                 }
             }
             writer.WritePropertyName("type"u8);
-            writer.WriteObjectValue<InternalTruncationObjectType>(_type, options);
+            writer.WriteStringValue(_type.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -98,7 +98,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = InternalTruncationObjectType.DeserializeInternalTruncationObjectType(prop.Value, options);
+                    @type = new InternalTruncationObjectType(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

@@ -11,6 +11,7 @@ namespace OpenAI.VectorStores
     {
         internal StaticFileChunkingStrategy(InternalStaticChunkingStrategyDetails internalDetails, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
+            _internalDetails = internalDetails;
         }
     }
 }

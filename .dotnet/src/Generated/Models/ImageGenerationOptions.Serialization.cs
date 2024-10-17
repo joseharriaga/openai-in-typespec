@@ -73,7 +73,7 @@ namespace OpenAI.Images
                 if (Model != null)
                 {
                     writer.WritePropertyName("model"u8);
-                    writer.WriteObjectValue<InternalCreateImageRequestModel?>(Model, options);
+                    writer.WriteStringValue(Model.Value.ToString());
                 }
                 else
                 {
@@ -193,7 +193,7 @@ namespace OpenAI.Images
                         model = null;
                         continue;
                     }
-                    model = Images.InternalCreateImageRequestModel?.DeserializeInternalCreateImageRequestModel(prop.Value, options);
+                    model = new InternalCreateImageRequestModel(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("prompt"u8))

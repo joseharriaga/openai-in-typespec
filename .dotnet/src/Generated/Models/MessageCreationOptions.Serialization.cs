@@ -68,7 +68,7 @@ namespace OpenAI.Assistants
                 }
             }
             writer.WritePropertyName("role"u8);
-            writer.WriteNumberValue((int)Role);
+            writer.WriteStringValue(Role.ToSerialString());
             writer.WritePropertyName("content"u8);
             this.SerializeContent(writer, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
@@ -151,7 +151,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("role"u8))
                 {
-                    role = prop.Value.GetInt32().ToMessageRole();
+                    role = prop.Value.GetString().ToMessageRole();
                     continue;
                 }
                 if (prop.NameEquals("content"u8))

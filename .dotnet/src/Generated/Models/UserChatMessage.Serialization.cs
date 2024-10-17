@@ -13,10 +13,6 @@ namespace OpenAI.Chat
 {
     public partial class UserChatMessage : IJsonModel<UserChatMessage>
     {
-        internal UserChatMessage()
-        {
-        }
-
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<UserChatMessage>)this).GetFormatFromOptions(options) : options.Format;
@@ -69,7 +65,7 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("role"u8))
                 {
-                    role = prop.Value.GetInt32().ToChatMessageRole();
+                    role = prop.Value.GetString().ToChatMessageRole();
                     continue;
                 }
                 if (prop.NameEquals("content"u8))

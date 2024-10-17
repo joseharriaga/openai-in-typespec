@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     public partial class FunctionChatMessage : ChatMessage
     {
-        public FunctionChatMessage(string functionName, Chat.ChatMessageRole role) : base(role)
+        public FunctionChatMessage(string functionName) : base(Chat.ChatMessageRole.Function)
         {
             Argument.AssertNotNull(functionName, nameof(functionName));
 

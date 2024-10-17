@@ -26,6 +26,7 @@ namespace OpenAI.RealtimeConversation
             Tools = tools.ToList();
             ToolChoice = toolChoice;
             Temperature = temperature;
+            _maxResponseOutputTokens = maxResponseOutputTokens;
         }
 
         internal InternalRealtimeResponseSession(InternalRealtimeResponseSessionObject @object, string id, string model, IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> modalities, string instructions, ConversationVoice voice, ConversationAudioFormat inputAudioFormat, ConversationAudioFormat outputAudioFormat, ConversationInputTranscriptionOptions inputAudioTranscription, ConversationTurnDetectionOptions turnDetection, IList<ConversationTool> tools, BinaryData toolChoice, float temperature, BinaryData maxResponseOutputTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
@@ -43,6 +44,7 @@ namespace OpenAI.RealtimeConversation
             Tools = tools;
             ToolChoice = toolChoice;
             Temperature = temperature;
+            _maxResponseOutputTokens = maxResponseOutputTokens;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

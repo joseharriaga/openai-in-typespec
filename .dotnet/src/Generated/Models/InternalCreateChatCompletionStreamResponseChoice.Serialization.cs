@@ -42,7 +42,7 @@ namespace OpenAI.Chat
             if (FinishReason != null)
             {
                 writer.WritePropertyName("finish_reason"u8);
-                writer.WriteNumberValue((int)FinishReason.Value);
+                writer.WriteStringValue(FinishReason.Value.ToSerialString());
             }
             else
             {

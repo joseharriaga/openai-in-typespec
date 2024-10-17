@@ -47,7 +47,7 @@ namespace OpenAI.Chat
             }
             else
             {
-                writer.WriteNull("utf8Bytes"u8);
+                writer.WriteNull("bytes"u8);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {

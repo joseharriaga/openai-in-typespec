@@ -15,6 +15,7 @@ namespace OpenAI.RealtimeConversation
         public ConversationSessionOptions()
         {
             Tools = new ChangeTrackingList<ConversationTool>();
+            _internalModalities = new ChangeTrackingList<InternalRealtimeRequestSessionUpdateCommandSessionModality>();
         }
 
         internal ConversationSessionOptions(ConversationVoice? voice, string instructions, ConversationAudioFormat? inputAudioFormat, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, string model, ConversationTurnDetectionOptions turnDetectionOptions, ConversationInputTranscriptionOptions inputTranscriptionOptions, IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> internalModalities, BinaryData internalToolChoice, BinaryData maxResponseOutputTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
@@ -28,6 +29,9 @@ namespace OpenAI.RealtimeConversation
             Model = model;
             TurnDetectionOptions = turnDetectionOptions;
             InputTranscriptionOptions = inputTranscriptionOptions;
+            _internalModalities = internalModalities;
+            _internalToolChoice = internalToolChoice;
+            _maxResponseOutputTokens = maxResponseOutputTokens;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

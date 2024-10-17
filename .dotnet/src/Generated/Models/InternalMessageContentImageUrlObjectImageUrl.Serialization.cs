@@ -36,7 +36,7 @@ namespace OpenAI.Assistants
             if (Optional.IsDefined(Detail))
             {
                 writer.WritePropertyName("detail"u8);
-                writer.WriteStringValue(Detail);
+                writer.WriteStringValue(Detail.ToSerialString());
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -91,7 +91,7 @@ namespace OpenAI.Assistants
                         detail = null;
                         continue;
                     }
-                    detail = prop.Value.GetString();
+                    detail = prop.Value.GetString().ToString();
                     continue;
                 }
                 if (options.Format != "W")

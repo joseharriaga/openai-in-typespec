@@ -18,6 +18,7 @@ namespace OpenAI.VectorStores
             Status = status;
             BatchId = batchId;
             FileCounts = fileCounts;
+            this.Object = @object;
         }
 
         internal VectorStoreBatchFileJob(DateTimeOffset createdAt, string vectorStoreId, VectorStoreBatchFileJobStatus status, string batchId, VectorStoreFileCounts fileCounts, object @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
@@ -27,6 +28,7 @@ namespace OpenAI.VectorStores
             Status = status;
             BatchId = batchId;
             FileCounts = fileCounts;
+            this.Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

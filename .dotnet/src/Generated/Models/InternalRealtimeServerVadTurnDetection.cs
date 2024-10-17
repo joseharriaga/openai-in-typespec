@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeServerVadTurnDetection : ConversationTurnDetectionOptions
     {
-        public InternalRealtimeServerVadTurnDetection(RealtimeConversation.ConversationTurnDetectionKind kind) : base(kind)
+        public InternalRealtimeServerVadTurnDetection() : base(RealtimeConversation.ConversationTurnDetectionKind.ServerVoiceActivityDetection)
         {
         }
 

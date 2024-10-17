@@ -14,6 +14,7 @@ namespace OpenAI.Assistants
         internal ToolConstraint(InternalAssistantsNamedToolChoiceFunction function, string objectType, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Function = function;
+            _objectType = objectType;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

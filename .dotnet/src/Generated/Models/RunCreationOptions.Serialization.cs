@@ -58,11 +58,11 @@ namespace OpenAI.Assistants
                 if (ModelOverride != null)
                 {
                     writer.WritePropertyName("model"u8);
-                    writer.WriteStringValue(ModelOverride);
+                    writer.WriteStringValue(ModelOverride.ToSerialString());
                 }
                 else
                 {
-                    writer.WriteNull("modelOverride"u8);
+                    writer.WriteNull("model"u8);
                 }
             }
             if (Optional.IsDefined(InstructionsOverride))
@@ -74,7 +74,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("instructionsOverride"u8);
+                    writer.WriteNull("instructions"u8);
                 }
             }
             if (Optional.IsDefined(AdditionalInstructions))
@@ -125,7 +125,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("toolsOverride"u8);
+                    writer.WriteNull("tools"u8);
                 }
             }
             if (Optional.IsCollectionDefined(Metadata))
@@ -172,7 +172,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("nucleusSamplingFactor"u8);
+                    writer.WriteNull("topP"u8);
                 }
             }
             if (Optional.IsDefined(MaxInputTokenCount))
@@ -184,7 +184,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("maxInputTokenCount"u8);
+                    writer.WriteNull("maxPromptTokens"u8);
                 }
             }
             if (Optional.IsDefined(MaxOutputTokenCount))
@@ -196,7 +196,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("maxOutputTokenCount"u8);
+                    writer.WriteNull("maxCompletionTokens"u8);
                 }
             }
             if (Optional.IsDefined(TruncationStrategy))
@@ -220,7 +220,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("toolConstraint"u8);
+                    writer.WriteNull("toolChoice"u8);
                 }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
@@ -310,7 +310,7 @@ namespace OpenAI.Assistants
                         modelOverride = null;
                         continue;
                     }
-                    modelOverride = prop.Value.GetString();
+                    modelOverride = prop.Value.GetString().ToString();
                     continue;
                 }
                 if (prop.NameEquals("instructions"u8))

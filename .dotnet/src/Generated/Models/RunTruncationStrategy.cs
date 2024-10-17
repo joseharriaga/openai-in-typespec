@@ -14,6 +14,7 @@ namespace OpenAI.Assistants
         internal RunTruncationStrategy(int? lastMessages, InternalTruncationObjectType @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             LastMessages = lastMessages;
+            _type = @type;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

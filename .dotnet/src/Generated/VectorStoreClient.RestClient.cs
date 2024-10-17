@@ -35,7 +35,7 @@ namespace OpenAI.VectorStores
             }
             if (order != null)
             {
-                uri.AppendQuery("order", TypeFormatters.ConvertToString(order, null), true);
+                uri.AppendQuery("order", order, true);
             }
             if (after != null)
             {
@@ -68,7 +68,7 @@ namespace OpenAI.VectorStores
             }
             if (order != null)
             {
-                uri.AppendQuery("order", TypeFormatters.ConvertToString(order, null), true);
+                uri.AppendQuery("order", order, true);
             }
             if (after != null)
             {
@@ -80,7 +80,7 @@ namespace OpenAI.VectorStores
             }
             if (filter != null)
             {
-                uri.AppendQuery("filter", TypeFormatters.ConvertToString(filter, null), true);
+                uri.AppendQuery("filter", filter, true);
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
@@ -107,7 +107,7 @@ namespace OpenAI.VectorStores
             }
             if (order != null)
             {
-                uri.AppendQuery("order", TypeFormatters.ConvertToString(order, null), true);
+                uri.AppendQuery("order", order, true);
             }
             if (after != null)
             {
@@ -119,7 +119,7 @@ namespace OpenAI.VectorStores
             }
             if (filter != null)
             {
-                uri.AppendQuery("filter", TypeFormatters.ConvertToString(filter, null), true);
+                uri.AppendQuery("filter", filter, true);
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");

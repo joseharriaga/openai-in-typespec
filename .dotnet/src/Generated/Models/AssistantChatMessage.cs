@@ -4,17 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI;
 
 namespace OpenAI.Chat
 {
     public partial class AssistantChatMessage : ChatMessage
     {
-        public AssistantChatMessage(Chat.ChatMessageRole role) : base(role)
-        {
-            ToolCalls = new ChangeTrackingList<ChatToolCall>();
-        }
-
         internal AssistantChatMessage(string refusal, string participantName, IList<ChatToolCall> toolCalls, ChatFunctionCall functionCall, Chat.ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, content, additionalBinaryDataProperties)
         {
             Refusal = refusal;

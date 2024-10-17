@@ -446,10 +446,10 @@ namespace OpenAI
             return new ConversationInputTranscriptionOptions(model, null);
         }
 
-        public static ConversationTurnDetectionOptions ConversationTurnDetectionOptions(RealtimeConversation.ConversationTurnDetectionKind kind = default)
+        public static ConversationTurnDetectionOptions ConversationTurnDetectionOptions(int kind = default)
         {
 
-            return new UnknownRealtimeTurnDetection(kind, null);
+            return new UnknownRealtimeTurnDetection(kind.ToConversationTurnDetectionKind(), null);
         }
 
         public static ConversationTool ConversationTool(ConversationToolKind kind = default)
@@ -458,10 +458,10 @@ namespace OpenAI
             return new UnknownRealtimeTool(kind, null);
         }
 
-        public static ConversationFunctionTool ConversationFunctionTool(string name = default, string description = default, BinaryData parameters = default, ConversationToolKind kind = default)
+        public static ConversationFunctionTool ConversationFunctionTool(string name = default, string description = default, BinaryData parameters = default)
         {
 
-            return new ConversationFunctionTool(name, description, parameters, kind, null);
+            return new ConversationFunctionTool(name, description, parameters, ConversationToolKind.Function, null);
         }
 
         public static ConversationItem ConversationItem(string @type = default, string id = default)
@@ -476,37 +476,37 @@ namespace OpenAI
             return new UnknownRealtimeContentPart(@type, null);
         }
 
-        public static ConversationUpdate ConversationUpdate(string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationUpdate ConversationUpdate(string eventId = default, int kind = default)
         {
 
-            return new UnknownRealtimeResponseCommand(eventId, kind, null);
+            return new UnknownRealtimeResponseCommand(eventId, kind.ToConversationUpdateKind(), null);
         }
 
-        public static ConversationSessionStartedUpdate ConversationSessionStartedUpdate(InternalRealtimeResponseSession internalSession = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationSessionStartedUpdate ConversationSessionStartedUpdate(InternalRealtimeResponseSession internalSession = default, string eventId = default)
         {
 
-            return new ConversationSessionStartedUpdate(internalSession, eventId, kind, null);
+            return new ConversationSessionStartedUpdate(internalSession, eventId, RealtimeConversation.ConversationUpdateKind.SessionStarted, null);
         }
 
-        public static ConversationSessionConfiguredUpdate ConversationSessionConfiguredUpdate(InternalRealtimeResponseSession internalSession = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationSessionConfiguredUpdate ConversationSessionConfiguredUpdate(InternalRealtimeResponseSession internalSession = default, string eventId = default)
         {
 
-            return new ConversationSessionConfiguredUpdate(internalSession, eventId, kind, null);
+            return new ConversationSessionConfiguredUpdate(internalSession, eventId, RealtimeConversation.ConversationUpdateKind.SessionConfigured, null);
         }
 
-        public static ConversationItemAcknowledgedUpdate ConversationItemAcknowledgedUpdate(ConversationItem item = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationItemAcknowledgedUpdate ConversationItemAcknowledgedUpdate(ConversationItem item = default, string eventId = default)
         {
 
-            return new ConversationItemAcknowledgedUpdate(item, eventId, kind, null);
+            return new ConversationItemAcknowledgedUpdate(item, eventId, RealtimeConversation.ConversationUpdateKind.ItemAcknowledged, null);
         }
 
-        public static ConversationItemDeletedUpdate ConversationItemDeletedUpdate(string itemId = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationItemDeletedUpdate ConversationItemDeletedUpdate(string itemId = default, string eventId = default)
         {
 
-            return new ConversationItemDeletedUpdate(itemId, eventId, kind, null);
+            return new ConversationItemDeletedUpdate(itemId, eventId, RealtimeConversation.ConversationUpdateKind.ItemDeleted, null);
         }
 
-        public static ConversationItemTruncatedUpdate ConversationItemTruncatedUpdate(string itemId = default, int audioEndMs = default, int index = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationItemTruncatedUpdate ConversationItemTruncatedUpdate(string itemId = default, int audioEndMs = default, int index = default, string eventId = default)
         {
 
             return new ConversationItemTruncatedUpdate(
@@ -514,14 +514,14 @@ namespace OpenAI
                 audioEndMs,
                 index,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ItemTruncated,
                 null);
         }
 
-        public static ConversationResponseStartedUpdate ConversationResponseStartedUpdate(InternalRealtimeResponse internalResponse = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationResponseStartedUpdate ConversationResponseStartedUpdate(InternalRealtimeResponse internalResponse = default, string eventId = default)
         {
 
-            return new ConversationResponseStartedUpdate(internalResponse, eventId, kind, null);
+            return new ConversationResponseStartedUpdate(internalResponse, eventId, RealtimeConversation.ConversationUpdateKind.ResponseStarted, null);
         }
 
         public static ConversationTokenUsage ConversationTokenUsage(int totalTokens = default, int inputTokens = default, int outputTokens = default, ConversationInputTokenUsageDetails inputTokenDetails = default, ConversationOutputTokenUsageDetails outputTokenDetails = default)
@@ -548,17 +548,17 @@ namespace OpenAI
             return new ConversationOutputTokenUsageDetails(textTokens, audioTokens, null);
         }
 
-        public static ConversationResponseFinishedUpdate ConversationResponseFinishedUpdate(InternalRealtimeResponse internalResponse = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationResponseFinishedUpdate ConversationResponseFinishedUpdate(InternalRealtimeResponse internalResponse = default, string eventId = default)
         {
 
-            return new ConversationResponseFinishedUpdate(internalResponse, eventId, kind, null);
+            return new ConversationResponseFinishedUpdate(internalResponse, eventId, RealtimeConversation.ConversationUpdateKind.ResponseFinished, null);
         }
 
-        public static ConversationRateLimitsUpdatedUpdate ConversationRateLimitsUpdatedUpdate(IEnumerable<ConversationRateLimitDetailsItem> rateLimits = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationRateLimitsUpdatedUpdate ConversationRateLimitsUpdatedUpdate(IEnumerable<ConversationRateLimitDetailsItem> rateLimits = default, string eventId = default)
         {
             rateLimits ??= new ChangeTrackingList<ConversationRateLimitDetailsItem>();
 
-            return new ConversationRateLimitsUpdatedUpdate(rateLimits?.ToList(), eventId, kind, null);
+            return new ConversationRateLimitsUpdatedUpdate(rateLimits?.ToList(), eventId, RealtimeConversation.ConversationUpdateKind.RateLimitsUpdated, null);
         }
 
         public static ConversationRateLimitDetailsItem ConversationRateLimitDetailsItem(string name = default, int limit = default, int remaining = default, float resetSeconds = default)
@@ -567,7 +567,7 @@ namespace OpenAI
             return new ConversationRateLimitDetailsItem(name, limit, remaining, resetSeconds, null);
         }
 
-        public static ConversationItemStartedUpdate ConversationItemStartedUpdate(string responseId = default, int outputIndex = default, InternalRealtimeResponseItem internalItem = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationItemStartedUpdate ConversationItemStartedUpdate(string responseId = default, int outputIndex = default, InternalRealtimeResponseItem internalItem = default, string eventId = default)
         {
 
             return new ConversationItemStartedUpdate(
@@ -575,11 +575,11 @@ namespace OpenAI
                 outputIndex,
                 internalItem,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ItemStarted,
                 null);
         }
 
-        public static ConversationItemFinishedUpdate ConversationItemFinishedUpdate(string responseId = default, int outputIndex = default, InternalRealtimeResponseItem internalItem = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationItemFinishedUpdate ConversationItemFinishedUpdate(string responseId = default, int outputIndex = default, InternalRealtimeResponseItem internalItem = default, string eventId = default)
         {
 
             return new ConversationItemFinishedUpdate(
@@ -587,11 +587,11 @@ namespace OpenAI
                 outputIndex,
                 internalItem,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ItemFinished,
                 null);
         }
 
-        public static ConversationContentPartStartedUpdate ConversationContentPartStartedUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, ConversationContentPart internalContentPart = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationContentPartStartedUpdate ConversationContentPartStartedUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, ConversationContentPart internalContentPart = default, string eventId = default)
         {
 
             return new ConversationContentPartStartedUpdate(
@@ -601,11 +601,11 @@ namespace OpenAI
                 contentIndex,
                 internalContentPart,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ContentPartStarted,
                 null);
         }
 
-        public static ConversationContentPartFinishedUpdate ConversationContentPartFinishedUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, ConversationContentPart internalContentPart = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationContentPartFinishedUpdate ConversationContentPartFinishedUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, ConversationContentPart internalContentPart = default, string eventId = default)
         {
 
             return new ConversationContentPartFinishedUpdate(
@@ -615,11 +615,11 @@ namespace OpenAI
                 contentIndex,
                 internalContentPart,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ContentPartFinished,
                 null);
         }
 
-        public static ConversationAudioDeltaUpdate ConversationAudioDeltaUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, BinaryData delta = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationAudioDeltaUpdate ConversationAudioDeltaUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, BinaryData delta = default, string eventId = default)
         {
 
             return new ConversationAudioDeltaUpdate(
@@ -629,24 +629,25 @@ namespace OpenAI
                 contentIndex,
                 delta,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ResponseAudioDelta,
                 null);
         }
 
-        public static ConversationAudioDoneUpdate ConversationAudioDoneUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationAudioDoneUpdate ConversationAudioDoneUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string eventId = default)
         {
 
             return new ConversationAudioDoneUpdate(
+                RealtimeConversation.ConversationUpdateKind.ResponseAudioDone,
                 responseId,
                 itemId,
                 outputIndex,
                 contentIndex,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ResponseAudioDone,
                 null);
         }
 
-        public static ConversationOutputTranscriptionDeltaUpdate ConversationOutputTranscriptionDeltaUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string delta = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationOutputTranscriptionDeltaUpdate ConversationOutputTranscriptionDeltaUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string delta = default, string eventId = default)
         {
 
             return new ConversationOutputTranscriptionDeltaUpdate(
@@ -656,11 +657,11 @@ namespace OpenAI
                 contentIndex,
                 delta,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ResponseAudioTranscriptDelta,
                 null);
         }
 
-        public static ConversationOutputTranscriptionFinishedUpdate ConversationOutputTranscriptionFinishedUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationOutputTranscriptionFinishedUpdate ConversationOutputTranscriptionFinishedUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string eventId = default)
         {
 
             return new ConversationOutputTranscriptionFinishedUpdate(
@@ -669,11 +670,11 @@ namespace OpenAI
                 outputIndex,
                 contentIndex,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ResponseAudioTranscriptDone,
                 null);
         }
 
-        public static ConversationTextDeltaUpdate ConversationTextDeltaUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string delta = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationTextDeltaUpdate ConversationTextDeltaUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string delta = default, string eventId = default)
         {
 
             return new ConversationTextDeltaUpdate(
@@ -683,11 +684,11 @@ namespace OpenAI
                 contentIndex,
                 delta,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ResponseTextDelta,
                 null);
         }
 
-        public static ConversationTextDoneUpdate ConversationTextDoneUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string value = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationTextDoneUpdate ConversationTextDoneUpdate(string responseId = default, string itemId = default, int outputIndex = default, int contentIndex = default, string value = default, string eventId = default)
         {
 
             return new ConversationTextDoneUpdate(
@@ -697,11 +698,11 @@ namespace OpenAI
                 contentIndex,
                 value,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ResponseTextDone,
                 null);
         }
 
-        public static ConversationFunctionCallArgumentsDeltaUpdate ConversationFunctionCallArgumentsDeltaUpdate(string responseId = default, string itemId = default, int outputIndex = default, string callId = default, string delta = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationFunctionCallArgumentsDeltaUpdate ConversationFunctionCallArgumentsDeltaUpdate(string responseId = default, string itemId = default, int outputIndex = default, string callId = default, string delta = default, string eventId = default)
         {
 
             return new ConversationFunctionCallArgumentsDeltaUpdate(
@@ -711,11 +712,11 @@ namespace OpenAI
                 callId,
                 delta,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ResponseFunctionCallArgumentsDelta,
                 null);
         }
 
-        public static ConversationFunctionCallArgumentsDoneUpdate ConversationFunctionCallArgumentsDoneUpdate(string responseId = default, string itemId = default, int outputIndex = default, string callId = default, string name = default, string arguments = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationFunctionCallArgumentsDoneUpdate ConversationFunctionCallArgumentsDoneUpdate(string responseId = default, string itemId = default, int outputIndex = default, string callId = default, string name = default, string arguments = default, string eventId = default)
         {
 
             return new ConversationFunctionCallArgumentsDoneUpdate(
@@ -726,23 +727,23 @@ namespace OpenAI
                 name,
                 arguments,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ResponseFunctionCallArgumentsDone,
                 null);
         }
 
-        public static ConversationInputSpeechStartedUpdate ConversationInputSpeechStartedUpdate(int audioStartMs = default, string itemId = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationInputSpeechStartedUpdate ConversationInputSpeechStartedUpdate(int audioStartMs = default, string itemId = default, string eventId = default)
         {
 
-            return new ConversationInputSpeechStartedUpdate(audioStartMs, itemId, eventId, kind, null);
+            return new ConversationInputSpeechStartedUpdate(audioStartMs, itemId, eventId, RealtimeConversation.ConversationUpdateKind.InputAudioBufferSpeechStarted, null);
         }
 
-        public static ConversationInputSpeechFinishedUpdate ConversationInputSpeechFinishedUpdate(int audioEndMs = default, string itemId = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationInputSpeechFinishedUpdate ConversationInputSpeechFinishedUpdate(int audioEndMs = default, string itemId = default, string eventId = default)
         {
 
-            return new ConversationInputSpeechFinishedUpdate(audioEndMs, itemId, eventId, kind, null);
+            return new ConversationInputSpeechFinishedUpdate(audioEndMs, itemId, eventId, RealtimeConversation.ConversationUpdateKind.InputAudioBufferSpeechStopped, null);
         }
 
-        public static ConversationInputTranscriptionFinishedUpdate ConversationInputTranscriptionFinishedUpdate(string itemId = default, int contentIndex = default, string transcript = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationInputTranscriptionFinishedUpdate ConversationInputTranscriptionFinishedUpdate(string itemId = default, int contentIndex = default, string transcript = default, string eventId = default)
         {
 
             return new ConversationInputTranscriptionFinishedUpdate(
@@ -750,11 +751,11 @@ namespace OpenAI
                 contentIndex,
                 transcript,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ItemInputAudioTranscriptionCompleted,
                 null);
         }
 
-        public static ConversationInputTranscriptionFailedUpdate ConversationInputTranscriptionFailedUpdate(string itemId = default, int contentIndex = default, InternalRealtimeResponseApiError error = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationInputTranscriptionFailedUpdate ConversationInputTranscriptionFailedUpdate(string itemId = default, int contentIndex = default, InternalRealtimeResponseApiError error = default, string eventId = default)
         {
 
             return new ConversationInputTranscriptionFailedUpdate(
@@ -762,26 +763,26 @@ namespace OpenAI
                 contentIndex,
                 error,
                 eventId,
-                kind,
+                RealtimeConversation.ConversationUpdateKind.ItemInputAudioTranscriptionFailed,
                 null);
         }
 
-        public static ConversationInputAudioBufferCommittedUpdate ConversationInputAudioBufferCommittedUpdate(string itemId = default, string previousItemId = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationInputAudioBufferCommittedUpdate ConversationInputAudioBufferCommittedUpdate(string itemId = default, string previousItemId = default, string eventId = default)
         {
 
-            return new ConversationInputAudioBufferCommittedUpdate(itemId, previousItemId, eventId, kind, null);
+            return new ConversationInputAudioBufferCommittedUpdate(itemId, previousItemId, eventId, RealtimeConversation.ConversationUpdateKind.InputAudioBufferCommitted, null);
         }
 
-        public static ConversationInputAudioBufferClearedUpdate ConversationInputAudioBufferClearedUpdate(string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationInputAudioBufferClearedUpdate ConversationInputAudioBufferClearedUpdate(string eventId = default)
         {
 
-            return new ConversationInputAudioBufferClearedUpdate(eventId, kind, null);
+            return new ConversationInputAudioBufferClearedUpdate(eventId, RealtimeConversation.ConversationUpdateKind.InputAudioBufferCleared, null);
         }
 
-        public static ConversationErrorUpdate ConversationErrorUpdate(InternalRealtimeResponseError error = default, string eventId = default, RealtimeConversation.ConversationUpdateKind kind = default)
+        public static ConversationErrorUpdate ConversationErrorUpdate(InternalRealtimeResponseError error = default, string eventId = default)
         {
 
-            return new ConversationErrorUpdate(error, eventId, kind, null);
+            return new ConversationErrorUpdate(error, eventId, RealtimeConversation.ConversationUpdateKind.Error, null);
         }
 
         public static ModerationResultCollection ModerationResultCollection(string id = default, string model = default)
@@ -1002,25 +1003,25 @@ namespace OpenAI
                 null);
         }
 
-        public static ChatMessage ChatMessage(Chat.ChatMessageRole role = default, ChatMessageContent content = default)
+        public static ChatMessage ChatMessage(int role = default, ChatMessageContent content = default)
         {
 
-            return new InternalUnknownChatMessage(role, content, null);
+            return new InternalUnknownChatMessage(role.ToChatMessageRole(), content, null);
         }
 
-        public static SystemChatMessage SystemChatMessage(string participantName = default, Chat.ChatMessageRole role = default, ChatMessageContent content = default)
+        public static SystemChatMessage SystemChatMessage(string participantName = default, ChatMessageContent content = default)
         {
 
-            return new SystemChatMessage(participantName, role, content, null);
+            return new SystemChatMessage(participantName, Chat.ChatMessageRole.System, content, null);
         }
 
-        public static UserChatMessage UserChatMessage(string participantName = default, Chat.ChatMessageRole role = default, ChatMessageContent content = default)
+        public static UserChatMessage UserChatMessage(string participantName = default, ChatMessageContent content = default)
         {
 
-            return new UserChatMessage(participantName, role, content, null);
+            return new UserChatMessage(participantName, Chat.ChatMessageRole.User, content, null);
         }
 
-        public static AssistantChatMessage AssistantChatMessage(string refusal = default, string participantName = default, IEnumerable<ChatToolCall> toolCalls = default, ChatFunctionCall functionCall = default, Chat.ChatMessageRole role = default, ChatMessageContent content = default)
+        public static AssistantChatMessage AssistantChatMessage(string refusal = default, string participantName = default, IEnumerable<ChatToolCall> toolCalls = default, ChatFunctionCall functionCall = default, ChatMessageContent content = default)
         {
             toolCalls ??= new ChangeTrackingList<ChatToolCall>();
 
@@ -1029,7 +1030,7 @@ namespace OpenAI
                 participantName,
                 toolCalls?.ToList(),
                 functionCall,
-                role,
+                Chat.ChatMessageRole.Assistant,
                 content,
                 null);
         }
@@ -1046,16 +1047,16 @@ namespace OpenAI
             return new ChatFunctionCall(functionName, functionArguments, null);
         }
 
-        public static ToolChatMessage ToolChatMessage(string toolCallId = default, Chat.ChatMessageRole role = default, ChatMessageContent content = default)
+        public static ToolChatMessage ToolChatMessage(string toolCallId = default, ChatMessageContent content = default)
         {
 
-            return new ToolChatMessage(toolCallId, role, content, null);
+            return new ToolChatMessage(toolCallId, Chat.ChatMessageRole.Tool, content, null);
         }
 
-        public static FunctionChatMessage FunctionChatMessage(string functionName = default, Chat.ChatMessageRole role = default, ChatMessageContent content = default)
+        public static FunctionChatMessage FunctionChatMessage(string functionName = default, ChatMessageContent content = default)
         {
 
-            return new FunctionChatMessage(functionName, role, content, null);
+            return new FunctionChatMessage(functionName, Chat.ChatMessageRole.Function, content, null);
         }
 
         public static ChatResponseFormat ChatResponseFormat(string @type = default)

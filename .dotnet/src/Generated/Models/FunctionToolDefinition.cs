@@ -12,6 +12,7 @@ namespace OpenAI.Assistants
     {
         internal FunctionToolDefinition(InternalFunctionDefinition internalFunction, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
+            _internalFunction = internalFunction;
         }
     }
 }

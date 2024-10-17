@@ -14,11 +14,13 @@ namespace OpenAI.Assistants
         internal InternalRunRequiredAction(InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs, object @type)
         {
             SubmitToolOutputs = submitToolOutputs;
+            Type = @type;
         }
 
         internal InternalRunRequiredAction(InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs, object @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             SubmitToolOutputs = submitToolOutputs;
+            Type = @type;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

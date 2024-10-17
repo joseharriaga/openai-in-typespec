@@ -48,10 +48,10 @@ namespace OpenAI.Files
             }
             else
             {
-                writer.WriteNull("sizeInBytes"u8);
+                writer.WriteNull("bytes"u8);
             }
             writer.WritePropertyName("status"u8);
-            writer.WriteNumberValue((int)Status);
+            writer.WriteStringValue(Status.ToSerialString());
             if (Optional.IsDefined(StatusDetails))
             {
                 writer.WritePropertyName("status_details"u8);
@@ -141,7 +141,7 @@ namespace OpenAI.Files
                 }
                 if (prop.NameEquals("status"u8))
                 {
-                    status = prop.Value.GetInt32().ToFileStatus();
+                    status = prop.Value.GetString().ToFileStatus();
                     continue;
                 }
                 if (prop.NameEquals("status_details"u8))

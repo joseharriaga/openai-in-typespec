@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationItemDeletedUpdate : ConversationUpdate
     {
-        internal ConversationItemDeletedUpdate(string itemId, string eventId, RealtimeConversation.ConversationUpdateKind kind) : base(eventId, kind)
+        internal ConversationItemDeletedUpdate(string itemId, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemDeleted)
         {
             ItemId = itemId;
         }

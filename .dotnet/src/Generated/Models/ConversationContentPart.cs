@@ -13,10 +13,12 @@ namespace OpenAI.RealtimeConversation
 
         private protected ConversationContentPart(ConversationContentPartKind @type)
         {
+            Type = @type;
         }
 
         internal ConversationContentPart(ConversationContentPartKind @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
+            Type = @type;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }

@@ -15,10 +15,14 @@ namespace OpenAI.Assistants
             Argument.AssertNotNull(@type, nameof(@type));
             Argument.AssertNotNull(imageFile, nameof(imageFile));
 
+            _type = @type;
+            _imageFile = imageFile;
         }
 
         internal InternalMessageImageFileContent(string @type, InternalMessageContentItemFileObjectImageFile imageFile, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
         {
+            _type = @type;
+            _imageFile = imageFile;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationRateLimitsUpdatedUpdate : ConversationUpdate
     {
-        internal ConversationRateLimitsUpdatedUpdate(IEnumerable<ConversationRateLimitDetailsItem> rateLimits, string eventId, RealtimeConversation.ConversationUpdateKind kind) : base(eventId, kind)
+        internal ConversationRateLimitsUpdatedUpdate(IEnumerable<ConversationRateLimitDetailsItem> rateLimits, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.RateLimitsUpdated)
         {
             RateLimits = rateLimits.ToList();
         }

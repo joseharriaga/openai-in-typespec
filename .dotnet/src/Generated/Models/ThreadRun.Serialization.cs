@@ -183,7 +183,7 @@ namespace OpenAI.Assistants
             }
             else
             {
-                writer.WriteNull("toolConstraint"u8);
+                writer.WriteNull("toolChoice"u8);
             }
             if (Optional.IsDefined(NucleusSamplingFactor))
             {
@@ -194,7 +194,7 @@ namespace OpenAI.Assistants
                 }
                 else
                 {
-                    writer.WriteNull("nucleusSamplingFactor"u8);
+                    writer.WriteNull("topP"u8);
                 }
             }
             writer.WritePropertyName("parallel_tool_calls"u8);
@@ -206,7 +206,7 @@ namespace OpenAI.Assistants
             }
             else
             {
-                writer.WriteNull("maxInputTokenCount"u8);
+                writer.WriteNull("maxPromptTokens"u8);
             }
             if (MaxOutputTokenCount != null)
             {
@@ -215,7 +215,7 @@ namespace OpenAI.Assistants
             }
             else
             {
-                writer.WriteNull("maxOutputTokenCount"u8);
+                writer.WriteNull("maxCompletionTokens"u8);
             }
             if (_internalRequiredAction != null)
             {
@@ -224,7 +224,7 @@ namespace OpenAI.Assistants
             }
             else
             {
-                writer.WriteNull("internalRequiredAction"u8);
+                writer.WriteNull("requiredAction"u8);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {

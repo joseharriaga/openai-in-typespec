@@ -9,12 +9,13 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationContentPartFinishedUpdate : ConversationUpdate
     {
-        internal ConversationContentPartFinishedUpdate(string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart, string eventId, RealtimeConversation.ConversationUpdateKind kind) : base(eventId, kind)
+        internal ConversationContentPartFinishedUpdate(string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ContentPartFinished)
         {
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
             ContentIndex = contentIndex;
+            _internalContentPart = internalContentPart;
         }
 
         internal ConversationContentPartFinishedUpdate(string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
@@ -23,6 +24,7 @@ namespace OpenAI.RealtimeConversation
             ItemId = itemId;
             OutputIndex = outputIndex;
             ContentIndex = contentIndex;
+            _internalContentPart = internalContentPart;
         }
 
         public string ResponseId { get; set; }

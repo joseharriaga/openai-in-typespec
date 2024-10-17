@@ -57,7 +57,7 @@ namespace OpenAI.Chat
             if (Optional.IsDefined(Role))
             {
                 writer.WritePropertyName("role"u8);
-                writer.WriteNumberValue((int)Role.Value);
+                writer.WriteStringValue(Role.Value.ToSerialString());
             }
             if (Optional.IsDefined(Content))
             {
@@ -156,7 +156,7 @@ namespace OpenAI.Chat
                         role = null;
                         continue;
                     }
-                    role = prop.Value.GetInt32().ToChatMessageRole();
+                    role = prop.Value.GetString().ToChatMessageRole();
                     continue;
                 }
                 if (prop.NameEquals("content"u8))

@@ -37,7 +37,7 @@ namespace OpenAI.Audio
             writer.WritePropertyName("input"u8);
             writer.WriteStringValue(Input);
             writer.WritePropertyName("voice"u8);
-            writer.WriteObjectValue<GeneratedSpeechVoice>(Voice, options);
+            writer.WriteStringValue(Voice.ToString());
             if (Optional.IsDefined(SpeedRatio))
             {
                 writer.WritePropertyName("speed"u8);
@@ -109,7 +109,7 @@ namespace OpenAI.Audio
                 }
                 if (prop.NameEquals("voice"u8))
                 {
-                    voice = GeneratedSpeechVoice.DeserializeGeneratedSpeechVoice(prop.Value, options);
+                    voice = new GeneratedSpeechVoice(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("speed"u8))

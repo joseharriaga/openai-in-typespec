@@ -114,7 +114,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("object"u8);
             writer.WriteStringValue(this.Object.ToString());
             writer.WritePropertyName("role"u8);
-            writer.WriteNumberValue((int)Role);
+            writer.WriteStringValue(Role.ToSerialString());
             if (Attachments != null && Optional.IsCollectionDefined(Attachments))
             {
                 writer.WritePropertyName("attachments"u8);
@@ -291,7 +291,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("role"u8))
                 {
-                    role = prop.Value.GetInt32().ToMessageRole();
+                    role = prop.Value.GetString().ToMessageRole();
                     continue;
                 }
                 if (prop.NameEquals("attachments"u8))

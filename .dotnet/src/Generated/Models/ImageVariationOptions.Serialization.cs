@@ -32,7 +32,7 @@ namespace OpenAI.Images
                 if (Model != null)
                 {
                     writer.WritePropertyName("model"u8);
-                    writer.WriteObjectValue<InternalCreateImageVariationRequestModel?>(Model, options);
+                    writer.WriteStringValue(Model.Value.ToString());
                 }
                 else
                 {
@@ -58,7 +58,7 @@ namespace OpenAI.Images
                 if (Size != null)
                 {
                     writer.WritePropertyName("size"u8);
-                    writer.WriteObjectValue<GeneratedImageSize?>(Size, options);
+                    writer.WriteStringValue(Size.Value.ToString());
                 }
                 else
                 {
@@ -70,7 +70,7 @@ namespace OpenAI.Images
                 if (ResponseFormat != null)
                 {
                     writer.WritePropertyName("response_format"u8);
-                    writer.WriteObjectValue<GeneratedImageFormat?>(ResponseFormat, options);
+                    writer.WriteStringValue(ResponseFormat.Value.ToString());
                 }
                 else
                 {
@@ -134,7 +134,7 @@ namespace OpenAI.Images
                         model = null;
                         continue;
                     }
-                    model = Images.InternalCreateImageVariationRequestModel?.DeserializeInternalCreateImageVariationRequestModel(prop.Value, options);
+                    model = new InternalCreateImageVariationRequestModel(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("image"u8))
@@ -159,7 +159,7 @@ namespace OpenAI.Images
                         size = null;
                         continue;
                     }
-                    size = Images.GeneratedImageSize?.DeserializeGeneratedImageSize(prop.Value, options);
+                    size = new GeneratedImageSize(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("response_format"u8))
@@ -169,7 +169,7 @@ namespace OpenAI.Images
                         responseFormat = null;
                         continue;
                     }
-                    responseFormat = Images.GeneratedImageFormat?.DeserializeGeneratedImageFormat(prop.Value, options);
+                    responseFormat = new GeneratedImageFormat(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("user"u8))

@@ -36,6 +36,7 @@ namespace OpenAI.Chat
             _deprecatedMaxTokens = deprecatedMaxTokens;
             MaxOutputTokenCount = maxOutputTokenCount;
             Functions = functions;
+            _serviceTier = serviceTier;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

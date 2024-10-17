@@ -15,12 +15,14 @@ namespace OpenAI.Assistants
         {
             Id = id;
             Delta = delta;
+            this.Object = @object;
         }
 
         internal InternalRunStepDelta(string id, InternalRunStepDeltaObjectDelta delta, object @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             Delta = delta;
+            this.Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

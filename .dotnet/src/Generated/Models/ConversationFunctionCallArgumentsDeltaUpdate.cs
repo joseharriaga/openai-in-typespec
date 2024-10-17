@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationFunctionCallArgumentsDeltaUpdate : ConversationUpdate
     {
-        internal ConversationFunctionCallArgumentsDeltaUpdate(string responseId, string itemId, int outputIndex, string callId, string delta, string eventId, RealtimeConversation.ConversationUpdateKind kind) : base(eventId, kind)
+        internal ConversationFunctionCallArgumentsDeltaUpdate(string responseId, string itemId, int outputIndex, string callId, string delta, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ResponseFunctionCallArgumentsDelta)
         {
             ResponseId = responseId;
             ItemId = itemId;

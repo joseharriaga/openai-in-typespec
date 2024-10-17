@@ -47,7 +47,7 @@ namespace OpenAI.Chat
                 if (ServiceTier != null)
                 {
                     writer.WritePropertyName("service_tier"u8);
-                    writer.WriteObjectValue<InternalCreateChatCompletionStreamResponseServiceTier?>(ServiceTier, options);
+                    writer.WriteStringValue(ServiceTier.Value.ToString());
                 }
                 else
                 {
@@ -147,7 +147,7 @@ namespace OpenAI.Chat
                         serviceTier = null;
                         continue;
                     }
-                    serviceTier = Chat.InternalCreateChatCompletionStreamResponseServiceTier?.DeserializeInternalCreateChatCompletionStreamResponseServiceTier(prop.Value, options);
+                    serviceTier = new InternalCreateChatCompletionStreamResponseServiceTier(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("choices"u8))

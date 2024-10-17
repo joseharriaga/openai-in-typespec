@@ -38,6 +38,7 @@ namespace OpenAI.Assistants
             AllowParallelToolCalls = allowParallelToolCalls;
             MaxInputTokenCount = maxInputTokenCount;
             MaxOutputTokenCount = maxOutputTokenCount;
+            _internalRequiredAction = internalRequiredAction;
         }
 
         internal ThreadRun(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IList<ToolDefinition> tools, IDictionary<string, string> metadata, RunTokenUsage usage, float? temperature, RunTruncationStrategy truncationStrategy, InternalRunObjectObject @object, AssistantResponseFormat responseFormat, ToolConstraint toolConstraint, float? nucleusSamplingFactor, bool? allowParallelToolCalls, int? maxInputTokenCount, int? maxOutputTokenCount, InternalRunRequiredAction internalRequiredAction, IDictionary<string, BinaryData> additionalBinaryDataProperties)
@@ -68,6 +69,7 @@ namespace OpenAI.Assistants
             AllowParallelToolCalls = allowParallelToolCalls;
             MaxInputTokenCount = maxInputTokenCount;
             MaxOutputTokenCount = maxOutputTokenCount;
+            _internalRequiredAction = internalRequiredAction;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

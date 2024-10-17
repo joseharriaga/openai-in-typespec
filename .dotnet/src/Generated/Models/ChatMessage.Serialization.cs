@@ -21,7 +21,7 @@ namespace OpenAI.Chat
                 throw new FormatException($"The model {nameof(ChatMessage)} does not support writing '{format}' format.");
             }
             writer.WritePropertyName("role"u8);
-            writer.WriteNumberValue((int)Role);
+            writer.WriteStringValue(Role.ToSerialString());
             if (options.Format != "W" && Optional.IsDefined(Content))
             {
                 writer.WritePropertyName("content"u8);

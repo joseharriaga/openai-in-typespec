@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     public partial class UserChatMessage : ChatMessage
     {
-        public UserChatMessage(Chat.ChatMessageRole role) : base(role)
+        public UserChatMessage() : base(Chat.ChatMessageRole.User)
         {
         }
 

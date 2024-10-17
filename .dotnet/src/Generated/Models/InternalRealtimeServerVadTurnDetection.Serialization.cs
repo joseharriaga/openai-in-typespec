@@ -13,10 +13,6 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeServerVadTurnDetection : IJsonModel<InternalRealtimeServerVadTurnDetection>
     {
-        internal InternalRealtimeServerVadTurnDetection()
-        {
-        }
-
         void IJsonModel<InternalRealtimeServerVadTurnDetection>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();

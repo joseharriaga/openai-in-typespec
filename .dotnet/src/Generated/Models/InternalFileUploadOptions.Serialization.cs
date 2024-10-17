@@ -38,7 +38,7 @@ namespace OpenAI.Files
             }
 #endif
             writer.WritePropertyName("purpose"u8);
-            writer.WriteObjectValue<FileUploadPurpose>(Purpose, options);
+            writer.WriteStringValue(Purpose.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -87,7 +87,7 @@ namespace OpenAI.Files
                 }
                 if (prop.NameEquals("purpose"u8))
                 {
-                    purpose = FileUploadPurpose.DeserializeFileUploadPurpose(prop.Value, options);
+                    purpose = new FileUploadPurpose(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

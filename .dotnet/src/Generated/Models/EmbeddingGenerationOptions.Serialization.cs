@@ -46,7 +46,7 @@ namespace OpenAI.Embeddings
             if (Optional.IsDefined(EncodingFormat))
             {
                 writer.WritePropertyName("encoding_format"u8);
-                writer.WriteObjectValue<InternalCreateEmbeddingRequestEncodingFormat?>(EncodingFormat, options);
+                writer.WriteStringValue(EncodingFormat.Value.ToString());
             }
             if (Optional.IsDefined(EndUserId))
             {
@@ -124,7 +124,7 @@ namespace OpenAI.Embeddings
                         encodingFormat = null;
                         continue;
                     }
-                    encodingFormat = Embeddings.InternalCreateEmbeddingRequestEncodingFormat?.DeserializeInternalCreateEmbeddingRequestEncodingFormat(prop.Value, options);
+                    encodingFormat = new InternalCreateEmbeddingRequestEncodingFormat(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("user"u8))

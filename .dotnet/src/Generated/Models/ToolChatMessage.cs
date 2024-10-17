@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     public partial class ToolChatMessage : ChatMessage
     {
-        public ToolChatMessage(string toolCallId, Chat.ChatMessageRole role) : base(role)
+        public ToolChatMessage(string toolCallId) : base(Chat.ChatMessageRole.Tool)
         {
             Argument.AssertNotNull(toolCallId, nameof(toolCallId));
 

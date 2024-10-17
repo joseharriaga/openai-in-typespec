@@ -57,7 +57,7 @@ namespace OpenAI.Assistants
             }
             if (order != null)
             {
-                uri.AppendQuery("order", TypeFormatters.ConvertToString(order, null), true);
+                uri.AppendQuery("order", order, true);
             }
             if (after != null)
             {

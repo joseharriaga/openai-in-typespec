@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationInputSpeechStartedUpdate : ConversationUpdate
     {
-        internal ConversationInputSpeechStartedUpdate(int audioStartMs, string itemId, string eventId, RealtimeConversation.ConversationUpdateKind kind) : base(eventId, kind)
+        internal ConversationInputSpeechStartedUpdate(int audioStartMs, string itemId, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.InputAudioBufferSpeechStarted)
         {
             AudioStartMs = audioStartMs;
             ItemId = itemId;

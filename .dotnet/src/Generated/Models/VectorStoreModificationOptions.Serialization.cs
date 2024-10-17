@@ -71,7 +71,7 @@ namespace OpenAI.VectorStores
                 }
                 else
                 {
-                    writer.WriteNull("expirationPolicy"u8);
+                    writer.WriteNull("expiresAfter"u8);
                 }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)

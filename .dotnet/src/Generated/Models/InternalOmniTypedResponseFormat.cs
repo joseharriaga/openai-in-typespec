@@ -9,15 +9,17 @@ namespace OpenAI.Internal
 {
     internal abstract partial class InternalOmniTypedResponseFormat
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        protected InternalOmniTypedResponseFormat()
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        private protected InternalOmniTypedResponseFormat(string @type)
         {
+            Type = @type;
         }
 
-        internal InternalOmniTypedResponseFormat(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalOmniTypedResponseFormat(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = type;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            Type = @type;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         internal string Type { get; set; }

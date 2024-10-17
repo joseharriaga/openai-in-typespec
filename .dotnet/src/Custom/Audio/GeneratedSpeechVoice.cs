@@ -6,6 +6,6 @@ namespace OpenAI.Audio;
 ///     <see href="https://platform.openai.com/docs/guides/text-to-speech/voice-options">text-to-speech guide</see>.
 /// </summary>
 [CodeGenModel("CreateSpeechRequestVoice")]
-public readonly partial struct GeneratedSpeechVoice
+public partial struct GeneratedSpeechVoice
 {
 }

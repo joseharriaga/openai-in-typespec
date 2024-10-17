@@ -7,109 +7,89 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     internal partial class RealtimeResponseFailedStatusDetails : IJsonModel<RealtimeResponseFailedStatusDetails>
     {
+        internal RealtimeResponseFailedStatusDetails()
+        {
+        }
+
         void IJsonModel<RealtimeResponseFailedStatusDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RealtimeResponseFailedStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<RealtimeResponseFailedStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(RealtimeResponseFailedStatusDetails)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("error") != true)
-            {
-                writer.WritePropertyName("error"u8);
+            base.JsonModelWriteCore(writer, options);
+            writer.WritePropertyName("error"u8);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(Error);
+            writer.WriteRawValue(Error);
 #else
-                using (JsonDocument document = JsonDocument.Parse(Error))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
+            using (JsonDocument document = JsonDocument.Parse(Error))
             {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type.ToString());
+                JsonSerializer.Serialize(writer, document.RootElement);
             }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
 #endif
-                }
-            }
-            writer.WriteEndObject();
         }
 
-        RealtimeResponseFailedStatusDetails IJsonModel<RealtimeResponseFailedStatusDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        RealtimeResponseFailedStatusDetails IJsonModel<RealtimeResponseFailedStatusDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (RealtimeResponseFailedStatusDetails)JsonModelCreateCore(ref reader, options);
+
+        protected override InternalRealtimeResponseStatusDetails JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RealtimeResponseFailedStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<RealtimeResponseFailedStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(RealtimeResponseFailedStatusDetails)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeRealtimeResponseFailedStatusDetails(document.RootElement, options);
         }
 
-        internal static RealtimeResponseFailedStatusDetails DeserializeRealtimeResponseFailedStatusDetails(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static RealtimeResponseFailedStatusDetails DeserializeRealtimeResponseFailedStatusDetails(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             BinaryData error = default;
-            ConversationStatus type = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            ConversationStatus @type = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("error"u8))
+                if (prop.NameEquals("error"u8))
                 {
-                    error = BinaryData.FromString(property.Value.GetRawText());
+                    error = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    type = new ConversationStatus(property.Value.GetString());
+                    @type = new ConversationStatus(prop.Value.GetString());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new RealtimeResponseFailedStatusDetails(type, serializedAdditionalRawData, error);
+            return new RealtimeResponseFailedStatusDetails(error, @type, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<RealtimeResponseFailedStatusDetails>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<RealtimeResponseFailedStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<RealtimeResponseFailedStatusDetails>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<RealtimeResponseFailedStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -119,15 +99,16 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        RealtimeResponseFailedStatusDetails IPersistableModel<RealtimeResponseFailedStatusDetails>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<RealtimeResponseFailedStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
+        RealtimeResponseFailedStatusDetails IPersistableModel<RealtimeResponseFailedStatusDetails>.Create(BinaryData data, ModelReaderWriterOptions options) => (RealtimeResponseFailedStatusDetails)PersistableModelCreateCore(data, options);
 
+        protected override InternalRealtimeResponseStatusDetails PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<RealtimeResponseFailedStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeRealtimeResponseFailedStatusDetails(document.RootElement, options);
                     }
                 default:
@@ -137,15 +118,16 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<RealtimeResponseFailedStatusDetails>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new RealtimeResponseFailedStatusDetails FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(RealtimeResponseFailedStatusDetails realtimeResponseFailedStatusDetails)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeRealtimeResponseFailedStatusDetails(document.RootElement);
+            return BinaryContent.Create(realtimeResponseFailedStatusDetails, ModelSerializationExtensions.WireOptions);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        public static explicit operator RealtimeResponseFailedStatusDetails(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeRealtimeResponseFailedStatusDetails(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

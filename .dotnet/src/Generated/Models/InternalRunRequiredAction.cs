@@ -9,23 +9,19 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunRequiredAction
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalRunRequiredAction(InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs)
-        {
-            Argument.AssertNotNull(submitToolOutputs, nameof(submitToolOutputs));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
+        internal InternalRunRequiredAction(InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs, object @type)
+        {
             SubmitToolOutputs = submitToolOutputs;
+            Type = @type;
         }
 
-        internal InternalRunRequiredAction(object type, InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRunRequiredAction(InternalRunObjectRequiredActionSubmitToolOutputs submitToolOutputs, object @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = type;
             SubmitToolOutputs = submitToolOutputs;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        internal InternalRunRequiredAction()
-        {
+            Type = @type;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public InternalRunObjectRequiredActionSubmitToolOutputs SubmitToolOutputs { get; }

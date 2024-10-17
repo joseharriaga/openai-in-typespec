@@ -1,0 +1,8 @@
+{
+  "output-folder": ".",
+  "namespace": "OpenAI",
+  "library-name": "OpenAI",
+  "unreferenced-types-handling": "keepAll",
+  "use-model-reader-writer": true,
+  "disable-xml-docs": true
+}

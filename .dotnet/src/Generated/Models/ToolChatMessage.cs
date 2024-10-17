@@ -4,20 +4,24 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
     public partial class ToolChatMessage : ChatMessage
     {
-        internal ToolChatMessage(ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> serializedAdditionalRawData, string toolCallId) : base(role, content, serializedAdditionalRawData)
+        public ToolChatMessage(string toolCallId) : base(Chat.ChatMessageRole.Tool)
+        {
+            Argument.AssertNotNull(toolCallId, nameof(toolCallId));
+
+            ToolCallId = toolCallId;
+        }
+
+        internal ToolChatMessage(string toolCallId, Chat.ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, content, additionalBinaryDataProperties)
         {
             ToolCallId = toolCallId;
         }
 
-        internal ToolChatMessage()
-        {
-        }
-
-        public string ToolCallId { get; }
+        public string ToolCallId { get; set; }
     }
 }

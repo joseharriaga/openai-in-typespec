@@ -4,24 +4,24 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestFunctionCallItem : ConversationItem
     {
-        public InternalRealtimeRequestFunctionCallItem(string name, string callId, string arguments)
+        public InternalRealtimeRequestFunctionCallItem(string name, string callId, string arguments) : base(InternalRealtimeRequestItemType.FunctionCall)
         {
             Argument.AssertNotNull(name, nameof(name));
             Argument.AssertNotNull(callId, nameof(callId));
             Argument.AssertNotNull(arguments, nameof(arguments));
 
-            Type = InternalRealtimeRequestItemType.FunctionCall;
             Name = name;
             CallId = callId;
             Arguments = arguments;
         }
 
-        internal InternalRealtimeRequestFunctionCallItem(InternalRealtimeRequestItemType type, string id, IDictionary<string, BinaryData> serializedAdditionalRawData, string name, string callId, string arguments, ConversationItemStatus? status) : base(type, id, serializedAdditionalRawData)
+        internal InternalRealtimeRequestFunctionCallItem(string name, string callId, string arguments, ConversationItemStatus? status, InternalRealtimeRequestItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, id, additionalBinaryDataProperties)
         {
             Name = name;
             CallId = callId;
@@ -29,13 +29,12 @@ namespace OpenAI.RealtimeConversation
             Status = status;
         }
 
-        internal InternalRealtimeRequestFunctionCallItem()
-        {
-        }
+        public string Name { get; set; }
 
-        public string Name { get; }
-        public string CallId { get; }
-        public string Arguments { get; }
+        public string CallId { get; set; }
+
+        public string Arguments { get; set; }
+
         public ConversationItemStatus? Status { get; set; }
     }
 }

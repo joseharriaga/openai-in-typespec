@@ -9,22 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationFunctionCallArgumentsDeltaUpdate : ConversationUpdate
     {
-        internal ConversationFunctionCallArgumentsDeltaUpdate(string eventId, string responseId, string itemId, int outputIndex, string callId, string delta) : base(eventId)
-        {
-            Argument.AssertNotNull(responseId, nameof(responseId));
-            Argument.AssertNotNull(itemId, nameof(itemId));
-            Argument.AssertNotNull(callId, nameof(callId));
-            Argument.AssertNotNull(delta, nameof(delta));
-
-            Kind = ConversationUpdateKind.ResponseFunctionCallArgumentsDelta;
-            ResponseId = responseId;
-            ItemId = itemId;
-            OutputIndex = outputIndex;
-            CallId = callId;
-            Delta = delta;
-        }
-
-        internal ConversationFunctionCallArgumentsDeltaUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, string callId, string delta) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationFunctionCallArgumentsDeltaUpdate(string responseId, string itemId, int outputIndex, string callId, string delta, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ResponseFunctionCallArgumentsDelta)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -33,14 +18,23 @@ namespace OpenAI.RealtimeConversation
             Delta = delta;
         }
 
-        internal ConversationFunctionCallArgumentsDeltaUpdate()
+        internal ConversationFunctionCallArgumentsDeltaUpdate(string responseId, string itemId, int outputIndex, string callId, string delta, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
+            ResponseId = responseId;
+            ItemId = itemId;
+            OutputIndex = outputIndex;
+            CallId = callId;
+            Delta = delta;
         }
 
         public string ResponseId { get; }
+
         public string ItemId { get; }
+
         public int OutputIndex { get; }
+
         public string CallId { get; }
+
         public string Delta { get; }
     }
 }

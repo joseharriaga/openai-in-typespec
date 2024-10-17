@@ -4,12 +4,22 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace OpenAI.Images
 {
-    public partial class GeneratedImageCollection : ReadOnlyCollection<GeneratedImage>
+    public partial class GeneratedImageCollection
     {
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        internal GeneratedImageCollection(DateTimeOffset createdAt)
+        {
+            CreatedAt = createdAt;
+        }
+
+        internal GeneratedImageCollection(DateTimeOffset createdAt, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        {
+            CreatedAt = createdAt;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
     }
 }

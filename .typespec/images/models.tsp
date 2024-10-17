@@ -57,7 +57,6 @@ model CreateImageRequest {
 model CreateImageEditRequest {
   // Tool customization: binary payloads are encoded bytes
   /** The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not provided, image must have transparency, which will be used as the mask. */
-  @encode("binary")
   image: bytes;
 
   /** A text description of the desired image(s). The maximum length is 1000 characters. */
@@ -67,7 +66,6 @@ model CreateImageEditRequest {
   @doc("""
     An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where `image` should be edited. Must be a valid PNG file, less than 4MB, and have the same dimensions as `image`.
     """)
-  @encode("binary")
   mask?: bytes;
 
   @doc("""

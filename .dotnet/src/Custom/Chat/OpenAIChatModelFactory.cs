@@ -30,17 +30,17 @@ public static partial class OpenAIChatModelFactory
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
         InternalChatCompletionResponseMessage message = new InternalChatCompletionResponseMessage(
-            content,
             refusal,
             toolCalls.ToList(),
             role,
+            content,
             functionCall,
-            serializedAdditionalRawData: null);
+            additionalBinaryDataProperties: null);
 
         InternalCreateChatCompletionResponseChoiceLogprobs logprobs = new InternalCreateChatCompletionResponseChoiceLogprobs(
             contentTokenLogProbabilities.ToList(),
             refusalTokenLogProbabilities.ToList(),
-            serializedAdditionalRawData: null);
+            additionalBinaryDataProperties: null);
 
         IReadOnlyList<InternalCreateChatCompletionResponseChoice> choices = [
             new InternalCreateChatCompletionResponseChoice(
@@ -48,7 +48,7 @@ public static partial class OpenAIChatModelFactory
                 index: 0,
                 message,
                 logprobs,
-                serializedAdditionalRawData: null)
+                additionalBinaryDataProperties: null)
         ];
 
         return new ChatCompletion(
@@ -60,7 +60,7 @@ public static partial class OpenAIChatModelFactory
             systemFingerprint,
             InternalCreateChatCompletionResponseObject.ChatCompletion,
             usage,
-            serializedAdditionalRawData: null);
+            additionalBinaryDataProperties: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatTokenLogProbabilityDetails"/>. </summary>
@@ -74,7 +74,7 @@ public static partial class OpenAIChatModelFactory
             logProbability,
             utf8Bytes,
             topLogProbabilities.ToList(),
-            serializedAdditionalRawData: null);
+            additionalBinaryDataProperties: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatTokenTopLogProbabilityDetails"/>. </summary>
@@ -85,7 +85,7 @@ public static partial class OpenAIChatModelFactory
             token,
             logProbability,
             utf8Bytes,
-            serializedAdditionalRawData: null);
+            additionalBinaryDataProperties: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatTokenUsage"/>. </summary>
@@ -97,14 +97,14 @@ public static partial class OpenAIChatModelFactory
             inputTokenCount,
             totalTokenCount,
             outputTokenDetails,
-            serializedAdditionalRawData: null);
+            additionalBinaryDataProperties: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatOutputTokenUsageDetails"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.ChatOutputTokenusageDetails"/> instance for mocking. </returns>
     public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default)
     {
-        return new ChatOutputTokenUsageDetails(reasoningTokenCount, serializedAdditionalRawData: null);
+        return new ChatOutputTokenUsageDetails(reasoningTokenCount, additionalBinaryDataProperties: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatCompletionUpdate"/>. </summary>
@@ -130,17 +130,17 @@ public static partial class OpenAIChatModelFactory
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
         InternalChatCompletionStreamResponseDelta delta = new InternalChatCompletionStreamResponseDelta(
-            contentUpdate,
             functionCallUpdate,
             toolCallUpdates.ToList(),
-            role,
             refusalUpdate,
-            serializedAdditionalRawData: null);
+            role,
+            contentUpdate,
+            additionalBinaryDataProperties: null);
 
         InternalCreateChatCompletionStreamResponseChoiceLogprobs logprobs = new InternalCreateChatCompletionStreamResponseChoiceLogprobs(
             contentTokenLogProbabilities.ToList(),
             refusalTokenLogProbabilities.ToList(),
-            serializedAdditionalRawData: null);
+            additionalBinaryDataProperties: null);
 
         IReadOnlyList<InternalCreateChatCompletionStreamResponseChoice> choices = [
             new InternalCreateChatCompletionStreamResponseChoice(
@@ -148,7 +148,7 @@ public static partial class OpenAIChatModelFactory
                 logprobs,
                 finishReason,
                 index: 0,
-                serializedAdditionalRawData: null)
+                additionalBinaryDataProperties: null)
         ];
 
         return new StreamingChatCompletionUpdate(
@@ -160,7 +160,7 @@ public static partial class OpenAIChatModelFactory
             systemFingerprint,
             InternalCreateChatCompletionStreamResponseObject.ChatCompletionChunk,
             usage,
-            serializedAdditionalRawData: null);
+            additionalBinaryDataProperties: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatFunctionCallUpdate"/>. </summary>
@@ -171,7 +171,7 @@ public static partial class OpenAIChatModelFactory
         return new StreamingChatFunctionCallUpdate(
             functionName,
             functionArgumentsUpdate,
-            serializedAdditionalRawData: null);
+            additionalBinaryDataProperties: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatToolCallUpdate"/>. </summary>
@@ -181,13 +181,13 @@ public static partial class OpenAIChatModelFactory
         InternalChatCompletionMessageToolCallChunkFunction function = new InternalChatCompletionMessageToolCallChunkFunction(
             functionName,
             functionArgumentsUpdate,
-            serializedAdditionalRawData: null);
+            additionalBinaryDataProperties: null);
 
         return new StreamingChatToolCallUpdate(
             index,
             toolCallId,
             kind,
             function,
-            serializedAdditionalRawData: null);
+            additionalBinaryDataProperties: null);
     }
 }

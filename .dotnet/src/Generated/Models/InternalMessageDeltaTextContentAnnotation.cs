@@ -9,15 +9,17 @@ namespace OpenAI.Assistants
 {
     internal abstract partial class InternalMessageDeltaTextContentAnnotation
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        protected InternalMessageDeltaTextContentAnnotation()
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        private protected InternalMessageDeltaTextContentAnnotation(string @type)
         {
+            Type = @type;
         }
 
-        internal InternalMessageDeltaTextContentAnnotation(string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalMessageDeltaTextContentAnnotation(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = type;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            Type = @type;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         internal string Type { get; set; }

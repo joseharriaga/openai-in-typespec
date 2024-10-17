@@ -29,7 +29,7 @@ public partial class BatchClient
 
         using PipelineMessage message = CreateCreateBatchRequest(content, options);
 
-        PipelineResponse response = await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
+        PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
 
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string batchId = doc.RootElement.GetProperty("id"u8).GetString();
@@ -57,7 +57,7 @@ public partial class BatchClient
         Argument.AssertNotNull(content, nameof(content));
 
         using PipelineMessage message = CreateCreateBatchRequest(content, options);
-        PipelineResponse response = _pipeline.ProcessMessage(message, options);
+        PipelineResponse response = Pipeline.ProcessMessage(message, options);
 
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string batchId = doc.RootElement.GetProperty("id"u8).GetString();
@@ -77,7 +77,7 @@ public partial class BatchClient
     /// <returns> The response returned from the service. </returns>
     public virtual AsyncCollectionResult GetBatchesAsync(string after, int? limit, RequestOptions options)
     {
-        return new AsyncBatchCollectionResult(this, _pipeline, options, limit, after);
+        return new AsyncBatchCollectionResult(this, Pipeline, options, limit, after);
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public partial class BatchClient
     /// <returns> The response returned from the service. </returns>
     public virtual CollectionResult GetBatches(string after, int? limit, RequestOptions options)
     {
-        return new BatchCollectionResult(this, _pipeline, options, limit, after);
+        return new BatchCollectionResult(this, Pipeline, options, limit, after);
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public partial class BatchClient
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
 
         using PipelineMessage message = CreateRetrieveBatchRequest(batchId, options);
-        return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
+        return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
     }
 
     /// <summary>
@@ -124,12 +124,12 @@ public partial class BatchClient
         Argument.AssertNotNullOrEmpty(batchId, nameof(batchId));
 
         using PipelineMessage message = CreateRetrieveBatchRequest(batchId, options);
-        return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
+        return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
     }
 
     internal virtual PipelineMessage CreateCreateBatchRequest(BinaryContent content, RequestOptions options)
     {
-        var message = _pipeline.CreateMessage();
+        var message = Pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
         var request = message.Request;
         request.Method = "POST";
@@ -146,7 +146,7 @@ public partial class BatchClient
 
     internal virtual PipelineMessage CreateGetBatchesRequest(string after, int? limit, RequestOptions options)
     {
-        var message = _pipeline.CreateMessage();
+        var message = Pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
         var request = message.Request;
         request.Method = "GET";
@@ -169,7 +169,7 @@ public partial class BatchClient
 
     internal virtual PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions options)
     {
-        var message = _pipeline.CreateMessage();
+        var message = Pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
         var request = message.Request;
         request.Method = "GET";
@@ -185,7 +185,7 @@ public partial class BatchClient
 
     internal virtual PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions options)
     {
-        var message = _pipeline.CreateMessage();
+        var message = Pipeline.CreateMessage();
         message.ResponseClassifier = PipelineMessageClassifier200;
         var request = message.Request;
         request.Method = "POST";

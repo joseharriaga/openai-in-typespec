@@ -4,28 +4,24 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestInputAudioBufferAppendCommand : InternalRealtimeRequestCommand
     {
-        public InternalRealtimeRequestInputAudioBufferAppendCommand(BinaryData audio)
+        public InternalRealtimeRequestInputAudioBufferAppendCommand(BinaryData audio) : base(InternalRealtimeRequestCommandType.InputAudioBufferAppend)
         {
             Argument.AssertNotNull(audio, nameof(audio));
 
-            Kind = InternalRealtimeRequestCommandType.InputAudioBufferAppend;
             Audio = audio;
         }
 
-        internal InternalRealtimeRequestInputAudioBufferAppendCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, BinaryData audio) : base(kind, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestInputAudioBufferAppendCommand(BinaryData audio, InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
         {
             Audio = audio;
         }
 
-        internal InternalRealtimeRequestInputAudioBufferAppendCommand()
-        {
-        }
-
-        public BinaryData Audio { get; }
+        public BinaryData Audio { get; set; }
     }
 }

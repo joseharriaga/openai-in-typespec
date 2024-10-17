@@ -4,26 +4,25 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalMessageRefusalContent : MessageContent
     {
-        public InternalMessageRefusalContent(string internalRefusal)
+        public InternalMessageRefusalContent(string internalRefusal, string @type)
         {
             Argument.AssertNotNull(internalRefusal, nameof(internalRefusal));
+            Argument.AssertNotNull(@type, nameof(@type));
 
             InternalRefusal = internalRefusal;
+            _type = @type;
         }
 
-        internal InternalMessageRefusalContent(IDictionary<string, BinaryData> serializedAdditionalRawData, string type, string internalRefusal) : base(serializedAdditionalRawData)
+        internal InternalMessageRefusalContent(string internalRefusal, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
         {
-            _type = type;
             InternalRefusal = internalRefusal;
-        }
-
-        internal InternalMessageRefusalContent()
-        {
+            _type = @type;
         }
     }
 }

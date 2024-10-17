@@ -7,13 +7,13 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    public abstract partial class MessageContent
+    public partial class MessageContent
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal MessageContent(IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal MessageContent(IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }
 }

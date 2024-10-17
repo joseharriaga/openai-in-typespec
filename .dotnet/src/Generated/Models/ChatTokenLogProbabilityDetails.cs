@@ -10,29 +10,23 @@ namespace OpenAI.Chat
 {
     public partial class ChatTokenLogProbabilityDetails
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal ChatTokenLogProbabilityDetails(string token, float logProbability, ReadOnlyMemory<byte>? utf8Bytes, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities)
         {
-            Argument.AssertNotNull(token, nameof(token));
-            Argument.AssertNotNull(topLogProbabilities, nameof(topLogProbabilities));
-
             Token = token;
             LogProbability = logProbability;
             Utf8Bytes = utf8Bytes;
             TopLogProbabilities = topLogProbabilities.ToList();
         }
 
-        internal ChatTokenLogProbabilityDetails(string token, float logProbability, ReadOnlyMemory<byte>? utf8Bytes, IReadOnlyList<ChatTokenTopLogProbabilityDetails> topLogProbabilities, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatTokenLogProbabilityDetails(string token, float logProbability, ReadOnlyMemory<byte>? utf8Bytes, IReadOnlyList<ChatTokenTopLogProbabilityDetails> topLogProbabilities, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Token = token;
             LogProbability = logProbability;
             Utf8Bytes = utf8Bytes;
             TopLogProbabilities = topLogProbabilities;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        internal ChatTokenLogProbabilityDetails()
-        {
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public string Token { get; }

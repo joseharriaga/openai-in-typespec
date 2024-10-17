@@ -26,16 +26,9 @@ namespace OpenAI.Files;
 public partial class OpenAIFileClient
 {
     private InternalUploadsClient _internalUploadsClient;
-
-    // CUSTOM: Remove virtual keyword.
-    /// <summary>
-    /// The HTTP pipeline for sending and receiving REST requests and responses.
-    /// </summary>
-    public ClientPipeline Pipeline => _pipeline;
-
+    
     // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="OpenAIFileClient">. </summary>
-    /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
+    /// <summary> Initializes a new instance of <see cref="OpenAIFileClient"/>. </summary>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> or <paramref name="apiKey"/> is null. </exception>
     /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
@@ -46,7 +39,7 @@ public partial class OpenAIFileClient
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="OpenAIFileClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="OpenAIFileClient"/>. </summary>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
     public OpenAIFileClient(ApiKeyCredential credential) : this(credential, new OpenAIClientOptions())
@@ -56,7 +49,7 @@ public partial class OpenAIFileClient
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="OpenAIFileClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="OpenAIFileClient"/>. </summary>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="credential"/> is null. </exception>
@@ -65,16 +58,16 @@ public partial class OpenAIFileClient
         Argument.AssertNotNull(credential, nameof(credential));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
-        _internalUploadsClient = new(_pipeline, options);
+        _internalUploadsClient = new(Pipeline, options);
     }
 
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
     // - Made protected.
-    /// <summary> Initializes a new instance of <see cref="OpenAIFileClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="OpenAIFileClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline to send and receive REST requests and responses. </param>
     /// <param name="options"> The options to configure the client. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="pipeline"/> is null. </exception>
@@ -83,7 +76,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         options ??= new OpenAIClientOptions();
 
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
         _internalUploadsClient = new(pipeline, options);
     }
@@ -112,7 +105,7 @@ public partial class OpenAIFileClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
         ClientResult result = await UploadFileAsync(content, content.ContentType, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(OpenAIFile.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIFile)result, result.GetRawResponse());
     }
 
     /// <summary> Uploads a file that can be used across various operations. </summary>
@@ -139,7 +132,7 @@ public partial class OpenAIFileClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
         ClientResult result = UploadFile(content, content.ContentType, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(OpenAIFile.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIFile)result, result.GetRawResponse());
     }
 
     /// <summary> Uploads a file that can be used across various operations. </summary>
@@ -221,7 +214,7 @@ public partial class OpenAIFileClient
     public virtual async Task<ClientResult<OpenAIFileCollection>> GetFilesAsync(CancellationToken cancellationToken = default)
     {
         ClientResult result = await GetFilesAsync(null, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(OpenAIFileCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIFileCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Gets basic information about each of the files belonging to the user's organization. </summary>
@@ -229,7 +222,7 @@ public partial class OpenAIFileClient
     public virtual ClientResult<OpenAIFileCollection> GetFiles(CancellationToken cancellationToken = default)
     {
         ClientResult result = GetFiles(null, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(OpenAIFileCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIFileCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Gets basic information about each of the files belonging to the user's organization. </summary>
@@ -238,7 +231,7 @@ public partial class OpenAIFileClient
     public virtual async Task<ClientResult<OpenAIFileCollection>> GetFilesAsync(FilePurpose purpose, CancellationToken cancellationToken = default)
     {
         ClientResult result = await GetFilesAsync(purpose.ToSerialString(), cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(OpenAIFileCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIFileCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Gets basic information about each of the files belonging to the user's organization. </summary>
@@ -247,7 +240,7 @@ public partial class OpenAIFileClient
     public virtual ClientResult<OpenAIFileCollection> GetFiles(FilePurpose purpose, CancellationToken cancellationToken = default)
     {
         ClientResult result = GetFiles(purpose.ToSerialString(), cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(OpenAIFileCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIFileCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Gets basic information about the specified file. </summary>
@@ -260,7 +253,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         ClientResult result = await GetFileAsync(fileId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(OpenAIFile.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIFile)result, result.GetRawResponse());
     }
 
     /// <summary> Gets basic information about the specified file. </summary>
@@ -273,7 +266,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         ClientResult result = GetFile(fileId, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(OpenAIFile.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIFile)result, result.GetRawResponse());
     }
 
     /// <summary> Deletes the specified file. </summary>
@@ -286,7 +279,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         ClientResult result = await DeleteFileAsync(fileId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(FileDeletionResult.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((FileDeletionResult)result, result.GetRawResponse());
     }
 
     /// <summary> Deletes the specified file. </summary>
@@ -299,7 +292,7 @@ public partial class OpenAIFileClient
         Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
         ClientResult result = DeleteFile(fileId, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(FileDeletionResult.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((FileDeletionResult)result, result.GetRawResponse());
     }
 
     /// <summary> Downloads the content of the specified file. </summary>

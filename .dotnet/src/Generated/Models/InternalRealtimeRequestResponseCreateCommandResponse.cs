@@ -4,12 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestResponseCreateCommandResponse
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         public InternalRealtimeRequestResponseCreateCommandResponse(bool commit, bool cancelPrevious)
         {
             Commit = commit;
@@ -20,7 +22,7 @@ namespace OpenAI.RealtimeConversation
             Tools = new ChangeTrackingList<ConversationTool>();
         }
 
-        internal InternalRealtimeRequestResponseCreateCommandResponse(bool commit, bool cancelPrevious, IList<ConversationItem> appendInputItems, IList<ConversationItem> inputItems, string instructions, IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> modalities, ConversationVoice? voice, float? temperature, BinaryData maxOutputTokens, IList<ConversationTool> tools, BinaryData toolChoice, ConversationAudioFormat? outputAudioFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRealtimeRequestResponseCreateCommandResponse(bool commit, bool cancelPrevious, IList<ConversationItem> appendInputItems, IList<ConversationItem> inputItems, string instructions, IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> modalities, ConversationVoice? voice, float? temperature, BinaryData maxOutputTokens, IList<ConversationTool> tools, BinaryData toolChoice, ConversationAudioFormat? outputAudioFormat, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Commit = commit;
             CancelPrevious = cancelPrevious;
@@ -34,24 +36,31 @@ namespace OpenAI.RealtimeConversation
             Tools = tools;
             ToolChoice = toolChoice;
             OutputAudioFormat = outputAudioFormat;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalRealtimeRequestResponseCreateCommandResponse()
-        {
-        }
+        public bool Commit { get; set; }
 
-        public bool Commit { get; }
-        public bool CancelPrevious { get; }
+        public bool CancelPrevious { get; set; }
+
         public IList<ConversationItem> AppendInputItems { get; }
+
         public IList<ConversationItem> InputItems { get; }
+
         public string Instructions { get; set; }
+
         public IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> Modalities { get; }
+
         public ConversationVoice? Voice { get; set; }
+
         public float? Temperature { get; set; }
+
         public BinaryData MaxOutputTokens { get; set; }
+
         public IList<ConversationTool> Tools { get; }
+
         public BinaryData ToolChoice { get; set; }
+
         public ConversationAudioFormat? OutputAudioFormat { get; set; }
     }
 }

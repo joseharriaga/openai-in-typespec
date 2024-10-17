@@ -7,41 +7,41 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionRequestMessageContentPartRefusal : IJsonModel<InternalChatCompletionRequestMessageContentPartRefusal>
     {
+        internal InternalChatCompletionRequestMessageContentPartRefusal()
+        {
+        }
+
         void IJsonModel<InternalChatCompletionRequestMessageContentPartRefusal>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalChatCompletionRequestMessageContentPartRefusal)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Type.ToString());
+            writer.WritePropertyName("refusal"u8);
+            writer.WriteStringValue(Refusal);
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("refusal") != true)
-            {
-                writer.WritePropertyName("refusal"u8);
-                writer.WriteStringValue(Refusal);
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -50,59 +50,55 @@ namespace OpenAI.Chat
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalChatCompletionRequestMessageContentPartRefusal IJsonModel<InternalChatCompletionRequestMessageContentPartRefusal>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalChatCompletionRequestMessageContentPartRefusal IJsonModel<InternalChatCompletionRequestMessageContentPartRefusal>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalChatCompletionRequestMessageContentPartRefusal JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalChatCompletionRequestMessageContentPartRefusal)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalChatCompletionRequestMessageContentPartRefusal(document.RootElement, options);
         }
 
-        internal static InternalChatCompletionRequestMessageContentPartRefusal DeserializeInternalChatCompletionRequestMessageContentPartRefusal(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalChatCompletionRequestMessageContentPartRefusal DeserializeInternalChatCompletionRequestMessageContentPartRefusal(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            InternalChatCompletionRequestMessageContentPartRefusalType type = default;
+            InternalChatCompletionRequestMessageContentPartRefusalType @type = default;
             string refusal = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    type = new InternalChatCompletionRequestMessageContentPartRefusalType(property.Value.GetString());
+                    @type = new InternalChatCompletionRequestMessageContentPartRefusalType(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("refusal"u8))
+                if (prop.NameEquals("refusal"u8))
                 {
-                    refusal = property.Value.GetString();
+                    refusal = prop.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalChatCompletionRequestMessageContentPartRefusal(type, refusal, serializedAdditionalRawData);
+            return new InternalChatCompletionRequestMessageContentPartRefusal(@type, refusal, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -112,15 +108,16 @@ namespace OpenAI.Chat
             }
         }
 
-        InternalChatCompletionRequestMessageContentPartRefusal IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>)this).GetFormatFromOptions(options) : options.Format;
+        InternalChatCompletionRequestMessageContentPartRefusal IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalChatCompletionRequestMessageContentPartRefusal PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalChatCompletionRequestMessageContentPartRefusal(document.RootElement, options);
                     }
                 default:
@@ -130,15 +127,16 @@ namespace OpenAI.Chat
 
         string IPersistableModel<InternalChatCompletionRequestMessageContentPartRefusal>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalChatCompletionRequestMessageContentPartRefusal FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalChatCompletionRequestMessageContentPartRefusal internalChatCompletionRequestMessageContentPartRefusal)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalChatCompletionRequestMessageContentPartRefusal(document.RootElement);
+            return BinaryContent.Create(internalChatCompletionRequestMessageContentPartRefusal, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalChatCompletionRequestMessageContentPartRefusal(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalChatCompletionRequestMessageContentPartRefusal(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

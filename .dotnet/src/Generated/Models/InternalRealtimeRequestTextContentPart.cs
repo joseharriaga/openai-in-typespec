@@ -4,26 +4,23 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestTextContentPart : ConversationContentPart
     {
-        public InternalRealtimeRequestTextContentPart(string text)
+        public InternalRealtimeRequestTextContentPart(string text, ConversationContentPartKind @type) : base(@type)
         {
             Argument.AssertNotNull(text, nameof(text));
+            Argument.AssertNotNull(@type, nameof(@type));
 
-            Type = ConversationContentPartKind.InputText;
             Text = text;
         }
 
-        internal InternalRealtimeRequestTextContentPart(ConversationContentPartKind type, IDictionary<string, BinaryData> serializedAdditionalRawData, string text) : base(type, serializedAdditionalRawData)
+        internal InternalRealtimeRequestTextContentPart(string text, ConversationContentPartKind @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
             Text = text;
-        }
-
-        internal InternalRealtimeRequestTextContentPart()
-        {
         }
 
         public string Text { get; set; }

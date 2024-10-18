@@ -3770,6 +3770,19 @@ components:
         parameters:
           $ref: '#/components/schemas/FunctionParameters'
       deprecated: true
+    ChatCompletionMessageAudioChunk:
+      type: object
+      properties:
+        id:
+          type: string
+        transcript:
+          type: string
+        data:
+          type: string
+          format: base64
+        expires_at:
+          type: integer
+          format: unixtime
     ChatCompletionMessageToolCall:
       type: object
       required:
@@ -4229,6 +4242,10 @@ components:
     ChatCompletionStreamResponseDelta:
       type: object
       properties:
+        audio:
+          allOf:
+            - $ref: '#/components/schemas/ChatCompletionMessageAudioChunk'
+          description: Response audio associated with the streaming chat delta payload.
         content:
           type: string
           nullable: true

@@ -76,6 +76,7 @@ function Edit-InternalChatCompletionStreamResponseDeltaSerialization {
     # content deserialization
     $inputRegex = @(
         "return new InternalChatCompletionStreamResponseDelta\("
+        "    audio,"
         "    content,"
         "    functionCall,"
         "    toolCalls \?\? new ChangeTrackingList<StreamingChatToolCallUpdate>\(\),"
@@ -86,6 +87,7 @@ function Edit-InternalChatCompletionStreamResponseDeltaSerialization {
     $outputString = @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalChatCompletionStreamResponseDelta("
+        "    audio,"
         "    content ?? new ChatMessageContent(),"
         "    functionCall,"
         "    toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(),"

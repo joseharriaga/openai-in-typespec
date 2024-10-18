@@ -305,6 +305,11 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
+        public static StreamingChatResponseAudioUpdate StreamingChatResponseAudioUpdate(string correlationId = null, string transcriptUpdate = null, BinaryData audioBytesUpdate = null, DateTimeOffset? expiresAt = null)
+        {
+            return new StreamingChatResponseAudioUpdate(correlationId, transcriptUpdate, audioBytesUpdate, expiresAt, serializedAdditionalRawData: null);
+        }
+
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(BinaryData functionArgumentsUpdate = null, string functionName = null)
         {
             return new StreamingChatFunctionCallUpdate(functionArgumentsUpdate, functionName, serializedAdditionalRawData: null);

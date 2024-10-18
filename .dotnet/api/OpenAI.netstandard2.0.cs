@@ -1322,12 +1322,14 @@ namespace OpenAI.Chat {
         public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, ChatMessageContent content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, ChatResponseAudio audio = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
         public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int? audioTokenCount = null, int? cachedTokenCount = null);
         public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0, int? audioTokenCount = null);
+        public static ChatResponseAudio ChatResponseAudio(string correlationId = null, BinaryData audioBytes = null, string transcript = null, DateTimeOffset expiresAt = default);
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
         public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null, ChatInputTokenUsageDetails inputTokenDetails = null);
-        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string completionId = null, ChatMessageContent contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string completionId = null, ChatMessageContent contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null, StreamingChatResponseAudioUpdate audioUpdate = null);
         [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = null, BinaryData functionArgumentsUpdate = null);
+        public static StreamingChatResponseAudioUpdate StreamingChatResponseAudioUpdate(string correlationId = null, BinaryData audioBytesUpdate = null, string transcriptUpdate = null, DateTimeOffset? expiresAt = null);
         public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = 0, string toolCallId = null, ChatToolCallKind kind = ChatToolCallKind.Function, string functionName = null, BinaryData functionArgumentsUpdate = null);
     }
     public class StreamingChatCompletionUpdate : IJsonModel<StreamingChatCompletionUpdate>, IPersistableModel<StreamingChatCompletionUpdate> {
@@ -1341,6 +1343,7 @@ namespace OpenAI.Chat {
         public string Model { get; }
         public IReadOnlyList<ChatTokenLogProbabilityDetails> RefusalTokenLogProbabilities { get; }
         public string RefusalUpdate { get; }
+        public StreamingChatResponseAudioUpdate ResponseAudioUpdate { get; }
         public ChatMessageRole? Role { get; }
         public string SystemFingerprint { get; }
         public IReadOnlyList<StreamingChatToolCallUpdate> ToolCallUpdates { get; }
@@ -1350,6 +1353,12 @@ namespace OpenAI.Chat {
     public class StreamingChatFunctionCallUpdate : IJsonModel<StreamingChatFunctionCallUpdate>, IPersistableModel<StreamingChatFunctionCallUpdate> {
         public BinaryData FunctionArgumentsUpdate { get; }
         public string FunctionName { get; }
+    }
+    public class StreamingChatResponseAudioUpdate : IJsonModel<StreamingChatResponseAudioUpdate>, IPersistableModel<StreamingChatResponseAudioUpdate> {
+        public BinaryData AudioBytesUpdate { get; }
+        public string CorrelationId { get; }
+        public DateTimeOffset? ExpiresAt { get; }
+        public string TranscriptUpdate { get; }
     }
     public class StreamingChatToolCallUpdate : IJsonModel<StreamingChatToolCallUpdate>, IPersistableModel<StreamingChatToolCallUpdate> {
         public BinaryData FunctionArgumentsUpdate { get; }

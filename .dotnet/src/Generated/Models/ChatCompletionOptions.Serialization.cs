@@ -145,6 +145,35 @@ namespace OpenAI.Chat
                     writer.WriteNull("n");
                 }
             }
+            if (SerializedAdditionalRawData?.ContainsKey("modalities") != true && Optional.IsCollectionDefined(_internalModalities))
+            {
+                if (_internalModalities != null)
+                {
+                    writer.WritePropertyName("modalities"u8);
+                    writer.WriteStartArray();
+                    foreach (var item in _internalModalities)
+                    {
+                        writer.WriteStringValue(item.ToString());
+                    }
+                    writer.WriteEndArray();
+                }
+                else
+                {
+                    writer.WriteNull("modalities");
+                }
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("audio") != true && Optional.IsDefined(_audioOptions))
+            {
+                if (_audioOptions != null)
+                {
+                    writer.WritePropertyName("audio"u8);
+                    writer.WriteObjectValue<ChatAudioOptions>(_audioOptions, options);
+                }
+                else
+                {
+                    writer.WriteNull("audio");
+                }
+            }
             if (SerializedAdditionalRawData?.ContainsKey("presence_penalty") != true && Optional.IsDefined(PresencePenalty))
             {
                 if (PresencePenalty != null)
@@ -339,6 +368,8 @@ namespace OpenAI.Chat
             int? maxTokens = default;
             int? maxCompletionTokens = default;
             int? n = default;
+            IList<InternalCreateChatCompletionRequestModality> modalities = default;
+            ChatAudioOptions audio = default;
             float? presencePenalty = default;
             ChatResponseFormat responseFormat = default;
             long? seed = default;
@@ -460,6 +491,30 @@ namespace OpenAI.Chat
                         continue;
                     }
                     n = property.Value.GetInt32();
+                    continue;
+                }
+                if (property.NameEquals("modalities"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<InternalCreateChatCompletionRequestModality> array = new List<InternalCreateChatCompletionRequestModality>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(new InternalCreateChatCompletionRequestModality(item.GetString()));
+                    }
+                    modalities = array;
+                    continue;
+                }
+                if (property.NameEquals("audio"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        audio = null;
+                        continue;
+                    }
+                    audio = ChatAudioOptions.DeserializeChatAudioOptions(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("presence_penalty"u8))
@@ -625,6 +680,8 @@ namespace OpenAI.Chat
                 maxTokens,
                 maxCompletionTokens,
                 n,
+                modalities ?? new ChangeTrackingList<InternalCreateChatCompletionRequestModality>(),
+                audio,
                 presencePenalty,
                 responseFormat,
                 seed,

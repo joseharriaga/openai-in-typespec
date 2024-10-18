@@ -65,6 +65,18 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("function_call"u8);
                 writer.WriteObjectValue<ChatFunctionCall>(FunctionCall, options);
             }
+            if (SerializedAdditionalRawData?.ContainsKey("audio") != true && Optional.IsDefined(Audio))
+            {
+                if (Audio != null)
+                {
+                    writer.WritePropertyName("audio"u8);
+                    writer.WriteObjectValue(Audio, options);
+                }
+                else
+                {
+                    writer.WriteNull("audio");
+                }
+            }
             if (SerializedAdditionalRawData != null)
             {
                 foreach (var item in SerializedAdditionalRawData)
@@ -112,6 +124,7 @@ namespace OpenAI.Chat
             IReadOnlyList<ChatToolCall> toolCalls = default;
             ChatMessageRole role = default;
             ChatFunctionCall functionCall = default;
+            ChatResponseAudio audio = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -159,6 +172,16 @@ namespace OpenAI.Chat
                     functionCall = ChatFunctionCall.DeserializeChatFunctionCall(property.Value, options);
                     continue;
                 }
+                if (property.NameEquals("audio"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        audio = null;
+                        continue;
+                    }
+                    audio = ChatResponseAudio.DeserializeChatResponseAudio(property.Value, options);
+                    continue;
+                }
                 if (true)
                 {
                     rawDataDictionary ??= new Dictionary<string, BinaryData>();
@@ -173,6 +196,7 @@ namespace OpenAI.Chat
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
                 role,
                 functionCall,
+                audio,
                 serializedAdditionalRawData);
         }
 

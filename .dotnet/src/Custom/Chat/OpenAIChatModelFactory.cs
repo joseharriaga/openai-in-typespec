@@ -17,6 +17,7 @@ public static partial class OpenAIChatModelFactory
         IEnumerable<ChatToolCall> toolCalls = null,
         ChatMessageRole role = default,
         ChatFunctionCall functionCall = null,
+        ChatResponseAudio audio = null,
         IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null,
         IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null,
         DateTimeOffset createdAt = default,
@@ -35,6 +36,7 @@ public static partial class OpenAIChatModelFactory
             toolCalls.ToList(),
             role,
             functionCall,
+            audio,
             serializedAdditionalRawData: null);
 
         InternalCreateChatCompletionResponseChoiceLogprobs logprobs = new InternalCreateChatCompletionResponseChoiceLogprobs(

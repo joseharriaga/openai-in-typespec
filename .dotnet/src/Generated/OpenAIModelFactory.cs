@@ -237,7 +237,7 @@ namespace OpenAI
             return new UserChatMessage(ChatMessageRole.User, content, serializedAdditionalRawData: null, participantName);
         }
 
-        public static AssistantChatMessage AssistantChatMessage(ChatMessageContent content = null, string refusal = null, string participantName = null, IEnumerable<ChatToolCall> toolCalls = null, ChatFunctionCall functionCall = null)
+        public static AssistantChatMessage AssistantChatMessage(ChatMessageContent content = null, string refusal = null, string participantName = null, ChatAudioReference audioReference = null, IEnumerable<ChatToolCall> toolCalls = null, ChatFunctionCall functionCall = null)
         {
             toolCalls ??= new List<ChatToolCall>();
 
@@ -247,6 +247,7 @@ namespace OpenAI
                 serializedAdditionalRawData: null,
                 refusal,
                 participantName,
+                audioReference,
                 toolCalls?.ToList(),
                 functionCall);
         }
@@ -264,6 +265,11 @@ namespace OpenAI
         public static ChatFunction ChatFunction(string functionDescription = null, string functionName = null, BinaryData functionParameters = null)
         {
             return new ChatFunction(functionDescription, functionName, functionParameters, serializedAdditionalRawData: null);
+        }
+
+        public static ChatResponseAudio ChatResponseAudio(string correlationId = null, DateTimeOffset expiresAt = default, BinaryData data = null, string transcript = null)
+        {
+            return new ChatResponseAudio(correlationId, expiresAt, data, transcript, serializedAdditionalRawData: null);
         }
 
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = default, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null)

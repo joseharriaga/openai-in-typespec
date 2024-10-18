@@ -9,13 +9,10 @@ namespace OpenAI.VectorStores
 {
     public partial class VectorStore
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal VectorStore(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStoreStatus status, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata)
-        {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(name, nameof(name));
-            Argument.AssertNotNull(fileCounts, nameof(fileCounts));
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
+        internal VectorStore(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStores.VectorStoreStatus status, DateTimeOffset? lastActiveAt, IDictionary<string, string> metadata)
+        {
             Id = id;
             CreatedAt = createdAt;
             Name = name;
@@ -26,35 +23,38 @@ namespace OpenAI.VectorStores
             Metadata = metadata;
         }
 
-        internal VectorStore(string id, InternalVectorStoreObjectObject @object, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStoreStatus status, VectorStoreExpirationPolicy expirationPolicy, DateTimeOffset? expiresAt, DateTimeOffset? lastActiveAt, IReadOnlyDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VectorStore(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStores.VectorStoreStatus status, DateTimeOffset? expiresAt, DateTimeOffset? lastActiveAt, IDictionary<string, string> metadata, InternalVectorStoreObjectObject @object, VectorStoreExpirationPolicy expirationPolicy, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Object = @object;
             CreatedAt = createdAt;
             Name = name;
             UsageBytes = usageBytes;
             FileCounts = fileCounts;
             Status = status;
-            ExpirationPolicy = expirationPolicy;
             ExpiresAt = expiresAt;
             LastActiveAt = lastActiveAt;
             Metadata = metadata;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        internal VectorStore()
-        {
+            this.Object = @object;
+            ExpirationPolicy = expirationPolicy;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public string Id { get; }
 
         public DateTimeOffset CreatedAt { get; }
+
         public string Name { get; }
+
         public int UsageBytes { get; }
+
         public VectorStoreFileCounts FileCounts { get; }
-        public VectorStoreStatus Status { get; }
+
+        public VectorStores.VectorStoreStatus Status { get; }
+
         public DateTimeOffset? ExpiresAt { get; }
+
         public DateTimeOffset? LastActiveAt { get; }
-        public IReadOnlyDictionary<string, string> Metadata { get; }
+
+        public IDictionary<string, string> Metadata { get; }
     }
 }

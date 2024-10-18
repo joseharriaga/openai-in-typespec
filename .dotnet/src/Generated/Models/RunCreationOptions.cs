@@ -9,27 +9,27 @@ namespace OpenAI.Assistants
 {
     public partial class RunCreationOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal RunCreationOptions(string assistantId, string modelOverride, string instructionsOverride, string additionalInstructions, IList<MessageCreationOptions> internalMessages, IList<ToolDefinition> toolsOverride, IDictionary<string, string> metadata, float? temperature, float? nucleusSamplingFactor, bool? stream, int? maxInputTokenCount, int? maxOutputTokenCount, RunTruncationStrategy truncationStrategy, ToolConstraint toolConstraint, bool? allowParallelToolCalls, AssistantResponseFormat responseFormat, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal RunCreationOptions(string assistantId, bool? stream, AssistantResponseFormat responseFormat, string modelOverride, string instructionsOverride, string additionalInstructions, IList<Assistants.ThreadInitializationMessage> additionalMessages, bool? allowParallelToolCalls, IList<ToolDefinition> toolsOverride, IDictionary<string, string> metadata, float? temperature, float? nucleusSamplingFactor, int? maxInputTokenCount, int? maxOutputTokenCount, RunTruncationStrategy truncationStrategy, ToolConstraint toolConstraint, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             AssistantId = assistantId;
+            Stream = stream;
+            ResponseFormat = responseFormat;
             ModelOverride = modelOverride;
             InstructionsOverride = instructionsOverride;
             AdditionalInstructions = additionalInstructions;
-            InternalMessages = internalMessages;
+            AdditionalMessages = additionalMessages;
+            AllowParallelToolCalls = allowParallelToolCalls;
             ToolsOverride = toolsOverride;
             Metadata = metadata;
             Temperature = temperature;
             NucleusSamplingFactor = nucleusSamplingFactor;
-            Stream = stream;
             MaxInputTokenCount = maxInputTokenCount;
             MaxOutputTokenCount = maxOutputTokenCount;
             TruncationStrategy = truncationStrategy;
             ToolConstraint = toolConstraint;
-            AllowParallelToolCalls = allowParallelToolCalls;
-            ResponseFormat = responseFormat;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
     }
 }

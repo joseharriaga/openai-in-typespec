@@ -9,5 +9,11 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationFunctionTool : ConversationTool
     {
+        internal ConversationFunctionTool(string name, string description, BinaryData parameters, ConversationToolKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, additionalBinaryDataProperties)
+        {
+            _name = name;
+            _description = description;
+            _parameters = parameters;
+        }
     }
 }

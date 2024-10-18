@@ -4,10 +4,15 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     public partial class FunctionToolDefinition : ToolDefinition
     {
+        internal FunctionToolDefinition(InternalFunctionDefinition internalFunction, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        {
+            _internalFunction = internalFunction;
+        }
     }
 }

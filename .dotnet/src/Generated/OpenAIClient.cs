@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading;
 using OpenAI.Assistants;
 using OpenAI.Audio;
 using OpenAI.Batch;
@@ -22,17 +21,34 @@ using OpenAI.VectorStores;
 
 namespace OpenAI
 {
-    // Data plane generated client.
     public partial class OpenAIClient
     {
+        private readonly Uri _endpoint;
         private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
         private const string AuthorizationApiKeyPrefix = "Bearer";
-        private readonly ClientPipeline _pipeline;
-        private readonly Uri _endpoint;
+        private AudioClient _cachedAudioClient;
+        private AssistantClient _cachedAssistantClient;
+        private BatchClient _cachedBatchClient;
+        private ChatClient _cachedChatClient;
+        private LegacyCompletionClient _cachedLegacyCompletionClient;
+        private EmbeddingClient _cachedEmbeddingClient;
+        private OpenAIFileClient _cachedOpenAIFileClient;
+        private FineTuningClient _cachedFineTuningClient;
+        private ImageClient _cachedImageClient;
+        private InternalAssistantMessageClient _cachedInternalAssistantMessageClient;
+        private OpenAIModelClient _cachedOpenAIModelClient;
+        private ModerationClient _cachedModerationClient;
+        private RealtimeConversationClient _cachedRealtimeConversationClient;
+        private InternalAssistantThreadClient _cachedInternalAssistantThreadClient;
+        private InternalAssistantRunClient _cachedInternalAssistantRunClient;
+        private VectorStoreClient _cachedVectorStoreClient;
+        private InternalUploadsClient _cachedInternalUploadsClient;
 
         protected OpenAIClient()
         {
         }
+
+        public ClientPipeline Pipeline { get; }
     }
 }

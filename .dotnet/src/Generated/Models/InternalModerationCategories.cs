@@ -9,7 +9,8 @@ namespace OpenAI.Moderations
 {
     internal partial class InternalModerationCategories
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalModerationCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic)
         {
             Hate = hate;
@@ -25,7 +26,7 @@ namespace OpenAI.Moderations
             ViolenceGraphic = violenceGraphic;
         }
 
-        internal InternalModerationCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalModerationCategories(bool hate, bool hateThreatening, bool harassment, bool harassmentThreatening, bool selfHarm, bool selfHarmIntent, bool selfHarmInstructions, bool sexual, bool sexualMinors, bool violence, bool violenceGraphic, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -38,23 +39,29 @@ namespace OpenAI.Moderations
             SexualMinors = sexualMinors;
             Violence = violence;
             ViolenceGraphic = violenceGraphic;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        internal InternalModerationCategories()
-        {
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public bool Hate { get; }
+
         public bool HateThreatening { get; }
+
         public bool Harassment { get; }
+
         public bool HarassmentThreatening { get; }
+
         public bool SelfHarm { get; }
+
         public bool SelfHarmIntent { get; }
+
         public bool SelfHarmInstructions { get; }
+
         public bool Sexual { get; }
+
         public bool SexualMinors { get; }
+
         public bool Violence { get; }
+
         public bool ViolenceGraphic { get; }
     }
 }

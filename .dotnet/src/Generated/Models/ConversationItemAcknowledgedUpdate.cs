@@ -9,21 +9,14 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationItemAcknowledgedUpdate : ConversationUpdate
     {
-        internal ConversationItemAcknowledgedUpdate(string eventId, ConversationItem item) : base(eventId)
-        {
-            Argument.AssertNotNull(item, nameof(item));
-
-            Kind = ConversationUpdateKind.ItemAcknowledged;
-            Item = item;
-        }
-
-        internal ConversationItemAcknowledgedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, ConversationItem item) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationItemAcknowledgedUpdate(ConversationItem item, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemAcknowledged)
         {
             Item = item;
         }
 
-        internal ConversationItemAcknowledgedUpdate()
+        internal ConversationItemAcknowledgedUpdate(ConversationItem item, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
+            Item = item;
         }
     }
 }

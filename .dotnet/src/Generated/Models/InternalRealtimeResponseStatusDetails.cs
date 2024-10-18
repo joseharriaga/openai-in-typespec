@@ -9,15 +9,17 @@ namespace OpenAI.RealtimeConversation
 {
     internal abstract partial class InternalRealtimeResponseStatusDetails
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        protected InternalRealtimeResponseStatusDetails()
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        private protected InternalRealtimeResponseStatusDetails(ConversationStatus @type)
         {
+            Type = @type;
         }
 
-        internal InternalRealtimeResponseStatusDetails(ConversationStatus type, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRealtimeResponseStatusDetails(ConversationStatus @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = type;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            Type = @type;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         internal ConversationStatus Type { get; set; }

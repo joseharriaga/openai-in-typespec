@@ -37,5 +37,10 @@ namespace OpenAI
                     return new ErrorResult<bool>(response, new ClientResultException(response));
             }
         }
+
+        private static PipelineResponse ExtractResponseContent(PipelineMessage message)
+        {
+            return message.ExtractResponse();
+        }
     }
 }

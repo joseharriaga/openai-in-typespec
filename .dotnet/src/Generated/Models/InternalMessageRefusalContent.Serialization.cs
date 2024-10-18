@@ -7,61 +7,77 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalMessageRefusalContent : IJsonModel<InternalMessageRefusalContent>
     {
-        InternalMessageRefusalContent IJsonModel<InternalMessageRefusalContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        internal InternalMessageRefusalContent()
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalMessageRefusalContent>)this).GetFormatFromOptions(options) : options.Format;
+        }
+
+        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalMessageRefusalContent>)this).GetFormatFromOptions(options) : options.Format;
+            if (format != "J")
+            {
+                throw new FormatException($"The model {nameof(InternalMessageRefusalContent)} does not support writing '{format}' format.");
+            }
+            base.JsonModelWriteCore(writer, options);
+            writer.WritePropertyName("refusal"u8);
+            writer.WriteStringValue(InternalRefusal);
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(_type.ToSerialString());
+        }
+
+        InternalMessageRefusalContent IJsonModel<InternalMessageRefusalContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalMessageRefusalContent)JsonModelCreateCore(ref reader, options);
+
+        protected override MessageContent JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalMessageRefusalContent>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalMessageRefusalContent)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalMessageRefusalContent(document.RootElement, options);
         }
 
-        internal static InternalMessageRefusalContent DeserializeInternalMessageRefusalContent(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalMessageRefusalContent DeserializeInternalMessageRefusalContent(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            string type = default;
-            string refusal = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string internalRefusal = default;
+            string @type = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("refusal"u8))
                 {
-                    type = property.Value.GetString();
+                    internalRefusal = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("refusal"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    refusal = property.Value.GetString();
+                    @type = prop.Value.GetString().ToString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalMessageRefusalContent(serializedAdditionalRawData, type, refusal);
+            return new InternalMessageRefusalContent(internalRefusal, @type, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalMessageRefusalContent>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalMessageRefusalContent>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalMessageRefusalContent>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalMessageRefusalContent>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -71,15 +87,16 @@ namespace OpenAI.Assistants
             }
         }
 
-        InternalMessageRefusalContent IPersistableModel<InternalMessageRefusalContent>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalMessageRefusalContent>)this).GetFormatFromOptions(options) : options.Format;
+        InternalMessageRefusalContent IPersistableModel<InternalMessageRefusalContent>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalMessageRefusalContent)PersistableModelCreateCore(data, options);
 
+        protected override MessageContent PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalMessageRefusalContent>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalMessageRefusalContent(document.RootElement, options);
                     }
                 default:
@@ -89,15 +106,16 @@ namespace OpenAI.Assistants
 
         string IPersistableModel<InternalMessageRefusalContent>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new InternalMessageRefusalContent FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalMessageRefusalContent internalMessageRefusalContent)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalMessageRefusalContent(document.RootElement);
+            return BinaryContent.Create(internalMessageRefusalContent, ModelSerializationExtensions.WireOptions);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        public static explicit operator InternalMessageRefusalContent(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalMessageRefusalContent(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

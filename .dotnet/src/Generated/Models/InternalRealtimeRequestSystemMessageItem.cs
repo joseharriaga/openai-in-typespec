@@ -5,26 +5,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestSystemMessageItem : InternalRealtimeRequestMessageItem
     {
-        public InternalRealtimeRequestSystemMessageItem(IEnumerable<ConversationContentPart> content)
+        public InternalRealtimeRequestSystemMessageItem(IEnumerable<ConversationContentPart> content) : base(ConversationMessageRole.System)
         {
             Argument.AssertNotNull(content, nameof(content));
 
-            Role = ConversationMessageRole.System;
             Content = content.ToList();
         }
 
-        internal InternalRealtimeRequestSystemMessageItem(InternalRealtimeRequestItemType type, string id, IDictionary<string, BinaryData> serializedAdditionalRawData, ConversationMessageRole role, ConversationItemStatus? status, IList<ConversationContentPart> content) : base(type, id, serializedAdditionalRawData, role, status)
+        internal InternalRealtimeRequestSystemMessageItem(IList<ConversationContentPart> content, ConversationMessageRole role, ConversationItemStatus? status, InternalRealtimeRequestItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, status, @type, id, additionalBinaryDataProperties)
         {
             Content = content;
-        }
-
-        internal InternalRealtimeRequestSystemMessageItem()
-        {
         }
     }
 }

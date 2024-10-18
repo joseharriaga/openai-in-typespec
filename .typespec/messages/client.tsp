@@ -63,3 +63,5 @@ using OpenAI;
 
 @@access(MessageDeltaContentTextAnnotationsFilePathObject, Access.public);
 @@usage(MessageDeltaContentTextAnnotationsFilePathObject, Usage.output);
+
+@@visibility(ListMessagesResponse.data, "read");

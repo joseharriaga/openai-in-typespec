@@ -9,21 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationAudioDeltaUpdate : ConversationUpdate
     {
-        internal ConversationAudioDeltaUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, BinaryData delta) : base(eventId)
-        {
-            Argument.AssertNotNull(responseId, nameof(responseId));
-            Argument.AssertNotNull(itemId, nameof(itemId));
-            Argument.AssertNotNull(delta, nameof(delta));
-
-            Kind = ConversationUpdateKind.ResponseAudioDelta;
-            ResponseId = responseId;
-            ItemId = itemId;
-            OutputIndex = outputIndex;
-            ContentIndex = contentIndex;
-            Delta = delta;
-        }
-
-        internal ConversationAudioDeltaUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, BinaryData delta) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationAudioDeltaUpdate(string responseId, string itemId, int outputIndex, int contentIndex, BinaryData delta, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ResponseAudioDelta)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -32,14 +18,23 @@ namespace OpenAI.RealtimeConversation
             Delta = delta;
         }
 
-        internal ConversationAudioDeltaUpdate()
+        internal ConversationAudioDeltaUpdate(string responseId, string itemId, int outputIndex, int contentIndex, BinaryData delta, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
+            ResponseId = responseId;
+            ItemId = itemId;
+            OutputIndex = outputIndex;
+            ContentIndex = contentIndex;
+            Delta = delta;
         }
 
         public string ResponseId { get; }
+
         public string ItemId { get; }
+
         public int OutputIndex { get; }
+
         public int ContentIndex { get; }
+
         public BinaryData Delta { get; }
     }
 }

@@ -9,21 +9,14 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class RealtimeResponseFailedStatusDetails : InternalRealtimeResponseStatusDetails
     {
-        internal RealtimeResponseFailedStatusDetails(BinaryData error)
-        {
-            Argument.AssertNotNull(error, nameof(error));
-
-            Type = ConversationStatus.Failed;
-            Error = error;
-        }
-
-        internal RealtimeResponseFailedStatusDetails(ConversationStatus type, IDictionary<string, BinaryData> serializedAdditionalRawData, BinaryData error) : base(type, serializedAdditionalRawData)
+        internal RealtimeResponseFailedStatusDetails(BinaryData error) : base(ConversationStatus.Failed)
         {
             Error = error;
         }
 
-        internal RealtimeResponseFailedStatusDetails()
+        internal RealtimeResponseFailedStatusDetails(BinaryData error, ConversationStatus @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
+            Error = error;
         }
 
         public BinaryData Error { get; }

@@ -6,42 +6,45 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     [PersistableModelProxy(typeof(UnknownRealtimeRequestCommand))]
-    internal partial class InternalRealtimeRequestCommand : IJsonModel<InternalRealtimeRequestCommand>
+    internal abstract partial class InternalRealtimeRequestCommand : IJsonModel<InternalRealtimeRequestCommand>
     {
+        internal InternalRealtimeRequestCommand()
+        {
+        }
+
         void IJsonModel<InternalRealtimeRequestCommand>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestCommand>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestCommand>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeRequestCommand)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
-            {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Kind.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true && Optional.IsDefined(EventId))
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Kind.ToString());
+            if (Optional.IsDefined(EventId))
             {
                 writer.WritePropertyName("event_id"u8);
                 writer.WriteStringValue(EventId);
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -50,51 +53,59 @@ namespace OpenAI.RealtimeConversation
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalRealtimeRequestCommand IJsonModel<InternalRealtimeRequestCommand>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalRealtimeRequestCommand IJsonModel<InternalRealtimeRequestCommand>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalRealtimeRequestCommand JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestCommand>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeRequestCommand)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalRealtimeRequestCommand(document.RootElement, options);
         }
 
-        internal static InternalRealtimeRequestCommand DeserializeInternalRealtimeRequestCommand(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalRealtimeRequestCommand DeserializeInternalRealtimeRequestCommand(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            if (element.TryGetProperty("type", out JsonElement discriminator))
+            if (element.TryGetProperty("kind"u8, out JsonElement discriminator))
             {
                 switch (discriminator.GetString())
                 {
-                    case "conversation.item.create": return InternalRealtimeRequestItemCreateCommand.DeserializeInternalRealtimeRequestItemCreateCommand(element, options);
-                    case "conversation.item.delete": return InternalRealtimeRequestItemDeleteCommand.DeserializeInternalRealtimeRequestItemDeleteCommand(element, options);
-                    case "conversation.item.truncate": return InternalRealtimeRequestItemTruncateCommand.DeserializeInternalRealtimeRequestItemTruncateCommand(element, options);
-                    case "input_audio_buffer.append": return InternalRealtimeRequestInputAudioBufferAppendCommand.DeserializeInternalRealtimeRequestInputAudioBufferAppendCommand(element, options);
-                    case "input_audio_buffer.clear": return InternalRealtimeRequestInputAudioBufferClearCommand.DeserializeInternalRealtimeRequestInputAudioBufferClearCommand(element, options);
-                    case "input_audio_buffer.commit": return InternalRealtimeRequestInputAudioBufferCommitCommand.DeserializeInternalRealtimeRequestInputAudioBufferCommitCommand(element, options);
-                    case "response.cancel": return InternalRealtimeRequestResponseCancelCommand.DeserializeInternalRealtimeRequestResponseCancelCommand(element, options);
-                    case "response.create": return InternalRealtimeRequestResponseCreateCommand.DeserializeInternalRealtimeRequestResponseCreateCommand(element, options);
-                    case "session.update": return InternalRealtimeRequestSessionUpdateCommand.DeserializeInternalRealtimeRequestSessionUpdateCommand(element, options);
+                    case "session.update":
+                        return InternalRealtimeRequestSessionUpdateCommand.DeserializeInternalRealtimeRequestSessionUpdateCommand(element, options);
+                    case "input_audio_buffer.append":
+                        return InternalRealtimeRequestInputAudioBufferAppendCommand.DeserializeInternalRealtimeRequestInputAudioBufferAppendCommand(element, options);
+                    case "input_audio_buffer.commit":
+                        return InternalRealtimeRequestInputAudioBufferCommitCommand.DeserializeInternalRealtimeRequestInputAudioBufferCommitCommand(element, options);
+                    case "input_audio_buffer.clear":
+                        return InternalRealtimeRequestInputAudioBufferClearCommand.DeserializeInternalRealtimeRequestInputAudioBufferClearCommand(element, options);
+                    case "conversation.item.create":
+                        return InternalRealtimeRequestItemCreateCommand.DeserializeInternalRealtimeRequestItemCreateCommand(element, options);
+                    case "conversation.item.delete":
+                        return InternalRealtimeRequestItemDeleteCommand.DeserializeInternalRealtimeRequestItemDeleteCommand(element, options);
+                    case "conversation.item.truncate":
+                        return InternalRealtimeRequestItemTruncateCommand.DeserializeInternalRealtimeRequestItemTruncateCommand(element, options);
+                    case "response.create":
+                        return InternalRealtimeRequestResponseCreateCommand.DeserializeInternalRealtimeRequestResponseCreateCommand(element, options);
+                    case "response.cancel":
+                        return InternalRealtimeRequestResponseCancelCommand.DeserializeInternalRealtimeRequestResponseCancelCommand(element, options);
                 }
             }
             return UnknownRealtimeRequestCommand.DeserializeUnknownRealtimeRequestCommand(element, options);
         }
 
-        BinaryData IPersistableModel<InternalRealtimeRequestCommand>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestCommand>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalRealtimeRequestCommand>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestCommand>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -104,15 +115,16 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        InternalRealtimeRequestCommand IPersistableModel<InternalRealtimeRequestCommand>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestCommand>)this).GetFormatFromOptions(options) : options.Format;
+        InternalRealtimeRequestCommand IPersistableModel<InternalRealtimeRequestCommand>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalRealtimeRequestCommand PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestCommand>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalRealtimeRequestCommand(document.RootElement, options);
                     }
                 default:
@@ -122,15 +134,16 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<InternalRealtimeRequestCommand>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalRealtimeRequestCommand FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalRealtimeRequestCommand internalRealtimeRequestCommand)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalRealtimeRequestCommand(document.RootElement);
+            return BinaryContent.Create(internalRealtimeRequestCommand, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalRealtimeRequestCommand(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalRealtimeRequestCommand(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

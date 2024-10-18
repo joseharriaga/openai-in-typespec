@@ -12,11 +12,10 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatCompletion(string id, string model, InternalCreateChatCompletionResponseObject @object, IEnumerable<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset createdAt)
+        internal ChatCompletion(string id, string model, IEnumerable<InternalCreateChatCompletionResponseChoice> choices, DateTimeOffset createdAt)
         {
             Id = id;
             Model = model;
-            this.Object = @object;
             Choices = choices.ToList();
             CreatedAt = createdAt;
         }

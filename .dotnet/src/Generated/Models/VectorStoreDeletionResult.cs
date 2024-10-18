@@ -11,11 +11,10 @@ namespace OpenAI.VectorStores
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal VectorStoreDeletionResult(bool deleted, string vectorStoreId, InternalDeleteVectorStoreResponseObject @object)
+        internal VectorStoreDeletionResult(bool deleted, string vectorStoreId)
         {
             Deleted = deleted;
             VectorStoreId = vectorStoreId;
-            this.Object = @object;
         }
 
         internal VectorStoreDeletionResult(bool deleted, string vectorStoreId, InternalDeleteVectorStoreResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)

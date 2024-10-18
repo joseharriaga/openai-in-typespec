@@ -11,11 +11,10 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalRunStepDelta(string id, InternalRunStepDeltaObjectDelta delta, object @object)
+        internal InternalRunStepDelta(string id, InternalRunStepDeltaObjectDelta delta)
         {
             Id = id;
             Delta = delta;
-            this.Object = @object;
         }
 
         internal InternalRunStepDelta(string id, InternalRunStepDeltaObjectDelta delta, object @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)

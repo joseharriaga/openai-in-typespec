@@ -11,11 +11,10 @@ namespace OpenAI.Embeddings
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal OpenAIEmbeddingCollection(string model, EmbeddingTokenUsage usage, InternalCreateEmbeddingResponseObject @object)
+        internal OpenAIEmbeddingCollection(string model, EmbeddingTokenUsage usage)
         {
             Model = model;
             Usage = usage;
-            this.Object = @object;
         }
 
         internal OpenAIEmbeddingCollection(string model, EmbeddingTokenUsage usage, InternalCreateEmbeddingResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)

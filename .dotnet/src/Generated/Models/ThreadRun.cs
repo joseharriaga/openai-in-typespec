@@ -12,7 +12,7 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ThreadRun(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IEnumerable<ToolDefinition> tools, IDictionary<string, string> metadata, RunTokenUsage usage, RunTruncationStrategy truncationStrategy, InternalRunObjectObject @object, AssistantResponseFormat responseFormat, ToolConstraint toolConstraint, bool? allowParallelToolCalls, int? maxInputTokenCount, int? maxOutputTokenCount, InternalRunRequiredAction internalRequiredAction)
+        internal ThreadRun(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IEnumerable<ToolDefinition> tools, IDictionary<string, string> metadata, RunTokenUsage usage, RunTruncationStrategy truncationStrategy, AssistantResponseFormat responseFormat, ToolConstraint toolConstraint, bool? allowParallelToolCalls, int? maxInputTokenCount, int? maxOutputTokenCount, InternalRunRequiredAction internalRequiredAction)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -32,7 +32,6 @@ namespace OpenAI.Assistants
             Metadata = metadata;
             Usage = usage;
             TruncationStrategy = truncationStrategy;
-            this.Object = @object;
             ResponseFormat = responseFormat;
             ToolConstraint = toolConstraint;
             AllowParallelToolCalls = allowParallelToolCalls;

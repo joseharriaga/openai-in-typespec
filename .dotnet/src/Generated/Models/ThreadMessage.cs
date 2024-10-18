@@ -12,7 +12,7 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, IEnumerable<MessageContent> content, string assistantId, string runId, IDictionary<string, string> metadata, InternalMessageObjectObject @object, Assistants.MessageRole role, IEnumerable<MessageCreationAttachment> attachments)
+        internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, IEnumerable<MessageContent> content, string assistantId, string runId, IDictionary<string, string> metadata, Assistants.MessageRole role, IEnumerable<MessageCreationAttachment> attachments)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -25,7 +25,6 @@ namespace OpenAI.Assistants
             AssistantId = assistantId;
             RunId = runId;
             Metadata = metadata;
-            this.Object = @object;
             Role = role;
             Attachments = attachments.ToList();
         }

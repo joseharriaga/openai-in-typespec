@@ -11,11 +11,10 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ThreadDeletionResult(bool deleted, string threadId, InternalDeleteThreadResponseObject @object)
+        internal ThreadDeletionResult(bool deleted, string threadId)
         {
             Deleted = deleted;
             ThreadId = threadId;
-            this.Object = @object;
         }
 
         internal ThreadDeletionResult(bool deleted, string threadId, InternalDeleteThreadResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)

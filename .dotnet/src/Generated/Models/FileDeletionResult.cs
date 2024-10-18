@@ -11,11 +11,10 @@ namespace OpenAI.Files
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal FileDeletionResult(bool deleted, string fileId, InternalDeleteFileResponseObject @object)
+        internal FileDeletionResult(bool deleted, string fileId)
         {
             Deleted = deleted;
             FileId = fileId;
-            this.Object = @object;
         }
 
         internal FileDeletionResult(bool deleted, string fileId, InternalDeleteFileResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)

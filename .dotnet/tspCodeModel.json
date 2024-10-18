@@ -37362,7 +37362,7 @@
       "decorators": []
      },
      "optional": true,
-     "readOnly": true,
+     "readOnly": false,
      "discriminator": false,
      "flatten": false,
      "decorators": [],

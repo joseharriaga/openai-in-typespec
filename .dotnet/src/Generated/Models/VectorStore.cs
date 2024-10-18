@@ -11,7 +11,7 @@ namespace OpenAI.VectorStores
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal VectorStore(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStores.VectorStoreStatus status, DateTimeOffset? lastActiveAt, IDictionary<string, string> metadata, InternalVectorStoreObjectObject @object)
+        internal VectorStore(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStores.VectorStoreStatus status, DateTimeOffset? lastActiveAt, IDictionary<string, string> metadata)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -21,7 +21,6 @@ namespace OpenAI.VectorStores
             Status = status;
             LastActiveAt = lastActiveAt;
             Metadata = metadata;
-            this.Object = @object;
         }
 
         internal VectorStore(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStores.VectorStoreStatus status, DateTimeOffset? expiresAt, DateTimeOffset? lastActiveAt, IDictionary<string, string> metadata, InternalVectorStoreObjectObject @object, VectorStoreExpirationPolicy expirationPolicy, IDictionary<string, BinaryData> additionalBinaryDataProperties)

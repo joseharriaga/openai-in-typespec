@@ -11,11 +11,6 @@ namespace OpenAI.Models
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal OpenAIModelCollection(InternalListModelsResponseObject @object)
-        {
-            this.Object = @object;
-        }
-
         internal OpenAIModelCollection(InternalListModelsResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             this.Object = @object;

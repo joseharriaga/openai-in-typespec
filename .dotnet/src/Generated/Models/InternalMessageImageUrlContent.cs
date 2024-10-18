@@ -4,21 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalMessageImageUrlContent : MessageContent
     {
-        public InternalMessageImageUrlContent(string @type, InternalMessageContentImageUrlObjectImageUrl imageUrl)
-        {
-            Argument.AssertNotNull(@type, nameof(@type));
-            Argument.AssertNotNull(imageUrl, nameof(imageUrl));
-
-            _type = @type;
-            _imageUrl = imageUrl;
-        }
-
         internal InternalMessageImageUrlContent(string @type, InternalMessageContentImageUrlObjectImageUrl imageUrl, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
         {
             _type = @type;

@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using OpenAI;
 
 namespace OpenAI.VectorStores
 {
@@ -12,15 +12,15 @@ namespace OpenAI.VectorStores
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalListVectorStoreFilesResponse(IEnumerable<VectorStoreFileAssociation> data, string firstId, string lastId, bool hasMore)
+        internal InternalListVectorStoreFilesResponse(string firstId, string lastId, bool hasMore)
         {
-            Data = data.ToList();
+            Data = new ChangeTrackingList<VectorStoreFileAssociation>();
             FirstId = firstId;
             LastId = lastId;
             HasMore = hasMore;
         }
 
-        internal InternalListVectorStoreFilesResponse(InternalListVectorStoreFilesResponseObject @object, IList<VectorStoreFileAssociation> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalListVectorStoreFilesResponse(InternalListVectorStoreFilesResponseObject @object, IReadOnlyList<VectorStoreFileAssociation> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Object = @object;
             Data = data;
@@ -32,7 +32,7 @@ namespace OpenAI.VectorStores
 
         public InternalListVectorStoreFilesResponseObject Object { get; } = "list";
 
-        public IList<VectorStoreFileAssociation> Data { get; }
+        public IReadOnlyList<VectorStoreFileAssociation> Data { get; }
 
         public string FirstId { get; }
 

@@ -33,13 +33,16 @@ namespace OpenAI.Assistants
             }
             writer.WritePropertyName("object"u8);
             writer.WriteStringValue(Object.ToString());
-            writer.WritePropertyName("data"u8);
-            writer.WriteStartArray();
-            foreach (ThreadRun item in Data)
+            if (options.Format != "W")
             {
-                writer.WriteObjectValue(item, options);
+                writer.WritePropertyName("data"u8);
+                writer.WriteStartArray();
+                foreach (ThreadRun item in Data)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
             writer.WritePropertyName("first_id"u8);
             writer.WriteStringValue(FirstId);
             writer.WritePropertyName("last_id"u8);
@@ -83,7 +86,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             InternalListRunsResponseObject @object = default;
-            IList<ThreadRun> data = default;
+            IReadOnlyList<ThreadRun> data = default;
             string firstId = default;
             string lastId = default;
             bool hasMore = default;

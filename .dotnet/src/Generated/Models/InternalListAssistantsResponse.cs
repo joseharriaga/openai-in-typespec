@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
@@ -12,15 +12,15 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalListAssistantsResponse(IEnumerable<Assistant> data, string firstId, string lastId, bool hasMore)
+        internal InternalListAssistantsResponse(string firstId, string lastId, bool hasMore)
         {
-            Data = data.ToList();
+            Data = new ChangeTrackingList<Assistant>();
             FirstId = firstId;
             LastId = lastId;
             HasMore = hasMore;
         }
 
-        internal InternalListAssistantsResponse(InternalListAssistantsResponseObject @object, IList<Assistant> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalListAssistantsResponse(InternalListAssistantsResponseObject @object, IReadOnlyList<Assistant> data, string firstId, string lastId, bool hasMore, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Object = @object;
             Data = data;
@@ -32,7 +32,7 @@ namespace OpenAI.Assistants
 
         public InternalListAssistantsResponseObject Object { get; } = "list";
 
-        public IList<Assistant> Data { get; }
+        public IReadOnlyList<Assistant> Data { get; }
 
         public string FirstId { get; }
 

@@ -369,6 +369,58 @@ public class ChatTests : SyncAsyncTestBase
     }
 
     [Test]
+    public async Task ChatWithAudio()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "gpt-4o-audio-preview");
+
+        string helloWorldAudioPath = Path.Join("Assets", "audio_hello_world.mp3");
+        BinaryData helloWorldAudioBytes = BinaryData.FromBytes(File.ReadAllBytes(helloWorldAudioPath));
+        ChatMessageContentPart helloWorldAudioContentPart = ChatMessageContentPart.CreateAudioPart(
+            helloWorldAudioBytes,
+            ChatInputAudioFormat.Mp3);
+        string whatsTheWeatherAudioPath = Path.Join("Assets", "whats_the_weather_pcm16_24khz_mono.wav");
+        BinaryData whatsTheWeatherAudioBytes = BinaryData.FromBytes(File.ReadAllBytes(whatsTheWeatherAudioPath));
+        ChatMessageContentPart whatsTheWeatherAudioContentPart = ChatMessageContentPart.CreateAudioPart(
+            whatsTheWeatherAudioBytes,
+            ChatInputAudioFormat.Wav);
+
+        List<ChatMessage> messages = [
+            new SystemChatMessage("Always reply with both a conventional text response and audio."),
+            new UserChatMessage([helloWorldAudioContentPart])];
+
+        ChatCompletionOptions options = new()
+        {
+            AudioOptions = new(ChatResponseVoice.Alloy, ChatOutputAudioFormat.Pcm16)
+        };
+
+        ChatCompletion completion = await client.CompleteChatAsync(messages, options);
+        Assert.That(completion, Is.Not.Null);
+        Assert.That(completion.Audio, Is.Not.Null);
+        Assert.That(completion.Audio.CorrelationId, Is.Not.Null.And.Not.Empty);
+        Assert.That(completion.Audio.Data, Is.Not.Null);
+        Assert.That(completion.Audio.Transcript, Is.Not.Null.And.Not.Empty);
+
+        messages.Add(ChatMessage.CreateAssistantMessage(completion));
+        Assert.That(
+            (messages[messages.Count - 1] as AssistantChatMessage)?.AudioReference.CorrelationId,
+            Is.Not.Null.And.Not.Empty);
+        messages.Add(
+            new UserChatMessage(
+                [
+                    "Please answer the following spoken question:",
+                    ChatMessageContentPart.CreateAudioPart(whatsTheWeatherAudioBytes, ChatInputAudioFormat.Wav),
+                ]));
+
+        string streamedCorrelationId = null;
+        using MemoryStream responseAudioStream = new();
+        await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(messages, options))
+        {
+            responseAudioStream.Write(update.ResponseAudioUpdate?.AudioBytesUpdate);
+        }
+        Assert.That(responseAudioStream.Length, Is.GreaterThan(9000));
+    }
+
+    [Test]
     public async Task AuthFailure()
     {
         string fakeApiKey = "not-a-real-key-but-should-be-sanitized";

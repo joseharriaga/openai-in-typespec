@@ -17,6 +17,7 @@ public static partial class OpenAIChatModelFactory
         IEnumerable<ChatToolCall> toolCalls = null,
         ChatMessageRole role = default,
         ChatFunctionCall functionCall = null,
+        ChatResponseAudio audio = null,
         IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null,
         IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null,
         DateTimeOffset createdAt = default,
@@ -35,6 +36,7 @@ public static partial class OpenAIChatModelFactory
             toolCalls.ToList(),
             role,
             functionCall,
+            audio,
             serializedAdditionalRawData: null);
 
         InternalCreateChatCompletionResponseChoiceLogprobs logprobs = new InternalCreateChatCompletionResponseChoiceLogprobs(
@@ -136,7 +138,8 @@ public static partial class OpenAIChatModelFactory
         DateTimeOffset createdAt = default,
         string model = null,
         string systemFingerprint = null,
-        ChatTokenUsage usage = null)
+        ChatTokenUsage usage = null,
+        StreamingChatResponseAudioUpdate audioUpdate = null)
     {
         contentUpdate ??= new ChatMessageContent();
         toolCallUpdates ??= new List<StreamingChatToolCallUpdate>();
@@ -144,6 +147,7 @@ public static partial class OpenAIChatModelFactory
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
         InternalChatCompletionStreamResponseDelta delta = new InternalChatCompletionStreamResponseDelta(
+            audioUpdate,
             contentUpdate,
             functionCallUpdate,
             toolCallUpdates.ToList(),
@@ -202,6 +206,26 @@ public static partial class OpenAIChatModelFactory
             toolCallId,
             kind,
             function,
+            serializedAdditionalRawData: null);
+    }
+
+    public static ChatResponseAudio ChatResponseAudio(string correlationId = null, BinaryData audioBytes = null, string transcript = null, DateTimeOffset expiresAt = default)
+    {
+        return new ChatResponseAudio(
+            correlationId,
+            expiresAt,
+            audioBytes,
+            transcript,
+            serializedAdditionalRawData: null);
+    }
+
+    public static StreamingChatResponseAudioUpdate StreamingChatResponseAudioUpdate(string correlationId = null, BinaryData audioBytesUpdate = null, string transcriptUpdate = null, DateTimeOffset? expiresAt = null)
+    {
+        return new StreamingChatResponseAudioUpdate(
+            correlationId,
+            transcriptUpdate,
+            audioBytesUpdate,
+            expiresAt,
             serializedAdditionalRawData: null);
     }
 }

@@ -165,4 +165,22 @@ public partial class ChatCompletionOptions
 
     [CodeGenMember("Store")]
     public bool? EnableOutputStorage { get; set; }
+
+    [CodeGenMember("Modalities")]
+    private IList<InternalCreateChatCompletionRequestModality> _internalModalities;
+
+    [CodeGenMember("Audio")]
+    private ChatAudioOptions _audioOptions;
+
+    public ChatAudioOptions AudioOptions
+    {
+        get => _audioOptions;
+        set
+        {
+            _audioOptions = value;
+            _internalModalities = value is null
+                ? new ChangeTrackingList<InternalCreateChatCompletionRequestModality>()
+                : [InternalCreateChatCompletionRequestModality.Text, InternalCreateChatCompletionRequestModality.Audio];
+        }
+    }
 }

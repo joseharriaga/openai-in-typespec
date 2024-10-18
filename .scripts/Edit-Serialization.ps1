@@ -43,6 +43,7 @@ function Edit-InternalChatCompletionResponseMessageSerialization {
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
         "    role,"
         "    functionCall,"
+        "    audio,"
         "    serializedAdditionalRawData\);"
     )
     $outputString = @(
@@ -53,6 +54,7 @@ function Edit-InternalChatCompletionResponseMessageSerialization {
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
         "    role,"
         "    functionCall,"
+        "    audio,"
         "    serializedAdditionalRawData);"
     )
     Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
@@ -74,6 +76,7 @@ function Edit-InternalChatCompletionStreamResponseDeltaSerialization {
     # content deserialization
     $inputRegex = @(
         "return new InternalChatCompletionStreamResponseDelta\("
+        "    audio,"
         "    content,"
         "    functionCall,"
         "    toolCalls \?\? new ChangeTrackingList<StreamingChatToolCallUpdate>\(\),"
@@ -84,6 +87,7 @@ function Edit-InternalChatCompletionStreamResponseDeltaSerialization {
     $outputString = @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalChatCompletionStreamResponseDelta("
+        "    audio,"
         "    content ?? new ChatMessageContent(),"
         "    functionCall,"
         "    toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(),"
@@ -108,6 +112,7 @@ function Edit-AssistantChatMessageSerialization {
         "    serializedAdditionalRawData,"
         "    refusal,"
         "    name,"
+        "    audio,"
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
         "    functionCall\);"
     )
@@ -119,6 +124,7 @@ function Edit-AssistantChatMessageSerialization {
         "    serializedAdditionalRawData,"
         "    refusal,"
         "    name,"
+        "    audio,"
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
         "    functionCall);"
     )
@@ -231,6 +237,7 @@ function Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization
         "    serializedAdditionalRawData,"
         "    refusal,"
         "    name,"
+        "    audio,"
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
         "    functionCall\);"
     )
@@ -242,6 +249,7 @@ function Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization
         "    serializedAdditionalRawData,"
         "    refusal,"
         "    name,"
+        "    audio,"
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
         "    functionCall);"
     )

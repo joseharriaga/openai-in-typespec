@@ -109,6 +109,7 @@ public partial class AssistantChatMessage : ChatMessage
 
         Refusal = chatCompletion.Refusal;
         FunctionCall = chatCompletion.FunctionCall;
+        AudioReference = chatCompletion.Audio;
         foreach (ChatToolCall toolCall in chatCompletion.ToolCalls ?? [])
         {
             ToolCalls.Add(toolCall);
@@ -129,4 +130,7 @@ public partial class AssistantChatMessage : ChatMessage
 
     [Obsolete($"This property is obsolete. Please use {nameof(ToolCalls)} instead.")]
     public ChatFunctionCall FunctionCall { get; set; }
+
+    [CodeGenMember("Audio")]
+    public ChatAudioReference AudioReference { get; set; }
 }

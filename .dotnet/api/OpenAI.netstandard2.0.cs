@@ -1024,11 +1024,22 @@ namespace OpenAI.Chat {
         public AssistantChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls);
         public AssistantChatMessage(string content);
+        public ChatAudioReference AudioReference { get; set; }
         [Obsolete("This property is obsolete. Please use ToolCalls instead.")]
         public ChatFunctionCall FunctionCall { get; set; }
         public string ParticipantName { get; set; }
         public string Refusal { get; set; }
         public IList<ChatToolCall> ToolCalls { get; }
+    }
+    public class ChatAudioOptions : IJsonModel<ChatAudioOptions>, IPersistableModel<ChatAudioOptions> {
+        public ChatAudioOptions(ChatResponseVoice responseVoice, ChatOutputAudioFormat outputAudioFormat);
+        public ChatOutputAudioFormat OutputAudioFormat { get; set; }
+        public ChatResponseVoice ResponseVoice { get; set; }
+    }
+    public class ChatAudioReference : IJsonModel<ChatAudioReference>, IPersistableModel<ChatAudioReference> {
+        public ChatAudioReference(string correlationId);
+        public string CorrelationId { get; set; }
+        public static implicit operator ChatAudioReference(ChatResponseAudio responseAudio);
     }
     public class ChatClient {
         protected ChatClient();
@@ -1051,6 +1062,7 @@ namespace OpenAI.Chat {
         public virtual AsyncCollectionResult<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default);
     }
     public class ChatCompletion : IJsonModel<ChatCompletion>, IPersistableModel<ChatCompletion> {
+        public ChatResponseAudio Audio { get; }
         public ChatMessageContent Content { get; }
         public IReadOnlyList<ChatTokenLogProbabilityDetails> ContentTokenLogProbabilities { get; }
         public DateTimeOffset CreatedAt { get; }
@@ -1068,6 +1080,7 @@ namespace OpenAI.Chat {
     }
     public class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>, IPersistableModel<ChatCompletionOptions> {
         public bool? AllowParallelToolCalls { get; set; }
+        public ChatAudioOptions AudioOptions { get; set; }
         public bool? EnableOutputStorage { get; set; }
         public string EndUserId { get; set; }
         public float? FrequencyPenalty { get; set; }
@@ -1130,6 +1143,20 @@ namespace OpenAI.Chat {
         public static bool operator !=(ChatImageDetailLevel left, ChatImageDetailLevel right);
         public override readonly string ToString();
     }
+    public readonly partial struct ChatInputAudioFormat : IEquatable<ChatInputAudioFormat> {
+        public ChatInputAudioFormat(string value);
+        public static ChatInputAudioFormat Mp3 { get; }
+        public static ChatInputAudioFormat Wav { get; }
+        public readonly bool Equals(ChatInputAudioFormat other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ChatInputAudioFormat left, ChatInputAudioFormat right);
+        public static implicit operator ChatInputAudioFormat(string value);
+        public static bool operator !=(ChatInputAudioFormat left, ChatInputAudioFormat right);
+        public override readonly string ToString();
+    }
     public class ChatInputTokenUsageDetails : IJsonModel<ChatInputTokenUsageDetails>, IPersistableModel<ChatInputTokenUsageDetails> {
         public int? AudioTokenCount { get; }
         public int? CachedTokenCount { get; }
@@ -1162,6 +1189,8 @@ namespace OpenAI.Chat {
         public ChatMessageContent(string content);
     }
     public class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>, IPersistableModel<ChatMessageContentPart> {
+        public BinaryData AudioBytes { get; }
+        public ChatInputAudioFormat? AudioInputFormat { get; }
         public BinaryData ImageBytes { get; }
         public string ImageBytesMediaType { get; }
         public ChatImageDetailLevel? ImageDetailLevel { get; }
@@ -1169,6 +1198,7 @@ namespace OpenAI.Chat {
         public ChatMessageContentPartKind Kind { get; }
         public string Refusal { get; }
         public string Text { get; }
+        public static ChatMessageContentPart CreateAudioPart(BinaryData audioBytes, ChatInputAudioFormat audioFormat);
         public static ChatMessageContentPart CreateImagePart(BinaryData imageBytes, string imageBytesMediaType, ChatImageDetailLevel? imageDetailLevel = null);
         public static ChatMessageContentPart CreateImagePart(Uri imageUri, ChatImageDetailLevel? imageDetailLevel = null);
         public static ChatMessageContentPart CreateRefusalPart(string refusal);
@@ -1178,7 +1208,8 @@ namespace OpenAI.Chat {
     public enum ChatMessageContentPartKind {
         Text = 0,
         Refusal = 1,
-        Image = 2
+        Image = 2,
+        Audio = 3
     }
     public enum ChatMessageRole {
         System = 0,
@@ -1187,14 +1218,55 @@ namespace OpenAI.Chat {
         Tool = 3,
         Function = 4
     }
+    public readonly partial struct ChatOutputAudioFormat : IEquatable<ChatOutputAudioFormat> {
+        public ChatOutputAudioFormat(string value);
+        public static ChatOutputAudioFormat Flac { get; }
+        public static ChatOutputAudioFormat Mp3 { get; }
+        public static ChatOutputAudioFormat Opus { get; }
+        public static ChatOutputAudioFormat Pcm16 { get; }
+        public static ChatOutputAudioFormat Wav { get; }
+        public readonly bool Equals(ChatOutputAudioFormat other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ChatOutputAudioFormat left, ChatOutputAudioFormat right);
+        public static implicit operator ChatOutputAudioFormat(string value);
+        public static bool operator !=(ChatOutputAudioFormat left, ChatOutputAudioFormat right);
+        public override readonly string ToString();
+    }
     public class ChatOutputTokenUsageDetails : IJsonModel<ChatOutputTokenUsageDetails>, IPersistableModel<ChatOutputTokenUsageDetails> {
         public int? AudioTokenCount { get; }
         public int ReasoningTokenCount { get; }
+    }
+    public class ChatResponseAudio : IJsonModel<ChatResponseAudio>, IPersistableModel<ChatResponseAudio> {
+        public string CorrelationId { get; }
+        public BinaryData Data { get; }
+        public DateTimeOffset ExpiresAt { get; }
+        public string Transcript { get; }
     }
     public class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
         public static ChatResponseFormat CreateJsonObjectFormat();
         public static ChatResponseFormat CreateJsonSchemaFormat(string jsonSchemaFormatName, BinaryData jsonSchema, string jsonSchemaFormatDescription = null, bool? jsonSchemaIsStrict = null);
         public static ChatResponseFormat CreateTextFormat();
+    }
+    public readonly partial struct ChatResponseVoice : IEquatable<ChatResponseVoice> {
+        public ChatResponseVoice(string value);
+        public static ChatResponseVoice Alloy { get; }
+        public static ChatResponseVoice Echo { get; }
+        public static ChatResponseVoice Fable { get; }
+        public static ChatResponseVoice Nova { get; }
+        public static ChatResponseVoice Onyx { get; }
+        public static ChatResponseVoice Shimmer { get; }
+        public readonly bool Equals(ChatResponseVoice other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ChatResponseVoice left, ChatResponseVoice right);
+        public static implicit operator ChatResponseVoice(string value);
+        public static bool operator !=(ChatResponseVoice left, ChatResponseVoice right);
+        public override readonly string ToString();
     }
     public class ChatTokenLogProbabilityDetails : IJsonModel<ChatTokenLogProbabilityDetails>, IPersistableModel<ChatTokenLogProbabilityDetails> {
         public float LogProbability { get; }
@@ -1247,7 +1319,7 @@ namespace OpenAI.Chat {
         public string FunctionName { get; }
     }
     public static class OpenAIChatModelFactory {
-        public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, ChatMessageContent content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
+        public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, ChatMessageContent content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, ChatResponseAudio audio = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
         public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int? audioTokenCount = null, int? cachedTokenCount = null);
         public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0, int? audioTokenCount = null);
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);

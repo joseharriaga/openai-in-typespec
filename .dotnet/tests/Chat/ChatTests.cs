@@ -369,6 +369,35 @@ public class ChatTests : SyncAsyncTestBase
     }
 
     [Test]
+    public async Task ChatWithAudio()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "gpt-4o-audio-preview");
+        string inputAudioPath = Path.Join("Assets", "whats_the_weather_pcm16_24khz_mono.wav");
+        BinaryData inputAudioBytes = BinaryData.FromBytes(File.ReadAllBytes(inputAudioPath));
+        ChatMessageContentPart inputAudioPart = ChatMessageContentPart.CreateAudioPart(
+            inputAudioBytes,
+            ChatInputAudioFormat.Wav);
+
+        UserChatMessage message = new(
+            [
+                "Please respond to the following spoken question.",
+                inputAudioPart,
+            ]);
+
+        ChatCompletionOptions options = new()
+        {
+            AudioOptions = new(ChatResponseVoice.Alloy, ChatOutputAudioFormat.Mp3)
+        };
+
+        ChatCompletion completion = await client.CompleteChatAsync([message], options);
+        Assert.That(completion, Is.Not.Null);
+        Assert.That(completion.Audio, Is.Not.Null);
+        Assert.That(completion.Audio.CorrelationId, Is.Not.Null.And.Not.Empty);
+        Assert.That(completion.Audio.Data, Is.Not.Null);
+        Assert.That(completion.Audio.Transcript, Is.Not.Null.And.Not.Empty);
+    }
+
+    [Test]
     public async Task AuthFailure()
     {
         string fakeApiKey = "not-a-real-key-but-should-be-sanitized";

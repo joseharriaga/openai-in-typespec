@@ -1,89 +1,85 @@
 import "@azure-tools/typespec-client-generator-core";
-import "./models/requests.tsp";
-import "./models/responses.tsp";
+import "./models.tsp";
 
 using Azure.ClientGenerator.Core;
 using OpenAI;
 
-@@clientName(RealtimeRequestCommand.type, "Kind", "csharp");
-@@clientName(RealtimeRequestInputAudioBufferAppendCommand.type,
+@@clientName(RealtimeClientEvent.type, "Kind", "csharp");
+@@clientName(RealtimeClientEventSessionUpdate.type, "Kind", "csharp");
+@@clientName(RealtimeClientEventInputAudioBufferAppend.type, "Kind", "csharp");
+@@clientName(RealtimeClientEventInputAudioBufferCommit.type, "Kind", "csharp");
+@@clientName(RealtimeClientEventInputAudioBufferClear.type, "Kind", "csharp");
+@@clientName(RealtimeClientEventConversationItemCreate.type, "Kind", "csharp");
+@@clientName(RealtimeClientEventConversationItemTruncate.type,
   "Kind",
   "csharp"
 );
-@@clientName(RealtimeRequestInputAudioBufferClearCommand.type,
+@@clientName(RealtimeClientEventConversationItemDelete.type, "Kind", "csharp");
+@@clientName(RealtimeClientEventResponseCreate.type, "Kind", "csharp");
+@@clientName(RealtimeClientEventResponseCancel.type, "Kind", "csharp");
+@@clientName(RealtimeServerEvent.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventError.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventSessionCreated.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventSessionUpdated.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventConversationCreated.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventInputAudioBufferCommitted.type,
   "Kind",
   "csharp"
 );
-@@clientName(RealtimeRequestInputAudioBufferCommitCommand.type,
+@@clientName(RealtimeServerEventInputAudioBufferCleared.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventInputAudioBufferSpeechStarted.type,
   "Kind",
   "csharp"
 );
-@@clientName(RealtimeRequestItemCreateCommand.type, "Kind", "csharp");
-@@clientName(RealtimeRequestItemDeleteCommand.type, "Kind", "csharp");
-@@clientName(RealtimeRequestItemTruncateCommand.type, "Kind", "csharp");
-@@clientName(RealtimeRequestResponseCancelCommand.type, "Kind", "csharp");
-@@clientName(RealtimeRequestResponseCreateCommand.type, "Kind", "csharp");
-@@clientName(RealtimeRequestSessionUpdateCommand.type, "Kind", "csharp");
-
-@@clientName(RealtimeResponseAudioDeltaCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseAudioDeltaCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseAudioTranscriptDeltaCommand.type,
+@@clientName(RealtimeServerEventInputAudioBufferSpeechStopped.type,
   "Kind",
   "csharp"
 );
-@@clientName(RealtimeResponseAudioTranscriptDeltaCommand.type,
+@@clientName(RealtimeServerEventConversationItemCreated.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventConversationItemInputAudioTranscriptionCompleted.type,
   "Kind",
   "csharp"
 );
-@@clientName(RealtimeResponseAudioTranscriptDoneCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseContentPartAddedCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseContentPartDoneCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseCreatedCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseDoneCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseErrorCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseFunctionCallArgumentsDeltaCommand.type,
+@@clientName(RealtimeServerEventConversationItemInputAudioTranscriptionFailed.type,
   "Kind",
   "csharp"
 );
-@@clientName(RealtimeResponseFunctionCallArgumentsDoneCommand.type,
+@@clientName(RealtimeServerEventConversationItemTruncated.type,
   "Kind",
   "csharp"
 );
-@@clientName(RealtimeResponseInputAudioBufferClearedCommand.type,
+@@clientName(RealtimeServerEventConversationItemDeleted.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventResponseCreated.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventResponseDone.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventResponseOutputItemAdded.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventResponseOutputItemDone.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventResponseContentPartAdded.type,
   "Kind",
   "csharp"
 );
-@@clientName(RealtimeResponseInputAudioBufferCommittedCommand.type,
+@@clientName(RealtimeServerEventResponseContentPartDone.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventResponseTextDelta.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventResponseTextDone.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventResponseAudioTranscriptDelta.type,
   "Kind",
   "csharp"
 );
-@@clientName(RealtimeResponseInputAudioBufferSpeechStartedCommand.type,
+@@clientName(RealtimeServerEventResponseAudioTranscriptDone.type,
   "Kind",
   "csharp"
 );
-@@clientName(RealtimeResponseInputAudioBufferSpeechStoppedCommand.type,
+@@clientName(RealtimeServerEventResponseAudioDelta.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventResponseAudioDone.type, "Kind", "csharp");
+@@clientName(RealtimeServerEventResponseFunctionCallArgumentsDelta.type,
   "Kind",
   "csharp"
 );
-@@clientName(RealtimeResponseItemCreatedCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseItemDeletedCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseItemInputAudioTranscriptionCompletedCommand.type,
+@@clientName(RealtimeServerEventResponseFunctionCallArgumentsDone.type,
   "Kind",
   "csharp"
 );
-@@clientName(RealtimeResponseItemInputAudioTranscriptionFailedCommand.type,
-  "Kind",
-  "csharp"
-);
-@@clientName(RealtimeResponseItemTruncatedCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseOutputItemAddedCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseOutputItemDoneCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseRateLimitsUpdatedCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseSessionCreatedCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseSessionUpdatedCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseTextDeltaCommand.type, "Kind", "csharp");
-@@clientName(RealtimeResponseTextDoneCommand.type, "Kind", "csharp");
-
+@@clientName(RealtimeServerEventRateLimitsUpdated.type, "Kind", "csharp");
 @@clientName(RealtimeTurnDetection.type, "Kind", "csharp");
 @@clientName(RealtimeServerVadTurnDetection.type, "Kind", "csharp");
+@@clientName(RealtimeContentPart.type, "Kind", "csharp");
+@@clientName(RealtimeResponseStatusDetails.type, "Kind", "csharp");

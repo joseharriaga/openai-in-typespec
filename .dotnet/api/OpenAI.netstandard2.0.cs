@@ -1017,10 +1017,12 @@ namespace OpenAI.Batch {
 }
 namespace OpenAI.Chat {
     public class AssistantChatMessage : ChatMessage, IJsonModel<AssistantChatMessage>, IPersistableModel<AssistantChatMessage> {
+        public AssistantChatMessage(ChatAudioReference audioReference);
         public AssistantChatMessage(ChatCompletion chatCompletion);
         [Obsolete("This constructor is obsolete. Please use the constructor that takes an IEnumerable<ChatToolCall> parameter instead.")]
         public AssistantChatMessage(ChatFunctionCall functionCall);
         public AssistantChatMessage(params ChatMessageContentPart[] contentParts);
+        public AssistantChatMessage(ChatResponseAudio responseAudio);
         public AssistantChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public AssistantChatMessage(IEnumerable<ChatToolCall> toolCalls);
         public AssistantChatMessage(string content);
@@ -1163,9 +1165,11 @@ namespace OpenAI.Chat {
     }
     public class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
         public ChatMessageContent Content { get; }
+        public static AssistantChatMessage CreateAssistantMessage(ChatAudioReference audioReference);
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
         public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall);
         public static AssistantChatMessage CreateAssistantMessage(params ChatMessageContentPart[] contentParts);
+        public static AssistantChatMessage CreateAssistantMessage(ChatResponseAudio responseAudio);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls);
         public static AssistantChatMessage CreateAssistantMessage(string content);

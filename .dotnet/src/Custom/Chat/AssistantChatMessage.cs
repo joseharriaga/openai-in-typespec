@@ -84,6 +84,35 @@ public partial class AssistantChatMessage : ChatMessage
     }
 
     /// <summary>
+    /// Creates a new instance of <see cref="AssistantChatMessage"/> that represents a prior interaction's
+    /// <see cref="ChatResponseAudio"/>, as received on a <see cref="ChatCompletion"/> when providing
+    /// <see cref="ChatAudioOptions"/> within <see cref="ChatCompletionOptions"/> for a request against a
+    /// supported model.
+    /// </summary>
+    /// <param name="responseAudio"> The <see cref="ChatResponseAudio"/> from a preceding interaction. </param>
+    public AssistantChatMessage(ChatResponseAudio responseAudio)
+        : this(new ChatAudioReference(responseAudio?.CorrelationId))
+    { }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="AssistantChatMessage"/> that correlates to a prior
+    /// <see cref="ChatResponseAudio"/>, as received on a <see cref="ChatCompletion"/> when providing
+    /// <see cref="ChatAudioOptions"/> within <see cref="ChatCompletionOptions"/> for a request against a
+    /// supported model.
+    /// </summary>
+    /// <param name="audioReference">
+    /// A <see cref="ChatAudioReference"/> instance that shares the same <see cref="ChatAudioReference.CorrelationId"/>
+    /// as a <see cref="ChatResponseAudio"/> instance received on a prior chat completion interaction.
+    /// </param>
+    public AssistantChatMessage(ChatAudioReference audioReference)
+    {
+        Argument.AssertNotNull(audioReference, nameof(audioReference));
+        Argument.AssertNotNullOrEmpty(audioReference.CorrelationId, nameof(audioReference.CorrelationId));
+
+        AudioReference = audioReference;
+    }
+
+    /// <summary>
     /// Creates a new instance of <see cref="AssistantChatMessage"/> from a <see cref="ChatCompletion"/> with
     /// an <c>assistant</c> role response.
     /// </summary>

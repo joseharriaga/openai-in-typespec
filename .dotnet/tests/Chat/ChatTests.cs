@@ -384,7 +384,9 @@ public class ChatTests : SyncAsyncTestBase
             whatsTheWeatherAudioBytes,
             ChatInputAudioFormat.Wav);
 
-        List<ChatMessage> messages = [new UserChatMessage([helloWorldAudioContentPart])];
+        List<ChatMessage> messages = [
+            new SystemChatMessage("Always reply with both a conventional text response and audio."),
+            new UserChatMessage([helloWorldAudioContentPart])];
 
         ChatCompletionOptions options = new()
         {
@@ -409,6 +411,7 @@ public class ChatTests : SyncAsyncTestBase
                     ChatMessageContentPart.CreateAudioPart(whatsTheWeatherAudioBytes, ChatInputAudioFormat.Wav),
                 ]));
 
+        string streamedCorrelationId = null;
         using MemoryStream responseAudioStream = new();
         await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(messages, options))
         {

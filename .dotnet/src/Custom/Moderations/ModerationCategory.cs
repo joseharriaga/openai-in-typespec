@@ -4,14 +4,14 @@ namespace OpenAI.Moderations;
 
 public partial class ModerationCategory
 {
-    internal ModerationCategory(bool flagged, float score, IEnumerable<string> internalAppliedInputTypes)
+    internal ModerationCategory(bool flagged, float score, ModerationFlaggedContentModalities flaggedContentModalities)
     {
         Flagged = flagged;
         Score = score;
-        InputKinds = ModerationInputKindsExtensions.FromInternalInputKinds(internalAppliedInputTypes);
+        FlaggedContentModalities = flaggedContentModalities;
     }
 
     public bool Flagged { get; }
     public float Score { get; }
-    public ModerationInputKinds InputKinds { get; }
+    public ModerationFlaggedContentModalities FlaggedContentModalities { get; }
 }

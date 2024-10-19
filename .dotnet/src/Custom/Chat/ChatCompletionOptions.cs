@@ -160,9 +160,11 @@ public partial class ChatCompletionOptions
     [Obsolete($"This property is obsolete. Please use {nameof(Tools)} instead.")]
     public IList<ChatFunction> Functions { get; }
 
+    // CUSTOM: Removed public setter.
     [CodeGenMember("Metadata")]
     public IDictionary<string, string> Metadata { get; } = new ChangeTrackingDictionary<string, string>();
 
+    // CUSTOM: Renamed.
     [CodeGenMember("Store")]
     public bool? EnableOutputStorage { get; set; }
 }

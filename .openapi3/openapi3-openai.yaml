@@ -6505,7 +6505,7 @@ components:
           description: An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
         response_format:
           allOf:
-            - $ref: '#/components/schemas/AudioResponseFormat'
+            - $ref: '#/components/schemas/TranscriptionAudioResponseFormat'
           default: json
         temperature:
           type: number
@@ -6591,7 +6591,7 @@ components:
           description: An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should be in English.
         response_format:
           allOf:
-            - $ref: '#/components/schemas/AudioResponseFormat'
+            - $ref: '#/components/schemas/TranslationAudioResponseFormat'
           default: json
         temperature:
           type: number
@@ -11991,6 +11991,14 @@ components:
             A helper to create a [vector store](/docs/api-reference/vector-stores/object) with
             file_ids and attach it to this assistant. There can be a maximum of 1 vector store
             attached to the assistant.
+    TranscriptionAudioResponseFormat:
+      type: string
+      enum:
+        - json
+        - text
+        - srt
+        - verbose_json
+        - vtt
     TranscriptionSegment:
       type: object
       required:
@@ -12064,6 +12072,14 @@ components:
           type: number
           format: float
           description: End time of the word in seconds.
+    TranslationAudioResponseFormat:
+      type: string
+      enum:
+        - json
+        - text
+        - srt
+        - verbose_json
+        - vtt
     TruncationObject:
       type: object
       required:

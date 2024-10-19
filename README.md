@@ -1,7 +1,7 @@
 # A conversion of the OpenAI OpenAPI to TypeSpec
 
 Snapshot: 9da44b1e126916bbd4ab0bd62accf5622a3ec6ba
-Ingestion tool: a58c83859965121d1fe4dd68e04dae5e95e0b86c
+Ingestion tool: 7c47fd5d12c579c555492c86306a2dbc8d4c751b
 
 There are some deltas:
 

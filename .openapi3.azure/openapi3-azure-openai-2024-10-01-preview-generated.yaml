@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Azure OpenAI Service
-  version: 2024-09-01-preview
+  version: 2024-10-01-preview
 tags:
   - name: Chat
   - name: Images
@@ -503,6 +503,39 @@ components:
               - id
           description: The pairs of individual blocklist IDs and whether they resulted in a filtering action.
       description: A collection of true/false filtering results for configured custom blocklists.
+    AzureContentFilterCompletionTextSpan:
+      type: object
+      required:
+        - completion_start_offset
+        - completion_end_offset
+      properties:
+        completion_start_offset:
+          type: integer
+          format: int32
+          description: Offset of the UTF32 code point which begins the span.
+        completion_end_offset:
+          type: integer
+          format: int32
+          description: Offset of the first UTF32 code point which is excluded from the span. This field is always equal to completion_start_offset for empty spans. This field is always larger than completion_start_offset for non-empty spans.
+      description: A representation of a span of completion text as used by Azure OpenAI content filter results.
+    AzureContentFilterCompletionTextSpanDetectionResult:
+      type: object
+      required:
+        - filtered
+        - detected
+        - details
+      properties:
+        filtered:
+          type: boolean
+          description: Whether the content detection resulted in a content filtering action.
+        detected:
+          type: boolean
+          description: Whether the labeled content category was detected in the content.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/AzureContentFilterCompletionTextSpan'
+          description: Detailed information about the detected completion text spans.
     AzureContentFilterDetectionResult:
       type: object
       required:
@@ -658,6 +691,8 @@ components:
             - filtered
             - detected
           description: A detection result that describes a match against licensed code or other protected source material.
+        ungrounded_material:
+          $ref: '#/components/schemas/AzureContentFilterCompletionTextSpanDetectionResult'
       description: A content filter result for a single response item produced by a generative AI system.
     AzureContentFilterResultForPrompt:
       type: object

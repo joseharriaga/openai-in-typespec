@@ -32,13 +32,16 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(InternalRealtimeResponseMessageItem)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("content"u8);
-            writer.WriteStartArray();
-            foreach (ConversationContentPart item in Content)
+            if (options.Format != "W")
             {
-                writer.WriteObjectValue(item, options);
+                writer.WritePropertyName("content"u8);
+                writer.WriteStartArray();
+                foreach (ConversationContentPart item in Content)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
             writer.WritePropertyName("status"u8);
             writer.WriteStringValue(Status.ToString());
             writer.WritePropertyName("role"u8);
@@ -64,7 +67,7 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            IList<ConversationContentPart> content = default;
+            IReadOnlyList<ConversationContentPart> content = default;
             ConversationItemStatus status = default;
             ConversationMessageRole role = default;
             InternalRealtimeResponseItemObject @object = default;

@@ -17,7 +17,7 @@ namespace OpenAI.Assistants
             Outputs = new ChangeTrackingList<RunStepUpdateCodeInterpreterOutput>();
         }
 
-        internal InternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter(string input, IList<RunStepUpdateCodeInterpreterOutput> outputs, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter(string input, IReadOnlyList<RunStepUpdateCodeInterpreterOutput> outputs, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Input = input;
             Outputs = outputs;
@@ -26,6 +26,6 @@ namespace OpenAI.Assistants
 
         public string Input { get; }
 
-        public IList<RunStepUpdateCodeInterpreterOutput> Outputs { get; }
+        public IReadOnlyList<RunStepUpdateCodeInterpreterOutput> Outputs { get; }
     }
 }

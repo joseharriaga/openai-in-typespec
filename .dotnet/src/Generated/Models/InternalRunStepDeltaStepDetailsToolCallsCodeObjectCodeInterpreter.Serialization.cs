@@ -32,7 +32,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("input"u8);
                 writer.WriteStringValue(Input);
             }
-            if (Optional.IsCollectionDefined(Outputs))
+            if (options.Format != "W" && Optional.IsCollectionDefined(Outputs))
             {
                 writer.WritePropertyName("outputs"u8);
                 writer.WriteStartArray();
@@ -79,7 +79,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             string input = default;
-            IList<RunStepUpdateCodeInterpreterOutput> outputs = default;
+            IReadOnlyList<RunStepUpdateCodeInterpreterOutput> outputs = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {

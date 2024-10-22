@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
@@ -12,21 +12,21 @@ namespace OpenAI.Chat
     {
         private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalCreateChatCompletionResponseChoiceLogprobs(IEnumerable<ChatTokenLogProbabilityDetails> content, IEnumerable<ChatTokenLogProbabilityDetails> refusal)
+        internal InternalCreateChatCompletionResponseChoiceLogprobs()
         {
-            Content = content?.ToList();
-            Refusal = refusal?.ToList();
+            Content = new ChangeTrackingList<ChatTokenLogProbabilityDetails>();
+            Refusal = new ChangeTrackingList<ChatTokenLogProbabilityDetails>();
         }
 
-        internal InternalCreateChatCompletionResponseChoiceLogprobs(IList<ChatTokenLogProbabilityDetails> content, IList<ChatTokenLogProbabilityDetails> refusal, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalCreateChatCompletionResponseChoiceLogprobs(IReadOnlyList<ChatTokenLogProbabilityDetails> content, IReadOnlyList<ChatTokenLogProbabilityDetails> refusal, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Content = content;
             Refusal = refusal;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public IList<ChatTokenLogProbabilityDetails> Content { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityDetails> Content { get; }
 
-        public IList<ChatTokenLogProbabilityDetails> Refusal { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityDetails> Refusal { get; }
     }
 }

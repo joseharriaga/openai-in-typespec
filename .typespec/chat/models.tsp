@@ -233,9 +233,11 @@ model CreateChatCompletionResponse {
     /** Log probability information for the choice. */
     logprobs: {
       /** A list of message content tokens with log probability information. */
+      @visibility("read")
       content: ChatCompletionTokenLogprob[] | null;
 
       /** A list of message refusal tokens with log probability information. */
+      @visibility("read")
       refusal: ChatCompletionTokenLogprob[] | null;
     } | null;
   }[];

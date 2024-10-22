@@ -13,10 +13,6 @@ namespace OpenAI.Chat
 {
     internal partial class InternalCreateChatCompletionResponseChoiceLogprobs : IJsonModel<InternalCreateChatCompletionResponseChoiceLogprobs>
     {
-        internal InternalCreateChatCompletionResponseChoiceLogprobs()
-        {
-        }
-
         void IJsonModel<InternalCreateChatCompletionResponseChoiceLogprobs>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -31,33 +27,39 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalCreateChatCompletionResponseChoiceLogprobs)} does not support writing '{format}' format.");
             }
-            if (Content != null && Optional.IsCollectionDefined(Content))
+            if (options.Format != "W")
             {
-                writer.WritePropertyName("content"u8);
-                writer.WriteStartArray();
-                foreach (ChatTokenLogProbabilityDetails item in Content)
+                if (Content != null && Optional.IsCollectionDefined(Content))
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WritePropertyName("content"u8);
+                    writer.WriteStartArray();
+                    foreach (ChatTokenLogProbabilityDetails item in Content)
+                    {
+                        writer.WriteObjectValue(item, options);
+                    }
+                    writer.WriteEndArray();
                 }
-                writer.WriteEndArray();
-            }
-            else
-            {
-                writer.WriteNull("content"u8);
-            }
-            if (Refusal != null && Optional.IsCollectionDefined(Refusal))
-            {
-                writer.WritePropertyName("refusal"u8);
-                writer.WriteStartArray();
-                foreach (ChatTokenLogProbabilityDetails item in Refusal)
+                else
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WriteNull("content"u8);
                 }
-                writer.WriteEndArray();
             }
-            else
+            if (options.Format != "W")
             {
-                writer.WriteNull("refusal"u8);
+                if (Refusal != null && Optional.IsCollectionDefined(Refusal))
+                {
+                    writer.WritePropertyName("refusal"u8);
+                    writer.WriteStartArray();
+                    foreach (ChatTokenLogProbabilityDetails item in Refusal)
+                    {
+                        writer.WriteObjectValue(item, options);
+                    }
+                    writer.WriteEndArray();
+                }
+                else
+                {
+                    writer.WriteNull("refusal"u8);
+                }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -95,8 +97,8 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            IList<ChatTokenLogProbabilityDetails> content = default;
-            IList<ChatTokenLogProbabilityDetails> refusal = default;
+            IReadOnlyList<ChatTokenLogProbabilityDetails> content = default;
+            IReadOnlyList<ChatTokenLogProbabilityDetails> refusal = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {

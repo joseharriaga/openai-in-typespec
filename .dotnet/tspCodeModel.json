@@ -18669,7 +18669,7 @@
                         "decorators": []
                        },
                        "optional": true,
-                       "readOnly": false,
+                       "readOnly": true,
                        "discriminator": false,
                        "flatten": false,
                        "decorators": [],
@@ -22393,7 +22393,7 @@
            "decorators": []
           },
           "optional": false,
-          "readOnly": false,
+          "readOnly": true,
           "discriminator": false,
           "flatten": false,
           "decorators": [],
@@ -22705,7 +22705,7 @@
              "decorators": []
             },
             "optional": false,
-            "readOnly": false,
+            "readOnly": true,
             "discriminator": false,
             "flatten": false,
             "decorators": [],
@@ -34025,7 +34025,7 @@
              "decorators": []
             },
             "optional": true,
-            "readOnly": false,
+            "readOnly": true,
             "discriminator": false,
             "flatten": false,
             "decorators": [],
@@ -34342,7 +34342,7 @@
               }
              },
              "optional": false,
-             "readOnly": false,
+             "readOnly": true,
              "discriminator": false,
              "flatten": false,
              "decorators": [],
@@ -34369,7 +34369,7 @@
               }
              },
              "optional": false,
-             "readOnly": false,
+             "readOnly": true,
              "discriminator": false,
              "flatten": false,
              "decorators": [],
@@ -41697,7 +41697,7 @@
                  "decorators": []
                 },
                 "optional": true,
-                "readOnly": false,
+                "readOnly": true,
                 "discriminator": false,
                 "flatten": false,
                 "decorators": [],

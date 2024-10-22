@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalRunStepDetailsToolCallsFileSearchObjectFileSearch)} does not support writing '{format}' format.");
             }
-            if (Optional.IsCollectionDefined(Results))
+            if (options.Format != "W" && Optional.IsCollectionDefined(Results))
             {
                 writer.WritePropertyName("results"u8);
                 writer.WriteStartArray();
@@ -78,7 +78,7 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            IList<RunStepFileSearchResult> results = default;
+            IReadOnlyList<RunStepFileSearchResult> results = default;
             FileSearchRankingOptions rankingOptions = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())

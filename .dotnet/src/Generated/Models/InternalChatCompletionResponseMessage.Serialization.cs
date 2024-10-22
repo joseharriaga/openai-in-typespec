@@ -40,7 +40,7 @@ namespace OpenAI.Chat
             {
                 writer.WriteNull("refusal"u8);
             }
-            if (Optional.IsCollectionDefined(ToolCalls))
+            if (options.Format != "W" && Optional.IsCollectionDefined(ToolCalls))
             {
                 writer.WritePropertyName("tool_calls"u8);
                 writer.WriteStartArray();
@@ -103,7 +103,7 @@ namespace OpenAI.Chat
                 return null;
             }
             string refusal = default;
-            IList<ChatToolCall> toolCalls = default;
+            IReadOnlyList<ChatToolCall> toolCalls = default;
             Chat.ChatMessageRole role = default;
             ChatMessageContent content = default;
             ChatFunctionCall functionCall = default;

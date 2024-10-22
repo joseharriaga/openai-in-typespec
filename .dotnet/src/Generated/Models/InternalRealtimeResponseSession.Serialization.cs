@@ -63,13 +63,16 @@ namespace OpenAI.RealtimeConversation
             }
             writer.WritePropertyName("turn_detection"u8);
             writer.WriteObjectValue(TurnDetection, options);
-            writer.WritePropertyName("tools"u8);
-            writer.WriteStartArray();
-            foreach (ConversationTool item in Tools)
+            if (options.Format != "W")
             {
-                writer.WriteObjectValue(item, options);
+                writer.WritePropertyName("tools"u8);
+                writer.WriteStartArray();
+                foreach (ConversationTool item in Tools)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
             writer.WritePropertyName("tool_choice"u8);
 #if NET6_0_OR_GREATER
             writer.WriteRawValue(ToolChoice);
@@ -143,7 +146,7 @@ namespace OpenAI.RealtimeConversation
             ConversationAudioFormat outputAudioFormat = default;
             ConversationInputTranscriptionOptions inputAudioTranscription = default;
             ConversationTurnDetectionOptions turnDetection = default;
-            IList<ConversationTool> tools = default;
+            IReadOnlyList<ConversationTool> tools = default;
             BinaryData toolChoice = default;
             float temperature = default;
             BinaryData maxResponseOutputTokens = default;

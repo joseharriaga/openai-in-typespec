@@ -359,6 +359,7 @@ model RunStepDetailsToolCallsFileSearchObject
     ranking_options?: RunStepDetailsToolCallsFileSearchRankingOptionsObject;
 
     /** The results of the file search. */
+    @visibility("read")
     results?: RunStepDetailsToolCallsFileSearchResultObject[];
   };
 }
@@ -499,6 +500,7 @@ model RunObject {
     /** Details on the tool outputs needed for this run to continue. */
     submit_tool_outputs: {
       /** A list of the relevant tool calls. */
+      @visibility("read")
       tool_calls: RunToolCallObject[];
     };
   } | null;
@@ -763,6 +765,7 @@ model RunStepDeltaStepDetailsToolCallsCodeObject
       The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
       """)
     @extension("x-oaiExpandable", true)
+    @visibility("read")
     outputs?: RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject[];
   };
 }

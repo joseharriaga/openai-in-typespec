@@ -37,8 +37,11 @@ namespace OpenAI.Assistants
                 }
                 writer.WriteEndArray();
             }
-            writer.WritePropertyName("role"u8);
-            writer.WriteStringValue(Role.ToSerialString());
+            if (Optional.IsDefined(Role))
+            {
+                writer.WritePropertyName("role"u8);
+                writer.WriteStringValue(Role.Value.ToSerialString());
+            }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -76,7 +79,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             IList<InternalMessageDeltaContent> content = default;
-            Assistants.MessageRole role = default;
+            Assistants.MessageRole? role = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {

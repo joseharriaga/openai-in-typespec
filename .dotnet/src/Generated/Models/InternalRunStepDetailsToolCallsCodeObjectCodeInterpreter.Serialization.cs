@@ -33,13 +33,16 @@ namespace OpenAI.Assistants
             }
             writer.WritePropertyName("input"u8);
             writer.WriteStringValue(Input);
-            writer.WritePropertyName("outputs"u8);
-            writer.WriteStartArray();
-            foreach (RunStepCodeInterpreterOutput item in Outputs)
+            if (options.Format != "W")
             {
-                writer.WriteObjectValue(item, options);
+                writer.WritePropertyName("outputs"u8);
+                writer.WriteStartArray();
+                foreach (RunStepCodeInterpreterOutput item in Outputs)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -77,7 +80,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             string input = default;
-            IList<RunStepCodeInterpreterOutput> outputs = default;
+            IReadOnlyList<RunStepCodeInterpreterOutput> outputs = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {

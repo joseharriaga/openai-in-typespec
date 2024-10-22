@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
@@ -12,13 +12,13 @@ namespace OpenAI.Assistants
     {
         private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter(string input, IEnumerable<RunStepCodeInterpreterOutput> outputs)
+        internal InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter(string input)
         {
             Input = input;
-            Outputs = outputs.ToList();
+            Outputs = new ChangeTrackingList<RunStepCodeInterpreterOutput>();
         }
 
-        internal InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter(string input, IList<RunStepCodeInterpreterOutput> outputs, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter(string input, IReadOnlyList<RunStepCodeInterpreterOutput> outputs, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Input = input;
             Outputs = outputs;
@@ -27,6 +27,6 @@ namespace OpenAI.Assistants
 
         public string Input { get; }
 
-        public IList<RunStepCodeInterpreterOutput> Outputs { get; }
+        public IReadOnlyList<RunStepCodeInterpreterOutput> Outputs { get; }
     }
 }

@@ -18358,7 +18358,7 @@
                         "decorators": []
                        },
                        "optional": false,
-                       "readOnly": false,
+                       "readOnly": true,
                        "discriminator": false,
                        "flatten": false,
                        "decorators": [],

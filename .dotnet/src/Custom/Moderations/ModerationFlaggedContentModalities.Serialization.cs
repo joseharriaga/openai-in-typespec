@@ -4,16 +4,16 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Moderations;
 
-internal static partial class ModerationInputKindsExtensions
+internal static partial class ModerationFlaggedContentModalitiesExtensions
 {
-    internal static IReadOnlyList<string> ToInternalInputKinds(this ModerationInputKinds inputKinds)
+    internal static IReadOnlyList<string> ToInternalFlaggedContentModalities(this ModerationFlaggedContentModalities inputKinds)
     {
         List<string> internalInputKinds = [];
-        if (inputKinds.HasFlag(ModerationInputKinds.Text))
+        if (inputKinds.HasFlag(ModerationFlaggedContentModalities.Text))
         {
             internalInputKinds.Add("text");
         }
-        if (inputKinds.HasFlag(ModerationInputKinds.Image))
+        if (inputKinds.HasFlag(ModerationFlaggedContentModalities.Image))
         {
             internalInputKinds.Add("image");
         }
@@ -24,18 +24,18 @@ internal static partial class ModerationInputKindsExtensions
         return internalInputKinds;
     }
 
-    internal static ModerationInputKinds FromInternalInputKinds(IEnumerable<string> internalInputKinds)
+    internal static ModerationFlaggedContentModalities FromInternalFlaggedContentModalities(IEnumerable<string> internalInputKinds)
     {
-        ModerationInputKinds result = 0;
+        ModerationFlaggedContentModalities result = 0;
         foreach (string internalInputKind in internalInputKinds ?? [])
         {
             if (StringComparer.OrdinalIgnoreCase.Equals(internalInputKind, "text"))
             {
-                result |= ModerationInputKinds.Text;
+                result |= ModerationFlaggedContentModalities.Text;
             }
             else if (StringComparer.OrdinalIgnoreCase.Equals(internalInputKind, "image"))
             {
-                result |= ModerationInputKinds.Image;
+                result |= ModerationFlaggedContentModalities.Image;
             }
             // else if (StringComparer.OrdinalIgnoreCase.Equals(internalInputKind, "audio"))
             // {
@@ -43,7 +43,7 @@ internal static partial class ModerationInputKindsExtensions
             // }
             else
             {
-                result |= ModerationInputKinds.Other;
+                result |= ModerationFlaggedContentModalities.Other;
             }
         }
         return result;

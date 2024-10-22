@@ -8,9 +8,9 @@ public static partial class OpenAIModerationsModelFactory
 {
     /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationCategory"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Moderations.ModerationCategory"/> instance for mocking. </returns>
-    public static ModerationCategory ModerationCategory(bool flagged = default, float score = default, ModerationInputKinds inputKinds = 0)
+    public static ModerationCategory ModerationCategory(bool flagged = default, float score = default, ModerationFlaggedContentModalities flaggedContentModalities = 0)
     {
-        return new ModerationCategory(flagged, score, inputKinds.ToInternalInputKinds());
+        return new ModerationCategory(flagged, score, flaggedContentModalities);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Moderations.ModerationResultCollection"/>. </summary>

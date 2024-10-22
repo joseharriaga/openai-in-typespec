@@ -4,7 +4,7 @@ For information on spec ingestion, see the Sorento wiki page:
 https://dev.azure.com/project-argos/Sorento/_wiki/wikis/Sorento.wiki/3021/Generate-OpenAI's-YAML-Spec
 
 Snapshot: 9da44b1e126916bbd4ab0bd62accf5622a3ec6ba
-Ingestion tool: 9eb31b01d6818eb19fecfef560329e026f7bfa29
+Ingestion tool: [pr/dev-day-2024 3f3d7b4] minor customization rule for chat function call ordering
 
 There are some deltas:
 

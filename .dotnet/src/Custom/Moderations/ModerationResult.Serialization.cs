@@ -69,19 +69,19 @@ namespace OpenAI.Moderations
             {
                 writer.WritePropertyName("category_applied_input_types"u8);
                 InternalCreateModerationResponseResultCategoryAppliedInputTypes internalAppliedInputTypes = new(
-                    hate: Hate.InputKinds.ToInternalInputKinds(),
-                    hateThreatening: HateThreatening.InputKinds.ToInternalInputKinds(),
-                    harassment: Harassment.InputKinds.ToInternalInputKinds(),
-                    harassmentThreatening: HarassmentThreatening.InputKinds.ToInternalInputKinds(),
-                    illicit: Illicit.InputKinds.ToInternalInputKinds(),
-                    illicitViolent: IllicitViolent.InputKinds.ToInternalInputKinds(),
-                    selfHarm: SelfHarm.InputKinds.ToInternalInputKinds().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1(kind)).ToList(),
-                    selfHarmIntent: SelfHarmIntent.InputKinds.ToInternalInputKinds().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent(kind)).ToList(),
-                    selfHarmInstructions: SelfHarmInstructions.InputKinds.ToInternalInputKinds().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction(kind)).ToList(),
-                    sexual: Sexual.InputKinds.ToInternalInputKinds().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual(kind)).ToList(),
-                    sexualMinors: SexualMinors.InputKinds.ToInternalInputKinds(),
-                    violence: Violence.InputKinds.ToInternalInputKinds().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence(kind)).ToList(),
-                    violenceGraphic: ViolenceGraphic.InputKinds.ToInternalInputKinds().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic(kind)).ToList(),
+                    hate: Hate.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
+                    hateThreatening: HateThreatening.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
+                    harassment: Harassment.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
+                    harassmentThreatening: HarassmentThreatening.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
+                    illicit: Illicit.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
+                    illicitViolent: IllicitViolent.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
+                    selfHarm: SelfHarm.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1(kind)).ToList(),
+                    selfHarmIntent: SelfHarmIntent.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent(kind)).ToList(),
+                    selfHarmInstructions: SelfHarmInstructions.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction(kind)).ToList(),
+                    sexual: Sexual.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual(kind)).ToList(),
+                    sexualMinors: SexualMinors.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
+                    violence: Violence.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence(kind)).ToList(),
+                    violenceGraphic: ViolenceGraphic.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic(kind)).ToList(),
                     serializedAdditionalRawData: null);
                 writer.WriteObjectValue(internalAppliedInputTypes, options);
             }
@@ -150,22 +150,43 @@ namespace OpenAI.Moderations
                     rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
                 }
             }
+
+            ModerationCategory MakeCategory<T>(
+                Func<InternalModerationCategories, bool> categoryFlaggedGetter,
+                Func<InternalModerationCategoryScores, float> scoreGetter,
+                Func<
+                    InternalCreateModerationResponseResultCategoryAppliedInputTypes,
+                    IReadOnlyList<T>
+                > internalAppliedInputTypesGetter)
+            {
+                IReadOnlyList<T> genericInputTypes
+                    = internalAppliedInputTypes is null ? null
+                        : internalAppliedInputTypesGetter.Invoke(internalAppliedInputTypes);
+                IReadOnlyList<string> stringInputTypes =
+                    (genericInputTypes as IReadOnlyList<string>)
+                        ?? genericInputTypes?.Select(t => t.ToString()).ToList().AsReadOnly();
+                return new ModerationCategory(
+                    categoryFlaggedGetter.Invoke(internalCategories),
+                    scoreGetter.Invoke(internalCategoryScores),
+                    ModerationFlaggedContentModalitiesExtensions.FromInternalFlaggedContentModalities(stringInputTypes));
+            }
+
             serializedAdditionalRawData = rawDataDictionary;
             return new ModerationResult(
                flagged: flagged,
-               hate: new ModerationCategory(internalCategories.Hate, internalCategoryScores.Hate, internalAppliedInputTypes?.Hate),
-               hateThreatening: new ModerationCategory(internalCategories.HateThreatening, internalCategoryScores.HateThreatening, internalAppliedInputTypes?.HateThreatening),
-               harassment: new ModerationCategory(internalCategories.Harassment, internalCategoryScores.Harassment, internalAppliedInputTypes?.Harassment),
-               harassmentThreatening: new ModerationCategory(internalCategories.HarassmentThreatening, internalCategoryScores.HarassmentThreatening, internalAppliedInputTypes?.HarassmentThreatening),
-               illicit: new ModerationCategory(internalCategories.Illicit, internalCategoryScores.Illicit, internalAppliedInputTypes?.Illicit),
-               illicitViolent: new ModerationCategory(internalCategories.IllicitViolent, internalCategoryScores.IllicitViolent, internalAppliedInputTypes?.IllicitViolent),
-               selfHarm: new ModerationCategory(internalCategories.SelfHarm, internalCategoryScores.SelfHarm, internalAppliedInputTypes?.SelfHarm?.Select(item => item.ToString())),
-               selfHarmIntent: new ModerationCategory(internalCategories.SelfHarmIntent, internalCategoryScores.SelfHarmIntent, internalAppliedInputTypes?.SelfHarmIntent?.Select(item => item.ToString())),
-               selfHarmInstructions: new ModerationCategory(internalCategories.SelfHarmInstructions, internalCategoryScores.SelfHarmInstructions, internalAppliedInputTypes?.SelfHarmInstructions?.Select(item => item.ToString())),
-               sexual: new ModerationCategory(internalCategories.Sexual, internalCategoryScores.Sexual, internalAppliedInputTypes?.Sexual?.Select(item => item.ToString())),
-               sexualMinors: new ModerationCategory(internalCategories.SexualMinors, internalCategoryScores.SexualMinors, internalAppliedInputTypes?.SexualMinors),
-               violence: new ModerationCategory(internalCategories.Violence, internalCategoryScores.Violence, internalAppliedInputTypes?.Violence?.Select(item => item.ToString())),
-               violenceGraphic: new ModerationCategory(internalCategories.ViolenceGraphic, internalCategoryScores.ViolenceGraphic, internalAppliedInputTypes?.ViolenceGraphic?.Select(item => item.ToString())),
+               hate: MakeCategory(cats => cats.Hate, catScores => catScores.Hate, types => types.Hate),
+               hateThreatening: MakeCategory(cats => cats.HateThreatening, catScores => catScores.HateThreatening, types => types.HateThreatening),
+               harassment: MakeCategory(cats => cats.Harassment, catScores => catScores.Harassment, types => types.Harassment),
+               harassmentThreatening: MakeCategory(cats => cats.HarassmentThreatening, catScores => catScores.HarassmentThreatening, types => types.HarassmentThreatening),
+               illicit: MakeCategory(cats => cats.Illicit, catScores => catScores.Illicit, types => types.Illicit),
+               illicitViolent: MakeCategory(cats => cats.IllicitViolent, catScores => catScores.IllicitViolent, types => types.IllicitViolent),
+               selfHarm: MakeCategory(cats => cats.SelfHarm, catScores => catScores.SelfHarm, types => types.SelfHarm),
+               selfHarmIntent: MakeCategory(cats => cats.SelfHarmIntent, catScores => catScores.SelfHarmIntent, types => types.SelfHarmIntent),
+               selfHarmInstructions: MakeCategory(cats => cats.SelfHarmInstructions, catScores => catScores.SelfHarmInstructions, types => types.SelfHarmInstructions),
+               sexual: MakeCategory(cats => cats.Sexual, catScores => catScores.Sexual, types => types.Sexual),
+               sexualMinors: MakeCategory(cats => cats.SexualMinors, catScores => catScores.SexualMinors, types => types.SexualMinors),
+               violence: MakeCategory(cats => cats.Violence, catScores => catScores.Violence, types => types.Violence),
+               violenceGraphic: MakeCategory(cats => cats.ViolenceGraphic, catScores => catScores.ViolenceGraphic, types => types.ViolenceGraphic),
                serializedAdditionalRawData: serializedAdditionalRawData);
         }
     }

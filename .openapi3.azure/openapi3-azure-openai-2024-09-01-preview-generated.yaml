@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Azure OpenAI Service
-  version: 2024-05-01-preview
+  version: 2024-09-01-preview
 tags:
   - name: Chat
   - name: Images
@@ -130,10 +130,10 @@ components:
         propertyName: type
         mapping:
           azure_search: '#/components/schemas/AzureSearchChatDataSource'
-          azure_ml_index: '#/components/schemas/AzureMachineLearningIndexChatDataSource'
           azure_cosmos_db: '#/components/schemas/AzureCosmosDBChatDataSource'
           elasticsearch: '#/components/schemas/ElasticsearchChatDataSource'
           pinecone: '#/components/schemas/PineconeChatDataSource'
+          mongo_db: '#/components/schemas/MongoDBChatDataSource'
       description: |-
         A representation of configuration data for a single Azure OpenAI chat data source.
         This will be used by a chat completions request that should use Azure OpenAI chat extensions to augment the
@@ -177,6 +177,7 @@ components:
       discriminator:
         propertyName: type
         mapping:
+          username_and_password: '#/components/schemas/AzureChatDataSourceUsernameAndPasswordAuthenticationOptions'
           connection_string: '#/components/schemas/AzureChatDataSourceConnectionStringAuthenticationOptions'
           key_and_key_id: '#/components/schemas/AzureChatDataSourceKeyAndKeyIdAuthenticationOptions'
           encoded_api_key: '#/components/schemas/AzureChatDataSourceEncodedApiKeyAuthenticationOptions'
@@ -275,6 +276,19 @@ components:
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
       description: Represents a vectorization source that makes public service calls against an Azure OpenAI embedding model deployment.
+    AzureChatDataSourceIntegratedVectorizationSource:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - integrated
+          description: The type identifier, always 'integrated' for this vectorization source type.
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
+      description: Represents an integrated vectorization source as defined within the supporting search resource.
     AzureChatDataSourceKeyAndKeyIdAuthenticationOptions:
       type: object
       required:
@@ -336,6 +350,23 @@ components:
           type: string
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
+    AzureChatDataSourceUsernameAndPasswordAuthenticationOptions:
+      type: object
+      required:
+        - type
+        - username
+        - password
+      properties:
+        type:
+          type: string
+          enum:
+            - username_and_password
+        username:
+          type: string
+        password:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
     AzureChatDataSourceVectorizationSource:
       type: object
       required:
@@ -349,6 +380,7 @@ components:
         mapping:
           deployment_name: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
           model_id: '#/components/schemas/AzureChatDataSourceModelIdVectorizationSource'
+          integrated: '#/components/schemas/AzureChatDataSourceIntegratedVectorizationSource'
       description: A representation of a data vectorization source usable as an embedding resource with a data source.
     AzureChatMessageContext:
       type: object
@@ -757,12 +789,6 @@ components:
               description: |-
                 The configured strictness of the search relevance filtering.
                 Higher strictness will increase precision but lower recall of the answer.
-            role_information:
-              type: string
-              description: |-
-                Additional instructions for the model to inform how it should behave and any context it should reference when
-                generating a response. You can describe the assistant's personality and tell it how to format responses.
-                This is limited to 100 tokens and counts against the overall token limit.
             max_search_queries:
               type: integer
               format: int32
@@ -883,94 +909,6 @@ components:
           $ref: '#/components/schemas/AzureContentFilterImageResponseResults'
       allOf:
         - $ref: '#/components/schemas/OpenAI.Image'
-    AzureMachineLearningIndexChatDataSource:
-      type: object
-      required:
-        - type
-        - parameters
-      properties:
-        type:
-          type: string
-          enum:
-            - azure_ml_index
-          description: The discriminated type identifier, which is always 'azure_ml_index'.
-        parameters:
-          type: object
-          properties:
-            top_n_documents:
-              type: integer
-              format: int32
-              description: The configured number of documents to feature in the query.
-            in_scope:
-              type: boolean
-              description: Whether queries should be restricted to use of the indexed data.
-            strictness:
-              type: integer
-              format: int32
-              minimum: 1
-              maximum: 5
-              description: |-
-                The configured strictness of the search relevance filtering.
-                Higher strictness will increase precision but lower recall of the answer.
-            role_information:
-              type: string
-              description: |-
-                Additional instructions for the model to inform how it should behave and any context it should reference when
-                generating a response. You can describe the assistant's personality and tell it how to format responses.
-                This is limited to 100 tokens and counts against the overall token limit.
-            max_search_queries:
-              type: integer
-              format: int32
-              description: |-
-                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-                By default, the system will make an automatic determination.
-            allow_partial_result:
-              type: boolean
-              description: |-
-                If set to true, the system will allow partial search results to be used and the request will fail if all
-                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-              default: false
-            include_contexts:
-              type: array
-              items:
-                type: string
-                enum:
-                  - citations
-                  - intent
-                  - all_retrieved_documents
-              maxItems: 3
-              description: |-
-                The output context properties to include on the response.
-                By default, citations and intent will be requested.
-              default:
-                - citations
-                - intent
-            authentication:
-              anyOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
-                - $ref: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
-                - $ref: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
-            project_resource_id:
-              type: string
-              description: The ID of the Azure Machine Learning index project to use.
-            name:
-              type: string
-              description: The name of the Azure Machine Learning index to use.
-            version:
-              type: string
-              description: The version of the vector index to use.
-            filter:
-              type: string
-              description: A search filter, which is only applicable if the vector index is of the 'AzureSearch' type.
-          required:
-            - authentication
-            - project_resource_id
-            - name
-            - version
-          description: The parameter information to control the use of the Azure Machine Learning Index data source.
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSource'
-      description: Represents a data source configuration that will use an Azure Machine Learning vector index.
     AzureOpenAIChatError:
       type: object
       properties:
@@ -1050,11 +988,9 @@ components:
     AzureOpenAIServiceApiVersion:
       type: string
       enum:
-        - 2024-04-01-preview
-        - 2024-05-01-preview
         - 2024-06-01
-        - 2024-07-01-preview
         - 2024-08-01-preview
+        - 2024-09-01-preview
       description: Known service API versions for Azure OpenAI.
     AzureSearchChatDataSource:
       type: object
@@ -1085,12 +1021,6 @@ components:
               description: |-
                 The configured strictness of the search relevance filtering.
                 Higher strictness will increase precision but lower recall of the answer.
-            role_information:
-              type: string
-              description: |-
-                Additional instructions for the model to inform how it should behave and any context it should reference when
-                generating a response. You can describe the assistant's personality and tell it how to format responses.
-                This is limited to 100 tokens and counts against the overall token limit.
             max_search_queries:
               type: integer
               format: int32
@@ -1182,6 +1112,7 @@ components:
               anyOf:
                 - $ref: '#/components/schemas/AzureChatDataSourceEndpointVectorizationSource'
                 - $ref: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
+                - $ref: '#/components/schemas/AzureChatDataSourceIntegratedVectorizationSource'
               description: |-
                 The vectorization source to use with Azure Search.
                 Supported sources for Azure Search include endpoint, deployment name, and integrated.
@@ -1251,12 +1182,6 @@ components:
               description: |-
                 The configured strictness of the search relevance filtering.
                 Higher strictness will increase precision but lower recall of the answer.
-            role_information:
-              type: string
-              description: |-
-                Additional instructions for the model to inform how it should behave and any context it should reference when
-                generating a response. You can describe the assistant's personality and tell it how to format responses.
-                This is limited to 100 tokens and counts against the overall token limit.
             max_search_queries:
               type: integer
               format: int32
@@ -1342,6 +1267,127 @@ components:
                 - $ref: '#/components/schemas/OpenAI.AssistantToolsFileSearchTypeOnly'
             description: The tools to add this file to.
             x-oaiExpandable: true
+    MongoDBChatDataSource:
+      type: object
+      required:
+        - type
+        - parameters
+      properties:
+        type:
+          type: string
+          enum:
+            - mongo_db
+          description: The discriminated type identifier, which is always 'mongo_db'.
+        parameters:
+          type: object
+          properties:
+            top_n_documents:
+              type: integer
+              format: int32
+              description: The configured number of documents to feature in the query.
+            in_scope:
+              type: boolean
+              description: Whether queries should be restricted to use of the indexed data.
+            strictness:
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 5
+              description: |-
+                The configured strictness of the search relevance filtering.
+                Higher strictness will increase precision but lower recall of the answer.
+            max_search_queries:
+              type: integer
+              format: int32
+              description: |-
+                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+                By default, the system will make an automatic determination.
+            allow_partial_result:
+              type: boolean
+              description: |-
+                If set to true, the system will allow partial search results to be used and the request will fail if all
+                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+              default: false
+            include_contexts:
+              type: array
+              items:
+                type: string
+                enum:
+                  - citations
+                  - intent
+                  - all_retrieved_documents
+              maxItems: 3
+              description: |-
+                The output context properties to include on the response.
+                By default, citations and intent will be requested.
+              default:
+                - citations
+                - intent
+            endpoint:
+              type: string
+              description: The name of the MongoDB cluster endpoint.
+            database_name:
+              type: string
+              description: The name of the MongoDB database.
+            collection_name:
+              type: string
+              description: The name of the MongoDB collection.
+            app_name:
+              type: string
+              description: The name of the MongoDB application.
+            index_name:
+              type: string
+              description: The name of the MongoDB index.
+            authentication:
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceUsernameAndPasswordAuthenticationOptions'
+              description: |-
+                The authentication mechanism to use with Pinecone.
+                Supported authentication mechanisms for Pinecone include: username and password.
+            embedding_dependency:
+              anyOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceEndpointVectorizationSource'
+                - $ref: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
+              description: |-
+                The vectorization source to use as an embedding dependency for the MongoDB data source.
+                Supported vectorization sources for MongoDB include: endpoint, deployment name.
+            fields_mapping:
+              type: object
+              properties:
+                content_fields:
+                  type: array
+                  items:
+                    type: string
+                vector_fields:
+                  type: array
+                  items:
+                    type: string
+                title_field:
+                  type: string
+                url_field:
+                  type: string
+                filepath_field:
+                  type: string
+                content_fields_separator:
+                  type: string
+              required:
+                - content_fields
+                - vector_fields
+              description: |-
+                Field mappings to apply to data used by the MongoDB data source.
+                Note that content and vector field mappings are required for MongoDB.
+          required:
+            - endpoint
+            - database_name
+            - collection_name
+            - app_name
+            - index_name
+            - authentication
+            - embedding_dependency
+            - fields_mapping
+          description: The parameter information to control the use of the MongoDB data source.
+      allOf:
+        - $ref: '#/components/schemas/AzureChatDataSource'
     OpenAI.AssistantToolDefinition:
       type: object
       required:
@@ -1544,15 +1590,15 @@ components:
         function_call:
           type: object
           properties:
-            arguments:
-              type: string
-              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
             name:
               type: string
               description: The name of the function to call.
+            arguments:
+              type: string
+              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
           required:
-            - arguments
             - name
+            - arguments
           nullable: true
           description: Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
           deprecated: true
@@ -1769,15 +1815,15 @@ components:
         function_call:
           type: object
           properties:
-            arguments:
-              type: string
-              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
             name:
               type: string
               description: The name of the function to call.
+            arguments:
+              type: string
+              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
           required:
-            - arguments
             - name
+            - arguments
           description: Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
           deprecated: true
       description: A chat completion message generated by the model.
@@ -1798,12 +1844,12 @@ components:
         function_call:
           type: object
           properties:
-            arguments:
-              type: string
-              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
             name:
               type: string
               description: The name of the function to call.
+            arguments:
+              type: string
+              description: The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.
           description: Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
           deprecated: true
         tool_calls:
@@ -2858,12 +2904,6 @@ components:
               description: |-
                 The configured strictness of the search relevance filtering.
                 Higher strictness will increase precision but lower recall of the answer.
-            role_information:
-              type: string
-              description: |-
-                Additional instructions for the model to inform how it should behave and any context it should reference when
-                generating a response. You can describe the assistant's personality and tell it how to format responses.
-                This is limited to 100 tokens and counts against the overall token limit.
             max_search_queries:
               type: integer
               format: int32

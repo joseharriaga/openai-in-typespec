@@ -130,23 +130,23 @@ public partial class ModerationSmokeTests : SyncAsyncTestBase
 
         Assert.That(moderations[0], Is.Not.Null);
         Assert.That(moderations[0].Flagged, Is.False);
-        Assert.That(moderations[0].Violence.InputKinds.HasFlag(ModerationInputKinds.Text), Is.False);
+        Assert.That(moderations[0].Violence.FlaggedContentModalities.HasFlag(ModerationFlaggedContentModalities.Text), Is.False);
 
         Assert.That(moderations[1], Is.Not.Null);
         Assert.That(moderations[1].Flagged, Is.True);
         Assert.That(moderations[1].Violence.Flagged, Is.True);
         Assert.That(moderations[1].Violence.Score, Is.EqualTo(0.5f));
-        Assert.That(moderations[1].Violence.InputKinds.HasFlag(ModerationInputKinds.Text), Is.True);
-        Assert.That(moderations[1].Violence.InputKinds.HasFlag(ModerationInputKinds.Image), Is.False);
-        Assert.That(moderations[1].Violence.InputKinds.HasFlag(ModerationInputKinds.Other), Is.False);
+        Assert.That(moderations[1].Violence.FlaggedContentModalities.HasFlag(ModerationFlaggedContentModalities.Text), Is.True);
+        Assert.That(moderations[1].Violence.FlaggedContentModalities.HasFlag(ModerationFlaggedContentModalities.Image), Is.False);
+        Assert.That(moderations[1].Violence.FlaggedContentModalities.HasFlag(ModerationFlaggedContentModalities.Other), Is.False);
 
         Assert.That(moderations[2], Is.Not.Null);
         Assert.That(moderations[2].Flagged, Is.True);
         Assert.That(moderations[2].Illicit.Flagged, Is.True);
         Assert.That(moderations[2].Illicit.Score, Is.EqualTo(0.42f));
-        Assert.That(moderations[2].Illicit.InputKinds.HasFlag(ModerationInputKinds.Text), Is.False);
-        Assert.That(moderations[2].Illicit.InputKinds.HasFlag(ModerationInputKinds.Image), Is.True);
-        Assert.That(moderations[2].Illicit.InputKinds.HasFlag(ModerationInputKinds.Other), Is.True);
+        Assert.That(moderations[2].Illicit.FlaggedContentModalities.HasFlag(ModerationFlaggedContentModalities.Text), Is.False);
+        Assert.That(moderations[2].Illicit.FlaggedContentModalities.HasFlag(ModerationFlaggedContentModalities.Image), Is.True);
+        Assert.That(moderations[2].Illicit.FlaggedContentModalities.HasFlag(ModerationFlaggedContentModalities.Other), Is.True);
     }
 
     [Test]

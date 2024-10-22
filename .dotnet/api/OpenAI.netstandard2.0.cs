@@ -1756,7 +1756,7 @@ namespace OpenAI.Models {
 namespace OpenAI.Moderations {
     public class ModerationCategory {
         public bool Flagged { get; }
-        public ModerationInputKinds InputKinds { get; }
+        public ModerationFlaggedContentModalities FlaggedContentModalities { get; }
         public float Score { get; }
     }
     public class ModerationClient {
@@ -1776,7 +1776,8 @@ namespace OpenAI.Moderations {
         public virtual Task<ClientResult<ModerationResult>> ClassifyTextAsync(string input, CancellationToken cancellationToken = default);
     }
     [Flags]
-    public enum ModerationInputKinds {
+    public enum ModerationFlaggedContentModalities {
+        None = 0,
         Other = 1,
         Text = 2,
         Image = 4
@@ -1802,7 +1803,7 @@ namespace OpenAI.Moderations {
         public string Model { get; }
     }
     public static class OpenAIModerationsModelFactory {
-        public static ModerationCategory ModerationCategory(bool flagged = false, float score = 0, ModerationInputKinds inputKinds = 0);
+        public static ModerationCategory ModerationCategory(bool flagged = false, float score = 0, ModerationFlaggedContentModalities flaggedContentModalities = ModerationFlaggedContentModalities.None);
         public static ModerationResult ModerationResult(bool flagged = false, ModerationCategory hate = null, ModerationCategory hateThreatening = null, ModerationCategory harassment = null, ModerationCategory harassmentThreatening = null, ModerationCategory selfHarm = null, ModerationCategory selfHarmIntent = null, ModerationCategory selfHarmInstructions = null, ModerationCategory sexual = null, ModerationCategory sexualMinors = null, ModerationCategory violence = null, ModerationCategory violenceGraphic = null, ModerationCategory illicit = null, ModerationCategory illicitViolent = null);
         public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> items = null);
     }

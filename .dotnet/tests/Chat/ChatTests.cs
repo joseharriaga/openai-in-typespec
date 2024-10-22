@@ -415,8 +415,10 @@ public class ChatTests : SyncAsyncTestBase
         using MemoryStream responseAudioStream = new();
         await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(messages, options))
         {
+            streamedCorrelationId ??= update.ResponseAudioUpdate?.CorrelationId;
             responseAudioStream.Write(update.ResponseAudioUpdate?.AudioBytesUpdate);
         }
+        Assert.That(streamedCorrelationId, Is.Not.Null.And.Not.Empty);
         Assert.That(responseAudioStream.Length, Is.GreaterThan(9000));
     }
 

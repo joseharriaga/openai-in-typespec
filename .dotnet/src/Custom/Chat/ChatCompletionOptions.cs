@@ -168,9 +168,11 @@ public partial class ChatCompletionOptions
     [CodeGenMember("Store")]
     public bool? EnableOutputStorage { get; set; }
 
+    // CUSTOM: Made internal for automatic enablement via audio options.
     [CodeGenMember("Modalities")]
-    private IList<InternalCreateChatCompletionRequestModality> _internalModalities;
+    private IList<InternalCreateChatCompletionRequestModality> _internalModalities = new ChangeTrackingList<InternalCreateChatCompletionRequestModality>();
 
+    // CUSTOM: supplemented with custom setter to internally enable audio output via modalities.
     [CodeGenMember("Audio")]
     private ChatAudioOptions _audioOptions;
 

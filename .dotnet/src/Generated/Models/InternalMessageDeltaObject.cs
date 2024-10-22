@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalMessageDeltaObject
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalMessageDeltaObject(string id, InternalMessageDeltaObjectDelta delta)
         {

@@ -34,7 +34,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("id"u8);
             writer.WriteStringValue(Id);
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(_type.ToSerialString());
+            writer.WriteObjectValue<object>(_type, options);
             writer.WritePropertyName("function"u8);
             writer.WriteObjectValue<InternalRunToolCallObjectFunction>(_internalFunction, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
@@ -86,7 +86,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = prop.Value.GetString().ToObject();
+                    @type = prop.Value.GetObject();
                     continue;
                 }
                 if (prop.NameEquals("function"u8))

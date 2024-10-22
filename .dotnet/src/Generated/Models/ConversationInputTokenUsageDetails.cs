@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationInputTokenUsageDetails
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ConversationInputTokenUsageDetails(int cachedTokens, int textTokens, int audioTokens)
         {

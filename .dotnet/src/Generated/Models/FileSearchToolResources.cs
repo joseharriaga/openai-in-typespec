@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class FileSearchToolResources
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal FileSearchToolResources(IList<string> vectorStoreIds, IList<VectorStoreCreationHelper> newVectorStores, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

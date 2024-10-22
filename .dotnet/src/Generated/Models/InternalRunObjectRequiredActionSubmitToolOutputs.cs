@@ -4,25 +4,25 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     internal partial class InternalRunObjectRequiredActionSubmitToolOutputs
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalRunObjectRequiredActionSubmitToolOutputs(IEnumerable<InternalRequiredFunctionToolCall> toolCalls)
+        internal InternalRunObjectRequiredActionSubmitToolOutputs()
         {
-            ToolCalls = toolCalls.ToList();
+            ToolCalls = new ChangeTrackingList<InternalRequiredFunctionToolCall>();
         }
 
-        internal InternalRunObjectRequiredActionSubmitToolOutputs(IList<InternalRequiredFunctionToolCall> toolCalls, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRunObjectRequiredActionSubmitToolOutputs(IReadOnlyList<InternalRequiredFunctionToolCall> toolCalls, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             ToolCalls = toolCalls;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public IList<InternalRequiredFunctionToolCall> ToolCalls { get; }
+        public IReadOnlyList<InternalRequiredFunctionToolCall> ToolCalls { get; }
     }
 }

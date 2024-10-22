@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     public partial class StreamingChatCompletionUpdate
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal StreamingChatCompletionUpdate(string model, string completionId, IEnumerable<InternalCreateChatCompletionStreamResponseChoice> choices, DateTimeOffset createdAt)
         {

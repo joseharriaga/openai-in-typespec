@@ -28,7 +28,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("refusal"u8);
             writer.WriteStringValue(InternalRefusal);
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(_type.ToSerialString());
+            writer.WriteStringValue(_type);
         }
 
         InternalMessageRefusalContent IJsonModel<InternalMessageRefusalContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalMessageRefusalContent)JsonModelCreateCore(ref reader, options);
@@ -62,7 +62,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = prop.Value.GetString().ToString();
+                    @type = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")

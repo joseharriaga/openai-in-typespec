@@ -53,13 +53,13 @@ public static partial class OpenAIChatModelFactory
 
         return new ChatCompletion(
             id,
+            model,
+            systemFingerprint,
+            usage,
+            InternalCreateChatCompletionResponseObject.ChatCompletion,
+            serviceTier: null,
             choices,
             createdAt,
-            model,
-            serviceTier: null,
-            systemFingerprint,
-            InternalCreateChatCompletionResponseObject.ChatCompletion,
-            usage,
             additionalBinaryDataProperties: null);
     }
 
@@ -146,19 +146,19 @@ public static partial class OpenAIChatModelFactory
             new InternalCreateChatCompletionStreamResponseChoice(
                 delta,
                 logprobs,
-                finishReason,
                 index: 0,
+                finishReason,
                 additionalBinaryDataProperties: null)
         ];
 
         return new StreamingChatCompletionUpdate(
-            completionId,
-            choices,
-            createdAt,
             model,
-            serviceTier: null,
             systemFingerprint,
             InternalCreateChatCompletionStreamResponseObject.ChatCompletionChunk,
+            completionId,
+            serviceTier: null,
+            choices,
+            createdAt,
             usage,
             additionalBinaryDataProperties: null);
     }
@@ -185,9 +185,9 @@ public static partial class OpenAIChatModelFactory
 
         return new StreamingChatToolCallUpdate(
             index,
-            toolCallId,
-            kind,
             function,
+            kind,
+            toolCallId,
             additionalBinaryDataProperties: null);
     }
 }

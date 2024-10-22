@@ -9,7 +9,7 @@ namespace OpenAI.Files
 {
     public partial class OpenAIFile
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal OpenAIFile(string id, DateTimeOffset createdAt, string filename, Files.FilePurpose purpose, int? sizeInBytes, Files.FileStatus status)
         {

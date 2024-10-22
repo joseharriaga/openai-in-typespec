@@ -9,7 +9,7 @@ namespace OpenAI.Audio
 {
     internal partial class InternalCreateTranscriptionResponseJson
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalCreateTranscriptionResponseJson(string text)
         {

@@ -10,7 +10,7 @@ namespace OpenAI.Audio
 {
     public partial class AudioTranscription
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal AudioTranscription(string language, string text, TimeSpan? duration)
         {

@@ -20,7 +20,7 @@ namespace OpenAI.FineTuning
         void IJsonModel<InternalFineTuningIntegrationWandb>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
-            this.JsonModelWriteCore(writer, options);
+            JsonModelWriteCore(writer, options);
             writer.WriteEndObject();
         }
 
@@ -36,7 +36,7 @@ namespace OpenAI.FineTuning
             writer.WriteObjectValue(Wandb, options);
         }
 
-        InternalFineTuningIntegrationWandb IJsonModel<InternalFineTuningIntegrationWandb>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalFineTuningIntegrationWandb)this.JsonModelCreateCore(ref reader, options);
+        InternalFineTuningIntegrationWandb IJsonModel<InternalFineTuningIntegrationWandb>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalFineTuningIntegrationWandb)JsonModelCreateCore(ref reader, options);
 
         protected override InternalFineTuningIntegration JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -78,7 +78,7 @@ namespace OpenAI.FineTuning
             return new InternalFineTuningIntegrationWandb(wandb, @type, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalFineTuningIntegrationWandb>.Write(ModelReaderWriterOptions options) => this.PersistableModelWriteCore(options);
+        BinaryData IPersistableModel<InternalFineTuningIntegrationWandb>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
         protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
@@ -92,7 +92,7 @@ namespace OpenAI.FineTuning
             }
         }
 
-        InternalFineTuningIntegrationWandb IPersistableModel<InternalFineTuningIntegrationWandb>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalFineTuningIntegrationWandb)this.PersistableModelCreateCore(data, options);
+        InternalFineTuningIntegrationWandb IPersistableModel<InternalFineTuningIntegrationWandb>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalFineTuningIntegrationWandb)PersistableModelCreateCore(data, options);
 
         protected override InternalFineTuningIntegration PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

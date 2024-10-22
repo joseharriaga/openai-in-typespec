@@ -13,10 +13,6 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunObjectRequiredActionSubmitToolOutputs : IJsonModel<InternalRunObjectRequiredActionSubmitToolOutputs>
     {
-        internal InternalRunObjectRequiredActionSubmitToolOutputs()
-        {
-        }
-
         void IJsonModel<InternalRunObjectRequiredActionSubmitToolOutputs>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -31,13 +27,16 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalRunObjectRequiredActionSubmitToolOutputs)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("tool_calls"u8);
-            writer.WriteStartArray();
-            foreach (InternalRequiredFunctionToolCall item in ToolCalls)
+            if (options.Format != "W")
             {
-                writer.WriteObjectValue(item, options);
+                writer.WritePropertyName("tool_calls"u8);
+                writer.WriteStartArray();
+                foreach (InternalRequiredFunctionToolCall item in ToolCalls)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -74,7 +73,7 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            IList<InternalRequiredFunctionToolCall> toolCalls = default;
+            IReadOnlyList<InternalRequiredFunctionToolCall> toolCalls = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {

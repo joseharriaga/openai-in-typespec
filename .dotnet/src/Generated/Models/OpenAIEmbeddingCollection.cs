@@ -9,7 +9,7 @@ namespace OpenAI.Embeddings
 {
     public partial class OpenAIEmbeddingCollection
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal OpenAIEmbeddingCollection(string model, EmbeddingTokenUsage usage)
         {

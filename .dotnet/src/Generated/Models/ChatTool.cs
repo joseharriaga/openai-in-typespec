@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     public partial class ChatTool
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ChatTool(InternalFunctionDefinition function, Chat.ChatToolKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

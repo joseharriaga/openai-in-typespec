@@ -10,7 +10,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestResponseCreateCommandResponse
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalRealtimeRequestResponseCreateCommandResponse(bool commit, bool cancelPrevious)
         {

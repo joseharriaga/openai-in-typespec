@@ -9,7 +9,7 @@ namespace OpenAI.Models
 {
     public partial class OpenAIModel
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal OpenAIModel(string id, string ownedBy, DateTimeOffset createdAt)
         {

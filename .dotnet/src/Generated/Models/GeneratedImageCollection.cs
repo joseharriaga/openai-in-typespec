@@ -9,7 +9,7 @@ namespace OpenAI.Images
 {
     public partial class GeneratedImageCollection
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal GeneratedImageCollection(DateTimeOffset createdAt)
         {

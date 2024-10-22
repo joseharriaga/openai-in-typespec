@@ -9,7 +9,7 @@ namespace OpenAI.Internal
 {
     internal abstract partial class InternalOmniTypedResponseFormat
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         private protected InternalOmniTypedResponseFormat(string @type)
         {

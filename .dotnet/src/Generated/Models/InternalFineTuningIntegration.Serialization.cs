@@ -20,7 +20,7 @@ namespace OpenAI.FineTuning
         void IJsonModel<InternalFineTuningIntegration>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
-            this.JsonModelWriteCore(writer, options);
+            JsonModelWriteCore(writer, options);
             writer.WriteEndObject();
         }
 
@@ -50,7 +50,7 @@ namespace OpenAI.FineTuning
             }
         }
 
-        InternalFineTuningIntegration IJsonModel<InternalFineTuningIntegration>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalFineTuningIntegration)this.JsonModelCreateCore(ref reader, options);
+        InternalFineTuningIntegration IJsonModel<InternalFineTuningIntegration>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected virtual InternalFineTuningIntegration JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -80,7 +80,7 @@ namespace OpenAI.FineTuning
             return UnknownFineTuningIntegration.DeserializeUnknownFineTuningIntegration(element, options);
         }
 
-        BinaryData IPersistableModel<InternalFineTuningIntegration>.Write(ModelReaderWriterOptions options) => this.PersistableModelWriteCore(options);
+        BinaryData IPersistableModel<InternalFineTuningIntegration>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
         protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
@@ -94,7 +94,7 @@ namespace OpenAI.FineTuning
             }
         }
 
-        InternalFineTuningIntegration IPersistableModel<InternalFineTuningIntegration>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalFineTuningIntegration)this.PersistableModelCreateCore(data, options);
+        InternalFineTuningIntegration IPersistableModel<InternalFineTuningIntegration>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected virtual InternalFineTuningIntegration PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

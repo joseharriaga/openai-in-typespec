@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal abstract partial class InternalMessageDeltaTextContentAnnotation
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         private protected InternalMessageDeltaTextContentAnnotation(string @type)
         {

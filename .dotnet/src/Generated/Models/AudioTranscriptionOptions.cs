@@ -9,7 +9,7 @@ namespace OpenAI.Audio
 {
     public partial class AudioTranscriptionOptions
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal AudioTranscriptionOptions(string language, string prompt, AudioTranscriptionFormat? responseFormat, float? temperature, BinaryData @file, InternalCreateTranscriptionRequestModel model, IList<BinaryData> internalTimestampGranularities, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

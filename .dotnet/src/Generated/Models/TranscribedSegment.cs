@@ -9,7 +9,7 @@ namespace OpenAI.Audio
 {
     public readonly partial struct TranscribedSegment
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal TranscribedSegment(int id, string text, float temperature, float compressionRatio, TimeSpan startTime, TimeSpan endTime, int seekOffset, ReadOnlyMemory<int> tokenIds, float averageLogProbability, float noSpeechProbability)
         {

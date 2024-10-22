@@ -10,7 +10,7 @@ namespace OpenAI.Batch
 {
     internal partial class InternalListBatchesResponse
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalListBatchesResponse(IEnumerable<InternalBatchJob> data, bool hasMore)
         {

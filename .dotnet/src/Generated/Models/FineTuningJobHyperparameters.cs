@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal readonly partial struct FineTuningJobHyperparameters
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal FineTuningJobHyperparameters(BinaryData nEpochs, BinaryData batchSize, BinaryData learningRateMultiplier)
         {

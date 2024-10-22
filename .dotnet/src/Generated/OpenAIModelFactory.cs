@@ -1095,7 +1095,7 @@ namespace OpenAI
 
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = default, float logProbability = default, ReadOnlyMemory<byte>? utf8Bytes = default, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = default)
         {
-            utf8Bytes ??= new ReadOnlyMemory<byte>();
+            utf8Bytes ??= new byte[]();
             topLogProbabilities ??= new ChangeTrackingList<ChatTokenTopLogProbabilityDetails>();
 
             return new ChatTokenLogProbabilityDetails(token, logProbability, utf8Bytes?.ToList(), topLogProbabilities?.ToList(), null);
@@ -1103,7 +1103,7 @@ namespace OpenAI
 
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = default, float logProbability = default, ReadOnlyMemory<byte>? utf8Bytes = default)
         {
-            utf8Bytes ??= new ReadOnlyMemory<byte>();
+            utf8Bytes ??= new byte[]();
 
             return new ChatTokenTopLogProbabilityDetails(token, logProbability, utf8Bytes?.ToList(), null);
         }
@@ -1237,7 +1237,7 @@ namespace OpenAI
 
         public static TranscribedSegment TranscribedSegment(int id = default, string text = default, float temperature = default, float compressionRatio = default, TimeSpan startTime = default, TimeSpan endTime = default, int seekOffset = default, ReadOnlyMemory<int> tokenIds = default, float averageLogProbability = default, float noSpeechProbability = default)
         {
-            tokenIds ??= new ReadOnlyMemory<int>();
+            tokenIds ??= new int[]();
 
             return new TranscribedSegment(
                 id,

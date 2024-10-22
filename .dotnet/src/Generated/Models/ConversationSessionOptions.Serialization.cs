@@ -65,7 +65,7 @@ namespace OpenAI.RealtimeConversation
             if (Optional.IsDefined(Model))
             {
                 writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model.ToSerialString());
+                writer.WriteStringValue(Model);
             }
             if (Optional.IsDefined(TurnDetectionOptions))
             {
@@ -233,7 +233,7 @@ namespace OpenAI.RealtimeConversation
                         model = null;
                         continue;
                     }
-                    model = prop.Value.GetString().ToString();
+                    model = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("turn_detection"u8))

@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalListRunsResponse
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalListRunsResponse(string firstId, string lastId, bool hasMore)
         {

@@ -26,7 +26,7 @@ namespace OpenAI.Assistants
             }
             base.JsonModelWriteCore(writer, options);
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(_type.ToSerialString());
+            writer.WriteStringValue(_type);
             writer.WritePropertyName("image_file"u8);
             writer.WriteObjectValue<InternalMessageContentItemFileObjectImageFile>(_imageFile, options);
         }
@@ -57,7 +57,7 @@ namespace OpenAI.Assistants
             {
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = prop.Value.GetString().ToString();
+                    @type = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("image_file"u8))

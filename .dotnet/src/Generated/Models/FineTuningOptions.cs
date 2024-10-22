@@ -10,7 +10,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class FineTuningOptions
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public FineTuningOptions(InternalCreateFineTuningJobRequestModel model, string trainingFile)
         {

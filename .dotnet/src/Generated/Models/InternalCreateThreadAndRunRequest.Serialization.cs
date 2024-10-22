@@ -172,7 +172,7 @@ namespace OpenAI.Assistants
                 if (Model != null)
                 {
                     writer.WritePropertyName("model"u8);
-                    writer.WriteStringValue(Model.ToSerialString());
+                    writer.WriteStringValue(Model);
                 }
                 else
                 {
@@ -407,7 +407,7 @@ namespace OpenAI.Assistants
                         model = null;
                         continue;
                     }
-                    model = prop.Value.GetString().ToString();
+                    model = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("tool_resources"u8))

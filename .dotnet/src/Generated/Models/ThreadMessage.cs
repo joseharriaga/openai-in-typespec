@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     public partial class ThreadMessage
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ThreadMessage(string id, DateTimeOffset createdAt, string threadId, MessageStatus status, MessageFailureDetails incompleteDetails, DateTimeOffset? completedAt, DateTimeOffset? incompleteAt, IEnumerable<MessageContent> content, string assistantId, string runId, IDictionary<string, string> metadata, Assistants.MessageRole role, IEnumerable<MessageCreationAttachment> attachments)
         {

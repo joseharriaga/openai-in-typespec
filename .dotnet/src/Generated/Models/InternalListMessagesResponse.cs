@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalListMessagesResponse
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalListMessagesResponse(string firstId, string lastId, bool hasMore)
         {

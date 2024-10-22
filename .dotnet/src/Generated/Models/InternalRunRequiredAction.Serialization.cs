@@ -34,7 +34,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("submit_tool_outputs"u8);
             writer.WriteObjectValue(SubmitToolOutputs, options);
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type.ToSerialString());
+            writer.WriteObjectValue<object>(Type, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -83,7 +83,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = prop.Value.GetString().ToObject();
+                    @type = prop.Value.GetObject();
                     continue;
                 }
                 if (options.Format != "W")

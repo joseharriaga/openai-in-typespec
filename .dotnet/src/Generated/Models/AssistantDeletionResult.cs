@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class AssistantDeletionResult
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal AssistantDeletionResult(bool deleted, string assistantId)
         {

@@ -9,7 +9,7 @@ namespace OpenAI.VectorStores
 {
     public partial class VectorStoreBatchFileJob
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal VectorStoreBatchFileJob(DateTimeOffset createdAt, string vectorStoreId, VectorStoreBatchFileJobStatus status, string batchId, VectorStoreFileCounts fileCounts)
         {

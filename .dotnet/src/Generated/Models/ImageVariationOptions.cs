@@ -9,7 +9,7 @@ namespace OpenAI.Images
 {
     public partial class ImageVariationOptions
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ImageVariationOptions(InternalCreateImageVariationRequestModel? model, BinaryData image, long? n, GeneratedImageSize? size, GeneratedImageFormat? responseFormat, string endUserId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

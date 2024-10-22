@@ -9,7 +9,7 @@ namespace OpenAI.VectorStores
 {
     internal partial class InternalStaticChunkingStrategyDetails
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalStaticChunkingStrategyDetails(int maxChunkSizeTokens, int chunkOverlapTokens)
         {

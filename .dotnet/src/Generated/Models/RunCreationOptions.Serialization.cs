@@ -58,7 +58,7 @@ namespace OpenAI.Assistants
                 if (ModelOverride != null)
                 {
                     writer.WritePropertyName("model"u8);
-                    writer.WriteStringValue(ModelOverride.ToSerialString());
+                    writer.WriteStringValue(ModelOverride);
                 }
                 else
                 {
@@ -310,7 +310,7 @@ namespace OpenAI.Assistants
                         modelOverride = null;
                         continue;
                     }
-                    modelOverride = prop.Value.GetString().ToString();
+                    modelOverride = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("instructions"u8))

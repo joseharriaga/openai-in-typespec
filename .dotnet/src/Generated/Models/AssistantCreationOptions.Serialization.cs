@@ -99,7 +99,7 @@ namespace OpenAI.Assistants
                 }
             }
             writer.WritePropertyName("model"u8);
-            writer.WriteStringValue(Model.ToSerialString());
+            writer.WriteStringValue(Model);
             if (Optional.IsCollectionDefined(Tools))
             {
                 writer.WritePropertyName("tools"u8);
@@ -258,7 +258,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("model"u8))
                 {
-                    model = prop.Value.GetString().ToString();
+                    model = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("tools"u8))

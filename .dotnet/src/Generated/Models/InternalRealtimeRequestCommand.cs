@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal abstract partial class InternalRealtimeRequestCommand
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         private protected InternalRealtimeRequestCommand(InternalRealtimeRequestCommandType kind)
         {

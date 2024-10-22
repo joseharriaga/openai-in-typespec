@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public abstract partial class ToolDefinition
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ToolDefinition(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

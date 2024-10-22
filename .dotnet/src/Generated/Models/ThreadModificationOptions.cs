@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     public partial class ThreadModificationOptions
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public ThreadModificationOptions()
         {

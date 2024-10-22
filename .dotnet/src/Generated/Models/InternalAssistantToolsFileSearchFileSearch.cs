@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalAssistantToolsFileSearchFileSearch
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalAssistantToolsFileSearchFileSearch()
         {

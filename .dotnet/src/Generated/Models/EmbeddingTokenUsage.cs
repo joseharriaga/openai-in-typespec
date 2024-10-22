@@ -9,7 +9,7 @@ namespace OpenAI.Embeddings
 {
     public partial class EmbeddingTokenUsage
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal EmbeddingTokenUsage(int inputTokenCount, int totalTokenCount)
         {

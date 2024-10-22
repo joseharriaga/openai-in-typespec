@@ -10,7 +10,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class FineTuningIntegrationWandbWandb
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal FineTuningIntegrationWandbWandb(string project)
         {

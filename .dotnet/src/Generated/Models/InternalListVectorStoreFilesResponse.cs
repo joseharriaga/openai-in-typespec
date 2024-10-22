@@ -10,7 +10,7 @@ namespace OpenAI.VectorStores
 {
     internal partial class InternalListVectorStoreFilesResponse
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalListVectorStoreFilesResponse(string firstId, string lastId, bool hasMore)
         {

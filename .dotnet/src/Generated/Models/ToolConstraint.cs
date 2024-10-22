@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class ToolConstraint
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ToolConstraint(InternalAssistantsNamedToolChoiceFunction function, string objectType, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

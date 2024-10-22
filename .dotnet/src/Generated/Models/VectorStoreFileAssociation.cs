@@ -9,7 +9,7 @@ namespace OpenAI.VectorStores
 {
     public partial class VectorStoreFileAssociation
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal VectorStoreFileAssociation(DateTimeOffset createdAt, string vectorStoreId, VectorStores.VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError, string fileId, int size)
         {

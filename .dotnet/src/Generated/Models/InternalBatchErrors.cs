@@ -10,7 +10,7 @@ namespace OpenAI.Batch
 {
     internal partial class InternalBatchErrors
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalBatchErrors()
         {

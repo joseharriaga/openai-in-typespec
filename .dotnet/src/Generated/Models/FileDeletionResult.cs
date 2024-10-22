@@ -9,7 +9,7 @@ namespace OpenAI.Files
 {
     public partial class FileDeletionResult
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal FileDeletionResult(bool deleted, string fileId)
         {

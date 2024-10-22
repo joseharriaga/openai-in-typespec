@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalAssistantsNamedToolChoiceFunction
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalAssistantsNamedToolChoiceFunction(string name)
         {

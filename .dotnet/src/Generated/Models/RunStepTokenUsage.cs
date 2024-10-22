@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class RunStepTokenUsage
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal RunStepTokenUsage(int outputTokenCount, int inputTokenCount, int totalTokenCount)
         {

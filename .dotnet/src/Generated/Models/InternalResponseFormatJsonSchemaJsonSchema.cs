@@ -10,7 +10,7 @@ namespace OpenAI.Internal
 {
     internal partial class InternalResponseFormatJsonSchemaJsonSchema
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalResponseFormatJsonSchemaJsonSchema(string name)
         {

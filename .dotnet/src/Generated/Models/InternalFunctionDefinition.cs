@@ -9,7 +9,7 @@ namespace OpenAI
 {
     internal partial class InternalFunctionDefinition
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalFunctionDefinition(string name)
         {

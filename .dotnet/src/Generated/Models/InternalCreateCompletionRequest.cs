@@ -11,7 +11,7 @@ namespace OpenAI.LegacyCompletions
 {
     internal partial class InternalCreateCompletionRequest
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalCreateCompletionRequest(InternalCreateCompletionRequestModel model, BinaryData prompt)
         {

@@ -9,7 +9,7 @@ namespace OpenAI.Embeddings
 {
     public partial class EmbeddingGenerationOptions
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal EmbeddingGenerationOptions(int? dimensions, BinaryData input, InternalCreateEmbeddingRequestModel model, InternalCreateEmbeddingRequestEncodingFormat? encodingFormat, string endUserId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

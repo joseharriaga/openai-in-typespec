@@ -11,7 +11,7 @@ namespace OpenAI.Files
 {
     internal partial class InternalCompleteUploadRequest
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalCompleteUploadRequest(IEnumerable<string> partIds)
         {

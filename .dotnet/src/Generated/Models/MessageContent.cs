@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class MessageContent
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal MessageContent(IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

@@ -19,7 +19,7 @@ namespace OpenAI.FineTuning
         void IJsonModel<InternalFineTuningIntegration>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
-            this.JsonModelWriteCore(writer, options);
+            JsonModelWriteCore(writer, options);
             writer.WriteEndObject();
         }
 
@@ -33,7 +33,7 @@ namespace OpenAI.FineTuning
             base.JsonModelWriteCore(writer, options);
         }
 
-        InternalFineTuningIntegration IJsonModel<InternalFineTuningIntegration>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownFineTuningIntegration)this.JsonModelCreateCore(ref reader, options);
+        InternalFineTuningIntegration IJsonModel<InternalFineTuningIntegration>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownFineTuningIntegration)JsonModelCreateCore(ref reader, options);
 
         protected override InternalFineTuningIntegration JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -69,7 +69,7 @@ namespace OpenAI.FineTuning
             return new UnknownFineTuningIntegration(@type, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalFineTuningIntegration>.Write(ModelReaderWriterOptions options) => this.PersistableModelWriteCore(options);
+        BinaryData IPersistableModel<InternalFineTuningIntegration>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
         protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
@@ -83,7 +83,7 @@ namespace OpenAI.FineTuning
             }
         }
 
-        InternalFineTuningIntegration IPersistableModel<InternalFineTuningIntegration>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownFineTuningIntegration)this.PersistableModelCreateCore(data, options);
+        InternalFineTuningIntegration IPersistableModel<InternalFineTuningIntegration>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownFineTuningIntegration)PersistableModelCreateCore(data, options);
 
         protected override InternalFineTuningIntegration PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

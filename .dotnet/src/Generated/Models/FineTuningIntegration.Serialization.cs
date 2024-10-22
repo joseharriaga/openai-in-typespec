@@ -3,16 +3,17 @@
 #nullable disable
 
 using System;
+using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class UnknownCreateFineTuningJobRequestIntegration : IJsonModel<FineTuningIntegration>
+    [PersistableModelProxy(typeof(UnknownCreateFineTuningJobRequestIntegration))]
+    internal abstract partial class FineTuningIntegration : IJsonModel<FineTuningIntegration>
     {
-        internal UnknownCreateFineTuningJobRequestIntegration()
+        internal FineTuningIntegration()
         {
         }
 
@@ -23,19 +24,35 @@ namespace OpenAI.FineTuning
             writer.WriteEndObject();
         }
 
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<FineTuningIntegration>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(FineTuningIntegration)} does not support writing '{format}' format.");
             }
-            base.JsonModelWriteCore(writer, options);
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Type);
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            {
+                foreach (var item in _additionalBinaryDataProperties)
+                {
+                    writer.WritePropertyName(item.Key);
+#if NET6_0_OR_GREATER
+                    writer.WriteRawValue(item.Value);
+#else
+                    using (JsonDocument document = JsonDocument.Parse(item.Value))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
+#endif
+                }
+            }
         }
 
-        FineTuningIntegration IJsonModel<FineTuningIntegration>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownCreateFineTuningJobRequestIntegration)JsonModelCreateCore(ref reader, options);
+        FineTuningIntegration IJsonModel<FineTuningIntegration>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
-        protected override FineTuningIntegration JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        protected virtual FineTuningIntegration JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<FineTuningIntegration>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
@@ -46,32 +63,26 @@ namespace OpenAI.FineTuning
             return DeserializeFineTuningIntegration(document.RootElement, options);
         }
 
-        internal static UnknownCreateFineTuningJobRequestIntegration DeserializeUnknownCreateFineTuningJobRequestIntegration(JsonElement element, ModelReaderWriterOptions options)
+        internal static FineTuningIntegration DeserializeFineTuningIntegration(JsonElement element, ModelReaderWriterOptions options)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            string @type = "unknown";
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            foreach (var prop in element.EnumerateObject())
+            if (element.TryGetProperty("kind"u8, out JsonElement discriminator))
             {
-                if (prop.NameEquals("type"u8))
+                switch (discriminator.GetString())
                 {
-                    @type = prop.Value.GetString();
-                    continue;
-                }
-                if (options.Format != "W")
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
+                    case "wandb":
+                        return WeightsAndBiasesIntegration.DeserializeWeightsAndBiasesIntegration(element, options);
                 }
             }
-            return new UnknownCreateFineTuningJobRequestIntegration(@type, additionalBinaryDataProperties);
+            return UnknownCreateFineTuningJobRequestIntegration.DeserializeUnknownCreateFineTuningJobRequestIntegration(element, options);
         }
 
         BinaryData IPersistableModel<FineTuningIntegration>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<FineTuningIntegration>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
@@ -83,9 +94,9 @@ namespace OpenAI.FineTuning
             }
         }
 
-        FineTuningIntegration IPersistableModel<FineTuningIntegration>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownCreateFineTuningJobRequestIntegration)PersistableModelCreateCore(data, options);
+        FineTuningIntegration IPersistableModel<FineTuningIntegration>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
-        protected override FineTuningIntegration PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        protected virtual FineTuningIntegration PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<FineTuningIntegration>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
@@ -101,5 +112,17 @@ namespace OpenAI.FineTuning
         }
 
         string IPersistableModel<FineTuningIntegration>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+
+        public static implicit operator BinaryContent(FineTuningIntegration fineTuningIntegration)
+        {
+            return BinaryContent.Create(fineTuningIntegration, ModelSerializationExtensions.WireOptions);
+        }
+
+        public static explicit operator FineTuningIntegration(ClientResult result)
+        {
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeFineTuningIntegration(document.RootElement, ModelSerializationExtensions.WireOptions);
+        }
     }
 }

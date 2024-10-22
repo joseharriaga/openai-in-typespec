@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal abstract partial class InternalFineTuningIntegration
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         private protected InternalFineTuningIntegration(string @type)
         {

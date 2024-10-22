@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRequiredFunctionToolCall
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalRequiredFunctionToolCall(string id, InternalRunToolCallObjectFunction internalFunction)
         {

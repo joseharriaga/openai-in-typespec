@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     public partial class ThreadRun
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ThreadRun(string id, DateTimeOffset createdAt, string threadId, string assistantId, RunStatus status, RunError lastError, DateTimeOffset? expiresAt, DateTimeOffset? startedAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, RunIncompleteDetails incompleteDetails, string model, string instructions, IEnumerable<ToolDefinition> tools, IDictionary<string, string> metadata, RunTokenUsage usage, RunTruncationStrategy truncationStrategy, AssistantResponseFormat responseFormat, ToolConstraint toolConstraint, bool? allowParallelToolCalls, int? maxInputTokenCount, int? maxOutputTokenCount, InternalRunRequiredAction internalRequiredAction)
         {

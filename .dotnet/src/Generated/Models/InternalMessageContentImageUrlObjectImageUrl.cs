@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalMessageContentImageUrlObjectImageUrl
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalMessageContentImageUrlObjectImageUrl(Uri url)
         {

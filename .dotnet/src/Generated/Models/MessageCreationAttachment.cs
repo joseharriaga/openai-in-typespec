@@ -11,7 +11,7 @@ namespace OpenAI.Assistants
 {
     public partial class MessageCreationAttachment
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public MessageCreationAttachment(string fileId, IEnumerable<ToolDefinition> tools)
         {

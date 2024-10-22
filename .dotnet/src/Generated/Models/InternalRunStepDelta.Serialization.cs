@@ -36,7 +36,7 @@ namespace OpenAI.Assistants
             writer.WritePropertyName("delta"u8);
             writer.WriteObjectValue(Delta, options);
             writer.WritePropertyName("object"u8);
-            writer.WriteStringValue(this.Object.ToSerialString());
+            writer.WriteObjectValue<object>(this.Object, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -91,7 +91,7 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("object"u8))
                 {
-                    @object = prop.Value.GetString().ToObject();
+                    @object = prop.Value.GetObject();
                     continue;
                 }
                 if (options.Format != "W")

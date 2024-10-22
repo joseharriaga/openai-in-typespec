@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class AssistantCreationOptions
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal AssistantCreationOptions(string name, string description, string instructions, IDictionary<string, string> metadata, float? temperature, string model, IList<ToolDefinition> tools, ToolResources toolResources, AssistantResponseFormat responseFormat, float? nucleusSamplingFactor, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

@@ -40,7 +40,7 @@ namespace OpenAI.Images
             if (Optional.IsDefined(ImageUri))
             {
                 writer.WritePropertyName("url"u8);
-                writer.WriteObjectValue<Uri>(ImageUri, options);
+                writer.WriteStringValue(ImageUri.AbsoluteUri);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
@@ -111,7 +111,7 @@ namespace OpenAI.Images
                         imageUri = null;
                         continue;
                     }
-                    imageUri = Uri.DeserializeUri(prop.Value, options);
+                    imageUri = new Uri(prop.Value.GetString());
                     continue;
                 }
                 if (options.Format != "W")

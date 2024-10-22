@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionStreamResponseDelta
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalChatCompletionStreamResponseDelta(StreamingChatFunctionCallUpdate functionCall, IList<StreamingChatToolCallUpdate> toolCalls, string refusal, Chat.ChatMessageRole? role, ChatMessageContent content, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

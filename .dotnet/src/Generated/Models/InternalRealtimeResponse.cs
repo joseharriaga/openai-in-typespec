@@ -10,7 +10,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponse
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalRealtimeResponse(string id, ConversationStatus status, InternalRealtimeResponseStatusDetails statusDetails, ConversationTokenUsage usage, IEnumerable<ConversationItem> output)
         {

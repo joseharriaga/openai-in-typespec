@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     public partial class ChatCompletionOptions
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ChatCompletionOptions(float? frequencyPenalty, float? presencePenalty, ChatResponseFormat responseFormat, float? temperature, float? topP, IList<ChatTool> tools, IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, int? n, bool? stream, InternalChatCompletionStreamOptions streamOptions, bool? includeLogProbabilities, int? topLogProbabilityCount, IList<string> stopSequences, IDictionary<int, int> logitBiases, ChatToolChoice toolChoice, ChatFunctionChoice functionChoice, bool? allowParallelToolCalls, string endUserId, long? seed, int? deprecatedMaxTokens, int? maxOutputTokenCount, IList<ChatFunction> functions, InternalCreateChatCompletionRequestServiceTier? serviceTier, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

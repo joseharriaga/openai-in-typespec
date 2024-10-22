@@ -9,7 +9,7 @@ namespace OpenAI.VectorStores
 {
     public partial class VectorStore
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal VectorStore(string id, DateTimeOffset createdAt, string name, int usageBytes, VectorStoreFileCounts fileCounts, VectorStores.VectorStoreStatus status, DateTimeOffset? lastActiveAt, IDictionary<string, string> metadata)
         {

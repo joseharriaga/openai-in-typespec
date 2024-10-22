@@ -29,7 +29,7 @@ namespace OpenAI.Assistants
                 writer.WriteObjectValue<InternalAssistantsNamedToolChoiceFunction>(Function, options);
             }
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(_objectType.ToSerialString());
+            writer.WriteStringValue(_objectType);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

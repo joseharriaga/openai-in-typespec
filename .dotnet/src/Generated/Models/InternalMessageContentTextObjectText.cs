@@ -11,7 +11,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalMessageContentTextObjectText
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalMessageContentTextObjectText(string value, IEnumerable<InternalMessageContentTextObjectAnnotation> annotations)
         {

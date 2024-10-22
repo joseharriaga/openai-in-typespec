@@ -9,7 +9,7 @@ namespace OpenAI.Moderations
 {
     public partial class ModerationResultCollection
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ModerationResultCollection(string id, string model)
         {

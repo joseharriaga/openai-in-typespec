@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class AssistantThread
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal AssistantThread(string id, DateTimeOffset createdAt, IDictionary<string, string> metadata, ToolResources toolResources)
         {

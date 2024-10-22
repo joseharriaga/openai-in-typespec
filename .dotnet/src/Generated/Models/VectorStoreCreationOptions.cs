@@ -10,7 +10,7 @@ namespace OpenAI.VectorStores
 {
     public partial class VectorStoreCreationOptions
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public VectorStoreCreationOptions()
         {

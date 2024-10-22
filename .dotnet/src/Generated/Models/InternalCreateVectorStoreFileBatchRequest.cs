@@ -11,7 +11,7 @@ namespace OpenAI.VectorStores
 {
     internal partial class InternalCreateVectorStoreFileBatchRequest
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalCreateVectorStoreFileBatchRequest(IEnumerable<string> fileIds)
         {

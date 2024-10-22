@@ -11,7 +11,7 @@ namespace OpenAI.LegacyCompletions
 {
     internal partial class InternalCreateCompletionResponse
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalCreateCompletionResponse(string id, IEnumerable<InternalCreateCompletionResponseChoice> choices, DateTimeOffset created, string model)
         {

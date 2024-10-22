@@ -9,7 +9,7 @@ namespace OpenAI.Files
 {
     internal partial class InternalUpload
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalUpload(string id, DateTimeOffset createdAt, string filename, int bytes, string purpose, InternalUploadStatus status, DateTimeOffset expiresAt)
         {

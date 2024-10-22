@@ -9,7 +9,7 @@ namespace OpenAI.Moderations
 {
     internal partial class InternalModerationCategoryScores
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalModerationCategoryScores(float hate, float hateThreatening, float harassment, float harassmentThreatening, float selfHarm, float selfHarmIntent, float selfHarmInstructions, float sexual, float sexualMinors, float violence, float violenceGraphic)
         {

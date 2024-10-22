@@ -123,7 +123,7 @@ public partial class ChatClient
             using BinaryContent content = options;
 
             ClientResult result = await CompleteChatAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-            ChatCompletion chatCompletion = ChatCompletion.FromResponse(result.GetRawResponse());
+            ChatCompletion chatCompletion = (ChatCompletion)result;
             scope?.RecordChatCompletion(chatCompletion);
             return ClientResult.FromValue(chatCompletion, result.GetRawResponse());
         }
@@ -152,7 +152,7 @@ public partial class ChatClient
         {
             using BinaryContent content = options;
             ClientResult result = CompleteChat(content, cancellationToken.ToRequestOptions());
-            ChatCompletion chatCompletion = ChatCompletion.FromResponse(result.GetRawResponse());
+            ChatCompletion chatCompletion = (ChatCompletion)result;
 
             scope?.RecordChatCompletion(chatCompletion);
             return ClientResult.FromValue(chatCompletion, result.GetRawResponse());

@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class FineTuningJobError
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal FineTuningJobError(string code, string message, string @param)
         {

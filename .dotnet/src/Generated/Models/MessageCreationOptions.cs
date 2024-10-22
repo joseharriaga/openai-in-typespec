@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class MessageCreationOptions
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal MessageCreationOptions(IList<MessageCreationAttachment> attachments, IDictionary<string, string> metadata, Assistants.MessageRole role, IList<MessageContent> content, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

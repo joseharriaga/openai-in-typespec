@@ -9,7 +9,7 @@ namespace OpenAI.Internal
 {
     internal partial class OpenAIErrorResponse
     {
-        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal OpenAIErrorResponse(OpenAIError error)
         {

@@ -18,23 +18,8 @@ internal readonly partial struct InternalCreateModerationRequestInput3Type { }
 [CodeGenModel("CreateModerationRequestInputImageUrl")]
 internal partial class InternalCreateModerationRequestInputImageUrl { }
 
-[CodeGenModel("CreateModerationResponseResultCategoryAppliedInputTypes")]
-internal partial class InternalCreateModerationResponseResultCategoryAppliedInputTypes { }
+[CodeGenModel("CreateModerationResponseResultCategories")]
+internal partial class InternalModerationCategories { }
 
-[CodeGenModel("CreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1")]
-internal readonly partial struct InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1 { }
-
-[CodeGenModel("CreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction")]
-internal readonly partial struct InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction { }
-
-[CodeGenModel("CreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent")]
-internal readonly partial struct InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent { }
-
-[CodeGenModel("CreateModerationResponseResultCategoryAppliedInputTypesSexual")]
-internal readonly partial struct InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual { }
-
-[CodeGenModel("CreateModerationResponseResultCategoryAppliedInputTypesViolence")]
-internal readonly partial struct InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence { }
-
-[CodeGenModel("CreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic")]
-internal readonly partial struct InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic { }
+[CodeGenModel("CreateModerationResponseResultCategoryScores")]
+internal partial class InternalModerationCategoryScores { }

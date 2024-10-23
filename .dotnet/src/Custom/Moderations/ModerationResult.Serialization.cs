@@ -69,19 +69,19 @@ namespace OpenAI.Moderations
             {
                 writer.WritePropertyName("category_applied_input_types"u8);
                 InternalCreateModerationResponseResultCategoryAppliedInputTypes internalAppliedInputTypes = new(
-                    hate: Hate.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    hateThreatening: HateThreatening.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    harassment: Harassment.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    harassmentThreatening: HarassmentThreatening.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    illicit: Illicit.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    illicitViolent: IllicitViolent.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    selfHarm: SelfHarm.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1(kind)).ToList(),
-                    selfHarmIntent: SelfHarmIntent.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent(kind)).ToList(),
-                    selfHarmInstructions: SelfHarmInstructions.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction(kind)).ToList(),
-                    sexual: Sexual.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual(kind)).ToList(),
-                    sexualMinors: SexualMinors.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    violence: Violence.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence(kind)).ToList(),
-                    violenceGraphic: ViolenceGraphic.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic(kind)).ToList(),
+                    hate: Hate.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    hateThreatening: HateThreatening.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    harassment: Harassment.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    harassmentThreatening: HarassmentThreatening.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    illicit: Illicit.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    illicitViolent: IllicitViolent.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    selfHarm: SelfHarm.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    selfHarmIntent: SelfHarmIntent.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    selfHarmInstructions: SelfHarmInstructions.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    sexual: Sexual.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    sexualMinors: SexualMinors.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    violence: Violence.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    violenceGraphic: ViolenceGraphic.ApplicableInputKinds.ToInternalApplicableInputKinds(),
                     serializedAdditionalRawData: null);
                 writer.WriteObjectValue(internalAppliedInputTypes, options);
             }
@@ -168,7 +168,7 @@ namespace OpenAI.Moderations
                 return new ModerationCategory(
                     categoryFlaggedGetter.Invoke(internalCategories),
                     scoreGetter.Invoke(internalCategoryScores),
-                    ModerationFlaggedContentModalitiesExtensions.FromInternalFlaggedContentModalities(stringInputTypes));
+                    ModerationApplicableInputKindsExtensions.FromInternalApplicableInputKinds(stringInputTypes));
             }
 
             serializedAdditionalRawData = rawDataDictionary;

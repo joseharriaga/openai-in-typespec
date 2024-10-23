@@ -310,9 +310,9 @@ namespace OpenAI
             return new StreamingChatResponseAudioUpdate(correlationId, transcriptUpdate, audioBytesUpdate, expiresAt, serializedAdditionalRawData: null);
         }
 
-        public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(BinaryData functionArgumentsUpdate = null, string functionName = null)
+        public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = null, BinaryData functionArgumentsUpdate = null)
         {
-            return new StreamingChatFunctionCallUpdate(functionArgumentsUpdate, functionName, serializedAdditionalRawData: null);
+            return new StreamingChatFunctionCallUpdate(functionName, functionArgumentsUpdate, serializedAdditionalRawData: null);
         }
     }
 }

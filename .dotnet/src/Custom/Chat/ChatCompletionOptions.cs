@@ -166,7 +166,7 @@ public partial class ChatCompletionOptions
 
     // CUSTOM: Renamed.
     [CodeGenMember("Store")]
-    public bool? EnableOutputStorage { get; set; }
+    public bool? StoredOutputEnabled { get; set; }
 
     // CUSTOM: Made internal for automatic enablement via audio options.
     [CodeGenMember("Modalities")]

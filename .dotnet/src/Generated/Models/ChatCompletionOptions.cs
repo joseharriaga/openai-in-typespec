@@ -12,11 +12,11 @@ namespace OpenAI.Chat
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
 
-        internal ChatCompletionOptions(IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, bool? enableOutputStorage, IDictionary<string, string> metadata, float? frequencyPenalty, IDictionary<int, int> logitBiases, bool? includeLogProbabilities, int? topLogProbabilityCount, int? deprecatedMaxTokens, int? maxOutputTokenCount, int? n, IList<InternalCreateChatCompletionRequestModality> internalModalities, ChatAudioOptions audioOptions, float? presencePenalty, ChatResponseFormat responseFormat, long? seed, InternalCreateChatCompletionRequestServiceTier? serviceTier, IList<string> stopSequences, bool? stream, InternalChatCompletionStreamOptions streamOptions, float? temperature, float? topP, IList<ChatTool> tools, ChatToolChoice toolChoice, bool? allowParallelToolCalls, string endUserId, ChatFunctionChoice functionChoice, IList<ChatFunction> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatCompletionOptions(IList<ChatMessage> messages, InternalCreateChatCompletionRequestModel model, bool? storedOutputEnabled, IDictionary<string, string> metadata, float? frequencyPenalty, IDictionary<int, int> logitBiases, bool? includeLogProbabilities, int? topLogProbabilityCount, int? deprecatedMaxTokens, int? maxOutputTokenCount, int? n, IList<InternalCreateChatCompletionRequestModality> internalModalities, ChatAudioOptions audioOptions, float? presencePenalty, ChatResponseFormat responseFormat, long? seed, InternalCreateChatCompletionRequestServiceTier? serviceTier, IList<string> stopSequences, bool? stream, InternalChatCompletionStreamOptions streamOptions, float? temperature, float? topP, IList<ChatTool> tools, ChatToolChoice toolChoice, bool? allowParallelToolCalls, string endUserId, ChatFunctionChoice functionChoice, IList<ChatFunction> functions, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Messages = messages;
             Model = model;
-            EnableOutputStorage = enableOutputStorage;
+            StoredOutputEnabled = storedOutputEnabled;
             Metadata = metadata;
             FrequencyPenalty = frequencyPenalty;
             LogitBiases = logitBiases;

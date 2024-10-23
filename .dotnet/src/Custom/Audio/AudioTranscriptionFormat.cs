@@ -5,7 +5,7 @@ namespace OpenAI.Audio;
 
 /// <summary> The format of the transcription. </summary>
 [CodeGenModel("TranscriptionAudioResponseFormat")]
-public readonly partial struct AudioTranscriptionFormat : IEquatable<AudioTranscriptionFormat>
+public readonly partial struct AudioTranscriptionFormat
 {
     // CUSTOM: Hide from browsing as this is equivalent to Simple
     /// <summary> Plain text only. </summary>

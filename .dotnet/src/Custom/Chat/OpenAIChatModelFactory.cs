@@ -187,8 +187,8 @@ public static partial class OpenAIChatModelFactory
     public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = null, BinaryData functionArgumentsUpdate = null)
     {
         return new StreamingChatFunctionCallUpdate(
-            functionArgumentsUpdate: functionArgumentsUpdate,
             functionName: functionName,
+            functionArgumentsUpdate: functionArgumentsUpdate,
             serializedAdditionalRawData: null);
     }
 

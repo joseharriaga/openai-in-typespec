@@ -31,12 +31,12 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("model"u8);
                 writer.WriteStringValue(Model.ToString());
             }
-            if (SerializedAdditionalRawData?.ContainsKey("store") != true && Optional.IsDefined(EnableOutputStorage))
+            if (SerializedAdditionalRawData?.ContainsKey("store") != true && Optional.IsDefined(StoredOutputEnabled))
             {
-                if (EnableOutputStorage != null)
+                if (StoredOutputEnabled != null)
                 {
                     writer.WritePropertyName("store"u8);
-                    writer.WriteBooleanValue(EnableOutputStorage.Value);
+                    writer.WriteBooleanValue(StoredOutputEnabled.Value);
                 }
                 else
                 {

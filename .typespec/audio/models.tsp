@@ -9,16 +9,15 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-// Tool customization: replace union with custom, scenario-specific spread enum copies
 @doc("""
   The format of the output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.
   """)
-enum AudioResponseFormat {
-  json,
-  text,
-  srt,
-  verbose_json,
-  vtt,
+union AudioResponseFormat {
+  "json",
+  "text",
+  "srt",
+  "verbose_json",
+  "vtt",
 }
 
 model CreateSpeechRequest {
@@ -69,8 +68,8 @@ model CreateTranscriptionRequest {
   /** An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should match the audio language. */
   prompt?: string;
 
-  // Tool customization: use scenario-specific spread enum
-  response_format?: TranscriptionAudioResponseFormat = TranscriptionAudioResponseFormat.json;
+  // Tool customization: use scenario-specific composed union
+  response_format?: TranscriptionAudioResponseFormat = "json";
 
   // Tool customization: add missing but documented min/max for temperature
   /** The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit. */
@@ -100,8 +99,8 @@ model CreateTranslationRequest {
   /** An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should be in English. */
   prompt?: string;
 
-  // Tool customization: use scenario-specific spread enum
-  response_format?: TranslationAudioResponseFormat = TranslationAudioResponseFormat.json;
+  // Tool customization: use scenario-specific composed union
+  response_format?: TranslationAudioResponseFormat = "json";
 
   // Tool customization: add missing but documented min/max for temperature
   /** The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit. */

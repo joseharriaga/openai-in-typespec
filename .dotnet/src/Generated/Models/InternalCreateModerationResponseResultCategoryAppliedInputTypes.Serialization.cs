@@ -87,7 +87,7 @@ namespace OpenAI.Moderations
                 writer.WriteStartArray();
                 foreach (var item in SelfHarm)
                 {
-                    writer.WriteStringValue(item.ToString());
+                    writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
             }
@@ -97,7 +97,7 @@ namespace OpenAI.Moderations
                 writer.WriteStartArray();
                 foreach (var item in SelfHarmIntent)
                 {
-                    writer.WriteStringValue(item.ToString());
+                    writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
             }
@@ -107,7 +107,7 @@ namespace OpenAI.Moderations
                 writer.WriteStartArray();
                 foreach (var item in SelfHarmInstructions)
                 {
-                    writer.WriteStringValue(item.ToString());
+                    writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
             }
@@ -117,7 +117,7 @@ namespace OpenAI.Moderations
                 writer.WriteStartArray();
                 foreach (var item in Sexual)
                 {
-                    writer.WriteStringValue(item.ToString());
+                    writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
             }
@@ -137,7 +137,7 @@ namespace OpenAI.Moderations
                 writer.WriteStartArray();
                 foreach (var item in Violence)
                 {
-                    writer.WriteStringValue(item.ToString());
+                    writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
             }
@@ -147,7 +147,7 @@ namespace OpenAI.Moderations
                 writer.WriteStartArray();
                 foreach (var item in ViolenceGraphic)
                 {
-                    writer.WriteStringValue(item.ToString());
+                    writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
             }
@@ -199,13 +199,13 @@ namespace OpenAI.Moderations
             IReadOnlyList<string> harassmentThreatening = default;
             IReadOnlyList<string> illicit = default;
             IReadOnlyList<string> illicitViolent = default;
-            IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1> selfHarm = default;
-            IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent> selfHarmIntent = default;
-            IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction> selfHarmInstructions = default;
-            IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual> sexual = default;
+            IReadOnlyList<string> selfHarm = default;
+            IReadOnlyList<string> selfHarmIntent = default;
+            IReadOnlyList<string> selfHarmInstructions = default;
+            IReadOnlyList<string> sexual = default;
             IReadOnlyList<string> sexualMinors = default;
-            IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence> violence = default;
-            IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic> violenceGraphic = default;
+            IReadOnlyList<string> violence = default;
+            IReadOnlyList<string> violenceGraphic = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -272,40 +272,40 @@ namespace OpenAI.Moderations
                 }
                 if (property.NameEquals("self-harm"u8))
                 {
-                    List<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1> array = new List<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1>();
+                    List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1(item.GetString()));
+                        array.Add(item.GetString());
                     }
                     selfHarm = array;
                     continue;
                 }
                 if (property.NameEquals("self-harm/intent"u8))
                 {
-                    List<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent> array = new List<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent>();
+                    List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent(item.GetString()));
+                        array.Add(item.GetString());
                     }
                     selfHarmIntent = array;
                     continue;
                 }
                 if (property.NameEquals("self-harm/instructions"u8))
                 {
-                    List<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction> array = new List<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction>();
+                    List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction(item.GetString()));
+                        array.Add(item.GetString());
                     }
                     selfHarmInstructions = array;
                     continue;
                 }
                 if (property.NameEquals("sexual"u8))
                 {
-                    List<InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual> array = new List<InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual>();
+                    List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(new InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual(item.GetString()));
+                        array.Add(item.GetString());
                     }
                     sexual = array;
                     continue;
@@ -322,20 +322,20 @@ namespace OpenAI.Moderations
                 }
                 if (property.NameEquals("violence"u8))
                 {
-                    List<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence> array = new List<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence>();
+                    List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(new InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence(item.GetString()));
+                        array.Add(item.GetString());
                     }
                     violence = array;
                     continue;
                 }
                 if (property.NameEquals("violence/graphic"u8))
                 {
-                    List<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic> array = new List<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic>();
+                    List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(new InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic(item.GetString()));
+                        array.Add(item.GetString());
                     }
                     violenceGraphic = array;
                     continue;

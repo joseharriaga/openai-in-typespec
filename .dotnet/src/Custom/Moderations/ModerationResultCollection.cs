@@ -7,7 +7,8 @@ namespace OpenAI.Moderations;
 [CodeGenModel("CreateModerationResponse")]
 [CodeGenSuppress("Results")]
 [CodeGenSuppress(nameof(ModerationResultCollection))]
-[CodeGenSuppress(nameof(ModerationResultCollection), typeof(string), typeof(string), typeof(IReadOnlyList<ModerationResult>))]
+[CodeGenSuppress(nameof(ModerationResultCollection), typeof(string), typeof(string))]
+[CodeGenSuppress(nameof(ModerationResultCollection), typeof(string), typeof(string), typeof(IDictionary<string, BinaryData>))]
 public partial class ModerationResultCollection : ReadOnlyCollection<ModerationResult>
 {
     // CUSTOM: Recovered this field. See https://github.com/Azure/autorest.csharp/issues/4636.

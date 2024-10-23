@@ -6,37 +6,40 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     [PersistableModelProxy(typeof(UnknownRealtimeTool))]
-    public partial class ConversationTool : IJsonModel<ConversationTool>
+    public abstract partial class ConversationTool : IJsonModel<ConversationTool>
     {
+        internal ConversationTool()
+        {
+        }
+
         void IJsonModel<ConversationTool>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationTool>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationTool>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ConversationTool)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(Kind.ToString());
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Kind.ToString());
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -45,43 +48,43 @@ namespace OpenAI.RealtimeConversation
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        ConversationTool IJsonModel<ConversationTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ConversationTool IJsonModel<ConversationTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual ConversationTool JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationTool>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationTool>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ConversationTool)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeConversationTool(document.RootElement, options);
         }
 
-        internal static ConversationTool DeserializeConversationTool(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ConversationTool DeserializeConversationTool(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            if (element.TryGetProperty("type", out JsonElement discriminator))
+            if (element.TryGetProperty("kind"u8, out JsonElement discriminator))
             {
                 switch (discriminator.GetString())
                 {
-                    case "function": return ConversationFunctionTool.DeserializeConversationFunctionTool(element, options);
+                    case "function":
+                        return ConversationFunctionTool.DeserializeConversationFunctionTool(element, options);
                 }
             }
             return UnknownRealtimeTool.DeserializeUnknownRealtimeTool(element, options);
         }
 
-        BinaryData IPersistableModel<ConversationTool>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationTool>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<ConversationTool>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationTool>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -91,15 +94,16 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        ConversationTool IPersistableModel<ConversationTool>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationTool>)this).GetFormatFromOptions(options) : options.Format;
+        ConversationTool IPersistableModel<ConversationTool>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual ConversationTool PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationTool>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeConversationTool(document.RootElement, options);
                     }
                 default:
@@ -109,15 +113,16 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<ConversationTool>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static ConversationTool FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(ConversationTool conversationTool)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeConversationTool(document.RootElement);
+            return BinaryContent.Create(conversationTool, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator ConversationTool(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeConversationTool(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

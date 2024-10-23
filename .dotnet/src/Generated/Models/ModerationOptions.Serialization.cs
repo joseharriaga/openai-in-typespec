@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Moderations
 {
@@ -14,41 +15,39 @@ namespace OpenAI.Moderations
     {
         void IJsonModel<ModerationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ModerationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ModerationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ModerationOptions)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("input") != true)
-            {
-                writer.WritePropertyName("input"u8);
+            writer.WritePropertyName("input"u8);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(Input);
+            writer.WriteRawValue(Input);
 #else
-                using (JsonDocument document = JsonDocument.Parse(Input))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+            using (JsonDocument document = JsonDocument.Parse(Input))
+            {
+                JsonSerializer.Serialize(writer, document.RootElement);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("model") != true && Optional.IsDefined(Model))
+#endif
+            if (Optional.IsDefined(Model))
             {
                 writer.WritePropertyName("model"u8);
                 writer.WriteStringValue(Model.Value.ToString());
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -57,63 +56,60 @@ namespace OpenAI.Moderations
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        ModerationOptions IJsonModel<ModerationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ModerationOptions IJsonModel<ModerationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual ModerationOptions JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ModerationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ModerationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ModerationOptions)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeModerationOptions(document.RootElement, options);
         }
 
-        internal static ModerationOptions DeserializeModerationOptions(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ModerationOptions DeserializeModerationOptions(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             BinaryData input = default;
             InternalCreateModerationRequestModel? model = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("input"u8))
+                if (prop.NameEquals("input"u8))
                 {
-                    input = BinaryData.FromString(property.Value.GetRawText());
+                    input = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (property.NameEquals("model"u8))
+                if (prop.NameEquals("model"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        model = null;
                         continue;
                     }
-                    model = new InternalCreateModerationRequestModel(property.Value.GetString());
+                    model = new InternalCreateModerationRequestModel(prop.Value.GetString());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new ModerationOptions(input, model, serializedAdditionalRawData);
+            return new ModerationOptions(input, model, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<ModerationOptions>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ModerationOptions>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<ModerationOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ModerationOptions>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -123,15 +119,16 @@ namespace OpenAI.Moderations
             }
         }
 
-        ModerationOptions IPersistableModel<ModerationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ModerationOptions>)this).GetFormatFromOptions(options) : options.Format;
+        ModerationOptions IPersistableModel<ModerationOptions>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual ModerationOptions PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ModerationOptions>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeModerationOptions(document.RootElement, options);
                     }
                 default:
@@ -141,15 +138,16 @@ namespace OpenAI.Moderations
 
         string IPersistableModel<ModerationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static ModerationOptions FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(ModerationOptions moderationOptions)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeModerationOptions(document.RootElement);
+            return BinaryContent.Create(moderationOptions, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator ModerationOptions(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeModerationOptions(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

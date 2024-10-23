@@ -9,26 +9,20 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDelta
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalRunStepDelta(string id, InternalRunStepDeltaObjectDelta delta)
         {
-            Argument.AssertNotNull(id, nameof(id));
-            Argument.AssertNotNull(delta, nameof(delta));
-
             Id = id;
             Delta = delta;
         }
 
-        internal InternalRunStepDelta(string id, object @object, InternalRunStepDeltaObjectDelta delta, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRunStepDelta(string id, InternalRunStepDeltaObjectDelta delta, object @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Object = @object;
             Delta = delta;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        internal InternalRunStepDelta()
-        {
+            this.Object = @object;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public string Id { get; }

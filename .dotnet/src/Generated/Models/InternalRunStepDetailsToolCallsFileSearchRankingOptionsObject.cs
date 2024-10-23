@@ -9,24 +9,21 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDetailsToolCallsFileSearchRankingOptionsObject
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal InternalRunStepDetailsToolCallsFileSearchRankingOptionsObject(float scoreThreshold)
         {
             ScoreThreshold = scoreThreshold;
         }
 
-        internal InternalRunStepDetailsToolCallsFileSearchRankingOptionsObject(InternalRunStepDetailsToolCallsFileSearchRankingOptionsObjectRanker ranker, float scoreThreshold, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRunStepDetailsToolCallsFileSearchRankingOptionsObject(InternalRunStepDetailsToolCallsFileSearchRankingOptionsObjectRanker ranker, float scoreThreshold, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Ranker = ranker;
             ScoreThreshold = scoreThreshold;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalRunStepDetailsToolCallsFileSearchRankingOptionsObject()
-        {
-        }
-
-        public InternalRunStepDetailsToolCallsFileSearchRankingOptionsObjectRanker Ranker { get; } = InternalRunStepDetailsToolCallsFileSearchRankingOptionsObjectRanker.Default20240821;
+        public InternalRunStepDetailsToolCallsFileSearchRankingOptionsObjectRanker Ranker { get; } = "default_2024_08_21";
 
         public float ScoreThreshold { get; }
     }

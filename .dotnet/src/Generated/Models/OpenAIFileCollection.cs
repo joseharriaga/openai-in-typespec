@@ -2,13 +2,13 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace OpenAI.Files
 {
-    public partial class OpenAIFileCollection : ReadOnlyCollection<OpenAIFile>
+    public partial class OpenAIFileCollection
     {
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
     }
 }

@@ -9,32 +9,29 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponseApiError
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalRealtimeResponseApiError(string type, string message)
-        {
-            Argument.AssertNotNull(type, nameof(type));
-            Argument.AssertNotNull(message, nameof(message));
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-            Type = type;
+        internal InternalRealtimeResponseApiError(string @type, string message)
+        {
+            Type = @type;
             Message = message;
         }
 
-        internal InternalRealtimeResponseApiError(string type, string code, string message, string param, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRealtimeResponseApiError(string @type, string code, string message, string @param, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = type;
+            Type = @type;
             Code = code;
             Message = message;
-            Param = param;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        internal InternalRealtimeResponseApiError()
-        {
+            Param = @param;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public string Type { get; }
+
         public string Code { get; }
+
         public string Message { get; }
+
         public string Param { get; }
     }
 }

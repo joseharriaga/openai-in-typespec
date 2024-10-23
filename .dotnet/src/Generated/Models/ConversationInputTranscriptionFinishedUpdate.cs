@@ -9,30 +9,24 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationInputTranscriptionFinishedUpdate : ConversationUpdate
     {
-        internal ConversationInputTranscriptionFinishedUpdate(string eventId, string itemId, int contentIndex, string transcript) : base(eventId)
-        {
-            Argument.AssertNotNull(itemId, nameof(itemId));
-            Argument.AssertNotNull(transcript, nameof(transcript));
-
-            Kind = ConversationUpdateKind.ItemInputAudioTranscriptionCompleted;
-            ItemId = itemId;
-            ContentIndex = contentIndex;
-            Transcript = transcript;
-        }
-
-        internal ConversationInputTranscriptionFinishedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId, int contentIndex, string transcript) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationInputTranscriptionFinishedUpdate(string itemId, int contentIndex, string transcript, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemInputAudioTranscriptionCompleted)
         {
             ItemId = itemId;
             ContentIndex = contentIndex;
             Transcript = transcript;
         }
 
-        internal ConversationInputTranscriptionFinishedUpdate()
+        internal ConversationInputTranscriptionFinishedUpdate(string itemId, int contentIndex, string transcript, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
+            ItemId = itemId;
+            ContentIndex = contentIndex;
+            Transcript = transcript;
         }
 
         public string ItemId { get; }
+
         public int ContentIndex { get; }
+
         public string Transcript { get; }
     }
 }

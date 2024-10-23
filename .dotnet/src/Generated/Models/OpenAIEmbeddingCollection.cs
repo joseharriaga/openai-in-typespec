@@ -2,14 +2,15 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace OpenAI.Embeddings
 {
-    public partial class OpenAIEmbeddingCollection : ReadOnlyCollection<OpenAIEmbedding>
+    public partial class OpenAIEmbeddingCollection
     {
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         public string Model { get; }
 
         public EmbeddingTokenUsage Usage { get; }

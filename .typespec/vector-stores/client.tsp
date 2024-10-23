@@ -11,3 +11,6 @@ using OpenAI;
 // TODO: Auto should only be an input.
 @@access(AutoChunkingStrategyResponseParam, Access.public);
 @@usage(AutoChunkingStrategyResponseParam, Usage.input | Usage.output);
+
+@@visibility(ListVectorStoresResponse.data, "read");
+@@visibility(ListVectorStoreFilesResponse.data, "read");

@@ -9,17 +9,18 @@ namespace OpenAI.Audio
 {
     public partial class SpeechGenerationOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal SpeechGenerationOptions(InternalCreateSpeechRequestModel model, string input, GeneratedSpeechVoice voice, GeneratedSpeechFormat? responseFormat, float? speedRatio, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal SpeechGenerationOptions(GeneratedSpeechFormat? responseFormat, InternalCreateSpeechRequestModel model, string input, GeneratedSpeechVoice voice, float? speedRatio, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
+            ResponseFormat = responseFormat;
             Model = model;
             Input = input;
             Voice = voice;
-            ResponseFormat = responseFormat;
             SpeedRatio = speedRatio;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
+
         public GeneratedSpeechFormat? ResponseFormat { get; set; }
     }
 }

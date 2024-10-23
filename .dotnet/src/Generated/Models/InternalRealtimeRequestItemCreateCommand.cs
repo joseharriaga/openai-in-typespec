@@ -4,30 +4,27 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestItemCreateCommand : InternalRealtimeRequestCommand
     {
-        public InternalRealtimeRequestItemCreateCommand(ConversationItem item)
+        public InternalRealtimeRequestItemCreateCommand(ConversationItem item) : base(InternalRealtimeRequestCommandType.ItemCreate)
         {
             Argument.AssertNotNull(item, nameof(item));
 
-            Kind = InternalRealtimeRequestCommandType.ItemCreate;
             Item = item;
         }
 
-        internal InternalRealtimeRequestItemCreateCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string previousItemId, ConversationItem item) : base(kind, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestItemCreateCommand(string previousItemId, ConversationItem item, InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
         {
             PreviousItemId = previousItemId;
             Item = item;
         }
 
-        internal InternalRealtimeRequestItemCreateCommand()
-        {
-        }
-
         public string PreviousItemId { get; set; }
-        public ConversationItem Item { get; }
+
+        public ConversationItem Item { get; set; }
     }
 }

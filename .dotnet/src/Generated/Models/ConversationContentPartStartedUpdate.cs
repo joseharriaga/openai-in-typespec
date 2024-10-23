@@ -9,21 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationContentPartStartedUpdate : ConversationUpdate
     {
-        internal ConversationContentPartStartedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(eventId)
-        {
-            Argument.AssertNotNull(responseId, nameof(responseId));
-            Argument.AssertNotNull(itemId, nameof(itemId));
-            Argument.AssertNotNull(internalContentPart, nameof(internalContentPart));
-
-            Kind = ConversationUpdateKind.ContentPartStarted;
-            ResponseId = responseId;
-            ItemId = itemId;
-            OutputIndex = outputIndex;
-            ContentIndex = contentIndex;
-            _internalContentPart = internalContentPart;
-        }
-
-        internal ConversationContentPartStartedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationContentPartStartedUpdate(string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ContentPartStarted)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -32,13 +18,21 @@ namespace OpenAI.RealtimeConversation
             _internalContentPart = internalContentPart;
         }
 
-        internal ConversationContentPartStartedUpdate()
+        internal ConversationContentPartStartedUpdate(string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
+            ResponseId = responseId;
+            ItemId = itemId;
+            OutputIndex = outputIndex;
+            ContentIndex = contentIndex;
+            _internalContentPart = internalContentPart;
         }
 
         public string ResponseId { get; }
+
         public string ItemId { get; }
+
         public int OutputIndex { get; }
+
         public int ContentIndex { get; }
     }
 }

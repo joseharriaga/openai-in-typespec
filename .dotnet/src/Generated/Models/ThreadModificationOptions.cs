@@ -4,23 +4,26 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     public partial class ThreadModificationOptions
     {
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         public ThreadModificationOptions()
         {
             Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        internal ThreadModificationOptions(ToolResources toolResources, IDictionary<string, string> metadata, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ThreadModificationOptions(IDictionary<string, string> metadata, ToolResources toolResources, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            ToolResources = toolResources;
             Metadata = metadata;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
+            ToolResources = toolResources;
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
+
         public IDictionary<string, string> Metadata { get; set; }
     }
 }

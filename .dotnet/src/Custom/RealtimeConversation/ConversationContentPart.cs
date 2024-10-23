@@ -22,15 +22,15 @@ public partial class ConversationContentPart
         ?? (this as InternalRealtimeResponseAudioContentPart)?.Transcript;
 
     public static ConversationContentPart FromInputText(string text)
-        => new InternalRealtimeRequestTextContentPart(text);
+        => new InternalRealtimeRequestTextContentPart(text, ConversationContentPartKind.Text);
     public static ConversationContentPart FromInputAudioTranscript(string transcript = null) => new InternalRealtimeRequestAudioContentPart()
     {
         Transcript = transcript,
     };
     public static ConversationContentPart FromOutputText(string text)
-        => new InternalRealtimeResponseTextContentPart(text);
+        => new InternalRealtimeResponseTextContentPart(text, ConversationContentPartKind.Text);
     public static ConversationContentPart FromOutputAudioTranscript(string transcript = null)
-        => new InternalRealtimeResponseAudioContentPart(transcript);
+        => new InternalRealtimeResponseAudioContentPart(transcript, ConversationContentPartKind.Audio);
 
     public static implicit operator ConversationContentPart(string text) => FromInputText(text);
 }

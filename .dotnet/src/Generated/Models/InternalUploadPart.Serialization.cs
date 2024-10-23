@@ -7,51 +7,45 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.Files
 {
     internal partial class InternalUploadPart : IJsonModel<InternalUploadPart>
     {
+        internal InternalUploadPart()
+        {
+        }
+
         void IJsonModel<InternalUploadPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadPart>)this).GetFormatFromOptions(options) : options.Format;
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalUploadPart>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalUploadPart)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("id") != true)
+            writer.WritePropertyName("id"u8);
+            writer.WriteStringValue(Id);
+            writer.WritePropertyName("created_at"u8);
+            writer.WriteNumberValue(CreatedAt, "U");
+            writer.WritePropertyName("upload_id"u8);
+            writer.WriteStringValue(UploadId);
+            writer.WritePropertyName("object"u8);
+            writer.WriteStringValue(Object.ToString());
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                writer.WritePropertyName("id"u8);
-                writer.WriteStringValue(Id);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("created_at") != true)
-            {
-                writer.WritePropertyName("created_at"u8);
-                writer.WriteNumberValue(CreatedAt, "U");
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("upload_id") != true)
-            {
-                writer.WritePropertyName("upload_id"u8);
-                writer.WriteStringValue(UploadId);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("object") != true)
-            {
-                writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(Object.ToString());
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -60,25 +54,23 @@ namespace OpenAI.Files
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
-        InternalUploadPart IJsonModel<InternalUploadPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalUploadPart IJsonModel<InternalUploadPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalUploadPart JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadPart>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalUploadPart>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalUploadPart)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalUploadPart(document.RootElement, options);
         }
 
-        internal static InternalUploadPart DeserializeInternalUploadPart(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalUploadPart DeserializeInternalUploadPart(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
@@ -87,44 +79,42 @@ namespace OpenAI.Files
             DateTimeOffset createdAt = default;
             string uploadId = default;
             InternalUploadPartObject @object = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("id"u8))
+                if (prop.NameEquals("id"u8))
                 {
-                    id = property.Value.GetString();
+                    id = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("created_at"u8))
+                if (prop.NameEquals("created_at"u8))
                 {
-                    createdAt = DateTimeOffset.FromUnixTimeSeconds(property.Value.GetInt64());
+                    createdAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (property.NameEquals("upload_id"u8))
+                if (prop.NameEquals("upload_id"u8))
                 {
-                    uploadId = property.Value.GetString();
+                    uploadId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("object"u8))
+                if (prop.NameEquals("object"u8))
                 {
-                    @object = new InternalUploadPartObject(property.Value.GetString());
+                    @object = new InternalUploadPartObject(prop.Value.GetString());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalUploadPart(id, createdAt, uploadId, @object, serializedAdditionalRawData);
+            return new InternalUploadPart(id, createdAt, uploadId, @object, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalUploadPart>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadPart>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalUploadPart>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalUploadPart>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -134,15 +124,16 @@ namespace OpenAI.Files
             }
         }
 
-        InternalUploadPart IPersistableModel<InternalUploadPart>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalUploadPart>)this).GetFormatFromOptions(options) : options.Format;
+        InternalUploadPart IPersistableModel<InternalUploadPart>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalUploadPart PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalUploadPart>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalUploadPart(document.RootElement, options);
                     }
                 default:
@@ -152,15 +143,16 @@ namespace OpenAI.Files
 
         string IPersistableModel<InternalUploadPart>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalUploadPart FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalUploadPart internalUploadPart)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalUploadPart(document.RootElement);
+            return BinaryContent.Create(internalUploadPart, ModelSerializationExtensions.WireOptions);
         }
 
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalUploadPart(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalUploadPart(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

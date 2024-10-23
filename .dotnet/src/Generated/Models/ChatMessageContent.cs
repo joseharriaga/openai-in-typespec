@@ -2,11 +2,18 @@
 
 #nullable disable
 
-using System.Collections.ObjectModel;
+using System;
+using System.Collections.Generic;
 
 namespace OpenAI.Chat
 {
-    public partial class ChatMessageContent : Collection<ChatMessageContentPart>
+    public partial class ChatMessageContent
     {
+        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        internal ChatMessageContent(IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        {
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
     }
 }

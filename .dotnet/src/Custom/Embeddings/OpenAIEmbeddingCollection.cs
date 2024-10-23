@@ -7,7 +7,8 @@ namespace OpenAI.Embeddings;
 [CodeGenModel("CreateEmbeddingResponse")]
 [CodeGenSuppress("Data")]
 [CodeGenSuppress(nameof(OpenAIEmbeddingCollection))]
-[CodeGenSuppress(nameof(OpenAIEmbeddingCollection), typeof(IReadOnlyList<OpenAIEmbedding>), typeof(string), typeof(InternalCreateEmbeddingResponseObject), typeof(EmbeddingTokenUsage))]
+[CodeGenSuppress(nameof(OpenAIEmbeddingCollection), typeof(string), typeof(EmbeddingTokenUsage))]
+[CodeGenSuppress(nameof(OpenAIEmbeddingCollection), typeof(string), typeof(EmbeddingTokenUsage),  typeof(InternalCreateEmbeddingResponseObject), typeof(IDictionary<string, BinaryData>))]
 public partial class OpenAIEmbeddingCollection : ReadOnlyCollection<OpenAIEmbedding>
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.

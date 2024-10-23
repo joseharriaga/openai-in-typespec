@@ -9,12 +9,11 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestResponseCancelCommand : InternalRealtimeRequestCommand
     {
-        public InternalRealtimeRequestResponseCancelCommand()
+        public InternalRealtimeRequestResponseCancelCommand() : base(InternalRealtimeRequestCommandType.ResponseCancel)
         {
-            Kind = InternalRealtimeRequestCommandType.ResponseCancel;
         }
 
-        internal InternalRealtimeRequestResponseCancelCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestResponseCancelCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
         {
         }
     }

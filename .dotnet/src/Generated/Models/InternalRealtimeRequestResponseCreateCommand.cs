@@ -9,12 +9,11 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestResponseCreateCommand : InternalRealtimeRequestCommand
     {
-        public InternalRealtimeRequestResponseCreateCommand()
+        public InternalRealtimeRequestResponseCreateCommand() : base(InternalRealtimeRequestCommandType.ResponseCreate)
         {
-            Kind = InternalRealtimeRequestCommandType.ResponseCreate;
         }
 
-        internal InternalRealtimeRequestResponseCreateCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeRequestResponseCreateCommandResponse response) : base(kind, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeRequestResponseCreateCommand(InternalRealtimeRequestResponseCreateCommandResponse response, InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
         {
             Response = response;
         }

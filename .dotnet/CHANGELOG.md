@@ -1,5 +1,12 @@
 # Release History
 
+## 2.0.1 (Unreleased)
+
+### Other Changes
+
+- Updated the referenced version of `System.ClientModel` to the latest `1.21.0`
+  - This transitively updates an inherited `System.Text.Json` dependency from `6.0.9` to `6.0.10`, resolving security compliance with [CVE-2024-43485](https://github.com/advisories/GHSA-8g4q-xg66-9fp4). Please note that the described vulnerability was not directly applicable to this library as `[ExtensionData]` is not used.
+
 ## 2.1.0-beta.1 (2024-10-01)
 
 With this updated preview library release, we're excited to bring early support for the newly-announced `/realtime` beta API. You can read more about `/realtime` here: https://openai.com/index/introducing-the-realtime-api/

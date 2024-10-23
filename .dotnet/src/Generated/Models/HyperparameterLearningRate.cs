@@ -7,14 +7,9 @@ using System.ComponentModel;
 
 namespace OpenAI.FineTuning
 {
-    internal readonly partial struct HyperparameterLearningRate : IEquatable<HyperparameterLearningRate>
+    public readonly partial struct HyperparameterLearningRate : IEquatable<HyperparameterLearningRate>
     {
         private readonly string _value;
-
-        public HyperparameterLearningRate(string value)
-        {
-            _value = value ?? throw new ArgumentNullException(nameof(value));
-        }
 
         private const string AutoValue = "auto";
 
@@ -22,9 +17,6 @@ namespace OpenAI.FineTuning
         public static bool operator ==(HyperparameterLearningRate left, HyperparameterLearningRate right) => left.Equals(right);
         public static bool operator !=(HyperparameterLearningRate left, HyperparameterLearningRate right) => !left.Equals(right);
         public static implicit operator HyperparameterLearningRate(string value) => new HyperparameterLearningRate(value);
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj) => obj is HyperparameterLearningRate other && Equals(other);
         public bool Equals(HyperparameterLearningRate other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
         [EditorBrowsable(EditorBrowsableState.Never)]

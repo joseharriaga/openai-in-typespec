@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class WeightsAndBiasesIntegration : IJsonModel<WeightsAndBiasesIntegration>
+    public partial class WeightsAndBiasesIntegration : IJsonModel<WeightsAndBiasesIntegration>
     {
         void IJsonModel<WeightsAndBiasesIntegration>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -24,7 +24,7 @@ namespace OpenAI.FineTuning
             if (SerializedAdditionalRawData?.ContainsKey("wandb") != true)
             {
                 writer.WritePropertyName("wandb"u8);
-                writer.WriteObjectValue(Wandb, options);
+                writer.WriteObjectValue<InternalCreateFineTuningJobRequestWandbIntegrationWandb>(_innerWandb, options);
             }
             if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {

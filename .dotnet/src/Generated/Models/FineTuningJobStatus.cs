@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace OpenAI.FineTuning
 {
-    internal readonly partial struct FineTuningJobStatus : IEquatable<FineTuningJobStatus>
+    public readonly partial struct FineTuningJobStatus : IEquatable<FineTuningJobStatus>
     {
         private readonly string _value;
 

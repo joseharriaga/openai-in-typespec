@@ -87,3 +87,8 @@ model CreateFineTuningJobRequestWandbIntegration
 model FineTuningIntegration {
   type: string;
 }
+
+model FineTuningJobsPageToken {
+  limit?: int32;
+  after?: string;
+}

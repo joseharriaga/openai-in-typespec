@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace OpenAI.FineTuning
 {
-    internal partial struct FineTuningJobHyperparameters : IJsonModel<FineTuningJobHyperparameters>, IJsonModel<object>
+    public partial struct FineTuningJobHyperparameters : IJsonModel<FineTuningJobHyperparameters>, IJsonModel<object>
     {
         void IJsonModel<FineTuningJobHyperparameters>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -25,9 +25,9 @@ namespace OpenAI.FineTuning
             {
                 writer.WritePropertyName("n_epochs"u8);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(NEpochs);
+				writer.WriteRawValue(_CycleCount);
 #else
-                using (JsonDocument document = JsonDocument.Parse(NEpochs))
+                using (JsonDocument document = JsonDocument.Parse(_CycleCount))
                 {
                     JsonSerializer.Serialize(writer, document.RootElement);
                 }
@@ -37,9 +37,9 @@ namespace OpenAI.FineTuning
             {
                 writer.WritePropertyName("batch_size"u8);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(BatchSize);
+				writer.WriteRawValue(_BatchSize);
 #else
-                using (JsonDocument document = JsonDocument.Parse(BatchSize))
+                using (JsonDocument document = JsonDocument.Parse(_BatchSize))
                 {
                     JsonSerializer.Serialize(writer, document.RootElement);
                 }
@@ -49,9 +49,9 @@ namespace OpenAI.FineTuning
             {
                 writer.WritePropertyName("learning_rate_multiplier"u8);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(LearningRateMultiplier);
+				writer.WriteRawValue(_LearningRateMultiplier);
 #else
-                using (JsonDocument document = JsonDocument.Parse(LearningRateMultiplier))
+                using (JsonDocument document = JsonDocument.Parse(_LearningRateMultiplier))
                 {
                     JsonSerializer.Serialize(writer, document.RootElement);
                 }

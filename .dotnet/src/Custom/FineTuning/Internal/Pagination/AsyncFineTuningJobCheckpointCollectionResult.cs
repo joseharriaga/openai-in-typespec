@@ -3,16 +3,18 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 #nullable enable
 
 namespace OpenAI.FineTuning;
 
-internal class AsyncFineTuningJobCheckpointCollectionResult : AsyncCollectionResult
+internal class AsyncFineTuningJobCheckpointCollectionResult : AsyncCollectionResult<FineTuningJobCheckpoint>
 {
     private readonly FineTuningJobOperation _operation;
     private readonly RequestOptions? _options;
+    private readonly CancellationToken _cancellationToken;
 
     // Initial values
     private readonly int? _limit;
@@ -21,13 +23,14 @@ internal class AsyncFineTuningJobCheckpointCollectionResult : AsyncCollectionRes
     public AsyncFineTuningJobCheckpointCollectionResult(
         FineTuningJobOperation fineTuningJobOperation,
         RequestOptions? options,
-        int? limit, string? after)
+        int? limit, string? after, CancellationToken cancellationToken = default)
     {
         _operation = fineTuningJobOperation;
         _options = options;
 
         _limit = limit;
         _after = after;
+        _cancellationToken = cancellationToken;
     }
 
     public async override IAsyncEnumerable<ClientResult> GetRawPagesAsync()
@@ -70,4 +73,13 @@ internal class AsyncFineTuningJobCheckpointCollectionResult : AsyncCollectionRes
 
     public static bool HasNextPage(ClientResult result)
         => FineTuningJobCheckpointCollectionResult.HasNextPage(result);
+
+    protected override IAsyncEnumerable<FineTuningJobCheckpoint> GetValuesFromPageAsync(ClientResult page)
+    {
+        Argument.AssertNotNull(page, nameof(page));
+
+        PipelineResponse response = page.GetRawResponse();
+        InternalListFineTuningJobCheckpointsResponse list = ModelReaderWriter.Read<InternalListFineTuningJobCheckpointsResponse>(response.Content)!;
+        return list.Data.ToAsyncEnumerable(_cancellationToken);
+    }
 }

@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace OpenAI.FineTuning;
 
-internal class FineTuningJobCheckpointCollectionResult : CollectionResult
+internal class FineTuningJobCheckpointCollectionResult : CollectionResult<FineTuningJobCheckpoint>
 {
     private readonly FineTuningJobOperation _operation;
     private readonly RequestOptions? _options;
@@ -77,5 +77,14 @@ internal class FineTuningJobCheckpointCollectionResult : CollectionResult
         bool hasMore = doc.RootElement.GetProperty("has_more"u8).GetBoolean();
 
         return hasMore;
+    }
+
+    protected override IEnumerable<FineTuningJobCheckpoint> GetValuesFromPage(ClientResult page)
+    {
+        Argument.AssertNotNull(page, nameof(page));
+
+        PipelineResponse response = page.GetRawResponse();
+        InternalListFineTuningJobCheckpointsResponse points = ModelReaderWriter.Read<InternalListFineTuningJobCheckpointsResponse>(response.Content)!;
+        return points.Data;
     }
 }

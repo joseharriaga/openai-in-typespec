@@ -10,16 +10,5 @@ namespace OpenAI.Images
     public partial class GeneratedImageCollection
     {
         private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
-
-        internal GeneratedImageCollection(DateTimeOffset createdAt)
-        {
-            CreatedAt = createdAt;
-        }
-
-        internal GeneratedImageCollection(DateTimeOffset createdAt, IDictionary<string, BinaryData> additionalBinaryDataProperties)
-        {
-            CreatedAt = createdAt;
-            _additionalBinaryDataProperties = additionalBinaryDataProperties;
-        }
     }
 }

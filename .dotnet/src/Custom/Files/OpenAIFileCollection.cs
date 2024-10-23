@@ -7,7 +7,7 @@ namespace OpenAI.Files;
 [CodeGenModel("ListFilesResponse")]
 [CodeGenSuppress("Data")]
 [CodeGenSuppress(nameof(OpenAIFileCollection))]
-[CodeGenSuppress(nameof(OpenAIFileCollection), typeof(IReadOnlyList<OpenAIFile>), typeof(InternalListFilesResponseObject))]
+[CodeGenSuppress(nameof(OpenAIFileCollection),typeof(InternalListFilesResponseObject), typeof(IDictionary<string, BinaryData>))]
 public partial class OpenAIFileCollection : ReadOnlyCollection<OpenAIFile>
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.

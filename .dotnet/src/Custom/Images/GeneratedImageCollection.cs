@@ -11,7 +11,8 @@ namespace OpenAI.Images;
 [CodeGenSuppress("Data")]
 [CodeGenSuppress("Created")]
 [CodeGenSuppress(nameof(GeneratedImageCollection))]
-[CodeGenSuppress(nameof(GeneratedImageCollection), typeof(DateTimeOffset), typeof(IReadOnlyList<GeneratedImage>))]
+[CodeGenSuppress(nameof(GeneratedImageCollection), typeof(DateTimeOffset))]
+[CodeGenSuppress(nameof(GeneratedImageCollection), typeof(DateTimeOffset), typeof(IDictionary<string, BinaryData>))]
 public partial class GeneratedImageCollection : ReadOnlyCollection<GeneratedImage>
 {
     // CUSTOM: Recovered this field. See https://github.com/Azure/autorest.csharp/issues/4636.

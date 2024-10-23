@@ -11,7 +11,7 @@ namespace OpenAI.Models;
 [CodeGenModel("ListModelsResponse")]
 [CodeGenSuppress("Data")]
 [CodeGenSuppress(nameof(OpenAIModelCollection))]
-[CodeGenSuppress(nameof(OpenAIModelCollection), typeof(InternalListModelsResponseObject), typeof(IReadOnlyList<OpenAIModel>))]
+[CodeGenSuppress(nameof(OpenAIModelCollection), typeof(InternalListModelsResponseObject), typeof(IDictionary<string, BinaryData>))]
 public partial class OpenAIModelCollection : ReadOnlyCollection<OpenAIModel>
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.

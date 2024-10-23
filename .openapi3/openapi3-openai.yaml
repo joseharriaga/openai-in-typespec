@@ -5837,260 +5837,280 @@ components:
         results:
           type: array
           items:
-            type: object
-            properties:
-              flagged:
-                type: boolean
-                description: Whether any of the below categories are flagged.
-              categories:
-                type: object
-                properties:
-                  hate:
-                    type: boolean
-                    description: Content that expresses, incites, or promotes hate based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. Hateful content aimed at non-protected groups (e.g., chess players) is harassment.
-                  hate/threatening:
-                    type: boolean
-                    description: Hateful content that also includes violence or serious harm towards the targeted group based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste.
-                  harassment:
-                    type: boolean
-                    description: Content that expresses, incites, or promotes harassing language towards any target.
-                  harassment/threatening:
-                    type: boolean
-                    description: Harassment content that also includes violence or serious harm towards any target.
-                  illicit:
-                    type: boolean
-                    description: Content that includes instructions or advice that facilitate the planning or execution of wrongdoing, or that gives advice or instruction on how to commit illicit acts. For example, "how to shoplift" would fit this category.
-                  illicit/violent:
-                    type: boolean
-                    description: Content that includes instructions or advice that facilitate the planning or execution of wrongdoing that also includes violence, or that gives advice or instruction on the procurement of any weapon.
-                  self-harm:
-                    type: boolean
-                    description: Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders.
-                  self-harm/intent:
-                    type: boolean
-                    description: Content where the speaker expresses that they are engaging or intend to engage in acts of self-harm, such as suicide, cutting, and eating disorders.
-                  self-harm/instructions:
-                    type: boolean
-                    description: Content that encourages performing acts of self-harm, such as suicide, cutting, and eating disorders, or that gives instructions or advice on how to commit such acts.
-                  sexual:
-                    type: boolean
-                    description: Content meant to arouse sexual excitement, such as the description of sexual activity, or that promotes sexual services (excluding sex education and wellness).
-                  sexual/minors:
-                    type: boolean
-                    description: Sexual content that includes an individual who is under 18 years old.
-                  violence:
-                    type: boolean
-                    description: Content that depicts death, violence, or physical injury.
-                  violence/graphic:
-                    type: boolean
-                    description: Content that depicts death, violence, or physical injury in graphic detail.
-                required:
-                  - hate
-                  - hate/threatening
-                  - harassment
-                  - harassment/threatening
-                  - illicit
-                  - illicit/violent
-                  - self-harm
-                  - self-harm/intent
-                  - self-harm/instructions
-                  - sexual
-                  - sexual/minors
-                  - violence
-                  - violence/graphic
-                description: A list of the categories, and whether they are flagged or not.
-              category_scores:
-                type: object
-                properties:
-                  hate:
-                    type: number
-                    format: float
-                    description: The score for the category 'hate'.
-                  hate/threatening:
-                    type: number
-                    format: float
-                    description: The score for the category 'hate/threatening'.
-                  harassment:
-                    type: number
-                    format: float
-                    description: The score for the category 'harassment'.
-                  harassment/threatening:
-                    type: number
-                    format: float
-                    description: The score for the category 'harassment/threatening'.
-                  illicit:
-                    type: number
-                    format: float
-                    description: The score for the category 'illicit'.
-                  illicit/violent:
-                    type: number
-                    format: float
-                    description: The score for the category 'illicit/violent'.
-                  self-harm:
-                    type: number
-                    format: float
-                    description: The score for the category 'self-harm'.
-                  self-harm/intent:
-                    type: number
-                    format: float
-                    description: The score for the category 'self-harm/intent'.
-                  self-harm/instructions:
-                    type: number
-                    format: float
-                    description: The score for the category 'self-harm/instructions'.
-                  sexual:
-                    type: number
-                    format: float
-                    description: The score for the category 'sexual'.
-                  sexual/minors:
-                    type: number
-                    format: float
-                    description: The score for the category 'sexual/minors'.
-                  violence:
-                    type: number
-                    format: float
-                    description: The score for the category 'violence'.
-                  violence/graphic:
-                    type: number
-                    format: float
-                    description: The score for the category 'violence/graphic'.
-                required:
-                  - hate
-                  - hate/threatening
-                  - harassment
-                  - harassment/threatening
-                  - illicit
-                  - illicit/violent
-                  - self-harm
-                  - self-harm/intent
-                  - self-harm/instructions
-                  - sexual
-                  - sexual/minors
-                  - violence
-                  - violence/graphic
-                description: A list of the categories along with their scores as predicted by model.
-              category_applied_input_types:
-                type: object
-                properties:
-                  hate:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                    description: The applied input type(s) for the category 'hate'.
-                  hate/threatening:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                    description: The applied input type(s) for the category 'hate/threatening'.
-                  harassment:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                    description: The applied input type(s) for the category 'harassment'.
-                  harassment/threatening:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                    description: The applied input type(s) for the category 'harassment/threatening'.
-                  illicit:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                    description: The applied input type(s) for the category 'illicit'.
-                  illicit/violent:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                    description: The applied input type(s) for the category 'illicit/violent'.
-                  self-harm:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                        - image
-                    description: The applied input type(s) for the category 'self-harm'.
-                  self-harm/intent:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                        - image
-                    description: The applied input type(s) for the category 'self-harm/intent'.
-                  self-harm/instructions:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                        - image
-                    description: The applied input type(s) for the category 'self-harm/instructions'.
-                  sexual:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                        - image
-                    description: The applied input type(s) for the category 'sexual'.
-                  sexual/minors:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                    description: The applied input type(s) for the category 'sexual/minors'.
-                  violence:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                        - image
-                    description: The applied input type(s) for the category 'violence'.
-                  violence/graphic:
-                    type: array
-                    items:
-                      type: string
-                      enum:
-                        - text
-                        - image
-                    description: The applied input type(s) for the category 'violence/graphic'.
-                required:
-                  - hate
-                  - hate/threatening
-                  - harassment
-                  - harassment/threatening
-                  - illicit
-                  - illicit/violent
-                  - self-harm
-                  - self-harm/intent
-                  - self-harm/instructions
-                  - sexual
-                  - sexual/minors
-                  - violence
-                  - violence/graphic
-                description: A list of the categories along with the input type(s) that the score applies to.
-            required:
-              - flagged
-              - categories
-              - category_scores
-              - category_applied_input_types
+            $ref: '#/components/schemas/CreateModerationResponseResult'
           description: A list of moderation objects.
       description: Represents if a given text input is potentially harmful.
+    CreateModerationResponseResult:
+      type: object
+      required:
+        - flagged
+        - categories
+        - category_scores
+        - category_applied_input_types
+      properties:
+        flagged:
+          type: boolean
+          description: Whether any of the below categories are flagged.
+        categories:
+          type: object
+          properties:
+            hate:
+              type: boolean
+              description: Content that expresses, incites, or promotes hate based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. Hateful content aimed at non-protected groups (e.g., chess players) is harassment.
+            hate/threatening:
+              type: boolean
+              description: Hateful content that also includes violence or serious harm towards the targeted group based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste.
+            harassment:
+              type: boolean
+              description: Content that expresses, incites, or promotes harassing language towards any target.
+            harassment/threatening:
+              type: boolean
+              description: Harassment content that also includes violence or serious harm towards any target.
+            illicit:
+              type: boolean
+              description: Content that includes instructions or advice that facilitate the planning or execution of wrongdoing, or that gives advice or instruction on how to commit illicit acts. For example, "how to shoplift" would fit this category.
+            illicit/violent:
+              type: boolean
+              description: Content that includes instructions or advice that facilitate the planning or execution of wrongdoing that also includes violence, or that gives advice or instruction on the procurement of any weapon.
+            self-harm:
+              type: boolean
+              description: Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders.
+            self-harm/intent:
+              type: boolean
+              description: Content where the speaker expresses that they are engaging or intend to engage in acts of self-harm, such as suicide, cutting, and eating disorders.
+            self-harm/instructions:
+              type: boolean
+              description: Content that encourages performing acts of self-harm, such as suicide, cutting, and eating disorders, or that gives instructions or advice on how to commit such acts.
+            sexual:
+              type: boolean
+              description: Content meant to arouse sexual excitement, such as the description of sexual activity, or that promotes sexual services (excluding sex education and wellness).
+            sexual/minors:
+              type: boolean
+              description: Sexual content that includes an individual who is under 18 years old.
+            violence:
+              type: boolean
+              description: Content that depicts death, violence, or physical injury.
+            violence/graphic:
+              type: boolean
+              description: Content that depicts death, violence, or physical injury in graphic detail.
+          required:
+            - hate
+            - hate/threatening
+            - harassment
+            - harassment/threatening
+            - illicit
+            - illicit/violent
+            - self-harm
+            - self-harm/intent
+            - self-harm/instructions
+            - sexual
+            - sexual/minors
+            - violence
+            - violence/graphic
+          description: A list of the categories, and whether they are flagged or not.
+        category_scores:
+          type: object
+          properties:
+            hate:
+              type: number
+              format: float
+              description: The score for the category 'hate'.
+            hate/threatening:
+              type: number
+              format: float
+              description: The score for the category 'hate/threatening'.
+            harassment:
+              type: number
+              format: float
+              description: The score for the category 'harassment'.
+            harassment/threatening:
+              type: number
+              format: float
+              description: The score for the category 'harassment/threatening'.
+            illicit:
+              type: number
+              format: float
+              description: The score for the category 'illicit'.
+            illicit/violent:
+              type: number
+              format: float
+              description: The score for the category 'illicit/violent'.
+            self-harm:
+              type: number
+              format: float
+              description: The score for the category 'self-harm'.
+            self-harm/intent:
+              type: number
+              format: float
+              description: The score for the category 'self-harm/intent'.
+            self-harm/instructions:
+              type: number
+              format: float
+              description: The score for the category 'self-harm/instructions'.
+            sexual:
+              type: number
+              format: float
+              description: The score for the category 'sexual'.
+            sexual/minors:
+              type: number
+              format: float
+              description: The score for the category 'sexual/minors'.
+            violence:
+              type: number
+              format: float
+              description: The score for the category 'violence'.
+            violence/graphic:
+              type: number
+              format: float
+              description: The score for the category 'violence/graphic'.
+          required:
+            - hate
+            - hate/threatening
+            - harassment
+            - harassment/threatening
+            - illicit
+            - illicit/violent
+            - self-harm
+            - self-harm/intent
+            - self-harm/instructions
+            - sexual
+            - sexual/minors
+            - violence
+            - violence/graphic
+          description: A list of the categories along with their scores as predicted by model.
+        category_applied_input_types:
+          type: object
+          properties:
+            hate:
+              type: array
+              items:
+                type: string
+                enum:
+                  - text
+              description: The applied input type(s) for the category 'hate'.
+            hate/threatening:
+              type: array
+              items:
+                type: string
+                enum:
+                  - text
+              description: The applied input type(s) for the category 'hate/threatening'.
+            harassment:
+              type: array
+              items:
+                type: string
+                enum:
+                  - text
+              description: The applied input type(s) for the category 'harassment'.
+            harassment/threatening:
+              type: array
+              items:
+                type: string
+                enum:
+                  - text
+              description: The applied input type(s) for the category 'harassment/threatening'.
+            illicit:
+              type: array
+              items:
+                type: string
+                enum:
+                  - text
+              description: The applied input type(s) for the category 'illicit'.
+            illicit/violent:
+              type: array
+              items:
+                type: string
+                enum:
+                  - text
+              description: The applied input type(s) for the category 'illicit/violent'.
+            self-harm:
+              type: array
+              items:
+                anyOf:
+                  - type: string
+                    enum:
+                      - text
+                  - type: string
+                    enum:
+                      - image
+              description: The applied input type(s) for the category 'self-harm'.
+            self-harm/intent:
+              type: array
+              items:
+                anyOf:
+                  - type: string
+                    enum:
+                      - text
+                  - type: string
+                    enum:
+                      - image
+              description: The applied input type(s) for the category 'self-harm/intent'.
+            self-harm/instructions:
+              type: array
+              items:
+                anyOf:
+                  - type: string
+                    enum:
+                      - text
+                  - type: string
+                    enum:
+                      - image
+              description: The applied input type(s) for the category 'self-harm/instructions'.
+            sexual:
+              type: array
+              items:
+                anyOf:
+                  - type: string
+                    enum:
+                      - text
+                  - type: string
+                    enum:
+                      - image
+              description: The applied input type(s) for the category 'sexual'.
+            sexual/minors:
+              type: array
+              items:
+                type: string
+                enum:
+                  - text
+              description: The applied input type(s) for the category 'sexual/minors'.
+            violence:
+              type: array
+              items:
+                anyOf:
+                  - type: string
+                    enum:
+                      - text
+                  - type: string
+                    enum:
+                      - image
+              description: The applied input type(s) for the category 'violence'.
+            violence/graphic:
+              type: array
+              items:
+                anyOf:
+                  - type: string
+                    enum:
+                      - text
+                  - type: string
+                    enum:
+                      - image
+              description: The applied input type(s) for the category 'violence/graphic'.
+          required:
+            - hate
+            - hate/threatening
+            - harassment
+            - harassment/threatening
+            - illicit
+            - illicit/violent
+            - self-harm
+            - self-harm/intent
+            - self-harm/instructions
+            - sexual
+            - sexual/minors
+            - violence
+            - violence/graphic
+          description: A list of the categories along with the input type(s) that the score applies to.
     CreateRunRequest:
       type: object
       required:
@@ -8328,6 +8348,13 @@ components:
           type: string
           description: The organization that owns the model.
       description: Describes an OpenAI model offering that can be used with the API.
+    ModerationAppliedInputType:
+      anyOf:
+        - type: string
+        - type: string
+          enum:
+            - text
+            - image
     ModifyAssistantRequest:
       type: object
       properties:

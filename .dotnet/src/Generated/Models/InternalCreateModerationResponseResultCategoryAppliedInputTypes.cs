@@ -11,7 +11,7 @@ namespace OpenAI.Moderations
     internal partial class InternalCreateModerationResponseResultCategoryAppliedInputTypes
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalCreateModerationResponseResultCategoryAppliedInputTypes(IEnumerable<string> hate, IEnumerable<string> hateThreatening, IEnumerable<string> harassment, IEnumerable<string> harassmentThreatening, IEnumerable<string> illicit, IEnumerable<string> illicitViolent, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1> selfHarm, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent> selfHarmIntent, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction> selfHarmInstructions, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual> sexual, IEnumerable<string> sexualMinors, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence> violence, IEnumerable<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic> violenceGraphic)
+        internal InternalCreateModerationResponseResultCategoryAppliedInputTypes(IEnumerable<string> hate, IEnumerable<string> hateThreatening, IEnumerable<string> harassment, IEnumerable<string> harassmentThreatening, IEnumerable<string> illicit, IEnumerable<string> illicitViolent, IEnumerable<string> selfHarm, IEnumerable<string> selfHarmIntent, IEnumerable<string> selfHarmInstructions, IEnumerable<string> sexual, IEnumerable<string> sexualMinors, IEnumerable<string> violence, IEnumerable<string> violenceGraphic)
         {
             Argument.AssertNotNull(hate, nameof(hate));
             Argument.AssertNotNull(hateThreatening, nameof(hateThreatening));
@@ -42,7 +42,7 @@ namespace OpenAI.Moderations
             ViolenceGraphic = violenceGraphic.ToList();
         }
 
-        internal InternalCreateModerationResponseResultCategoryAppliedInputTypes(IReadOnlyList<string> hate, IReadOnlyList<string> hateThreatening, IReadOnlyList<string> harassment, IReadOnlyList<string> harassmentThreatening, IReadOnlyList<string> illicit, IReadOnlyList<string> illicitViolent, IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1> selfHarm, IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent> selfHarmIntent, IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction> selfHarmInstructions, IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual> sexual, IReadOnlyList<string> sexualMinors, IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence> violence, IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic> violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalCreateModerationResponseResultCategoryAppliedInputTypes(IReadOnlyList<string> hate, IReadOnlyList<string> hateThreatening, IReadOnlyList<string> harassment, IReadOnlyList<string> harassmentThreatening, IReadOnlyList<string> illicit, IReadOnlyList<string> illicitViolent, IReadOnlyList<string> selfHarm, IReadOnlyList<string> selfHarmIntent, IReadOnlyList<string> selfHarmInstructions, IReadOnlyList<string> sexual, IReadOnlyList<string> sexualMinors, IReadOnlyList<string> violence, IReadOnlyList<string> violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Hate = hate;
             HateThreatening = hateThreatening;
@@ -63,19 +63,5 @@ namespace OpenAI.Moderations
         internal InternalCreateModerationResponseResultCategoryAppliedInputTypes()
         {
         }
-
-        public IReadOnlyList<string> Hate { get; }
-        public IReadOnlyList<string> HateThreatening { get; }
-        public IReadOnlyList<string> Harassment { get; }
-        public IReadOnlyList<string> HarassmentThreatening { get; }
-        public IReadOnlyList<string> Illicit { get; }
-        public IReadOnlyList<string> IllicitViolent { get; }
-        public IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1> SelfHarm { get; }
-        public IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent> SelfHarmIntent { get; }
-        public IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction> SelfHarmInstructions { get; }
-        public IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual> Sexual { get; }
-        public IReadOnlyList<string> SexualMinors { get; }
-        public IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence> Violence { get; }
-        public IReadOnlyList<InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic> ViolenceGraphic { get; }
     }
 }

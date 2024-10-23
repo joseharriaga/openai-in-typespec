@@ -48,4 +48,10 @@ internal static partial class ModerationFlaggedContentModalitiesExtensions
         }
         return result;
     }
+
+    internal static string ToSerialString(this ModerationFlaggedContentModalities value)
+        => throw new NotImplementedException();
+
+    internal static ModerationFlaggedContentModalities ToModerationFlaggedContentModalities(this string value)
+        => throw new NotImplementedException();
 }

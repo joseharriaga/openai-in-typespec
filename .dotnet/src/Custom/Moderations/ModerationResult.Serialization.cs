@@ -75,13 +75,13 @@ namespace OpenAI.Moderations
                     harassmentThreatening: HarassmentThreatening.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
                     illicit: Illicit.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
                     illicitViolent: IllicitViolent.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    selfHarm: SelfHarm.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarm1(kind)).ToList(),
-                    selfHarmIntent: SelfHarmIntent.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmIntent(kind)).ToList(),
-                    selfHarmInstructions: SelfHarmInstructions.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSelfHarmInstruction(kind)).ToList(),
-                    sexual: Sexual.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesSexual(kind)).ToList(),
+                    selfHarm: SelfHarm.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
+                    selfHarmIntent: SelfHarmIntent.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
+                    selfHarmInstructions: SelfHarmInstructions.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
+                    sexual: Sexual.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
                     sexualMinors: SexualMinors.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    violence: Violence.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesViolence(kind)).ToList(),
-                    violenceGraphic: ViolenceGraphic.FlaggedContentModalities.ToInternalFlaggedContentModalities().Select(kind => new InternalCreateModerationResponseResultCategoryAppliedInputTypesViolenceGraphic(kind)).ToList(),
+                    violence: Violence.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
+                    violenceGraphic: ViolenceGraphic.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
                     serializedAdditionalRawData: null);
                 writer.WriteObjectValue(internalAppliedInputTypes, options);
             }

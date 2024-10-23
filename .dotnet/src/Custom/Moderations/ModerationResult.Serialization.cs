@@ -69,19 +69,19 @@ namespace OpenAI.Moderations
             {
                 writer.WritePropertyName("category_applied_input_types"u8);
                 InternalCreateModerationResponseResultCategoryAppliedInputTypes internalAppliedInputTypes = new(
-                    hate: Hate.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    hateThreatening: HateThreatening.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    harassment: Harassment.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    harassmentThreatening: HarassmentThreatening.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    illicit: Illicit.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    illicitViolent: IllicitViolent.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    selfHarm: SelfHarm.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    selfHarmIntent: SelfHarmIntent.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    selfHarmInstructions: SelfHarmInstructions.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    sexual: Sexual.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    sexualMinors: SexualMinors.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    violence: Violence.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
-                    violenceGraphic: ViolenceGraphic.FlaggedContentModalities.ToInternalFlaggedContentModalities(),
+                    hate: Hate.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    hateThreatening: HateThreatening.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    harassment: Harassment.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    harassmentThreatening: HarassmentThreatening.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    illicit: Illicit.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    illicitViolent: IllicitViolent.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    selfHarm: SelfHarm.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    selfHarmIntent: SelfHarmIntent.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    selfHarmInstructions: SelfHarmInstructions.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    sexual: Sexual.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    sexualMinors: SexualMinors.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    violence: Violence.ApplicableInputKinds.ToInternalApplicableInputKinds(),
+                    violenceGraphic: ViolenceGraphic.ApplicableInputKinds.ToInternalApplicableInputKinds(),
                     serializedAdditionalRawData: null);
                 writer.WriteObjectValue(internalAppliedInputTypes, options);
             }
@@ -168,7 +168,7 @@ namespace OpenAI.Moderations
                 return new ModerationCategory(
                     categoryFlaggedGetter.Invoke(internalCategories),
                     scoreGetter.Invoke(internalCategoryScores),
-                    ModerationFlaggedContentModalitiesExtensions.FromInternalFlaggedContentModalities(stringInputTypes));
+                    ModerationApplicableInputKindsExtensions.FromInternalApplicableInputKinds(stringInputTypes));
             }
 
             serializedAdditionalRawData = rawDataDictionary;

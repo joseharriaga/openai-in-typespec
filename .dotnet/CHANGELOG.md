@@ -9,7 +9,7 @@
   - A new `InputTokenDetails` property (of new type `ChatInputTokenUsageDetails`) has been added, containing breakdowns of `AudioTokenCount` and `CachedTokenCount` for usage with supported models
   - The existing `OutputTokenDetails` has been expanded to include `AudioTokenCount` for supported models
 - `ModerationResult` now includes `Illicit` and `IllictViolent` categories
-- `ModerationCategory` now includes a (bitmasked flag enum) `InputKinds` property, representing applied input modalities for the category
+- `ModerationCategory` now includes a (bitmasked flag enum) `ApplicableInputKinds` property, representing applied input types for the category
 
 **Realtime**
 

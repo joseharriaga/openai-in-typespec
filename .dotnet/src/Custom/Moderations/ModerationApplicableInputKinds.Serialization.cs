@@ -4,16 +4,16 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Moderations;
 
-internal static partial class ModerationFlaggedContentModalitiesExtensions
+internal static partial class ModerationApplicableInputKindsExtensions
 {
-    internal static IReadOnlyList<string> ToInternalFlaggedContentModalities(this ModerationFlaggedContentModalities inputKinds)
+    internal static IReadOnlyList<string> ToInternalApplicableInputKinds(this ModerationApplicableInputKinds inputKinds)
     {
         List<string> internalInputKinds = [];
-        if (inputKinds.HasFlag(ModerationFlaggedContentModalities.Text))
+        if (inputKinds.HasFlag(ModerationApplicableInputKinds.Text))
         {
             internalInputKinds.Add("text");
         }
-        if (inputKinds.HasFlag(ModerationFlaggedContentModalities.Image))
+        if (inputKinds.HasFlag(ModerationApplicableInputKinds.Image))
         {
             internalInputKinds.Add("image");
         }
@@ -24,18 +24,18 @@ internal static partial class ModerationFlaggedContentModalitiesExtensions
         return internalInputKinds;
     }
 
-    internal static ModerationFlaggedContentModalities FromInternalFlaggedContentModalities(IEnumerable<string> internalInputKinds)
+    internal static ModerationApplicableInputKinds FromInternalApplicableInputKinds(IEnumerable<string> internalInputKinds)
     {
-        ModerationFlaggedContentModalities result = 0;
+        ModerationApplicableInputKinds result = 0;
         foreach (string internalInputKind in internalInputKinds ?? [])
         {
             if (StringComparer.OrdinalIgnoreCase.Equals(internalInputKind, "text"))
             {
-                result |= ModerationFlaggedContentModalities.Text;
+                result |= ModerationApplicableInputKinds.Text;
             }
             else if (StringComparer.OrdinalIgnoreCase.Equals(internalInputKind, "image"))
             {
-                result |= ModerationFlaggedContentModalities.Image;
+                result |= ModerationApplicableInputKinds.Image;
             }
             // else if (StringComparer.OrdinalIgnoreCase.Equals(internalInputKind, "audio"))
             // {
@@ -43,15 +43,15 @@ internal static partial class ModerationFlaggedContentModalitiesExtensions
             // }
             else
             {
-                result |= ModerationFlaggedContentModalities.Other;
+                result |= ModerationApplicableInputKinds.Other;
             }
         }
         return result;
     }
 
-    internal static string ToSerialString(this ModerationFlaggedContentModalities value)
+    internal static string ToSerialString(this ModerationApplicableInputKinds value)
         => throw new NotImplementedException();
 
-    internal static ModerationFlaggedContentModalities ToModerationFlaggedContentModalities(this string value)
+    internal static ModerationApplicableInputKinds ToModerationApplicableInputKinds(this string value)
         => throw new NotImplementedException();
 }

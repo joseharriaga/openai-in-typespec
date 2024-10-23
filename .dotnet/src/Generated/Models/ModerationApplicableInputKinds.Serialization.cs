@@ -6,7 +6,7 @@ using System;
 
 namespace OpenAI.Moderations
 {
-    internal static partial class ModerationFlaggedContentModalitiesExtensions
+    internal static partial class ModerationApplicableInputKindsExtensions
     {
     }
 }

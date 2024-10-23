@@ -4,7 +4,7 @@ namespace OpenAI.Moderations;
 
 [Flags]
 [CodeGenModel("ModerationAppliedInputType")]
-public enum ModerationFlaggedContentModalities : int
+public enum ModerationApplicableInputKinds : int
 {
     None = 0,
     Other = 1 << 0,

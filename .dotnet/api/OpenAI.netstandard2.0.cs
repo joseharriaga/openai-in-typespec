@@ -1669,9 +1669,16 @@ namespace OpenAI.Models {
     }
 }
 namespace OpenAI.Moderations {
+    [Flags]
+    public enum ModerationApplicableInputKinds {
+        None = 0,
+        Other = 1,
+        Text = 2,
+        Image = 4
+    }
     public class ModerationCategory {
+        public ModerationApplicableInputKinds ApplicableInputKinds { get; }
         public bool Flagged { get; }
-        public ModerationFlaggedContentModalities FlaggedContentModalities { get; }
         public float Score { get; }
     }
     public class ModerationClient {
@@ -1689,13 +1696,6 @@ namespace OpenAI.Moderations {
         public virtual Task<ClientResult> ClassifyTextAsync(BinaryContent content, RequestOptions options = null);
         public virtual Task<ClientResult<ModerationResultCollection>> ClassifyTextAsync(IEnumerable<string> inputs, CancellationToken cancellationToken = default);
         public virtual Task<ClientResult<ModerationResult>> ClassifyTextAsync(string input, CancellationToken cancellationToken = default);
-    }
-    [Flags]
-    public enum ModerationFlaggedContentModalities {
-        None = 0,
-        Other = 1,
-        Text = 2,
-        Image = 4
     }
     public class ModerationResult : IJsonModel<ModerationResult>, IPersistableModel<ModerationResult> {
         public bool Flagged { get; }
@@ -1718,7 +1718,7 @@ namespace OpenAI.Moderations {
         public string Model { get; }
     }
     public static class OpenAIModerationsModelFactory {
-        public static ModerationCategory ModerationCategory(bool flagged = false, float score = 0, ModerationFlaggedContentModalities flaggedContentModalities = ModerationFlaggedContentModalities.None);
+        public static ModerationCategory ModerationCategory(bool flagged = false, float score = 0, ModerationApplicableInputKinds applicableInputKinds = ModerationApplicableInputKinds.None);
         public static ModerationResult ModerationResult(bool flagged = false, ModerationCategory hate = null, ModerationCategory hateThreatening = null, ModerationCategory harassment = null, ModerationCategory harassmentThreatening = null, ModerationCategory selfHarm = null, ModerationCategory selfHarmIntent = null, ModerationCategory selfHarmInstructions = null, ModerationCategory sexual = null, ModerationCategory sexualMinors = null, ModerationCategory violence = null, ModerationCategory violenceGraphic = null, ModerationCategory illicit = null, ModerationCategory illicitViolent = null);
         public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> items = null);
     }

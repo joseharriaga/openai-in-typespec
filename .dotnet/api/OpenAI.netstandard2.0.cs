@@ -1371,7 +1371,6 @@ namespace OpenAI.Chat {
     }
     public class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>, IPersistableModel<ChatCompletionOptions> {
         public bool? AllowParallelToolCalls { get; set; }
-        public bool? EnableOutputStorage { get; set; }
         public string EndUserId { get; set; }
         public float? FrequencyPenalty { get; set; }
         [Obsolete("This property is obsolete. Please use ToolChoice instead.")]
@@ -1386,6 +1385,7 @@ namespace OpenAI.Chat {
         public ChatResponseFormat ResponseFormat { get; set; }
         public long? Seed { get; set; }
         public IList<string> StopSequences { get; }
+        public bool? StoredOutputEnabled { get; set; }
         public float? Temperature { get; set; }
         public ChatToolChoice ToolChoice { get; set; }
         public IList<ChatTool> Tools { get; }

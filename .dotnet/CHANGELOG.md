@@ -4,7 +4,7 @@
 
 ### Features added
 
-- `ChatCompletionOptions` now has an `EnableOutputStorage` property (reflecting [the REST `store` property](https://platform.openai.com/docs/api-reference/chat/create#chat-create-store)) as well as a `Metadata` property ([`metadata` in REST](https://platform.openai.com/docs/api-reference/chat/create#chat-create-metadata))
+- `ChatCompletionOptions` now has an `StoredOutputEnabled` property (reflecting [the REST `store` property](https://platform.openai.com/docs/api-reference/chat/create#chat-create-store)) as well as a `Metadata` property ([`metadata` in REST](https://platform.openai.com/docs/api-reference/chat/create#chat-create-metadata))
 - `ChatTokenUsage` (`Usage` on `ChatCompletion`) has been expanded:
   - A new `InputTokenDetails` property (of new type `ChatInputTokenUsageDetails`) has been added, containing breakdowns of `AudioTokenCount` and `CachedTokenCount` for usage with supported models
   - The existing `OutputTokenDetails` has been expanded to include `AudioTokenCount` for supported models

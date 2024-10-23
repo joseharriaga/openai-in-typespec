@@ -84,4 +84,9 @@ public partial class ChatCompletion
     // CUSTOM: Flattened choice message property.
     [Obsolete($"This property is obsolete. Please use {nameof(ToolCalls)} instead.")]
     public ChatFunctionCall FunctionCall => Choices[0].Message.FunctionCall;
+
+    /// <summary>
+    /// If the audio output modality is requested, this object contains data about the audio response from the model.
+    /// </summary>
+    public ChatResponseAudio Audio => Choices[0].Message.Audio;
 }

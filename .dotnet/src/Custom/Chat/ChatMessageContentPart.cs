@@ -28,6 +28,7 @@ public partial class ChatMessageContentPart
     private readonly ChatMessageContentPartKind _kind;
     private readonly string _text;
     private readonly InternalChatCompletionRequestMessageContentPartImageImageUrl _imageUri;
+    private readonly InternalChatCompletionRequestMessageContentPartAudioInputAudio _inputAudio;
     private readonly string _refusal;
 
     // CUSTOM: Made internal.
@@ -36,12 +37,19 @@ public partial class ChatMessageContentPart
     }
 
     // CUSTOM: Added to support deserialization.
-    internal ChatMessageContentPart(ChatMessageContentPartKind kind, string text, InternalChatCompletionRequestMessageContentPartImageImageUrl imageUri, string refusal, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    internal ChatMessageContentPart(
+        ChatMessageContentPartKind kind,
+        string text,
+        InternalChatCompletionRequestMessageContentPartImageImageUrl imageUri,
+        string refusal,
+        InternalChatCompletionRequestMessageContentPartAudioInputAudio inputAudio,
+        IDictionary<string, BinaryData> serializedAdditionalRawData)
     {
         _kind = kind;
         _text = text;
         _imageUri = imageUri;
         _refusal = refusal;
+        _inputAudio = inputAudio;
         SerializedAdditionalRawData = serializedAdditionalRawData;
     }
 
@@ -68,6 +76,10 @@ public partial class ChatMessageContentPart
     /// <remarks> Present when <see cref="Kind"/> is <see cref="ChatMessageContentPartKind.Image"/>. </remarks>
     public string ImageBytesMediaType => _imageUri?.ImageBytesMediaType;
 
+    public BinaryData AudioBytes => _inputAudio?.Data;
+
+    public ChatInputAudioFormat? AudioInputFormat => _inputAudio?.Format;
+
     // CUSTOM: Spread.
     /// <summary>
     ///     The level of detail with which the model should process the image and generate its textual understanding of
@@ -93,6 +105,7 @@ public partial class ChatMessageContentPart
             text: text,
             imageUri: null,
             refusal: null,
+            inputAudio: null,
             serializedAdditionalRawData: null);
     }
 
@@ -112,6 +125,7 @@ public partial class ChatMessageContentPart
             text: null,
             imageUri: new(imageUri) { Detail = imageDetailLevel },
             refusal: null,
+            inputAudio: null,
             serializedAdditionalRawData: null);
     }
 
@@ -134,6 +148,7 @@ public partial class ChatMessageContentPart
             text: null,
             imageUri: new(imageBytes, imageBytesMediaType) { Detail = imageDetailLevel },
             refusal: null,
+            inputAudio: null,
             serializedAdditionalRawData: null);
     }
 
@@ -149,6 +164,20 @@ public partial class ChatMessageContentPart
             text: null,
             imageUri: null,
             refusal: refusal,
+            inputAudio: null,
+            serializedAdditionalRawData: null);
+    }
+
+    public static ChatMessageContentPart CreateAudioPart(BinaryData audioBytes, ChatInputAudioFormat audioFormat)
+    {
+        Argument.AssertNotNull(audioBytes, nameof(audioBytes));
+
+        return new ChatMessageContentPart(
+            kind: ChatMessageContentPartKind.Audio,
+            text: null,
+            imageUri: null,
+            refusal: null,
+            inputAudio: new(audioBytes, audioFormat),
             serializedAdditionalRawData: null);
     }
 

@@ -534,6 +534,16 @@ public class ChatSmokeTests : SyncAsyncTestBase
     }
 
     [Test]
+    public void SerializeAudioThings()
+    {
+        ChatAudioReference audioReference = new("audio_correlated_id_1234");
+        AssistantChatMessage message = new(audioReference);
+        Assert.That(message.AudioReference?.CorrelationId, Is.EqualTo("audio_correlated_id_1234"));
+        string serializedMessage = ModelReaderWriter.Write(message).ToString();
+        Assert.That(serializedMessage, Does.Contain(@"""audio"":{""id"":""audio_correlated_id_1234""}"));
+    }
+
+    [Test]
     [TestCase(true)]
     [TestCase(false)]
     public void SerializeChatMessageWithSingleStringContent(bool fromRawJson)

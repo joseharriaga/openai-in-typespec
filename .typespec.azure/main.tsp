@@ -65,4 +65,9 @@ enum AzureOpenAIServiceApiVersion {
    * The 2024-09-01-preview service API version label.
    */
   v2024_09_01_preview: "2024-09-01-preview",
+
+  /**
+   * The 2024-10-01-preview service API version label.
+   */
+  v2024_10_01_preview: "2024-10-01-preview",
 }

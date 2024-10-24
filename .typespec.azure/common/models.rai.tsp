@@ -1,3 +1,8 @@
+import "@typespec/versioning";
+import "../main.tsp";
+
+using TypeSpec.Versioning;
+
 namespace AzureOpenAI;
 
 /**
@@ -34,6 +39,33 @@ model AzureContentFilterBlocklistIdResult {
 
   /** Whether the associated blocklist resulted in the content being filtered. */
   filtered: boolean;
+}
+
+/**
+ * A representation of a span of completion text as used by Azure OpenAI content filter results.
+ */
+@added(AzureOpenAIServiceApiVersion.v2024_10_01_preview)
+model AzureContentFilterCompletionTextSpan {
+  /**
+   * Offset of the UTF32 code point which begins the span.
+   */
+  completion_start_offset: int32;
+
+  /**
+   * Offset of the first UTF32 code point which is excluded from the span. This field is always equal to completion_start_offset for empty spans. This field is always larger than completion_start_offset for non-empty spans.
+   */
+  completion_end_offset: int32;
+}
+
+@added(AzureOpenAIServiceApiVersion.v2024_10_01_preview)
+model AzureContentFilterCompletionTextSpanDetectionResult {
+  ...AzureContentFilterDetectionResult;
+
+  /**
+   * Detailed information about the detected completion text spans.
+   */
+  @added(AzureOpenAIServiceApiVersion.v2024_10_01_preview)
+  details: AzureContentFilterCompletionTextSpan[];
 }
 
 alias AzureContentFilterCategoriesBase = {
@@ -134,6 +166,9 @@ model AzureContentFilterResultForChoice {
       URL?: url;
     };
   };
+
+  @added(AzureOpenAIServiceApiVersion.v2024_10_01_preview)
+  ungrounded_material?: AzureContentFilterCompletionTextSpanDetectionResult;
 }
 
 /**

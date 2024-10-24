@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using Azure.Core;
-using OpenAI.RealtimeConversation;
 using System.ClientModel.Primitives;
 using System.ComponentModel;
 using System.Net.WebSockets;
@@ -12,7 +11,7 @@ namespace Azure.AI.OpenAI.RealtimeConversation;
 internal partial class AzureRealtimeConversationSession : RealtimeConversationSession
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
-    protected internal override async Task ConnectAsync(RequestOptions options)
+    internal override async Task ConnectAsync(RequestOptions options)
     {
         ClientUriBuilder uriBuilder = new();
         uriBuilder.Reset(_endpoint);

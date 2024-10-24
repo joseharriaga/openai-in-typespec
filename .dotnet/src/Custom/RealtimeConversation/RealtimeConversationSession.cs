@@ -2,6 +2,7 @@ using System;
 using System.Buffers;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.ClientModel.Primitives.TwoWayPipeline;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -164,13 +165,15 @@ public partial class RealtimeConversationSession : IDisposable
         await SendCommandAsync(requestData, cancellationOptions).ConfigureAwait(false);
     }
 
-    public async IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync(/*[EnumeratorCancellation]*/ CancellationToken cancellationToken = default)
     {
-        await foreach (ClientResult protocolEvent in ReceiveUpdatesAsync(cancellationToken.ToRequestOptions()))
-        {
-            ConversationUpdate nextUpdate = ConversationUpdate.FromResponse(protocolEvent.GetRawResponse());
-            yield return nextUpdate;
-        }
+        throw new NotImplementedException();
+
+        //await foreach (TwoWayPipelineServiceMessage protocolEvent in ReceiveUpdatesAsync(/*cancellationToken.ToRequestOptions())*/)
+        //{
+        //    ConversationUpdate nextUpdate = ConversationUpdate.FromResponse(protocolEvent.GetRawResponse());
+        //    yield return nextUpdate;
+        //}
     }
 
     public void Dispose()

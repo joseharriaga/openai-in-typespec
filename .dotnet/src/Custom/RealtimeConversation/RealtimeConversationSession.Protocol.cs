@@ -1,8 +1,7 @@
 using System;
-using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.ClientModel.Primitives.TwoWayPipeline;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,25 +11,30 @@ namespace OpenAI.RealtimeConversation;
 public partial class RealtimeConversationSession
 {
     protected ClientWebSocket _clientWebSocket;
+
     private readonly SemaphoreSlim _clientSendSemaphore = new(initialCount: 1, maxCount: 1);
     private readonly object _singleReceiveLock = new();
+
     private AsyncWebsocketMessageCollectionResult _receiveCollectionResult;
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    protected internal virtual async Task ConnectAsync(RequestOptions options)
+    // TODO: The client should open the connection when the session is created.
+    //       This method doesn't need to be exposed publicly.
+    internal virtual async Task ConnectAsync(RequestOptions options)
     {
         _clientWebSocket.Options.AddSubProtocol("realtime");
         await _clientWebSocket.ConnectAsync(_endpoint, options?.CancellationToken ?? default)
             .ConfigureAwait(false);
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    protected internal virtual void Connect(RequestOptions options)
+    internal virtual void Connect(RequestOptions options)
     {
+        // TODO: we should avoid sync-over-async where we can.
         ConnectAsync(options).Wait();
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    // TODO: What is the analog of a protocol method for a WebSocket subclient?
+    //       Is it at this level - that you can send any message across the
+    //       connection?
     public virtual async Task SendCommandAsync(BinaryData data, RequestOptions options)
     {
         Argument.AssertNotNull(data, nameof(data));
@@ -57,33 +61,42 @@ public partial class RealtimeConversationSession
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public virtual void SendCommand(BinaryData data, RequestOptions options)
     {
         // ClientWebSocket does **not** include a synchronous Send()
         SendCommandAsync(data, options).Wait();
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async IAsyncEnumerable<ClientResult> ReceiveUpdatesAsync(RequestOptions options)
+    // TODO: since service response is exposed to end-users at the protocol layer,
+    //       we probably want a better name.  Should we have an equivalent of
+    //       ClientResult, e.g. that wraps a raw response?
+    //       Could the two-way service message inherit from PipelineResponse?
+    //       If it did, we could return ClientResult here and GetRawResponse
+    //       would return a websocket-specific subtype...
+    public virtual IAsyncEnumerable<TwoWayPipelineServiceMessage> GetResponsesAsync()
     {
-        lock (_singleReceiveLock)
-        {
-            _receiveCollectionResult ??= new(_clientWebSocket, options?.CancellationToken ?? default);
-        }
-        await foreach (ClientResult result in _receiveCollectionResult)
-        {
-            BinaryData incomingMessage = result?.GetRawResponse()?.Content;
-            if (incomingMessage is not null)
-            {
-                _parentClient?.RaiseOnReceivingCommand(this, incomingMessage);
-            }
-            yield return result;
-        }
+        // TODO: is there an equivalent of RequestOptions for two-way pipeline?
+        //       - we would need it for CancellationToken, modification of pipeline
+        //         per message sent, e.g. ...
+
+        throw new NotImplementedException();
+
+        //lock (_singleReceiveLock)
+        //{
+        //    _receiveCollectionResult ??= new(_clientWebSocket, options?.CancellationToken ?? default);
+        //}
+        //await foreach (ClientResult result in _receiveCollectionResult)
+        //{
+        //    BinaryData incomingMessage = result?.GetRawResponse()?.Content;
+        //    if (incomingMessage is not null)
+        //    {
+        //        _parentClient?.RaiseOnReceivingCommand(this, incomingMessage);
+        //    }
+        //    yield return result;
+        //}
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual IEnumerable<ClientResult> ReceiveUpdates(RequestOptions options)
+    public virtual IEnumerable<TwoWayPipelineServiceMessage> ReceiveUpdates(RequestOptions options)
     {
         throw new NotImplementedException();
     }

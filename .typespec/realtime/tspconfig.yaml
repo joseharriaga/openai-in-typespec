@@ -1,0 +1,16 @@
+# https://typespec.io/docs/handbook/configuration/configuration/
+# adding entry point exclusive to realtime
+options:
+  "@azure-tools/typespec-java":
+    emitter-output-dir: "{project-root}/../TempTypeSpecFiles/java/unbranded"
+    package-dir: "azure-ai-openai-realtime"
+    namespace: "com.azure.ai.openai.realtime"
+    # partial-update: true
+    enable-sync-stack: true
+    generate-tests: false
+    generate-samples: false
+    custom-types-subpackage: "implementation.models"
+    # custom-types: "FunctionCallPreset,FileListResponse,OpenAIPageableListOfBatch"
+    # customization-class: customization/src/main/java/OpenAICustomizations.java
+    flavor: azure
+    # tsp compile .typespec/realtime/client_java.tsp --emit "@azure-tools/typespec-java"

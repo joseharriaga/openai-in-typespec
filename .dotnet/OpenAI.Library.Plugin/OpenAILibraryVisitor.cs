@@ -1,9 +1,7 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Generator.CSharp.ClientModel;
 using Microsoft.Generator.CSharp.ClientModel.Providers;
 using Microsoft.Generator.CSharp.Expressions;
 using Microsoft.Generator.CSharp.Primitives;
@@ -12,7 +10,7 @@ using Microsoft.Generator.CSharp.Snippets;
 using Microsoft.Generator.CSharp.Statements;
 using static Microsoft.Generator.CSharp.Snippets.Snippet;
 
-namespace Microsoft.Generator.CSharp.ClientModel.OpenAILibraryPlugin
+namespace OpenAILibraryPlugin
 {
     public class OpenAILibraryVisitor : ScmLibraryVisitor
     {
@@ -34,7 +32,8 @@ namespace Microsoft.Generator.CSharp.ClientModel.OpenAILibraryPlugin
                         typeof(IDictionary<string, BinaryData>), RawDataPropertyName,
                         new ExpressionPropertyBody(
                             additionalPropertiesField,
-                            additionalPropertiesField.Assign(Value)), type)
+                            type.DeclarationModifiers.HasFlag(TypeSignatureModifiers.ReadOnly) ? null : additionalPropertiesField.Assign(Value)),
+                        type)
                 };
                 type.Update(properties: properties);
             }
@@ -65,8 +64,8 @@ namespace Microsoft.Generator.CSharp.ClientModel.OpenAILibraryPlugin
                             [valueParameter]),
                         new[]
                         {
-                            Declare("sentinelSpan", typeof(ReadOnlySpan<byte>), sentinelValueField.Invoke("ToMemory", []).Property("Span"), out var sentinelVariable),
-                            Declare("valueSpan", typeof(ReadOnlySpan<byte>), valueParameter.Invoke("ToMemory", []).Property("Span"), out var valueVariable),
+                            Declare("sentinelSpan", typeof(ReadOnlySpan<byte>), sentinelValueField.As<BinaryData>().ToMemory().Property("Span"), out var sentinelVariable),
+                            Declare("valueSpan", typeof(ReadOnlySpan<byte>), valueParameter.As<BinaryData>().ToMemory().Property("Span"), out var valueVariable),
                             Return(sentinelVariable.Invoke("SequenceEqual", valueVariable))
                         },
                         type)
@@ -78,7 +77,7 @@ namespace Microsoft.Generator.CSharp.ClientModel.OpenAILibraryPlugin
 
         protected override FieldProvider? Visit(FieldProvider field)
         {
-            if (field.Name == AdditionalPropertiesFieldName)
+            if (field.Name == AdditionalPropertiesFieldName && !field.EnclosingType.DeclarationModifiers.HasFlag(TypeSignatureModifiers.ReadOnly))
             {
                 field.Modifiers &= ~FieldModifiers.ReadOnly;
             }
@@ -105,20 +104,24 @@ namespace Microsoft.Generator.CSharp.ClientModel.OpenAILibraryPlugin
             }
 
             var updatedStatements = new List<MethodBodyStatement>();
+            var flattenedStatements = Flatten(statements).ToArray();
 
-            foreach (var statement in Flatten(statements!))
+            for (int line = 0; line < flattenedStatements.Length; line++)
             {
+                var statement = flattenedStatements[line];
+
                 if (statement is IfStatement ifStatement)
                 {
                     var body = ifStatement.Body.ToDisplayString();
+
+                    // If we already have an if statement that contains property writing, we need to add the condition to the existing if statement
                     if (body.Contains(WritePropertyNameMethodCall))
                     {
                         ifStatement.Condition = ifStatement.Condition.As<bool>().And(GetContainsKeyCondition(body));
-                        updatedStatements.Add(ifStatement);
-                        continue;
                     }
 
-                    if (Flatten(ifStatement.Body).First() is ForeachStatement foreachStatement)
+                    // Handle writing AdditionalProperties
+                    else if (Flatten(ifStatement.Body).First() is ForeachStatement foreachStatement)
                     {
                         foreachStatement.Body.Insert(
                             0,
@@ -128,12 +131,30 @@ namespace Microsoft.Generator.CSharp.ClientModel.OpenAILibraryPlugin
                                 Continue
                             });
                     }
+
+                    updatedStatements.Add(ifStatement);
+                    continue;
                 }
 
                 var displayString = statement.ToDisplayString();
                 if (displayString.Contains(WritePropertyNameMethodCall))
                 {
                     var ifSt = new IfStatement(GetContainsKeyCondition(displayString)) { statement };
+
+                    // If this is a plain expression statement, we need to add the next statement as well which
+                    // will either write the property value or start writing an array
+                    if (statement is ExpressionStatement)
+                    {
+                        ifSt.Add(flattenedStatements[++line]);
+                        // Include array writing in the if statement
+                        if (flattenedStatements[line + 1] is ForeachStatement)
+                        {
+                            // Foreach
+                            ifSt.Add(flattenedStatements[++line]);
+                            // End array
+                            ifSt.Add(flattenedStatements[++line]);
+                        }
+                    }
                     updatedStatements.Add(ifSt);
                 }
                 else
@@ -148,7 +169,7 @@ namespace Microsoft.Generator.CSharp.ClientModel.OpenAILibraryPlugin
         private static ScopedApi<bool> GetContainsKeyCondition(string displayString)
         {
             var propertyName = displayString.Split('"')[1];
-            return AdditionalBinaryDataExpression
+            return This.Property(AdditionalPropertiesFieldName)
                 .NullConditional()
                 .Invoke("ContainsKey", Literal(propertyName)).NotEqual(True);
         }

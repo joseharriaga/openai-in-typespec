@@ -1,9 +1,8 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-
 using System.ComponentModel.Composition;
+using Microsoft.Generator.CSharp;
+using Microsoft.Generator.CSharp.ClientModel;
 
-namespace Microsoft.Generator.CSharp.ClientModel.OpenAILibraryPlugin
+namespace OpenAILibraryPlugin
 {
     [Export(typeof(CodeModelPlugin))]
     [ExportMetadata("PluginName", nameof(OpenAILibraryPlugin))]

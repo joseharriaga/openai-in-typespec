@@ -34,8 +34,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("assistant_id") != true)
             {
                 writer.WritePropertyName("assistant_id"u8);
+                writer.WriteStringValue(AssistantId);
             }
-            writer.WriteStringValue(AssistantId);
             if (Optional.IsDefined(Thread) && _additionalBinaryDataProperties?.ContainsKey("thread") != true)
             {
                 writer.WritePropertyName("thread"u8);

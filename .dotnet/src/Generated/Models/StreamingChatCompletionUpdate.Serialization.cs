@@ -34,8 +34,8 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model);
             }
-            writer.WriteStringValue(Model);
             if (Optional.IsDefined(SystemFingerprint) && _additionalBinaryDataProperties?.ContainsKey("system_fingerprint") != true)
             {
                 writer.WritePropertyName("system_fingerprint"u8);
@@ -44,13 +44,13 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(this.Object.ToString());
             }
-            writer.WriteStringValue(this.Object.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(CompletionId);
             }
-            writer.WriteStringValue(CompletionId);
             if (Optional.IsDefined(ServiceTier) && _additionalBinaryDataProperties?.ContainsKey("service_tier") != true)
             {
                 if (ServiceTier != null)
@@ -66,18 +66,18 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("choices") != true)
             {
                 writer.WritePropertyName("choices"u8);
+                writer.WriteStartArray();
+                foreach (InternalCreateChatCompletionStreamResponseChoice item in Choices)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteStartArray();
-            foreach (InternalCreateChatCompletionStreamResponseChoice item in Choices)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
             if (_additionalBinaryDataProperties?.ContainsKey("created") != true)
             {
                 writer.WritePropertyName("created"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (Optional.IsDefined(Usage) && _additionalBinaryDataProperties?.ContainsKey("usage") != true)
             {
                 writer.WritePropertyName("usage"u8);

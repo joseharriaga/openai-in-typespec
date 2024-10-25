@@ -34,13 +34,13 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("token") != true)
             {
                 writer.WritePropertyName("token"u8);
+                writer.WriteStringValue(Token);
             }
-            writer.WriteStringValue(Token);
             if (_additionalBinaryDataProperties?.ContainsKey("logprob") != true)
             {
                 writer.WritePropertyName("logprob"u8);
+                writer.WriteNumberValue(LogProbability);
             }
-            writer.WriteNumberValue(LogProbability);
             if (_additionalBinaryDataProperties?.ContainsKey("bytes") != true)
             {
                 if (Utf8Bytes != null)
@@ -61,13 +61,13 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("top_logprobs") != true)
             {
                 writer.WritePropertyName("top_logprobs"u8);
+                writer.WriteStartArray();
+                foreach (ChatTokenTopLogProbabilityDetails item in TopLogProbabilities)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteStartArray();
-            foreach (ChatTokenTopLogProbabilityDetails item in TopLogProbabilities)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

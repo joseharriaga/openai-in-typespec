@@ -35,8 +35,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
             {
                 writer.WritePropertyName("index"u8);
+                writer.WriteNumberValue(Index);
             }
-            writer.WriteNumberValue(Index);
             if (Optional.IsDefined(InternalLogs) && _additionalBinaryDataProperties?.ContainsKey("logs") != true)
             {
                 writer.WritePropertyName("logs"u8);

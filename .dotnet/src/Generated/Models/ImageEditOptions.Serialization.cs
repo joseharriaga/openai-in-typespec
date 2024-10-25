@@ -42,13 +42,13 @@ namespace OpenAI.Images
             if (_additionalBinaryDataProperties?.ContainsKey("image") != true)
             {
                 writer.WritePropertyName("image"u8);
+                writer.WriteBase64StringValue(Image.ToArray(), "D");
             }
-            writer.WriteBase64StringValue(Image.ToArray(), "D");
             if (_additionalBinaryDataProperties?.ContainsKey("prompt") != true)
             {
                 writer.WritePropertyName("prompt"u8);
+                writer.WriteStringValue(Prompt);
             }
-            writer.WriteStringValue(Prompt);
             if (Optional.IsDefined(Mask) && _additionalBinaryDataProperties?.ContainsKey("mask") != true)
             {
                 writer.WritePropertyName("mask"u8);

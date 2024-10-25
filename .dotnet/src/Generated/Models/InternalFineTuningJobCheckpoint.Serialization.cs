@@ -34,38 +34,38 @@ namespace OpenAI.FineTuning
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (_additionalBinaryDataProperties?.ContainsKey("fine_tuned_model_checkpoint") != true)
             {
                 writer.WritePropertyName("fine_tuned_model_checkpoint"u8);
+                writer.WriteStringValue(FineTunedModelCheckpoint);
             }
-            writer.WriteStringValue(FineTunedModelCheckpoint);
             if (_additionalBinaryDataProperties?.ContainsKey("step_number") != true)
             {
                 writer.WritePropertyName("step_number"u8);
+                writer.WriteNumberValue(StepNumber);
             }
-            writer.WriteNumberValue(StepNumber);
             if (_additionalBinaryDataProperties?.ContainsKey("metrics") != true)
             {
                 writer.WritePropertyName("metrics"u8);
+                writer.WriteObjectValue(Metrics, options);
             }
-            writer.WriteObjectValue(Metrics, options);
             if (_additionalBinaryDataProperties?.ContainsKey("fine_tuning_job_id") != true)
             {
                 writer.WritePropertyName("fine_tuning_job_id"u8);
+                writer.WriteStringValue(FineTuningJobId);
             }
-            writer.WriteStringValue(FineTuningJobId);
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            writer.WriteStringValue(Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

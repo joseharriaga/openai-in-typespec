@@ -34,23 +34,23 @@ namespace OpenAI.Files
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (_additionalBinaryDataProperties?.ContainsKey("upload_id") != true)
             {
                 writer.WritePropertyName("upload_id"u8);
+                writer.WriteStringValue(UploadId);
             }
-            writer.WriteStringValue(UploadId);
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            writer.WriteStringValue(Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

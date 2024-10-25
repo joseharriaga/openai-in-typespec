@@ -35,8 +35,8 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("item") != true)
             {
                 writer.WritePropertyName("item"u8);
+                writer.WriteObjectValue<ConversationItem>(Item, options);
             }
-            writer.WriteObjectValue<ConversationItem>(Item, options);
         }
 
         ConversationItemAcknowledgedUpdate IJsonModel<ConversationItemAcknowledgedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationItemAcknowledgedUpdate)JsonModelCreateCore(ref reader, options);

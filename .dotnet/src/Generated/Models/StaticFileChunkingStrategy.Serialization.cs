@@ -35,8 +35,8 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("static") != true)
             {
                 writer.WritePropertyName("static"u8);
+                writer.WriteObjectValue<InternalStaticChunkingStrategyDetails>(_internalDetails, options);
             }
-            writer.WriteObjectValue<InternalStaticChunkingStrategyDetails>(_internalDetails, options);
         }
 
         StaticFileChunkingStrategy IJsonModel<StaticFileChunkingStrategy>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (StaticFileChunkingStrategy)JsonModelCreateCore(ref reader, options);

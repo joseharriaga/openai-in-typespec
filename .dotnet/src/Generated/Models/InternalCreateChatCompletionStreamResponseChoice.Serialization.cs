@@ -26,8 +26,8 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("delta") != true)
             {
                 writer.WritePropertyName("delta"u8);
+                writer.WriteObjectValue(Delta, options);
             }
-            writer.WriteObjectValue(Delta, options);
             if (Optional.IsDefined(Logprobs) && _additionalBinaryDataProperties?.ContainsKey("logprobs") != true)
             {
                 if (Logprobs != null)
@@ -43,8 +43,8 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
             {
                 writer.WritePropertyName("index"u8);
+                writer.WriteNumberValue(Index);
             }
-            writer.WriteNumberValue(Index);
             if (_additionalBinaryDataProperties?.ContainsKey("finish_reason") != true)
             {
                 if (FinishReason != null)

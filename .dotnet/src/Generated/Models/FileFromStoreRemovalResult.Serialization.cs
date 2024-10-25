@@ -34,18 +34,18 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(FileId);
             }
-            writer.WriteStringValue(FileId);
             if (_additionalBinaryDataProperties?.ContainsKey("deleted") != true)
             {
                 writer.WritePropertyName("deleted"u8);
+                writer.WriteBooleanValue(Removed);
             }
-            writer.WriteBooleanValue(Removed);
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(this.Object.ToString());
             }
-            writer.WriteStringValue(this.Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

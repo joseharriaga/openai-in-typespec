@@ -34,23 +34,23 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (_additionalBinaryDataProperties?.ContainsKey("thread_id") != true)
             {
                 writer.WritePropertyName("thread_id"u8);
+                writer.WriteStringValue(ThreadId);
             }
-            writer.WriteStringValue(ThreadId);
             if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToString());
             }
-            writer.WriteStringValue(Status.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("incomplete_details") != true)
             {
                 if (IncompleteDetails != null)
@@ -90,13 +90,13 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
+                writer.WriteStartArray();
+                foreach (MessageContent item in Content)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteStartArray();
-            foreach (MessageContent item in Content)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
             if (_additionalBinaryDataProperties?.ContainsKey("assistant_id") != true)
             {
                 if (AssistantId != null)
@@ -147,13 +147,13 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(this.Object.ToString());
             }
-            writer.WriteStringValue(this.Object.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("role") != true)
             {
                 writer.WritePropertyName("role"u8);
+                writer.WriteStringValue(Role.ToSerialString());
             }
-            writer.WriteStringValue(Role.ToSerialString());
             if (_additionalBinaryDataProperties?.ContainsKey("attachments") != true)
             {
                 if (Attachments != null && Optional.IsCollectionDefined(Attachments))

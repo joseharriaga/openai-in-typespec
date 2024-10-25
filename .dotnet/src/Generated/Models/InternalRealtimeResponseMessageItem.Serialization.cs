@@ -45,13 +45,13 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToString());
             }
-            writer.WriteStringValue(Status.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("role") != true)
             {
                 writer.WritePropertyName("role"u8);
+                writer.WriteStringValue(Role.ToString());
             }
-            writer.WriteStringValue(Role.ToString());
         }
 
         InternalRealtimeResponseMessageItem IJsonModel<InternalRealtimeResponseMessageItem>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeResponseMessageItem)JsonModelCreateCore(ref reader, options);

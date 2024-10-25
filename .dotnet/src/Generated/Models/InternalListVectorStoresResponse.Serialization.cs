@@ -34,8 +34,8 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            writer.WriteStringValue(Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("data") != true)
             {
                 writer.WritePropertyName("data"u8);
@@ -49,18 +49,18 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("first_id") != true)
             {
                 writer.WritePropertyName("first_id"u8);
+                writer.WriteStringValue(FirstId);
             }
-            writer.WriteStringValue(FirstId);
             if (_additionalBinaryDataProperties?.ContainsKey("last_id") != true)
             {
                 writer.WritePropertyName("last_id"u8);
+                writer.WriteStringValue(LastId);
             }
-            writer.WriteStringValue(LastId);
             if (_additionalBinaryDataProperties?.ContainsKey("has_more") != true)
             {
                 writer.WritePropertyName("has_more"u8);
+                writer.WriteBooleanValue(HasMore);
             }
-            writer.WriteBooleanValue(HasMore);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

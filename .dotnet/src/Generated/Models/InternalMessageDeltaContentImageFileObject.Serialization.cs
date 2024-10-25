@@ -35,8 +35,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
             {
                 writer.WritePropertyName("index"u8);
+                writer.WriteNumberValue(Index);
             }
-            writer.WriteNumberValue(Index);
             if (Optional.IsDefined(ImageFile) && _additionalBinaryDataProperties?.ContainsKey("image_file") != true)
             {
                 writer.WritePropertyName("image_file"u8);

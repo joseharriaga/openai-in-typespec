@@ -31,8 +31,8 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
+                writer.WriteStringValue(_name);
             }
-            writer.WriteStringValue(_name);
             if (Optional.IsDefined(_description) && _additionalBinaryDataProperties?.ContainsKey("description") != true)
             {
                 writer.WritePropertyName("description"u8);

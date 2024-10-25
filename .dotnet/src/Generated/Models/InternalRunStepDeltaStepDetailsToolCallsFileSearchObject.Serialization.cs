@@ -35,8 +35,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
             {
                 writer.WritePropertyName("index"u8);
+                writer.WriteNumberValue(Index);
             }
-            writer.WriteNumberValue(Index);
             if (Optional.IsDefined(Id) && _additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
@@ -45,26 +45,26 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("file_search") != true)
             {
                 writer.WritePropertyName("file_search"u8);
-            }
-            writer.WriteStartObject();
-            foreach (var item in FileSearch)
-            {
-                writer.WritePropertyName(item.Key);
-                if (item.Value == null)
+                writer.WriteStartObject();
+                foreach (var item in FileSearch)
                 {
-                    writer.WriteNullValue();
-                    continue;
-                }
+                    writer.WritePropertyName(item.Key);
+                    if (item.Value == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
 #if NET6_0_OR_GREATER
-                writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
-                using (JsonDocument document = JsonDocument.Parse(item.Value))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
+                    using (JsonDocument document = JsonDocument.Parse(item.Value))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
 #endif
+                }
+                writer.WriteEndObject();
             }
-            writer.WriteEndObject();
         }
 
         InternalRunStepDeltaStepDetailsToolCallsFileSearchObject IJsonModel<InternalRunStepDeltaStepDetailsToolCallsFileSearchObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepDeltaStepDetailsToolCallsFileSearchObject)JsonModelCreateCore(ref reader, options);

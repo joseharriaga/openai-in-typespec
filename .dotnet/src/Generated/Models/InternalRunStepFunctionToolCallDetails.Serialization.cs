@@ -35,13 +35,13 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("function") != true)
             {
                 writer.WritePropertyName("function"u8);
+                writer.WriteObjectValue<InternalRunStepDetailsToolCallsFunctionObjectFunction>(_internalFunction, options);
             }
-            writer.WriteObjectValue<InternalRunStepDetailsToolCallsFunctionObjectFunction>(_internalFunction, options);
         }
 
         InternalRunStepFunctionToolCallDetails IJsonModel<InternalRunStepFunctionToolCallDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepFunctionToolCallDetails)JsonModelCreateCore(ref reader, options);

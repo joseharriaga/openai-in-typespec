@@ -35,23 +35,23 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
+                writer.WriteStringValue(Text);
             }
-            writer.WriteStringValue(Text);
             if (_additionalBinaryDataProperties?.ContainsKey("file_citation") != true)
             {
                 writer.WritePropertyName("file_citation"u8);
+                writer.WriteObjectValue(FileCitation, options);
             }
-            writer.WriteObjectValue(FileCitation, options);
             if (_additionalBinaryDataProperties?.ContainsKey("start_index") != true)
             {
                 writer.WritePropertyName("start_index"u8);
+                writer.WriteNumberValue(StartIndex);
             }
-            writer.WriteNumberValue(StartIndex);
             if (_additionalBinaryDataProperties?.ContainsKey("end_index") != true)
             {
                 writer.WritePropertyName("end_index"u8);
+                writer.WriteNumberValue(EndIndex);
             }
-            writer.WriteNumberValue(EndIndex);
         }
 
         InternalMessageContentTextAnnotationsFileCitationObject IJsonModel<InternalMessageContentTextAnnotationsFileCitationObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalMessageContentTextAnnotationsFileCitationObject)JsonModelCreateCore(ref reader, options);

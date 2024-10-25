@@ -34,18 +34,18 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            writer.WriteStringValue(Object.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToString());
             }
-            writer.WriteStringValue(Status.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("status_details") != true)
             {
                 if (StatusDetails != null)
@@ -61,18 +61,18 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("usage") != true)
             {
                 writer.WritePropertyName("usage"u8);
+                writer.WriteObjectValue(Usage, options);
             }
-            writer.WriteObjectValue(Usage, options);
             if (_additionalBinaryDataProperties?.ContainsKey("output") != true)
             {
                 writer.WritePropertyName("output"u8);
+                writer.WriteStartArray();
+                foreach (ConversationItem item in Output)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteStartArray();
-            foreach (ConversationItem item in Output)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

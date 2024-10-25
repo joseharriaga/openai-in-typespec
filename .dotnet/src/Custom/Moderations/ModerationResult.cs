@@ -12,8 +12,6 @@ namespace OpenAI.Moderations;
 [CodeGenSuppress(nameof(ModerationResult), typeof(bool), typeof(InternalModerationCategories), typeof(InternalModerationCategoryScores), typeof(IDictionary<string, BinaryData>))]
 public partial class ModerationResult
 {
-    internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-    
     internal ModerationResult(bool flagged, ModerationCategory hate, ModerationCategory hateThreatening, ModerationCategory harassment, ModerationCategory harassmentThreatening, ModerationCategory selfHarm, ModerationCategory selfHarmIntent, ModerationCategory selfHarmInstructions, ModerationCategory sexual, ModerationCategory sexualMinors, ModerationCategory violence, ModerationCategory violenceGraphic)
     {
         Flagged = flagged;

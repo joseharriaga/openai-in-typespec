@@ -34,13 +34,13 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 if (Name != null)
@@ -68,8 +68,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model);
             }
-            writer.WriteStringValue(Model);
             if (_additionalBinaryDataProperties?.ContainsKey("instructions") != true)
             {
                 if (Instructions != null)
@@ -85,13 +85,13 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("tools") != true)
             {
                 writer.WritePropertyName("tools"u8);
+                writer.WriteStartArray();
+                foreach (ToolDefinition item in Tools)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteStartArray();
-            foreach (ToolDefinition item in Tools)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
             if (Optional.IsDefined(ToolResources) && _additionalBinaryDataProperties?.ContainsKey("tool_resources") != true)
             {
                 if (ToolResources != null)
@@ -142,8 +142,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(this.Object.ToString());
             }
-            writer.WriteStringValue(this.Object.ToString());
             if (Optional.IsDefined(ResponseFormat) && _additionalBinaryDataProperties?.ContainsKey("response_format") != true)
             {
                 if (ResponseFormat != null)

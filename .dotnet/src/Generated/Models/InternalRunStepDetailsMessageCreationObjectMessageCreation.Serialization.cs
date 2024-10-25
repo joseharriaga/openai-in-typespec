@@ -34,8 +34,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("message_id") != true)
             {
                 writer.WritePropertyName("message_id"u8);
+                writer.WriteStringValue(MessageId);
             }
-            writer.WriteStringValue(MessageId);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

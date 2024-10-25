@@ -34,13 +34,13 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("commit") != true)
             {
                 writer.WritePropertyName("commit"u8);
+                writer.WriteBooleanValue(Commit);
             }
-            writer.WriteBooleanValue(Commit);
             if (_additionalBinaryDataProperties?.ContainsKey("cancel_previous") != true)
             {
                 writer.WritePropertyName("cancel_previous"u8);
+                writer.WriteBooleanValue(CancelPrevious);
             }
-            writer.WriteBooleanValue(CancelPrevious);
             if (Optional.IsCollectionDefined(AppendInputItems) && _additionalBinaryDataProperties?.ContainsKey("append_input_items") != true)
             {
                 writer.WritePropertyName("append_input_items"u8);

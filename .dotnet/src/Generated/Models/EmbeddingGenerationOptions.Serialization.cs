@@ -35,20 +35,20 @@ namespace OpenAI.Embeddings
             if (_additionalBinaryDataProperties?.ContainsKey("input") != true)
             {
                 writer.WritePropertyName("input"u8);
-            }
 #if NET6_0_OR_GREATER
-            writer.WriteRawValue(Input);
+                writer.WriteRawValue(Input);
 #else
-            using (JsonDocument document = JsonDocument.Parse(Input))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
+                using (JsonDocument document = JsonDocument.Parse(Input))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
 #endif
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model.ToString());
             }
-            writer.WriteStringValue(Model.ToString());
             if (Optional.IsDefined(EncodingFormat) && _additionalBinaryDataProperties?.ContainsKey("encoding_format") != true)
             {
                 writer.WritePropertyName("encoding_format"u8);

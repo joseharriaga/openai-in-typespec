@@ -35,13 +35,13 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
+                writer.WriteStartArray();
+                foreach (ConversationContentPart item in Content)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteStartArray();
-            foreach (ConversationContentPart item in Content)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
         }
 
         InternalRealtimeRequestAssistantMessageItem IJsonModel<InternalRealtimeRequestAssistantMessageItem>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeRequestAssistantMessageItem)JsonModelCreateCore(ref reader, options);

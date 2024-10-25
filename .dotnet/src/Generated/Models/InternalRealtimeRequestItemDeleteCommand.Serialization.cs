@@ -35,8 +35,8 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
             {
                 writer.WritePropertyName("item_id"u8);
+                writer.WriteStringValue(ItemId);
             }
-            writer.WriteStringValue(ItemId);
         }
 
         InternalRealtimeRequestItemDeleteCommand IJsonModel<InternalRealtimeRequestItemDeleteCommand>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeRequestItemDeleteCommand)JsonModelCreateCore(ref reader, options);

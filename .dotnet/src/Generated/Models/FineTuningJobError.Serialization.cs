@@ -34,13 +34,13 @@ namespace OpenAI.FineTuning
             if (_additionalBinaryDataProperties?.ContainsKey("code") != true)
             {
                 writer.WritePropertyName("code"u8);
+                writer.WriteStringValue(Code);
             }
-            writer.WriteStringValue(Code);
             if (_additionalBinaryDataProperties?.ContainsKey("message") != true)
             {
                 writer.WritePropertyName("message"u8);
+                writer.WriteStringValue(Message);
             }
-            writer.WriteStringValue(Message);
             if (_additionalBinaryDataProperties?.ContainsKey("param") != true)
             {
                 if (Param != null)

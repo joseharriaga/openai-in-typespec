@@ -34,13 +34,13 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("text_tokens") != true)
             {
                 writer.WritePropertyName("text_tokens"u8);
+                writer.WriteNumberValue(TextTokens);
             }
-            writer.WriteNumberValue(TextTokens);
             if (_additionalBinaryDataProperties?.ContainsKey("audio_tokens") != true)
             {
                 writer.WritePropertyName("audio_tokens"u8);
+                writer.WriteNumberValue(AudioTokens);
             }
-            writer.WriteNumberValue(AudioTokens);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

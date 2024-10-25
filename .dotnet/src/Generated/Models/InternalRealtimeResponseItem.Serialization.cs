@@ -34,13 +34,13 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            writer.WriteStringValue(Object.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Type.ToString());
             }
-            writer.WriteStringValue(Type.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 if (Id != null)

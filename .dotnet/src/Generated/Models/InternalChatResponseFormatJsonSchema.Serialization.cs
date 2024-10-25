@@ -29,8 +29,8 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("json_schema") != true)
             {
                 writer.WritePropertyName("json_schema"u8);
+                writer.WriteObjectValue(JsonSchema, options);
             }
-            writer.WriteObjectValue(JsonSchema, options);
         }
 
         InternalChatResponseFormatJsonSchema IJsonModel<InternalChatResponseFormatJsonSchema>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalChatResponseFormatJsonSchema)JsonModelCreateCore(ref reader, options);

@@ -35,18 +35,18 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
             {
                 writer.WritePropertyName("item_id"u8);
+                writer.WriteStringValue(ItemId);
             }
-            writer.WriteStringValue(ItemId);
             if (_additionalBinaryDataProperties?.ContainsKey("audio_end_ms") != true)
             {
                 writer.WritePropertyName("audio_end_ms"u8);
+                writer.WriteNumberValue(AudioEndMs);
             }
-            writer.WriteNumberValue(AudioEndMs);
             if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
             {
                 writer.WritePropertyName("index"u8);
+                writer.WriteNumberValue(Index);
             }
-            writer.WriteNumberValue(Index);
         }
 
         ConversationItemTruncatedUpdate IJsonModel<ConversationItemTruncatedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationItemTruncatedUpdate)JsonModelCreateCore(ref reader, options);

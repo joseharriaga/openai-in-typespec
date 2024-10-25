@@ -34,13 +34,13 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("submit_tool_outputs") != true)
             {
                 writer.WritePropertyName("submit_tool_outputs"u8);
+                writer.WriteObjectValue(SubmitToolOutputs, options);
             }
-            writer.WriteObjectValue(SubmitToolOutputs, options);
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
+                writer.WriteObjectValue<object>(Type, options);
             }
-            writer.WriteObjectValue<object>(Type, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

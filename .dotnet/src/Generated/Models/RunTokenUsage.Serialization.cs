@@ -34,18 +34,18 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("completion_tokens") != true)
             {
                 writer.WritePropertyName("completion_tokens"u8);
+                writer.WriteNumberValue(OutputTokenCount);
             }
-            writer.WriteNumberValue(OutputTokenCount);
             if (_additionalBinaryDataProperties?.ContainsKey("prompt_tokens") != true)
             {
                 writer.WritePropertyName("prompt_tokens"u8);
+                writer.WriteNumberValue(InputTokenCount);
             }
-            writer.WriteNumberValue(InputTokenCount);
             if (_additionalBinaryDataProperties?.ContainsKey("total_tokens") != true)
             {
                 writer.WritePropertyName("total_tokens"u8);
+                writer.WriteNumberValue(TotalTokenCount);
             }
-            writer.WriteNumberValue(TotalTokenCount);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

@@ -34,18 +34,18 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("completion_tokens") != true)
             {
                 writer.WritePropertyName("completion_tokens"u8);
+                writer.WriteNumberValue(OutputTokenCount);
             }
-            writer.WriteNumberValue(OutputTokenCount);
             if (_additionalBinaryDataProperties?.ContainsKey("prompt_tokens") != true)
             {
                 writer.WritePropertyName("prompt_tokens"u8);
+                writer.WriteNumberValue(InputTokenCount);
             }
-            writer.WriteNumberValue(InputTokenCount);
             if (_additionalBinaryDataProperties?.ContainsKey("total_tokens") != true)
             {
                 writer.WritePropertyName("total_tokens"u8);
+                writer.WriteNumberValue(TotalTokenCount);
             }
-            writer.WriteNumberValue(TotalTokenCount);
             if (Optional.IsDefined(OutputTokenDetails) && _additionalBinaryDataProperties?.ContainsKey("completion_tokens_details") != true)
             {
                 writer.WritePropertyName("completion_tokens_details"u8);

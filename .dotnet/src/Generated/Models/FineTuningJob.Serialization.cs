@@ -46,13 +46,13 @@ namespace OpenAI.FineTuning
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (_additionalBinaryDataProperties?.ContainsKey("error") != true)
             {
                 if (Error != null)
@@ -92,43 +92,43 @@ namespace OpenAI.FineTuning
             if (_additionalBinaryDataProperties?.ContainsKey("hyperparameters") != true)
             {
                 writer.WritePropertyName("hyperparameters"u8);
+                writer.WriteObjectValue(Hyperparameters, options);
             }
-            writer.WriteObjectValue(Hyperparameters, options);
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model);
             }
-            writer.WriteStringValue(Model);
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            writer.WriteStringValue(Object.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("organization_id") != true)
             {
                 writer.WritePropertyName("organization_id"u8);
+                writer.WriteStringValue(OrganizationId);
             }
-            writer.WriteStringValue(OrganizationId);
             if (_additionalBinaryDataProperties?.ContainsKey("result_files") != true)
             {
                 writer.WritePropertyName("result_files"u8);
-            }
-            writer.WriteStartArray();
-            foreach (string item in ResultFiles)
-            {
-                if (item == null)
+                writer.WriteStartArray();
+                foreach (string item in ResultFiles)
                 {
-                    writer.WriteNullValue();
-                    continue;
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
+                    writer.WriteStringValue(item);
                 }
-                writer.WriteStringValue(item);
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
             if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToString());
             }
-            writer.WriteStringValue(Status.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("trained_tokens") != true)
             {
                 if (TrainedTokens != null)
@@ -144,8 +144,8 @@ namespace OpenAI.FineTuning
             if (_additionalBinaryDataProperties?.ContainsKey("training_file") != true)
             {
                 writer.WritePropertyName("training_file"u8);
+                writer.WriteStringValue(TrainingFile);
             }
-            writer.WriteStringValue(TrainingFile);
             if (_additionalBinaryDataProperties?.ContainsKey("validation_file") != true)
             {
                 if (ValidationFile != null)
@@ -178,8 +178,8 @@ namespace OpenAI.FineTuning
             if (_additionalBinaryDataProperties?.ContainsKey("seed") != true)
             {
                 writer.WritePropertyName("seed"u8);
+                writer.WriteNumberValue(Seed);
             }
-            writer.WriteNumberValue(Seed);
             if (Optional.IsDefined(EstimatedFinish) && _additionalBinaryDataProperties?.ContainsKey("estimated_finish") != true)
             {
                 if (EstimatedFinish != null)

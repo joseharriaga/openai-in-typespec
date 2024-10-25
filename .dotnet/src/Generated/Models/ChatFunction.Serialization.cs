@@ -34,8 +34,8 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
+                writer.WriteStringValue(FunctionName);
             }
-            writer.WriteStringValue(FunctionName);
             if (Optional.IsDefined(FunctionDescription) && _additionalBinaryDataProperties?.ContainsKey("description") != true)
             {
                 writer.WritePropertyName("description"u8);

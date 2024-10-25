@@ -34,18 +34,18 @@ namespace OpenAI.Audio
             if (_additionalBinaryDataProperties?.ContainsKey("word") != true)
             {
                 writer.WritePropertyName("word"u8);
+                writer.WriteStringValue(Word);
             }
-            writer.WriteStringValue(Word);
             if (_additionalBinaryDataProperties?.ContainsKey("start") != true)
             {
                 writer.WritePropertyName("start"u8);
+                writer.WriteNumberValue(Convert.ToDouble(StartTime.ToString("s\\.FFF")));
             }
-            writer.WriteNumberValue(Convert.ToDouble(StartTime.ToString("s\\.FFF")));
             if (_additionalBinaryDataProperties?.ContainsKey("end") != true)
             {
                 writer.WritePropertyName("end"u8);
+                writer.WriteNumberValue(Convert.ToDouble(EndTime.ToString("s\\.FFF")));
             }
-            writer.WriteNumberValue(Convert.ToDouble(EndTime.ToString("s\\.FFF")));
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

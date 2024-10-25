@@ -35,13 +35,13 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("tool_calls") != true)
             {
                 writer.WritePropertyName("tool_calls"u8);
+                writer.WriteStartArray();
+                foreach (RunStepToolCall item in InternalToolCalls)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteStartArray();
-            foreach (RunStepToolCall item in InternalToolCalls)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
         }
 
         InternalRunStepDetailsToolCallsObject IJsonModel<InternalRunStepDetailsToolCallsObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepDetailsToolCallsObject)JsonModelCreateCore(ref reader, options);

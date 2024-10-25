@@ -23,8 +23,8 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("role") != true)
             {
                 writer.WritePropertyName("role"u8);
+                writer.WriteStringValue(Role.ToSerialString());
             }
-            writer.WriteStringValue(Role.ToSerialString());
             if (options.Format != "W" && Optional.IsDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);

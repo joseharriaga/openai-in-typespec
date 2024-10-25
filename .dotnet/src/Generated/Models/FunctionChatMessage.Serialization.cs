@@ -28,8 +28,8 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
+                writer.WriteStringValue(FunctionName);
             }
-            writer.WriteStringValue(FunctionName);
         }
 
         FunctionChatMessage IJsonModel<FunctionChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (FunctionChatMessage)JsonModelCreateCore(ref reader, options);

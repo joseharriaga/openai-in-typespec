@@ -30,8 +30,8 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("reasoning_tokens") != true)
             {
                 writer.WritePropertyName("reasoning_tokens"u8);
+                writer.WriteNumberValue(ReasoningTokenCount);
             }
-            writer.WriteNumberValue(ReasoningTokenCount);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

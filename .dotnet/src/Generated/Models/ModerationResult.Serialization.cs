@@ -22,8 +22,8 @@ namespace OpenAI.Moderations
             if (_additionalBinaryDataProperties?.ContainsKey("flagged") != true)
             {
                 writer.WritePropertyName("flagged"u8);
+                writer.WriteBooleanValue(Flagged);
             }
-            writer.WriteBooleanValue(Flagged);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

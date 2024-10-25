@@ -30,13 +30,13 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("anchor") != true)
             {
                 writer.WritePropertyName("anchor"u8);
+                writer.WriteStringValue(_anchor.ToSerialString());
             }
-            writer.WriteStringValue(_anchor.ToSerialString());
             if (_additionalBinaryDataProperties?.ContainsKey("days") != true)
             {
                 writer.WritePropertyName("days"u8);
+                writer.WriteNumberValue(_days);
             }
-            writer.WriteNumberValue(_days);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

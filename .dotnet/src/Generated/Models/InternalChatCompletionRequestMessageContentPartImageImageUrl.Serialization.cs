@@ -39,8 +39,8 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("url") != true)
             {
                 writer.WritePropertyName("url"u8);
+                writer.WriteStringValue(Url);
             }
-            writer.WriteStringValue(Url);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

@@ -34,18 +34,18 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("value") != true)
             {
                 writer.WritePropertyName("value"u8);
+                writer.WriteStringValue(Value);
             }
-            writer.WriteStringValue(Value);
             if (_additionalBinaryDataProperties?.ContainsKey("annotations") != true)
             {
                 writer.WritePropertyName("annotations"u8);
+                writer.WriteStartArray();
+                foreach (InternalMessageContentTextObjectAnnotation item in Annotations)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteStartArray();
-            foreach (InternalMessageContentTextObjectAnnotation item in Annotations)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

@@ -31,20 +31,20 @@ namespace OpenAI.Files
             if (_additionalBinaryDataProperties?.ContainsKey("file") != true)
             {
                 writer.WritePropertyName("file"u8);
-            }
 #if NET6_0_OR_GREATER
-            writer.WriteRawValue(global::System.BinaryData.FromStream(File));
+                writer.WriteRawValue(global::System.BinaryData.FromStream(File));
 #else
-            using (JsonDocument document = JsonDocument.Parse(BinaryData.FromStream(File)))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
+                using (JsonDocument document = JsonDocument.Parse(BinaryData.FromStream(File)))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
 #endif
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("purpose") != true)
             {
                 writer.WritePropertyName("purpose"u8);
+                writer.WriteStringValue(Purpose.ToString());
             }
-            writer.WriteStringValue(Purpose.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

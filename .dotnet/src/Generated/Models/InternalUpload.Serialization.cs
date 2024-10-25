@@ -34,38 +34,38 @@ namespace OpenAI.Files
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (_additionalBinaryDataProperties?.ContainsKey("filename") != true)
             {
                 writer.WritePropertyName("filename"u8);
+                writer.WriteStringValue(Filename);
             }
-            writer.WriteStringValue(Filename);
             if (_additionalBinaryDataProperties?.ContainsKey("bytes") != true)
             {
                 writer.WritePropertyName("bytes"u8);
+                writer.WriteNumberValue(Bytes);
             }
-            writer.WriteNumberValue(Bytes);
             if (_additionalBinaryDataProperties?.ContainsKey("purpose") != true)
             {
                 writer.WritePropertyName("purpose"u8);
+                writer.WriteStringValue(Purpose);
             }
-            writer.WriteStringValue(Purpose);
             if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToString());
             }
-            writer.WriteStringValue(Status.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("expires_at") != true)
             {
                 writer.WritePropertyName("expires_at"u8);
+                writer.WriteNumberValue(ExpiresAt, "U");
             }
-            writer.WriteNumberValue(ExpiresAt, "U");
             if (Optional.IsDefined(Object) && _additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);

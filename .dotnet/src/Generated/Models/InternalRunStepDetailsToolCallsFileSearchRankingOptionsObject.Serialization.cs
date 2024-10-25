@@ -34,13 +34,13 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("ranker") != true)
             {
                 writer.WritePropertyName("ranker"u8);
+                writer.WriteStringValue(Ranker.ToString());
             }
-            writer.WriteStringValue(Ranker.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("score_threshold") != true)
             {
                 writer.WritePropertyName("score_threshold"u8);
+                writer.WriteNumberValue(ScoreThreshold);
             }
-            writer.WriteNumberValue(ScoreThreshold);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

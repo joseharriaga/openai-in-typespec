@@ -34,58 +34,58 @@ namespace OpenAI.Moderations
             if (_additionalBinaryDataProperties?.ContainsKey("hate") != true)
             {
                 writer.WritePropertyName("hate"u8);
+                writer.WriteNumberValue(Hate);
             }
-            writer.WriteNumberValue(Hate);
             if (_additionalBinaryDataProperties?.ContainsKey("hate/threatening") != true)
             {
                 writer.WritePropertyName("hate/threatening"u8);
+                writer.WriteNumberValue(HateThreatening);
             }
-            writer.WriteNumberValue(HateThreatening);
             if (_additionalBinaryDataProperties?.ContainsKey("harassment") != true)
             {
                 writer.WritePropertyName("harassment"u8);
+                writer.WriteNumberValue(Harassment);
             }
-            writer.WriteNumberValue(Harassment);
             if (_additionalBinaryDataProperties?.ContainsKey("harassment/threatening") != true)
             {
                 writer.WritePropertyName("harassment/threatening"u8);
+                writer.WriteNumberValue(HarassmentThreatening);
             }
-            writer.WriteNumberValue(HarassmentThreatening);
             if (_additionalBinaryDataProperties?.ContainsKey("self-harm") != true)
             {
                 writer.WritePropertyName("self-harm"u8);
+                writer.WriteNumberValue(SelfHarm);
             }
-            writer.WriteNumberValue(SelfHarm);
             if (_additionalBinaryDataProperties?.ContainsKey("self-harm/intent") != true)
             {
                 writer.WritePropertyName("self-harm/intent"u8);
+                writer.WriteNumberValue(SelfHarmIntent);
             }
-            writer.WriteNumberValue(SelfHarmIntent);
             if (_additionalBinaryDataProperties?.ContainsKey("self-harm/instructions") != true)
             {
                 writer.WritePropertyName("self-harm/instructions"u8);
+                writer.WriteNumberValue(SelfHarmInstructions);
             }
-            writer.WriteNumberValue(SelfHarmInstructions);
             if (_additionalBinaryDataProperties?.ContainsKey("sexual") != true)
             {
                 writer.WritePropertyName("sexual"u8);
+                writer.WriteNumberValue(Sexual);
             }
-            writer.WriteNumberValue(Sexual);
             if (_additionalBinaryDataProperties?.ContainsKey("sexual/minors") != true)
             {
                 writer.WritePropertyName("sexual/minors"u8);
+                writer.WriteNumberValue(SexualMinors);
             }
-            writer.WriteNumberValue(SexualMinors);
             if (_additionalBinaryDataProperties?.ContainsKey("violence") != true)
             {
                 writer.WritePropertyName("violence"u8);
+                writer.WriteNumberValue(Violence);
             }
-            writer.WriteNumberValue(Violence);
             if (_additionalBinaryDataProperties?.ContainsKey("violence/graphic") != true)
             {
                 writer.WritePropertyName("violence/graphic"u8);
+                writer.WriteNumberValue(ViolenceGraphic);
             }
-            writer.WriteNumberValue(ViolenceGraphic);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

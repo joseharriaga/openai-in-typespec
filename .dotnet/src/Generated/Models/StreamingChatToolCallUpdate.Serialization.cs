@@ -34,8 +34,8 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
             {
                 writer.WritePropertyName("index"u8);
+                writer.WriteNumberValue(Index);
             }
-            writer.WriteNumberValue(Index);
             if (Optional.IsDefined(Function) && _additionalBinaryDataProperties?.ContainsKey("function") != true)
             {
                 writer.WritePropertyName("function"u8);
@@ -44,8 +44,8 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Kind.ToSerialString());
             }
-            writer.WriteStringValue(Kind.ToSerialString());
             if (Optional.IsDefined(ToolCallId) && _additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);

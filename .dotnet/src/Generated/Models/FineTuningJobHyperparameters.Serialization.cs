@@ -34,39 +34,39 @@ namespace OpenAI.FineTuning
             if (_additionalBinaryDataProperties?.ContainsKey("n_epochs") != true)
             {
                 writer.WritePropertyName("n_epochs"u8);
-            }
 #if NET6_0_OR_GREATER
-            writer.WriteRawValue(NEpochs);
+                writer.WriteRawValue(NEpochs);
 #else
-            using (JsonDocument document = JsonDocument.Parse(NEpochs))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
+                using (JsonDocument document = JsonDocument.Parse(NEpochs))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
 #endif
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("batch_size") != true)
             {
                 writer.WritePropertyName("batch_size"u8);
-            }
 #if NET6_0_OR_GREATER
-            writer.WriteRawValue(BatchSize);
+                writer.WriteRawValue(BatchSize);
 #else
-            using (JsonDocument document = JsonDocument.Parse(BatchSize))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
+                using (JsonDocument document = JsonDocument.Parse(BatchSize))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
 #endif
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("learning_rate_multiplier") != true)
             {
                 writer.WritePropertyName("learning_rate_multiplier"u8);
-            }
 #if NET6_0_OR_GREATER
-            writer.WriteRawValue(LearningRateMultiplier);
+                writer.WriteRawValue(LearningRateMultiplier);
 #else
-            using (JsonDocument document = JsonDocument.Parse(LearningRateMultiplier))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
+                using (JsonDocument document = JsonDocument.Parse(LearningRateMultiplier))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
 #endif
+            }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

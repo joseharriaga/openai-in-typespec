@@ -35,8 +35,8 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
+                writer.WriteStringValue(Text);
             }
-            writer.WriteStringValue(Text);
         }
 
         InternalRealtimeRequestTextContentPart IJsonModel<InternalRealtimeRequestTextContentPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeRequestTextContentPart)JsonModelCreateCore(ref reader, options);

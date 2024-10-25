@@ -70,13 +70,13 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("role") != true)
             {
                 writer.WritePropertyName("role"u8);
+                writer.WriteStringValue(Role.ToSerialString());
             }
-            writer.WriteStringValue(Role.ToSerialString());
             if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
+                this.SerializeContent(writer, options);
             }
-            this.SerializeContent(writer, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

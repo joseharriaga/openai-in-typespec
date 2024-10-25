@@ -34,23 +34,23 @@ namespace OpenAI.Files
             if (_additionalBinaryDataProperties?.ContainsKey("filename") != true)
             {
                 writer.WritePropertyName("filename"u8);
+                writer.WriteStringValue(Filename);
             }
-            writer.WriteStringValue(Filename);
             if (_additionalBinaryDataProperties?.ContainsKey("purpose") != true)
             {
                 writer.WritePropertyName("purpose"u8);
+                writer.WriteStringValue(Purpose.ToString());
             }
-            writer.WriteStringValue(Purpose.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("bytes") != true)
             {
                 writer.WritePropertyName("bytes"u8);
+                writer.WriteNumberValue(Bytes);
             }
-            writer.WriteNumberValue(Bytes);
             if (_additionalBinaryDataProperties?.ContainsKey("mime_type") != true)
             {
                 writer.WritePropertyName("mime_type"u8);
+                writer.WriteStringValue(MimeType);
             }
-            writer.WriteStringValue(MimeType);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

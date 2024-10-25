@@ -35,8 +35,8 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("audio") != true)
             {
                 writer.WritePropertyName("audio"u8);
+                writer.WriteBase64StringValue(Audio.ToArray(), "D");
             }
-            writer.WriteBase64StringValue(Audio.ToArray(), "D");
         }
 
         InternalRealtimeRequestInputAudioBufferAppendCommand IJsonModel<InternalRealtimeRequestInputAudioBufferAppendCommand>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeRequestInputAudioBufferAppendCommand)JsonModelCreateCore(ref reader, options);

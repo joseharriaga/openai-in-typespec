@@ -34,13 +34,13 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
+                writer.WriteStringValue(FunctionName);
             }
-            writer.WriteStringValue(FunctionName);
             if (_additionalBinaryDataProperties?.ContainsKey("arguments") != true)
             {
                 writer.WritePropertyName("arguments"u8);
+                this.SerializeFunctionArgumentsValue(writer, options);
             }
-            this.SerializeFunctionArgumentsValue(writer, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

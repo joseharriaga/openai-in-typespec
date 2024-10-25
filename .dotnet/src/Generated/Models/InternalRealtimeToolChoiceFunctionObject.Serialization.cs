@@ -35,8 +35,8 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("function") != true)
             {
                 writer.WritePropertyName("function"u8);
+                writer.WriteObjectValue(Function, options);
             }
-            writer.WriteObjectValue(Function, options);
         }
 
         InternalRealtimeToolChoiceFunctionObject IJsonModel<InternalRealtimeToolChoiceFunctionObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeToolChoiceFunctionObject)JsonModelCreateCore(ref reader, options);

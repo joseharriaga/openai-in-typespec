@@ -83,8 +83,8 @@ namespace OpenAI.Images
             if (_additionalBinaryDataProperties?.ContainsKey("prompt") != true)
             {
                 writer.WritePropertyName("prompt"u8);
+                writer.WriteStringValue(Prompt);
             }
-            writer.WriteStringValue(Prompt);
             if (Optional.IsDefined(N) && _additionalBinaryDataProperties?.ContainsKey("n") != true)
             {
                 if (N != null)

@@ -35,13 +35,13 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("rate_limits") != true)
             {
                 writer.WritePropertyName("rate_limits"u8);
+                writer.WriteStartArray();
+                foreach (ConversationRateLimitDetailsItem item in RateLimits)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteStartArray();
-            foreach (ConversationRateLimitDetailsItem item in RateLimits)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
         }
 
         ConversationRateLimitsUpdatedUpdate IJsonModel<ConversationRateLimitsUpdatedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationRateLimitsUpdatedUpdate)JsonModelCreateCore(ref reader, options);

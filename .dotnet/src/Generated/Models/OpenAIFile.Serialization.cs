@@ -34,28 +34,28 @@ namespace OpenAI.Files
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (_additionalBinaryDataProperties?.ContainsKey("filename") != true)
             {
                 writer.WritePropertyName("filename"u8);
+                writer.WriteStringValue(Filename);
             }
-            writer.WriteStringValue(Filename);
             if (_additionalBinaryDataProperties?.ContainsKey("purpose") != true)
             {
                 writer.WritePropertyName("purpose"u8);
+                writer.WriteStringValue(Purpose.ToSerialString());
             }
-            writer.WriteStringValue(Purpose.ToSerialString());
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(this.Object.ToString());
             }
-            writer.WriteStringValue(this.Object.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("bytes") != true)
             {
                 if (SizeInBytes != null)
@@ -71,8 +71,8 @@ namespace OpenAI.Files
             if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToSerialString());
             }
-            writer.WriteStringValue(Status.ToSerialString());
             if (Optional.IsDefined(StatusDetails) && _additionalBinaryDataProperties?.ContainsKey("status_details") != true)
             {
                 writer.WritePropertyName("status_details"u8);

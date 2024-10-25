@@ -45,13 +45,13 @@ namespace OpenAI.Audio
             if (_additionalBinaryDataProperties?.ContainsKey("file") != true)
             {
                 writer.WritePropertyName("file"u8);
+                writer.WriteBase64StringValue(File.ToArray(), "D");
             }
-            writer.WriteBase64StringValue(File.ToArray(), "D");
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model.ToString());
             }
-            writer.WriteStringValue(Model.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

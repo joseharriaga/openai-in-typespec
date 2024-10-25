@@ -34,18 +34,18 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("finish_reason") != true)
             {
                 writer.WritePropertyName("finish_reason"u8);
+                writer.WriteStringValue(FinishReason.ToString());
             }
-            writer.WriteStringValue(FinishReason.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
             {
                 writer.WritePropertyName("index"u8);
+                writer.WriteNumberValue(Index);
             }
-            writer.WriteNumberValue(Index);
             if (_additionalBinaryDataProperties?.ContainsKey("message") != true)
             {
                 writer.WritePropertyName("message"u8);
+                writer.WriteObjectValue(Message, options);
             }
-            writer.WriteObjectValue(Message, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

@@ -35,13 +35,13 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("audio_start_ms") != true)
             {
                 writer.WritePropertyName("audio_start_ms"u8);
+                writer.WriteNumberValue(AudioStartMs);
             }
-            writer.WriteNumberValue(AudioStartMs);
             if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
             {
                 writer.WritePropertyName("item_id"u8);
+                writer.WriteStringValue(ItemId);
             }
-            writer.WriteStringValue(ItemId);
         }
 
         ConversationInputSpeechStartedUpdate IJsonModel<ConversationInputSpeechStartedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationInputSpeechStartedUpdate)JsonModelCreateCore(ref reader, options);

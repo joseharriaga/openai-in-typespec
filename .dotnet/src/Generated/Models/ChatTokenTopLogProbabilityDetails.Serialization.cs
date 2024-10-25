@@ -34,13 +34,13 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("token") != true)
             {
                 writer.WritePropertyName("token"u8);
+                writer.WriteStringValue(Token);
             }
-            writer.WriteStringValue(Token);
             if (_additionalBinaryDataProperties?.ContainsKey("logprob") != true)
             {
                 writer.WritePropertyName("logprob"u8);
+                writer.WriteNumberValue(LogProbability);
             }
-            writer.WriteNumberValue(LogProbability);
             if (_additionalBinaryDataProperties?.ContainsKey("bytes") != true)
             {
                 if (Utf8Bytes != null)

@@ -34,13 +34,13 @@ namespace OpenAI.Batch
             if (_additionalBinaryDataProperties?.ContainsKey("data") != true)
             {
                 writer.WritePropertyName("data"u8);
+                writer.WriteStartArray();
+                foreach (InternalBatchJob item in Data)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteStartArray();
-            foreach (InternalBatchJob item in Data)
-            {
-                writer.WriteObjectValue(item, options);
-            }
-            writer.WriteEndArray();
             if (Optional.IsDefined(FirstId) && _additionalBinaryDataProperties?.ContainsKey("first_id") != true)
             {
                 writer.WritePropertyName("first_id"u8);
@@ -54,13 +54,13 @@ namespace OpenAI.Batch
             if (_additionalBinaryDataProperties?.ContainsKey("has_more") != true)
             {
                 writer.WritePropertyName("has_more"u8);
+                writer.WriteBooleanValue(HasMore);
             }
-            writer.WriteBooleanValue(HasMore);
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            writer.WriteStringValue(Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

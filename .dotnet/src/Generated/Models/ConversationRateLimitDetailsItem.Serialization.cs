@@ -34,23 +34,23 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
+                writer.WriteStringValue(Name);
             }
-            writer.WriteStringValue(Name);
             if (_additionalBinaryDataProperties?.ContainsKey("limit") != true)
             {
                 writer.WritePropertyName("limit"u8);
+                writer.WriteNumberValue(Limit);
             }
-            writer.WriteNumberValue(Limit);
             if (_additionalBinaryDataProperties?.ContainsKey("remaining") != true)
             {
                 writer.WritePropertyName("remaining"u8);
+                writer.WriteNumberValue(Remaining);
             }
-            writer.WriteNumberValue(Remaining);
             if (_additionalBinaryDataProperties?.ContainsKey("reset_seconds") != true)
             {
                 writer.WritePropertyName("reset_seconds"u8);
+                writer.WriteNumberValue(ResetSeconds);
             }
-            writer.WriteNumberValue(ResetSeconds);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

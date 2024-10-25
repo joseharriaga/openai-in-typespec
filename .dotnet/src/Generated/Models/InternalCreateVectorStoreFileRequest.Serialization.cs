@@ -34,8 +34,8 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("file_id") != true)
             {
                 writer.WritePropertyName("file_id"u8);
+                writer.WriteStringValue(FileId);
             }
-            writer.WriteStringValue(FileId);
             if (Optional.IsDefined(ChunkingStrategy) && _additionalBinaryDataProperties?.ContainsKey("chunking_strategy") != true)
             {
                 writer.WritePropertyName("chunking_strategy"u8);

@@ -34,28 +34,28 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("in_progress") != true)
             {
                 writer.WritePropertyName("in_progress"u8);
+                writer.WriteNumberValue(InProgress);
             }
-            writer.WriteNumberValue(InProgress);
             if (_additionalBinaryDataProperties?.ContainsKey("completed") != true)
             {
                 writer.WritePropertyName("completed"u8);
+                writer.WriteNumberValue(Completed);
             }
-            writer.WriteNumberValue(Completed);
             if (_additionalBinaryDataProperties?.ContainsKey("failed") != true)
             {
                 writer.WritePropertyName("failed"u8);
+                writer.WriteNumberValue(Failed);
             }
-            writer.WriteNumberValue(Failed);
             if (_additionalBinaryDataProperties?.ContainsKey("cancelled") != true)
             {
                 writer.WritePropertyName("cancelled"u8);
+                writer.WriteNumberValue(Cancelled);
             }
-            writer.WriteNumberValue(Cancelled);
             if (_additionalBinaryDataProperties?.ContainsKey("total") != true)
             {
                 writer.WritePropertyName("total"u8);
+                writer.WriteNumberValue(Total);
             }
-            writer.WriteNumberValue(Total);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

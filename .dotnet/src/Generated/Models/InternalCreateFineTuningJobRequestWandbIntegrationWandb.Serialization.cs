@@ -73,8 +73,8 @@ namespace OpenAI.FineTuning
             if (_additionalBinaryDataProperties?.ContainsKey("project") != true)
             {
                 writer.WritePropertyName("project"u8);
+                writer.WriteStringValue(Project);
             }
-            writer.WriteStringValue(Project);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

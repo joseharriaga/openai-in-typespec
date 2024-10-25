@@ -24,8 +24,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("function") != true)
             {
                 writer.WritePropertyName("function"u8);
+                writer.WriteObjectValue<InternalFunctionDefinition>(_internalFunction, options);
             }
-            writer.WriteObjectValue<InternalFunctionDefinition>(_internalFunction, options);
         }
 
         FunctionToolDefinition IJsonModel<FunctionToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (FunctionToolDefinition)JsonModelCreateCore(ref reader, options);

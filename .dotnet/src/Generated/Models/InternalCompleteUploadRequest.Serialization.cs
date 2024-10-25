@@ -34,18 +34,18 @@ namespace OpenAI.Files
             if (_additionalBinaryDataProperties?.ContainsKey("part_ids") != true)
             {
                 writer.WritePropertyName("part_ids"u8);
-            }
-            writer.WriteStartArray();
-            foreach (string item in PartIds)
-            {
-                if (item == null)
+                writer.WriteStartArray();
+                foreach (string item in PartIds)
                 {
-                    writer.WriteNullValue();
-                    continue;
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
+                    writer.WriteStringValue(item);
                 }
-                writer.WriteStringValue(item);
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
             if (Optional.IsDefined(Md5) && _additionalBinaryDataProperties?.ContainsKey("md5") != true)
             {
                 writer.WritePropertyName("md5"u8);

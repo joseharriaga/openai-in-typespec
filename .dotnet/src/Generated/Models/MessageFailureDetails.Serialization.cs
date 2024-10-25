@@ -34,8 +34,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("reason") != true)
             {
                 writer.WritePropertyName("reason"u8);
+                writer.WriteStringValue(Reason.ToString());
             }
-            writer.WriteStringValue(Reason.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

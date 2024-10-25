@@ -35,15 +35,15 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("error") != true)
             {
                 writer.WritePropertyName("error"u8);
-            }
 #if NET6_0_OR_GREATER
-            writer.WriteRawValue(Error);
+                writer.WriteRawValue(Error);
 #else
-            using (JsonDocument document = JsonDocument.Parse(Error))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
+                using (JsonDocument document = JsonDocument.Parse(Error))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
 #endif
+            }
         }
 
         RealtimeResponseFailedStatusDetails IJsonModel<RealtimeResponseFailedStatusDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (RealtimeResponseFailedStatusDetails)JsonModelCreateCore(ref reader, options);

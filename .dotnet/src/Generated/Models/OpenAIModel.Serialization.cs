@@ -34,23 +34,23 @@ namespace OpenAI.Models
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("owned_by") != true)
             {
                 writer.WritePropertyName("owned_by"u8);
+                writer.WriteStringValue(OwnedBy);
             }
-            writer.WriteStringValue(OwnedBy);
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(this.Object.ToString());
             }
-            writer.WriteStringValue(this.Object.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("created") != true)
             {
                 writer.WritePropertyName("created"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

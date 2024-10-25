@@ -34,8 +34,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("file_id") != true)
             {
                 writer.WritePropertyName("file_id"u8);
+                writer.WriteStringValue(FileId);
             }
-            writer.WriteStringValue(FileId);
             if (Optional.IsDefined(Detail) && _additionalBinaryDataProperties?.ContainsKey("detail") != true)
             {
                 writer.WritePropertyName("detail"u8);

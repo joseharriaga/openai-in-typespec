@@ -28,13 +28,13 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("refusal") != true)
             {
                 writer.WritePropertyName("refusal"u8);
+                writer.WriteStringValue(InternalRefusal);
             }
-            writer.WriteStringValue(InternalRefusal);
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(_type);
             }
-            writer.WriteStringValue(_type);
         }
 
         InternalMessageRefusalContent IJsonModel<InternalMessageRefusalContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalMessageRefusalContent)JsonModelCreateCore(ref reader, options);

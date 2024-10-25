@@ -35,8 +35,8 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("reason") != true)
             {
                 writer.WritePropertyName("reason"u8);
+                writer.WriteStringValue(Reason.ToString());
             }
-            writer.WriteStringValue(Reason.ToString());
         }
 
         InternalRealtimeResponseIncompleteStatusDetails IJsonModel<InternalRealtimeResponseIncompleteStatusDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeResponseIncompleteStatusDetails)JsonModelCreateCore(ref reader, options);

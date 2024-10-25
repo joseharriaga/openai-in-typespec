@@ -35,13 +35,13 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("file_search") != true)
             {
                 writer.WritePropertyName("file_search"u8);
+                writer.WriteObjectValue(FileSearch, options);
             }
-            writer.WriteObjectValue(FileSearch, options);
         }
 
         InternalRunStepFileSearchToolCallDetails IJsonModel<InternalRunStepFileSearchToolCallDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepFileSearchToolCallDetails)JsonModelCreateCore(ref reader, options);

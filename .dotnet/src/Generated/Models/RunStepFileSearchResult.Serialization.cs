@@ -34,18 +34,18 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("file_id") != true)
             {
                 writer.WritePropertyName("file_id"u8);
+                writer.WriteStringValue(FileId);
             }
-            writer.WriteStringValue(FileId);
             if (_additionalBinaryDataProperties?.ContainsKey("file_name") != true)
             {
                 writer.WritePropertyName("file_name"u8);
+                writer.WriteStringValue(FileName);
             }
-            writer.WriteStringValue(FileName);
             if (_additionalBinaryDataProperties?.ContainsKey("score") != true)
             {
                 writer.WritePropertyName("score"u8);
+                writer.WriteNumberValue(Score);
             }
-            writer.WriteNumberValue(Score);
             if (Optional.IsCollectionDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);

@@ -50,13 +50,13 @@ namespace OpenAI.Audio
             if (_additionalBinaryDataProperties?.ContainsKey("file") != true)
             {
                 writer.WritePropertyName("file"u8);
+                writer.WriteBase64StringValue(File.ToArray(), "D");
             }
-            writer.WriteBase64StringValue(File.ToArray(), "D");
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model.ToString());
             }
-            writer.WriteStringValue(Model.ToString());
             if (Optional.IsCollectionDefined(InternalTimestampGranularities) && _additionalBinaryDataProperties?.ContainsKey("timestamp_granularities") != true)
             {
                 writer.WritePropertyName("timestamp_granularities"u8);

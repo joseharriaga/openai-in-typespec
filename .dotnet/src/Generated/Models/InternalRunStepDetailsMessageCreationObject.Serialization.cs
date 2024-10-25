@@ -35,8 +35,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("message_creation") != true)
             {
                 writer.WritePropertyName("message_creation"u8);
+                writer.WriteObjectValue<InternalRunStepDetailsMessageCreationObjectMessageCreation>(_messageCreation, options);
             }
-            writer.WriteObjectValue<InternalRunStepDetailsMessageCreationObjectMessageCreation>(_messageCreation, options);
         }
 
         InternalRunStepDetailsMessageCreationObject IJsonModel<InternalRunStepDetailsMessageCreationObject>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepDetailsMessageCreationObject)JsonModelCreateCore(ref reader, options);

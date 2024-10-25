@@ -34,18 +34,18 @@ namespace OpenAI.Batch
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            writer.WriteStringValue(Object.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("endpoint") != true)
             {
                 writer.WritePropertyName("endpoint"u8);
+                writer.WriteStringValue(Endpoint);
             }
-            writer.WriteStringValue(Endpoint);
             if (Optional.IsDefined(Errors) && _additionalBinaryDataProperties?.ContainsKey("errors") != true)
             {
                 writer.WritePropertyName("errors"u8);
@@ -54,18 +54,18 @@ namespace OpenAI.Batch
             if (_additionalBinaryDataProperties?.ContainsKey("input_file_id") != true)
             {
                 writer.WritePropertyName("input_file_id"u8);
+                writer.WriteStringValue(InputFileId);
             }
-            writer.WriteStringValue(InputFileId);
             if (_additionalBinaryDataProperties?.ContainsKey("completion_window") != true)
             {
                 writer.WritePropertyName("completion_window"u8);
+                writer.WriteStringValue(CompletionWindow);
             }
-            writer.WriteStringValue(CompletionWindow);
             if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToString());
             }
-            writer.WriteStringValue(Status.ToString());
             if (Optional.IsDefined(OutputFileId) && _additionalBinaryDataProperties?.ContainsKey("output_file_id") != true)
             {
                 writer.WritePropertyName("output_file_id"u8);
@@ -79,8 +79,8 @@ namespace OpenAI.Batch
             if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (Optional.IsDefined(InProgressAt) && _additionalBinaryDataProperties?.ContainsKey("in_progress_at") != true)
             {
                 writer.WritePropertyName("in_progress_at"u8);

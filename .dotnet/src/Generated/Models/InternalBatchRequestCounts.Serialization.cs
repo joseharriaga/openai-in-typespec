@@ -34,18 +34,18 @@ namespace OpenAI.Batch
             if (_additionalBinaryDataProperties?.ContainsKey("total") != true)
             {
                 writer.WritePropertyName("total"u8);
+                writer.WriteNumberValue(Total);
             }
-            writer.WriteNumberValue(Total);
             if (_additionalBinaryDataProperties?.ContainsKey("completed") != true)
             {
                 writer.WritePropertyName("completed"u8);
+                writer.WriteNumberValue(Completed);
             }
-            writer.WriteNumberValue(Completed);
             if (_additionalBinaryDataProperties?.ContainsKey("failed") != true)
             {
                 writer.WritePropertyName("failed"u8);
+                writer.WriteNumberValue(Failed);
             }
-            writer.WriteNumberValue(Failed);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

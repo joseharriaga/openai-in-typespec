@@ -34,8 +34,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("url") != true)
             {
                 writer.WritePropertyName("url"u8);
+                writer.WriteStringValue(Url.AbsoluteUri);
             }
-            writer.WriteStringValue(Url.AbsoluteUri);
             if (Optional.IsDefined(Detail) && _additionalBinaryDataProperties?.ContainsKey("detail") != true)
             {
                 writer.WritePropertyName("detail"u8);

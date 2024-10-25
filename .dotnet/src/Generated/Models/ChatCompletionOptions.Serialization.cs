@@ -93,13 +93,13 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("messages") != true)
             {
                 writer.WritePropertyName("messages"u8);
+                this.SerializeMessagesValue(writer, options);
             }
-            this.SerializeMessagesValue(writer, options);
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model.ToString());
             }
-            writer.WriteStringValue(Model.ToString());
             if (Optional.IsDefined(N) && _additionalBinaryDataProperties?.ContainsKey("n") != true)
             {
                 if (N != null)

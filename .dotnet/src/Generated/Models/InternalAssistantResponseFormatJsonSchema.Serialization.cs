@@ -36,8 +36,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("json_schema") != true)
             {
                 writer.WritePropertyName("json_schema"u8);
+                writer.WriteObjectValue(JsonSchema, options);
             }
-            writer.WriteObjectValue(JsonSchema, options);
         }
 
         InternalAssistantResponseFormatJsonSchema IJsonModel<InternalAssistantResponseFormatJsonSchema>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalAssistantResponseFormatJsonSchema)JsonModelCreateCore(ref reader, options);

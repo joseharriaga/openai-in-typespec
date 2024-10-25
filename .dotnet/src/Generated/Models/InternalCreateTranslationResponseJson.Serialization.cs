@@ -34,8 +34,8 @@ namespace OpenAI.Audio
             if (_additionalBinaryDataProperties?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
+                writer.WriteStringValue(Text);
             }
-            writer.WriteStringValue(Text);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

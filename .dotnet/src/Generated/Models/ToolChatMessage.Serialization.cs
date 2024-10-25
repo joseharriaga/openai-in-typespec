@@ -28,8 +28,8 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("tool_call_id") != true)
             {
                 writer.WritePropertyName("tool_call_id"u8);
+                writer.WriteStringValue(ToolCallId);
             }
-            writer.WriteStringValue(ToolCallId);
         }
 
         ToolChatMessage IJsonModel<ToolChatMessage>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ToolChatMessage)JsonModelCreateCore(ref reader, options);

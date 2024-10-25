@@ -34,8 +34,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("input") != true)
             {
                 writer.WritePropertyName("input"u8);
+                writer.WriteStringValue(Input);
             }
-            writer.WriteStringValue(Input);
             if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("outputs") != true)
             {
                 writer.WritePropertyName("outputs"u8);

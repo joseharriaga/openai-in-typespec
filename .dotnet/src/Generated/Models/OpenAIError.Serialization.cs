@@ -46,8 +46,8 @@ namespace OpenAI.Internal
             if (_additionalBinaryDataProperties?.ContainsKey("message") != true)
             {
                 writer.WritePropertyName("message"u8);
+                writer.WriteStringValue(Message);
             }
-            writer.WriteStringValue(Message);
             if (_additionalBinaryDataProperties?.ContainsKey("param") != true)
             {
                 if (Param != null)
@@ -63,8 +63,8 @@ namespace OpenAI.Internal
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Type);
             }
-            writer.WriteStringValue(Type);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

@@ -35,8 +35,8 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("logs") != true)
             {
                 writer.WritePropertyName("logs"u8);
+                writer.WriteStringValue(InternalLogs);
             }
-            writer.WriteStringValue(InternalLogs);
         }
 
         InternalRunStepCodeInterpreterLogOutput IJsonModel<InternalRunStepCodeInterpreterLogOutput>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRunStepCodeInterpreterLogOutput)JsonModelCreateCore(ref reader, options);

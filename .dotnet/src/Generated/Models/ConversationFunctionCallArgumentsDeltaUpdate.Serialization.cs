@@ -35,28 +35,28 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("response_id") != true)
             {
                 writer.WritePropertyName("response_id"u8);
+                writer.WriteStringValue(ResponseId);
             }
-            writer.WriteStringValue(ResponseId);
             if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
             {
                 writer.WritePropertyName("item_id"u8);
+                writer.WriteStringValue(ItemId);
             }
-            writer.WriteStringValue(ItemId);
             if (_additionalBinaryDataProperties?.ContainsKey("output_index") != true)
             {
                 writer.WritePropertyName("output_index"u8);
+                writer.WriteNumberValue(OutputIndex);
             }
-            writer.WriteNumberValue(OutputIndex);
             if (_additionalBinaryDataProperties?.ContainsKey("call_id") != true)
             {
                 writer.WritePropertyName("call_id"u8);
+                writer.WriteStringValue(CallId);
             }
-            writer.WriteStringValue(CallId);
             if (_additionalBinaryDataProperties?.ContainsKey("delta") != true)
             {
                 writer.WritePropertyName("delta"u8);
+                writer.WriteStringValue(Delta);
             }
-            writer.WriteStringValue(Delta);
         }
 
         ConversationFunctionCallArgumentsDeltaUpdate IJsonModel<ConversationFunctionCallArgumentsDeltaUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationFunctionCallArgumentsDeltaUpdate)JsonModelCreateCore(ref reader, options);

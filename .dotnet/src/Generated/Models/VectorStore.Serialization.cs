@@ -34,33 +34,33 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
+                writer.WriteStringValue(Name);
             }
-            writer.WriteStringValue(Name);
             if (_additionalBinaryDataProperties?.ContainsKey("usage_bytes") != true)
             {
                 writer.WritePropertyName("usage_bytes"u8);
+                writer.WriteNumberValue(UsageBytes);
             }
-            writer.WriteNumberValue(UsageBytes);
             if (_additionalBinaryDataProperties?.ContainsKey("file_counts") != true)
             {
                 writer.WritePropertyName("file_counts"u8);
+                writer.WriteObjectValue(FileCounts, options);
             }
-            writer.WriteObjectValue(FileCounts, options);
             if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToSerialString());
             }
-            writer.WriteStringValue(Status.ToSerialString());
             if (Optional.IsDefined(ExpiresAt) && _additionalBinaryDataProperties?.ContainsKey("expires_at") != true)
             {
                 if (ExpiresAt != null)
@@ -111,8 +111,8 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(this.Object.ToString());
             }
-            writer.WriteStringValue(this.Object.ToString());
             if (Optional.IsDefined(ExpirationPolicy) && _additionalBinaryDataProperties?.ContainsKey("expires_after") != true)
             {
                 writer.WritePropertyName("expires_after"u8);

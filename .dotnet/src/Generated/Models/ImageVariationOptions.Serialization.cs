@@ -42,8 +42,8 @@ namespace OpenAI.Images
             if (_additionalBinaryDataProperties?.ContainsKey("image") != true)
             {
                 writer.WritePropertyName("image"u8);
+                writer.WriteBase64StringValue(Image.ToArray(), "D");
             }
-            writer.WriteBase64StringValue(Image.ToArray(), "D");
             if (Optional.IsDefined(N) && _additionalBinaryDataProperties?.ContainsKey("n") != true)
             {
                 if (N != null)

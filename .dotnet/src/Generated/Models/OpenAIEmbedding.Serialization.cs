@@ -34,25 +34,25 @@ namespace OpenAI.Embeddings
             if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
             {
                 writer.WritePropertyName("index"u8);
+                writer.WriteNumberValue(Index);
             }
-            writer.WriteNumberValue(Index);
             if (_additionalBinaryDataProperties?.ContainsKey("embedding") != true)
             {
                 writer.WritePropertyName("embedding"u8);
-            }
 #if NET6_0_OR_GREATER
-            writer.WriteRawValue(EmbeddingProperty);
+                writer.WriteRawValue(EmbeddingProperty);
 #else
-            using (JsonDocument document = JsonDocument.Parse(EmbeddingProperty))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
+                using (JsonDocument document = JsonDocument.Parse(EmbeddingProperty))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
 #endif
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(this.Object.ToString());
             }
-            writer.WriteStringValue(this.Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

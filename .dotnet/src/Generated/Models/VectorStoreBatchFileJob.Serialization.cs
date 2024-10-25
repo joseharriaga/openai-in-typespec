@@ -34,33 +34,33 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (_additionalBinaryDataProperties?.ContainsKey("vector_store_id") != true)
             {
                 writer.WritePropertyName("vector_store_id"u8);
+                writer.WriteStringValue(VectorStoreId);
             }
-            writer.WriteStringValue(VectorStoreId);
             if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToString());
             }
-            writer.WriteStringValue(Status.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(BatchId);
             }
-            writer.WriteStringValue(BatchId);
             if (_additionalBinaryDataProperties?.ContainsKey("file_counts") != true)
             {
                 writer.WritePropertyName("file_counts"u8);
+                writer.WriteObjectValue<VectorStoreFileCounts>(FileCounts, options);
             }
-            writer.WriteObjectValue<VectorStoreFileCounts>(FileCounts, options);
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteObjectValue<object>(this.Object, options);
             }
-            writer.WriteObjectValue<object>(this.Object, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

@@ -34,13 +34,13 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Type.ToString());
             }
-            writer.WriteStringValue(Type.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("refusal") != true)
             {
                 writer.WritePropertyName("refusal"u8);
+                writer.WriteStringValue(Refusal);
             }
-            writer.WriteStringValue(Refusal);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

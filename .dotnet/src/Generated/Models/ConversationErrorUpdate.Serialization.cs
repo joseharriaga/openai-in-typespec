@@ -35,8 +35,8 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("error") != true)
             {
                 writer.WritePropertyName("error"u8);
+                writer.WriteObjectValue<InternalRealtimeResponseError>(_error, options);
             }
-            writer.WriteObjectValue<InternalRealtimeResponseError>(_error, options);
         }
 
         ConversationErrorUpdate IJsonModel<ConversationErrorUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationErrorUpdate)JsonModelCreateCore(ref reader, options);

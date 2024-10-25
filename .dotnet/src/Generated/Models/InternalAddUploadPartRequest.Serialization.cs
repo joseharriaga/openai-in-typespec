@@ -34,8 +34,8 @@ namespace OpenAI.Files
             if (_additionalBinaryDataProperties?.ContainsKey("data") != true)
             {
                 writer.WritePropertyName("data"u8);
+                writer.WriteBase64StringValue(Data.ToArray(), "D");
             }
-            writer.WriteBase64StringValue(Data.ToArray(), "D");
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

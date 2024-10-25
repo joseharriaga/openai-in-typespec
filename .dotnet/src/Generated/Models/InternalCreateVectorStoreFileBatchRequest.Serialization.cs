@@ -34,18 +34,18 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("file_ids") != true)
             {
                 writer.WritePropertyName("file_ids"u8);
-            }
-            writer.WriteStartArray();
-            foreach (string item in FileIds)
-            {
-                if (item == null)
+                writer.WriteStartArray();
+                foreach (string item in FileIds)
                 {
-                    writer.WriteNullValue();
-                    continue;
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
+                    writer.WriteStringValue(item);
                 }
-                writer.WriteStringValue(item);
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
             if (Optional.IsDefined(ChunkingStrategy) && _additionalBinaryDataProperties?.ContainsKey("chunking_strategy") != true)
             {
                 writer.WritePropertyName("chunking_strategy"u8);

@@ -34,48 +34,48 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.ToString());
             }
-            writer.WriteStringValue(Object.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
             }
-            writer.WriteStringValue(Id);
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model);
             }
-            writer.WriteStringValue(Model);
             if (_additionalBinaryDataProperties?.ContainsKey("modalities") != true)
             {
                 writer.WritePropertyName("modalities"u8);
+                writer.WriteStartArray();
+                foreach (InternalRealtimeRequestSessionUpdateCommandSessionModality item in Modalities)
+                {
+                    writer.WriteStringValue(item.ToString());
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteStartArray();
-            foreach (InternalRealtimeRequestSessionUpdateCommandSessionModality item in Modalities)
-            {
-                writer.WriteStringValue(item.ToString());
-            }
-            writer.WriteEndArray();
             if (_additionalBinaryDataProperties?.ContainsKey("instructions") != true)
             {
                 writer.WritePropertyName("instructions"u8);
+                writer.WriteStringValue(Instructions);
             }
-            writer.WriteStringValue(Instructions);
             if (_additionalBinaryDataProperties?.ContainsKey("voice") != true)
             {
                 writer.WritePropertyName("voice"u8);
+                writer.WriteStringValue(Voice.ToString());
             }
-            writer.WriteStringValue(Voice.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("input_audio_format") != true)
             {
                 writer.WritePropertyName("input_audio_format"u8);
+                writer.WriteStringValue(InputAudioFormat.ToString());
             }
-            writer.WriteStringValue(InputAudioFormat.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("output_audio_format") != true)
             {
                 writer.WritePropertyName("output_audio_format"u8);
+                writer.WriteStringValue(OutputAudioFormat.ToString());
             }
-            writer.WriteStringValue(OutputAudioFormat.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("input_audio_transcription") != true)
             {
                 if (InputAudioTranscription != null)
@@ -91,8 +91,8 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("turn_detection") != true)
             {
                 writer.WritePropertyName("turn_detection"u8);
+                writer.WriteObjectValue(TurnDetection, options);
             }
-            writer.WriteObjectValue(TurnDetection, options);
             if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("tools") != true)
             {
                 writer.WritePropertyName("tools"u8);
@@ -106,20 +106,20 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("tool_choice") != true)
             {
                 writer.WritePropertyName("tool_choice"u8);
-            }
 #if NET6_0_OR_GREATER
-            writer.WriteRawValue(ToolChoice);
+                writer.WriteRawValue(ToolChoice);
 #else
-            using (JsonDocument document = JsonDocument.Parse(ToolChoice))
-            {
-                JsonSerializer.Serialize(writer, document.RootElement);
-            }
+                using (JsonDocument document = JsonDocument.Parse(ToolChoice))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
 #endif
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("temperature") != true)
             {
                 writer.WritePropertyName("temperature"u8);
+                writer.WriteNumberValue(Temperature);
             }
-            writer.WriteNumberValue(Temperature);
             if (_additionalBinaryDataProperties?.ContainsKey("max_response_output_tokens") != true)
             {
                 if (_maxResponseOutputTokens != null)

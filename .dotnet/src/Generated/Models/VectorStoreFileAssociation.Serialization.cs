@@ -34,18 +34,18 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
             {
                 writer.WritePropertyName("created_at"u8);
+                writer.WriteNumberValue(CreatedAt, "U");
             }
-            writer.WriteNumberValue(CreatedAt, "U");
             if (_additionalBinaryDataProperties?.ContainsKey("vector_store_id") != true)
             {
                 writer.WritePropertyName("vector_store_id"u8);
+                writer.WriteStringValue(VectorStoreId);
             }
-            writer.WriteStringValue(VectorStoreId);
             if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
+                writer.WriteStringValue(Status.ToSerialString());
             }
-            writer.WriteStringValue(Status.ToSerialString());
             if (_additionalBinaryDataProperties?.ContainsKey("last_error") != true)
             {
                 if (LastError != null)
@@ -61,18 +61,18 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(this.Object.ToString());
             }
-            writer.WriteStringValue(this.Object.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(FileId);
             }
-            writer.WriteStringValue(FileId);
             if (_additionalBinaryDataProperties?.ContainsKey("usage_bytes") != true)
             {
                 writer.WritePropertyName("usage_bytes"u8);
+                writer.WriteNumberValue(Size);
             }
-            writer.WriteNumberValue(Size);
             if (Optional.IsDefined(ChunkingStrategy) && _additionalBinaryDataProperties?.ContainsKey("chunking_strategy") != true)
             {
                 writer.WritePropertyName("chunking_strategy"u8);

@@ -34,13 +34,13 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("max_chunk_size_tokens") != true)
             {
                 writer.WritePropertyName("max_chunk_size_tokens"u8);
+                writer.WriteNumberValue(MaxChunkSizeTokens);
             }
-            writer.WriteNumberValue(MaxChunkSizeTokens);
             if (_additionalBinaryDataProperties?.ContainsKey("chunk_overlap_tokens") != true)
             {
                 writer.WritePropertyName("chunk_overlap_tokens"u8);
+                writer.WriteNumberValue(ChunkOverlapTokens);
             }
-            writer.WriteNumberValue(ChunkOverlapTokens);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

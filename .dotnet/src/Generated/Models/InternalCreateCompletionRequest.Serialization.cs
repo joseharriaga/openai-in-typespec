@@ -35,8 +35,8 @@ namespace OpenAI.LegacyCompletions
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model.ToString());
             }
-            writer.WriteStringValue(Model.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("prompt") != true)
             {
                 if (Prompt != null)

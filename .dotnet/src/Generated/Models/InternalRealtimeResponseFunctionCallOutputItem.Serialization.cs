@@ -35,13 +35,13 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("call_id") != true)
             {
                 writer.WritePropertyName("call_id"u8);
+                writer.WriteStringValue(CallId);
             }
-            writer.WriteStringValue(CallId);
             if (_additionalBinaryDataProperties?.ContainsKey("output") != true)
             {
                 writer.WritePropertyName("output"u8);
+                writer.WriteStringValue(Output);
             }
-            writer.WriteStringValue(Output);
         }
 
         InternalRealtimeResponseFunctionCallOutputItem IJsonModel<InternalRealtimeResponseFunctionCallOutputItem>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeResponseFunctionCallOutputItem)JsonModelCreateCore(ref reader, options);

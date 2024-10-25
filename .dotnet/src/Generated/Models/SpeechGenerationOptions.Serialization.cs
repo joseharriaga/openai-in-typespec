@@ -35,18 +35,18 @@ namespace OpenAI.Audio
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model.ToString());
             }
-            writer.WriteStringValue(Model.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("input") != true)
             {
                 writer.WritePropertyName("input"u8);
+                writer.WriteStringValue(Input);
             }
-            writer.WriteStringValue(Input);
             if (_additionalBinaryDataProperties?.ContainsKey("voice") != true)
             {
                 writer.WritePropertyName("voice"u8);
+                writer.WriteStringValue(Voice.ToString());
             }
-            writer.WriteStringValue(Voice.ToString());
             if (Optional.IsDefined(SpeedRatio) && _additionalBinaryDataProperties?.ContainsKey("speed") != true)
             {
                 writer.WritePropertyName("speed"u8);

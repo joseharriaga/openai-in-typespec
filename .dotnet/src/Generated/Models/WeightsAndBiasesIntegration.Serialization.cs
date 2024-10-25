@@ -35,8 +35,8 @@ namespace OpenAI.FineTuning
             if (_additionalBinaryDataProperties?.ContainsKey("wandb") != true)
             {
                 writer.WritePropertyName("wandb"u8);
+                writer.WriteObjectValue(Wandb, options);
             }
-            writer.WriteObjectValue(Wandb, options);
         }
 
         WeightsAndBiasesIntegration IJsonModel<WeightsAndBiasesIntegration>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (WeightsAndBiasesIntegration)JsonModelCreateCore(ref reader, options);

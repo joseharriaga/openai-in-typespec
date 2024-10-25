@@ -34,8 +34,8 @@ namespace OpenAI.Internal
             if (_additionalBinaryDataProperties?.ContainsKey("error") != true)
             {
                 writer.WritePropertyName("error"u8);
+                writer.WriteObjectValue(Error, options);
             }
-            writer.WriteObjectValue(Error, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

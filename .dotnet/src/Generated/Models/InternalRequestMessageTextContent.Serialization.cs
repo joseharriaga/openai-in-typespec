@@ -28,13 +28,13 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Type.ToString());
             }
-            writer.WriteStringValue(Type.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
+                writer.WriteStringValue(InternalText);
             }
-            writer.WriteStringValue(InternalText);
         }
 
         InternalRequestMessageTextContent IJsonModel<InternalRequestMessageTextContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRequestMessageTextContent)JsonModelCreateCore(ref reader, options);

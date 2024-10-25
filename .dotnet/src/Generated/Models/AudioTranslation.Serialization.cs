@@ -34,13 +34,13 @@ namespace OpenAI.Audio
             if (_additionalBinaryDataProperties?.ContainsKey("language") != true)
             {
                 writer.WritePropertyName("language"u8);
+                writer.WriteStringValue(Language);
             }
-            writer.WriteStringValue(Language);
             if (_additionalBinaryDataProperties?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
+                writer.WriteStringValue(Text);
             }
-            writer.WriteStringValue(Text);
             if (Optional.IsCollectionDefined(Segments) && _additionalBinaryDataProperties?.ContainsKey("segments") != true)
             {
                 writer.WritePropertyName("segments"u8);
@@ -54,13 +54,13 @@ namespace OpenAI.Audio
             if (_additionalBinaryDataProperties?.ContainsKey("task") != true)
             {
                 writer.WritePropertyName("task"u8);
+                writer.WriteStringValue(Task.ToString());
             }
-            writer.WriteStringValue(Task.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("duration") != true)
             {
                 writer.WritePropertyName("duration"u8);
+                writer.WriteNumberValue(Convert.ToDouble(Duration.Value.ToString("s\\.FFF")));
             }
-            writer.WriteNumberValue(Convert.ToDouble(Duration.Value.ToString("s\\.FFF")));
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

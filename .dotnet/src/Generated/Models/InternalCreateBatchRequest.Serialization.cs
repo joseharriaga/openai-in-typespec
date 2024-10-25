@@ -34,18 +34,18 @@ namespace OpenAI.Batch
             if (_additionalBinaryDataProperties?.ContainsKey("input_file_id") != true)
             {
                 writer.WritePropertyName("input_file_id"u8);
+                writer.WriteStringValue(InputFileId);
             }
-            writer.WriteStringValue(InputFileId);
             if (_additionalBinaryDataProperties?.ContainsKey("endpoint") != true)
             {
                 writer.WritePropertyName("endpoint"u8);
+                writer.WriteStringValue(Endpoint.ToString());
             }
-            writer.WriteStringValue(Endpoint.ToString());
             if (_additionalBinaryDataProperties?.ContainsKey("completion_window") != true)
             {
                 writer.WritePropertyName("completion_window"u8);
+                writer.WriteStringValue(CompletionWindow.ToString());
             }
-            writer.WriteStringValue(CompletionWindow.ToString());
             if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null)

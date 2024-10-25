@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public abstract partial class ConversationItem
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         private protected ConversationItem(InternalRealtimeRequestItemType @type)
         {
@@ -26,5 +26,11 @@ namespace OpenAI.RealtimeConversation
         internal InternalRealtimeRequestItemType Type { get; set; }
 
         public string Id { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

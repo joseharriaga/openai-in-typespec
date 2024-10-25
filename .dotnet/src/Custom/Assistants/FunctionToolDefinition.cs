@@ -62,7 +62,7 @@ public partial class FunctionToolDefinition : ToolDefinition
     }
 
     [SetsRequiredMembers]
-    internal FunctionToolDefinition(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalFunctionDefinition function)
+    internal FunctionToolDefinition(InternalFunctionDefinition function, string type, IDictionary<string, BinaryData> serializedAdditionalRawData)
         : base(type, serializedAdditionalRawData)
     {
         _internalFunction = function;

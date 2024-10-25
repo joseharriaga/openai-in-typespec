@@ -31,32 +31,48 @@ namespace OpenAI.Internal
             {
                 throw new FormatException($"The model {nameof(OpenAIError)} does not support writing '{format}' format.");
             }
-            if (Code != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("code") != true)
             {
-                writer.WritePropertyName("code"u8);
-                writer.WriteStringValue(Code);
+                if (Code != null)
+                {
+                    writer.WritePropertyName("code"u8);
+                    writer.WriteStringValue(Code);
+                }
+                else
+                {
+                    writer.WriteNull("code"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("message") != true)
             {
-                writer.WriteNull("code"u8);
+                writer.WritePropertyName("message"u8);
             }
-            writer.WritePropertyName("message"u8);
             writer.WriteStringValue(Message);
-            if (Param != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("param") != true)
             {
-                writer.WritePropertyName("param"u8);
-                writer.WriteStringValue(Param);
+                if (Param != null)
+                {
+                    writer.WritePropertyName("param"u8);
+                    writer.WriteStringValue(Param);
+                }
+                else
+                {
+                    writer.WriteNull("param"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
-                writer.WriteNull("param"u8);
+                writer.WritePropertyName("type"u8);
             }
-            writer.WritePropertyName("type"u8);
             writer.WriteStringValue(Type);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

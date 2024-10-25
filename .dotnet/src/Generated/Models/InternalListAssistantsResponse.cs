@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalListAssistantsResponse
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalListAssistantsResponse(string firstId, string lastId, bool hasMore)
         {
@@ -39,5 +39,11 @@ namespace OpenAI.Assistants
         public string LastId { get; }
 
         public bool HasMore { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

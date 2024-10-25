@@ -9,7 +9,7 @@ namespace OpenAI.VectorStores
 {
     public partial class VectorStoreFileAssociationError
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal VectorStoreFileAssociationError(VectorStoreFileAssociationErrorCode code, string message)
         {
@@ -27,5 +27,11 @@ namespace OpenAI.VectorStores
         public VectorStoreFileAssociationErrorCode Code { get; }
 
         public string Message { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

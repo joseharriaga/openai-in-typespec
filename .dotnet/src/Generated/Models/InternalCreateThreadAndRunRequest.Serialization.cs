@@ -31,14 +31,17 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalCreateThreadAndRunRequest)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("assistant_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("assistant_id") != true)
+            {
+                writer.WritePropertyName("assistant_id"u8);
+            }
             writer.WriteStringValue(AssistantId);
-            if (Optional.IsDefined(Thread))
+            if (Optional.IsDefined(Thread) && _additionalBinaryDataProperties?.ContainsKey("thread") != true)
             {
                 writer.WritePropertyName("thread"u8);
                 writer.WriteObjectValue(Thread, options);
             }
-            if (Optional.IsDefined(Instructions))
+            if (Optional.IsDefined(Instructions) && _additionalBinaryDataProperties?.ContainsKey("instructions") != true)
             {
                 if (Instructions != null)
                 {
@@ -50,7 +53,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("instructions"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(Tools))
+            if (Optional.IsCollectionDefined(Tools) && _additionalBinaryDataProperties?.ContainsKey("tools") != true)
             {
                 if (Tools != null)
                 {
@@ -67,7 +70,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("tools"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(Metadata))
+            if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null)
                 {
@@ -90,7 +93,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("metadata"u8);
                 }
             }
-            if (Optional.IsDefined(Temperature))
+            if (Optional.IsDefined(Temperature) && _additionalBinaryDataProperties?.ContainsKey("temperature") != true)
             {
                 if (Temperature != null)
                 {
@@ -102,7 +105,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("temperature"u8);
                 }
             }
-            if (Optional.IsDefined(TopP))
+            if (Optional.IsDefined(TopP) && _additionalBinaryDataProperties?.ContainsKey("top_p") != true)
             {
                 if (TopP != null)
                 {
@@ -114,7 +117,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("topP"u8);
                 }
             }
-            if (Optional.IsDefined(Stream))
+            if (Optional.IsDefined(Stream) && _additionalBinaryDataProperties?.ContainsKey("stream") != true)
             {
                 if (Stream != null)
                 {
@@ -126,7 +129,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("stream"u8);
                 }
             }
-            if (Optional.IsDefined(MaxPromptTokens))
+            if (Optional.IsDefined(MaxPromptTokens) && _additionalBinaryDataProperties?.ContainsKey("max_prompt_tokens") != true)
             {
                 if (MaxPromptTokens != null)
                 {
@@ -138,7 +141,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("maxPromptTokens"u8);
                 }
             }
-            if (Optional.IsDefined(MaxCompletionTokens))
+            if (Optional.IsDefined(MaxCompletionTokens) && _additionalBinaryDataProperties?.ContainsKey("max_completion_tokens") != true)
             {
                 if (MaxCompletionTokens != null)
                 {
@@ -150,7 +153,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("maxCompletionTokens"u8);
                 }
             }
-            if (Optional.IsDefined(TruncationStrategy))
+            if (Optional.IsDefined(TruncationStrategy) && _additionalBinaryDataProperties?.ContainsKey("truncation_strategy") != true)
             {
                 if (TruncationStrategy != null)
                 {
@@ -162,12 +165,12 @@ namespace OpenAI.Assistants
                     writer.WriteNull("truncationStrategy"u8);
                 }
             }
-            if (Optional.IsDefined(ParallelToolCalls))
+            if (Optional.IsDefined(ParallelToolCalls) && _additionalBinaryDataProperties?.ContainsKey("parallel_tool_calls") != true)
             {
                 writer.WritePropertyName("parallel_tool_calls"u8);
                 writer.WriteBooleanValue(ParallelToolCalls.Value);
             }
-            if (Optional.IsDefined(Model))
+            if (Optional.IsDefined(Model) && _additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 if (Model != null)
                 {
@@ -179,7 +182,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("model"u8);
                 }
             }
-            if (Optional.IsDefined(ToolResources))
+            if (Optional.IsDefined(ToolResources) && _additionalBinaryDataProperties?.ContainsKey("tool_resources") != true)
             {
                 if (ToolResources != null)
                 {
@@ -191,7 +194,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("toolResources"u8);
                 }
             }
-            if (Optional.IsDefined(ResponseFormat))
+            if (Optional.IsDefined(ResponseFormat) && _additionalBinaryDataProperties?.ContainsKey("response_format") != true)
             {
                 if (ResponseFormat != null)
                 {
@@ -203,7 +206,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("responseFormat"u8);
                 }
             }
-            if (Optional.IsDefined(ToolChoice))
+            if (Optional.IsDefined(ToolChoice) && _additionalBinaryDataProperties?.ContainsKey("tool_choice") != true)
             {
                 if (ToolChoice != null)
                 {
@@ -219,6 +222,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -279,7 +286,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        thread = null;
                         continue;
                     }
                     thread = ThreadCreationOptions.DeserializeThreadCreationOptions(prop.Value, options);
@@ -394,7 +400,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        parallelToolCalls = null;
                         continue;
                     }
                     parallelToolCalls = prop.Value.GetBoolean();

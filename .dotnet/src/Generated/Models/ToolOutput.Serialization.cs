@@ -27,12 +27,12 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(ToolOutput)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(ToolCallId))
+            if (Optional.IsDefined(ToolCallId) && _additionalBinaryDataProperties?.ContainsKey("tool_call_id") != true)
             {
                 writer.WritePropertyName("tool_call_id"u8);
                 writer.WriteStringValue(ToolCallId);
             }
-            if (Optional.IsDefined(Output))
+            if (Optional.IsDefined(Output) && _additionalBinaryDataProperties?.ContainsKey("output") != true)
             {
                 writer.WritePropertyName("output"u8);
                 writer.WriteStringValue(Output);
@@ -41,6 +41,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -80,21 +84,11 @@ namespace OpenAI.Assistants
             {
                 if (prop.NameEquals("tool_call_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        toolCallId = null;
-                        continue;
-                    }
                     toolCallId = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("output"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        output = null;
-                        continue;
-                    }
                     output = prop.Value.GetString();
                     continue;
                 }

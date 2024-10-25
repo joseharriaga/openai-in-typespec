@@ -27,17 +27,17 @@ namespace OpenAI.Batch
             {
                 throw new FormatException($"The model {nameof(InternalBatchRequestOutputResponse)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(StatusCode))
+            if (Optional.IsDefined(StatusCode) && _additionalBinaryDataProperties?.ContainsKey("status_code") != true)
             {
                 writer.WritePropertyName("status_code"u8);
                 writer.WriteNumberValue(StatusCode.Value);
             }
-            if (Optional.IsDefined(RequestId))
+            if (Optional.IsDefined(RequestId) && _additionalBinaryDataProperties?.ContainsKey("request_id") != true)
             {
                 writer.WritePropertyName("request_id"u8);
                 writer.WriteStringValue(RequestId);
             }
-            if (Optional.IsCollectionDefined(Body))
+            if (Optional.IsCollectionDefined(Body) && _additionalBinaryDataProperties?.ContainsKey("body") != true)
             {
                 writer.WritePropertyName("body"u8);
                 writer.WriteStartObject();
@@ -64,6 +64,10 @@ namespace OpenAI.Batch
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -106,7 +110,6 @@ namespace OpenAI.Batch
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        statusCode = null;
                         continue;
                     }
                     statusCode = prop.Value.GetInt32();
@@ -114,11 +117,6 @@ namespace OpenAI.Batch
                 }
                 if (prop.NameEquals("request_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        requestId = null;
-                        continue;
-                    }
                     requestId = prop.Value.GetString();
                     continue;
                 }

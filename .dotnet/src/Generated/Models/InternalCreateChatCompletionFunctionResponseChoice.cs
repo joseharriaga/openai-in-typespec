@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalCreateChatCompletionFunctionResponseChoice
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalCreateChatCompletionFunctionResponseChoice(InternalCreateChatCompletionFunctionResponseChoiceFinishReason finishReason, int index, InternalChatCompletionResponseMessage message)
         {
@@ -31,5 +31,11 @@ namespace OpenAI.Chat
         public int Index { get; }
 
         public InternalChatCompletionResponseMessage Message { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

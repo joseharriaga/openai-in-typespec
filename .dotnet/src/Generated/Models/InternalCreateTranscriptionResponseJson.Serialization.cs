@@ -31,12 +31,19 @@ namespace OpenAI.Audio
             {
                 throw new FormatException($"The model {nameof(InternalCreateTranscriptionResponseJson)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("text"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("text") != true)
+            {
+                writer.WritePropertyName("text"u8);
+            }
             writer.WriteStringValue(Text);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

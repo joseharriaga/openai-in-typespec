@@ -21,7 +21,7 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(FileSearchToolDefinition)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (Optional.IsDefined(_fileSearch))
+            if (Optional.IsDefined(_fileSearch) && _additionalBinaryDataProperties?.ContainsKey("file_search") != true)
             {
                 writer.WritePropertyName("file_search"u8);
                 writer.WriteObjectValue<InternalAssistantToolsFileSearchFileSearch>(_fileSearch, options);
@@ -56,7 +56,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        fileSearch = null;
                         continue;
                     }
                     fileSearch = InternalAssistantToolsFileSearchFileSearch.DeserializeInternalAssistantToolsFileSearchFileSearch(prop.Value, options);

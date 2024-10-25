@@ -64,11 +64,6 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("event_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
                     eventId = prop.Value.GetString();
                     continue;
                 }

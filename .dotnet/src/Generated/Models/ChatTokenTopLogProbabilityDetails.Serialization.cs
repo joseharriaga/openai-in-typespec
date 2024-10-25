@@ -31,28 +31,41 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatTokenTopLogProbabilityDetails)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("token"u8);
-            writer.WriteStringValue(Token);
-            writer.WritePropertyName("logprob"u8);
-            writer.WriteNumberValue(LogProbability);
-            if (Utf8Bytes != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("token") != true)
             {
-                writer.WritePropertyName("bytes"u8);
-                writer.WriteStartArray();
-                foreach (byte item in Utf8Bytes.Value.Span)
-                {
-                    writer.WriteNumberValue(item);
-                }
-                writer.WriteEndArray();
+                writer.WritePropertyName("token"u8);
             }
-            else
+            writer.WriteStringValue(Token);
+            if (_additionalBinaryDataProperties?.ContainsKey("logprob") != true)
             {
-                writer.WriteNull("bytes"u8);
+                writer.WritePropertyName("logprob"u8);
+            }
+            writer.WriteNumberValue(LogProbability);
+            if (_additionalBinaryDataProperties?.ContainsKey("bytes") != true)
+            {
+                if (Utf8Bytes != null)
+                {
+                    writer.WritePropertyName("bytes"u8);
+                    writer.WriteStartArray();
+                    foreach (byte item in Utf8Bytes.Value.Span)
+                    {
+                        writer.WriteNumberValue(item);
+                    }
+                    writer.WriteEndArray();
+                }
+                else
+                {
+                    writer.WriteNull("bytes"u8);
+                }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -107,12 +120,14 @@ namespace OpenAI.Chat
                     {
                         continue;
                     }
-                    List<byte> array = new List<byte>();
+                    int index = 0;
+                    byte[] array = new byte[prop.Value.GetArrayLength()];
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(item.GetByte());
+                        array[index] = item.GetByte();
+                        index++;
                     }
-                    utf8Bytes = array;
+                    utf8Bytes = new ReadOnlyMemory<byte>(array);
                     continue;
                 }
                 if (options.Format != "W")

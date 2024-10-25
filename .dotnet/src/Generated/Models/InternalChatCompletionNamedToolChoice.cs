@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionNamedToolChoice
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalChatCompletionNamedToolChoice(InternalChatCompletionNamedToolChoiceFunction function)
         {
@@ -29,5 +29,11 @@ namespace OpenAI.Chat
         public InternalChatCompletionNamedToolChoiceType Type { get; } = "function";
 
         public InternalChatCompletionNamedToolChoiceFunction Function { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

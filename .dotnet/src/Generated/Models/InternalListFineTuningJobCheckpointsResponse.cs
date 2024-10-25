@@ -10,7 +10,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalListFineTuningJobCheckpointsResponse
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalListFineTuningJobCheckpointsResponse(IEnumerable<InternalFineTuningJobCheckpoint> data, bool hasMore)
         {
@@ -37,5 +37,11 @@ namespace OpenAI.FineTuning
         public string LastId { get; }
 
         public bool HasMore { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

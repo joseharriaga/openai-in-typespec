@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationOutputTokenUsageDetails
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ConversationOutputTokenUsageDetails(int textTokens, int audioTokens)
         {
@@ -27,5 +27,11 @@ namespace OpenAI.RealtimeConversation
         public int TextTokens { get; }
 
         public int AudioTokens { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

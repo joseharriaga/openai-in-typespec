@@ -32,17 +32,35 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationFunctionCallArgumentsDoneUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("response_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("response_id") != true)
+            {
+                writer.WritePropertyName("response_id"u8);
+            }
             writer.WriteStringValue(ResponseId);
-            writer.WritePropertyName("item_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
+            {
+                writer.WritePropertyName("item_id"u8);
+            }
             writer.WriteStringValue(ItemId);
-            writer.WritePropertyName("output_index"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("output_index") != true)
+            {
+                writer.WritePropertyName("output_index"u8);
+            }
             writer.WriteNumberValue(OutputIndex);
-            writer.WritePropertyName("call_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("call_id") != true)
+            {
+                writer.WritePropertyName("call_id"u8);
+            }
             writer.WriteStringValue(CallId);
-            writer.WritePropertyName("name"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
+            {
+                writer.WritePropertyName("name"u8);
+            }
             writer.WriteStringValue(Name);
-            writer.WritePropertyName("arguments"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("arguments") != true)
+            {
+                writer.WritePropertyName("arguments"u8);
+            }
             writer.WriteStringValue(Arguments);
         }
 

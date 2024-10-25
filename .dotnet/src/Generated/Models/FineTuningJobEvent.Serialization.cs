@@ -31,20 +31,39 @@ namespace OpenAI.FineTuning
             {
                 throw new FormatException($"The model {nameof(FineTuningJobEvent)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("created_at"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
+            {
+                writer.WritePropertyName("created_at"u8);
+            }
             writer.WriteNumberValue(CreatedAt, "U");
-            writer.WritePropertyName("level"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("level") != true)
+            {
+                writer.WritePropertyName("level"u8);
+            }
             writer.WriteStringValue(Level.ToSerialString());
-            writer.WritePropertyName("message"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("message") != true)
+            {
+                writer.WritePropertyName("message"u8);
+            }
             writer.WriteStringValue(Message);
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

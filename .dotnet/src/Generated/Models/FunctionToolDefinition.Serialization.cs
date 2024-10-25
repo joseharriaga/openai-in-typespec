@@ -21,7 +21,10 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(FunctionToolDefinition)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("function"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("function") != true)
+            {
+                writer.WritePropertyName("function"u8);
+            }
             writer.WriteObjectValue<InternalFunctionDefinition>(_internalFunction, options);
         }
 

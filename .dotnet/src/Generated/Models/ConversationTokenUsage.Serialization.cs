@@ -31,20 +31,39 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(ConversationTokenUsage)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("total_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("total_tokens") != true)
+            {
+                writer.WritePropertyName("total_tokens"u8);
+            }
             writer.WriteNumberValue(TotalTokens);
-            writer.WritePropertyName("input_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("input_tokens") != true)
+            {
+                writer.WritePropertyName("input_tokens"u8);
+            }
             writer.WriteNumberValue(InputTokens);
-            writer.WritePropertyName("output_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("output_tokens") != true)
+            {
+                writer.WritePropertyName("output_tokens"u8);
+            }
             writer.WriteNumberValue(OutputTokens);
-            writer.WritePropertyName("input_token_details"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("input_token_details") != true)
+            {
+                writer.WritePropertyName("input_token_details"u8);
+            }
             writer.WriteObjectValue(InputTokenDetails, options);
-            writer.WritePropertyName("output_token_details"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("output_token_details") != true)
+            {
+                writer.WritePropertyName("output_token_details"u8);
+            }
             writer.WriteObjectValue(OutputTokenDetails, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

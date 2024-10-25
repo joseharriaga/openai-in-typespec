@@ -32,7 +32,10 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationSessionStartedUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("session"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("session") != true)
+            {
+                writer.WritePropertyName("session"u8);
+            }
             writer.WriteObjectValue<InternalRealtimeResponseSession>(_internalSession, options);
         }
 

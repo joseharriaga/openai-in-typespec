@@ -11,3 +11,5 @@ using OpenAI;
 
 @@access(CreateThreadRequestToolResourcesFileSearchBase, Access.public);
 @@usage(CreateThreadRequestToolResourcesFileSearchBase, Usage.input);
+
+@@visibility(ThreadObject.metadata, "read");

@@ -9,7 +9,7 @@ namespace OpenAI.VectorStores
 {
     public partial class FileFromStoreRemovalResult
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal FileFromStoreRemovalResult(string fileId, bool removed)
         {
@@ -23,6 +23,12 @@ namespace OpenAI.VectorStores
             Removed = removed;
             this.Object = @object;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
         }
     }
 }

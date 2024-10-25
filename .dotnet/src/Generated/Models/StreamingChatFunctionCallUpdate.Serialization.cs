@@ -27,12 +27,12 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(StreamingChatFunctionCallUpdate)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(FunctionName))
+            if (Optional.IsDefined(FunctionName) && _additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(FunctionName);
             }
-            if (Optional.IsDefined(FunctionArgumentsUpdate))
+            if (Optional.IsDefined(FunctionArgumentsUpdate) && _additionalBinaryDataProperties?.ContainsKey("arguments") != true)
             {
                 writer.WritePropertyName("arguments"u8);
                 this.SerializeFunctionArgumentsUpdateValue(writer, options);
@@ -41,6 +41,10 @@ namespace OpenAI.Chat
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -80,21 +84,11 @@ namespace OpenAI.Chat
             {
                 if (prop.NameEquals("name"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        functionName = null;
-                        continue;
-                    }
                     functionName = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("arguments"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        functionArgumentsUpdate = null;
-                        continue;
-                    }
                     DeserializeFunctionArgumentsUpdateValue(prop, ref functionArgumentsUpdate);
                     continue;
                 }

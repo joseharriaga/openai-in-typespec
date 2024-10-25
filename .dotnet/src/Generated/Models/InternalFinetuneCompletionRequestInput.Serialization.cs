@@ -27,12 +27,12 @@ namespace OpenAI.FineTuning
             {
                 throw new FormatException($"The model {nameof(InternalFinetuneCompletionRequestInput)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Prompt))
+            if (Optional.IsDefined(Prompt) && _additionalBinaryDataProperties?.ContainsKey("prompt") != true)
             {
                 writer.WritePropertyName("prompt"u8);
                 writer.WriteStringValue(Prompt);
             }
-            if (Optional.IsDefined(Completion))
+            if (Optional.IsDefined(Completion) && _additionalBinaryDataProperties?.ContainsKey("completion") != true)
             {
                 writer.WritePropertyName("completion"u8);
                 writer.WriteStringValue(Completion);
@@ -41,6 +41,10 @@ namespace OpenAI.FineTuning
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -80,21 +84,11 @@ namespace OpenAI.FineTuning
             {
                 if (prop.NameEquals("prompt"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        prompt = null;
-                        continue;
-                    }
                     prompt = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("completion"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        completion = null;
-                        continue;
-                    }
                     completion = prop.Value.GetString();
                     continue;
                 }

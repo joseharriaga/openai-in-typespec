@@ -19,14 +19,24 @@ namespace OpenAI.Moderations
             {
                 throw new FormatException($"The model {nameof(ModerationResultCollection)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("model"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+            }
             writer.WriteStringValue(Model);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

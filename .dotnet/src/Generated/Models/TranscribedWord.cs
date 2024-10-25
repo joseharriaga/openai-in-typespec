@@ -9,7 +9,7 @@ namespace OpenAI.Audio
 {
     public readonly partial struct TranscribedWord
     {
-        private readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal TranscribedWord(string word, TimeSpan startTime, TimeSpan endTime)
         {
@@ -27,5 +27,11 @@ namespace OpenAI.Audio
         }
 
         public string Word { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

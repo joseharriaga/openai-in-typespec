@@ -10,7 +10,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalListPaginatedFineTuningJobsResponse
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalListPaginatedFineTuningJobsResponse(IEnumerable<FineTuningJob> data, bool hasMore)
         {
@@ -31,5 +31,11 @@ namespace OpenAI.FineTuning
         public bool HasMore { get; }
 
         public InternalListPaginatedFineTuningJobsResponseObject Object { get; } = "list";
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

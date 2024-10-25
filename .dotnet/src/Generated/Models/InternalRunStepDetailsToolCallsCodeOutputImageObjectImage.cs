@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDetailsToolCallsCodeOutputImageObjectImage
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalRunStepDetailsToolCallsCodeOutputImageObjectImage(string fileId)
         {
@@ -23,5 +23,11 @@ namespace OpenAI.Assistants
         }
 
         public string FileId { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

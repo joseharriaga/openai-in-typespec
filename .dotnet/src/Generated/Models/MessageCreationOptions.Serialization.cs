@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(MessageCreationOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsCollectionDefined(Attachments))
+            if (Optional.IsCollectionDefined(Attachments) && _additionalBinaryDataProperties?.ContainsKey("attachments") != true)
             {
                 if (Attachments != null)
                 {
@@ -44,7 +44,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("attachments"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(Metadata))
+            if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null)
                 {
@@ -67,14 +67,24 @@ namespace OpenAI.Assistants
                     writer.WriteNull("metadata"u8);
                 }
             }
-            writer.WritePropertyName("role"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("role") != true)
+            {
+                writer.WritePropertyName("role"u8);
+            }
             writer.WriteStringValue(Role.ToSerialString());
-            writer.WritePropertyName("content"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
+            {
+                writer.WritePropertyName("content"u8);
+            }
             this.SerializeContent(writer, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

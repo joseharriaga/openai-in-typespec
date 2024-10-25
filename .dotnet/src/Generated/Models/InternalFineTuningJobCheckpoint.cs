@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFineTuningJobCheckpoint
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalFineTuningJobCheckpoint(string id, DateTimeOffset createdAt, string fineTunedModelCheckpoint, int stepNumber, InternalFineTuningJobCheckpointMetrics metrics, string fineTuningJobId)
         {
@@ -46,5 +46,11 @@ namespace OpenAI.FineTuning
         public string FineTuningJobId { get; }
 
         public InternalFineTuningJobCheckpointObject Object { get; } = "fine_tuning.job.checkpoint";
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

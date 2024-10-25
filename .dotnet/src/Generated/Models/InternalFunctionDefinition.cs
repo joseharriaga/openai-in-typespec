@@ -9,7 +9,7 @@ namespace OpenAI
 {
     internal partial class InternalFunctionDefinition
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalFunctionDefinition(string name)
         {
@@ -32,5 +32,11 @@ namespace OpenAI
         public string Name { get; set; }
 
         public bool? Strict { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

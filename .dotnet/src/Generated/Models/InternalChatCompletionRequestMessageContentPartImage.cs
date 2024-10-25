@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionRequestMessageContentPartImage
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalChatCompletionRequestMessageContentPartImage(InternalChatCompletionRequestMessageContentPartImageImageUrl imageUrl)
         {
@@ -29,5 +29,11 @@ namespace OpenAI.Chat
         public InternalChatCompletionRequestMessageContentPartImageType Type { get; } = "image_url";
 
         public InternalChatCompletionRequestMessageContentPartImageImageUrl ImageUrl { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

@@ -19,16 +19,29 @@ namespace OpenAI.Embeddings
             {
                 throw new FormatException($"The model {nameof(OpenAIEmbeddingCollection)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("model"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+            }
             writer.WriteStringValue(Model);
-            writer.WritePropertyName("usage"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("usage") != true)
+            {
+                writer.WritePropertyName("usage"u8);
+            }
             writer.WriteObjectValue(Usage, options);
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(this.Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

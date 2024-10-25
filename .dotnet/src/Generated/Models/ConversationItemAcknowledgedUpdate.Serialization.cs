@@ -32,7 +32,10 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationItemAcknowledgedUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("item"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("item") != true)
+            {
+                writer.WritePropertyName("item"u8);
+            }
             writer.WriteObjectValue<ConversationItem>(Item, options);
         }
 

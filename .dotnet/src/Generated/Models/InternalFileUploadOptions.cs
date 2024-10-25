@@ -10,13 +10,19 @@ namespace OpenAI.Files
 {
     internal partial class InternalFileUploadOptions
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalFileUploadOptions(Stream @file, FileUploadPurpose purpose, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             File = @file;
             Purpose = purpose;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
         }
     }
 }

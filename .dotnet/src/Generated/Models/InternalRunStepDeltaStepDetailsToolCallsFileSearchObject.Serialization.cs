@@ -32,14 +32,20 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(InternalRunStepDeltaStepDetailsToolCallsFileSearchObject)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("index"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
+            {
+                writer.WritePropertyName("index"u8);
+            }
             writer.WriteNumberValue(Index);
-            if (Optional.IsDefined(Id))
+            if (Optional.IsDefined(Id) && _additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(Id);
             }
-            writer.WritePropertyName("file_search"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("file_search") != true)
+            {
+                writer.WritePropertyName("file_search"u8);
+            }
             writer.WriteStartObject();
             foreach (var item in FileSearch)
             {
@@ -94,11 +100,6 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = prop.Value.GetString();
                     continue;
                 }

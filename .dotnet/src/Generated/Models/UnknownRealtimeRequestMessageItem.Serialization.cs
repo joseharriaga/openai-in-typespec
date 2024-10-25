@@ -69,7 +69,6 @@ namespace OpenAI.Models
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        status = null;
                         continue;
                     }
                     status = new ConversationItemStatus(prop.Value.GetString());
@@ -82,11 +81,6 @@ namespace OpenAI.Models
                 }
                 if (prop.NameEquals("id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = prop.Value.GetString();
                     continue;
                 }

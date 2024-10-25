@@ -32,9 +32,15 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(InternalRealtimeRequestFunctionCallOutputItem)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("call_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("call_id") != true)
+            {
+                writer.WritePropertyName("call_id"u8);
+            }
             writer.WriteStringValue(CallId);
-            writer.WritePropertyName("output"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("output") != true)
+            {
+                writer.WritePropertyName("output"u8);
+            }
             writer.WriteStringValue(Output);
         }
 
@@ -81,11 +87,6 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = prop.Value.GetString();
                     continue;
                 }

@@ -31,18 +31,34 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(ConversationRateLimitDetailsItem)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("name"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
+            {
+                writer.WritePropertyName("name"u8);
+            }
             writer.WriteStringValue(Name);
-            writer.WritePropertyName("limit"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("limit") != true)
+            {
+                writer.WritePropertyName("limit"u8);
+            }
             writer.WriteNumberValue(Limit);
-            writer.WritePropertyName("remaining"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("remaining") != true)
+            {
+                writer.WritePropertyName("remaining"u8);
+            }
             writer.WriteNumberValue(Remaining);
-            writer.WritePropertyName("reset_seconds"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("reset_seconds") != true)
+            {
+                writer.WritePropertyName("reset_seconds"u8);
+            }
             writer.WriteNumberValue(ResetSeconds);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

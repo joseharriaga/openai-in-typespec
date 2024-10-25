@@ -27,12 +27,12 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(ToolResources)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(CodeInterpreter))
+            if (Optional.IsDefined(CodeInterpreter) && _additionalBinaryDataProperties?.ContainsKey("code_interpreter") != true)
             {
                 writer.WritePropertyName("code_interpreter"u8);
                 writer.WriteObjectValue<CodeInterpreterToolResources>(CodeInterpreter, options);
             }
-            if (Optional.IsDefined(FileSearch))
+            if (Optional.IsDefined(FileSearch) && _additionalBinaryDataProperties?.ContainsKey("file_search") != true)
             {
                 writer.WritePropertyName("file_search"u8);
                 this.SerializeFileSearch(writer, options);
@@ -41,6 +41,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -82,7 +86,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        codeInterpreter = null;
                         continue;
                     }
                     codeInterpreter = CodeInterpreterToolResources.DeserializeCodeInterpreterToolResources(prop.Value, options);
@@ -92,7 +95,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        fileSearch = null;
                         continue;
                     }
                     fileSearch = FileSearchToolResources.DeserializeFileSearchToolResources(prop.Value, options);

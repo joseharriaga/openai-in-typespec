@@ -27,17 +27,17 @@ namespace OpenAI.Batch
             {
                 throw new FormatException($"The model {nameof(InternalBatchRequestOutput)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Id))
+            if (Optional.IsDefined(Id) && _additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(Id);
             }
-            if (Optional.IsDefined(CustomId))
+            if (Optional.IsDefined(CustomId) && _additionalBinaryDataProperties?.ContainsKey("custom_id") != true)
             {
                 writer.WritePropertyName("custom_id"u8);
                 writer.WriteStringValue(CustomId);
             }
-            if (Optional.IsDefined(Response))
+            if (Optional.IsDefined(Response) && _additionalBinaryDataProperties?.ContainsKey("response") != true)
             {
                 if (Response != null)
                 {
@@ -49,7 +49,7 @@ namespace OpenAI.Batch
                     writer.WriteNull("response"u8);
                 }
             }
-            if (Optional.IsDefined(Error))
+            if (Optional.IsDefined(Error) && _additionalBinaryDataProperties?.ContainsKey("error") != true)
             {
                 if (Error != null)
                 {
@@ -65,6 +65,10 @@ namespace OpenAI.Batch
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -106,21 +110,11 @@ namespace OpenAI.Batch
             {
                 if (prop.NameEquals("id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("custom_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        customId = null;
-                        continue;
-                    }
                     customId = prop.Value.GetString();
                     continue;
                 }

@@ -31,9 +31,12 @@ namespace OpenAI.VectorStores
             {
                 throw new FormatException($"The model {nameof(InternalCreateVectorStoreFileRequest)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("file_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("file_id") != true)
+            {
+                writer.WritePropertyName("file_id"u8);
+            }
             writer.WriteStringValue(FileId);
-            if (Optional.IsDefined(ChunkingStrategy))
+            if (Optional.IsDefined(ChunkingStrategy) && _additionalBinaryDataProperties?.ContainsKey("chunking_strategy") != true)
             {
                 writer.WritePropertyName("chunking_strategy"u8);
                 writer.WriteObjectValue<FileChunkingStrategy>(ChunkingStrategy, options);
@@ -42,6 +45,10 @@ namespace OpenAI.VectorStores
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -88,7 +95,6 @@ namespace OpenAI.VectorStores
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        chunkingStrategy = null;
                         continue;
                     }
                     chunkingStrategy = FileChunkingStrategy.DeserializeFileChunkingStrategy(prop.Value, options);

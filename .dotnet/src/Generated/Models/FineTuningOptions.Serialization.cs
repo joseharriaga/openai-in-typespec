@@ -31,16 +31,22 @@ namespace OpenAI.FineTuning
             {
                 throw new FormatException($"The model {nameof(FineTuningOptions)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("model"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+            }
             writer.WriteStringValue(Model.ToString());
-            writer.WritePropertyName("training_file"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("training_file") != true)
+            {
+                writer.WritePropertyName("training_file"u8);
+            }
             writer.WriteStringValue(TrainingFile);
-            if (Optional.IsDefined(Hyperparameters))
+            if (Optional.IsDefined(Hyperparameters) && _additionalBinaryDataProperties?.ContainsKey("hyperparameters") != true)
             {
                 writer.WritePropertyName("hyperparameters"u8);
                 writer.WriteObjectValue(Hyperparameters, options);
             }
-            if (Optional.IsDefined(Suffix))
+            if (Optional.IsDefined(Suffix) && _additionalBinaryDataProperties?.ContainsKey("suffix") != true)
             {
                 if (Suffix != null)
                 {
@@ -52,7 +58,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("suffix"u8);
                 }
             }
-            if (Optional.IsDefined(ValidationFile))
+            if (Optional.IsDefined(ValidationFile) && _additionalBinaryDataProperties?.ContainsKey("validation_file") != true)
             {
                 if (ValidationFile != null)
                 {
@@ -64,7 +70,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("validationFile"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(Integrations))
+            if (Optional.IsCollectionDefined(Integrations) && _additionalBinaryDataProperties?.ContainsKey("integrations") != true)
             {
                 if (Integrations != null)
                 {
@@ -81,7 +87,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("integrations"u8);
                 }
             }
-            if (Optional.IsDefined(Seed))
+            if (Optional.IsDefined(Seed) && _additionalBinaryDataProperties?.ContainsKey("seed") != true)
             {
                 if (Seed != null)
                 {
@@ -97,6 +103,10 @@ namespace OpenAI.FineTuning
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -153,7 +163,6 @@ namespace OpenAI.FineTuning
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        hyperparameters = null;
                         continue;
                     }
                     hyperparameters = HyperparameterOptions.DeserializeHyperparameterOptions(prop.Value, options);

@@ -31,25 +31,37 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatTokenLogProbabilityDetails)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("token"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("token") != true)
+            {
+                writer.WritePropertyName("token"u8);
+            }
             writer.WriteStringValue(Token);
-            writer.WritePropertyName("logprob"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("logprob") != true)
+            {
+                writer.WritePropertyName("logprob"u8);
+            }
             writer.WriteNumberValue(LogProbability);
-            if (Utf8Bytes != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("bytes") != true)
             {
-                writer.WritePropertyName("bytes"u8);
-                writer.WriteStartArray();
-                foreach (byte item in Utf8Bytes.Value.Span)
+                if (Utf8Bytes != null)
                 {
-                    writer.WriteNumberValue(item);
+                    writer.WritePropertyName("bytes"u8);
+                    writer.WriteStartArray();
+                    foreach (byte item in Utf8Bytes.Value.Span)
+                    {
+                        writer.WriteNumberValue(item);
+                    }
+                    writer.WriteEndArray();
                 }
-                writer.WriteEndArray();
+                else
+                {
+                    writer.WriteNull("bytes"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("top_logprobs") != true)
             {
-                writer.WriteNull("bytes"u8);
+                writer.WritePropertyName("top_logprobs"u8);
             }
-            writer.WritePropertyName("top_logprobs"u8);
             writer.WriteStartArray();
             foreach (ChatTokenTopLogProbabilityDetails item in TopLogProbabilities)
             {
@@ -60,6 +72,10 @@ namespace OpenAI.Chat
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -115,12 +131,14 @@ namespace OpenAI.Chat
                     {
                         continue;
                     }
-                    List<byte> array = new List<byte>();
+                    int index = 0;
+                    byte[] array = new byte[prop.Value.GetArrayLength()];
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(item.GetByte());
+                        array[index] = item.GetByte();
+                        index++;
                     }
-                    utf8Bytes = array;
+                    utf8Bytes = new ReadOnlyMemory<byte>(array);
                     continue;
                 }
                 if (prop.NameEquals("top_logprobs"u8))

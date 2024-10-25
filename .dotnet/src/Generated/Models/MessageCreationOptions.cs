@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class MessageCreationOptions
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal MessageCreationOptions(IList<MessageCreationAttachment> attachments, IDictionary<string, string> metadata, Assistants.MessageRole role, IList<MessageContent> content, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
@@ -23,5 +23,11 @@ namespace OpenAI.Assistants
         public IList<MessageCreationAttachment> Attachments { get; set; }
 
         public IDictionary<string, string> Metadata { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

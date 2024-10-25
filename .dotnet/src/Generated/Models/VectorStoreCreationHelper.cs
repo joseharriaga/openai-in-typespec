@@ -11,7 +11,7 @@ namespace OpenAI.Assistants
 {
     public partial class VectorStoreCreationHelper
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public VectorStoreCreationHelper()
         {
@@ -30,5 +30,11 @@ namespace OpenAI.Assistants
         public IList<string> FileIds { get; }
 
         public IDictionary<string, string> Metadata { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

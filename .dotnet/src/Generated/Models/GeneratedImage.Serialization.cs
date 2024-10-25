@@ -27,17 +27,17 @@ namespace OpenAI.Images
             {
                 throw new FormatException($"The model {nameof(GeneratedImage)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(RevisedPrompt))
+            if (Optional.IsDefined(RevisedPrompt) && _additionalBinaryDataProperties?.ContainsKey("revised_prompt") != true)
             {
                 writer.WritePropertyName("revised_prompt"u8);
                 writer.WriteStringValue(RevisedPrompt);
             }
-            if (Optional.IsDefined(ImageBytes))
+            if (Optional.IsDefined(ImageBytes) && _additionalBinaryDataProperties?.ContainsKey("b64_json") != true)
             {
                 writer.WritePropertyName("b64_json"u8);
                 writer.WriteBase64StringValue(ImageBytes.ToArray(), "D");
             }
-            if (Optional.IsDefined(ImageUri))
+            if (Optional.IsDefined(ImageUri) && _additionalBinaryDataProperties?.ContainsKey("url") != true)
             {
                 writer.WritePropertyName("url"u8);
                 writer.WriteStringValue(ImageUri.AbsoluteUri);
@@ -46,6 +46,10 @@ namespace OpenAI.Images
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -86,11 +90,6 @@ namespace OpenAI.Images
             {
                 if (prop.NameEquals("revised_prompt"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        revisedPrompt = null;
-                        continue;
-                    }
                     revisedPrompt = prop.Value.GetString();
                     continue;
                 }
@@ -98,7 +97,6 @@ namespace OpenAI.Images
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        imageBytes = null;
                         continue;
                     }
                     imageBytes = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
@@ -108,7 +106,6 @@ namespace OpenAI.Images
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        imageUri = null;
                         continue;
                     }
                     imageUri = new Uri(prop.Value.GetString());

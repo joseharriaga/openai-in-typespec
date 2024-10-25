@@ -32,9 +32,15 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(InternalRunStepCodeInterpreterToolCallDetails)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("code_interpreter"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("code_interpreter") != true)
+            {
+                writer.WritePropertyName("code_interpreter"u8);
+            }
             writer.WriteObjectValue<InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter>(_codeInterpreter, options);
         }
 

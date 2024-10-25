@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class ThreadDeletionResult
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ThreadDeletionResult(bool deleted, string threadId)
         {
@@ -26,5 +26,11 @@ namespace OpenAI.Assistants
         }
 
         public bool Deleted { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

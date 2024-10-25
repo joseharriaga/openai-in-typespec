@@ -9,12 +9,12 @@ namespace OpenAI.Models
 {
     public partial class OpenAIModelCollection
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal OpenAIModelCollection(InternalListModelsResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
-            this.Object = @object;
-            _additionalBinaryDataProperties = additionalBinaryDataProperties;
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
         }
     }
 }

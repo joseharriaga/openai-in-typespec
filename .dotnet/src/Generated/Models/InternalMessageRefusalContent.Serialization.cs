@@ -25,9 +25,15 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(InternalMessageRefusalContent)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("refusal"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("refusal") != true)
+            {
+                writer.WritePropertyName("refusal"u8);
+            }
             writer.WriteStringValue(InternalRefusal);
-            writer.WritePropertyName("type"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+            }
             writer.WriteStringValue(_type);
         }
 

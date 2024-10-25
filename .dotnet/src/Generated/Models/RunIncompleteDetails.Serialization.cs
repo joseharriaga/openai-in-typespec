@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(RunIncompleteDetails)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Reason))
+            if (Optional.IsDefined(Reason) && _additionalBinaryDataProperties?.ContainsKey("reason") != true)
             {
                 writer.WritePropertyName("reason"u8);
                 writer.WriteStringValue(Reason.Value.ToString());
@@ -36,6 +36,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -76,7 +80,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        reason = null;
                         continue;
                     }
                     reason = new RunIncompleteReason(prop.Value.GetString());

@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter()
         {
@@ -27,5 +27,11 @@ namespace OpenAI.Assistants
         public string Input { get; }
 
         public IReadOnlyList<RunStepUpdateCodeInterpreterOutput> Outputs { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

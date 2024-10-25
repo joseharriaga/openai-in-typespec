@@ -25,9 +25,15 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(InternalMessageImageFileContent)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("type"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+            }
             writer.WriteStringValue(_type);
-            writer.WritePropertyName("image_file"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("image_file") != true)
+            {
+                writer.WritePropertyName("image_file"u8);
+            }
             writer.WriteObjectValue<InternalMessageContentItemFileObjectImageFile>(_imageFile, options);
         }
 

@@ -32,7 +32,10 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationRateLimitsUpdatedUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("rate_limits"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("rate_limits") != true)
+            {
+                writer.WritePropertyName("rate_limits"u8);
+            }
             writer.WriteStartArray();
             foreach (ConversationRateLimitDetailsItem item in RateLimits)
             {

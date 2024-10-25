@@ -31,16 +31,19 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalChatCompletionResponseMessage)} does not support writing '{format}' format.");
             }
-            if (Refusal != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("refusal") != true)
             {
-                writer.WritePropertyName("refusal"u8);
-                writer.WriteStringValue(Refusal);
+                if (Refusal != null)
+                {
+                    writer.WritePropertyName("refusal"u8);
+                    writer.WriteStringValue(Refusal);
+                }
+                else
+                {
+                    writer.WriteNull("refusal"u8);
+                }
             }
-            else
-            {
-                writer.WriteNull("refusal"u8);
-            }
-            if (options.Format != "W" && Optional.IsCollectionDefined(ToolCalls))
+            if (options.Format != "W" && Optional.IsCollectionDefined(ToolCalls) && _additionalBinaryDataProperties?.ContainsKey("tool_calls") != true)
             {
                 writer.WritePropertyName("tool_calls"u8);
                 writer.WriteStartArray();
@@ -50,18 +53,24 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            writer.WritePropertyName("role"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("role") != true)
+            {
+                writer.WritePropertyName("role"u8);
+            }
             writer.WriteStringValue(Role.ToSerialString());
-            if (Content != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
-                writer.WritePropertyName("content"u8);
-                this.SerializeContentValue(writer, options);
+                if (Content != null)
+                {
+                    writer.WritePropertyName("content"u8);
+                    this.SerializeContentValue(writer, options);
+                }
+                else
+                {
+                    writer.WriteNull("content"u8);
+                }
             }
-            else
-            {
-                writer.WriteNull("content"u8);
-            }
-            if (Optional.IsDefined(FunctionCall))
+            if (Optional.IsDefined(FunctionCall) && _additionalBinaryDataProperties?.ContainsKey("function_call") != true)
             {
                 writer.WritePropertyName("function_call"u8);
                 writer.WriteObjectValue<ChatFunctionCall>(FunctionCall, options);
@@ -70,6 +79,10 @@ namespace OpenAI.Chat
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -148,7 +161,6 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        functionCall = null;
                         continue;
                     }
                     functionCall = ChatFunctionCall.DeserializeChatFunctionCall(prop.Value, options);

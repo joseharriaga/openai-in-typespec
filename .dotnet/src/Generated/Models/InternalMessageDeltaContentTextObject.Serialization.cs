@@ -32,9 +32,12 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(InternalMessageDeltaContentTextObject)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("index"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
+            {
+                writer.WritePropertyName("index"u8);
+            }
             writer.WriteNumberValue(Index);
-            if (Optional.IsDefined(Text))
+            if (Optional.IsDefined(Text) && _additionalBinaryDataProperties?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
                 writer.WriteObjectValue(Text, options);
@@ -75,7 +78,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        text = null;
                         continue;
                     }
                     text = InternalMessageDeltaContentTextObjectText.DeserializeInternalMessageDeltaContentTextObjectText(prop.Value, options);

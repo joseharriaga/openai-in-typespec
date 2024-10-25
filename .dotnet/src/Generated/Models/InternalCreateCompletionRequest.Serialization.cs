@@ -32,25 +32,31 @@ namespace OpenAI.LegacyCompletions
             {
                 throw new FormatException($"The model {nameof(InternalCreateCompletionRequest)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("model"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+            }
             writer.WriteStringValue(Model.ToString());
-            if (Prompt != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("prompt") != true)
             {
-                writer.WritePropertyName("prompt"u8);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(Prompt);
-#else
-                using (JsonDocument document = JsonDocument.Parse(Prompt))
+                if (Prompt != null)
                 {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
+                    writer.WritePropertyName("prompt"u8);
+#if NET6_0_OR_GREATER
+                    writer.WriteRawValue(Prompt);
+#else
+                    using (JsonDocument document = JsonDocument.Parse(Prompt))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
 #endif
+                }
+                else
+                {
+                    writer.WriteNull("prompt"u8);
+                }
             }
-            else
-            {
-                writer.WriteNull("prompt"u8);
-            }
-            if (Optional.IsDefined(BestOf))
+            if (Optional.IsDefined(BestOf) && _additionalBinaryDataProperties?.ContainsKey("best_of") != true)
             {
                 if (BestOf != null)
                 {
@@ -62,7 +68,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("bestOf"u8);
                 }
             }
-            if (Optional.IsDefined(Echo))
+            if (Optional.IsDefined(Echo) && _additionalBinaryDataProperties?.ContainsKey("echo") != true)
             {
                 if (Echo != null)
                 {
@@ -74,7 +80,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("echo"u8);
                 }
             }
-            if (Optional.IsDefined(FrequencyPenalty))
+            if (Optional.IsDefined(FrequencyPenalty) && _additionalBinaryDataProperties?.ContainsKey("frequency_penalty") != true)
             {
                 if (FrequencyPenalty != null)
                 {
@@ -86,7 +92,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("frequencyPenalty"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(LogitBias))
+            if (Optional.IsCollectionDefined(LogitBias) && _additionalBinaryDataProperties?.ContainsKey("logit_bias") != true)
             {
                 if (LogitBias != null)
                 {
@@ -104,7 +110,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("logitBias"u8);
                 }
             }
-            if (Optional.IsDefined(Logprobs))
+            if (Optional.IsDefined(Logprobs) && _additionalBinaryDataProperties?.ContainsKey("logprobs") != true)
             {
                 if (Logprobs != null)
                 {
@@ -116,7 +122,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("logprobs"u8);
                 }
             }
-            if (Optional.IsDefined(MaxTokens))
+            if (Optional.IsDefined(MaxTokens) && _additionalBinaryDataProperties?.ContainsKey("max_tokens") != true)
             {
                 if (MaxTokens != null)
                 {
@@ -128,7 +134,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("maxTokens"u8);
                 }
             }
-            if (Optional.IsDefined(N))
+            if (Optional.IsDefined(N) && _additionalBinaryDataProperties?.ContainsKey("n") != true)
             {
                 if (N != null)
                 {
@@ -140,7 +146,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("n"u8);
                 }
             }
-            if (Optional.IsDefined(PresencePenalty))
+            if (Optional.IsDefined(PresencePenalty) && _additionalBinaryDataProperties?.ContainsKey("presence_penalty") != true)
             {
                 if (PresencePenalty != null)
                 {
@@ -152,7 +158,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("presencePenalty"u8);
                 }
             }
-            if (Optional.IsDefined(Seed))
+            if (Optional.IsDefined(Seed) && _additionalBinaryDataProperties?.ContainsKey("seed") != true)
             {
                 if (Seed != null)
                 {
@@ -164,7 +170,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("seed"u8);
                 }
             }
-            if (Optional.IsDefined(Stop))
+            if (Optional.IsDefined(Stop) && _additionalBinaryDataProperties?.ContainsKey("stop") != true)
             {
                 if (Stop != null)
                 {
@@ -183,7 +189,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("stop"u8);
                 }
             }
-            if (Optional.IsDefined(Stream))
+            if (Optional.IsDefined(Stream) && _additionalBinaryDataProperties?.ContainsKey("stream") != true)
             {
                 if (Stream != null)
                 {
@@ -195,7 +201,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("stream"u8);
                 }
             }
-            if (Optional.IsDefined(StreamOptions))
+            if (Optional.IsDefined(StreamOptions) && _additionalBinaryDataProperties?.ContainsKey("stream_options") != true)
             {
                 if (StreamOptions != null)
                 {
@@ -207,7 +213,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("streamOptions"u8);
                 }
             }
-            if (Optional.IsDefined(Suffix))
+            if (Optional.IsDefined(Suffix) && _additionalBinaryDataProperties?.ContainsKey("suffix") != true)
             {
                 if (Suffix != null)
                 {
@@ -219,7 +225,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("suffix"u8);
                 }
             }
-            if (Optional.IsDefined(Temperature))
+            if (Optional.IsDefined(Temperature) && _additionalBinaryDataProperties?.ContainsKey("temperature") != true)
             {
                 if (Temperature != null)
                 {
@@ -231,7 +237,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("temperature"u8);
                 }
             }
-            if (Optional.IsDefined(TopP))
+            if (Optional.IsDefined(TopP) && _additionalBinaryDataProperties?.ContainsKey("top_p") != true)
             {
                 if (TopP != null)
                 {
@@ -243,7 +249,7 @@ namespace OpenAI.LegacyCompletions
                     writer.WriteNull("topP"u8);
                 }
             }
-            if (Optional.IsDefined(User))
+            if (Optional.IsDefined(User) && _additionalBinaryDataProperties?.ContainsKey("user") != true)
             {
                 writer.WritePropertyName("user"u8);
                 writer.WriteStringValue(User);
@@ -252,6 +258,10 @@ namespace OpenAI.LegacyCompletions
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -476,11 +486,6 @@ namespace OpenAI.LegacyCompletions
                 }
                 if (prop.NameEquals("user"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        user = null;
-                        continue;
-                    }
                     user = prop.Value.GetString();
                     continue;
                 }

@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalRunObjectRequiredActionSubmitToolOutputs)} does not support writing '{format}' format.");
             }
-            if (options.Format != "W")
+            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("tool_calls") != true)
             {
                 writer.WritePropertyName("tool_calls"u8);
                 writer.WriteStartArray();
@@ -41,6 +41,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

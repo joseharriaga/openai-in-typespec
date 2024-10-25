@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalThreadObjectToolResourcesFileSearch)} does not support writing '{format}' format.");
             }
-            if (Optional.IsCollectionDefined(VectorStoreIds))
+            if (Optional.IsCollectionDefined(VectorStoreIds) && _additionalBinaryDataProperties?.ContainsKey("vector_store_ids") != true)
             {
                 writer.WritePropertyName("vector_store_ids"u8);
                 writer.WriteStartArray();
@@ -46,6 +46,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

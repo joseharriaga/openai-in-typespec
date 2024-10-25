@@ -27,7 +27,10 @@ namespace OpenAI.Moderations
             {
                 throw new FormatException($"The model {nameof(ModerationOptions)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("input"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("input") != true)
+            {
+                writer.WritePropertyName("input"u8);
+            }
 #if NET6_0_OR_GREATER
             writer.WriteRawValue(Input);
 #else
@@ -36,7 +39,7 @@ namespace OpenAI.Moderations
                 JsonSerializer.Serialize(writer, document.RootElement);
             }
 #endif
-            if (Optional.IsDefined(Model))
+            if (Optional.IsDefined(Model) && _additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
                 writer.WriteStringValue(Model.Value.ToString());
@@ -45,6 +48,10 @@ namespace OpenAI.Moderations
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -91,7 +98,6 @@ namespace OpenAI.Moderations
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        model = null;
                         continue;
                     }
                     model = new InternalCreateModerationRequestModel(prop.Value.GetString());

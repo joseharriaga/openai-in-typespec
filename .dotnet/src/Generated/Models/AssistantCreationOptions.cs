@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class AssistantCreationOptions
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal AssistantCreationOptions(string name, string description, string instructions, IDictionary<string, string> metadata, float? temperature, string model, IList<ToolDefinition> tools, ToolResources toolResources, AssistantResponseFormat responseFormat, float? nucleusSamplingFactor, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
@@ -35,5 +35,11 @@ namespace OpenAI.Assistants
         public IDictionary<string, string> Metadata { get; set; }
 
         public float? Temperature { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

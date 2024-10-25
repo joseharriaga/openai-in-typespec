@@ -27,17 +27,17 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalRunStepDeltaStepDetailsToolCallsFunctionObjectFunction)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Name))
+            if (Optional.IsDefined(Name) && _additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(Name);
             }
-            if (Optional.IsDefined(Arguments))
+            if (Optional.IsDefined(Arguments) && _additionalBinaryDataProperties?.ContainsKey("arguments") != true)
             {
                 writer.WritePropertyName("arguments"u8);
                 writer.WriteStringValue(Arguments);
             }
-            if (Optional.IsDefined(Output))
+            if (Optional.IsDefined(Output) && _additionalBinaryDataProperties?.ContainsKey("output") != true)
             {
                 if (Output != null)
                 {
@@ -53,6 +53,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -93,21 +97,11 @@ namespace OpenAI.Assistants
             {
                 if (prop.NameEquals("name"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
                     name = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("arguments"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        arguments = null;
-                        continue;
-                    }
                     arguments = prop.Value.GetString();
                     continue;
                 }

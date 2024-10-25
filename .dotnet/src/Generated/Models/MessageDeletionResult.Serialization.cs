@@ -31,16 +31,29 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(MessageDeletionResult)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("deleted"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("deleted") != true)
+            {
+                writer.WritePropertyName("deleted"u8);
+            }
             writer.WriteBooleanValue(Deleted);
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(MessageId);
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(this.Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

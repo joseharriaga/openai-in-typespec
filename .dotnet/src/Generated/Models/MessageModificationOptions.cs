@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     public partial class MessageModificationOptions
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public MessageModificationOptions()
         {
@@ -24,5 +24,11 @@ namespace OpenAI.Assistants
         }
 
         public IDictionary<string, string> Metadata { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

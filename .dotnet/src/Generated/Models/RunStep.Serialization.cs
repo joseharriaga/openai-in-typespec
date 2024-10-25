@@ -31,102 +31,154 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(RunStep)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("created_at"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
+            {
+                writer.WritePropertyName("created_at"u8);
+            }
             writer.WriteNumberValue(CreatedAt, "U");
-            writer.WritePropertyName("assistant_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("assistant_id") != true)
+            {
+                writer.WritePropertyName("assistant_id"u8);
+            }
             writer.WriteStringValue(AssistantId);
-            writer.WritePropertyName("thread_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("thread_id") != true)
+            {
+                writer.WritePropertyName("thread_id"u8);
+            }
             writer.WriteStringValue(ThreadId);
-            writer.WritePropertyName("run_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("run_id") != true)
+            {
+                writer.WritePropertyName("run_id"u8);
+            }
             writer.WriteStringValue(RunId);
-            writer.WritePropertyName("type"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+            }
             writer.WriteStringValue(Type.ToString());
-            writer.WritePropertyName("status"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
+            {
+                writer.WritePropertyName("status"u8);
+            }
             writer.WriteStringValue(Status.ToString());
-            if (LastError != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("last_error") != true)
             {
-                writer.WritePropertyName("last_error"u8);
-                writer.WriteObjectValue(LastError, options);
-            }
-            else
-            {
-                writer.WriteNull("lastError"u8);
-            }
-            if (ExpiredAt != null)
-            {
-                writer.WritePropertyName("expired_at"u8);
-                writer.WriteNumberValue(ExpiredAt.Value, "U");
-            }
-            else
-            {
-                writer.WriteNull("expiredAt"u8);
-            }
-            if (CancelledAt != null)
-            {
-                writer.WritePropertyName("cancelled_at"u8);
-                writer.WriteNumberValue(CancelledAt.Value, "U");
-            }
-            else
-            {
-                writer.WriteNull("cancelledAt"u8);
-            }
-            if (FailedAt != null)
-            {
-                writer.WritePropertyName("failed_at"u8);
-                writer.WriteNumberValue(FailedAt.Value, "U");
-            }
-            else
-            {
-                writer.WriteNull("failedAt"u8);
-            }
-            if (CompletedAt != null)
-            {
-                writer.WritePropertyName("completed_at"u8);
-                writer.WriteNumberValue(CompletedAt.Value, "U");
-            }
-            else
-            {
-                writer.WriteNull("completedAt"u8);
-            }
-            if (Metadata != null && Optional.IsCollectionDefined(Metadata))
-            {
-                writer.WritePropertyName("metadata"u8);
-                writer.WriteStartObject();
-                foreach (var item in Metadata)
+                if (LastError != null)
                 {
-                    writer.WritePropertyName(item.Key);
-                    if (item.Value == null)
-                    {
-                        writer.WriteNullValue();
-                        continue;
-                    }
-                    writer.WriteStringValue(item.Value);
+                    writer.WritePropertyName("last_error"u8);
+                    writer.WriteObjectValue(LastError, options);
                 }
-                writer.WriteEndObject();
+                else
+                {
+                    writer.WriteNull("lastError"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("expired_at") != true)
             {
-                writer.WriteNull("metadata"u8);
+                if (ExpiredAt != null)
+                {
+                    writer.WritePropertyName("expired_at"u8);
+                    writer.WriteNumberValue(ExpiredAt.Value, "U");
+                }
+                else
+                {
+                    writer.WriteNull("expiredAt"u8);
+                }
             }
-            if (Usage != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("cancelled_at") != true)
             {
-                writer.WritePropertyName("usage"u8);
-                writer.WriteObjectValue(Usage, options);
+                if (CancelledAt != null)
+                {
+                    writer.WritePropertyName("cancelled_at"u8);
+                    writer.WriteNumberValue(CancelledAt.Value, "U");
+                }
+                else
+                {
+                    writer.WriteNull("cancelledAt"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("failed_at") != true)
             {
-                writer.WriteNull("usage"u8);
+                if (FailedAt != null)
+                {
+                    writer.WritePropertyName("failed_at"u8);
+                    writer.WriteNumberValue(FailedAt.Value, "U");
+                }
+                else
+                {
+                    writer.WriteNull("failedAt"u8);
+                }
             }
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("completed_at") != true)
+            {
+                if (CompletedAt != null)
+                {
+                    writer.WritePropertyName("completed_at"u8);
+                    writer.WriteNumberValue(CompletedAt.Value, "U");
+                }
+                else
+                {
+                    writer.WriteNull("completedAt"u8);
+                }
+            }
+            if (_additionalBinaryDataProperties?.ContainsKey("metadata") != true)
+            {
+                if (Metadata != null && Optional.IsCollectionDefined(Metadata))
+                {
+                    writer.WritePropertyName("metadata"u8);
+                    writer.WriteStartObject();
+                    foreach (var item in Metadata)
+                    {
+                        writer.WritePropertyName(item.Key);
+                        if (item.Value == null)
+                        {
+                            writer.WriteNullValue();
+                            continue;
+                        }
+                        writer.WriteStringValue(item.Value);
+                    }
+                    writer.WriteEndObject();
+                }
+                else
+                {
+                    writer.WriteNull("metadata"u8);
+                }
+            }
+            if (_additionalBinaryDataProperties?.ContainsKey("usage") != true)
+            {
+                if (Usage != null)
+                {
+                    writer.WritePropertyName("usage"u8);
+                    writer.WriteObjectValue(Usage, options);
+                }
+                else
+                {
+                    writer.WriteNull("usage"u8);
+                }
+            }
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(this.Object.ToString());
-            writer.WritePropertyName("step_details"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("step_details") != true)
+            {
+                writer.WritePropertyName("step_details"u8);
+            }
             writer.WriteObjectValue<RunStepDetails>(Details, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

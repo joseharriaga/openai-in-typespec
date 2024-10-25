@@ -11,7 +11,7 @@ namespace OpenAI.LegacyCompletions
 {
     internal partial class InternalCreateCompletionRequest
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalCreateCompletionRequest(InternalCreateCompletionRequestModel model, BinaryData prompt)
         {
@@ -78,5 +78,11 @@ namespace OpenAI.LegacyCompletions
         public float? TopP { get; set; }
 
         public string User { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

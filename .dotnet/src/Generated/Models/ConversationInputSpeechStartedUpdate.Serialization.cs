@@ -32,9 +32,15 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationInputSpeechStartedUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("audio_start_ms"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("audio_start_ms") != true)
+            {
+                writer.WritePropertyName("audio_start_ms"u8);
+            }
             writer.WriteNumberValue(AudioStartMs);
-            writer.WritePropertyName("item_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
+            {
+                writer.WritePropertyName("item_id"u8);
+            }
             writer.WriteStringValue(ItemId);
         }
 

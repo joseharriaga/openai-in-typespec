@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class RunError
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal RunError(RunErrorCode code, string message)
         {
@@ -27,5 +27,11 @@ namespace OpenAI.Assistants
         public RunErrorCode Code { get; }
 
         public string Message { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

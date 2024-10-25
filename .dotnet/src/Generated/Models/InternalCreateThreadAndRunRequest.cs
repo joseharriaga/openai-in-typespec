@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalCreateThreadAndRunRequest
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalCreateThreadAndRunRequest(string assistantId)
         {
@@ -65,5 +65,11 @@ namespace OpenAI.Assistants
         public RunTruncationStrategy TruncationStrategy { get; set; }
 
         public bool? ParallelToolCalls { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

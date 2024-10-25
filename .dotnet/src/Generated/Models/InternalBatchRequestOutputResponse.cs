@@ -10,7 +10,7 @@ namespace OpenAI.Batch
 {
     internal partial class InternalBatchRequestOutputResponse
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalBatchRequestOutputResponse()
         {
@@ -30,5 +30,11 @@ namespace OpenAI.Batch
         public string RequestId { get; }
 
         public IDictionary<string, BinaryData> Body { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

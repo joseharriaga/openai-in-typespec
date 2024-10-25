@@ -31,7 +31,10 @@ namespace OpenAI.FineTuning
             {
                 throw new FormatException($"The model {nameof(FineTuningJobHyperparameters)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("n_epochs"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("n_epochs") != true)
+            {
+                writer.WritePropertyName("n_epochs"u8);
+            }
 #if NET6_0_OR_GREATER
             writer.WriteRawValue(NEpochs);
 #else
@@ -40,7 +43,10 @@ namespace OpenAI.FineTuning
                 JsonSerializer.Serialize(writer, document.RootElement);
             }
 #endif
-            writer.WritePropertyName("batch_size"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("batch_size") != true)
+            {
+                writer.WritePropertyName("batch_size"u8);
+            }
 #if NET6_0_OR_GREATER
             writer.WriteRawValue(BatchSize);
 #else
@@ -49,7 +55,10 @@ namespace OpenAI.FineTuning
                 JsonSerializer.Serialize(writer, document.RootElement);
             }
 #endif
-            writer.WritePropertyName("learning_rate_multiplier"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("learning_rate_multiplier") != true)
+            {
+                writer.WritePropertyName("learning_rate_multiplier"u8);
+            }
 #if NET6_0_OR_GREATER
             writer.WriteRawValue(LearningRateMultiplier);
 #else
@@ -62,6 +71,10 @@ namespace OpenAI.FineTuning
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

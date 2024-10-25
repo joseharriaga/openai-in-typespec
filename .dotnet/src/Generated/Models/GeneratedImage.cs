@@ -9,7 +9,7 @@ namespace OpenAI.Images
 {
     public partial class GeneratedImage
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal GeneratedImage()
         {
@@ -24,5 +24,11 @@ namespace OpenAI.Images
         }
 
         public string RevisedPrompt { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

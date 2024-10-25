@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class RunCreationOptions
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal RunCreationOptions(string assistantId, bool? stream, AssistantResponseFormat responseFormat, string modelOverride, string instructionsOverride, string additionalInstructions, IList<Assistants.ThreadInitializationMessage> additionalMessages, bool? allowParallelToolCalls, IList<ToolDefinition> toolsOverride, IDictionary<string, string> metadata, float? temperature, float? nucleusSamplingFactor, int? maxInputTokenCount, int? maxOutputTokenCount, RunTruncationStrategy truncationStrategy, ToolConstraint toolConstraint, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
@@ -30,6 +30,12 @@ namespace OpenAI.Assistants
             TruncationStrategy = truncationStrategy;
             ToolConstraint = toolConstraint;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
         }
     }
 }

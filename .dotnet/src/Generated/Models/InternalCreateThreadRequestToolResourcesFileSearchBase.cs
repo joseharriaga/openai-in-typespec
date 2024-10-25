@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalCreateThreadRequestToolResourcesFileSearchBase
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalCreateThreadRequestToolResourcesFileSearchBase()
         {
@@ -18,6 +18,12 @@ namespace OpenAI.Assistants
         internal InternalCreateThreadRequestToolResourcesFileSearchBase(IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
         }
     }
 }

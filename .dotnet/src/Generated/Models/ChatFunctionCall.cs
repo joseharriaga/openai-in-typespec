@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     public partial class ChatFunctionCall
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public ChatFunctionCall(string functionName, BinaryData functionArguments)
         {
@@ -26,6 +26,12 @@ namespace OpenAI.Chat
             FunctionName = functionName;
             FunctionArguments = functionArguments;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
         }
     }
 }

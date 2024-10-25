@@ -4,22 +4,23 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     public partial class AssistantThread
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal AssistantThread(string id, DateTimeOffset createdAt, IDictionary<string, string> metadata, ToolResources toolResources)
+        internal AssistantThread(string id, DateTimeOffset createdAt, ToolResources toolResources)
         {
             Id = id;
             CreatedAt = createdAt;
-            Metadata = metadata;
+            Metadata = new ChangeTrackingDictionary<string, string>();
             ToolResources = toolResources;
         }
 
-        internal AssistantThread(string id, DateTimeOffset createdAt, IDictionary<string, string> metadata, InternalThreadObjectObject @object, ToolResources toolResources, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal AssistantThread(string id, DateTimeOffset createdAt, IReadOnlyDictionary<string, string> metadata, InternalThreadObjectObject @object, ToolResources toolResources, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -33,6 +34,12 @@ namespace OpenAI.Assistants
 
         public DateTimeOffset CreatedAt { get; }
 
-        public IDictionary<string, string> Metadata { get; }
+        public IReadOnlyDictionary<string, string> Metadata { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

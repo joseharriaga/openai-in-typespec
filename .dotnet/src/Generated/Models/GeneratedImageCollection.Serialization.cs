@@ -19,12 +19,19 @@ namespace OpenAI.Images
             {
                 throw new FormatException($"The model {nameof(GeneratedImageCollection)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("created"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("created") != true)
+            {
+                writer.WritePropertyName("created"u8);
+            }
             writer.WriteNumberValue(CreatedAt, "U");
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

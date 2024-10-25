@@ -27,18 +27,27 @@ namespace OpenAI.Audio
             {
                 throw new FormatException($"The model {nameof(SpeechGenerationOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(ResponseFormat))
+            if (Optional.IsDefined(ResponseFormat) && _additionalBinaryDataProperties?.ContainsKey("response_format") != true)
             {
                 writer.WritePropertyName("response_format"u8);
                 writer.WriteStringValue(ResponseFormat.Value.ToString());
             }
-            writer.WritePropertyName("model"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+            }
             writer.WriteStringValue(Model.ToString());
-            writer.WritePropertyName("input"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("input") != true)
+            {
+                writer.WritePropertyName("input"u8);
+            }
             writer.WriteStringValue(Input);
-            writer.WritePropertyName("voice"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("voice") != true)
+            {
+                writer.WritePropertyName("voice"u8);
+            }
             writer.WriteStringValue(Voice.ToString());
-            if (Optional.IsDefined(SpeedRatio))
+            if (Optional.IsDefined(SpeedRatio) && _additionalBinaryDataProperties?.ContainsKey("speed") != true)
             {
                 writer.WritePropertyName("speed"u8);
                 writer.WriteNumberValue(SpeedRatio.Value);
@@ -47,6 +56,10 @@ namespace OpenAI.Audio
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -91,7 +104,6 @@ namespace OpenAI.Audio
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        responseFormat = null;
                         continue;
                     }
                     responseFormat = new GeneratedSpeechFormat(prop.Value.GetString());
@@ -116,7 +128,6 @@ namespace OpenAI.Audio
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        speedRatio = null;
                         continue;
                     }
                     speedRatio = prop.Value.GetSingle();

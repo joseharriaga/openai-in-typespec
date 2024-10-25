@@ -32,7 +32,10 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(InternalRunStepDetailsToolCallsCodeOutputImageObject)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("image"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("image") != true)
+            {
+                writer.WritePropertyName("image"u8);
+            }
             writer.WriteObjectValue<InternalRunStepDetailsToolCallsCodeOutputImageObjectImage>(_image, options);
         }
 

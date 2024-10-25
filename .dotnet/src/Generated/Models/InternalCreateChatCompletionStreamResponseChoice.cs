@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalCreateChatCompletionStreamResponseChoice
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalCreateChatCompletionStreamResponseChoice(InternalChatCompletionStreamResponseDelta delta, int index, Chat.ChatFinishReason? finishReason)
         {
@@ -32,5 +32,11 @@ namespace OpenAI.Chat
         public InternalCreateChatCompletionStreamResponseChoiceLogprobs Logprobs { get; }
 
         public int Index { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

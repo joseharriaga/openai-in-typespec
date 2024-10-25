@@ -27,17 +27,17 @@ namespace OpenAI.Batch
             {
                 throw new FormatException($"The model {nameof(InternalBatchError)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Code))
+            if (Optional.IsDefined(Code) && _additionalBinaryDataProperties?.ContainsKey("code") != true)
             {
                 writer.WritePropertyName("code"u8);
                 writer.WriteStringValue(Code);
             }
-            if (Optional.IsDefined(Message))
+            if (Optional.IsDefined(Message) && _additionalBinaryDataProperties?.ContainsKey("message") != true)
             {
                 writer.WritePropertyName("message"u8);
                 writer.WriteStringValue(Message);
             }
-            if (Optional.IsDefined(Param))
+            if (Optional.IsDefined(Param) && _additionalBinaryDataProperties?.ContainsKey("param") != true)
             {
                 if (Param != null)
                 {
@@ -49,7 +49,7 @@ namespace OpenAI.Batch
                     writer.WriteNull("param"u8);
                 }
             }
-            if (Optional.IsDefined(Line))
+            if (Optional.IsDefined(Line) && _additionalBinaryDataProperties?.ContainsKey("line") != true)
             {
                 if (Line != null)
                 {
@@ -65,6 +65,10 @@ namespace OpenAI.Batch
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -106,21 +110,11 @@ namespace OpenAI.Batch
             {
                 if (prop.NameEquals("code"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        code = null;
-                        continue;
-                    }
                     code = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("message"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        message = null;
-                        continue;
-                    }
                     message = prop.Value.GetString();
                     continue;
                 }

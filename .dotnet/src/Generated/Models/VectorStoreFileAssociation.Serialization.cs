@@ -31,28 +31,49 @@ namespace OpenAI.VectorStores
             {
                 throw new FormatException($"The model {nameof(VectorStoreFileAssociation)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("created_at"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
+            {
+                writer.WritePropertyName("created_at"u8);
+            }
             writer.WriteNumberValue(CreatedAt, "U");
-            writer.WritePropertyName("vector_store_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("vector_store_id") != true)
+            {
+                writer.WritePropertyName("vector_store_id"u8);
+            }
             writer.WriteStringValue(VectorStoreId);
-            writer.WritePropertyName("status"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
+            {
+                writer.WritePropertyName("status"u8);
+            }
             writer.WriteStringValue(Status.ToSerialString());
-            if (LastError != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("last_error") != true)
             {
-                writer.WritePropertyName("last_error"u8);
-                writer.WriteObjectValue(LastError, options);
+                if (LastError != null)
+                {
+                    writer.WritePropertyName("last_error"u8);
+                    writer.WriteObjectValue(LastError, options);
+                }
+                else
+                {
+                    writer.WriteNull("lastError"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
-                writer.WriteNull("lastError"u8);
+                writer.WritePropertyName("object"u8);
             }
-            writer.WritePropertyName("object"u8);
             writer.WriteStringValue(this.Object.ToString());
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(FileId);
-            writer.WritePropertyName("usage_bytes"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("usage_bytes") != true)
+            {
+                writer.WritePropertyName("usage_bytes"u8);
+            }
             writer.WriteNumberValue(Size);
-            if (Optional.IsDefined(ChunkingStrategy))
+            if (Optional.IsDefined(ChunkingStrategy) && _additionalBinaryDataProperties?.ContainsKey("chunking_strategy") != true)
             {
                 writer.WritePropertyName("chunking_strategy"u8);
                 writer.WriteObjectValue<FileChunkingStrategy>(ChunkingStrategy, options);
@@ -61,6 +82,10 @@ namespace OpenAI.VectorStores
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -148,7 +173,6 @@ namespace OpenAI.VectorStores
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        chunkingStrategy = null;
                         continue;
                     }
                     chunkingStrategy = FileChunkingStrategy.DeserializeFileChunkingStrategy(prop.Value, options);

@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     public partial class ChatTokenUsage
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ChatTokenUsage(int outputTokenCount, int inputTokenCount, int totalTokenCount)
         {
@@ -25,6 +25,12 @@ namespace OpenAI.Chat
             TotalTokenCount = totalTokenCount;
             OutputTokenDetails = outputTokenDetails;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
         }
     }
 }

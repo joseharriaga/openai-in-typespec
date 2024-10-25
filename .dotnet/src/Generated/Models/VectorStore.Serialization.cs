@@ -31,19 +31,37 @@ namespace OpenAI.VectorStores
             {
                 throw new FormatException($"The model {nameof(VectorStore)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("created_at"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
+            {
+                writer.WritePropertyName("created_at"u8);
+            }
             writer.WriteNumberValue(CreatedAt, "U");
-            writer.WritePropertyName("name"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
+            {
+                writer.WritePropertyName("name"u8);
+            }
             writer.WriteStringValue(Name);
-            writer.WritePropertyName("usage_bytes"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("usage_bytes") != true)
+            {
+                writer.WritePropertyName("usage_bytes"u8);
+            }
             writer.WriteNumberValue(UsageBytes);
-            writer.WritePropertyName("file_counts"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("file_counts") != true)
+            {
+                writer.WritePropertyName("file_counts"u8);
+            }
             writer.WriteObjectValue(FileCounts, options);
-            writer.WritePropertyName("status"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
+            {
+                writer.WritePropertyName("status"u8);
+            }
             writer.WriteStringValue(Status.ToSerialString());
-            if (Optional.IsDefined(ExpiresAt))
+            if (Optional.IsDefined(ExpiresAt) && _additionalBinaryDataProperties?.ContainsKey("expires_at") != true)
             {
                 if (ExpiresAt != null)
                 {
@@ -55,38 +73,47 @@ namespace OpenAI.VectorStores
                     writer.WriteNull("expiresAt"u8);
                 }
             }
-            if (LastActiveAt != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("last_active_at") != true)
             {
-                writer.WritePropertyName("last_active_at"u8);
-                writer.WriteNumberValue(LastActiveAt.Value, "U");
-            }
-            else
-            {
-                writer.WriteNull("lastActiveAt"u8);
-            }
-            if (Metadata != null && Optional.IsCollectionDefined(Metadata))
-            {
-                writer.WritePropertyName("metadata"u8);
-                writer.WriteStartObject();
-                foreach (var item in Metadata)
+                if (LastActiveAt != null)
                 {
-                    writer.WritePropertyName(item.Key);
-                    if (item.Value == null)
-                    {
-                        writer.WriteNullValue();
-                        continue;
-                    }
-                    writer.WriteStringValue(item.Value);
+                    writer.WritePropertyName("last_active_at"u8);
+                    writer.WriteNumberValue(LastActiveAt.Value, "U");
                 }
-                writer.WriteEndObject();
+                else
+                {
+                    writer.WriteNull("lastActiveAt"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
-                writer.WriteNull("metadata"u8);
+                if (Metadata != null && Optional.IsCollectionDefined(Metadata))
+                {
+                    writer.WritePropertyName("metadata"u8);
+                    writer.WriteStartObject();
+                    foreach (var item in Metadata)
+                    {
+                        writer.WritePropertyName(item.Key);
+                        if (item.Value == null)
+                        {
+                            writer.WriteNullValue();
+                            continue;
+                        }
+                        writer.WriteStringValue(item.Value);
+                    }
+                    writer.WriteEndObject();
+                }
+                else
+                {
+                    writer.WriteNull("metadata"u8);
+                }
             }
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(this.Object.ToString());
-            if (Optional.IsDefined(ExpirationPolicy))
+            if (Optional.IsDefined(ExpirationPolicy) && _additionalBinaryDataProperties?.ContainsKey("expires_after") != true)
             {
                 writer.WritePropertyName("expires_after"u8);
                 writer.WriteObjectValue<VectorStoreExpirationPolicy>(ExpirationPolicy, options);
@@ -95,6 +122,10 @@ namespace OpenAI.VectorStores
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -222,7 +253,6 @@ namespace OpenAI.VectorStores
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        expirationPolicy = null;
                         continue;
                     }
                     expirationPolicy = VectorStoreExpirationPolicy.DeserializeVectorStoreExpirationPolicy(prop.Value, options);

@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalCreateChatCompletionFunctionResponse
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalCreateChatCompletionFunctionResponse(string id, IEnumerable<InternalCreateChatCompletionFunctionResponseChoice> choices, DateTimeOffset created, string model)
         {
@@ -45,5 +45,11 @@ namespace OpenAI.Chat
         public InternalCreateChatCompletionFunctionResponseObject Object { get; } = "chat.completion";
 
         public ChatTokenUsage Usage { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

@@ -31,14 +31,24 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalRunRequiredAction)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("submit_tool_outputs"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("submit_tool_outputs") != true)
+            {
+                writer.WritePropertyName("submit_tool_outputs"u8);
+            }
             writer.WriteObjectValue(SubmitToolOutputs, options);
-            writer.WritePropertyName("type"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+            }
             writer.WriteObjectValue<object>(Type, options);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

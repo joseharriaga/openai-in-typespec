@@ -31,16 +31,29 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatToolCall)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("function"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("function") != true)
+            {
+                writer.WritePropertyName("function"u8);
+            }
             writer.WriteObjectValue<InternalChatCompletionMessageToolCallFunction>(Function, options);
-            writer.WritePropertyName("type"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+            }
             writer.WriteStringValue(Kind.ToSerialString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

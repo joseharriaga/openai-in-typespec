@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     public partial class StreamingChatCompletionUpdate
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal StreamingChatCompletionUpdate(string model, string completionId, IEnumerable<InternalCreateChatCompletionStreamResponseChoice> choices, DateTimeOffset createdAt)
         {
@@ -36,5 +36,11 @@ namespace OpenAI.Chat
         public string Model { get; }
 
         public string SystemFingerprint { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

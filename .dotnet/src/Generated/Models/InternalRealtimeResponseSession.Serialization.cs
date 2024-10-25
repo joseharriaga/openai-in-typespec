@@ -31,39 +31,69 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeResponseSession)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(Object.ToString());
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("model"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+            }
             writer.WriteStringValue(Model);
-            writer.WritePropertyName("modalities"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("modalities") != true)
+            {
+                writer.WritePropertyName("modalities"u8);
+            }
             writer.WriteStartArray();
             foreach (InternalRealtimeRequestSessionUpdateCommandSessionModality item in Modalities)
             {
                 writer.WriteStringValue(item.ToString());
             }
             writer.WriteEndArray();
-            writer.WritePropertyName("instructions"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("instructions") != true)
+            {
+                writer.WritePropertyName("instructions"u8);
+            }
             writer.WriteStringValue(Instructions);
-            writer.WritePropertyName("voice"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("voice") != true)
+            {
+                writer.WritePropertyName("voice"u8);
+            }
             writer.WriteStringValue(Voice.ToString());
-            writer.WritePropertyName("input_audio_format"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("input_audio_format") != true)
+            {
+                writer.WritePropertyName("input_audio_format"u8);
+            }
             writer.WriteStringValue(InputAudioFormat.ToString());
-            writer.WritePropertyName("output_audio_format"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("output_audio_format") != true)
+            {
+                writer.WritePropertyName("output_audio_format"u8);
+            }
             writer.WriteStringValue(OutputAudioFormat.ToString());
-            if (InputAudioTranscription != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("input_audio_transcription") != true)
             {
-                writer.WritePropertyName("input_audio_transcription"u8);
-                writer.WriteObjectValue(InputAudioTranscription, options);
+                if (InputAudioTranscription != null)
+                {
+                    writer.WritePropertyName("input_audio_transcription"u8);
+                    writer.WriteObjectValue(InputAudioTranscription, options);
+                }
+                else
+                {
+                    writer.WriteNull("inputAudioTranscription"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("turn_detection") != true)
             {
-                writer.WriteNull("inputAudioTranscription"u8);
+                writer.WritePropertyName("turn_detection"u8);
             }
-            writer.WritePropertyName("turn_detection"u8);
             writer.WriteObjectValue(TurnDetection, options);
-            if (options.Format != "W")
+            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("tools") != true)
             {
                 writer.WritePropertyName("tools"u8);
                 writer.WriteStartArray();
@@ -73,7 +103,10 @@ namespace OpenAI.RealtimeConversation
                 }
                 writer.WriteEndArray();
             }
-            writer.WritePropertyName("tool_choice"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("tool_choice") != true)
+            {
+                writer.WritePropertyName("tool_choice"u8);
+            }
 #if NET6_0_OR_GREATER
             writer.WriteRawValue(ToolChoice);
 #else
@@ -82,28 +115,38 @@ namespace OpenAI.RealtimeConversation
                 JsonSerializer.Serialize(writer, document.RootElement);
             }
 #endif
-            writer.WritePropertyName("temperature"u8);
-            writer.WriteNumberValue(Temperature);
-            if (_maxResponseOutputTokens != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("temperature") != true)
             {
-                writer.WritePropertyName("max_response_output_tokens"u8);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(_maxResponseOutputTokens);
-#else
-                using (JsonDocument document = JsonDocument.Parse(_maxResponseOutputTokens))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WritePropertyName("temperature"u8);
             }
-            else
+            writer.WriteNumberValue(Temperature);
+            if (_additionalBinaryDataProperties?.ContainsKey("max_response_output_tokens") != true)
             {
-                writer.WriteNull("maxResponseOutputTokens"u8);
+                if (_maxResponseOutputTokens != null)
+                {
+                    writer.WritePropertyName("max_response_output_tokens"u8);
+#if NET6_0_OR_GREATER
+                    writer.WriteRawValue(_maxResponseOutputTokens);
+#else
+                    using (JsonDocument document = JsonDocument.Parse(_maxResponseOutputTokens))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
+#endif
+                }
+                else
+                {
+                    writer.WriteNull("maxResponseOutputTokens"u8);
+                }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -235,6 +278,11 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("max_response_output_tokens"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        maxResponseOutputTokens = null;
+                        continue;
+                    }
                     maxResponseOutputTokens = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }

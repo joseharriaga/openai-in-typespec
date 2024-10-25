@@ -31,24 +31,49 @@ namespace OpenAI.FineTuning
             {
                 throw new FormatException($"The model {nameof(InternalFineTuningJobCheckpoint)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("created_at"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
+            {
+                writer.WritePropertyName("created_at"u8);
+            }
             writer.WriteNumberValue(CreatedAt, "U");
-            writer.WritePropertyName("fine_tuned_model_checkpoint"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("fine_tuned_model_checkpoint") != true)
+            {
+                writer.WritePropertyName("fine_tuned_model_checkpoint"u8);
+            }
             writer.WriteStringValue(FineTunedModelCheckpoint);
-            writer.WritePropertyName("step_number"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("step_number") != true)
+            {
+                writer.WritePropertyName("step_number"u8);
+            }
             writer.WriteNumberValue(StepNumber);
-            writer.WritePropertyName("metrics"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("metrics") != true)
+            {
+                writer.WritePropertyName("metrics"u8);
+            }
             writer.WriteObjectValue(Metrics, options);
-            writer.WritePropertyName("fine_tuning_job_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("fine_tuning_job_id") != true)
+            {
+                writer.WritePropertyName("fine_tuning_job_id"u8);
+            }
             writer.WriteStringValue(FineTuningJobId);
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

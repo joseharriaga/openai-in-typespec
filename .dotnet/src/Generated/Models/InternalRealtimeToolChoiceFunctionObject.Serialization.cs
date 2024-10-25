@@ -32,7 +32,10 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(InternalRealtimeToolChoiceFunctionObject)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("function"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("function") != true)
+            {
+                writer.WritePropertyName("function"u8);
+            }
             writer.WriteObjectValue(Function, options);
         }
 

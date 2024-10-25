@@ -27,12 +27,12 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalRunStepDetailsToolCallsFileSearchResultObjectContent)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Type))
+            if (Optional.IsDefined(Type) && _additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type.Value.ToString());
             }
-            if (Optional.IsDefined(Text))
+            if (Optional.IsDefined(Text) && _additionalBinaryDataProperties?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
                 writer.WriteStringValue(Text);
@@ -41,6 +41,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -82,7 +86,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        @type = null;
                         continue;
                     }
                     @type = new InternalRunStepDetailsToolCallsFileSearchResultObjectContentType(prop.Value.GetString());
@@ -90,11 +93,6 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("text"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        text = null;
-                        continue;
-                    }
                     text = prop.Value.GetString();
                     continue;
                 }

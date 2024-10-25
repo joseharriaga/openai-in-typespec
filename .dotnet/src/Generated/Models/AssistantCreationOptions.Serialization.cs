@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(AssistantCreationOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Name))
+            if (Optional.IsDefined(Name) && _additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 if (Name != null)
                 {
@@ -39,7 +39,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("name"u8);
                 }
             }
-            if (Optional.IsDefined(Description))
+            if (Optional.IsDefined(Description) && _additionalBinaryDataProperties?.ContainsKey("description") != true)
             {
                 if (Description != null)
                 {
@@ -51,7 +51,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("description"u8);
                 }
             }
-            if (Optional.IsDefined(Instructions))
+            if (Optional.IsDefined(Instructions) && _additionalBinaryDataProperties?.ContainsKey("instructions") != true)
             {
                 if (Instructions != null)
                 {
@@ -63,7 +63,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("instructions"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(Metadata))
+            if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null)
                 {
@@ -86,7 +86,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("metadata"u8);
                 }
             }
-            if (Optional.IsDefined(Temperature))
+            if (Optional.IsDefined(Temperature) && _additionalBinaryDataProperties?.ContainsKey("temperature") != true)
             {
                 if (Temperature != null)
                 {
@@ -98,9 +98,12 @@ namespace OpenAI.Assistants
                     writer.WriteNull("temperature"u8);
                 }
             }
-            writer.WritePropertyName("model"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+            }
             writer.WriteStringValue(Model);
-            if (Optional.IsCollectionDefined(Tools))
+            if (Optional.IsCollectionDefined(Tools) && _additionalBinaryDataProperties?.ContainsKey("tools") != true)
             {
                 writer.WritePropertyName("tools"u8);
                 writer.WriteStartArray();
@@ -110,7 +113,7 @@ namespace OpenAI.Assistants
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsDefined(ToolResources))
+            if (Optional.IsDefined(ToolResources) && _additionalBinaryDataProperties?.ContainsKey("tool_resources") != true)
             {
                 if (ToolResources != null)
                 {
@@ -122,7 +125,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("toolResources"u8);
                 }
             }
-            if (Optional.IsDefined(ResponseFormat))
+            if (Optional.IsDefined(ResponseFormat) && _additionalBinaryDataProperties?.ContainsKey("response_format") != true)
             {
                 if (ResponseFormat != null)
                 {
@@ -134,7 +137,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("responseFormat"u8);
                 }
             }
-            if (Optional.IsDefined(NucleusSamplingFactor))
+            if (Optional.IsDefined(NucleusSamplingFactor) && _additionalBinaryDataProperties?.ContainsKey("top_p") != true)
             {
                 if (NucleusSamplingFactor != null)
                 {
@@ -150,6 +153,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

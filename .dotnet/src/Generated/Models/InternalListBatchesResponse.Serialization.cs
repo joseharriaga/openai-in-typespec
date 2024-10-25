@@ -31,31 +31,44 @@ namespace OpenAI.Batch
             {
                 throw new FormatException($"The model {nameof(InternalListBatchesResponse)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("data"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("data") != true)
+            {
+                writer.WritePropertyName("data"u8);
+            }
             writer.WriteStartArray();
             foreach (InternalBatchJob item in Data)
             {
                 writer.WriteObjectValue(item, options);
             }
             writer.WriteEndArray();
-            if (Optional.IsDefined(FirstId))
+            if (Optional.IsDefined(FirstId) && _additionalBinaryDataProperties?.ContainsKey("first_id") != true)
             {
                 writer.WritePropertyName("first_id"u8);
                 writer.WriteStringValue(FirstId);
             }
-            if (Optional.IsDefined(LastId))
+            if (Optional.IsDefined(LastId) && _additionalBinaryDataProperties?.ContainsKey("last_id") != true)
             {
                 writer.WritePropertyName("last_id"u8);
                 writer.WriteStringValue(LastId);
             }
-            writer.WritePropertyName("has_more"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("has_more") != true)
+            {
+                writer.WritePropertyName("has_more"u8);
+            }
             writer.WriteBooleanValue(HasMore);
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(Object.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -108,21 +121,11 @@ namespace OpenAI.Batch
                 }
                 if (prop.NameEquals("first_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        firstId = null;
-                        continue;
-                    }
                     firstId = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("last_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        lastId = null;
-                        continue;
-                    }
                     lastId = prop.Value.GetString();
                     continue;
                 }

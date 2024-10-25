@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(ThreadCreationOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsCollectionDefined(Metadata))
+            if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null)
                 {
@@ -50,7 +50,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("metadata"u8);
                 }
             }
-            if (Optional.IsDefined(ToolResources))
+            if (Optional.IsDefined(ToolResources) && _additionalBinaryDataProperties?.ContainsKey("tool_resources") != true)
             {
                 if (ToolResources != null)
                 {
@@ -62,7 +62,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("toolResources"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(InternalMessages))
+            if (Optional.IsCollectionDefined(InternalMessages) && _additionalBinaryDataProperties?.ContainsKey("messages") != true)
             {
                 writer.WritePropertyName("messages"u8);
                 writer.WriteStartArray();
@@ -76,6 +76,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

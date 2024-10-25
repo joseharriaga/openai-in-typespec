@@ -31,35 +31,69 @@ namespace OpenAI.Audio
             {
                 throw new FormatException($"The model {nameof(TranscribedSegment)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteNumberValue(Id);
-            writer.WritePropertyName("text"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("text") != true)
+            {
+                writer.WritePropertyName("text"u8);
+            }
             writer.WriteStringValue(Text);
-            writer.WritePropertyName("temperature"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("temperature") != true)
+            {
+                writer.WritePropertyName("temperature"u8);
+            }
             writer.WriteNumberValue(Temperature);
-            writer.WritePropertyName("compression_ratio"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("compression_ratio") != true)
+            {
+                writer.WritePropertyName("compression_ratio"u8);
+            }
             writer.WriteNumberValue(CompressionRatio);
-            writer.WritePropertyName("start"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("start") != true)
+            {
+                writer.WritePropertyName("start"u8);
+            }
             writer.WriteNumberValue(Convert.ToDouble(StartTime.ToString("s\\.FFF")));
-            writer.WritePropertyName("end"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("end") != true)
+            {
+                writer.WritePropertyName("end"u8);
+            }
             writer.WriteNumberValue(Convert.ToDouble(EndTime.ToString("s\\.FFF")));
-            writer.WritePropertyName("seek"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("seek") != true)
+            {
+                writer.WritePropertyName("seek"u8);
+            }
             writer.WriteNumberValue(SeekOffset);
-            writer.WritePropertyName("tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("tokens") != true)
+            {
+                writer.WritePropertyName("tokens"u8);
+            }
             writer.WriteStartArray();
             foreach (int item in TokenIds.Span)
             {
                 writer.WriteNumberValue(item);
             }
             writer.WriteEndArray();
-            writer.WritePropertyName("avg_logprob"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("avg_logprob") != true)
+            {
+                writer.WritePropertyName("avg_logprob"u8);
+            }
             writer.WriteNumberValue(AverageLogProbability);
-            writer.WritePropertyName("no_speech_prob"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("no_speech_prob") != true)
+            {
+                writer.WritePropertyName("no_speech_prob"u8);
+            }
             writer.WriteNumberValue(NoSpeechProbability);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -146,12 +180,14 @@ namespace OpenAI.Audio
                     {
                         continue;
                     }
-                    List<int> array = new List<int>();
+                    int index = 0;
+                    int[] array = new int[prop.Value.GetArrayLength()];
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(item.GetInt32());
+                        array[index] = item.GetInt32();
+                        index++;
                     }
-                    tokenIds = array;
+                    tokenIds = new ReadOnlyMemory<int>(array);
                     continue;
                 }
                 if (prop.NameEquals("avg_logprob"u8))

@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalAssistantToolsFileSearchTypeOnly
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalAssistantToolsFileSearchTypeOnly()
         {
@@ -22,5 +22,11 @@ namespace OpenAI.Assistants
         }
 
         public InternalAssistantToolsFileSearchTypeOnlyType Type { get; } = "file_search";
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

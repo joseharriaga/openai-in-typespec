@@ -28,17 +28,17 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(InternalRealtimeServerVadTurnDetection)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (Optional.IsDefined(Threshold))
+            if (Optional.IsDefined(Threshold) && _additionalBinaryDataProperties?.ContainsKey("threshold") != true)
             {
                 writer.WritePropertyName("threshold"u8);
                 writer.WriteNumberValue(Threshold.Value);
             }
-            if (Optional.IsDefined(PrefixPaddingMs))
+            if (Optional.IsDefined(PrefixPaddingMs) && _additionalBinaryDataProperties?.ContainsKey("prefix_padding_ms") != true)
             {
                 writer.WritePropertyName("prefix_padding_ms"u8);
                 this.SerializePrefixPaddingMs(writer, options);
             }
-            if (Optional.IsDefined(SilenceDurationMs))
+            if (Optional.IsDefined(SilenceDurationMs) && _additionalBinaryDataProperties?.ContainsKey("silence_duration_ms") != true)
             {
                 writer.WritePropertyName("silence_duration_ms"u8);
                 this.SerializeSilenceDurationMs(writer, options);
@@ -75,7 +75,6 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        threshold = null;
                         continue;
                     }
                     threshold = prop.Value.GetSingle();
@@ -83,21 +82,11 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("prefix_padding_ms"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        prefixPaddingMs = null;
-                        continue;
-                    }
                     DeserializeMillisecondDuration(prop, ref prefixPaddingMs);
                     continue;
                 }
                 if (prop.NameEquals("silence_duration_ms"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        silenceDurationMs = null;
-                        continue;
-                    }
                     DeserializeMillisecondDuration(prop, ref silenceDurationMs);
                     continue;
                 }

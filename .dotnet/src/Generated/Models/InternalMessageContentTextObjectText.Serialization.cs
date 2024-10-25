@@ -31,9 +31,15 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalMessageContentTextObjectText)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("value"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("value") != true)
+            {
+                writer.WritePropertyName("value"u8);
+            }
             writer.WriteStringValue(Value);
-            writer.WritePropertyName("annotations"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("annotations") != true)
+            {
+                writer.WritePropertyName("annotations"u8);
+            }
             writer.WriteStartArray();
             foreach (InternalMessageContentTextObjectAnnotation item in Annotations)
             {
@@ -44,6 +50,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

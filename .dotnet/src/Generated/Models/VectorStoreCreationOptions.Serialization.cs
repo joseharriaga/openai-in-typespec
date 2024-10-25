@@ -27,7 +27,7 @@ namespace OpenAI.VectorStores
             {
                 throw new FormatException($"The model {nameof(VectorStoreCreationOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsCollectionDefined(FileIds))
+            if (Optional.IsCollectionDefined(FileIds) && _additionalBinaryDataProperties?.ContainsKey("file_ids") != true)
             {
                 writer.WritePropertyName("file_ids"u8);
                 writer.WriteStartArray();
@@ -42,12 +42,12 @@ namespace OpenAI.VectorStores
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsDefined(Name))
+            if (Optional.IsDefined(Name) && _additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(Name);
             }
-            if (Optional.IsCollectionDefined(Metadata))
+            if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null)
                 {
@@ -70,12 +70,12 @@ namespace OpenAI.VectorStores
                     writer.WriteNull("metadata"u8);
                 }
             }
-            if (Optional.IsDefined(ExpirationPolicy))
+            if (Optional.IsDefined(ExpirationPolicy) && _additionalBinaryDataProperties?.ContainsKey("expires_after") != true)
             {
                 writer.WritePropertyName("expires_after"u8);
                 writer.WriteObjectValue<VectorStoreExpirationPolicy>(ExpirationPolicy, options);
             }
-            if (Optional.IsDefined(ChunkingStrategy))
+            if (Optional.IsDefined(ChunkingStrategy) && _additionalBinaryDataProperties?.ContainsKey("chunking_strategy") != true)
             {
                 writer.WritePropertyName("chunking_strategy"u8);
                 writer.WriteObjectValue<FileChunkingStrategy>(ChunkingStrategy, options);
@@ -84,6 +84,10 @@ namespace OpenAI.VectorStores
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -147,11 +151,6 @@ namespace OpenAI.VectorStores
                 }
                 if (prop.NameEquals("name"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
                     name = prop.Value.GetString();
                     continue;
                 }
@@ -180,7 +179,6 @@ namespace OpenAI.VectorStores
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        expirationPolicy = null;
                         continue;
                     }
                     expirationPolicy = VectorStoreExpirationPolicy.DeserializeVectorStoreExpirationPolicy(prop.Value, options);
@@ -190,7 +188,6 @@ namespace OpenAI.VectorStores
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        chunkingStrategy = null;
                         continue;
                     }
                     chunkingStrategy = FileChunkingStrategy.DeserializeFileChunkingStrategy(prop.Value, options);

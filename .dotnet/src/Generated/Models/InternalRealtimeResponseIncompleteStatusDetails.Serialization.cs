@@ -32,7 +32,10 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(InternalRealtimeResponseIncompleteStatusDetails)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("reason"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("reason") != true)
+            {
+                writer.WritePropertyName("reason"u8);
+            }
             writer.WriteStringValue(Reason.ToString());
         }
 

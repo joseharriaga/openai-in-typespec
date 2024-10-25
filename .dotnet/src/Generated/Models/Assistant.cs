@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     public partial class Assistant
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal Assistant(string id, DateTimeOffset createdAt, string name, string description, string model, string instructions, IEnumerable<ToolDefinition> tools, IDictionary<string, string> metadata)
         {
@@ -61,5 +61,11 @@ namespace OpenAI.Assistants
         public IDictionary<string, string> Metadata { get; }
 
         public float? Temperature { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalMessageDeltaContentTextAnnotationsFileCitationObjectFileCitation
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalMessageDeltaContentTextAnnotationsFileCitationObjectFileCitation()
         {
@@ -25,5 +25,11 @@ namespace OpenAI.Assistants
         public string FileId { get; }
 
         public string Quote { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

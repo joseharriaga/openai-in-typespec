@@ -27,12 +27,15 @@ namespace OpenAI.Embeddings
             {
                 throw new FormatException($"The model {nameof(EmbeddingGenerationOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Dimensions))
+            if (Optional.IsDefined(Dimensions) && _additionalBinaryDataProperties?.ContainsKey("dimensions") != true)
             {
                 writer.WritePropertyName("dimensions"u8);
                 writer.WriteNumberValue(Dimensions.Value);
             }
-            writer.WritePropertyName("input"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("input") != true)
+            {
+                writer.WritePropertyName("input"u8);
+            }
 #if NET6_0_OR_GREATER
             writer.WriteRawValue(Input);
 #else
@@ -41,14 +44,17 @@ namespace OpenAI.Embeddings
                 JsonSerializer.Serialize(writer, document.RootElement);
             }
 #endif
-            writer.WritePropertyName("model"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+            }
             writer.WriteStringValue(Model.ToString());
-            if (Optional.IsDefined(EncodingFormat))
+            if (Optional.IsDefined(EncodingFormat) && _additionalBinaryDataProperties?.ContainsKey("encoding_format") != true)
             {
                 writer.WritePropertyName("encoding_format"u8);
                 writer.WriteStringValue(EncodingFormat.Value.ToString());
             }
-            if (Optional.IsDefined(EndUserId))
+            if (Optional.IsDefined(EndUserId) && _additionalBinaryDataProperties?.ContainsKey("user") != true)
             {
                 writer.WritePropertyName("user"u8);
                 writer.WriteStringValue(EndUserId);
@@ -57,6 +63,10 @@ namespace OpenAI.Embeddings
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -101,7 +111,6 @@ namespace OpenAI.Embeddings
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        dimensions = null;
                         continue;
                     }
                     dimensions = prop.Value.GetInt32();
@@ -121,7 +130,6 @@ namespace OpenAI.Embeddings
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        encodingFormat = null;
                         continue;
                     }
                     encodingFormat = new InternalCreateEmbeddingRequestEncodingFormat(prop.Value.GetString());
@@ -129,11 +137,6 @@ namespace OpenAI.Embeddings
                 }
                 if (prop.NameEquals("user"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        endUserId = null;
-                        continue;
-                    }
                     endUserId = prop.Value.GetString();
                     continue;
                 }

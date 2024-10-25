@@ -32,11 +32,20 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(InternalRealtimeRequestItemTruncateCommand)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("item_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
+            {
+                writer.WritePropertyName("item_id"u8);
+            }
             writer.WriteStringValue(ItemId);
-            writer.WritePropertyName("content_index"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("content_index") != true)
+            {
+                writer.WritePropertyName("content_index"u8);
+            }
             writer.WriteNumberValue(ContentIndex);
-            writer.WritePropertyName("audio_end_ms"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("audio_end_ms") != true)
+            {
+                writer.WritePropertyName("audio_end_ms"u8);
+            }
             writer.WriteNumberValue(AudioEndMs);
         }
 
@@ -89,11 +98,6 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("event_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
                     eventId = prop.Value.GetString();
                     continue;
                 }

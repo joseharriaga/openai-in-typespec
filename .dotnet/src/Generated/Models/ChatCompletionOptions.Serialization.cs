@@ -27,7 +27,7 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatCompletionOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(FrequencyPenalty))
+            if (Optional.IsDefined(FrequencyPenalty) && _additionalBinaryDataProperties?.ContainsKey("frequency_penalty") != true)
             {
                 if (FrequencyPenalty != null)
                 {
@@ -39,7 +39,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("frequencyPenalty"u8);
                 }
             }
-            if (Optional.IsDefined(PresencePenalty))
+            if (Optional.IsDefined(PresencePenalty) && _additionalBinaryDataProperties?.ContainsKey("presence_penalty") != true)
             {
                 if (PresencePenalty != null)
                 {
@@ -51,12 +51,12 @@ namespace OpenAI.Chat
                     writer.WriteNull("presencePenalty"u8);
                 }
             }
-            if (Optional.IsDefined(ResponseFormat))
+            if (Optional.IsDefined(ResponseFormat) && _additionalBinaryDataProperties?.ContainsKey("response_format") != true)
             {
                 writer.WritePropertyName("response_format"u8);
                 writer.WriteObjectValue(ResponseFormat, options);
             }
-            if (Optional.IsDefined(Temperature))
+            if (Optional.IsDefined(Temperature) && _additionalBinaryDataProperties?.ContainsKey("temperature") != true)
             {
                 if (Temperature != null)
                 {
@@ -68,7 +68,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("temperature"u8);
                 }
             }
-            if (Optional.IsDefined(TopP))
+            if (Optional.IsDefined(TopP) && _additionalBinaryDataProperties?.ContainsKey("top_p") != true)
             {
                 if (TopP != null)
                 {
@@ -80,7 +80,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("topP"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(Tools))
+            if (Optional.IsCollectionDefined(Tools) && _additionalBinaryDataProperties?.ContainsKey("tools") != true)
             {
                 writer.WritePropertyName("tools"u8);
                 writer.WriteStartArray();
@@ -90,11 +90,17 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            writer.WritePropertyName("messages"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("messages") != true)
+            {
+                writer.WritePropertyName("messages"u8);
+            }
             this.SerializeMessagesValue(writer, options);
-            writer.WritePropertyName("model"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+            }
             writer.WriteStringValue(Model.ToString());
-            if (Optional.IsDefined(N))
+            if (Optional.IsDefined(N) && _additionalBinaryDataProperties?.ContainsKey("n") != true)
             {
                 if (N != null)
                 {
@@ -106,7 +112,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("n"u8);
                 }
             }
-            if (Optional.IsDefined(Stream))
+            if (Optional.IsDefined(Stream) && _additionalBinaryDataProperties?.ContainsKey("stream") != true)
             {
                 if (Stream != null)
                 {
@@ -118,7 +124,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("stream"u8);
                 }
             }
-            if (Optional.IsDefined(StreamOptions))
+            if (Optional.IsDefined(StreamOptions) && _additionalBinaryDataProperties?.ContainsKey("stream_options") != true)
             {
                 if (StreamOptions != null)
                 {
@@ -130,7 +136,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("streamOptions"u8);
                 }
             }
-            if (Optional.IsDefined(IncludeLogProbabilities))
+            if (Optional.IsDefined(IncludeLogProbabilities) && _additionalBinaryDataProperties?.ContainsKey("logprobs") != true)
             {
                 if (IncludeLogProbabilities != null)
                 {
@@ -142,7 +148,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("logprobs"u8);
                 }
             }
-            if (Optional.IsDefined(TopLogProbabilityCount))
+            if (Optional.IsDefined(TopLogProbabilityCount) && _additionalBinaryDataProperties?.ContainsKey("top_logprobs") != true)
             {
                 if (TopLogProbabilityCount != null)
                 {
@@ -154,7 +160,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("topLogprobs"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(StopSequences))
+            if (Optional.IsCollectionDefined(StopSequences) && _additionalBinaryDataProperties?.ContainsKey("stop") != true)
             {
                 if (StopSequences != null)
                 {
@@ -166,7 +172,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("stop"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(LogitBiases))
+            if (Optional.IsCollectionDefined(LogitBiases) && _additionalBinaryDataProperties?.ContainsKey("logit_bias") != true)
             {
                 if (LogitBiases != null)
                 {
@@ -178,27 +184,27 @@ namespace OpenAI.Chat
                     writer.WriteNull("logitBias"u8);
                 }
             }
-            if (Optional.IsDefined(ToolChoice))
+            if (Optional.IsDefined(ToolChoice) && _additionalBinaryDataProperties?.ContainsKey("tool_choice") != true)
             {
                 writer.WritePropertyName("tool_choice"u8);
                 writer.WriteObjectValue<ChatToolChoice>(ToolChoice, options);
             }
-            if (Optional.IsDefined(FunctionChoice))
+            if (Optional.IsDefined(FunctionChoice) && _additionalBinaryDataProperties?.ContainsKey("function_call") != true)
             {
                 writer.WritePropertyName("function_call"u8);
                 writer.WriteObjectValue<ChatFunctionChoice>(FunctionChoice, options);
             }
-            if (Optional.IsDefined(AllowParallelToolCalls))
+            if (Optional.IsDefined(AllowParallelToolCalls) && _additionalBinaryDataProperties?.ContainsKey("parallel_tool_calls") != true)
             {
                 writer.WritePropertyName("parallel_tool_calls"u8);
                 writer.WriteBooleanValue(AllowParallelToolCalls.Value);
             }
-            if (Optional.IsDefined(EndUserId))
+            if (Optional.IsDefined(EndUserId) && _additionalBinaryDataProperties?.ContainsKey("user") != true)
             {
                 writer.WritePropertyName("user"u8);
                 writer.WriteStringValue(EndUserId);
             }
-            if (Optional.IsDefined(Seed))
+            if (Optional.IsDefined(Seed) && _additionalBinaryDataProperties?.ContainsKey("seed") != true)
             {
                 if (Seed != null)
                 {
@@ -210,7 +216,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("seed"u8);
                 }
             }
-            if (Optional.IsDefined(_deprecatedMaxTokens))
+            if (Optional.IsDefined(_deprecatedMaxTokens) && _additionalBinaryDataProperties?.ContainsKey("max_tokens") != true)
             {
                 if (_deprecatedMaxTokens != null)
                 {
@@ -222,7 +228,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("maxTokens"u8);
                 }
             }
-            if (Optional.IsDefined(MaxOutputTokenCount))
+            if (Optional.IsDefined(MaxOutputTokenCount) && _additionalBinaryDataProperties?.ContainsKey("max_completion_tokens") != true)
             {
                 if (MaxOutputTokenCount != null)
                 {
@@ -234,7 +240,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("maxCompletionTokens"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(Functions))
+            if (Optional.IsCollectionDefined(Functions) && _additionalBinaryDataProperties?.ContainsKey("functions") != true)
             {
                 writer.WritePropertyName("functions"u8);
                 writer.WriteStartArray();
@@ -244,7 +250,7 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsDefined(_serviceTier))
+            if (Optional.IsDefined(_serviceTier) && _additionalBinaryDataProperties?.ContainsKey("service_tier") != true)
             {
                 if (_serviceTier != null)
                 {
@@ -260,6 +266,10 @@ namespace OpenAI.Chat
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -343,7 +353,6 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        responseFormat = null;
                         continue;
                     }
                     responseFormat = ChatResponseFormat.DeserializeChatResponseFormat(prop.Value, options);
@@ -450,19 +459,11 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("stop"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     DeserializeStopSequencesValue(prop, ref stopSequences);
                     continue;
                 }
                 if (prop.NameEquals("logit_bias"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     DeserializeLogitBiasesValue(prop, ref logitBiases);
                     continue;
                 }
@@ -470,7 +471,6 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        toolChoice = null;
                         continue;
                     }
                     toolChoice = ChatToolChoice.DeserializeChatToolChoice(prop.Value, options);
@@ -480,7 +480,6 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        functionChoice = null;
                         continue;
                     }
                     functionChoice = ChatFunctionChoice.DeserializeChatFunctionChoice(prop.Value, options);
@@ -490,7 +489,6 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        allowParallelToolCalls = null;
                         continue;
                     }
                     allowParallelToolCalls = prop.Value.GetBoolean();
@@ -498,11 +496,6 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("user"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        endUserId = null;
-                        continue;
-                    }
                     endUserId = prop.Value.GetString();
                     continue;
                 }

@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalMessageDeltaObject
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalMessageDeltaObject(string id, InternalMessageDeltaObjectDelta delta)
         {
@@ -30,5 +30,11 @@ namespace OpenAI.Assistants
         public InternalMessageDeltaObjectObject Object { get; } = "thread.message.delta";
 
         public InternalMessageDeltaObjectDelta Delta { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

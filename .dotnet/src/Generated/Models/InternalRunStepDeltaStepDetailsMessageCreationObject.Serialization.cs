@@ -28,7 +28,7 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(InternalRunStepDeltaStepDetailsMessageCreationObject)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (Optional.IsDefined(MessageCreation))
+            if (Optional.IsDefined(MessageCreation) && _additionalBinaryDataProperties?.ContainsKey("message_creation") != true)
             {
                 writer.WritePropertyName("message_creation"u8);
                 writer.WriteObjectValue(MessageCreation, options);
@@ -63,7 +63,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        messageCreation = null;
                         continue;
                     }
                     messageCreation = InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation.DeserializeInternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation(prop.Value, options);

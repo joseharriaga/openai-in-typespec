@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationRateLimitDetailsItem
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ConversationRateLimitDetailsItem(string name, int limit, int remaining, float resetSeconds)
         {
@@ -35,5 +35,11 @@ namespace OpenAI.RealtimeConversation
         public int Remaining { get; }
 
         public float ResetSeconds { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

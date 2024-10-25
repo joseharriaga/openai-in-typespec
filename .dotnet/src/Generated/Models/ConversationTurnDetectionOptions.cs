@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public abstract partial class ConversationTurnDetectionOptions
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         private protected ConversationTurnDetectionOptions(RealtimeConversation.ConversationTurnDetectionKind kind)
         {
@@ -20,6 +20,12 @@ namespace OpenAI.RealtimeConversation
         {
             Kind = kind;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
+        }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
         }
     }
 }

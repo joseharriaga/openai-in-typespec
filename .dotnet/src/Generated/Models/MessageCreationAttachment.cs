@@ -11,7 +11,7 @@ namespace OpenAI.Assistants
 {
     public partial class MessageCreationAttachment
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public MessageCreationAttachment(string fileId, IEnumerable<ToolDefinition> tools)
         {
@@ -30,5 +30,11 @@ namespace OpenAI.Assistants
         }
 
         public string FileId { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

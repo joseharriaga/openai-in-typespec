@@ -32,7 +32,10 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(InternalRunStepCodeInterpreterLogOutput)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("logs"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("logs") != true)
+            {
+                writer.WritePropertyName("logs"u8);
+            }
             writer.WriteStringValue(InternalLogs);
         }
 

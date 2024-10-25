@@ -9,7 +9,7 @@ namespace OpenAI.Batch
 {
     internal partial class InternalBatchError
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalBatchError()
         {
@@ -31,5 +31,11 @@ namespace OpenAI.Batch
         public string Param { get; }
 
         public int? Line { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

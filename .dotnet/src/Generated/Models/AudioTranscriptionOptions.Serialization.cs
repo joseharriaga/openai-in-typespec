@@ -27,31 +27,37 @@ namespace OpenAI.Audio
             {
                 throw new FormatException($"The model {nameof(AudioTranscriptionOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Language))
+            if (Optional.IsDefined(Language) && _additionalBinaryDataProperties?.ContainsKey("language") != true)
             {
                 writer.WritePropertyName("language"u8);
                 writer.WriteStringValue(Language);
             }
-            if (Optional.IsDefined(Prompt))
+            if (Optional.IsDefined(Prompt) && _additionalBinaryDataProperties?.ContainsKey("prompt") != true)
             {
                 writer.WritePropertyName("prompt"u8);
                 writer.WriteStringValue(Prompt);
             }
-            if (Optional.IsDefined(ResponseFormat))
+            if (Optional.IsDefined(ResponseFormat) && _additionalBinaryDataProperties?.ContainsKey("response_format") != true)
             {
                 writer.WritePropertyName("response_format"u8);
                 writer.WriteStringValue(ResponseFormat.Value.ToString());
             }
-            if (Optional.IsDefined(Temperature))
+            if (Optional.IsDefined(Temperature) && _additionalBinaryDataProperties?.ContainsKey("temperature") != true)
             {
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
             }
-            writer.WritePropertyName("file"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("file") != true)
+            {
+                writer.WritePropertyName("file"u8);
+            }
             writer.WriteBase64StringValue(File.ToArray(), "D");
-            writer.WritePropertyName("model"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+            }
             writer.WriteStringValue(Model.ToString());
-            if (Optional.IsCollectionDefined(InternalTimestampGranularities))
+            if (Optional.IsCollectionDefined(InternalTimestampGranularities) && _additionalBinaryDataProperties?.ContainsKey("timestamp_granularities") != true)
             {
                 writer.WritePropertyName("timestamp_granularities"u8);
                 writer.WriteStartArray();
@@ -77,6 +83,10 @@ namespace OpenAI.Audio
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -121,21 +131,11 @@ namespace OpenAI.Audio
             {
                 if (prop.NameEquals("language"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        language = null;
-                        continue;
-                    }
                     language = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("prompt"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        prompt = null;
-                        continue;
-                    }
                     prompt = prop.Value.GetString();
                     continue;
                 }
@@ -143,7 +143,6 @@ namespace OpenAI.Audio
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        responseFormat = null;
                         continue;
                     }
                     responseFormat = new AudioTranscriptionFormat(prop.Value.GetString());
@@ -153,7 +152,6 @@ namespace OpenAI.Audio
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        temperature = null;
                         continue;
                     }
                     temperature = prop.Value.GetSingle();

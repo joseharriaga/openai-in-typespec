@@ -20,9 +20,12 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatMessage)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("role"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("role") != true)
+            {
+                writer.WritePropertyName("role"u8);
+            }
             writer.WriteStringValue(Role.ToSerialString());
-            if (options.Format != "W" && Optional.IsDefined(Content))
+            if (options.Format != "W" && Optional.IsDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
                 this.SerializeContentValue(writer, options);
@@ -31,6 +34,10 @@ namespace OpenAI.Chat
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

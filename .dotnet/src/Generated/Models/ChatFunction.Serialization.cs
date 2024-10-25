@@ -31,14 +31,17 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatFunction)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("name"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
+            {
+                writer.WritePropertyName("name"u8);
+            }
             writer.WriteStringValue(FunctionName);
-            if (Optional.IsDefined(FunctionDescription))
+            if (Optional.IsDefined(FunctionDescription) && _additionalBinaryDataProperties?.ContainsKey("description") != true)
             {
                 writer.WritePropertyName("description"u8);
                 writer.WriteStringValue(FunctionDescription);
             }
-            if (Optional.IsDefined(FunctionParameters))
+            if (Optional.IsDefined(FunctionParameters) && _additionalBinaryDataProperties?.ContainsKey("parameters") != true)
             {
                 writer.WritePropertyName("parameters"u8);
 #if NET6_0_OR_GREATER
@@ -54,6 +57,10 @@ namespace OpenAI.Chat
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -99,11 +106,6 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("description"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        functionDescription = null;
-                        continue;
-                    }
                     functionDescription = prop.Value.GetString();
                     continue;
                 }
@@ -111,7 +113,6 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        functionParameters = null;
                         continue;
                     }
                     functionParameters = BinaryData.FromString(prop.Value.GetRawText());

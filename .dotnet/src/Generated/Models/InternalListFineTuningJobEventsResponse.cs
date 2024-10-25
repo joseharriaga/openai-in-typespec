@@ -10,7 +10,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalListFineTuningJobEventsResponse
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalListFineTuningJobEventsResponse(bool hasMore, IEnumerable<FineTuningJobEvent> data)
         {
@@ -31,5 +31,11 @@ namespace OpenAI.FineTuning
         public IList<FineTuningJobEvent> Data { get; }
 
         public InternalListFineTuningJobEventsResponseObject Object { get; } = "list";
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

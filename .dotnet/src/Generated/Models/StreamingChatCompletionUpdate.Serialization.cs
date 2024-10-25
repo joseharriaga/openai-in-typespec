@@ -31,18 +31,27 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(StreamingChatCompletionUpdate)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("model"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+            }
             writer.WriteStringValue(Model);
-            if (Optional.IsDefined(SystemFingerprint))
+            if (Optional.IsDefined(SystemFingerprint) && _additionalBinaryDataProperties?.ContainsKey("system_fingerprint") != true)
             {
                 writer.WritePropertyName("system_fingerprint"u8);
                 writer.WriteStringValue(SystemFingerprint);
             }
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(this.Object.ToString());
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(CompletionId);
-            if (Optional.IsDefined(ServiceTier))
+            if (Optional.IsDefined(ServiceTier) && _additionalBinaryDataProperties?.ContainsKey("service_tier") != true)
             {
                 if (ServiceTier != null)
                 {
@@ -54,16 +63,22 @@ namespace OpenAI.Chat
                     writer.WriteNull("serviceTier"u8);
                 }
             }
-            writer.WritePropertyName("choices"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("choices") != true)
+            {
+                writer.WritePropertyName("choices"u8);
+            }
             writer.WriteStartArray();
             foreach (InternalCreateChatCompletionStreamResponseChoice item in Choices)
             {
                 writer.WriteObjectValue(item, options);
             }
             writer.WriteEndArray();
-            writer.WritePropertyName("created"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("created") != true)
+            {
+                writer.WritePropertyName("created"u8);
+            }
             writer.WriteNumberValue(CreatedAt, "U");
-            if (Optional.IsDefined(Usage))
+            if (Optional.IsDefined(Usage) && _additionalBinaryDataProperties?.ContainsKey("usage") != true)
             {
                 writer.WritePropertyName("usage"u8);
                 writer.WriteObjectValue<ChatTokenUsage>(Usage, options);
@@ -72,6 +87,10 @@ namespace OpenAI.Chat
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -122,11 +141,6 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("system_fingerprint"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        systemFingerprint = null;
-                        continue;
-                    }
                     systemFingerprint = prop.Value.GetString();
                     continue;
                 }
@@ -169,7 +183,6 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        usage = null;
                         continue;
                     }
                     usage = ChatTokenUsage.DeserializeChatTokenUsage(prop.Value, options);

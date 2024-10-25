@@ -27,12 +27,12 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalChatCompletionMessageToolCallChunkFunction)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Name))
+            if (Optional.IsDefined(Name) && _additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(Name);
             }
-            if (Optional.IsDefined(Arguments))
+            if (Optional.IsDefined(Arguments) && _additionalBinaryDataProperties?.ContainsKey("arguments") != true)
             {
                 writer.WritePropertyName("arguments"u8);
                 this.SerializeArgumentsValue(writer, options);
@@ -41,6 +41,10 @@ namespace OpenAI.Chat
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -80,21 +84,11 @@ namespace OpenAI.Chat
             {
                 if (prop.NameEquals("name"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
                     name = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("arguments"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        arguments = null;
-                        continue;
-                    }
                     DeserializeArgumentsValue(prop, ref arguments);
                     continue;
                 }

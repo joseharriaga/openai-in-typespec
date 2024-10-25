@@ -21,7 +21,7 @@ namespace OpenAI.Chat
                 throw new FormatException($"The model {nameof(AssistantChatMessage)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (Optional.IsDefined(Refusal))
+            if (Optional.IsDefined(Refusal) && _additionalBinaryDataProperties?.ContainsKey("refusal") != true)
             {
                 if (Refusal != null)
                 {
@@ -33,12 +33,12 @@ namespace OpenAI.Chat
                     writer.WriteNull("refusal"u8);
                 }
             }
-            if (Optional.IsDefined(ParticipantName))
+            if (Optional.IsDefined(ParticipantName) && _additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(ParticipantName);
             }
-            if (Optional.IsCollectionDefined(ToolCalls))
+            if (Optional.IsCollectionDefined(ToolCalls) && _additionalBinaryDataProperties?.ContainsKey("tool_calls") != true)
             {
                 writer.WritePropertyName("tool_calls"u8);
                 writer.WriteStartArray();
@@ -48,7 +48,7 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsDefined(FunctionCall))
+            if (Optional.IsDefined(FunctionCall) && _additionalBinaryDataProperties?.ContainsKey("function_call") != true)
             {
                 if (FunctionCall != null)
                 {
@@ -102,11 +102,6 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("name"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        participantName = null;
-                        continue;
-                    }
                     participantName = prop.Value.GetString();
                     continue;
                 }
@@ -141,11 +136,6 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("content"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        content = null;
-                        continue;
-                    }
                     DeserializeContentValue(prop, ref content);
                     continue;
                 }

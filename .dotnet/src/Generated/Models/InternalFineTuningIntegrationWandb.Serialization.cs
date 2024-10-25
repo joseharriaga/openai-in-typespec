@@ -32,7 +32,10 @@ namespace OpenAI.FineTuning
                 throw new FormatException($"The model {nameof(InternalFineTuningIntegrationWandb)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("wandb"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("wandb") != true)
+            {
+                writer.WritePropertyName("wandb"u8);
+            }
             writer.WriteObjectValue(Wandb, options);
         }
 

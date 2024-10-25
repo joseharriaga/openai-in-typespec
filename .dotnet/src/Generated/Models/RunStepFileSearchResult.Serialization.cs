@@ -31,13 +31,22 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(RunStepFileSearchResult)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("file_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("file_id") != true)
+            {
+                writer.WritePropertyName("file_id"u8);
+            }
             writer.WriteStringValue(FileId);
-            writer.WritePropertyName("file_name"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("file_name") != true)
+            {
+                writer.WritePropertyName("file_name"u8);
+            }
             writer.WriteStringValue(FileName);
-            writer.WritePropertyName("score"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("score") != true)
+            {
+                writer.WritePropertyName("score"u8);
+            }
             writer.WriteNumberValue(Score);
-            if (Optional.IsCollectionDefined(Content))
+            if (Optional.IsCollectionDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
                 writer.WriteStartArray();
@@ -51,6 +60,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

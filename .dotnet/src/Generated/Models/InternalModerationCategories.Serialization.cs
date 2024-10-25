@@ -31,32 +31,69 @@ namespace OpenAI.Moderations
             {
                 throw new FormatException($"The model {nameof(InternalModerationCategories)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("hate"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("hate") != true)
+            {
+                writer.WritePropertyName("hate"u8);
+            }
             writer.WriteBooleanValue(Hate);
-            writer.WritePropertyName("hate/threatening"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("hate/threatening") != true)
+            {
+                writer.WritePropertyName("hate/threatening"u8);
+            }
             writer.WriteBooleanValue(HateThreatening);
-            writer.WritePropertyName("harassment"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("harassment") != true)
+            {
+                writer.WritePropertyName("harassment"u8);
+            }
             writer.WriteBooleanValue(Harassment);
-            writer.WritePropertyName("harassment/threatening"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("harassment/threatening") != true)
+            {
+                writer.WritePropertyName("harassment/threatening"u8);
+            }
             writer.WriteBooleanValue(HarassmentThreatening);
-            writer.WritePropertyName("self-harm"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("self-harm") != true)
+            {
+                writer.WritePropertyName("self-harm"u8);
+            }
             writer.WriteBooleanValue(SelfHarm);
-            writer.WritePropertyName("self-harm/intent"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("self-harm/intent") != true)
+            {
+                writer.WritePropertyName("self-harm/intent"u8);
+            }
             writer.WriteBooleanValue(SelfHarmIntent);
-            writer.WritePropertyName("self-harm/instructions"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("self-harm/instructions") != true)
+            {
+                writer.WritePropertyName("self-harm/instructions"u8);
+            }
             writer.WriteBooleanValue(SelfHarmInstructions);
-            writer.WritePropertyName("sexual"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("sexual") != true)
+            {
+                writer.WritePropertyName("sexual"u8);
+            }
             writer.WriteBooleanValue(Sexual);
-            writer.WritePropertyName("sexual/minors"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("sexual/minors") != true)
+            {
+                writer.WritePropertyName("sexual/minors"u8);
+            }
             writer.WriteBooleanValue(SexualMinors);
-            writer.WritePropertyName("violence"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("violence") != true)
+            {
+                writer.WritePropertyName("violence"u8);
+            }
             writer.WriteBooleanValue(Violence);
-            writer.WritePropertyName("violence/graphic"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("violence/graphic") != true)
+            {
+                writer.WritePropertyName("violence/graphic"u8);
+            }
             writer.WriteBooleanValue(ViolenceGraphic);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

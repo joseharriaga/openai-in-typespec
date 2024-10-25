@@ -32,13 +32,25 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(InternalMessageContentTextAnnotationsFilePathObject)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("text"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("text") != true)
+            {
+                writer.WritePropertyName("text"u8);
+            }
             writer.WriteStringValue(Text);
-            writer.WritePropertyName("file_path"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("file_path") != true)
+            {
+                writer.WritePropertyName("file_path"u8);
+            }
             writer.WriteObjectValue(FilePath, options);
-            writer.WritePropertyName("start_index"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("start_index") != true)
+            {
+                writer.WritePropertyName("start_index"u8);
+            }
             writer.WriteNumberValue(StartIndex);
-            writer.WritePropertyName("end_index"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("end_index") != true)
+            {
+                writer.WritePropertyName("end_index"u8);
+            }
             writer.WriteNumberValue(EndIndex);
         }
 

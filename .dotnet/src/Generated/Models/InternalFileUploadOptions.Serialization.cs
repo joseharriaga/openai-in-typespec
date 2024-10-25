@@ -28,7 +28,10 @@ namespace OpenAI.Files
             {
                 throw new FormatException($"The model {nameof(InternalFileUploadOptions)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("file"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("file") != true)
+            {
+                writer.WritePropertyName("file"u8);
+            }
 #if NET6_0_OR_GREATER
             writer.WriteRawValue(global::System.BinaryData.FromStream(File));
 #else
@@ -37,12 +40,19 @@ namespace OpenAI.Files
                 JsonSerializer.Serialize(writer, document.RootElement);
             }
 #endif
-            writer.WritePropertyName("purpose"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("purpose") != true)
+            {
+                writer.WritePropertyName("purpose"u8);
+            }
             writer.WriteStringValue(Purpose.ToString());
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

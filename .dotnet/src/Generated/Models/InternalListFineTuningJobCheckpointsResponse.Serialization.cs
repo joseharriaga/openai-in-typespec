@@ -31,16 +31,22 @@ namespace OpenAI.FineTuning
             {
                 throw new FormatException($"The model {nameof(InternalListFineTuningJobCheckpointsResponse)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("data"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("data") != true)
+            {
+                writer.WritePropertyName("data"u8);
+            }
             writer.WriteStartArray();
             foreach (InternalFineTuningJobCheckpoint item in Data)
             {
                 writer.WriteObjectValue(item, options);
             }
             writer.WriteEndArray();
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(Object.ToString());
-            if (Optional.IsDefined(FirstId))
+            if (Optional.IsDefined(FirstId) && _additionalBinaryDataProperties?.ContainsKey("first_id") != true)
             {
                 if (FirstId != null)
                 {
@@ -52,7 +58,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("firstId"u8);
                 }
             }
-            if (Optional.IsDefined(LastId))
+            if (Optional.IsDefined(LastId) && _additionalBinaryDataProperties?.ContainsKey("last_id") != true)
             {
                 if (LastId != null)
                 {
@@ -64,12 +70,19 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("lastId"u8);
                 }
             }
-            writer.WritePropertyName("has_more"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("has_more") != true)
+            {
+                writer.WritePropertyName("has_more"u8);
+            }
             writer.WriteBooleanValue(HasMore);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

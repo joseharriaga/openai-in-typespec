@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     public partial class RunStepFileSearchResult
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal RunStepFileSearchResult(string fileId, string fileName, float score)
         {
@@ -34,5 +34,11 @@ namespace OpenAI.Assistants
         public string FileName { get; }
 
         public float Score { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

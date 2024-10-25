@@ -9,7 +9,7 @@ namespace OpenAI.Images
 {
     public partial class ImageGenerationOptions
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ImageGenerationOptions(GeneratedImageQuality? quality, GeneratedImageFormat? responseFormat, GeneratedImageSize? size, GeneratedImageStyle? style, InternalCreateImageRequestModel? model, string prompt, long? n, string endUserId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
@@ -31,5 +31,11 @@ namespace OpenAI.Images
         public GeneratedImageSize? Size { get; set; }
 
         public GeneratedImageStyle? Style { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

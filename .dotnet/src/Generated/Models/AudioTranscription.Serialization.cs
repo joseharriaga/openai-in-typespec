@@ -31,11 +31,17 @@ namespace OpenAI.Audio
             {
                 throw new FormatException($"The model {nameof(AudioTranscription)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("language"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("language") != true)
+            {
+                writer.WritePropertyName("language"u8);
+            }
             writer.WriteStringValue(Language);
-            writer.WritePropertyName("text"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("text") != true)
+            {
+                writer.WritePropertyName("text"u8);
+            }
             writer.WriteStringValue(Text);
-            if (Optional.IsCollectionDefined(Words))
+            if (Optional.IsCollectionDefined(Words) && _additionalBinaryDataProperties?.ContainsKey("words") != true)
             {
                 writer.WritePropertyName("words"u8);
                 writer.WriteStartArray();
@@ -45,7 +51,7 @@ namespace OpenAI.Audio
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsCollectionDefined(Segments))
+            if (Optional.IsCollectionDefined(Segments) && _additionalBinaryDataProperties?.ContainsKey("segments") != true)
             {
                 writer.WritePropertyName("segments"u8);
                 writer.WriteStartArray();
@@ -55,14 +61,24 @@ namespace OpenAI.Audio
                 }
                 writer.WriteEndArray();
             }
-            writer.WritePropertyName("task"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("task") != true)
+            {
+                writer.WritePropertyName("task"u8);
+            }
             writer.WriteStringValue(Task.ToString());
-            writer.WritePropertyName("duration"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("duration") != true)
+            {
+                writer.WritePropertyName("duration"u8);
+            }
             writer.WriteNumberValue(Convert.ToDouble(Duration.Value.ToString("s\\.FFF")));
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -149,11 +165,6 @@ namespace OpenAI.Audio
                 }
                 if (prop.NameEquals("duration"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        duration = null;
-                        continue;
-                    }
                     duration = TimeSpan.FromSeconds(prop.Value.GetDouble());
                     continue;
                 }

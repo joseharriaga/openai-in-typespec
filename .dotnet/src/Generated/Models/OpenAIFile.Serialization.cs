@@ -31,28 +31,49 @@ namespace OpenAI.Files
             {
                 throw new FormatException($"The model {nameof(OpenAIFile)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("created_at"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
+            {
+                writer.WritePropertyName("created_at"u8);
+            }
             writer.WriteNumberValue(CreatedAt, "U");
-            writer.WritePropertyName("filename"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("filename") != true)
+            {
+                writer.WritePropertyName("filename"u8);
+            }
             writer.WriteStringValue(Filename);
-            writer.WritePropertyName("purpose"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("purpose") != true)
+            {
+                writer.WritePropertyName("purpose"u8);
+            }
             writer.WriteStringValue(Purpose.ToSerialString());
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(this.Object.ToString());
-            if (SizeInBytes != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("bytes") != true)
             {
-                writer.WritePropertyName("bytes"u8);
-                writer.WriteNumberValue(SizeInBytes.Value);
+                if (SizeInBytes != null)
+                {
+                    writer.WritePropertyName("bytes"u8);
+                    writer.WriteNumberValue(SizeInBytes.Value);
+                }
+                else
+                {
+                    writer.WriteNull("bytes"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
-                writer.WriteNull("bytes"u8);
+                writer.WritePropertyName("status"u8);
             }
-            writer.WritePropertyName("status"u8);
             writer.WriteStringValue(Status.ToSerialString());
-            if (Optional.IsDefined(StatusDetails))
+            if (Optional.IsDefined(StatusDetails) && _additionalBinaryDataProperties?.ContainsKey("status_details") != true)
             {
                 writer.WritePropertyName("status_details"u8);
                 writer.WriteStringValue(StatusDetails);
@@ -61,6 +82,10 @@ namespace OpenAI.Files
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -146,11 +171,6 @@ namespace OpenAI.Files
                 }
                 if (prop.NameEquals("status_details"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        statusDetails = null;
-                        continue;
-                    }
                     statusDetails = prop.Value.GetString();
                     continue;
                 }

@@ -10,7 +10,7 @@ namespace OpenAI.Batch
 {
     internal partial class InternalCreateBatchRequest
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalCreateBatchRequest(string inputFileId, InternalCreateBatchRequestEndpoint endpoint)
         {
@@ -35,5 +35,11 @@ namespace OpenAI.Batch
         public InternalBatchCompletionTimeframe CompletionWindow { get; } = "24h";
 
         public IDictionary<string, string> Metadata { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

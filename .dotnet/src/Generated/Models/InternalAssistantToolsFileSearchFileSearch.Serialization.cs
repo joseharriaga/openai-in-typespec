@@ -27,12 +27,12 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalAssistantToolsFileSearchFileSearch)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(RankingOptions))
+            if (Optional.IsDefined(RankingOptions) && _additionalBinaryDataProperties?.ContainsKey("ranking_options") != true)
             {
                 writer.WritePropertyName("ranking_options"u8);
                 writer.WriteObjectValue(RankingOptions, options);
             }
-            if (Optional.IsDefined(InternalMaxNumResults))
+            if (Optional.IsDefined(InternalMaxNumResults) && _additionalBinaryDataProperties?.ContainsKey("max_num_results") != true)
             {
                 writer.WritePropertyName("max_num_results"u8);
                 writer.WriteNumberValue(InternalMaxNumResults.Value);
@@ -41,6 +41,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -82,7 +86,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        rankingOptions = null;
                         continue;
                     }
                     rankingOptions = FileSearchRankingOptions.DeserializeFileSearchRankingOptions(prop.Value, options);
@@ -92,7 +95,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        internalMaxNumResults = null;
                         continue;
                     }
                     internalMaxNumResults = prop.Value.GetInt32();

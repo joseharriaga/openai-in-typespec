@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class MessageFailureDetails
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal MessageFailureDetails(MessageFailureReason reason)
         {
@@ -23,5 +23,11 @@ namespace OpenAI.Assistants
         }
 
         public MessageFailureReason Reason { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

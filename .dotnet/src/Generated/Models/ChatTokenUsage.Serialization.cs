@@ -31,13 +31,22 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatTokenUsage)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("completion_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("completion_tokens") != true)
+            {
+                writer.WritePropertyName("completion_tokens"u8);
+            }
             writer.WriteNumberValue(OutputTokenCount);
-            writer.WritePropertyName("prompt_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("prompt_tokens") != true)
+            {
+                writer.WritePropertyName("prompt_tokens"u8);
+            }
             writer.WriteNumberValue(InputTokenCount);
-            writer.WritePropertyName("total_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("total_tokens") != true)
+            {
+                writer.WritePropertyName("total_tokens"u8);
+            }
             writer.WriteNumberValue(TotalTokenCount);
-            if (Optional.IsDefined(OutputTokenDetails))
+            if (Optional.IsDefined(OutputTokenDetails) && _additionalBinaryDataProperties?.ContainsKey("completion_tokens_details") != true)
             {
                 writer.WritePropertyName("completion_tokens_details"u8);
                 writer.WriteObjectValue<ChatOutputTokenUsageDetails>(OutputTokenDetails, options);
@@ -46,6 +55,10 @@ namespace OpenAI.Chat
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -104,7 +117,6 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        outputTokenDetails = null;
                         continue;
                     }
                     outputTokenDetails = ChatOutputTokenUsageDetails.DeserializeChatOutputTokenUsageDetails(prop.Value, options);

@@ -23,17 +23,24 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(ToolConstraint)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Function))
+            if (Optional.IsDefined(Function) && _additionalBinaryDataProperties?.ContainsKey("function") != true)
             {
                 writer.WritePropertyName("function"u8);
                 writer.WriteObjectValue<InternalAssistantsNamedToolChoiceFunction>(Function, options);
             }
-            writer.WritePropertyName("type"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+            }
             writer.WriteStringValue(_objectType);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

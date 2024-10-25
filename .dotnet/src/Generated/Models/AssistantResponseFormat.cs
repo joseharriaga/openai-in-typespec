@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public abstract partial class AssistantResponseFormat
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         private protected AssistantResponseFormat(string @type)
         {
@@ -23,5 +23,11 @@ namespace OpenAI.Assistants
         }
 
         internal string Type { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

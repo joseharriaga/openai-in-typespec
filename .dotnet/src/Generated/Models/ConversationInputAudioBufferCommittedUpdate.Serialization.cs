@@ -32,9 +32,12 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationInputAudioBufferCommittedUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("item_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
+            {
+                writer.WritePropertyName("item_id"u8);
+            }
             writer.WriteStringValue(ItemId);
-            if (Optional.IsDefined(PreviousItemId))
+            if (Optional.IsDefined(PreviousItemId) && _additionalBinaryDataProperties?.ContainsKey("previous_item_id") != true)
             {
                 writer.WritePropertyName("previous_item_id"u8);
                 writer.WriteStringValue(PreviousItemId);
@@ -74,11 +77,6 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("previous_item_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        previousItemId = null;
-                        continue;
-                    }
                     previousItemId = prop.Value.GetString();
                     continue;
                 }

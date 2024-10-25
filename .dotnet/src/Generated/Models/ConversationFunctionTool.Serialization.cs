@@ -28,14 +28,17 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationFunctionTool)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("name"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
+            {
+                writer.WritePropertyName("name"u8);
+            }
             writer.WriteStringValue(_name);
-            if (Optional.IsDefined(_description))
+            if (Optional.IsDefined(_description) && _additionalBinaryDataProperties?.ContainsKey("description") != true)
             {
                 writer.WritePropertyName("description"u8);
                 writer.WriteStringValue(_description);
             }
-            if (Optional.IsDefined(_parameters))
+            if (Optional.IsDefined(_parameters) && _additionalBinaryDataProperties?.ContainsKey("parameters") != true)
             {
                 writer.WritePropertyName("parameters"u8);
 #if NET6_0_OR_GREATER
@@ -82,11 +85,6 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("description"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        description = null;
-                        continue;
-                    }
                     description = prop.Value.GetString();
                     continue;
                 }
@@ -94,7 +92,6 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        parameters = null;
                         continue;
                     }
                     parameters = BinaryData.FromString(prop.Value.GetRawText());

@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatCompletionResponseMessage
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalChatCompletionResponseMessage(string refusal, ChatMessageContent content)
         {
@@ -32,5 +32,11 @@ namespace OpenAI.Chat
         public string Refusal { get; }
 
         public IReadOnlyList<ChatToolCall> ToolCalls { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

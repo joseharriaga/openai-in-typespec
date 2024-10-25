@@ -11,7 +11,7 @@ namespace OpenAI.VectorStores
 {
     internal partial class InternalCreateVectorStoreFileBatchRequest
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalCreateVectorStoreFileBatchRequest(IEnumerable<string> fileIds)
         {
@@ -30,5 +30,11 @@ namespace OpenAI.VectorStores
         public IList<string> FileIds { get; }
 
         public BinaryData ChunkingStrategy { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

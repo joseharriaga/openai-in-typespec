@@ -10,7 +10,7 @@ namespace OpenAI.Batch
 {
     internal partial class InternalBatchJob
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalBatchJob(string id, string endpoint, string inputFileId, string completionWindow, InternalBatchStatus status, DateTimeOffset createdAt)
         {
@@ -87,5 +87,11 @@ namespace OpenAI.Batch
         public InternalBatchRequestCounts RequestCounts { get; }
 
         public IDictionary<string, string> Metadata { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

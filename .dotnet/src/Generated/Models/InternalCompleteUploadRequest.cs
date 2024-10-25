@@ -11,7 +11,7 @@ namespace OpenAI.Files
 {
     internal partial class InternalCompleteUploadRequest
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalCompleteUploadRequest(IEnumerable<string> partIds)
         {
@@ -30,5 +30,11 @@ namespace OpenAI.Files
         public IList<string> PartIds { get; }
 
         public string Md5 { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

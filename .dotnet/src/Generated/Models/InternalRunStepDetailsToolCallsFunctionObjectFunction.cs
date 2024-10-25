@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDetailsToolCallsFunctionObjectFunction
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalRunStepDetailsToolCallsFunctionObjectFunction(string name, string arguments, string output)
         {
@@ -31,5 +31,11 @@ namespace OpenAI.Assistants
         public string Arguments { get; }
 
         public string Output { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

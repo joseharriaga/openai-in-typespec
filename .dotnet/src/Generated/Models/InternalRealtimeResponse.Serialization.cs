@@ -31,24 +31,42 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeResponse)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(Object.ToString());
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("status"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
+            {
+                writer.WritePropertyName("status"u8);
+            }
             writer.WriteStringValue(Status.ToString());
-            if (StatusDetails != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("status_details") != true)
             {
-                writer.WritePropertyName("status_details"u8);
-                writer.WriteObjectValue(StatusDetails, options);
+                if (StatusDetails != null)
+                {
+                    writer.WritePropertyName("status_details"u8);
+                    writer.WriteObjectValue(StatusDetails, options);
+                }
+                else
+                {
+                    writer.WriteNull("statusDetails"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("usage") != true)
             {
-                writer.WriteNull("statusDetails"u8);
+                writer.WritePropertyName("usage"u8);
             }
-            writer.WritePropertyName("usage"u8);
             writer.WriteObjectValue(Usage, options);
-            writer.WritePropertyName("output"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("output") != true)
+            {
+                writer.WritePropertyName("output"u8);
+            }
             writer.WriteStartArray();
             foreach (ConversationItem item in Output)
             {
@@ -59,6 +77,10 @@ namespace OpenAI.RealtimeConversation
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

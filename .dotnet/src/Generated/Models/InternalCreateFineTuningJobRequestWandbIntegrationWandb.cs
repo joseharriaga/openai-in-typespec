@@ -10,7 +10,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalCreateFineTuningJobRequestWandbIntegrationWandb
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalCreateFineTuningJobRequestWandbIntegrationWandb(string project)
         {
@@ -34,5 +34,11 @@ namespace OpenAI.FineTuning
         public string Entity { get; set; }
 
         public IList<string> Tags { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

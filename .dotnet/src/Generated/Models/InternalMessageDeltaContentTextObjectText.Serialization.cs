@@ -27,12 +27,12 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalMessageDeltaContentTextObjectText)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Value))
+            if (Optional.IsDefined(Value) && _additionalBinaryDataProperties?.ContainsKey("value") != true)
             {
                 writer.WritePropertyName("value"u8);
                 writer.WriteStringValue(Value);
             }
-            if (Optional.IsCollectionDefined(Annotations))
+            if (Optional.IsCollectionDefined(Annotations) && _additionalBinaryDataProperties?.ContainsKey("annotations") != true)
             {
                 writer.WritePropertyName("annotations"u8);
                 writer.WriteStartArray();
@@ -46,6 +46,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -85,11 +89,6 @@ namespace OpenAI.Assistants
             {
                 if (prop.NameEquals("value"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        value = null;
-                        continue;
-                    }
                     value = prop.Value.GetString();
                     continue;
                 }

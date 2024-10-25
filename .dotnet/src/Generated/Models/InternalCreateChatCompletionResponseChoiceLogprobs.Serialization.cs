@@ -27,7 +27,7 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalCreateChatCompletionResponseChoiceLogprobs)} does not support writing '{format}' format.");
             }
-            if (options.Format != "W")
+            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 if (Content != null && Optional.IsCollectionDefined(Content))
                 {
@@ -44,7 +44,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("content"u8);
                 }
             }
-            if (options.Format != "W")
+            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("refusal") != true)
             {
                 if (Refusal != null && Optional.IsCollectionDefined(Refusal))
                 {
@@ -65,6 +65,10 @@ namespace OpenAI.Chat
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

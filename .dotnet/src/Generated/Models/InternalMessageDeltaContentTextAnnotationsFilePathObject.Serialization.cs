@@ -32,24 +32,27 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(InternalMessageDeltaContentTextAnnotationsFilePathObject)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("index"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
+            {
+                writer.WritePropertyName("index"u8);
+            }
             writer.WriteNumberValue(Index);
-            if (Optional.IsDefined(Text))
+            if (Optional.IsDefined(Text) && _additionalBinaryDataProperties?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
                 writer.WriteStringValue(Text);
             }
-            if (Optional.IsDefined(FilePath))
+            if (Optional.IsDefined(FilePath) && _additionalBinaryDataProperties?.ContainsKey("file_path") != true)
             {
                 writer.WritePropertyName("file_path"u8);
                 writer.WriteObjectValue(FilePath, options);
             }
-            if (Optional.IsDefined(StartIndex))
+            if (Optional.IsDefined(StartIndex) && _additionalBinaryDataProperties?.ContainsKey("start_index") != true)
             {
                 writer.WritePropertyName("start_index"u8);
                 writer.WriteNumberValue(StartIndex.Value);
             }
-            if (Optional.IsDefined(EndIndex))
+            if (Optional.IsDefined(EndIndex) && _additionalBinaryDataProperties?.ContainsKey("end_index") != true)
             {
                 writer.WritePropertyName("end_index"u8);
                 writer.WriteNumberValue(EndIndex.Value);
@@ -91,11 +94,6 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("text"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        text = null;
-                        continue;
-                    }
                     text = prop.Value.GetString();
                     continue;
                 }
@@ -103,7 +101,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        filePath = null;
                         continue;
                     }
                     filePath = InternalMessageDeltaContentTextAnnotationsFilePathObjectFilePath.DeserializeInternalMessageDeltaContentTextAnnotationsFilePathObjectFilePath(prop.Value, options);
@@ -113,7 +110,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        startIndex = null;
                         continue;
                     }
                     startIndex = prop.Value.GetInt32();
@@ -123,7 +119,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        endIndex = null;
                         continue;
                     }
                     endIndex = prop.Value.GetInt32();

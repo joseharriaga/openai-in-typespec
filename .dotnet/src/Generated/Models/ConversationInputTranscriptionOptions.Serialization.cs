@@ -27,7 +27,7 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(ConversationInputTranscriptionOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Model))
+            if (Optional.IsDefined(Model) && _additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
                 writer.WriteStringValue(Model.Value.ToString());
@@ -36,6 +36,10 @@ namespace OpenAI.RealtimeConversation
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -76,7 +80,6 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        model = null;
                         continue;
                     }
                     model = new ConversationTranscriptionModel(prop.Value.GetString());

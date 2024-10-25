@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalMessageContentItemFileObjectImageFile
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalMessageContentItemFileObjectImageFile(string fileId)
         {
@@ -27,5 +27,11 @@ namespace OpenAI.Assistants
         }
 
         public string FileId { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

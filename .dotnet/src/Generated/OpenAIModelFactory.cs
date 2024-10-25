@@ -168,12 +168,6 @@ namespace OpenAI
             return new MessageCreationOptions(attachments?.ToList(), metadata, role, content?.ToList(), null);
         }
 
-        public static MessageContent MessageContent()
-        {
-
-            return new MessageContent(null);
-        }
-
         public static MessageCreationAttachment MessageCreationAttachment(string fileId = default, IEnumerable<ToolDefinition> tools = default)
         {
             tools ??= new ChangeTrackingList<ToolDefinition>();
@@ -393,7 +387,7 @@ namespace OpenAI
             return new RunStepTokenUsage(outputTokenCount, inputTokenCount, totalTokenCount, null);
         }
 
-        public static AssistantThread AssistantThread(string id = default, DateTimeOffset createdAt = default, IDictionary<string, string> metadata = default, InternalThreadObjectObject @object = default, ToolResources toolResources = default)
+        public static AssistantThread AssistantThread(string id = default, DateTimeOffset createdAt = default, IReadOnlyDictionary<string, string> metadata = default, InternalThreadObjectObject @object = default, ToolResources toolResources = default)
         {
             metadata ??= new ChangeTrackingDictionary<string, string>();
 
@@ -446,16 +440,16 @@ namespace OpenAI
             return new ConversationInputTranscriptionOptions(model, null);
         }
 
-        public static ConversationTurnDetectionOptions ConversationTurnDetectionOptions(int kind = default)
+        public static ConversationTurnDetectionOptions ConversationTurnDetectionOptions(string kind = default)
         {
 
             return new UnknownRealtimeTurnDetection(kind.ToConversationTurnDetectionKind(), null);
         }
 
-        public static ConversationTool ConversationTool(ConversationToolKind kind = default)
+        public static ConversationTool ConversationTool(string kind = default)
         {
 
-            return new UnknownRealtimeTool(kind, null);
+            return new UnknownRealtimeTool(new ConversationToolKind(kind), null);
         }
 
         public static ConversationFunctionTool ConversationFunctionTool(string name = default, string description = default, BinaryData parameters = default)
@@ -476,7 +470,7 @@ namespace OpenAI
             return new UnknownRealtimeContentPart(@type, null);
         }
 
-        public static ConversationUpdate ConversationUpdate(string eventId = default, int kind = default)
+        public static ConversationUpdate ConversationUpdate(string eventId = default, string kind = default)
         {
 
             return new UnknownRealtimeResponseCommand(eventId, kind.ToConversationUpdateKind(), null);
@@ -1003,7 +997,7 @@ namespace OpenAI
                 null);
         }
 
-        public static ChatMessage ChatMessage(int role = default, ChatMessageContent content = default)
+        public static ChatMessage ChatMessage(string role = default, ChatMessageContent content = default)
         {
 
             return new InternalUnknownChatMessage(role.ToChatMessageRole(), content, null);

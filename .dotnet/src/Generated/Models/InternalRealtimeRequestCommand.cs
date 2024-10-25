@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal abstract partial class InternalRealtimeRequestCommand
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         private protected InternalRealtimeRequestCommand(InternalRealtimeRequestCommandType kind)
         {
@@ -26,5 +26,11 @@ namespace OpenAI.RealtimeConversation
         internal InternalRealtimeRequestCommandType Kind { get; set; }
 
         public string EventId { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class HyperparameterOptions
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public HyperparameterOptions()
         {
@@ -28,5 +28,11 @@ namespace OpenAI.FineTuning
         public BinaryData BatchSize { get; set; }
 
         public BinaryData LearningRateMultiplier { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

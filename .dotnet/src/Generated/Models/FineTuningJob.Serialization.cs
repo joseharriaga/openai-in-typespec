@@ -31,7 +31,7 @@ namespace OpenAI.FineTuning
             {
                 throw new FormatException($"The model {nameof(FineTuningJob)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(UserProvidedSuffix))
+            if (Optional.IsDefined(UserProvidedSuffix) && _additionalBinaryDataProperties?.ContainsKey("user_provided_suffix") != true)
             {
                 if (UserProvidedSuffix != null)
                 {
@@ -43,46 +43,76 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("userProvidedSuffix"u8);
                 }
             }
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("created_at"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
+            {
+                writer.WritePropertyName("created_at"u8);
+            }
             writer.WriteNumberValue(CreatedAt, "U");
-            if (Error != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("error") != true)
             {
-                writer.WritePropertyName("error"u8);
-                writer.WriteObjectValue(Error, options);
+                if (Error != null)
+                {
+                    writer.WritePropertyName("error"u8);
+                    writer.WriteObjectValue(Error, options);
+                }
+                else
+                {
+                    writer.WriteNull("error"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("fine_tuned_model") != true)
             {
-                writer.WriteNull("error"u8);
+                if (FineTunedModel != null)
+                {
+                    writer.WritePropertyName("fine_tuned_model"u8);
+                    writer.WriteStringValue(FineTunedModel);
+                }
+                else
+                {
+                    writer.WriteNull("fineTunedModel"u8);
+                }
             }
-            if (FineTunedModel != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("finished_at") != true)
             {
-                writer.WritePropertyName("fine_tuned_model"u8);
-                writer.WriteStringValue(FineTunedModel);
+                if (FinishedAt != null)
+                {
+                    writer.WritePropertyName("finished_at"u8);
+                    writer.WriteNumberValue(FinishedAt.Value, "U");
+                }
+                else
+                {
+                    writer.WriteNull("finishedAt"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("hyperparameters") != true)
             {
-                writer.WriteNull("fineTunedModel"u8);
+                writer.WritePropertyName("hyperparameters"u8);
             }
-            if (FinishedAt != null)
-            {
-                writer.WritePropertyName("finished_at"u8);
-                writer.WriteNumberValue(FinishedAt.Value, "U");
-            }
-            else
-            {
-                writer.WriteNull("finishedAt"u8);
-            }
-            writer.WritePropertyName("hyperparameters"u8);
             writer.WriteObjectValue(Hyperparameters, options);
-            writer.WritePropertyName("model"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+            }
             writer.WriteStringValue(Model);
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(Object.ToString());
-            writer.WritePropertyName("organization_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("organization_id") != true)
+            {
+                writer.WritePropertyName("organization_id"u8);
+            }
             writer.WriteStringValue(OrganizationId);
-            writer.WritePropertyName("result_files"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("result_files") != true)
+            {
+                writer.WritePropertyName("result_files"u8);
+            }
             writer.WriteStartArray();
             foreach (string item in ResultFiles)
             {
@@ -94,29 +124,41 @@ namespace OpenAI.FineTuning
                 writer.WriteStringValue(item);
             }
             writer.WriteEndArray();
-            writer.WritePropertyName("status"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
+            {
+                writer.WritePropertyName("status"u8);
+            }
             writer.WriteStringValue(Status.ToString());
-            if (TrainedTokens != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("trained_tokens") != true)
             {
-                writer.WritePropertyName("trained_tokens"u8);
-                writer.WriteNumberValue(TrainedTokens.Value);
+                if (TrainedTokens != null)
+                {
+                    writer.WritePropertyName("trained_tokens"u8);
+                    writer.WriteNumberValue(TrainedTokens.Value);
+                }
+                else
+                {
+                    writer.WriteNull("trainedTokens"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("training_file") != true)
             {
-                writer.WriteNull("trainedTokens"u8);
+                writer.WritePropertyName("training_file"u8);
             }
-            writer.WritePropertyName("training_file"u8);
             writer.WriteStringValue(TrainingFile);
-            if (ValidationFile != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("validation_file") != true)
             {
-                writer.WritePropertyName("validation_file"u8);
-                writer.WriteStringValue(ValidationFile);
+                if (ValidationFile != null)
+                {
+                    writer.WritePropertyName("validation_file"u8);
+                    writer.WriteStringValue(ValidationFile);
+                }
+                else
+                {
+                    writer.WriteNull("validationFile"u8);
+                }
             }
-            else
-            {
-                writer.WriteNull("validationFile"u8);
-            }
-            if (Optional.IsCollectionDefined(Integrations))
+            if (Optional.IsCollectionDefined(Integrations) && _additionalBinaryDataProperties?.ContainsKey("integrations") != true)
             {
                 if (Integrations != null)
                 {
@@ -133,9 +175,12 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("integrations"u8);
                 }
             }
-            writer.WritePropertyName("seed"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("seed") != true)
+            {
+                writer.WritePropertyName("seed"u8);
+            }
             writer.WriteNumberValue(Seed);
-            if (Optional.IsDefined(EstimatedFinish))
+            if (Optional.IsDefined(EstimatedFinish) && _additionalBinaryDataProperties?.ContainsKey("estimated_finish") != true)
             {
                 if (EstimatedFinish != null)
                 {
@@ -151,6 +196,10 @@ namespace OpenAI.FineTuning
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

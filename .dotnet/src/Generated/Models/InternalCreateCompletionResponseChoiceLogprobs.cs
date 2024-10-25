@@ -10,7 +10,7 @@ namespace OpenAI.LegacyCompletions
 {
     internal partial class InternalCreateCompletionResponseChoiceLogprobs
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalCreateCompletionResponseChoiceLogprobs()
         {
@@ -36,5 +36,11 @@ namespace OpenAI.LegacyCompletions
         public IList<string> Tokens { get; }
 
         public IList<IDictionary<string, float>> TopLogprobs { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

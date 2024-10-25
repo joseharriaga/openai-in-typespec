@@ -31,38 +31,48 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalCreateChatCompletionStreamResponseChoiceLogprobs)} does not support writing '{format}' format.");
             }
-            if (Content != null && Optional.IsCollectionDefined(Content))
+            if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
-                writer.WritePropertyName("content"u8);
-                writer.WriteStartArray();
-                foreach (ChatTokenLogProbabilityDetails item in Content)
+                if (Content != null && Optional.IsCollectionDefined(Content))
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WritePropertyName("content"u8);
+                    writer.WriteStartArray();
+                    foreach (ChatTokenLogProbabilityDetails item in Content)
+                    {
+                        writer.WriteObjectValue(item, options);
+                    }
+                    writer.WriteEndArray();
                 }
-                writer.WriteEndArray();
-            }
-            else
-            {
-                writer.WriteNull("content"u8);
-            }
-            if (Refusal != null && Optional.IsCollectionDefined(Refusal))
-            {
-                writer.WritePropertyName("refusal"u8);
-                writer.WriteStartArray();
-                foreach (ChatTokenLogProbabilityDetails item in Refusal)
+                else
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WriteNull("content"u8);
                 }
-                writer.WriteEndArray();
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("refusal") != true)
             {
-                writer.WriteNull("refusal"u8);
+                if (Refusal != null && Optional.IsCollectionDefined(Refusal))
+                {
+                    writer.WritePropertyName("refusal"u8);
+                    writer.WriteStartArray();
+                    foreach (ChatTokenLogProbabilityDetails item in Refusal)
+                    {
+                        writer.WriteObjectValue(item, options);
+                    }
+                    writer.WriteEndArray();
+                }
+                else
+                {
+                    writer.WriteNull("refusal"u8);
+                }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

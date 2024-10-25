@@ -31,16 +31,29 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(ConversationInputTokenUsageDetails)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("cached_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("cached_tokens") != true)
+            {
+                writer.WritePropertyName("cached_tokens"u8);
+            }
             writer.WriteNumberValue(CachedTokens);
-            writer.WritePropertyName("text_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("text_tokens") != true)
+            {
+                writer.WritePropertyName("text_tokens"u8);
+            }
             writer.WriteNumberValue(TextTokens);
-            writer.WritePropertyName("audio_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("audio_tokens") != true)
+            {
+                writer.WritePropertyName("audio_tokens"u8);
+            }
             writer.WriteNumberValue(AudioTokens);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

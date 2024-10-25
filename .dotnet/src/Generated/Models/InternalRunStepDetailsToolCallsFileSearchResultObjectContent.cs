@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalRunStepDetailsToolCallsFileSearchResultObjectContent
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalRunStepDetailsToolCallsFileSearchResultObjectContent()
         {
@@ -25,5 +25,11 @@ namespace OpenAI.Assistants
         public InternalRunStepDetailsToolCallsFileSearchResultObjectContentType? Type { get; }
 
         public string Text { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

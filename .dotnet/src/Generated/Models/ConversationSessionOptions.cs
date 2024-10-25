@@ -10,7 +10,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationSessionOptions
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public ConversationSessionOptions()
         {
@@ -46,5 +46,11 @@ namespace OpenAI.RealtimeConversation
         public IList<ConversationTool> Tools { get; }
 
         public float? Temperature { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

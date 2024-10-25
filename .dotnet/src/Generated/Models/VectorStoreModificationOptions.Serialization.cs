@@ -27,7 +27,7 @@ namespace OpenAI.VectorStores
             {
                 throw new FormatException($"The model {nameof(VectorStoreModificationOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Name))
+            if (Optional.IsDefined(Name) && _additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 if (Name != null)
                 {
@@ -39,7 +39,7 @@ namespace OpenAI.VectorStores
                     writer.WriteNull("name"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(Metadata))
+            if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null)
                 {
@@ -62,7 +62,7 @@ namespace OpenAI.VectorStores
                     writer.WriteNull("metadata"u8);
                 }
             }
-            if (Optional.IsDefined(ExpirationPolicy))
+            if (Optional.IsDefined(ExpirationPolicy) && _additionalBinaryDataProperties?.ContainsKey("expires_after") != true)
             {
                 if (ExpirationPolicy != null)
                 {
@@ -78,6 +78,10 @@ namespace OpenAI.VectorStores
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

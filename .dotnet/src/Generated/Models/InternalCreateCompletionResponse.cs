@@ -11,7 +11,7 @@ namespace OpenAI.LegacyCompletions
 {
     internal partial class InternalCreateCompletionResponse
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalCreateCompletionResponse(string id, IEnumerable<InternalCreateCompletionResponseChoice> choices, DateTimeOffset created, string model)
         {
@@ -46,5 +46,11 @@ namespace OpenAI.LegacyCompletions
         public InternalCreateCompletionResponseObject Object { get; } = "text_completion";
 
         public ChatTokenUsage Usage { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

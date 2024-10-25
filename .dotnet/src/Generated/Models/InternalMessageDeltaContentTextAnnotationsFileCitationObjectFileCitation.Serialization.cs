@@ -27,12 +27,12 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalMessageDeltaContentTextAnnotationsFileCitationObjectFileCitation)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(FileId))
+            if (Optional.IsDefined(FileId) && _additionalBinaryDataProperties?.ContainsKey("file_id") != true)
             {
                 writer.WritePropertyName("file_id"u8);
                 writer.WriteStringValue(FileId);
             }
-            if (Optional.IsDefined(Quote))
+            if (Optional.IsDefined(Quote) && _additionalBinaryDataProperties?.ContainsKey("quote") != true)
             {
                 writer.WritePropertyName("quote"u8);
                 writer.WriteStringValue(Quote);
@@ -41,6 +41,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -80,21 +84,11 @@ namespace OpenAI.Assistants
             {
                 if (prop.NameEquals("file_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        fileId = null;
-                        continue;
-                    }
                     fileId = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("quote"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        quote = null;
-                        continue;
-                    }
                     quote = prop.Value.GetString();
                     continue;
                 }

@@ -31,16 +31,29 @@ namespace OpenAI.Audio
             {
                 throw new FormatException($"The model {nameof(TranscribedWord)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("word"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("word") != true)
+            {
+                writer.WritePropertyName("word"u8);
+            }
             writer.WriteStringValue(Word);
-            writer.WritePropertyName("start"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("start") != true)
+            {
+                writer.WritePropertyName("start"u8);
+            }
             writer.WriteNumberValue(Convert.ToDouble(StartTime.ToString("s\\.FFF")));
-            writer.WritePropertyName("end"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("end") != true)
+            {
+                writer.WritePropertyName("end"u8);
+            }
             writer.WriteNumberValue(Convert.ToDouble(EndTime.ToString("s\\.FFF")));
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

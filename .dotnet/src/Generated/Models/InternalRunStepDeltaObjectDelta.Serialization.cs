@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalRunStepDeltaObjectDelta)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(StepDetails))
+            if (Optional.IsDefined(StepDetails) && _additionalBinaryDataProperties?.ContainsKey("step_details") != true)
             {
                 writer.WritePropertyName("step_details"u8);
                 writer.WriteObjectValue(StepDetails, options);
@@ -36,6 +36,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -76,7 +80,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        stepDetails = null;
                         continue;
                     }
                     stepDetails = InternalRunStepDeltaStepDetails.DeserializeInternalRunStepDeltaStepDetails(prop.Value, options);

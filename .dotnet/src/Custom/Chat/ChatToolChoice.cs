@@ -25,7 +25,6 @@ namespace OpenAI.Chat;
 ///     </list>
 /// </summary>
 [CodeGenModel("ChatCompletionToolChoice")]
-[CodeGenSuppress("ChatToolChoice", typeof(IDictionary<string, BinaryData>))]
 public partial class ChatToolChoice
 {
     private readonly bool _predefined;

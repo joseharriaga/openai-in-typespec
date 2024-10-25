@@ -10,7 +10,7 @@ namespace OpenAI.Chat
 {
     internal partial class InternalCreateChatCompletionResponseChoiceLogprobs
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalCreateChatCompletionResponseChoiceLogprobs()
         {
@@ -28,5 +28,11 @@ namespace OpenAI.Chat
         public IReadOnlyList<ChatTokenLogProbabilityDetails> Content { get; }
 
         public IReadOnlyList<ChatTokenLogProbabilityDetails> Refusal { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

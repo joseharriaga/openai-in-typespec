@@ -31,9 +31,12 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalMessageContentImageUrlObjectImageUrl)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("url"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("url") != true)
+            {
+                writer.WritePropertyName("url"u8);
+            }
             writer.WriteStringValue(Url.AbsoluteUri);
-            if (Optional.IsDefined(Detail))
+            if (Optional.IsDefined(Detail) && _additionalBinaryDataProperties?.ContainsKey("detail") != true)
             {
                 writer.WritePropertyName("detail"u8);
                 writer.WriteStringValue(Detail);
@@ -42,6 +45,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -86,11 +93,6 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("detail"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        detail = null;
-                        continue;
-                    }
                     detail = prop.Value.GetString();
                     continue;
                 }

@@ -32,7 +32,10 @@ namespace OpenAI.Internal
                 throw new FormatException($"The model {nameof(InternalResponseFormatJsonSchema)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("json_schema"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("json_schema") != true)
+            {
+                writer.WritePropertyName("json_schema"u8);
+            }
             writer.WriteObjectValue(JsonSchema, options);
         }
 

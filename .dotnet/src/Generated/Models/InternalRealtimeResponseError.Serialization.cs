@@ -31,21 +31,27 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeResponseError)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("type"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+            }
             writer.WriteStringValue(Type);
-            if (Optional.IsDefined(Code))
+            if (Optional.IsDefined(Code) && _additionalBinaryDataProperties?.ContainsKey("code") != true)
             {
                 writer.WritePropertyName("code"u8);
                 writer.WriteStringValue(Code);
             }
-            writer.WritePropertyName("message"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("message") != true)
+            {
+                writer.WritePropertyName("message"u8);
+            }
             writer.WriteStringValue(Message);
-            if (Optional.IsDefined(Param))
+            if (Optional.IsDefined(Param) && _additionalBinaryDataProperties?.ContainsKey("param") != true)
             {
                 writer.WritePropertyName("param"u8);
                 writer.WriteStringValue(Param);
             }
-            if (Optional.IsDefined(EventId))
+            if (Optional.IsDefined(EventId) && _additionalBinaryDataProperties?.ContainsKey("event_id") != true)
             {
                 writer.WritePropertyName("event_id"u8);
                 writer.WriteStringValue(EventId);
@@ -54,6 +60,10 @@ namespace OpenAI.RealtimeConversation
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -101,11 +111,6 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("code"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        code = null;
-                        continue;
-                    }
                     code = prop.Value.GetString();
                     continue;
                 }
@@ -116,21 +121,11 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("param"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        @param = null;
-                        continue;
-                    }
                     @param = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("event_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
                     eventId = prop.Value.GetString();
                     continue;
                 }

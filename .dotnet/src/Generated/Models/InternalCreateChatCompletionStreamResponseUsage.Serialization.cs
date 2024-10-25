@@ -31,16 +31,29 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalCreateChatCompletionStreamResponseUsage)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("completion_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("completion_tokens") != true)
+            {
+                writer.WritePropertyName("completion_tokens"u8);
+            }
             writer.WriteNumberValue(CompletionTokens);
-            writer.WritePropertyName("prompt_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("prompt_tokens") != true)
+            {
+                writer.WritePropertyName("prompt_tokens"u8);
+            }
             writer.WriteNumberValue(PromptTokens);
-            writer.WritePropertyName("total_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("total_tokens") != true)
+            {
+                writer.WritePropertyName("total_tokens"u8);
+            }
             writer.WriteNumberValue(TotalTokens);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

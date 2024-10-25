@@ -27,7 +27,7 @@ namespace OpenAI.LegacyCompletions
             {
                 throw new FormatException($"The model {nameof(InternalCreateCompletionResponseChoiceLogprobs)} does not support writing '{format}' format.");
             }
-            if (Optional.IsCollectionDefined(TextOffset))
+            if (Optional.IsCollectionDefined(TextOffset) && _additionalBinaryDataProperties?.ContainsKey("text_offset") != true)
             {
                 writer.WritePropertyName("text_offset"u8);
                 writer.WriteStartArray();
@@ -37,7 +37,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsCollectionDefined(TokenLogprobs))
+            if (Optional.IsCollectionDefined(TokenLogprobs) && _additionalBinaryDataProperties?.ContainsKey("token_logprobs") != true)
             {
                 writer.WritePropertyName("token_logprobs"u8);
                 writer.WriteStartArray();
@@ -47,7 +47,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsCollectionDefined(Tokens))
+            if (Optional.IsCollectionDefined(Tokens) && _additionalBinaryDataProperties?.ContainsKey("tokens") != true)
             {
                 writer.WritePropertyName("tokens"u8);
                 writer.WriteStartArray();
@@ -62,7 +62,7 @@ namespace OpenAI.LegacyCompletions
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsCollectionDefined(TopLogprobs))
+            if (Optional.IsCollectionDefined(TopLogprobs) && _additionalBinaryDataProperties?.ContainsKey("top_logprobs") != true)
             {
                 writer.WritePropertyName("top_logprobs"u8);
                 writer.WriteStartArray();
@@ -87,6 +87,10 @@ namespace OpenAI.LegacyCompletions
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

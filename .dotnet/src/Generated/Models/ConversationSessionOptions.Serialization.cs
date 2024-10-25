@@ -27,27 +27,27 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(ConversationSessionOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Voice))
+            if (Optional.IsDefined(Voice) && _additionalBinaryDataProperties?.ContainsKey("voice") != true)
             {
                 writer.WritePropertyName("voice"u8);
                 writer.WriteStringValue(Voice.Value.ToString());
             }
-            if (Optional.IsDefined(Instructions))
+            if (Optional.IsDefined(Instructions) && _additionalBinaryDataProperties?.ContainsKey("instructions") != true)
             {
                 writer.WritePropertyName("instructions"u8);
                 writer.WriteStringValue(Instructions);
             }
-            if (Optional.IsDefined(InputAudioFormat))
+            if (Optional.IsDefined(InputAudioFormat) && _additionalBinaryDataProperties?.ContainsKey("input_audio_format") != true)
             {
                 writer.WritePropertyName("input_audio_format"u8);
                 writer.WriteStringValue(InputAudioFormat.Value.ToString());
             }
-            if (Optional.IsDefined(OutputAudioFormat))
+            if (Optional.IsDefined(OutputAudioFormat) && _additionalBinaryDataProperties?.ContainsKey("output_audio_format") != true)
             {
                 writer.WritePropertyName("output_audio_format"u8);
                 writer.WriteStringValue(OutputAudioFormat.Value.ToString());
             }
-            if (Optional.IsCollectionDefined(Tools))
+            if (Optional.IsCollectionDefined(Tools) && _additionalBinaryDataProperties?.ContainsKey("tools") != true)
             {
                 writer.WritePropertyName("tools"u8);
                 writer.WriteStartArray();
@@ -57,27 +57,27 @@ namespace OpenAI.RealtimeConversation
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsDefined(Temperature))
+            if (Optional.IsDefined(Temperature) && _additionalBinaryDataProperties?.ContainsKey("temperature") != true)
             {
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
             }
-            if (Optional.IsDefined(Model))
+            if (Optional.IsDefined(Model) && _additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
                 writer.WriteStringValue(Model);
             }
-            if (Optional.IsDefined(TurnDetectionOptions))
+            if (Optional.IsDefined(TurnDetectionOptions) && _additionalBinaryDataProperties?.ContainsKey("turn_detection") != true)
             {
                 writer.WritePropertyName("turn_detection"u8);
                 writer.WriteObjectValue<ConversationTurnDetectionOptions>(TurnDetectionOptions, options);
             }
-            if (Optional.IsDefined(InputTranscriptionOptions))
+            if (Optional.IsDefined(InputTranscriptionOptions) && _additionalBinaryDataProperties?.ContainsKey("input_audio_transcription") != true)
             {
                 writer.WritePropertyName("input_audio_transcription"u8);
                 writer.WriteObjectValue<ConversationInputTranscriptionOptions>(InputTranscriptionOptions, options);
             }
-            if (Optional.IsCollectionDefined(_internalModalities))
+            if (Optional.IsCollectionDefined(_internalModalities) && _additionalBinaryDataProperties?.ContainsKey("modalities") != true)
             {
                 writer.WritePropertyName("modalities"u8);
                 writer.WriteStartArray();
@@ -87,7 +87,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsDefined(_internalToolChoice))
+            if (Optional.IsDefined(_internalToolChoice) && _additionalBinaryDataProperties?.ContainsKey("tool_choice") != true)
             {
                 writer.WritePropertyName("tool_choice"u8);
 #if NET6_0_OR_GREATER
@@ -99,7 +99,7 @@ namespace OpenAI.RealtimeConversation
                 }
 #endif
             }
-            if (Optional.IsDefined(_maxResponseOutputTokens))
+            if (Optional.IsDefined(_maxResponseOutputTokens) && _additionalBinaryDataProperties?.ContainsKey("max_response_output_tokens") != true)
             {
                 writer.WritePropertyName("max_response_output_tokens"u8);
 #if NET6_0_OR_GREATER
@@ -115,6 +115,10 @@ namespace OpenAI.RealtimeConversation
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -166,7 +170,6 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        voice = null;
                         continue;
                     }
                     voice = new ConversationVoice(prop.Value.GetString());
@@ -174,11 +177,6 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("instructions"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        instructions = null;
-                        continue;
-                    }
                     instructions = prop.Value.GetString();
                     continue;
                 }
@@ -186,7 +184,6 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        inputAudioFormat = null;
                         continue;
                     }
                     inputAudioFormat = new ConversationAudioFormat(prop.Value.GetString());
@@ -196,7 +193,6 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        outputAudioFormat = null;
                         continue;
                     }
                     outputAudioFormat = new ConversationAudioFormat(prop.Value.GetString());
@@ -220,7 +216,6 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        temperature = null;
                         continue;
                     }
                     temperature = prop.Value.GetSingle();
@@ -228,11 +223,6 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("model"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        model = null;
-                        continue;
-                    }
                     model = prop.Value.GetString();
                     continue;
                 }
@@ -240,7 +230,6 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        turnDetectionOptions = null;
                         continue;
                     }
                     turnDetectionOptions = ConversationTurnDetectionOptions.DeserializeConversationTurnDetectionOptions(prop.Value, options);
@@ -250,7 +239,6 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        inputTranscriptionOptions = null;
                         continue;
                     }
                     inputTranscriptionOptions = ConversationInputTranscriptionOptions.DeserializeConversationInputTranscriptionOptions(prop.Value, options);
@@ -274,7 +262,6 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        internalToolChoice = null;
                         continue;
                     }
                     internalToolChoice = BinaryData.FromString(prop.Value.GetRawText());
@@ -284,7 +271,6 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        maxResponseOutputTokens = null;
                         continue;
                     }
                     maxResponseOutputTokens = BinaryData.FromString(prop.Value.GetRawText());

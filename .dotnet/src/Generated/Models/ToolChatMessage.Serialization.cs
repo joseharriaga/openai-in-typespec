@@ -25,7 +25,10 @@ namespace OpenAI.Chat
                 throw new FormatException($"The model {nameof(ToolChatMessage)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("tool_call_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("tool_call_id") != true)
+            {
+                writer.WritePropertyName("tool_call_id"u8);
+            }
             writer.WriteStringValue(ToolCallId);
         }
 
@@ -66,11 +69,6 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("content"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        content = null;
-                        continue;
-                    }
                     DeserializeContentValue(prop, ref content);
                     continue;
                 }

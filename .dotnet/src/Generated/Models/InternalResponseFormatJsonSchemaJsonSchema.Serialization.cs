@@ -31,14 +31,17 @@ namespace OpenAI.Internal
             {
                 throw new FormatException($"The model {nameof(InternalResponseFormatJsonSchemaJsonSchema)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Description))
+            if (Optional.IsDefined(Description) && _additionalBinaryDataProperties?.ContainsKey("description") != true)
             {
                 writer.WritePropertyName("description"u8);
                 writer.WriteStringValue(Description);
             }
-            writer.WritePropertyName("name"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
+            {
+                writer.WritePropertyName("name"u8);
+            }
             writer.WriteStringValue(Name);
-            if (Optional.IsDefined(Strict))
+            if (Optional.IsDefined(Strict) && _additionalBinaryDataProperties?.ContainsKey("strict") != true)
             {
                 if (Strict != null)
                 {
@@ -50,7 +53,7 @@ namespace OpenAI.Internal
                     writer.WriteNull("strict"u8);
                 }
             }
-            if (Optional.IsDefined(Schema))
+            if (Optional.IsDefined(Schema) && _additionalBinaryDataProperties?.ContainsKey("schema") != true)
             {
                 writer.WritePropertyName("schema"u8);
 #if NET6_0_OR_GREATER
@@ -66,6 +69,10 @@ namespace OpenAI.Internal
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -107,11 +114,6 @@ namespace OpenAI.Internal
             {
                 if (prop.NameEquals("description"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        description = null;
-                        continue;
-                    }
                     description = prop.Value.GetString();
                     continue;
                 }
@@ -134,7 +136,6 @@ namespace OpenAI.Internal
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        schema = null;
                         continue;
                     }
                     schema = BinaryData.FromString(prop.Value.GetRawText());

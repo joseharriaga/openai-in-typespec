@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class RunStep
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal RunStep(string id, DateTimeOffset createdAt, string assistantId, string threadId, string runId, RunStepType @type, RunStepStatus status, RunStepError lastError, DateTimeOffset? expiredAt, DateTimeOffset? cancelledAt, DateTimeOffset? failedAt, DateTimeOffset? completedAt, IDictionary<string, string> metadata, RunStepTokenUsage usage, RunStepDetails details)
         {
@@ -78,5 +78,11 @@ namespace OpenAI.Assistants
         public IDictionary<string, string> Metadata { get; }
 
         public RunStepTokenUsage Usage { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

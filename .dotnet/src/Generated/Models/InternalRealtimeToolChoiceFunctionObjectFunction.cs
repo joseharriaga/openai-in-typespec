@@ -10,7 +10,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeToolChoiceFunctionObjectFunction
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalRealtimeToolChoiceFunctionObjectFunction(string name)
         {
@@ -26,5 +26,11 @@ namespace OpenAI.RealtimeConversation
         }
 
         public string Name { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

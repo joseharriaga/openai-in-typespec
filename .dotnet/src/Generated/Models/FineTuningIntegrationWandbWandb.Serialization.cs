@@ -31,9 +31,12 @@ namespace OpenAI.FineTuning
             {
                 throw new FormatException($"The model {nameof(FineTuningIntegrationWandbWandb)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("project"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("project") != true)
+            {
+                writer.WritePropertyName("project"u8);
+            }
             writer.WriteStringValue(Project);
-            if (Optional.IsDefined(Name))
+            if (Optional.IsDefined(Name) && _additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 if (Name != null)
                 {
@@ -45,7 +48,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("name"u8);
                 }
             }
-            if (Optional.IsDefined(Entity))
+            if (Optional.IsDefined(Entity) && _additionalBinaryDataProperties?.ContainsKey("entity") != true)
             {
                 if (Entity != null)
                 {
@@ -57,7 +60,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("entity"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(Tags))
+            if (Optional.IsCollectionDefined(Tags) && _additionalBinaryDataProperties?.ContainsKey("tags") != true)
             {
                 writer.WritePropertyName("tags"u8);
                 writer.WriteStartArray();
@@ -76,6 +79,10 @@ namespace OpenAI.FineTuning
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

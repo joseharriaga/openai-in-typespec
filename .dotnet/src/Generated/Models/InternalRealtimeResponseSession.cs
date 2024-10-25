@@ -11,7 +11,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponseSession
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalRealtimeResponseSession(string id, string model, IEnumerable<InternalRealtimeRequestSessionUpdateCommandSessionModality> modalities, string instructions, ConversationVoice voice, ConversationAudioFormat inputAudioFormat, ConversationAudioFormat outputAudioFormat, ConversationInputTranscriptionOptions inputAudioTranscription, ConversationTurnDetectionOptions turnDetection, BinaryData toolChoice, float temperature, BinaryData maxResponseOutputTokens)
         {
@@ -74,5 +74,11 @@ namespace OpenAI.RealtimeConversation
         public BinaryData ToolChoice { get; }
 
         public float Temperature { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

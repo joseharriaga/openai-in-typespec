@@ -31,16 +31,22 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(StreamingChatToolCallUpdate)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("index"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
+            {
+                writer.WritePropertyName("index"u8);
+            }
             writer.WriteNumberValue(Index);
-            if (Optional.IsDefined(Function))
+            if (Optional.IsDefined(Function) && _additionalBinaryDataProperties?.ContainsKey("function") != true)
             {
                 writer.WritePropertyName("function"u8);
                 writer.WriteObjectValue<InternalChatCompletionMessageToolCallChunkFunction>(Function, options);
             }
-            writer.WritePropertyName("type"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+            }
             writer.WriteStringValue(Kind.ToSerialString());
-            if (Optional.IsDefined(ToolCallId))
+            if (Optional.IsDefined(ToolCallId) && _additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(ToolCallId);
@@ -49,6 +55,10 @@ namespace OpenAI.Chat
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -97,7 +107,6 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        function = null;
                         continue;
                     }
                     function = InternalChatCompletionMessageToolCallChunkFunction.DeserializeInternalChatCompletionMessageToolCallChunkFunction(prop.Value, options);
@@ -107,7 +116,6 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        kind = null;
                         continue;
                     }
                     kind = prop.Value.GetString().ToChatToolCallKind();
@@ -115,11 +123,6 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        toolCallId = null;
-                        continue;
-                    }
                     toolCallId = prop.Value.GetString();
                     continue;
                 }

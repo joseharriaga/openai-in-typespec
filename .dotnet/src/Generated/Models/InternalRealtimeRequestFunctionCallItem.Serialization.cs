@@ -32,13 +32,22 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(InternalRealtimeRequestFunctionCallItem)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("name"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("name") != true)
+            {
+                writer.WritePropertyName("name"u8);
+            }
             writer.WriteStringValue(Name);
-            writer.WritePropertyName("call_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("call_id") != true)
+            {
+                writer.WritePropertyName("call_id"u8);
+            }
             writer.WriteStringValue(CallId);
-            writer.WritePropertyName("arguments"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("arguments") != true)
+            {
+                writer.WritePropertyName("arguments"u8);
+            }
             writer.WriteStringValue(Arguments);
-            if (Optional.IsDefined(Status))
+            if (Optional.IsDefined(Status) && _additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
                 writer.WriteStringValue(Status.Value.ToString());
@@ -92,7 +101,6 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        status = null;
                         continue;
                     }
                     status = new ConversationItemStatus(prop.Value.GetString());
@@ -105,11 +113,6 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = prop.Value.GetString();
                     continue;
                 }

@@ -31,45 +31,64 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(AssistantThread)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+            }
             writer.WriteStringValue(Id);
-            writer.WritePropertyName("created_at"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("created_at") != true)
+            {
+                writer.WritePropertyName("created_at"u8);
+            }
             writer.WriteNumberValue(CreatedAt, "U");
-            if (Metadata != null && Optional.IsCollectionDefined(Metadata))
+            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
-                writer.WritePropertyName("metadata"u8);
-                writer.WriteStartObject();
-                foreach (var item in Metadata)
+                if (Metadata != null && Optional.IsCollectionDefined(Metadata))
                 {
-                    writer.WritePropertyName(item.Key);
-                    if (item.Value == null)
+                    writer.WritePropertyName("metadata"u8);
+                    writer.WriteStartObject();
+                    foreach (var item in Metadata)
                     {
-                        writer.WriteNullValue();
-                        continue;
+                        writer.WritePropertyName(item.Key);
+                        if (item.Value == null)
+                        {
+                            writer.WriteNullValue();
+                            continue;
+                        }
+                        writer.WriteStringValue(item.Value);
                     }
-                    writer.WriteStringValue(item.Value);
+                    writer.WriteEndObject();
                 }
-                writer.WriteEndObject();
+                else
+                {
+                    writer.WriteNull("metadata"u8);
+                }
             }
-            else
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
-                writer.WriteNull("metadata"u8);
+                writer.WritePropertyName("object"u8);
             }
-            writer.WritePropertyName("object"u8);
             writer.WriteStringValue(this.Object.ToString());
-            if (ToolResources != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("tool_resources") != true)
             {
-                writer.WritePropertyName("tool_resources"u8);
-                writer.WriteObjectValue(ToolResources, options);
-            }
-            else
-            {
-                writer.WriteNull("toolResources"u8);
+                if (ToolResources != null)
+                {
+                    writer.WritePropertyName("tool_resources"u8);
+                    writer.WriteObjectValue(ToolResources, options);
+                }
+                else
+                {
+                    writer.WriteNull("toolResources"u8);
+                }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -104,7 +123,7 @@ namespace OpenAI.Assistants
             }
             string id = default;
             DateTimeOffset createdAt = default;
-            IDictionary<string, string> metadata = default;
+            IReadOnlyDictionary<string, string> metadata = default;
             InternalThreadObjectObject @object = default;
             ToolResources toolResources = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
@@ -149,6 +168,11 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("tool_resources"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        toolResources = null;
+                        continue;
+                    }
                     toolResources = ToolResources.DeserializeToolResources(prop.Value, options);
                     continue;
                 }

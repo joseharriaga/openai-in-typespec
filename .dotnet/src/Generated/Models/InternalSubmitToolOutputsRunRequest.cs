@@ -11,7 +11,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalSubmitToolOutputsRunRequest
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalSubmitToolOutputsRunRequest(IEnumerable<ToolOutput> toolOutputs)
         {
@@ -30,5 +30,11 @@ namespace OpenAI.Assistants
         public IList<ToolOutput> ToolOutputs { get; }
 
         public bool? Stream { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

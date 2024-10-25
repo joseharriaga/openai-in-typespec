@@ -31,9 +31,12 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("input"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("input") != true)
+            {
+                writer.WritePropertyName("input"u8);
+            }
             writer.WriteStringValue(Input);
-            if (options.Format != "W")
+            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("outputs") != true)
             {
                 writer.WritePropertyName("outputs"u8);
                 writer.WriteStartArray();
@@ -47,6 +50,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

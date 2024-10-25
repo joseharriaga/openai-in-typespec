@@ -31,14 +31,24 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalRunStepDetailsToolCallsFileSearchRankingOptionsObject)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("ranker"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("ranker") != true)
+            {
+                writer.WritePropertyName("ranker"u8);
+            }
             writer.WriteStringValue(Ranker.ToString());
-            writer.WritePropertyName("score_threshold"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("score_threshold") != true)
+            {
+                writer.WritePropertyName("score_threshold"u8);
+            }
             writer.WriteNumberValue(ScoreThreshold);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

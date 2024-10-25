@@ -32,7 +32,10 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(InternalRealtimeRequestSessionUpdateCommand)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("session"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("session") != true)
+            {
+                writer.WritePropertyName("session"u8);
+            }
             writer.WriteObjectValue(Session, options);
         }
 
@@ -73,11 +76,6 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("event_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
                     eventId = prop.Value.GetString();
                     continue;
                 }

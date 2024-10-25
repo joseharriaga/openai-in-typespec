@@ -9,7 +9,7 @@ namespace OpenAI.Assistants
 {
     public partial class ToolOutput
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public ToolOutput()
         {
@@ -25,5 +25,11 @@ namespace OpenAI.Assistants
         public string ToolCallId { get; set; }
 
         public string Output { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace OpenAI.Audio
 {
     public partial class AudioTranscription
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal AudioTranscription(string language, string text, TimeSpan? duration)
         {
@@ -39,5 +39,11 @@ namespace OpenAI.Audio
         public IList<TranscribedWord> Words { get; }
 
         public IList<TranscribedSegment> Segments { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

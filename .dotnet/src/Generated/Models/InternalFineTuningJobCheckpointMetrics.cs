@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class InternalFineTuningJobCheckpointMetrics
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalFineTuningJobCheckpointMetrics()
         {
@@ -40,5 +40,11 @@ namespace OpenAI.FineTuning
         public float? FullValidLoss { get; }
 
         public float? FullValidMeanTokenAccuracy { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

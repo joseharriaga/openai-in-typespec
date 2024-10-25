@@ -27,7 +27,7 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalChatCompletionStreamOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(IncludeUsage))
+            if (Optional.IsDefined(IncludeUsage) && _additionalBinaryDataProperties?.ContainsKey("include_usage") != true)
             {
                 writer.WritePropertyName("include_usage"u8);
                 writer.WriteBooleanValue(IncludeUsage.Value);
@@ -36,6 +36,10 @@ namespace OpenAI.Chat
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -76,7 +80,6 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        includeUsage = null;
                         continue;
                     }
                     includeUsage = prop.Value.GetBoolean();

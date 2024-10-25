@@ -27,17 +27,24 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(FileSearchRankingOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Ranker))
+            if (Optional.IsDefined(Ranker) && _additionalBinaryDataProperties?.ContainsKey("ranker") != true)
             {
                 writer.WritePropertyName("ranker"u8);
                 writer.WriteStringValue(Ranker.Value.ToString());
             }
-            writer.WritePropertyName("score_threshold"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("score_threshold") != true)
+            {
+                writer.WritePropertyName("score_threshold"u8);
+            }
             writer.WriteNumberValue(_scoreThreshold);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -79,7 +86,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        ranker = null;
                         continue;
                     }
                     ranker = new FileSearchRanker(prop.Value.GetString());

@@ -31,9 +31,12 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeRequestCommand)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("type"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+            }
             writer.WriteStringValue(Kind.ToString());
-            if (Optional.IsDefined(EventId))
+            if (Optional.IsDefined(EventId) && _additionalBinaryDataProperties?.ContainsKey("event_id") != true)
             {
                 writer.WritePropertyName("event_id"u8);
                 writer.WriteStringValue(EventId);
@@ -42,6 +45,10 @@ namespace OpenAI.RealtimeConversation
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

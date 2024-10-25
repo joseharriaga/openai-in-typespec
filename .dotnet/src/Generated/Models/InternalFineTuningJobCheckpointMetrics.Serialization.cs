@@ -27,37 +27,37 @@ namespace OpenAI.FineTuning
             {
                 throw new FormatException($"The model {nameof(InternalFineTuningJobCheckpointMetrics)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Step))
+            if (Optional.IsDefined(Step) && _additionalBinaryDataProperties?.ContainsKey("step") != true)
             {
                 writer.WritePropertyName("step"u8);
                 writer.WriteNumberValue(Step.Value);
             }
-            if (Optional.IsDefined(TrainLoss))
+            if (Optional.IsDefined(TrainLoss) && _additionalBinaryDataProperties?.ContainsKey("train_loss") != true)
             {
                 writer.WritePropertyName("train_loss"u8);
                 writer.WriteNumberValue(TrainLoss.Value);
             }
-            if (Optional.IsDefined(TrainMeanTokenAccuracy))
+            if (Optional.IsDefined(TrainMeanTokenAccuracy) && _additionalBinaryDataProperties?.ContainsKey("train_mean_token_accuracy") != true)
             {
                 writer.WritePropertyName("train_mean_token_accuracy"u8);
                 writer.WriteNumberValue(TrainMeanTokenAccuracy.Value);
             }
-            if (Optional.IsDefined(ValidLoss))
+            if (Optional.IsDefined(ValidLoss) && _additionalBinaryDataProperties?.ContainsKey("valid_loss") != true)
             {
                 writer.WritePropertyName("valid_loss"u8);
                 writer.WriteNumberValue(ValidLoss.Value);
             }
-            if (Optional.IsDefined(ValidMeanTokenAccuracy))
+            if (Optional.IsDefined(ValidMeanTokenAccuracy) && _additionalBinaryDataProperties?.ContainsKey("valid_mean_token_accuracy") != true)
             {
                 writer.WritePropertyName("valid_mean_token_accuracy"u8);
                 writer.WriteNumberValue(ValidMeanTokenAccuracy.Value);
             }
-            if (Optional.IsDefined(FullValidLoss))
+            if (Optional.IsDefined(FullValidLoss) && _additionalBinaryDataProperties?.ContainsKey("full_valid_loss") != true)
             {
                 writer.WritePropertyName("full_valid_loss"u8);
                 writer.WriteNumberValue(FullValidLoss.Value);
             }
-            if (Optional.IsDefined(FullValidMeanTokenAccuracy))
+            if (Optional.IsDefined(FullValidMeanTokenAccuracy) && _additionalBinaryDataProperties?.ContainsKey("full_valid_mean_token_accuracy") != true)
             {
                 writer.WritePropertyName("full_valid_mean_token_accuracy"u8);
                 writer.WriteNumberValue(FullValidMeanTokenAccuracy.Value);
@@ -66,6 +66,10 @@ namespace OpenAI.FineTuning
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -112,7 +116,6 @@ namespace OpenAI.FineTuning
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        step = null;
                         continue;
                     }
                     step = prop.Value.GetSingle();
@@ -122,7 +125,6 @@ namespace OpenAI.FineTuning
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        trainLoss = null;
                         continue;
                     }
                     trainLoss = prop.Value.GetSingle();
@@ -132,7 +134,6 @@ namespace OpenAI.FineTuning
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        trainMeanTokenAccuracy = null;
                         continue;
                     }
                     trainMeanTokenAccuracy = prop.Value.GetSingle();
@@ -142,7 +143,6 @@ namespace OpenAI.FineTuning
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        validLoss = null;
                         continue;
                     }
                     validLoss = prop.Value.GetSingle();
@@ -152,7 +152,6 @@ namespace OpenAI.FineTuning
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        validMeanTokenAccuracy = null;
                         continue;
                     }
                     validMeanTokenAccuracy = prop.Value.GetSingle();
@@ -162,7 +161,6 @@ namespace OpenAI.FineTuning
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        fullValidLoss = null;
                         continue;
                     }
                     fullValidLoss = prop.Value.GetSingle();
@@ -172,7 +170,6 @@ namespace OpenAI.FineTuning
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        fullValidMeanTokenAccuracy = null;
                         continue;
                     }
                     fullValidMeanTokenAccuracy = prop.Value.GetSingle();

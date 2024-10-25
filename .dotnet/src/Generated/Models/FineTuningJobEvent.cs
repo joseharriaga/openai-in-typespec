@@ -9,7 +9,7 @@ namespace OpenAI.FineTuning
 {
     internal partial class FineTuningJobEvent
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal FineTuningJobEvent(string id, DateTimeOffset createdAt, FineTuning.FineTuningJobEventLevel level, string message)
         {
@@ -38,5 +38,11 @@ namespace OpenAI.FineTuning
         public string Message { get; }
 
         public InternalFineTuningJobEventObject Object { get; } = "fine_tuning.job.event";
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

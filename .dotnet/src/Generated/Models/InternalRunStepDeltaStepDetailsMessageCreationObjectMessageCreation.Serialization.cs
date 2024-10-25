@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(MessageId))
+            if (Optional.IsDefined(MessageId) && _additionalBinaryDataProperties?.ContainsKey("message_id") != true)
             {
                 writer.WritePropertyName("message_id"u8);
                 writer.WriteStringValue(MessageId);
@@ -36,6 +36,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -74,11 +78,6 @@ namespace OpenAI.Assistants
             {
                 if (prop.NameEquals("message_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        messageId = null;
-                        continue;
-                    }
                     messageId = prop.Value.GetString();
                     continue;
                 }

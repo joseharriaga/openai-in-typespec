@@ -9,7 +9,7 @@ namespace OpenAI.Models
 {
     public partial class ModelDeletionResult
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal ModelDeletionResult(bool deleted, string modelId)
         {
@@ -26,5 +26,11 @@ namespace OpenAI.Models
         }
 
         public bool Deleted { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

@@ -23,9 +23,12 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalCreateChatCompletionStreamResponseChoice)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("delta"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("delta") != true)
+            {
+                writer.WritePropertyName("delta"u8);
+            }
             writer.WriteObjectValue(Delta, options);
-            if (Optional.IsDefined(Logprobs))
+            if (Optional.IsDefined(Logprobs) && _additionalBinaryDataProperties?.ContainsKey("logprobs") != true)
             {
                 if (Logprobs != null)
                 {
@@ -37,21 +40,31 @@ namespace OpenAI.Chat
                     writer.WriteNull("logprobs"u8);
                 }
             }
-            writer.WritePropertyName("index"u8);
-            writer.WriteNumberValue(Index);
-            if (FinishReason != null)
+            if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
             {
-                writer.WritePropertyName("finish_reason"u8);
-                writer.WriteStringValue(FinishReason.Value.ToSerialString());
+                writer.WritePropertyName("index"u8);
             }
-            else
+            writer.WriteNumberValue(Index);
+            if (_additionalBinaryDataProperties?.ContainsKey("finish_reason") != true)
             {
-                writer.WriteNull("finishReason"u8);
+                if (FinishReason != null)
+                {
+                    writer.WritePropertyName("finish_reason"u8);
+                    writer.WriteStringValue(FinishReason.Value.ToSerialString());
+                }
+                else
+                {
+                    writer.WriteNull("finishReason"u8);
+                }
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

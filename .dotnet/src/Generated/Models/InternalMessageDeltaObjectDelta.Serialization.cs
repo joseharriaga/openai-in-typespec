@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalMessageDeltaObjectDelta)} does not support writing '{format}' format.");
             }
-            if (Optional.IsCollectionDefined(Content))
+            if (Optional.IsCollectionDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
                 writer.WriteStartArray();
@@ -37,7 +37,7 @@ namespace OpenAI.Assistants
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsDefined(Role))
+            if (Optional.IsDefined(Role) && _additionalBinaryDataProperties?.ContainsKey("role") != true)
             {
                 writer.WritePropertyName("role"u8);
                 writer.WriteStringValue(Role.Value.ToSerialString());
@@ -46,6 +46,10 @@ namespace OpenAI.Assistants
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -101,7 +105,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        role = null;
                         continue;
                     }
                     role = prop.Value.GetString().ToMessageRole();

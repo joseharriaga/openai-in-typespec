@@ -31,13 +31,22 @@ namespace OpenAI.Batch
             {
                 throw new FormatException($"The model {nameof(InternalCreateBatchRequest)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("input_file_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("input_file_id") != true)
+            {
+                writer.WritePropertyName("input_file_id"u8);
+            }
             writer.WriteStringValue(InputFileId);
-            writer.WritePropertyName("endpoint"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("endpoint") != true)
+            {
+                writer.WritePropertyName("endpoint"u8);
+            }
             writer.WriteStringValue(Endpoint.ToString());
-            writer.WritePropertyName("completion_window"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("completion_window") != true)
+            {
+                writer.WritePropertyName("completion_window"u8);
+            }
             writer.WriteStringValue(CompletionWindow.ToString());
-            if (Optional.IsCollectionDefined(Metadata))
+            if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null)
                 {
@@ -64,6 +73,10 @@ namespace OpenAI.Batch
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

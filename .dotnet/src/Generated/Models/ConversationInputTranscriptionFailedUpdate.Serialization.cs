@@ -32,11 +32,20 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationInputTranscriptionFailedUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("item_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
+            {
+                writer.WritePropertyName("item_id"u8);
+            }
             writer.WriteStringValue(ItemId);
-            writer.WritePropertyName("content_index"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("content_index") != true)
+            {
+                writer.WritePropertyName("content_index"u8);
+            }
             writer.WriteNumberValue(ContentIndex);
-            writer.WritePropertyName("error"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("error") != true)
+            {
+                writer.WritePropertyName("error"u8);
+            }
             writer.WriteObjectValue<InternalRealtimeResponseApiError>(_error, options);
         }
 

@@ -27,12 +27,12 @@ namespace OpenAI.Batch
             {
                 throw new FormatException($"The model {nameof(InternalBatchErrors)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Object))
+            if (Optional.IsDefined(Object) && _additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.Value.ToString());
             }
-            if (Optional.IsCollectionDefined(Data))
+            if (Optional.IsCollectionDefined(Data) && _additionalBinaryDataProperties?.ContainsKey("data") != true)
             {
                 writer.WritePropertyName("data"u8);
                 writer.WriteStartArray();
@@ -46,6 +46,10 @@ namespace OpenAI.Batch
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -87,7 +91,6 @@ namespace OpenAI.Batch
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        @object = null;
                         continue;
                     }
                     @object = new InternalBatchErrorsObject(prop.Value.GetString());

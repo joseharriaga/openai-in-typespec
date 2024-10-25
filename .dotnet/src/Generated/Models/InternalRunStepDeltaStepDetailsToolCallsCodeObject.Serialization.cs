@@ -32,14 +32,17 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(InternalRunStepDeltaStepDetailsToolCallsCodeObject)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            writer.WritePropertyName("index"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
+            {
+                writer.WritePropertyName("index"u8);
+            }
             writer.WriteNumberValue(Index);
-            if (Optional.IsDefined(Id))
+            if (Optional.IsDefined(Id) && _additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(Id);
             }
-            if (Optional.IsDefined(CodeInterpreter))
+            if (Optional.IsDefined(CodeInterpreter) && _additionalBinaryDataProperties?.ContainsKey("code_interpreter") != true)
             {
                 writer.WritePropertyName("code_interpreter"u8);
                 writer.WriteObjectValue(CodeInterpreter, options);
@@ -79,11 +82,6 @@ namespace OpenAI.Assistants
                 }
                 if (prop.NameEquals("id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = prop.Value.GetString();
                     continue;
                 }
@@ -91,7 +89,6 @@ namespace OpenAI.Assistants
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        codeInterpreter = null;
                         continue;
                     }
                     codeInterpreter = InternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter.DeserializeInternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter(prop.Value, options);

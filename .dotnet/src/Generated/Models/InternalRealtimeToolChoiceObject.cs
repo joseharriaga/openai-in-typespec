@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal abstract partial class InternalRealtimeToolChoiceObject
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         private protected InternalRealtimeToolChoiceObject(ConversationToolKind @type)
         {
@@ -23,5 +23,11 @@ namespace OpenAI.RealtimeConversation
         }
 
         internal ConversationToolKind Type { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

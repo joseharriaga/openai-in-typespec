@@ -31,14 +31,24 @@ namespace OpenAI.VectorStores
             {
                 throw new FormatException($"The model {nameof(InternalStaticChunkingStrategyDetails)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("max_chunk_size_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("max_chunk_size_tokens") != true)
+            {
+                writer.WritePropertyName("max_chunk_size_tokens"u8);
+            }
             writer.WriteNumberValue(MaxChunkSizeTokens);
-            writer.WritePropertyName("chunk_overlap_tokens"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("chunk_overlap_tokens") != true)
+            {
+                writer.WritePropertyName("chunk_overlap_tokens"u8);
+            }
             writer.WriteNumberValue(ChunkOverlapTokens);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

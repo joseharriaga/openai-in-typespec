@@ -19,12 +19,19 @@ namespace OpenAI.Moderations
             {
                 throw new FormatException($"The model {nameof(ModerationResult)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("flagged"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("flagged") != true)
+            {
+                writer.WritePropertyName("flagged"u8);
+            }
             writer.WriteBooleanValue(Flagged);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

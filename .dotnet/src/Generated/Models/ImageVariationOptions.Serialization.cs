@@ -27,7 +27,7 @@ namespace OpenAI.Images
             {
                 throw new FormatException($"The model {nameof(ImageVariationOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Model))
+            if (Optional.IsDefined(Model) && _additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 if (Model != null)
                 {
@@ -39,9 +39,12 @@ namespace OpenAI.Images
                     writer.WriteNull("model"u8);
                 }
             }
-            writer.WritePropertyName("image"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("image") != true)
+            {
+                writer.WritePropertyName("image"u8);
+            }
             writer.WriteBase64StringValue(Image.ToArray(), "D");
-            if (Optional.IsDefined(N))
+            if (Optional.IsDefined(N) && _additionalBinaryDataProperties?.ContainsKey("n") != true)
             {
                 if (N != null)
                 {
@@ -53,7 +56,7 @@ namespace OpenAI.Images
                     writer.WriteNull("n"u8);
                 }
             }
-            if (Optional.IsDefined(Size))
+            if (Optional.IsDefined(Size) && _additionalBinaryDataProperties?.ContainsKey("size") != true)
             {
                 if (Size != null)
                 {
@@ -65,7 +68,7 @@ namespace OpenAI.Images
                     writer.WriteNull("size"u8);
                 }
             }
-            if (Optional.IsDefined(ResponseFormat))
+            if (Optional.IsDefined(ResponseFormat) && _additionalBinaryDataProperties?.ContainsKey("response_format") != true)
             {
                 if (ResponseFormat != null)
                 {
@@ -77,7 +80,7 @@ namespace OpenAI.Images
                     writer.WriteNull("responseFormat"u8);
                 }
             }
-            if (Optional.IsDefined(EndUserId))
+            if (Optional.IsDefined(EndUserId) && _additionalBinaryDataProperties?.ContainsKey("user") != true)
             {
                 writer.WritePropertyName("user"u8);
                 writer.WriteStringValue(EndUserId);
@@ -86,6 +89,10 @@ namespace OpenAI.Images
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -174,11 +181,6 @@ namespace OpenAI.Images
                 }
                 if (prop.NameEquals("user"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        endUserId = null;
-                        continue;
-                    }
                     endUserId = prop.Value.GetString();
                     continue;
                 }

@@ -31,17 +31,24 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalChatCompletionRequestMessageContentPartImageImageUrl)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Detail))
+            if (Optional.IsDefined(Detail) && _additionalBinaryDataProperties?.ContainsKey("detail") != true)
             {
                 writer.WritePropertyName("detail"u8);
                 writer.WriteStringValue(Detail.Value.ToString());
             }
-            writer.WritePropertyName("url"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("url") != true)
+            {
+                writer.WritePropertyName("url"u8);
+            }
             writer.WriteStringValue(Url);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -83,7 +90,6 @@ namespace OpenAI.Chat
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        detail = null;
                         continue;
                     }
                     detail = new ChatImageDetailLevel(prop.Value.GetString());

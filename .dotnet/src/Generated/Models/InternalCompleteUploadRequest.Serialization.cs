@@ -31,7 +31,10 @@ namespace OpenAI.Files
             {
                 throw new FormatException($"The model {nameof(InternalCompleteUploadRequest)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("part_ids"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("part_ids") != true)
+            {
+                writer.WritePropertyName("part_ids"u8);
+            }
             writer.WriteStartArray();
             foreach (string item in PartIds)
             {
@@ -43,7 +46,7 @@ namespace OpenAI.Files
                 writer.WriteStringValue(item);
             }
             writer.WriteEndArray();
-            if (Optional.IsDefined(Md5))
+            if (Optional.IsDefined(Md5) && _additionalBinaryDataProperties?.ContainsKey("md5") != true)
             {
                 writer.WritePropertyName("md5"u8);
                 writer.WriteStringValue(Md5);
@@ -52,6 +55,10 @@ namespace OpenAI.Files
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);
@@ -108,11 +115,6 @@ namespace OpenAI.Files
                 }
                 if (prop.NameEquals("md5"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        md5 = null;
-                        continue;
-                    }
                     md5 = prop.Value.GetString();
                     continue;
                 }

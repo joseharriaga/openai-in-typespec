@@ -9,7 +9,7 @@ namespace OpenAI.Chat
 {
     public abstract partial class ChatResponseFormat
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         private protected ChatResponseFormat(string @type)
         {
@@ -23,5 +23,11 @@ namespace OpenAI.Chat
         }
 
         internal string Type { get; set; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

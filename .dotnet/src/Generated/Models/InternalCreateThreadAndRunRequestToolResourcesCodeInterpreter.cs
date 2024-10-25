@@ -10,7 +10,7 @@ namespace OpenAI.Assistants
 {
     internal partial class InternalCreateThreadAndRunRequestToolResourcesCodeInterpreter
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         public InternalCreateThreadAndRunRequestToolResourcesCodeInterpreter()
         {
@@ -24,5 +24,11 @@ namespace OpenAI.Assistants
         }
 
         public IList<string> FileIds { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

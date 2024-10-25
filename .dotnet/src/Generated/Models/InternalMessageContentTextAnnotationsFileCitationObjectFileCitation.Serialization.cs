@@ -31,12 +31,19 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalMessageContentTextAnnotationsFileCitationObjectFileCitation)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("file_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("file_id") != true)
+            {
+                writer.WritePropertyName("file_id"u8);
+            }
             writer.WriteStringValue(FileId);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

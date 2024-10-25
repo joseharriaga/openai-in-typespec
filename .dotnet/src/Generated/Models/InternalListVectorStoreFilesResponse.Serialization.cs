@@ -31,9 +31,12 @@ namespace OpenAI.VectorStores
             {
                 throw new FormatException($"The model {nameof(InternalListVectorStoreFilesResponse)} does not support writing '{format}' format.");
             }
-            writer.WritePropertyName("object"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+            }
             writer.WriteStringValue(Object.ToString());
-            if (options.Format != "W")
+            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("data") != true)
             {
                 writer.WritePropertyName("data"u8);
                 writer.WriteStartArray();
@@ -43,16 +46,29 @@ namespace OpenAI.VectorStores
                 }
                 writer.WriteEndArray();
             }
-            writer.WritePropertyName("first_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("first_id") != true)
+            {
+                writer.WritePropertyName("first_id"u8);
+            }
             writer.WriteStringValue(FirstId);
-            writer.WritePropertyName("last_id"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("last_id") != true)
+            {
+                writer.WritePropertyName("last_id"u8);
+            }
             writer.WriteStringValue(LastId);
-            writer.WritePropertyName("has_more"u8);
+            if (_additionalBinaryDataProperties?.ContainsKey("has_more") != true)
+            {
+                writer.WritePropertyName("has_more"u8);
+            }
             writer.WriteBooleanValue(HasMore);
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
                     writer.WriteRawValue(item.Value);

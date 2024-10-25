@@ -21,7 +21,7 @@ namespace OpenAI.Chat
                 throw new FormatException($"The model {nameof(UserChatMessage)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (Optional.IsDefined(ParticipantName))
+            if (Optional.IsDefined(ParticipantName) && _additionalBinaryDataProperties?.ContainsKey("name") != true)
             {
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(ParticipantName);
@@ -55,11 +55,6 @@ namespace OpenAI.Chat
             {
                 if (prop.NameEquals("name"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        participantName = null;
-                        continue;
-                    }
                     participantName = prop.Value.GetString();
                     continue;
                 }
@@ -70,11 +65,6 @@ namespace OpenAI.Chat
                 }
                 if (prop.NameEquals("content"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        content = null;
-                        continue;
-                    }
                     DeserializeContentValue(prop, ref content);
                     continue;
                 }

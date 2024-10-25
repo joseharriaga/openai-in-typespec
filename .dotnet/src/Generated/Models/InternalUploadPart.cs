@@ -9,7 +9,7 @@ namespace OpenAI.Files
 {
     internal partial class InternalUploadPart
     {
-        private protected readonly IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
         internal InternalUploadPart(string id, DateTimeOffset createdAt, string uploadId)
         {
@@ -34,5 +34,11 @@ namespace OpenAI.Files
         public string UploadId { get; }
 
         public InternalUploadPartObject Object { get; } = "upload.part";
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

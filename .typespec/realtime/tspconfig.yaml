@@ -2,7 +2,6 @@
 # adding entry point exclusive to realtime
 options:
   "@azure-tools/typespec-java":
-    emitter-output-dir: "{project-root}/../TempTypeSpecFiles/java/unbranded"
     package-dir: "azure-ai-openai-realtime"
     namespace: "com.azure.ai.openai.realtime"
     # partial-update: true

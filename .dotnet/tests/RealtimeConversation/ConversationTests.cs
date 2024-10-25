@@ -22,7 +22,7 @@ public class ConversationTests : ConversationTestFixtureBase
     public async Task CanConfigureSession()
     {
         RealtimeConversationClient client = GetTestClient();
-        using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
+        using RealtimeConversationSession session = await client.StartConversationAsync(CancellationToken);
 
         await session.ConfigureSessionAsync(
             new ConversationSessionOptions()
@@ -37,7 +37,7 @@ public class ConversationTests : ConversationTestFixtureBase
 
         List<ConversationUpdate> receivedUpdates = [];
 
-        await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
+        await foreach (ConversationUpdate update in session.GetResponsesAsync(CancellationToken))
         {
             receivedUpdates.Add(update);
 
@@ -68,7 +68,7 @@ public class ConversationTests : ConversationTestFixtureBase
     public async Task TextOnlyWorks()
     {
         RealtimeConversationClient client = GetTestClient();
-        using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
+        using RealtimeConversationSession session = await client.StartConversationAsync(CancellationToken);
         await session.AddItemAsync(
             ConversationItem.CreateUserMessage(["Hello, world!"]),
             cancellationToken: CancellationToken);
@@ -76,7 +76,7 @@ public class ConversationTests : ConversationTestFixtureBase
 
         StringBuilder responseBuilder = new();
 
-        await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
+        await foreach (ConversationUpdate update in session.GetResponsesAsync(CancellationToken))
         {
             if (update is ConversationSessionStartedUpdate sessionStartedUpdate)
             {
@@ -105,7 +105,7 @@ public class ConversationTests : ConversationTestFixtureBase
     public async Task AudioWithToolsWorks()
     {
         RealtimeConversationClient client = GetTestClient();
-        using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
+        using RealtimeConversationSession session = await client.StartConversationAsync(CancellationToken);
 
         ConversationFunctionTool getWeatherTool = new()
         {
@@ -153,7 +153,7 @@ public class ConversationTests : ConversationTestFixtureBase
 
         string userTranscript = null;
 
-        await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
+        await foreach (ConversationUpdate update in session.GetResponsesAsync(CancellationToken))
         {
             Assert.That(update.EventId, Is.Not.Null.And.Not.Empty);
 
@@ -203,7 +203,7 @@ public class ConversationTests : ConversationTestFixtureBase
     public async Task CanDisableVoiceActivityDetection()
     {
         RealtimeConversationClient client = GetTestClient();
-        using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
+        using RealtimeConversationSession session = await client.StartConversationAsync(CancellationToken);
 
         await session.ConfigureSessionAsync(
             new()
@@ -223,7 +223,7 @@ public class ConversationTests : ConversationTestFixtureBase
 
         await session.AddItemAsync(ConversationItem.CreateUserMessage(["Hello, assistant!"]), CancellationToken);
 
-        await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
+        await foreach (ConversationUpdate update in session.GetResponsesAsync(CancellationToken))
         {
             if (update is ConversationErrorUpdate errorUpdate)
             {

@@ -2,13 +2,11 @@ using System;
 using System.Buffers;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.ClientModel.Primitives.TwoWayPipeline;
+using System.ClientModel.Primitives.TwoWayClient;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net.WebSockets;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -165,7 +163,7 @@ public partial class RealtimeConversationSession : IDisposable
         await SendCommandAsync(requestData, cancellationOptions).ConfigureAwait(false);
     }
 
-    public IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync(/*[EnumeratorCancellation]*/ CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<TwoWayResult<ConversationUpdate>> GetResponsesAsync(/*[EnumeratorCancellation]*/ CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
 

@@ -60,17 +60,17 @@ public partial class RealtimeConversationClient
     /// </remarks>
     /// <param name="cancellationToken"></param>
     /// <returns> A new, connected, configured instance of <see cref="RealtimeConversationSession"/>. </returns>
-    public virtual async Task<RealtimeConversationSession> StartConversationSessionAsync(
+    public virtual async Task<RealtimeConversationSession> StartConversationAsync(
         CancellationToken cancellationToken = default)
     {
         RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
-        RealtimeConversationSession newOperation = await StartConversationSessionAsync(cancellationOptions).ConfigureAwait(false);
+        RealtimeConversationSession newOperation = await StartConversationAsync(cancellationOptions).ConfigureAwait(false);
         return newOperation;
     }
 
-    public RealtimeConversationSession StartConversationSession(CancellationToken cancellationToken = default)
+    public RealtimeConversationSession StartConversation(CancellationToken cancellationToken = default)
     {
-        return StartConversationSessionAsync(cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
+        return StartConversationAsync(cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
     }
 
     private static Uri GetEndpoint(string model, OpenAIClientOptions options)

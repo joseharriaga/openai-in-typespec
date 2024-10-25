@@ -36,7 +36,7 @@ public class ConversationProtocolTests : ConversationTestFixtureBase
     public async Task ProtocolCanConfigureSession()
     {
         RealtimeConversationClient client = GetTestClient();
-        using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
+        using RealtimeConversationSession session = await client.StartConversationAsync(CancellationToken);
 
         BinaryData configureSessionCommand = BinaryData.FromString("""
             {
@@ -50,7 +50,7 @@ public class ConversationProtocolTests : ConversationTestFixtureBase
 
         List<JsonNode> receivedCommands = [];
 
-        await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
+        await foreach (ConversationUpdate update in session.GetResponsesAsync(CancellationToken))
         {
             BinaryData rawContentBytes = update.GetRawContent();
             JsonNode jsonNode = JsonNode.Parse(rawContentBytes);

@@ -1,6 +1,6 @@
 using System;
 using System.ClientModel.Primitives;
-using System.ClientModel.Primitives.TwoWayPipeline;
+using System.ClientModel.Primitives.TwoWayClient;
 using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Threading;
@@ -73,7 +73,7 @@ public partial class RealtimeConversationSession
     //       Could the two-way service message inherit from PipelineResponse?
     //       If it did, we could return ClientResult here and GetRawResponse
     //       would return a websocket-specific subtype...
-    public virtual IAsyncEnumerable<TwoWayPipelineServiceMessage> GetResponsesAsync()
+    public virtual IAsyncEnumerable<TwoWayResult> GetResponsesAsync()
     {
         // TODO: is there an equivalent of RequestOptions for two-way pipeline?
         //       - we would need it for CancellationToken, modification of pipeline
@@ -96,7 +96,7 @@ public partial class RealtimeConversationSession
         //}
     }
 
-    public virtual IEnumerable<TwoWayPipelineServiceMessage> ReceiveUpdates(RequestOptions options)
+    public virtual IEnumerable<TwoWayResult> GetResponsesAsync(RequestOptions options)
     {
         throw new NotImplementedException();
     }

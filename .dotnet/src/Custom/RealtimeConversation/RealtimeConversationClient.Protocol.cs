@@ -1,5 +1,4 @@
 using System.ClientModel.Primitives;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace OpenAI.RealtimeConversation;
@@ -13,7 +12,7 @@ public partial class RealtimeConversationClient
     /// </summary>
     /// <param name="options"></param>
     /// <returns></returns>
-    public virtual async Task<RealtimeConversationSession> StartConversationSessionAsync(RequestOptions options)
+    public virtual async Task<RealtimeConversationSession> StartConversationAsync(RequestOptions options)
     {
         RealtimeConversationSession provisionalSession = new(this, _endpoint, _credential);
         try

@@ -3,6 +3,8 @@ import "@typespec/openapi";
 
 import "./main.tsp";
 
+using TypeSpec.Http;
+
 /** The OpenAI REST API. Please see https://platform.openai.com/docs/api-reference for more details. */
 @service({
 	title: "OpenAI API",

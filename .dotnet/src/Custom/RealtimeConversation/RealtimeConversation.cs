@@ -10,35 +10,35 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-public partial class RealtimeConversationSession : IDisposable
+public partial class RealtimeConversation 
 {
-    private readonly RealtimeConversationClient _parentClient;
-    private readonly Uri _endpoint;
-    private readonly ApiKeyCredential _credential;
+    //private readonly RealtimeConversationClient _parentClient;
+    //private readonly Uri _endpoint;
+    //private readonly ApiKeyCredential _credential;
     private readonly object _sendingAudioLock = new();
     private bool _isSendingAudio = false;
 
     internal bool ShouldBufferTurnResponseData { get; set; }
 
-    protected internal RealtimeConversationSession(
-        RealtimeConversationClient parentClient,
-        Uri endpoint,
-        ApiKeyCredential credential)
+    internal RealtimeConversation(PipelineResponse response, TwoWayPipelineOptions? options = default)
+        : base(response, options)
     {
-        Argument.AssertNotNull(endpoint, nameof(endpoint));
-        Argument.AssertNotNull(credential, nameof(credential));
+        //Argument.AssertNotNull(endpoint, nameof(endpoint));
+        //Argument.AssertNotNull(credential, nameof(credential));
 
-        _parentClient = parentClient;
-        _endpoint = endpoint;
-        _credential = credential;
-        _clientWebSocket = new ClientWebSocket();
+        //_parentClient = parentClient;
+        //_endpoint = endpoint;
+        //_credential = credential;
+        //_clientWebSocket = new ClientWebSocket();
 
-        _credential.Deconstruct(out string dangerousCredential);
-        _clientWebSocket.Options.SetRequestHeader("openai-beta", $"realtime=v1");
-        _clientWebSocket.Options.SetRequestHeader("Authorization", $"Bearer {dangerousCredential}");
+        //_credential.Deconstruct(out string dangerousCredential);
+        //_clientWebSocket.Options.SetRequestHeader("openai-beta", $"realtime=v1");
+        //_clientWebSocket.Options.SetRequestHeader("Authorization", $"Bearer {dangerousCredential}");
     }
 
     /// <summary>
@@ -172,10 +172,5 @@ public partial class RealtimeConversationSession : IDisposable
         //    ConversationUpdate nextUpdate = ConversationUpdate.FromResponse(protocolEvent.GetRawResponse());
         //    yield return nextUpdate;
         //}
-    }
-
-    public void Dispose()
-    {
-        _clientWebSocket?.Dispose();
     }
 }

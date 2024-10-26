@@ -17,8 +17,8 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")]
 public partial class RealtimeConversationClient
 {
-    public event EventHandler<BinaryData> OnSendingCommand;
-    public event EventHandler<BinaryData> OnReceivingCommand;
+    //public event EventHandler<BinaryData> OnSendingCommand;
+    //public event EventHandler<BinaryData> OnReceivingCommand;
 
     private readonly Uri _endpoint;
     private readonly ApiKeyCredential _credential;
@@ -51,24 +51,24 @@ public partial class RealtimeConversationClient
     }
 
     /// <summary>
-    /// Starts a new <see cref="RealtimeConversationSession"/>, optionally applying initial configuration to the session and
+    /// Starts a new <see cref="RealtimeConversation"/>, optionally applying initial configuration to the session and
     /// default conversation for the session.
     /// </summary>
     /// <remarks>
-    /// The <see cref="RealtimeConversationSession"/> abstracts bidirectional communication between the caller and service,
+    /// The <see cref="RealtimeConversation"/> abstracts bidirectional communication between the caller and service,
     /// simultaneously sending and receiving WebSocket messages.
     /// </remarks>
     /// <param name="cancellationToken"></param>
-    /// <returns> A new, connected, configured instance of <see cref="RealtimeConversationSession"/>. </returns>
-    public virtual async Task<RealtimeConversationSession> StartConversationAsync(
+    /// <returns> A new, connected, configured instance of <see cref="RealtimeConversation"/>. </returns>
+    public virtual async Task<RealtimeConversation> StartConversationAsync(
         CancellationToken cancellationToken = default)
     {
         RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
-        RealtimeConversationSession newOperation = await StartConversationAsync(cancellationOptions).ConfigureAwait(false);
+        RealtimeConversation newOperation = await StartConversationAsync(cancellationOptions).ConfigureAwait(false);
         return newOperation;
     }
 
-    public RealtimeConversationSession StartConversation(CancellationToken cancellationToken = default)
+    public RealtimeConversation StartConversation(CancellationToken cancellationToken = default)
     {
         return StartConversationAsync(cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
     }
@@ -93,13 +93,13 @@ public partial class RealtimeConversationClient
         return uriBuilder.Uri;
     }
 
-    internal void RaiseOnSendingCommand(RealtimeConversationSession session, BinaryData data)
-    {
-        OnSendingCommand?.Invoke(session, data);
-    }
+    //internal void RaiseOnSendingCommand(RealtimeConversationSession session, BinaryData data)
+    //{
+    //    OnSendingCommand?.Invoke(session, data);
+    //}
 
-    internal void RaiseOnReceivingCommand(RealtimeConversationSession session, BinaryData data)
-    {
-        OnReceivingCommand?.Invoke(session, data);
-    }
+    //internal void RaiseOnReceivingCommand(RealtimeConversationSession session, BinaryData data)
+    //{
+    //    OnReceivingCommand?.Invoke(session, data);
+    //}
 }

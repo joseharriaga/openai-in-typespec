@@ -1,14 +1,13 @@
 using System;
 using System.ClientModel.Primitives;
 using System.ClientModel.Primitives.TwoWayClient;
-using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI.RealtimeConversation;
 
-public partial class RealtimeConversationSession
+public partial class RealtimeConversation : TwoWayConnectionResult
 {
     protected ClientWebSocket _clientWebSocket;
 
@@ -67,37 +66,43 @@ public partial class RealtimeConversationSession
         SendCommandAsync(data, options).Wait();
     }
 
-    // TODO: since service response is exposed to end-users at the protocol layer,
-    //       we probably want a better name.  Should we have an equivalent of
-    //       ClientResult, e.g. that wraps a raw response?
-    //       Could the two-way service message inherit from PipelineResponse?
-    //       If it did, we could return ClientResult here and GetRawResponse
-    //       would return a websocket-specific subtype...
-    public virtual IAsyncEnumerable<TwoWayResult> GetResponsesAsync()
-    {
-        // TODO: is there an equivalent of RequestOptions for two-way pipeline?
-        //       - we would need it for CancellationToken, modification of pipeline
-        //         per message sent, e.g. ...
+    //// TODO: since service response is exposed to end-users at the protocol layer,
+    ////       we probably want a better name.  Should we have an equivalent of
+    ////       ClientResult, e.g. that wraps a raw response?
+    ////       Could the two-way service message inherit from PipelineResponse?
+    ////       If it did, we could return ClientResult here and GetRawResponse
+    ////       would return a websocket-specific subtype...
+    //public virtual IAsyncEnumerable<TwoWayResult> GetResponsesAsync()
+    //{
+    //    // TODO: is there an equivalent of RequestOptions for two-way pipeline?
+    //    //       - we would need it for CancellationToken, modification of pipeline
+    //    //         per message sent, e.g. ...
 
-        throw new NotImplementedException();
+    //    throw new NotImplementedException();
 
-        //lock (_singleReceiveLock)
-        //{
-        //    _receiveCollectionResult ??= new(_clientWebSocket, options?.CancellationToken ?? default);
-        //}
-        //await foreach (ClientResult result in _receiveCollectionResult)
-        //{
-        //    BinaryData incomingMessage = result?.GetRawResponse()?.Content;
-        //    if (incomingMessage is not null)
-        //    {
-        //        _parentClient?.RaiseOnReceivingCommand(this, incomingMessage);
-        //    }
-        //    yield return result;
-        //}
-    }
+    //    //lock (_singleReceiveLock)
+    //    //{
+    //    //    _receiveCollectionResult ??= new(_clientWebSocket, options?.CancellationToken ?? default);
+    //    //}
+    //    //await foreach (ClientResult result in _receiveCollectionResult)
+    //    //{
+    //    //    BinaryData incomingMessage = result?.GetRawResponse()?.Content;
+    //    //    if (incomingMessage is not null)
+    //    //    {
+    //    //        _parentClient?.RaiseOnReceivingCommand(this, incomingMessage);
+    //    //    }
+    //    //    yield return result;
+    //    //}
+    //}
 
-    public virtual IEnumerable<TwoWayResult> GetResponsesAsync(RequestOptions options)
-    {
-        throw new NotImplementedException();
-    }
+    //public virtual IEnumerable<TwoWayResult> GetResponses()
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    // TODO: disposal moves to the base type
+    //public void Dispose()
+    //{
+    //    _clientWebSocket?.Dispose();
+    //}
 }

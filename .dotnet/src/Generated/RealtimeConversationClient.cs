@@ -7,6 +7,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenAI.RealtimeConversation
@@ -30,6 +31,16 @@ namespace OpenAI.RealtimeConversation
             _pipeline = pipeline;
             _keyCredential = keyCredential;
             _endpoint = endpoint;
+        }
+
+        public virtual Task<AssistantConversation> StartConversationAsync(ConversationSessionOptions options, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual AssistantConversation StartConversation(ConversationSessionOptions options, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
 
         private static PipelineMessageClassifier _pipelineMessageClassifier200;

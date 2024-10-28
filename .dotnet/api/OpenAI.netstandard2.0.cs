@@ -2211,7 +2211,6 @@ namespace OpenAI.Moderations {
 }
 namespace OpenAI.RealtimeConversation {
     public class AssistantConversation {
-        protected Net.WebSockets.ClientWebSocket _clientWebSocket;
         public Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
         public Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default);
         public Task CancelResponseTurnAsync(CancellationToken cancellationToken = default);
@@ -2898,8 +2897,10 @@ namespace OpenAI.RealtimeConversation {
         public RealtimeConversationClient(string model, ApiKeyCredential credential, OpenAIClientOptions options);
         public RealtimeConversationClient(string model, ApiKeyCredential credential);
         public virtual ClientPipeline Pipeline { get; }
+        public virtual AssistantConversation StartConversation(ConversationSessionOptions options, CancellationToken cancellationToken = default);
         public virtual AssistantConversation StartConversation(BinaryContent configuration, TwoWayClient.TwoWayPipelineOptions conversationOptions, RequestOptions requestOptions);
         public AssistantConversation StartConversation(CancellationToken cancellationToken = default);
+        public virtual Task<AssistantConversation> StartConversationAsync(ConversationSessionOptions options, CancellationToken cancellationToken = default);
         public virtual Task<AssistantConversation> StartConversationAsync(BinaryContent configuration, TwoWayClient.TwoWayPipelineOptions conversationOptions, RequestOptions requestOptions);
         public virtual Task<AssistantConversation> StartConversationAsync(CancellationToken cancellationToken = default);
     }

@@ -10,7 +10,7 @@ namespace OpenAI.RealtimeConversation;
 
 public partial class AssistantConversation : TwoWayConnectionResult
 {
-    protected ClientWebSocket _clientWebSocket;
+    private ClientWebSocket _clientWebSocket;
 
     private readonly SemaphoreSlim _clientSendSemaphore = new(initialCount: 1, maxCount: 1);
     private readonly object _singleReceiveLock = new();

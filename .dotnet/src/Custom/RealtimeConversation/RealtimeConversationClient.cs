@@ -51,20 +51,20 @@ public partial class RealtimeConversationClient
     }
 
     /// <summary>
-    /// Starts a new <see cref="RealtimeConversation"/>, optionally applying initial configuration to the session and
+    /// Starts a new <see cref="AssistantConversation"/>, optionally applying initial configuration to the session and
     /// default conversation for the session.
     /// </summary>
     /// <remarks>
-    /// The <see cref="RealtimeConversation"/> abstracts bidirectional communication between the caller and service,
+    /// The <see cref="AssistantConversation"/> abstracts bidirectional communication between the caller and service,
     /// simultaneously sending and receiving WebSocket messages.
     /// </remarks>
     /// <param name="cancellationToken"></param>
-    /// <returns> A new, connected, configured instance of <see cref="RealtimeConversation"/>. </returns>
-    public virtual async Task<RealtimeConversation> StartConversationAsync(
+    /// <returns> A new, connected, configured instance of <see cref="AssistantConversation"/>. </returns>
+    public virtual async Task<AssistantConversation> StartConversationAsync(
         CancellationToken cancellationToken = default)
     {
         RequestOptions requestOptions = cancellationToken.ToRequestOptions();
-        RealtimeConversation newOperation = await StartConversationAsync(
+        AssistantConversation newOperation = await StartConversationAsync(
             // TODO: pass these arguments
             configuration: null!,
             conversationOptions: null!,
@@ -72,7 +72,7 @@ public partial class RealtimeConversationClient
         return newOperation;
     }
 
-    public RealtimeConversation StartConversation(CancellationToken cancellationToken = default)
+    public AssistantConversation StartConversation(CancellationToken cancellationToken = default)
     {
         return StartConversationAsync(cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
     }

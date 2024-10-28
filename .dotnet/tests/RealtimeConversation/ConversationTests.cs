@@ -22,7 +22,7 @@ public class ConversationTests : ConversationTestFixtureBase
     public async Task CanConfigureSession()
     {
         RealtimeConversationClient client = GetTestClient();
-        using RealtimeConversation.RealtimeConversation session = await client.StartConversationAsync(CancellationToken);
+        using RealtimeConversation.AssistantConversation session = await client.StartConversationAsync(CancellationToken);
 
         await session.ConfigureSessionAsync(
             new ConversationSessionOptions()
@@ -68,7 +68,7 @@ public class ConversationTests : ConversationTestFixtureBase
     public async Task TextOnlyWorks()
     {
         RealtimeConversationClient client = GetTestClient();
-        using RealtimeConversation.RealtimeConversation session = await client.StartConversationAsync(CancellationToken);
+        using RealtimeConversation.AssistantConversation session = await client.StartConversationAsync(CancellationToken);
         await session.AddItemAsync(
             ConversationItem.CreateUserMessage(["Hello, world!"]),
             cancellationToken: CancellationToken);
@@ -105,7 +105,7 @@ public class ConversationTests : ConversationTestFixtureBase
     public async Task AudioWithToolsWorks()
     {
         RealtimeConversationClient client = GetTestClient();
-        using RealtimeConversation.RealtimeConversation session = await client.StartConversationAsync(CancellationToken);
+        using RealtimeConversation.AssistantConversation session = await client.StartConversationAsync(CancellationToken);
 
         ConversationFunctionTool getWeatherTool = new()
         {
@@ -203,7 +203,7 @@ public class ConversationTests : ConversationTestFixtureBase
     public async Task CanDisableVoiceActivityDetection()
     {
         RealtimeConversationClient client = GetTestClient();
-        using RealtimeConversation.RealtimeConversation session = await client.StartConversationAsync(CancellationToken);
+        using RealtimeConversation.AssistantConversation session = await client.StartConversationAsync(CancellationToken);
 
         await session.ConfigureSessionAsync(
             new()

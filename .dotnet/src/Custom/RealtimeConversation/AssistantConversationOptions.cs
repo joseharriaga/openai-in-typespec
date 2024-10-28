@@ -7,6 +7,6 @@ using System.Text;
 
 namespace OpenAI.RealtimeConversation;
 
-public class RealtimeConversationOptions : TwoWayPipelineOptions
+public class AssistantConversationOptions : TwoWayPipelineOptions
 {
 }

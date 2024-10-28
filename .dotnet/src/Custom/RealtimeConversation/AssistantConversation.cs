@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-public partial class RealtimeConversation
+public partial class AssistantConversation
 {
     //private readonly RealtimeConversationClient _parentClient;
     //private readonly Uri _endpoint;
@@ -24,7 +24,7 @@ public partial class RealtimeConversation
 
     internal bool ShouldBufferTurnResponseData { get; set; }
 
-    internal RealtimeConversation(PipelineResponse response, TwoWayPipelineOptions? options = default)
+    internal AssistantConversation(PipelineResponse response, TwoWayPipelineOptions? options = default)
         : base(response, options)
     {
         //Argument.AssertNotNull(endpoint, nameof(endpoint));
@@ -173,7 +173,8 @@ public partial class RealtimeConversation
         throw new NotImplementedException();
     }
 
-    private async Task SendCommandAsync(InternalRealtimeRequestCommand command, CancellationToken cancellationToken = default)
+    // needs to be internal so Azure client can override and modify message content
+    internal virtual async Task SendCommandAsync(InternalRealtimeRequestCommand command, CancellationToken cancellationToken = default)
     {
         BinaryData requestData = ModelReaderWriter.Write(command);
         //RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();

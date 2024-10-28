@@ -3,6 +3,7 @@
 
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.ClientModel.Primitives.TwoWayClient;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
@@ -12,7 +13,7 @@ using OpenAI.RealtimeConversation;
 namespace Azure.AI.OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-internal partial class AzureRealtimeConversationSession : RealtimeConversationSession
+internal partial class AzureRealtimeConversationSession : AssistantConversation
 {
     private readonly Uri _endpoint;
     private readonly ApiKeyCredential _keyCredential;
@@ -44,15 +45,16 @@ internal partial class AzureRealtimeConversationSession : RealtimeConversationSe
         _tokenRequestContext = new(_tokenAuthorizationScopes.ToArray(), parentRequestId: _clientRequestId);
     }
 
+    // TODO: make it build
     private AzureRealtimeConversationSession(AzureRealtimeConversationClient parentClient, Uri endpoint, string userAgent)
         : base(parentClient, endpoint, credential: new("placeholder"))
     {
-        _clientRequestId = Guid.NewGuid().ToString();
+        //_clientRequestId = Guid.NewGuid().ToString();
 
-        _endpoint = endpoint;
-        _clientWebSocket.Options.AddSubProtocol("realtime");
-        _clientWebSocket.Options.SetRequestHeader("User-Agent", userAgent);
-        _clientWebSocket.Options.SetRequestHeader("x-ms-client-request-id", _clientRequestId);
+        //_endpoint = endpoint;
+        //_clientWebSocket.Options.AddSubProtocol("realtime");
+        //_clientWebSocket.Options.SetRequestHeader("User-Agent", userAgent);
+        //_clientWebSocket.Options.SetRequestHeader("x-ms-client-request-id", _clientRequestId);
     }
 
     internal override async Task SendCommandAsync(InternalRealtimeRequestCommand command, CancellationToken cancellationToken = default)
@@ -67,7 +69,6 @@ internal partial class AzureRealtimeConversationSession : RealtimeConversationSe
                 .Replace(@"""turn_detection"":null", @"""turn_detection"":{""type"":""none""}"));
         }
 
-        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
-        await SendCommandAsync(requestData, cancellationOptions).ConfigureAwait(false);
+        await SendAsync(BinaryContent.Create(requestData), cancellationToken.ToMessageOptions()).ConfigureAwait(false);
     }
 }

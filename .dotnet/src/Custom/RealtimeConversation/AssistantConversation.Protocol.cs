@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OpenAI.RealtimeConversation;
 
-public partial class RealtimeConversation : TwoWayConnectionResult
+public partial class AssistantConversation : TwoWayConnectionResult
 {
     protected ClientWebSocket _clientWebSocket;
 

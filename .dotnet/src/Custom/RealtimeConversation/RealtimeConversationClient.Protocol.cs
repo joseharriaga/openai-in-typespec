@@ -14,7 +14,7 @@ public partial class RealtimeConversationClient
     // Does this make sense?  It is not part of the HTTP protocol, so maybe we want to keep
     // that as a separate message on the conversation after it is created.
     // Maybe that is only part of the convenience overload.
-    public virtual async Task<RealtimeConversation> StartConversationAsync(
+    public virtual async Task<AssistantConversation> StartConversationAsync(
         BinaryContent configuration,
         // TODO: Maybe there is a subtype of TwoWayPipelineOptions specific to the
         // conversation?  Maybe it holds the configuration for the conversation, too?
@@ -32,7 +32,7 @@ public partial class RealtimeConversationClient
         // "Connect" call is needed.
         PipelineResponse response = await _pipeline.ProcessMessageAsync(message, requestOptions).ConfigureAwait(false);
 
-        RealtimeConversation result = new(response, conversationOptions);
+        AssistantConversation result = new(response, conversationOptions);
 
         // TODO: validate that the conversation subclient is returned ready for
         // a caller to send a message with, or start listening for responses on.
@@ -52,7 +52,7 @@ public partial class RealtimeConversationClient
         //}
     }
 
-    public virtual RealtimeConversation StartConversation(
+    public virtual AssistantConversation StartConversation(
         BinaryContent configuration,
         TwoWayPipelineOptions conversationOptions,
         RequestOptions requestOptions)

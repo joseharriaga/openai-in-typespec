@@ -36,7 +36,7 @@ public class ConversationProtocolTests : ConversationTestFixtureBase
     public async Task ProtocolCanConfigureSession()
     {
         RealtimeConversationClient client = GetTestClient();
-        using RealtimeConversation.RealtimeConversation session = await client.StartConversationAsync(CancellationToken);
+        using RealtimeConversation.AssistantConversation session = await client.StartConversationAsync(CancellationToken);
 
         BinaryData configureSessionCommand = BinaryData.FromString("""
             {

@@ -1,12 +1,10 @@
 using System;
 using System.Buffers;
-using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ClientModel.Primitives.TwoWayClient;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +13,7 @@ using System.Threading.Tasks;
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-public partial class RealtimeConversation 
+public partial class RealtimeConversation
 {
     //private readonly RealtimeConversationClient _parentClient;
     //private readonly Uri _endpoint;
@@ -39,6 +37,24 @@ public partial class RealtimeConversation
         //_credential.Deconstruct(out string dangerousCredential);
         //_clientWebSocket.Options.SetRequestHeader("openai-beta", $"realtime=v1");
         //_clientWebSocket.Options.SetRequestHeader("Authorization", $"Bearer {dangerousCredential}");
+    }
+
+    public async Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default)
+        => await AddItemAsync(item, string.Empty, cancellationToken).ConfigureAwait(false);
+
+    public async Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default)
+    {
+        InternalRealtimeRequestItemCreateCommand internalCommand = new(item)
+        {
+            PreviousItemId = previousItemId,
+        };
+        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(itemId, nameof(itemId));
+        await SendCommandAsync(new InternalRealtimeRequestItemDeleteCommand(itemId), cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -113,24 +129,6 @@ public partial class RealtimeConversation
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default)
-        => await AddItemAsync(item, string.Empty, cancellationToken).ConfigureAwait(false);
-
-    public async Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default)
-    {
-        InternalRealtimeRequestItemCreateCommand internalCommand = new(item)
-        {
-            PreviousItemId = previousItemId,
-        };
-        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
-    }
-
-    public async Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default)
-    {
-        Argument.AssertNotNull(itemId, nameof(itemId));
-        await SendCommandAsync(new InternalRealtimeRequestItemDeleteCommand(itemId), cancellationToken).ConfigureAwait(false);
-    }
-
     public async Task CommitPendingAudioAsync(CancellationToken cancellationToken = default)
     {
         await SendCommandAsync(new InternalRealtimeRequestInputAudioBufferCommitCommand(), cancellationToken).ConfigureAwait(false);
@@ -156,13 +154,8 @@ public partial class RealtimeConversation
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
     }
 
-    internal virtual async Task SendCommandAsync(InternalRealtimeRequestCommand command, CancellationToken cancellationToken = default)
-    {
-        BinaryData requestData = ModelReaderWriter.Write(command);
-        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
-        await SendCommandAsync(requestData, cancellationOptions).ConfigureAwait(false);
-    }
-
+    // Convenience overload for protocol GetResponsesAsync method on the base
+    // TwoWayResult type.
     public IAsyncEnumerable<TwoWayResult<ConversationUpdate>> GetResponsesAsync(/*[EnumeratorCancellation]*/ CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
@@ -172,5 +165,17 @@ public partial class RealtimeConversation
         //    ConversationUpdate nextUpdate = ConversationUpdate.FromResponse(protocolEvent.GetRawResponse());
         //    yield return nextUpdate;
         //}
+    }
+
+    public IEnumerable<TwoWayResult<ConversationUpdate>> GetResponses(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal virtual async Task SendCommandAsync(InternalRealtimeRequestCommand command, CancellationToken cancellationToken = default)
+    {
+        BinaryData requestData = ModelReaderWriter.Write(command);
+        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
+        await SendCommandAsync(requestData, cancellationOptions).ConfigureAwait(false);
     }
 }

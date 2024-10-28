@@ -18,6 +18,8 @@ public partial class RealtimeConversationClient
         BinaryContent configuration,
         // TODO: Maybe there is a subtype of TwoWayPipelineOptions specific to the
         // conversation?  Maybe it holds the configuration for the conversation, too?
+        // What goes on these options and do they need to be different from request options?
+        // Is there a story about the convenience overload that meshes well here?
         TwoWayPipelineOptions conversationOptions,
         RequestOptions requestOptions)
     {
@@ -48,6 +50,14 @@ public partial class RealtimeConversationClient
         //{
         //    provisionalSession?.Dispose();
         //}
+    }
+
+    public virtual RealtimeConversation StartConversation(
+        BinaryContent configuration,
+        TwoWayPipelineOptions conversationOptions,
+        RequestOptions requestOptions)
+    {
+        throw new NotImplementedException();
     }
 
     // HTTP request creation helper -- boilerplate .NET client pattern

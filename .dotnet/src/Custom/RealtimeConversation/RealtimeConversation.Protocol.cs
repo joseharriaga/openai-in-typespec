@@ -33,6 +33,10 @@ public partial class RealtimeConversation : TwoWayConnectionResult
     // TODO: What is the analog of a protocol method for a WebSocket subclient?
     //       Is it at this level - that you can send any message across the
     //       connection?
+    // TODO: Do we want to enable sending arbitrary messages over the connection?
+    //       If so, would this go on the base type?  Or would we recommend using
+    //       the pipeline directly for that?  How would that work with the
+    //       receive loop if using the pipeline directly was the story?
     public virtual Task SendCommandAsync(BinaryData data, RequestOptions options)
     {
         throw new NotImplementedException();

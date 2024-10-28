@@ -2878,6 +2878,7 @@ namespace OpenAI.RealtimeConversation {
         public Task CommitPendingAudioAsync(CancellationToken cancellationToken = default);
         public Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
         public Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default);
+        public IEnumerable<TwoWayClient.TwoWayResult<ConversationUpdate>> GetResponses(CancellationToken cancellationToken = default);
         public IAsyncEnumerable<TwoWayClient.TwoWayResult<ConversationUpdate>> GetResponsesAsync(CancellationToken cancellationToken = default);
         public Task InterruptTurnAsync(CancellationToken cancellationToken = default);
         public Task SendAudioAsync(BinaryData audio, CancellationToken cancellationToken = default);
@@ -2892,6 +2893,7 @@ namespace OpenAI.RealtimeConversation {
         public RealtimeConversationClient(string model, ApiKeyCredential credential, OpenAIClientOptions options);
         public RealtimeConversationClient(string model, ApiKeyCredential credential);
         public virtual ClientPipeline Pipeline { get; }
+        public virtual RealtimeConversation StartConversation(BinaryContent configuration, TwoWayClient.TwoWayPipelineOptions conversationOptions, RequestOptions requestOptions);
         public RealtimeConversation StartConversation(CancellationToken cancellationToken = default);
         public virtual Task<RealtimeConversation> StartConversationAsync(BinaryContent configuration, TwoWayClient.TwoWayPipelineOptions conversationOptions, RequestOptions requestOptions);
         public virtual Task<RealtimeConversation> StartConversationAsync(CancellationToken cancellationToken = default);

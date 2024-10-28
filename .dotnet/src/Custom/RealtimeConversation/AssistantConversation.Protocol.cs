@@ -19,15 +19,15 @@ public partial class AssistantConversation : TwoWayConnectionResult
 
     private AsyncWebsocketMessageCollectionResult? _receiveCollectionResult;
 
-    public Task ConfigureSessionAsync(BinaryContent content, TwoWayMessageOptions? options = default)
-    {
-        throw new NotImplementedException();
-    }
+    //public Task ConfigureSessionAsync(BinaryContent content, TwoWayMessageOptions? options = default)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
-    public void ConfigureSession(BinaryContent content, TwoWayMessageOptions? options = default)
-    {
-        throw new NotImplementedException();
-    }
+    //public void ConfigureSession(BinaryContent content, TwoWayMessageOptions? options = default)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
     public Task CreateResponseAsync(BinaryContent content, TwoWayMessageOptions? options = default)
     {

@@ -40,11 +40,11 @@ public partial class AssistantConversation
         //_clientWebSocket.Options.SetRequestHeader("Authorization", $"Bearer {dangerousCredential}");
     }
 
-    public async Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default)
-    {
-        InternalRealtimeRequestSessionUpdateCommand internalCommand = new(sessionOptions);
-        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
-    }
+    //public async Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default)
+    //{
+    //    InternalRealtimeRequestSessionUpdateCommand internalCommand = new(sessionOptions);
+    //    await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+    //}
 
     public async Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default)
         => await AddItemAsync(item, string.Empty, cancellationToken).ConfigureAwait(false);

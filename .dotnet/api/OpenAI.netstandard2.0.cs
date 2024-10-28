@@ -2215,9 +2215,6 @@ namespace OpenAI.RealtimeConversation {
         public Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default);
         public Task CancelResponseTurnAsync(CancellationToken cancellationToken = default);
         public Task CommitPendingAudioAsync(CancellationToken cancellationToken = default);
-        public void ConfigureSession(BinaryContent content, TwoWayClient.TwoWayMessageOptions? options = null);
-        public Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
-        public Task ConfigureSessionAsync(BinaryContent content, TwoWayClient.TwoWayMessageOptions? options = null);
         public void CreateResponse(BinaryContent content, TwoWayClient.TwoWayMessageOptions? options = null);
         public Task CreateResponseAsync(BinaryContent content, TwoWayClient.TwoWayMessageOptions? options = null);
         public Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default);
@@ -2230,6 +2227,7 @@ namespace OpenAI.RealtimeConversation {
     }
     public class AssistantConversationOptions {
         public AssistantConversationOptions();
+        public ConversationSessionOptions? ConversationOptions { get; set; }
     }
     public class ConversationAudioDeltaUpdate : ConversationUpdate, IJsonModel<ConversationAudioDeltaUpdate>, IPersistableModel<ConversationAudioDeltaUpdate> {
         public int ContentIndex { get; }
@@ -2897,10 +2895,10 @@ namespace OpenAI.RealtimeConversation {
         public RealtimeConversationClient(string model, ApiKeyCredential credential, OpenAIClientOptions options);
         public RealtimeConversationClient(string model, ApiKeyCredential credential);
         public virtual ClientPipeline Pipeline { get; }
-        public virtual AssistantConversation StartConversation(ConversationSessionOptions options, CancellationToken cancellationToken = default);
+        public virtual AssistantConversation StartConversation(AssistantConversationOptions options, CancellationToken cancellationToken = default);
         public virtual AssistantConversation StartConversation(BinaryContent configuration, TwoWayClient.TwoWayPipelineOptions conversationOptions, RequestOptions requestOptions);
         public AssistantConversation StartConversation(CancellationToken cancellationToken = default);
-        public virtual Task<AssistantConversation> StartConversationAsync(ConversationSessionOptions options, CancellationToken cancellationToken = default);
+        public virtual Task<AssistantConversation> StartConversationAsync(AssistantConversationOptions options, CancellationToken cancellationToken = default);
         public virtual Task<AssistantConversation> StartConversationAsync(BinaryContent configuration, TwoWayClient.TwoWayPipelineOptions conversationOptions, RequestOptions requestOptions);
         public virtual Task<AssistantConversation> StartConversationAsync(CancellationToken cancellationToken = default);
     }

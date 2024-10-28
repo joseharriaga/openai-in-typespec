@@ -33,12 +33,12 @@ namespace OpenAI.RealtimeConversation
             _endpoint = endpoint;
         }
 
-        public virtual Task<AssistantConversation> StartConversationAsync(ConversationSessionOptions options, CancellationToken cancellationToken = default)
+        public virtual Task<AssistantConversation> StartConversationAsync(AssistantConversationOptions options, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public virtual AssistantConversation StartConversation(ConversationSessionOptions options, CancellationToken cancellationToken = default)
+        public virtual AssistantConversation StartConversation(AssistantConversationOptions options, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

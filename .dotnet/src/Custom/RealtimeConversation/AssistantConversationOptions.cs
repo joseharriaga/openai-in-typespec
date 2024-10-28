@@ -9,4 +9,5 @@ namespace OpenAI.RealtimeConversation;
 
 public class AssistantConversationOptions : TwoWayPipelineOptions
 {
+    public ConversationSessionOptions? ConversationOptions { get; set; }
 }

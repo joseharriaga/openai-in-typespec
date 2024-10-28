@@ -58,39 +58,39 @@ public partial class RealtimeConversation : TwoWayConnectionResult
     //       If so, would this go on the base type?  Or would we recommend using
     //       the pipeline directly for that?  How would that work with the
     //       receive loop if using the pipeline directly was the story?
-    internal virtual Task SendCommandAsync(BinaryData data, RequestOptions options)
-    {
-        throw new NotImplementedException();
+    //internal virtual Task SendCommandAsync(BinaryData data, RequestOptions options)
+    //{
+    //    throw new NotImplementedException();
 
-        //Argument.AssertNotNull(data, nameof(data));
+    //    //Argument.AssertNotNull(data, nameof(data));
 
-        //_parentClient?.RaiseOnSendingCommand(this, data);
+    //    //_parentClient?.RaiseOnSendingCommand(this, data);
 
-        //ArraySegment<byte> messageBytes = new(data.ToArray());
+    //    //ArraySegment<byte> messageBytes = new(data.ToArray());
 
-        //CancellationToken cancellationToken = options?.CancellationToken ?? default;
+    //    //CancellationToken cancellationToken = options?.CancellationToken ?? default;
 
-        //await _clientSendSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-        //try
-        //{
-        //    await _clientWebSocket.SendAsync(
-        //        messageBytes,
-        //        WebSocketMessageType.Text, // TODO: extensibility for binary messages -- via "content"?
-        //        endOfMessage: true,
-        //        cancellationToken)
-        //            .ConfigureAwait(false);
-        //}
-        //finally
-        //{
-        //    _clientSendSemaphore.Release();
-        //}
-    }
+    //    //await _clientSendSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+    //    //try
+    //    //{
+    //    //    await _clientWebSocket.SendAsync(
+    //    //        messageBytes,
+    //    //        WebSocketMessageType.Text, // TODO: extensibility for binary messages -- via "content"?
+    //    //        endOfMessage: true,
+    //    //        cancellationToken)
+    //    //            .ConfigureAwait(false);
+    //    //}
+    //    //finally
+    //    //{
+    //    //    _clientSendSemaphore.Release();
+    //    //}
+    //}
 
-    internal virtual void SendCommand(BinaryData data, RequestOptions options)
-    {
-        // ClientWebSocket does **not** include a synchronous Send()
-        SendCommandAsync(data, options).Wait();
-    }
+    //internal virtual void SendCommand(BinaryData data, RequestOptions options)
+    //{
+    //    // ClientWebSocket does **not** include a synchronous Send()
+    //    SendCommandAsync(data, options).Wait();
+    //}
 
     //// TODO: since service response is exposed to end-users at the protocol layer,
     ////       we probably want a better name.  Should we have an equivalent of

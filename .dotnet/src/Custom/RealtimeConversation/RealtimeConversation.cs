@@ -1,5 +1,6 @@
 using System;
 using System.Buffers;
+using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ClientModel.Primitives.TwoWayClient;
 using System.Collections.Generic;
@@ -94,7 +95,7 @@ public partial class RealtimeConversation
                 BinaryData audioData = BinaryData.FromBytes(audioMemory);
                 InternalRealtimeRequestInputAudioBufferAppendCommand internalCommand = new(audioData);
                 BinaryData requestData = ModelReaderWriter.Write(internalCommand);
-                await SendCommandAsync(requestData, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+                await SendAsync(BinaryContent.Create(requestData), cancellationToken.ToMessageOptions()).ConfigureAwait(false);
             }
         }
         finally
@@ -126,7 +127,7 @@ public partial class RealtimeConversation
         // TODO: consider automatically limiting/breaking size of chunk (as with streaming)
         InternalRealtimeRequestInputAudioBufferAppendCommand internalCommand = new(audio);
         BinaryData requestData = ModelReaderWriter.Write(internalCommand);
-        await SendCommandAsync(requestData, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        await SendAsync(BinaryContent.Create(requestData), cancellationToken.ToMessageOptions()).ConfigureAwait(false);
     }
 
     public async Task CommitPendingAudioAsync(CancellationToken cancellationToken = default)
@@ -172,10 +173,10 @@ public partial class RealtimeConversation
         throw new NotImplementedException();
     }
 
-    internal virtual async Task SendCommandAsync(InternalRealtimeRequestCommand command, CancellationToken cancellationToken = default)
+    private async Task SendCommandAsync(InternalRealtimeRequestCommand command, CancellationToken cancellationToken = default)
     {
         BinaryData requestData = ModelReaderWriter.Write(command);
-        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
-        await SendCommandAsync(requestData, cancellationOptions).ConfigureAwait(false);
+        //RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
+        await SendAsync(BinaryContent.Create(requestData), cancellationToken.ToMessageOptions()).ConfigureAwait(false);
     }
 }

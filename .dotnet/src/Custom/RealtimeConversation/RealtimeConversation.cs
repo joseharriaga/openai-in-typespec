@@ -39,6 +39,12 @@ public partial class RealtimeConversation
         //_clientWebSocket.Options.SetRequestHeader("Authorization", $"Bearer {dangerousCredential}");
     }
 
+    public async Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default)
+    {
+        InternalRealtimeRequestSessionUpdateCommand internalCommand = new(sessionOptions);
+        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default)
         => await AddItemAsync(item, string.Empty, cancellationToken).ConfigureAwait(false);
 
@@ -123,20 +129,9 @@ public partial class RealtimeConversation
         await SendCommandAsync(requestData, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
     }
 
-    public async Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default)
-    {
-        InternalRealtimeRequestSessionUpdateCommand internalCommand = new(sessionOptions);
-        await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
-    }
-
     public async Task CommitPendingAudioAsync(CancellationToken cancellationToken = default)
     {
         await SendCommandAsync(new InternalRealtimeRequestInputAudioBufferCommitCommand(), cancellationToken).ConfigureAwait(false);
-    }
-
-    public async Task InterruptTurnAsync(CancellationToken cancellationToken = default)
-    {
-        await SendCommandAsync(new InternalRealtimeRequestResponseCancelCommand(), cancellationToken).ConfigureAwait(false);
     }
 
     public async Task StartResponseTurnAsync(CancellationToken cancellationToken = default)
@@ -152,6 +147,11 @@ public partial class RealtimeConversation
     {
         InternalRealtimeRequestResponseCancelCommand internalCommand = new();
         await SendCommandAsync(internalCommand, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task InterruptTurnAsync(CancellationToken cancellationToken = default)
+    {
+        await SendCommandAsync(new InternalRealtimeRequestResponseCancelCommand(), cancellationToken).ConfigureAwait(false);
     }
 
     // Convenience overload for protocol GetResponsesAsync method on the base

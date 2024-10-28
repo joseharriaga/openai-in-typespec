@@ -96,4 +96,9 @@ public class ConversationProtocolTests : ConversationTestFixtureBase
         Assert.That(NodesOfType("response.content_part.done"), Has.Count.EqualTo(1));
         Assert.That(NodesOfType("response.output_item.done"), Has.Count.EqualTo(1));
     }
+
+    // TODO: Add tests/samples for common scenarios at protocol-layer
+    // What is the difference and what needs to be supported at this layer?
+    // Does it make sense to have named method that take
+    // BinaryData/BinaryContent?  Would they set the "event type", e.g.?
 }

@@ -2870,45 +2870,34 @@ namespace OpenAI.RealtimeConversation {
         public static bool operator !=(ConversationVoice left, ConversationVoice right);
         public override readonly string ToString();
     }
+    public class RealtimeConversation {
+        protected Net.WebSockets.ClientWebSocket _clientWebSocket;
+        public Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
+        public Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default);
+        public Task CancelResponseTurnAsync(CancellationToken cancellationToken = default);
+        public Task CommitPendingAudioAsync(CancellationToken cancellationToken = default);
+        public Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
+        public Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default);
+        public IAsyncEnumerable<TwoWayClient.TwoWayResult<ConversationUpdate>> GetResponsesAsync(CancellationToken cancellationToken = default);
+        public Task InterruptTurnAsync(CancellationToken cancellationToken = default);
+        public Task SendAudioAsync(BinaryData audio, CancellationToken cancellationToken = default);
+        public Task SendAudioAsync(Stream audio, CancellationToken cancellationToken = default);
+        public virtual void SendCommand(BinaryData data, RequestOptions options);
+        public virtual Task SendCommandAsync(BinaryData data, RequestOptions options);
+        public Task StartResponseTurnAsync(CancellationToken cancellationToken = default);
+    }
     public class RealtimeConversationClient {
         protected RealtimeConversationClient();
         protected internal RealtimeConversationClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public RealtimeConversationClient(string model, ApiKeyCredential credential, OpenAIClientOptions options);
         public RealtimeConversationClient(string model, ApiKeyCredential credential);
         public virtual ClientPipeline Pipeline { get; }
-        public event EventHandler<BinaryData> OnReceivingCommand { add; remove; }
-        public event EventHandler<BinaryData> OnSendingCommand { add; remove; }
-        public RealtimeConversationSession StartConversationSession(CancellationToken cancellationToken = default);
-        public virtual Task<RealtimeConversationSession> StartConversationSessionAsync(RequestOptions options);
-        public virtual Task<RealtimeConversationSession> StartConversationSessionAsync(CancellationToken cancellationToken = default);
+        public RealtimeConversation StartConversation(CancellationToken cancellationToken = default);
+        public virtual Task<RealtimeConversation> StartConversationAsync(BinaryContent configuration, TwoWayClient.TwoWayPipelineOptions conversationOptions, RequestOptions requestOptions);
+        public virtual Task<RealtimeConversation> StartConversationAsync(CancellationToken cancellationToken = default);
     }
-    public class RealtimeConversationSession : IDisposable {
-        protected Net.WebSockets.ClientWebSocket _clientWebSocket;
-        protected internal RealtimeConversationSession(RealtimeConversationClient parentClient, Uri endpoint, ApiKeyCredential credential);
-        public Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
-        public Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default);
-        public Task CancelResponseTurnAsync(CancellationToken cancellationToken = default);
-        public Task CommitPendingAudioAsync(CancellationToken cancellationToken = default);
-        public Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        protected internal virtual void Connect(RequestOptions options);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        protected internal virtual Task ConnectAsync(RequestOptions options);
-        public Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default);
-        public void Dispose();
-        public Task InterruptTurnAsync(CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual IEnumerable<ClientResult> ReceiveUpdates(RequestOptions options);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual IAsyncEnumerable<ClientResult> ReceiveUpdatesAsync(RequestOptions options);
-        public IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync(CancellationToken cancellationToken = default);
-        public Task SendAudioAsync(BinaryData audio, CancellationToken cancellationToken = default);
-        public Task SendAudioAsync(Stream audio, CancellationToken cancellationToken = default);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual void SendCommand(BinaryData data, RequestOptions options);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual Task SendCommandAsync(BinaryData data, RequestOptions options);
-        public Task StartResponseTurnAsync(CancellationToken cancellationToken = default);
+    public class RealtimeConversationOptions {
+        public RealtimeConversationOptions();
     }
 }
 namespace OpenAI.VectorStores {

@@ -4,6 +4,8 @@ using System.ClientModel.Primitives;
 using System.ClientModel.Primitives.TwoWayClient;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace OpenAI.RealtimeConversation;
 
 public partial class RealtimeConversationClient
@@ -17,17 +19,22 @@ public partial class RealtimeConversationClient
         // TODO: Maybe there is a subtype of TwoWayPipelineOptions specific to the
         // conversation?  Maybe it holds the configuration for the conversation, too?
         TwoWayPipelineOptions conversationOptions,
-        RequestOptions options)
+        RequestOptions requestOptions)
     {
         // TODO: are inputs needed to create a unique conversation?
         //Argument.AssertNotNullOrEmpty(assistantId, nameof(assistantId));
 
-        using PipelineMessage message = CreateStartConversationRequest(options);
+        using PipelineMessage message = CreateStartConversationRequest(requestOptions);
 
+        // Note: this does everything Connect does, I believe, so no separate
+        // "Connect" call is needed.
+        PipelineResponse response = await _pipeline.ProcessMessageAsync(message, requestOptions).ConfigureAwait(false);
 
-        PipelineResponse response = await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
+        RealtimeConversation result = new(response, conversationOptions);
 
-        RealtimeConversation result = new RealtimeConversation(response, )
+        // TODO: validate that the conversation subclient is returned ready for
+        // a caller to send a message with, or start listening for responses on.
+        return result;
 
         //RealtimeConversation provisionalSession = new(this, _endpoint, _credential);
         //try
@@ -43,10 +50,12 @@ public partial class RealtimeConversationClient
         //}
     }
 
+    // HTTP request creation helper -- boilerplate .NET client pattern
     private PipelineMessage CreateStartConversationRequest(RequestOptions options)
     {
         // TODO: Add this
         //_clientWebSocket.Options.SetRequestHeader("openai-beta", $"realtime=v1");
+        //_clientWebSocket.Options.AddSubProtocol("realtime");
 
         throw new NotImplementedException();
     }

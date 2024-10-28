@@ -114,7 +114,7 @@ public partial class RealtimeConversation
     }
 
     public async Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default)
-        => await AddItemAsync(item, null, cancellationToken).ConfigureAwait(false);
+        => await AddItemAsync(item, string.Empty, cancellationToken).ConfigureAwait(false);
 
     public async Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default)
     {

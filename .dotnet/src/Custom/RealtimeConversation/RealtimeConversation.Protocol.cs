@@ -16,48 +16,49 @@ public partial class RealtimeConversation : TwoWayConnectionResult
 
     private AsyncWebsocketMessageCollectionResult _receiveCollectionResult;
 
-    // TODO: The client should open the connection when the session is created.
-    //       This method doesn't need to be exposed publicly.
-    internal virtual async Task ConnectAsync(RequestOptions options)
-    {
-        _clientWebSocket.Options.AddSubProtocol("realtime");
-        await _clientWebSocket.ConnectAsync(_endpoint, options?.CancellationToken ?? default)
-            .ConfigureAwait(false);
-    }
+    //// TODO: The client should open the connection when the session is created.
+    ////       This method doesn't need to be exposed publicly.
+    //internal virtual async Task ConnectAsync(RequestOptions options)
+    //{
+    //    await _clientWebSocket.ConnectAsync(_endpoint, options?.CancellationToken ?? default)
+    //        .ConfigureAwait(false);
+    //}
 
-    internal virtual void Connect(RequestOptions options)
-    {
-        // TODO: we should avoid sync-over-async where we can.
-        ConnectAsync(options).Wait();
-    }
+    //internal virtual void Connect(RequestOptions options)
+    //{
+    //    // TODO: we should avoid sync-over-async where we can.
+    //    ConnectAsync(options).Wait();
+    //}
 
     // TODO: What is the analog of a protocol method for a WebSocket subclient?
     //       Is it at this level - that you can send any message across the
     //       connection?
-    public virtual async Task SendCommandAsync(BinaryData data, RequestOptions options)
+    public virtual Task SendCommandAsync(BinaryData data, RequestOptions options)
     {
-        Argument.AssertNotNull(data, nameof(data));
+        throw new NotImplementedException();
 
-        _parentClient?.RaiseOnSendingCommand(this, data);
+        //Argument.AssertNotNull(data, nameof(data));
 
-        ArraySegment<byte> messageBytes = new(data.ToArray());
+        //_parentClient?.RaiseOnSendingCommand(this, data);
 
-        CancellationToken cancellationToken = options?.CancellationToken ?? default;
+        //ArraySegment<byte> messageBytes = new(data.ToArray());
 
-        await _clientSendSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-        try
-        {
-            await _clientWebSocket.SendAsync(
-                messageBytes,
-                WebSocketMessageType.Text, // TODO: extensibility for binary messages -- via "content"?
-                endOfMessage: true,
-                cancellationToken)
-                    .ConfigureAwait(false);
-        }
-        finally
-        {
-            _clientSendSemaphore.Release();
-        }
+        //CancellationToken cancellationToken = options?.CancellationToken ?? default;
+
+        //await _clientSendSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+        //try
+        //{
+        //    await _clientWebSocket.SendAsync(
+        //        messageBytes,
+        //        WebSocketMessageType.Text, // TODO: extensibility for binary messages -- via "content"?
+        //        endOfMessage: true,
+        //        cancellationToken)
+        //            .ConfigureAwait(false);
+        //}
+        //finally
+        //{
+        //    _clientSendSemaphore.Release();
+        //}
     }
 
     public virtual void SendCommand(BinaryData data, RequestOptions options)

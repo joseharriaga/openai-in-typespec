@@ -63,8 +63,12 @@ public partial class RealtimeConversationClient
     public virtual async Task<RealtimeConversation> StartConversationAsync(
         CancellationToken cancellationToken = default)
     {
-        RequestOptions cancellationOptions = cancellationToken.ToRequestOptions();
-        RealtimeConversation newOperation = await StartConversationAsync(cancellationOptions).ConfigureAwait(false);
+        RequestOptions requestOptions = cancellationToken.ToRequestOptions();
+        RealtimeConversation newOperation = await StartConversationAsync(
+            // TODO: pass these arguments
+            configuration: null!,
+            conversationOptions: null!,
+            requestOptions).ConfigureAwait(false);
         return newOperation;
     }
 

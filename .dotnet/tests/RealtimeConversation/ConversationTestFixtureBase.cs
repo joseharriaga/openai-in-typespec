@@ -33,8 +33,8 @@ public class ConversationTestFixtureBase : SyncAsyncTestBase
     public static RealtimeConversationClient GetTestClient()
     {
         RealtimeConversationClient client = GetTestClient<RealtimeConversationClient>(TestScenario.RealtimeConversation);
-        client.OnSendingCommand += (_, data) => PrintMessageData(data, "> ");
-        client.OnReceivingCommand += (_, data) => PrintMessageData(data, "  < ");
+        //client.OnSendingCommand += (_, data) => PrintMessageData(data, "> ");
+        //client.OnReceivingCommand += (_, data) => PrintMessageData(data, "  < ");
         return client;
     }
 

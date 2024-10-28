@@ -6,33 +6,35 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace OpenAI.RealtimeConversation;
 
 public partial class AssistantConversation : TwoWayConnectionResult
 {
-    private ClientWebSocket _clientWebSocket;
+    private readonly ClientWebSocket? _clientWebSocket;
 
-    private readonly SemaphoreSlim _clientSendSemaphore = new(initialCount: 1, maxCount: 1);
-    private readonly object _singleReceiveLock = new();
+    private readonly SemaphoreSlim? _clientSendSemaphore = new(initialCount: 1, maxCount: 1);
+    private readonly object? _singleReceiveLock = new();
 
-    private AsyncWebsocketMessageCollectionResult _receiveCollectionResult;
+    private AsyncWebsocketMessageCollectionResult? _receiveCollectionResult;
 
-    public Task ConfigureSessionAsync(BinaryContent content, TwoWayMessageOptions options)
+    public Task ConfigureSessionAsync(BinaryContent content, TwoWayMessageOptions? options = default)
     {
         throw new NotImplementedException();
     }
 
-    public void ConfigureSession(BinaryContent content, TwoWayMessageOptions options)
+    public void ConfigureSession(BinaryContent content, TwoWayMessageOptions? options = default)
     {
         throw new NotImplementedException();
     }
 
-    public Task CreateResponseAsync(BinaryContent content, TwoWayMessageOptions options)
+    public Task CreateResponseAsync(BinaryContent content, TwoWayMessageOptions? options = default)
     {
         throw new NotImplementedException();
     }
 
-    public void CreateResponse(BinaryContent content, TwoWayMessageOptions options)
+    public void CreateResponse(BinaryContent content, TwoWayMessageOptions? options = default)
     {
         throw new NotImplementedException();
     }

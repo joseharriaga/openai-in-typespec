@@ -2215,11 +2215,11 @@ namespace OpenAI.RealtimeConversation {
         public Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default);
         public Task CancelResponseTurnAsync(CancellationToken cancellationToken = default);
         public Task CommitPendingAudioAsync(CancellationToken cancellationToken = default);
-        public void ConfigureSession(BinaryContent content, TwoWayClient.TwoWayMessageOptions options);
+        public void ConfigureSession(BinaryContent content, TwoWayClient.TwoWayMessageOptions? options = null);
         public Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
-        public Task ConfigureSessionAsync(BinaryContent content, TwoWayClient.TwoWayMessageOptions options);
-        public void CreateResponse(BinaryContent content, TwoWayClient.TwoWayMessageOptions options);
-        public Task CreateResponseAsync(BinaryContent content, TwoWayClient.TwoWayMessageOptions options);
+        public Task ConfigureSessionAsync(BinaryContent content, TwoWayClient.TwoWayMessageOptions? options = null);
+        public void CreateResponse(BinaryContent content, TwoWayClient.TwoWayMessageOptions? options = null);
+        public Task CreateResponseAsync(BinaryContent content, TwoWayClient.TwoWayMessageOptions? options = null);
         public Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default);
         public IEnumerable<TwoWayClient.TwoWayResult<ConversationUpdate>> GetResponses(CancellationToken cancellationToken = default);
         public IAsyncEnumerable<TwoWayClient.TwoWayResult<ConversationUpdate>> GetResponsesAsync(CancellationToken cancellationToken = default);

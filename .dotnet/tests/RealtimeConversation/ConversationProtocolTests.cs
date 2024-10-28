@@ -46,7 +46,9 @@ public class ConversationProtocolTests : ConversationTestFixtureBase
               }
             }
             """);
-        await session.SendCommandAsync(configureSessionCommand, CancellationOptions);
+        await session.ConfigureSessionAsync(
+            BinaryContent.Create(configureSessionCommand),
+            CancellationOptions);
 
         List<JsonNode> receivedCommands = [];
 
@@ -73,7 +75,9 @@ public class ConversationProtocolTests : ConversationTestFixtureBase
                       }
                     }
                     """);
-                await session.SendCommandAsync(createResponseCommand, CancellationOptions);
+                await session.CreateResponseAsync(
+                    BinaryContent.Create(createResponseCommand),
+                    CancellationOptions);
             }
             else if (updateType == "response.done")
             {

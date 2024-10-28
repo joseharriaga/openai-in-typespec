@@ -3,6 +3,7 @@ using OpenAI.RealtimeConversation;
 using OpenAI.Tests.Utility;
 using System;
 using System.ClientModel.Primitives;
+using System.ClientModel.Primitives.TwoWayClient;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -19,7 +20,7 @@ public class ConversationTestFixtureBase : SyncAsyncTestBase
 {
     public CancellationTokenSource CancellationTokenSource { get; }
     public CancellationToken CancellationToken => CancellationTokenSource?.Token ?? default;
-    public RequestOptions CancellationOptions => new() { CancellationToken = CancellationToken };
+    public TwoWayMessageOptions CancellationOptions => new() { CancellationToken = CancellationToken };
 
     public ConversationTestFixtureBase(bool isAsync) : base(isAsync)
     {

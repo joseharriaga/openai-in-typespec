@@ -1,4 +1,5 @@
 using System;
+using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ClientModel.Primitives.TwoWayClient;
 using System.Net.WebSockets;
@@ -15,6 +16,26 @@ public partial class RealtimeConversation : TwoWayConnectionResult
     private readonly object _singleReceiveLock = new();
 
     private AsyncWebsocketMessageCollectionResult _receiveCollectionResult;
+
+    public Task ConfigureSessionAsync(BinaryContent content, TwoWayMessageOptions options)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ConfigureSession(BinaryContent content, TwoWayMessageOptions options)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task CreateResponseAsync(BinaryContent content, TwoWayMessageOptions options)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void CreateResponse(BinaryContent content, TwoWayMessageOptions options)
+    {
+        throw new NotImplementedException();
+    }
 
     //// TODO: The client should open the connection when the session is created.
     ////       This method doesn't need to be exposed publicly.
@@ -37,7 +58,7 @@ public partial class RealtimeConversation : TwoWayConnectionResult
     //       If so, would this go on the base type?  Or would we recommend using
     //       the pipeline directly for that?  How would that work with the
     //       receive loop if using the pipeline directly was the story?
-    public virtual Task SendCommandAsync(BinaryData data, RequestOptions options)
+    internal virtual Task SendCommandAsync(BinaryData data, RequestOptions options)
     {
         throw new NotImplementedException();
 
@@ -65,7 +86,7 @@ public partial class RealtimeConversation : TwoWayConnectionResult
         //}
     }
 
-    public virtual void SendCommand(BinaryData data, RequestOptions options)
+    internal virtual void SendCommand(BinaryData data, RequestOptions options)
     {
         // ClientWebSocket does **not** include a synchronous Send()
         SendCommandAsync(data, options).Wait();

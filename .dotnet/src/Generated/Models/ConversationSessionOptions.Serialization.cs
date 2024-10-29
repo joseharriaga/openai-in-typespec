@@ -83,7 +83,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WriteStartArray();
                 foreach (InternalRealtimeRequestSessionUpdateCommandSessionModality item in _internalModalities)
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WriteStringValue(item.ToString());
                 }
                 writer.WriteEndArray();
             }
@@ -253,7 +253,7 @@ namespace OpenAI.RealtimeConversation
                     List<InternalRealtimeRequestSessionUpdateCommandSessionModality> array = new List<InternalRealtimeRequestSessionUpdateCommandSessionModality>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(InternalRealtimeRequestSessionUpdateCommandSessionModality.DeserializeInternalRealtimeRequestSessionUpdateCommandSessionModality(item, options));
+                        array.Add(new InternalRealtimeRequestSessionUpdateCommandSessionModality(item.GetString()));
                     }
                     internalModalities = array;
                     continue;

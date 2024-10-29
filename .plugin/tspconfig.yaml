@@ -1,0 +1,4 @@
+"emit":
+  - "@open-ai/plugin"
+"options":
+  "@open-ai/plugin":

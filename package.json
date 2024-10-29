@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "dependencies": {
-    "@typespec/http-client-csharp": "latest",
+    "@open-ai/plugin": "file:.plugin",
     "@typespec/openapi3": "^0.61.0",
     "openai-tsp": "file:"
   },

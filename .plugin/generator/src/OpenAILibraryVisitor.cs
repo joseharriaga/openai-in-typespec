@@ -17,7 +17,7 @@ namespace OpenAILibraryPlugin
         private const string AdditionalPropertiesFieldName = "_additionalBinaryDataProperties";
         private const string SentinelValueFieldName = "_sentinelValue";
         private const string WritePropertyNameMethodCall = "WritePropertyName(\"";
-        private const string ModelSerializationExtensionsTypeName = "ModelSerializationExtension";
+        private const string ModelSerializationExtensionsTypeName = "ModelSerializationExtensions";
         private const string IsSentinelValueMethodName = "IsSentinelValue";
         private const string JsonModelWriteCoreMethodName = "JsonModelWriteCore";
         
@@ -47,7 +47,7 @@ namespace OpenAILibraryPlugin
                     typeof(BinaryData),
                     SentinelValueFieldName,
                     type,
-                    null,
+                    $"",
                     BinaryDataSnippets.FromBytes(LiteralU8("\"__EMPTY__\"").Invoke("ToArray")));
                 var fields = new List<FieldProvider>(type.Fields)
                 {

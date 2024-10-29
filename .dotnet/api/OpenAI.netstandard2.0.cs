@@ -1077,10 +1077,12 @@ namespace OpenAI.Chat {
         public bool? IncludeLogProbabilities { get; set; }
         public IDictionary<int, int> LogitBiases { get; }
         public int? MaxOutputTokenCount { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public float? PresencePenalty { get; set; }
         public ChatResponseFormat ResponseFormat { get; set; }
         public long? Seed { get; set; }
         public IList<string> StopSequences { get; }
+        public bool? StoredOutputEnabled { get; set; }
         public float? Temperature { get; set; }
         public ChatToolChoice ToolChoice { get; set; }
         public IList<ChatTool> Tools { get; }
@@ -1127,6 +1129,10 @@ namespace OpenAI.Chat {
         public static implicit operator ChatImageDetailLevel(string value);
         public static bool operator !=(ChatImageDetailLevel left, ChatImageDetailLevel right);
         public override readonly string ToString();
+    }
+    public class ChatInputTokenUsageDetails : IJsonModel<ChatInputTokenUsageDetails>, IPersistableModel<ChatInputTokenUsageDetails> {
+        public int? AudioTokenCount { get; }
+        public int? CachedTokenCount { get; }
     }
     public class ChatMessage : IJsonModel<ChatMessage>, IPersistableModel<ChatMessage> {
         public ChatMessageContent Content { get; }
@@ -1182,6 +1188,7 @@ namespace OpenAI.Chat {
         Function = 4
     }
     public class ChatOutputTokenUsageDetails : IJsonModel<ChatOutputTokenUsageDetails>, IPersistableModel<ChatOutputTokenUsageDetails> {
+        public int? AudioTokenCount { get; }
         public int ReasoningTokenCount { get; }
     }
     public class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
@@ -1202,6 +1209,7 @@ namespace OpenAI.Chat {
     }
     public class ChatTokenUsage : IJsonModel<ChatTokenUsage>, IPersistableModel<ChatTokenUsage> {
         public int InputTokenCount { get; }
+        public ChatInputTokenUsageDetails InputTokenDetails { get; }
         public int OutputTokenCount { get; }
         public ChatOutputTokenUsageDetails OutputTokenDetails { get; }
         public int TotalTokenCount { get; }
@@ -1240,10 +1248,11 @@ namespace OpenAI.Chat {
     }
     public static class OpenAIChatModelFactory {
         public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, ChatMessageContent content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0);
+        public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int? audioTokenCount = null, int? cachedTokenCount = null);
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0, int? audioTokenCount = null);
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
-        public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null);
+        public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null, ChatInputTokenUsageDetails inputTokenDetails = null);
         public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string completionId = null, ChatMessageContent contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
         [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = null, BinaryData functionArgumentsUpdate = null);
@@ -1660,7 +1669,15 @@ namespace OpenAI.Models {
     }
 }
 namespace OpenAI.Moderations {
+    [Flags]
+    public enum ModerationApplicableInputKinds {
+        None = 0,
+        Other = 1,
+        Text = 2,
+        Image = 4
+    }
     public class ModerationCategory {
+        public ModerationApplicableInputKinds ApplicableInputKinds { get; }
         public bool Flagged { get; }
         public float Score { get; }
     }
@@ -1686,6 +1703,8 @@ namespace OpenAI.Moderations {
         public ModerationCategory HarassmentThreatening { get; }
         public ModerationCategory Hate { get; }
         public ModerationCategory HateThreatening { get; }
+        public ModerationCategory Illicit { get; }
+        public ModerationCategory IllicitViolent { get; }
         public ModerationCategory SelfHarm { get; }
         public ModerationCategory SelfHarmInstructions { get; }
         public ModerationCategory SelfHarmIntent { get; }
@@ -1699,25 +1718,12 @@ namespace OpenAI.Moderations {
         public string Model { get; }
     }
     public static class OpenAIModerationsModelFactory {
-        public static ModerationCategory ModerationCategory(bool flagged = false, float score = 0);
-        public static ModerationResult ModerationResult(bool flagged = false, ModerationCategory hate = null, ModerationCategory hateThreatening = null, ModerationCategory harassment = null, ModerationCategory harassmentThreatening = null, ModerationCategory selfHarm = null, ModerationCategory selfHarmIntent = null, ModerationCategory selfHarmInstructions = null, ModerationCategory sexual = null, ModerationCategory sexualMinors = null, ModerationCategory violence = null, ModerationCategory violenceGraphic = null);
+        public static ModerationCategory ModerationCategory(bool flagged = false, float score = 0, ModerationApplicableInputKinds applicableInputKinds = ModerationApplicableInputKinds.None);
+        public static ModerationResult ModerationResult(bool flagged = false, ModerationCategory hate = null, ModerationCategory hateThreatening = null, ModerationCategory harassment = null, ModerationCategory harassmentThreatening = null, ModerationCategory selfHarm = null, ModerationCategory selfHarmIntent = null, ModerationCategory selfHarmInstructions = null, ModerationCategory sexual = null, ModerationCategory sexualMinors = null, ModerationCategory violence = null, ModerationCategory violenceGraphic = null, ModerationCategory illicit = null, ModerationCategory illicitViolent = null);
         public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> items = null);
     }
 }
 namespace OpenAI.RealtimeConversation {
-    public class ConversationAudioDeltaUpdate : ConversationUpdate, IJsonModel<ConversationAudioDeltaUpdate>, IPersistableModel<ConversationAudioDeltaUpdate> {
-        public int ContentIndex { get; }
-        public BinaryData Delta { get; }
-        public string ItemId { get; }
-        public int OutputIndex { get; }
-        public string ResponseId { get; }
-    }
-    public class ConversationAudioDoneUpdate : ConversationUpdate, IJsonModel<ConversationAudioDoneUpdate>, IPersistableModel<ConversationAudioDoneUpdate> {
-        public int ContentIndex { get; }
-        public string ItemId { get; }
-        public int OutputIndex { get; }
-        public string ResponseId { get; }
-    }
     public readonly partial struct ConversationAudioFormat : IEquatable<ConversationAudioFormat> {
         public ConversationAudioFormat(string value);
         public static ConversationAudioFormat G711Alaw { get; }
@@ -1739,30 +1745,20 @@ namespace OpenAI.RealtimeConversation {
         Audio = 2
     }
     public abstract class ConversationContentPart : IJsonModel<ConversationContentPart>, IPersistableModel<ConversationContentPart> {
-        public string AudioTranscriptValue { get; }
-        public ConversationContentPartKind Kind { get; }
-        public string TextValue { get; }
+        public string AudioTranscript { get; }
+        public string Text { get; }
         public static ConversationContentPart FromInputAudioTranscript(string transcript = null);
         public static ConversationContentPart FromInputText(string text);
         public static ConversationContentPart FromOutputAudioTranscript(string transcript = null);
         public static ConversationContentPart FromOutputText(string text);
         public static implicit operator ConversationContentPart(string text);
     }
-    public class ConversationContentPartFinishedUpdate : ConversationUpdate, IJsonModel<ConversationContentPartFinishedUpdate>, IPersistableModel<ConversationContentPartFinishedUpdate> {
-        public string AudioTranscript { get; }
-        public int ContentIndex { get; }
-        public ConversationContentPartKind ContentKind { get; }
-        public string ItemId { get; }
-        public int OutputIndex { get; }
-        public string ResponseId { get; }
-        public string Text { get; }
-    }
     public readonly partial struct ConversationContentPartKind : IEquatable<ConversationContentPartKind> {
         public ConversationContentPartKind(string value);
-        public static ConversationContentPartKind Audio { get; }
         public static ConversationContentPartKind InputAudio { get; }
         public static ConversationContentPartKind InputText { get; }
-        public static ConversationContentPartKind Text { get; }
+        public static ConversationContentPartKind OutputAudio { get; }
+        public static ConversationContentPartKind OutputText { get; }
         public readonly bool Equals(ConversationContentPartKind other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
@@ -1773,35 +1769,11 @@ namespace OpenAI.RealtimeConversation {
         public static bool operator !=(ConversationContentPartKind left, ConversationContentPartKind right);
         public override readonly string ToString();
     }
-    public class ConversationContentPartStartedUpdate : ConversationUpdate, IJsonModel<ConversationContentPartStartedUpdate>, IPersistableModel<ConversationContentPartStartedUpdate> {
-        public string AudioTranscript { get; }
-        public int ContentIndex { get; }
-        public ConversationContentPartKind ContentKind { get; }
-        public string ItemId { get; }
-        public int OutputIndex { get; }
-        public string ResponseId { get; }
-        public string Text { get; }
-    }
     public class ConversationErrorUpdate : ConversationUpdate, IJsonModel<ConversationErrorUpdate>, IPersistableModel<ConversationErrorUpdate> {
         public string ErrorCode { get; }
         public string ErrorEventId { get; }
-        public string ErrorMessage { get; }
-        public string ErrorParameterName { get; }
-    }
-    public class ConversationFunctionCallArgumentsDeltaUpdate : ConversationUpdate, IJsonModel<ConversationFunctionCallArgumentsDeltaUpdate>, IPersistableModel<ConversationFunctionCallArgumentsDeltaUpdate> {
-        public string CallId { get; }
-        public string Delta { get; }
-        public string ItemId { get; }
-        public int OutputIndex { get; }
-        public string ResponseId { get; }
-    }
-    public class ConversationFunctionCallArgumentsDoneUpdate : ConversationUpdate, IJsonModel<ConversationFunctionCallArgumentsDoneUpdate>, IPersistableModel<ConversationFunctionCallArgumentsDoneUpdate> {
-        public string Arguments { get; }
-        public string CallId { get; }
-        public string ItemId { get; }
-        public string Name { get; }
-        public int OutputIndex { get; }
-        public string ResponseId { get; }
+        public string Message { get; }
+        public string ParameterName { get; }
     }
     public class ConversationFunctionTool : ConversationTool, IJsonModel<ConversationFunctionTool>, IPersistableModel<ConversationFunctionTool> {
         public ConversationFunctionTool();
@@ -1810,18 +1782,18 @@ namespace OpenAI.RealtimeConversation {
         public required string Name { get; set; }
         public BinaryData Parameters { get; set; }
     }
-    public class ConversationInputAudioBufferClearedUpdate : ConversationUpdate, IJsonModel<ConversationInputAudioBufferClearedUpdate>, IPersistableModel<ConversationInputAudioBufferClearedUpdate> {
+    public class ConversationInputAudioClearedUpdate : ConversationUpdate, IJsonModel<ConversationInputAudioClearedUpdate>, IPersistableModel<ConversationInputAudioClearedUpdate> {
     }
-    public class ConversationInputAudioBufferCommittedUpdate : ConversationUpdate, IJsonModel<ConversationInputAudioBufferCommittedUpdate>, IPersistableModel<ConversationInputAudioBufferCommittedUpdate> {
+    public class ConversationInputAudioCommittedUpdate : ConversationUpdate, IJsonModel<ConversationInputAudioCommittedUpdate>, IPersistableModel<ConversationInputAudioCommittedUpdate> {
         public string ItemId { get; }
         public string PreviousItemId { get; }
     }
     public class ConversationInputSpeechFinishedUpdate : ConversationUpdate, IJsonModel<ConversationInputSpeechFinishedUpdate>, IPersistableModel<ConversationInputSpeechFinishedUpdate> {
-        public int AudioEndMs { get; }
+        public TimeSpan AudioEndTime { get; }
         public string ItemId { get; }
     }
     public class ConversationInputSpeechStartedUpdate : ConversationUpdate, IJsonModel<ConversationInputSpeechStartedUpdate>, IPersistableModel<ConversationInputSpeechStartedUpdate> {
-        public int AudioStartMs { get; }
+        public TimeSpan AudioStartTime { get; }
         public string ItemId { get; }
     }
     public class ConversationInputTokenUsageDetails : IJsonModel<ConversationInputTokenUsageDetails>, IPersistableModel<ConversationInputTokenUsageDetails> {
@@ -1857,31 +1829,18 @@ namespace OpenAI.RealtimeConversation {
         public static ConversationItem CreateSystemMessage(string toolCallId, IEnumerable<ConversationContentPart> contentItems);
         public static ConversationItem CreateUserMessage(IEnumerable<ConversationContentPart> contentItems);
     }
-    public class ConversationItemAcknowledgedUpdate : ConversationUpdate, IJsonModel<ConversationItemAcknowledgedUpdate>, IPersistableModel<ConversationItemAcknowledgedUpdate> {
-        public ConversationItem Item { get; }
+    public class ConversationItemCreatedUpdate : ConversationUpdate, IJsonModel<ConversationItemCreatedUpdate>, IPersistableModel<ConversationItemCreatedUpdate> {
+        public string FunctionCallArguments { get; }
+        public string FunctionCallId { get; }
+        public string FunctionCallOutput { get; }
+        public string FunctionName { get; }
+        public string ItemId { get; }
+        public IReadOnlyList<ConversationContentPart> MessageContentParts { get; }
+        public ConversationMessageRole? MessageRole { get; }
+        public string PreviousItemId { get; }
     }
     public class ConversationItemDeletedUpdate : ConversationUpdate, IJsonModel<ConversationItemDeletedUpdate>, IPersistableModel<ConversationItemDeletedUpdate> {
         public string ItemId { get; }
-    }
-    public class ConversationItemFinishedUpdate : ConversationUpdate, IJsonModel<ConversationItemFinishedUpdate>, IPersistableModel<ConversationItemFinishedUpdate> {
-        public string FunctionCallArguments { get; }
-        public string FunctionCallId { get; }
-        public string FunctionCallOutput { get; }
-        public string FunctionName { get; }
-        public IReadOnlyList<ConversationContentPart> MessageContentParts { get; }
-        public ConversationMessageRole? MessageRole { get; }
-        public int OutputIndex { get; }
-        public string ResponseId { get; }
-    }
-    public class ConversationItemStartedUpdate : ConversationUpdate, IJsonModel<ConversationItemStartedUpdate>, IPersistableModel<ConversationItemStartedUpdate> {
-        public string FunctionCallArguments { get; }
-        public string FunctionCallId { get; }
-        public string FunctionCallOutput { get; }
-        public string FunctionName { get; }
-        public IReadOnlyList<ConversationContentPart> MessageContentParts { get; }
-        public ConversationMessageRole? MessageRole { get; }
-        public int OutputIndex { get; }
-        public string ResponseId { get; }
     }
     public readonly partial struct ConversationItemStatus : IEquatable<ConversationItemStatus> {
         public ConversationItemStatus(string value);
@@ -1898,9 +1857,72 @@ namespace OpenAI.RealtimeConversation {
         public static bool operator !=(ConversationItemStatus left, ConversationItemStatus right);
         public override readonly string ToString();
     }
+    public class ConversationItemStreamingAudioFinishedUpdate : ConversationUpdate, IJsonModel<ConversationItemStreamingAudioFinishedUpdate>, IPersistableModel<ConversationItemStreamingAudioFinishedUpdate> {
+        public int ContentIndex { get; }
+        public string ItemId { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+    }
+    public class ConversationItemStreamingAudioTranscriptionFinishedUpdate : ConversationUpdate, IJsonModel<ConversationItemStreamingAudioTranscriptionFinishedUpdate>, IPersistableModel<ConversationItemStreamingAudioTranscriptionFinishedUpdate> {
+        public int ContentIndex { get; }
+        public string ItemId { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        public string Transcript { get; }
+    }
+    public class ConversationItemStreamingFinishedUpdate : ConversationUpdate, IJsonModel<ConversationItemStreamingFinishedUpdate>, IPersistableModel<ConversationItemStreamingFinishedUpdate> {
+        public string FunctionCallArguments { get; }
+        public string FunctionCallId { get; }
+        public string FunctionCallOutput { get; }
+        public string FunctionName { get; }
+        public string ItemId { get; }
+        public IReadOnlyList<ConversationContentPart> MessageContentParts { get; }
+        public ConversationMessageRole? MessageRole { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+    }
+    public class ConversationItemStreamingPartDeltaUpdate : ConversationUpdate, IJsonModel<ConversationItemStreamingPartDeltaUpdate>, IPersistableModel<ConversationItemStreamingPartDeltaUpdate> {
+        public BinaryData AudioBytes { get; }
+        public string AudioTranscript { get; }
+        public int ContentPartIndex { get; }
+        public string FunctionArguments { get; }
+        public string FunctionCallId { get; }
+        public string ItemId { get; }
+        public int ItemIndex { get; }
+        public string ResponseId { get; }
+        public string Text { get; }
+    }
+    public class ConversationItemStreamingPartFinishedUpdate : ConversationUpdate, IJsonModel<ConversationItemStreamingPartFinishedUpdate>, IPersistableModel<ConversationItemStreamingPartFinishedUpdate> {
+        public string AudioTranscript { get; }
+        public int ContentPartIndex { get; }
+        public string FunctionArguments { get; }
+        public string FunctionCallId { get; }
+        public string ItemId { get; }
+        public int ItemIndex { get; }
+        public string ResponseId { get; }
+        public string Text { get; }
+    }
+    public class ConversationItemStreamingStartedUpdate : ConversationUpdate, IJsonModel<ConversationItemStreamingStartedUpdate>, IPersistableModel<ConversationItemStreamingStartedUpdate> {
+        public string FunctionCallArguments { get; }
+        public string FunctionCallId { get; }
+        public string FunctionCallOutput { get; }
+        public string FunctionName { get; }
+        public string ItemId { get; }
+        public int ItemIndex { get; }
+        public IReadOnlyList<ConversationContentPart> MessageContentParts { get; }
+        public ConversationMessageRole? MessageRole { get; }
+        public string ResponseId { get; }
+    }
+    public class ConversationItemStreamingTextFinishedUpdate : ConversationUpdate, IJsonModel<ConversationItemStreamingTextFinishedUpdate>, IPersistableModel<ConversationItemStreamingTextFinishedUpdate> {
+        public int ContentIndex { get; }
+        public string ItemId { get; }
+        public int OutputIndex { get; }
+        public string ResponseId { get; }
+        public string Text { get; }
+    }
     public class ConversationItemTruncatedUpdate : ConversationUpdate, IJsonModel<ConversationItemTruncatedUpdate>, IPersistableModel<ConversationItemTruncatedUpdate> {
         public int AudioEndMs { get; }
-        public int Index { get; }
+        public int ContentIndex { get; }
         public string ItemId { get; }
     }
     public class ConversationMaxTokensChoice : IJsonModel<ConversationMaxTokensChoice>, IPersistableModel<ConversationMaxTokensChoice> {
@@ -1930,38 +1952,35 @@ namespace OpenAI.RealtimeConversation {
         public int AudioTokens { get; }
         public int TextTokens { get; }
     }
-    public class ConversationOutputTranscriptionDeltaUpdate : ConversationUpdate, IJsonModel<ConversationOutputTranscriptionDeltaUpdate>, IPersistableModel<ConversationOutputTranscriptionDeltaUpdate> {
-        public int ContentIndex { get; }
-        public string Delta { get; }
-        public string ItemId { get; }
-        public int OutputIndex { get; }
-        public string ResponseId { get; }
-    }
-    public class ConversationOutputTranscriptionFinishedUpdate : ConversationUpdate, IJsonModel<ConversationOutputTranscriptionFinishedUpdate>, IPersistableModel<ConversationOutputTranscriptionFinishedUpdate> {
-        public int ContentIndex { get; }
-        public string ItemId { get; }
-        public int OutputIndex { get; }
-        public string ResponseId { get; }
-    }
     public class ConversationRateLimitDetailsItem : IJsonModel<ConversationRateLimitDetailsItem>, IPersistableModel<ConversationRateLimitDetailsItem> {
-        public int Limit { get; }
+        public int MaximumCount { get; }
         public string Name { get; }
-        public int Remaining { get; }
-        public float ResetSeconds { get; }
+        public int RemainingCount { get; }
+        public TimeSpan TimeUntilReset { get; }
     }
-    public class ConversationRateLimitsUpdatedUpdate : ConversationUpdate, IJsonModel<ConversationRateLimitsUpdatedUpdate>, IPersistableModel<ConversationRateLimitsUpdatedUpdate> {
-        public IReadOnlyList<ConversationRateLimitDetailsItem> RateLimits { get; }
+    public class ConversationRateLimitsUpdate : ConversationUpdate, IJsonModel<ConversationRateLimitsUpdate>, IPersistableModel<ConversationRateLimitsUpdate> {
+        public IReadOnlyList<ConversationRateLimitDetailsItem> AllDetails { get; }
+        public ConversationRateLimitDetailsItem RequestDetails { get; }
+        public ConversationRateLimitDetailsItem TokenDetails { get; }
     }
     public class ConversationResponseFinishedUpdate : ConversationUpdate, IJsonModel<ConversationResponseFinishedUpdate>, IPersistableModel<ConversationResponseFinishedUpdate> {
         public IReadOnlyList<ConversationItem> CreatedItems { get; }
-        public string Id { get; }
+        public string ResponseId { get; }
         public ConversationStatus? Status { get; }
+        public ConversationStatusDetails StatusDetails { get; }
+        public ConversationTokenUsage Usage { get; }
     }
     public class ConversationResponseStartedUpdate : ConversationUpdate, IJsonModel<ConversationResponseStartedUpdate>, IPersistableModel<ConversationResponseStartedUpdate> {
+        public IReadOnlyList<ConversationItem> CreatedItems { get; }
+        public string ResponseId { get; }
+        public ConversationStatus Status { get; }
+        public ConversationStatusDetails StatusDetails { get; }
+        public ConversationTokenUsage Usage { get; }
     }
     public class ConversationSessionConfiguredUpdate : ConversationUpdate, IJsonModel<ConversationSessionConfiguredUpdate>, IPersistableModel<ConversationSessionConfiguredUpdate> {
         public ConversationContentModalities ContentModalities { get; }
         public ConversationAudioFormat InputAudioFormat { get; }
+        public ConversationInputTranscriptionOptions InputTranscriptionOptions { get; }
         public string Instructions { get; }
         public ConversationMaxTokensChoice MaxOutputTokens { get; }
         public string Model { get; }
@@ -1970,8 +1989,7 @@ namespace OpenAI.RealtimeConversation {
         public float Temperature { get; }
         public ConversationToolChoice ToolChoice { get; }
         public IReadOnlyList<ConversationTool> Tools { get; }
-        public ConversationInputTranscriptionOptions TranscriptionSettings { get; }
-        public ConversationTurnDetectionOptions TurnDetectionSettings { get; }
+        public ConversationTurnDetectionOptions TurnDetectionOptions { get; }
         public ConversationVoice Voice { get; }
     }
     public class ConversationSessionOptions : IJsonModel<ConversationSessionOptions>, IPersistableModel<ConversationSessionOptions> {
@@ -1979,8 +1997,7 @@ namespace OpenAI.RealtimeConversation {
         public ConversationAudioFormat? InputAudioFormat { get; set; }
         public ConversationInputTranscriptionOptions InputTranscriptionOptions { get; set; }
         public string Instructions { get; set; }
-        public ConversationMaxTokensChoice MaxResponseOutputTokens { get; set; }
-        public string Model { get; set; }
+        public ConversationMaxTokensChoice MaxOutputTokens { get; set; }
         public ConversationAudioFormat? OutputAudioFormat { get; set; }
         public float? Temperature { get; set; }
         public ConversationToolChoice ToolChoice { get; set; }
@@ -1991,6 +2008,7 @@ namespace OpenAI.RealtimeConversation {
     public class ConversationSessionStartedUpdate : ConversationUpdate, IJsonModel<ConversationSessionStartedUpdate>, IPersistableModel<ConversationSessionStartedUpdate> {
         public ConversationContentModalities ContentModalities { get; }
         public ConversationAudioFormat InputAudioFormat { get; }
+        public ConversationInputTranscriptionOptions InputTranscriptionOptions { get; }
         public string Instructions { get; }
         public ConversationMaxTokensChoice MaxOutputTokens { get; }
         public string Model { get; }
@@ -1999,8 +2017,7 @@ namespace OpenAI.RealtimeConversation {
         public float Temperature { get; }
         public ConversationToolChoice ToolChoice { get; }
         public IReadOnlyList<ConversationTool> Tools { get; }
-        public ConversationInputTranscriptionOptions TranscriptionSettings { get; }
-        public ConversationTurnDetectionOptions TurnDetectionSettings { get; }
+        public ConversationTurnDetectionOptions TurnDetectionOptions { get; }
         public ConversationVoice Voice { get; }
     }
     public readonly partial struct ConversationStatus : IEquatable<ConversationStatus> {
@@ -2020,19 +2037,8 @@ namespace OpenAI.RealtimeConversation {
         public static bool operator !=(ConversationStatus left, ConversationStatus right);
         public override readonly string ToString();
     }
-    public class ConversationTextDeltaUpdate : ConversationUpdate, IJsonModel<ConversationTextDeltaUpdate>, IPersistableModel<ConversationTextDeltaUpdate> {
-        public int ContentIndex { get; }
-        public string Delta { get; }
-        public string ItemId { get; }
-        public int OutputIndex { get; }
-        public string ResponseId { get; }
-    }
-    public class ConversationTextDoneUpdate : ConversationUpdate, IJsonModel<ConversationTextDoneUpdate>, IPersistableModel<ConversationTextDoneUpdate> {
-        public int ContentIndex { get; }
-        public string ItemId { get; }
-        public int OutputIndex { get; }
-        public string ResponseId { get; }
-        public string Value { get; }
+    public abstract class ConversationStatusDetails : IJsonModel<ConversationStatusDetails>, IPersistableModel<ConversationStatusDetails> {
+        public ConversationStatus StatusKind { get; }
     }
     public class ConversationTokenUsage : IJsonModel<ConversationTokenUsage>, IPersistableModel<ConversationTokenUsage> {
         public ConversationInputTokenUsageDetails InputTokenDetails { get; }
@@ -2101,33 +2107,35 @@ namespace OpenAI.RealtimeConversation {
         public BinaryData GetRawContent();
     }
     public enum ConversationUpdateKind {
-        SessionStarted = 0,
-        SessionConfigured = 1,
-        ItemAcknowledged = 2,
-        ItemDeleted = 3,
-        ItemTruncated = 4,
-        ResponseStarted = 5,
-        ResponseFinished = 6,
-        RateLimitsUpdated = 7,
-        ItemStarted = 8,
-        ItemFinished = 9,
-        ContentPartStarted = 10,
-        ContentPartFinished = 11,
-        ResponseAudioDelta = 12,
-        ResponseAudioDone = 13,
-        ResponseAudioTranscriptDelta = 14,
-        ResponseAudioTranscriptDone = 15,
-        ResponseTextDelta = 16,
-        ResponseTextDone = 17,
-        ResponseFunctionCallArgumentsDelta = 18,
-        ResponseFunctionCallArgumentsDone = 19,
-        InputAudioBufferSpeechStarted = 20,
-        InputAudioBufferSpeechStopped = 21,
-        ItemInputAudioTranscriptionCompleted = 22,
-        ItemInputAudioTranscriptionFailed = 23,
-        InputAudioBufferCommitted = 24,
-        InputAudioBufferCleared = 25,
-        Error = 26
+        Unknown = 0,
+        SessionStarted = 1,
+        SessionConfigured = 2,
+        ItemCreated = 3,
+        ConversationCreated = 4,
+        ItemDeleted = 5,
+        ItemTruncated = 6,
+        ResponseStarted = 7,
+        ResponseFinished = 8,
+        RateLimitsUpdated = 9,
+        ItemStreamingStarted = 10,
+        ItemStreamingFinished = 11,
+        ItemContentPartStarted = 12,
+        ItemContentPartFinished = 13,
+        ItemStreamingPartAudioDelta = 14,
+        ItemStreamingPartAudioFinished = 15,
+        ItemStreamingPartAudioTranscriptionDelta = 16,
+        ItemStreamingPartAudioTranscriptionFinished = 17,
+        ItemStreamingPartTextDelta = 18,
+        ItemStreamingPartTextFinished = 19,
+        ItemStreamingFunctionCallArgumentsDelta = 20,
+        ItemStreamingFunctionCallArgumentsFinished = 21,
+        InputSpeechStarted = 22,
+        InputSpeechStopped = 23,
+        InputTranscriptionFinished = 24,
+        InputTranscriptionFailed = 25,
+        InputAudioCommitted = 26,
+        InputAudioCleared = 27,
+        Error = 28
     }
     public readonly partial struct ConversationVoice : IEquatable<ConversationVoice> {
         public ConversationVoice(string value);
@@ -2157,32 +2165,49 @@ namespace OpenAI.RealtimeConversation {
         public virtual Task<RealtimeConversationSession> StartConversationSessionAsync(CancellationToken cancellationToken = default);
     }
     public class RealtimeConversationSession : IDisposable {
-        protected Net.WebSockets.ClientWebSocket _clientWebSocket;
         protected internal RealtimeConversationSession(RealtimeConversationClient parentClient, Uri endpoint, ApiKeyCredential credential);
-        public Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
-        public Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default);
-        public Task CancelResponseTurnAsync(CancellationToken cancellationToken = default);
-        public Task CommitPendingAudioAsync(CancellationToken cancellationToken = default);
-        public Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
+        public Net.WebSockets.WebSocket WebSocket { get; protected set; }
+        public virtual void AddItem(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
+        public virtual void AddItem(ConversationItem item, CancellationToken cancellationToken = default);
+        public virtual Task AddItemAsync(ConversationItem item, string previousItemId, CancellationToken cancellationToken = default);
+        public virtual Task AddItemAsync(ConversationItem item, CancellationToken cancellationToken = default);
+        public virtual void CancelResponse(CancellationToken cancellationToken = default);
+        public virtual Task CancelResponseAsync(CancellationToken cancellationToken = default);
+        public virtual void ClearInputAudio(CancellationToken cancellationToken = default);
+        public virtual Task ClearInputAudioAsync(CancellationToken cancellationToken = default);
+        public virtual void CommitPendingAudio(CancellationToken cancellationToken = default);
+        public virtual Task CommitPendingAudioAsync(CancellationToken cancellationToken = default);
+        public virtual void ConfigureSession(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
+        public virtual Task ConfigureSessionAsync(ConversationSessionOptions sessionOptions, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected internal virtual void Connect(RequestOptions options);
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected internal virtual Task ConnectAsync(RequestOptions options);
-        public Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default);
+        public virtual void DeleteItem(string itemId, CancellationToken cancellationToken = default);
+        public virtual Task DeleteItemAsync(string itemId, CancellationToken cancellationToken = default);
         public void Dispose();
-        public Task InterruptTurnAsync(CancellationToken cancellationToken = default);
+        public virtual void InterruptResponse(CancellationToken cancellationToken = default);
+        public virtual Task InterruptResponseAsync(CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual IEnumerable<ClientResult> ReceiveUpdates(RequestOptions options);
+        public virtual IEnumerable<ConversationUpdate> ReceiveUpdates(CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual IAsyncEnumerable<ClientResult> ReceiveUpdatesAsync(RequestOptions options);
-        public IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync(CancellationToken cancellationToken = default);
-        public Task SendAudioAsync(BinaryData audio, CancellationToken cancellationToken = default);
-        public Task SendAudioAsync(Stream audio, CancellationToken cancellationToken = default);
+        public virtual IAsyncEnumerable<ConversationUpdate> ReceiveUpdatesAsync(CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual void SendCommand(BinaryData data, RequestOptions options);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task SendCommandAsync(BinaryData data, RequestOptions options);
-        public Task StartResponseTurnAsync(CancellationToken cancellationToken = default);
+        public virtual void SendInputAudio(BinaryData audio, CancellationToken cancellationToken = default);
+        public virtual void SendInputAudio(Stream audio, CancellationToken cancellationToken = default);
+        public virtual Task SendInputAudioAsync(BinaryData audio, CancellationToken cancellationToken = default);
+        public virtual Task SendInputAudioAsync(Stream audio, CancellationToken cancellationToken = default);
+        public virtual void StartResponse(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default);
+        public virtual void StartResponse(CancellationToken cancellationToken = default);
+        public virtual Task StartResponseAsync(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default);
+        public virtual Task StartResponseAsync(CancellationToken cancellationToken = default);
+        public virtual void TruncateItem(string itemId, int contentPartIndex, TimeSpan audioDuration, CancellationToken cancellationToken = default);
+        public virtual Task TruncateItemAsync(string itemId, int contentPartIndex, TimeSpan audioDuration, CancellationToken cancellationToken = default);
     }
 }
 namespace OpenAI.VectorStores {

@@ -55,7 +55,6 @@ public static partial class AzureChatExtensions
         }
     }
 
-
     [Experimental("AOAI001")]
     public static RequestContentFilterResult GetRequestContentFilterResult(this ChatCompletion chatCompletion)
     {

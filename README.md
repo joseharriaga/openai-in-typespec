@@ -3,8 +3,8 @@
 For information on spec ingestion, see the Sorento wiki page:
 https://dev.azure.com/project-argos/Sorento/_wiki/wikis/Sorento.wiki/3021/Generate-OpenAI's-YAML-Spec
 
-Snapshot: https://project-argos@dev.azure.com/project-argos/Sorento/_git/export-api@54593e37
-Ingestion tool: https://project-argos@dev.azure.com/project-argos/Sorento/_git/sdk@da3aa64
+Snapshot: https://project-argos@dev.azure.com/project-argos/Sorento/_git/export-api@b083af2
+Ingestion tool: https://project-argos@dev.azure.com/project-argos/Sorento/_git/sdk@7f87ab0
 
 There are some deltas:
 

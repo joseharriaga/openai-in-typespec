@@ -4791,14 +4791,16 @@ components:
               type: string
               enum:
                 - alloy
+                - ash
+                - ballad
+                - coral
                 - echo
-                - fable
-                - onyx
-                - nova
+                - sage
                 - shimmer
+                - verse
               description: |-
-                Specifies the voice type. Supported voices are `alloy`, `echo`, 
-                `fable`, `onyx`, `nova`, and `shimmer`.
+                The voice the model uses to respond. Supported voices are `alloy`, 
+                `ash`, `ballad`, `coral`, `echo`, `sage`, `shimmer`, and `verse`.
             format:
               type: string
               enum:
@@ -11013,8 +11015,13 @@ components:
         - type: string
           enum:
             - alloy
-            - shimmer
+            - ash
+            - ballad
+            - coral
             - echo
+            - sage
+            - shimmer
+            - verse
     ResponseFormatJsonObject:
       type: object
       required:

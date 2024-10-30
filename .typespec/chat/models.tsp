@@ -129,10 +129,18 @@ model CreateChatCompletionRequest {
   @extension("x-oaiExpandable", true)
   audio?: {
     @doc("""
-      Specifies the voice type. Supported voices are `alloy`, `echo`, 
-      `fable`, `onyx`, `nova`, and `shimmer`.
+      The voice the model uses to respond. Supported voices are `alloy`, 
+      `ash`, `ballad`, `coral`, `echo`, `sage`, `shimmer`, and `verse`.
       """)
-    voice: "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
+    voice:
+      | "alloy"
+      | "ash"
+      | "ballad"
+      | "coral"
+      | "echo"
+      | "sage"
+      | "shimmer"
+      | "verse";
 
     @doc("""
       Specifies the output audio format. Must be one of `wav`, `mp3`, `flac`,

@@ -17,12 +17,22 @@ namespace OpenAI.RealtimeConversation
         }
 
         private const string AlloyValue = "alloy";
-        private const string ShimmerValue = "shimmer";
+        private const string AshValue = "ash";
+        private const string BalladValue = "ballad";
+        private const string CoralValue = "coral";
         private const string EchoValue = "echo";
+        private const string SageValue = "sage";
+        private const string ShimmerValue = "shimmer";
+        private const string VerseValue = "verse";
 
         public static ConversationVoice Alloy { get; } = new ConversationVoice(AlloyValue);
-        public static ConversationVoice Shimmer { get; } = new ConversationVoice(ShimmerValue);
+        public static ConversationVoice Ash { get; } = new ConversationVoice(AshValue);
+        public static ConversationVoice Ballad { get; } = new ConversationVoice(BalladValue);
+        public static ConversationVoice Coral { get; } = new ConversationVoice(CoralValue);
         public static ConversationVoice Echo { get; } = new ConversationVoice(EchoValue);
+        public static ConversationVoice Sage { get; } = new ConversationVoice(SageValue);
+        public static ConversationVoice Shimmer { get; } = new ConversationVoice(ShimmerValue);
+        public static ConversationVoice Verse { get; } = new ConversationVoice(VerseValue);
         public static bool operator ==(ConversationVoice left, ConversationVoice right) => left.Equals(right);
         public static bool operator !=(ConversationVoice left, ConversationVoice right) => !left.Equals(right);
         public static implicit operator ConversationVoice(string value) => new ConversationVoice(value);

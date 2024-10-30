@@ -49,6 +49,23 @@ namespace OpenAI
             return new RunTokenUsage(outputTokenCount, inputTokenCount, totalTokenCount, serializedAdditionalRawData: null);
         }
 
+        public static RunStepToolCall RunStepToolCall(string id = null)
+        {
+            return new UnknownRunStepDetailsToolCallsObjectToolCallsObject(default, id, serializedAdditionalRawData: null);
+        }
+
+        public static RunStepFileSearchResult RunStepFileSearchResult(string fileId = null, string fileName = null, float score = default, IEnumerable<RunStepFileSearchResultContent> content = null)
+        {
+            content ??= new List<RunStepFileSearchResultContent>();
+
+            return new RunStepFileSearchResult(fileId, fileName, score, content?.ToList(), serializedAdditionalRawData: null);
+        }
+
+        public static RunStepFileSearchResultContent RunStepFileSearchResultContent(RunStepFileSearchResultContentKind kind = default, string text = null)
+        {
+            return new RunStepFileSearchResultContent(kind, text, serializedAdditionalRawData: null);
+        }
+
         public static RunStepError RunStepError(RunStepErrorCode code = default, string message = null)
         {
             return new RunStepError(code, message, serializedAdditionalRawData: null);

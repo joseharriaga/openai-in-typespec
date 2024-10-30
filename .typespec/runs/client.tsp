@@ -5,6 +5,11 @@ import "./models.tsp";
 using Azure.ClientGenerator.Core;
 using OpenAI;
 
+@@clientName(RunStepDetailsToolCallsObjectToolCallsObject.type, "kind", "csharp");
+@@clientName(RunStepDetailsToolCallsCodeObject.type, "kind", "csharp");
+@@clientName(RunStepDetailsToolCallsFileSearchObject.type, "kind", "csharp");
+@@clientName(RunStepDetailsToolCallsFunctionObject.type, "kind", "csharp");
+
 @@access(RunStepDeltaObject, Access.public);
 @@usage(RunStepDeltaObject, Usage.output);
 

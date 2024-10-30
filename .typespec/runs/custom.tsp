@@ -18,13 +18,23 @@ model RunStepObjectStepDetails {
   type: string;
 }
 
+union RunStepDetailsToolCallKind {
+  string,
+  code_interpreter: "code_interpreter";
+  file_search: "file_search";
+  function: "function";
+}
+
 /**
  * Abstractly represents a run step tool call details inner object.
  */
 @discriminator("type")
 model RunStepDetailsToolCallsObjectToolCallsObject {
   /** The discriminated type identifier for the details object. */
-  type: string;
+  type: RunStepDetailsToolCallKind;
+
+  /** The ID of the tool call object. */
+  id: string;
 }
 
 /**
@@ -58,4 +68,9 @@ model RunStepDeltaStepDetailsToolCallsObjectToolCallsObject {
 model RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject {
   /** The discriminated type identifier for the details object. */
   type: string;
+}
+
+union IncludedRunStepProperty {
+  string,
+  file_search_result_content: "step_details.tool_calls[*].file_search.results[*].content",
 }

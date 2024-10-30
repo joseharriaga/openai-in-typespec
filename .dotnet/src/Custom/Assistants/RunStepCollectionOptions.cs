@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Assistants;
@@ -31,4 +32,7 @@ public class RunStepCollectionOptions
     ///     before this one.
     /// </summary>
     public string BeforeId { get; set; }
+
+    /// <summary> A list of additional properties that each <see cref="RunStep"/> must include. </summary>
+    public IList<IncludedRunStepProperty> IncludedRunStepProperties { get; } = new ChangeTrackingList<IncludedRunStepProperty>();
 }

@@ -433,8 +433,8 @@ public class AssistantsTests : SyncAsyncTestBase
         Assert.Multiple(() =>
         {
             Assert.That(details?.ToolCalls.Count, Is.GreaterThan(0));
-            Assert.That(details.ToolCalls[0].ToolKind, Is.EqualTo(RunStepToolCallKind.CodeInterpreter));
-            Assert.That(details.ToolCalls[0].ToolCallId, Is.Not.Null.And.Not.Empty);
+            Assert.That(details.ToolCalls[0].Kind, Is.EqualTo(RunStepToolCallKind.CodeInterpreter));
+            Assert.That(details.ToolCalls[0].Id, Is.Not.Null.And.Not.Empty);
             Assert.That(details.ToolCalls[0].CodeInterpreterInput, Is.Not.Null.And.Not.Empty);
             Assert.That(details.ToolCalls[0].CodeInterpreterOutputs?.Count, Is.GreaterThan(0));
             Assert.That(details.ToolCalls[0].CodeInterpreterOutputs[0].ImageFileId, Is.Not.Null.And.Not.Empty);
@@ -934,12 +934,15 @@ public class AssistantsTests : SyncAsyncTestBase
         Assert.That(messageCount > 1);
         Assert.That(hasCake, Is.True);
 
-        List<RunStep> runSteps = client.GetRunSteps(run.ThreadId, run.Id).ToList();
+        RunStepCollectionOptions runStepCollectionOptions = new();
+        runStepCollectionOptions.IncludedRunStepProperties.Add(IncludedRunStepProperty.FileSearchResultContent);
+
+        CollectionResult<RunStep> runSteps = client.GetRunSteps(run.ThreadId, run.Id, runStepCollectionOptions);
         Assert.That(runSteps, Is.Not.Null.And.Not.Empty);
 
         RunStepToolCall fileSearchToolCall = runSteps
             .SelectMany(runStep => runStep.Details?.ToolCalls ?? [])
-            .FirstOrDefault(toolCall => toolCall.ToolKind == RunStepToolCallKind.FileSearch);
+            .FirstOrDefault(toolCall => toolCall.Kind == RunStepToolCallKind.FileSearch);
         Assert.That(fileSearchToolCall, Is.Not.Null);
         Assert.Multiple(() =>
         {
@@ -947,12 +950,21 @@ public class AssistantsTests : SyncAsyncTestBase
             Assert.That(fileSearchToolCall.FileSearchScoreThreshold, Is.EqualTo(fileSearchTool.RankingOptions.ScoreThreshold));
             Assert.That(fileSearchToolCall.FileSearchResults, Has.Count.GreaterThan(0));
         });
+
+        RunStepFileSearchResult fileSearchResult = fileSearchToolCall.FileSearchResults[0];
         Assert.Multiple(() =>
         {
-            RunStepFileSearchResult fileSearchResult = fileSearchToolCall.FileSearchResults[0];
             Assert.That(fileSearchResult.FileId, Is.Not.Null.And.Not.Empty);
             Assert.That(fileSearchResult.FileName, Is.Not.Null.And.Not.Empty);
             Assert.That(fileSearchResult.Score, Is.GreaterThan(0));
+            Assert.That(fileSearchResult.Content, Has.Count.GreaterThan(0));
+        });
+
+        RunStepFileSearchResultContent fileSearchResultContent = fileSearchResult.Content[0];
+        Assert.Multiple(() =>
+        {
+            Assert.That(fileSearchResultContent.Kind, Is.EqualTo(RunStepFileSearchResultContentKind.Text));
+            Assert.That(fileSearchResultContent.Text, Is.Not.Null.And.Not.Empty);
         });
     }
 

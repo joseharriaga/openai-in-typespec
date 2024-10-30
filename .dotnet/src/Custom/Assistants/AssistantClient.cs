@@ -1137,7 +1137,7 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        return GetRunStepsAsync(threadId, runId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
+        return GetRunStepsAsync(threadId, runId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.IncludedRunStepProperties?.Select(s => s.ToString()), cancellationToken.ToRequestOptions())
             as AsyncCollectionResult<RunStep>;
     }
 
@@ -1154,7 +1154,7 @@ public partial class AssistantClient
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
         RunStepCollectionPageToken pageToken = RunStepCollectionPageToken.FromToken(firstPageToken);
-        AsyncCollectionResult result = GetRunStepsAsync(pageToken?.ThreadId, pageToken?.RunId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions());
+        AsyncCollectionResult result = GetRunStepsAsync(pageToken?.ThreadId, pageToken?.RunId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Include, cancellationToken.ToRequestOptions());
 
         if (result is not AsyncCollectionResult<RunStep> collection)
         {
@@ -1181,7 +1181,7 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        CollectionResult result = GetRunSteps(threadId, runId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions());
+        CollectionResult result = GetRunSteps(threadId, runId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.IncludedRunStepProperties?.Select(s => s.ToString()),cancellationToken.ToRequestOptions());
 
         if (result is not CollectionResult<RunStep> collection)
         {
@@ -1204,7 +1204,7 @@ public partial class AssistantClient
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
         RunStepCollectionPageToken pageToken = RunStepCollectionPageToken.FromToken(firstPageToken);
-        CollectionResult result = GetRunSteps(pageToken?.ThreadId, pageToken?.RunId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions());
+        CollectionResult result = GetRunSteps(pageToken?.ThreadId, pageToken?.RunId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Include, cancellationToken.ToRequestOptions());
 
         if (result is not CollectionResult<RunStep> collection)
         {

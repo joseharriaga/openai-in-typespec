@@ -225,7 +225,6 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
     }
 
     [RecordedTest]
-    [Category("Smoke")]
     public async Task DefaultAzureCredentialWorks()
     {
         ChatClient chatClient = GetTestClient(tokenCredential: this.TestEnvironment.Credential);

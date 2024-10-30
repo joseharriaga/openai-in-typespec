@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    [PersistableModelProxy(typeof(UnknownRealtimeRequestItem))]
+    [PersistableModelProxy(typeof(UnknownRealtimeConversationRequestItem))]
     public partial class ConversationItem : IJsonModel<ConversationItem>
     {
         void IJsonModel<ConversationItem>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -85,7 +85,7 @@ namespace OpenAI.RealtimeConversation
                     case "user": return InternalRealtimeRequestUserMessageItem.DeserializeInternalRealtimeRequestUserMessageItem(element, options);
                 }
             }
-            return UnknownRealtimeRequestItem.DeserializeUnknownRealtimeRequestItem(element, options);
+            return UnknownRealtimeConversationRequestItem.DeserializeUnknownRealtimeConversationRequestItem(element, options);
         }
 
         BinaryData IPersistableModel<ConversationItem>.Write(ModelReaderWriterOptions options)

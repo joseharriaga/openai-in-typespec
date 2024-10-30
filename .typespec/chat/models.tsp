@@ -849,7 +849,7 @@ model CreateChatCompletionStreamResponse {
 
     /** Total number of tokens used in the request (prompt + completion). */
     total_tokens: int32;
-  };
+  } | null;
 }
 
 /** Represents a streamed chunk of a chat completion response returned by model, based on the provided input. */

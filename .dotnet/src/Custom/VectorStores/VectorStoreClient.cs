@@ -51,15 +51,6 @@ public partial class VectorStoreClient
     {
     }
 
-    // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="VectorStoreClient"/>. </summary>
-    /// <param name="apiKey"> The API key to authenticate with the service. </param>
-    /// <param name="options"> The options to configure the client. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="apiKey"/> is null. </exception>
-    public VectorStoreClient(string apiKey, OpenAIClientOptions options) : this(new ApiKeyCredential(apiKey), options)
-    {
-    }
-
     // CUSTOM:
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
@@ -125,7 +116,7 @@ public partial class VectorStoreClient
     /// <param name="vectorStore"> The <see cref="VectorStoreCreationOptions"/> to use. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStore"/> is null. </exception>
-    /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for
     /// the vector store creation to complete. </returns>
     public virtual async Task<CreateVectorStoreOperation> CreateVectorStoreAsync(bool waitUntilCompleted, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
     {
@@ -141,7 +132,7 @@ public partial class VectorStoreClient
     /// <param name="vectorStore"> The <see cref="VectorStoreCreationOptions"/> to use. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStore"/> is null. </exception>
-    /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateVectorStoreOperation"/> that can be used to wait for
     /// the vector store creation to complete. </returns>
     public virtual CreateVectorStoreOperation CreateVectorStore(bool waitUntilCompleted, VectorStoreCreationOptions vectorStore = null, CancellationToken cancellationToken = default)
     {
@@ -317,7 +308,7 @@ public partial class VectorStoreClient
     /// <param name="vectorStoreId"> The ID of the vector store to associate the file with. </param>
     /// <param name="fileId"> The ID of the file to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for
     /// the vector store file addition to complete. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is null. </exception>
     public virtual async Task<AddFileToVectorStoreOperation> AddFileToVectorStoreAsync(string vectorStoreId, string fileId, bool waitUntilCompleted, CancellationToken cancellationToken = default)
@@ -339,7 +330,7 @@ public partial class VectorStoreClient
     /// <param name="vectorStoreId"> The ID of the vector store to associate the file with. </param>
     /// <param name="fileId"> The ID of the file to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="AddFileToVectorStoreOperation"/> that can be used to wait for
     /// the vector store file addition to complete. </returns>
     /// <exception cref="ArgumentNullException"> <paramref name="vectorStoreId"/> or <paramref name="fileId"/> is null. </exception>
     public virtual AddFileToVectorStoreOperation AddFileToVectorStore(string vectorStoreId, string fileId, bool waitUntilCompleted, CancellationToken cancellationToken = default)
@@ -519,7 +510,7 @@ public partial class VectorStoreClient
     /// <param name="vectorStoreId"> The ID of the vector store to associate files with. </param>
     /// <param name="fileIds"> The IDs of the files to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
     public virtual async Task<CreateBatchFileJobOperation> CreateBatchFileJobAsync(
         string vectorStoreId,
@@ -546,7 +537,7 @@ public partial class VectorStoreClient
     /// <param name="vectorStoreId"> The ID of the vector store to associate files with. </param>
     /// <param name="fileIds"> The IDs of the files to associate with the vector store. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for 
+    /// <returns> A <see cref="CreateBatchFileJobOperation"/> that can be used to wait for
     /// the operation to complete, get information about the batch file job, or cancel the operation. </returns>
     public virtual CreateBatchFileJobOperation CreateBatchFileJob(
         string vectorStoreId,
@@ -739,7 +730,7 @@ public partial class VectorStoreClient
     /// The ID of the <see cref="VectorStore"/> that is the ingestion target of the batch job being cancelled.
     /// </param>
     /// <param name="batchJobId">
-    /// The ID of the <see cref="VectorStoreBatchFileJob"/> that should be canceled. 
+    /// The ID of the <see cref="VectorStoreBatchFileJob"/> that should be canceled.
     /// </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>
@@ -761,7 +752,7 @@ public partial class VectorStoreClient
     /// The ID of the <see cref="VectorStore"/> that is the ingestion target of the batch job being cancelled.
     /// </param>
     /// <param name="batchJobId">
-    /// The ID of the <see cref="VectorStoreBatchFileJob"/> that should be canceled. 
+    /// The ID of the <see cref="VectorStoreBatchFileJob"/> that should be canceled.
     /// </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> An updated <see cref="VectorStoreBatchFileJob"/> instance. </returns>

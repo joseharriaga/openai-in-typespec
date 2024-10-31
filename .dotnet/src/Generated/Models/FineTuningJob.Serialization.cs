@@ -192,7 +192,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("estimatedFinish"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -399,7 +399,7 @@ namespace OpenAI.FineTuning
                     estimatedFinish = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

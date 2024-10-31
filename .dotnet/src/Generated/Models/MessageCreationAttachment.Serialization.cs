@@ -41,7 +41,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("tools"u8);
                 this.SerializeTools(writer, options);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -96,7 +96,7 @@ namespace OpenAI.Assistants
                     DeserializeTools(prop, ref tools);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

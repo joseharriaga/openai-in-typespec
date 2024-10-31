@@ -11,7 +11,7 @@ using OpenAI;
 namespace OpenAI.Chat
 {
     [PersistableModelProxy(typeof(InternalUnknownChatMessage))]
-    public partial class ChatMessage : IJsonModel<ChatMessage>
+    public abstract partial class ChatMessage : IJsonModel<ChatMessage>
     {
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -25,12 +25,12 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("role"u8);
                 writer.WriteStringValue(Role.ToSerialString());
             }
-            if (true && Optional.IsDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true)
+            if (options.Format != "W" && Optional.IsDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
                 this.SerializeContentValue(writer, options);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {

@@ -32,7 +32,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("function_call"u8);
                 writer.WriteObjectValue(FunctionCall, options);
             }
-            if (Optional.IsCollectionDefined(ToolCalls) && _additionalBinaryDataProperties?.ContainsKey("tool_calls") != true)
+            if (options.Format != "W" && Optional.IsCollectionDefined(ToolCalls) && _additionalBinaryDataProperties?.ContainsKey("tool_calls") != true)
             {
                 writer.WritePropertyName("tool_calls"u8);
                 writer.WriteStartArray();
@@ -71,7 +71,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("content"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -112,7 +112,7 @@ namespace OpenAI.Chat
                 return null;
             }
             StreamingChatFunctionCallUpdate functionCall = default;
-            IList<StreamingChatToolCallUpdate> toolCalls = default;
+            IReadOnlyList<StreamingChatToolCallUpdate> toolCalls = default;
             string refusal = default;
             Chat.ChatMessageRole? role = default;
             ChatMessageContent content = default;
@@ -166,7 +166,7 @@ namespace OpenAI.Chat
                     DeserializeContentValue(prop, ref content);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

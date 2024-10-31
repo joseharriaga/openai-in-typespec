@@ -36,7 +36,7 @@ namespace OpenAI.Files
                 writer.WritePropertyName("data"u8);
                 writer.WriteBase64StringValue(Data.ToArray(), "D");
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -85,7 +85,7 @@ namespace OpenAI.Files
                     data = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.Chat
 {
-    public partial class ChatMessage
+    public abstract partial class ChatMessage
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 

@@ -32,7 +32,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("input"u8);
                 writer.WriteStringValue(Input);
             }
-            if (true && Optional.IsCollectionDefined(Outputs) && _additionalBinaryDataProperties?.ContainsKey("outputs") != true)
+            if (options.Format != "W" && Optional.IsCollectionDefined(Outputs) && _additionalBinaryDataProperties?.ContainsKey("outputs") != true)
             {
                 writer.WritePropertyName("outputs"u8);
                 writer.WriteStartArray();
@@ -42,7 +42,7 @@ namespace OpenAI.Assistants
                 }
                 writer.WriteEndArray();
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -106,7 +106,7 @@ namespace OpenAI.Assistants
                     outputs = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

@@ -46,7 +46,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(this.Object.ToString());
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -107,7 +107,7 @@ namespace OpenAI.Assistants
                     @object = new InternalDeleteAssistantResponseObject(prop.Value.GetString());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

@@ -27,7 +27,7 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalCreateChatCompletionResponseChoiceLogprobs)} does not support writing '{format}' format.");
             }
-            if (true && _additionalBinaryDataProperties?.ContainsKey("content") != true)
+            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 if (Content != null && Optional.IsCollectionDefined(Content))
                 {
@@ -44,7 +44,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("content"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties?.ContainsKey("refusal") != true)
+            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("refusal") != true)
             {
                 if (Refusal != null && Optional.IsCollectionDefined(Refusal))
                 {
@@ -61,7 +61,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("refusal"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -136,7 +136,7 @@ namespace OpenAI.Chat
                     refusal = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

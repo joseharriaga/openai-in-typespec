@@ -30,3 +30,4 @@ using OpenAI;
 @@usage(ChatResponseFormatJsonSchema, Usage.input);
 
 @@visibility(ChatCompletionResponseMessage.tool_calls, "read");
+@@visibility(ChatCompletionStreamResponseDelta.tool_calls, "read");

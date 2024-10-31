@@ -71,7 +71,7 @@ namespace OpenAI.Assistants
                     text = InternalMessageContentTextObjectText.DeserializeInternalMessageContentTextObjectText(prop.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

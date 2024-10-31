@@ -37,7 +37,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("score_threshold"u8);
                 writer.WriteNumberValue(_scoreThreshold);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -96,7 +96,7 @@ namespace OpenAI.Assistants
                     scoreThreshold = prop.Value.GetSingle();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

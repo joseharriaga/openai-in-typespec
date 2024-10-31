@@ -97,6 +97,7 @@ public static partial class OpenAIChatModelFactory
             inputTokenCount,
             totalTokenCount,
             outputTokenDetails,
+            inputTokenDetails,
             additionalBinaryDataProperties: null);
     }
 
@@ -104,7 +105,7 @@ public static partial class OpenAIChatModelFactory
     /// <returns> A new <see cref="OpenAI.Chat.ChatOutputTokenusageDetails"/> instance for mocking. </returns>
     public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default, int? audioTokenCount = null)
     {
-        return new ChatOutputTokenUsageDetails(reasoningTokenCount, additionalBinaryDataProperties: null);
+        return new ChatOutputTokenUsageDetails(reasoningTokenCount, audioTokenCount, additionalBinaryDataProperties: null);
     }
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatCompletionUpdate"/>. </summary>

@@ -41,7 +41,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(Id);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {

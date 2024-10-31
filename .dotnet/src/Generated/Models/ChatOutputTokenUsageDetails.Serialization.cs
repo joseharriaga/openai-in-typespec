@@ -37,7 +37,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("audio_tokens"u8);
                 writer.WriteNumberValue(AudioTokenCount.Value);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -100,7 +100,7 @@ namespace OpenAI.Chat
                     audioTokenCount = prop.Value.GetInt32();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

@@ -13,10 +13,6 @@ namespace OpenAI.Chat
 {
     internal partial class InternalCreateChatCompletionStreamResponseChoiceLogprobs : IJsonModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>
     {
-        internal InternalCreateChatCompletionStreamResponseChoiceLogprobs()
-        {
-        }
-
         void IJsonModel<InternalCreateChatCompletionStreamResponseChoiceLogprobs>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -31,7 +27,7 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalCreateChatCompletionStreamResponseChoiceLogprobs)} does not support writing '{format}' format.");
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
+            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 if (Content != null && Optional.IsCollectionDefined(Content))
                 {
@@ -48,7 +44,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("content"u8);
                 }
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("refusal") != true)
+            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("refusal") != true)
             {
                 if (Refusal != null && Optional.IsCollectionDefined(Refusal))
                 {
@@ -65,7 +61,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("refusal"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -105,8 +101,8 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            IList<ChatTokenLogProbabilityDetails> content = default;
-            IList<ChatTokenLogProbabilityDetails> refusal = default;
+            IReadOnlyList<ChatTokenLogProbabilityDetails> content = default;
+            IReadOnlyList<ChatTokenLogProbabilityDetails> refusal = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -140,7 +136,7 @@ namespace OpenAI.Chat
                     refusal = array;
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

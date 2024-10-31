@@ -93,7 +93,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("turn_detection"u8);
                 writer.WriteObjectValue(TurnDetection, options);
             }
-            if (true && _additionalBinaryDataProperties?.ContainsKey("tools") != true)
+            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("tools") != true)
             {
                 writer.WritePropertyName("tools"u8);
                 writer.WriteStartArray();
@@ -139,7 +139,7 @@ namespace OpenAI.RealtimeConversation
                     writer.WriteNull("maxResponseOutputTokens"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -286,7 +286,7 @@ namespace OpenAI.RealtimeConversation
                     maxResponseOutputTokens = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

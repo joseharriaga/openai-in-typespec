@@ -57,7 +57,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("finishReason"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {

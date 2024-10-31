@@ -46,7 +46,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("function"u8);
                 writer.WriteObjectValue<InternalRunToolCallObjectFunction>(_internalFunction, options);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -107,7 +107,7 @@ namespace OpenAI.Assistants
                     internalFunction = InternalRunToolCallObjectFunction.DeserializeInternalRunToolCallObjectFunction(prop.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

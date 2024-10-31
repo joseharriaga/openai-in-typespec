@@ -37,7 +37,7 @@ namespace OpenAI.FineTuning
                 writer.WritePropertyName("completion"u8);
                 writer.WriteStringValue(Completion);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -92,7 +92,7 @@ namespace OpenAI.FineTuning
                     completion = prop.Value.GetString();
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

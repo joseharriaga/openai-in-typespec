@@ -56,7 +56,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("prompt_tokens_details"u8);
                 writer.WriteObjectValue<ChatInputTokenUsageDetails>(InputTokenDetails, options);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -137,7 +137,7 @@ namespace OpenAI.Chat
                     inputTokenDetails = ChatInputTokenUsageDetails.DeserializeChatInputTokenUsageDetails(prop.Value, options);
                     continue;
                 }
-                if (true)
+                if (options.Format != "W")
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

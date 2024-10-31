@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
@@ -12,22 +12,22 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalCreateChatCompletionStreamResponseChoiceLogprobs(IEnumerable<ChatTokenLogProbabilityDetails> content, IEnumerable<ChatTokenLogProbabilityDetails> refusal)
+        internal InternalCreateChatCompletionStreamResponseChoiceLogprobs()
         {
-            Content = content?.ToList();
-            Refusal = refusal?.ToList();
+            Content = new ChangeTrackingList<ChatTokenLogProbabilityDetails>();
+            Refusal = new ChangeTrackingList<ChatTokenLogProbabilityDetails>();
         }
 
-        internal InternalCreateChatCompletionStreamResponseChoiceLogprobs(IList<ChatTokenLogProbabilityDetails> content, IList<ChatTokenLogProbabilityDetails> refusal, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalCreateChatCompletionStreamResponseChoiceLogprobs(IReadOnlyList<ChatTokenLogProbabilityDetails> content, IReadOnlyList<ChatTokenLogProbabilityDetails> refusal, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Content = content;
             Refusal = refusal;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public IList<ChatTokenLogProbabilityDetails> Content { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityDetails> Content { get; }
 
-        public IList<ChatTokenLogProbabilityDetails> Refusal { get; }
+        public IReadOnlyList<ChatTokenLogProbabilityDetails> Refusal { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

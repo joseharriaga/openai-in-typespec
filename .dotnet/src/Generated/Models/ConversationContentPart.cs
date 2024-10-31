@@ -27,5 +27,7 @@ namespace OpenAI.RealtimeConversation
             get => _additionalBinaryDataProperties;
             set => _additionalBinaryDataProperties = value;
         }
+
+        internal ConversationContentPartKind Kind { get; set; }
     }
 }

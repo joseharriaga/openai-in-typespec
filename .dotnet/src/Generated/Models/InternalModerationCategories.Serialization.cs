@@ -130,6 +130,8 @@ namespace OpenAI.Moderations
             bool hateThreatening = default;
             bool harassment = default;
             bool harassmentThreatening = default;
+            bool illicit = default;
+            bool illicitViolent = default;
             bool selfHarm = default;
             bool selfHarmIntent = default;
             bool selfHarmInstructions = default;
@@ -205,6 +207,8 @@ namespace OpenAI.Moderations
                 hateThreatening,
                 harassment,
                 harassmentThreatening,
+                illicit,
+                illicitViolent,
                 selfHarm,
                 selfHarmIntent,
                 selfHarmInstructions,

@@ -17,6 +17,8 @@ namespace OpenAI.Moderations
             HateThreatening = hateThreatening;
             Harassment = harassment;
             HarassmentThreatening = harassmentThreatening;
+            Illicit = illicit;
+            IllicitViolent = illicitViolent;
             SelfHarm = selfHarm;
             SelfHarmIntent = selfHarmIntent;
             SelfHarmInstructions = selfHarmInstructions;
@@ -32,6 +34,8 @@ namespace OpenAI.Moderations
             HateThreatening = hateThreatening;
             Harassment = harassment;
             HarassmentThreatening = harassmentThreatening;
+            Illicit = illicit;
+            IllicitViolent = illicitViolent;
             SelfHarm = selfHarm;
             SelfHarmIntent = selfHarmIntent;
             SelfHarmInstructions = selfHarmInstructions;
@@ -49,7 +53,6 @@ namespace OpenAI.Moderations
         public float Harassment { get; }
 
         public float HarassmentThreatening { get; }
-
         public float SelfHarm { get; }
 
         public float SelfHarmIntent { get; }

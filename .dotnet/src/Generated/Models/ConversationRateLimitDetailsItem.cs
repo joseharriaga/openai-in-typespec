@@ -14,9 +14,9 @@ namespace OpenAI.RealtimeConversation
         internal ConversationRateLimitDetailsItem(string name, int limit, int remaining, float resetSeconds)
         {
             Name = name;
-            Limit = limit;
-            Remaining = remaining;
-            ResetSeconds = resetSeconds;
+            MaximumCount = maximumCount;
+            RemainingCount = remainingCount;
+            TimeUntilReset = timeUntilReset;
         }
 
         internal ConversationRateLimitDetailsItem(string name, int limit, int remaining, float resetSeconds, IDictionary<string, BinaryData> additionalBinaryDataProperties)

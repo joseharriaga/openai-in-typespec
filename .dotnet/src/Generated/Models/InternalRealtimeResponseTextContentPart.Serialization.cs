@@ -35,7 +35,7 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
-                writer.WriteStringValue(Text);
+                writer.WriteStringValue(InternalTextValue);
             }
         }
 
@@ -58,6 +58,7 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
+            string type = default;
             string text = default;
             ConversationContentPartKind @type = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();

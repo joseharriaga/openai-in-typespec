@@ -27,7 +27,19 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatCompletionOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(FrequencyPenalty) && _additionalBinaryDataProperties?.ContainsKey("frequency_penalty") != true)
+
+            writer.WriteStartObject();
+            if (SerializedAdditionalRawData?.ContainsKey("messages") != true)
+            {
+                writer.WritePropertyName("messages"u8);
+                SerializeMessagesValue(writer, options);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model.ToString());
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("frequency_penalty") != true && Optional.IsDefined(FrequencyPenalty))
             {
                 if (FrequencyPenalty != null)
                 {
@@ -302,6 +314,8 @@ namespace OpenAI.Chat
             {
                 return null;
             }
+            IList<ChatMessage> messages = default;
+            InternalCreateChatCompletionRequestModel model = default;
             float? frequencyPenalty = default;
             float? presencePenalty = default;
             ChatResponseFormat responseFormat = default;
@@ -349,7 +363,7 @@ namespace OpenAI.Chat
                     presencePenalty = prop.Value.GetSingle();
                     continue;
                 }
-                if (prop.NameEquals("response_format"u8))
+                if (property.NameEquals("frequency_penalty"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -559,6 +573,8 @@ namespace OpenAI.Chat
                 }
             }
             return new ChatCompletionOptions(
+                messages,
+                model,
                 frequencyPenalty,
                 presencePenalty,
                 responseFormat,

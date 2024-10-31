@@ -22,6 +22,7 @@ namespace OpenAI.RealtimeConversation
         {
             Voice = voice;
             Instructions = instructions;
+            Voice = voice;
             InputAudioFormat = inputAudioFormat;
             OutputAudioFormat = outputAudioFormat;
             Tools = tools;

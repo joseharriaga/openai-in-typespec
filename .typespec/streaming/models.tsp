@@ -44,6 +44,9 @@ union AssistantStreamEvent {
 
 union ThreadStreamEvent {
   {
+    /** Whether to enable input audio transcription. */
+    enabled?: boolean,
+
     event: "thread.created",
     data: ThreadObject,
   },

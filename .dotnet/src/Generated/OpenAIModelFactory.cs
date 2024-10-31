@@ -960,7 +960,7 @@ namespace OpenAI
             return new ChatTokenUsage(outputTokenCount, inputTokenCount, totalTokenCount, outputTokenDetails, additionalBinaryDataProperties: null);
         }
 
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default)
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int? audioTokenCount = null, int reasoningTokenCount = default)
         {
 
             return new ChatOutputTokenUsageDetails(reasoningTokenCount, additionalBinaryDataProperties: null);

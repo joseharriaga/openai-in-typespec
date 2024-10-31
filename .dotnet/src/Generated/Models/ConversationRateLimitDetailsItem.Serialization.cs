@@ -39,17 +39,17 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("limit") != true)
             {
                 writer.WritePropertyName("limit"u8);
-                writer.WriteNumberValue(Limit);
+                writer.WriteNumberValue(MaximumCount);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("remaining") != true)
             {
                 writer.WritePropertyName("remaining"u8);
-                writer.WriteNumberValue(Remaining);
+                writer.WriteNumberValue(RemainingCount);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("reset_seconds") != true)
             {
                 writer.WritePropertyName("reset_seconds"u8);
-                writer.WriteNumberValue(ResetSeconds);
+                writer.WriteNumberValue(Convert.ToDouble(TimeUntilReset.ToString("s\\.FFF")));
             }
             if (true && _additionalBinaryDataProperties != null)
             {

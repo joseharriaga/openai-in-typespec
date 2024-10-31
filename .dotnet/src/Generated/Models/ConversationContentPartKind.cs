@@ -11,6 +11,12 @@ namespace OpenAI.RealtimeConversation
     public readonly partial struct ConversationContentPartKind : IEquatable<ConversationContentPartKind>
     {
         private readonly string _value;
+
+        public ConversationContentPartKind(string value)
+        {
+            _value = value ?? throw new ArgumentNullException(nameof(value));
+        }
+
         private const string InputTextValue = "input_text";
         private const string InputAudioValue = "input_audio";
         private const string TextValue = "text";

@@ -1,5 +1,30 @@
 # Release History
 
+## 2.1.0-beta.2 (Unreleased)
+
+### Features added
+
+- `ChatCompletionOptions` now has an `StoredOutputEnabled` property (reflecting [the REST `store` property](https://platform.openai.com/docs/api-reference/chat/create#chat-create-store)) as well as a `Metadata` property ([`metadata` in REST](https://platform.openai.com/docs/api-reference/chat/create#chat-create-metadata))
+- `ChatTokenUsage` (`Usage` on `ChatCompletion`) has been expanded:
+  - A new `InputTokenDetails` property (of new type `ChatInputTokenUsageDetails`) has been added, containing breakdowns of `AudioTokenCount` and `CachedTokenCount` for usage with supported models
+  - The existing `OutputTokenDetails` has been expanded to include `AudioTokenCount` for supported models
+- `ModerationResult` now includes `Illicit` and `IllictViolent` categories
+- `ModerationCategory` now includes a (bitmasked flag enum) `ApplicableInputKinds` property, representing applied input types for the category
+
+**Realtime**
+
+***Note**: the `/realtime` area is under rapid development and not all changes may be reflected here.*
+
+- `ConversationRateLimitsUpdate` (previously `ConversationRateLimitsUpdatedUpdate`) now includes named `RequestDetails` and `TokenDetails` properties, mapping to the corresponding named items in the underlying `rate_limits` command payload
+- Several types have been renamed for consistency and clarity
+
+## 2.0.1 (Unreleased)
+
+### Other Changes
+
+- Updated the referenced version of `System.ClientModel` to the latest `1.21.0`
+  - This transitively updates an inherited `System.Text.Json` dependency from `6.0.9` to `6.0.10`, resolving security compliance with [CVE-2024-43485](https://github.com/advisories/GHSA-8g4q-xg66-9fp4). Please note that the described vulnerability was not directly applicable to this library as `[ExtensionData]` is not used.
+
 ## 2.1.0-beta.1 (2024-10-01)
 
 With this updated preview library release, we're excited to bring early support for the newly-announced `/realtime` beta API. You can read more about `/realtime` here: https://openai.com/index/introducing-the-realtime-api/
@@ -8,7 +33,7 @@ Given the scope and recency of the feature area, the new `RealtimeConversationCl
 
 ### Features Added
 
-- Added a new `RealtimeConversationClient` in a corresponding scenario namespace.
+- Added a new `RealtimeConversationClient` in a corresponding scenario namespace. ([ff75da4](https://github.com/openai/openai-dotnet/commit/ff75da4167bc83fa85eb69ac142cab88a963ed06))
   - This maps to the new `/realtime` beta endpoint and is thus marked with a new `[Experimental("OPENAI002")]` diagnostic tag. 
   - This is a very early version of the convenience surface and thus subject to significant change
   - Documentation and samples will arrive soon; in the interim, see [the scenario test files](/tests/RealtimeConversation) for basic usage
@@ -32,15 +57,18 @@ Given the scope and recency of the feature area, the new `RealtimeConversationCl
 
 ### Breaking Changes
 
-- Implemented `ChatMessageContent` to encapsulate the representation of content parts in `ChatMessage`, `ChatCompletion`, and `StreamingChatCompletionUpdate`. (commit_hash)
-- Changed the representation of function arguments to `BinaryData` in `ChatToolCall`, `StreamingChatToolCallUpdate`, `ChatFunctionCall`, and `StreamingChatFunctionCallUpdate`. (commit_hash)
-- Renamed `OpenAIClientOptions`'s `ApplicationId` to `UserAgentApplicationId` (commit_hash)
-- Renamed `StreamingChatToolCallUpdate`'s `Id` to `ToolCallId` (commit_hash)
-- Renamed `StreamingChatCompletionUpdate`'s `Id` to `CompletionId` (commit_hash)
-- Replaced `Auto` and `None` in the deprecated `ChatFunctionChoice` with `CreateAutoChoice()` and `CreateNoneChoice()` (commit_hash)
-- Replaced the deprecated `ChatFunctionChoice(ChatFunction)` constructor with `CreateNamedChoice(string functionName)` (commit_hash)
-- Renamed `FileClient` to `OpenAIFileClient` and the corresponding `GetFileClient()` method in `OpenAIClient` to `GetOpenAIFileClient()`. (commit_hash)
-- Renamed `ModelClient` to `OpenAIModelClient` and the corresponding `GetModelClient()` method in `OpenAIClient` to `GetOpenAIModelClient()`. (commit_hash)
+> [!NOTE]
+> The following breaking changes only apply when upgrading from the previous 2.0.0-beta.* versions.
+
+- Implemented `ChatMessageContent` to encapsulate the representation of content parts in `ChatMessage`, `ChatCompletion`, and `StreamingChatCompletionUpdate`. ([31c2ba6](https://github.com/openai/openai-dotnet/commit/31c2ba63c625b1b4fc2640ddf378a97e89b89167))
+- Changed the representation of function arguments to `BinaryData` in `ChatToolCall`, `StreamingChatToolCallUpdate`, `ChatFunctionCall`, and `StreamingChatFunctionCallUpdate`. ([31c2ba6](https://github.com/openai/openai-dotnet/commit/31c2ba63c625b1b4fc2640ddf378a97e89b89167))
+- Renamed `OpenAIClientOptions`'s `ApplicationId` to `UserAgentApplicationId`. ([31c2ba6](https://github.com/openai/openai-dotnet/commit/31c2ba63c625b1b4fc2640ddf378a97e89b89167))
+- Renamed `StreamingChatToolCallUpdate`'s `Id` to `ToolCallId`. ([31c2ba6](https://github.com/openai/openai-dotnet/commit/31c2ba63c625b1b4fc2640ddf378a97e89b89167))
+- Renamed `StreamingChatCompletionUpdate`'s `Id` to `CompletionId`. ([31c2ba6](https://github.com/openai/openai-dotnet/commit/31c2ba63c625b1b4fc2640ddf378a97e89b89167))
+- Replaced `Auto` and `None` in the deprecated `ChatFunctionChoice` with `CreateAutoChoice()` and `CreateNoneChoice()`. ([31c2ba6](https://github.com/openai/openai-dotnet/commit/31c2ba63c625b1b4fc2640ddf378a97e89b89167))
+- Replaced the deprecated `ChatFunctionChoice(ChatFunction)` constructor with `CreateNamedChoice(string functionName)`. ([31c2ba6](https://github.com/openai/openai-dotnet/commit/31c2ba63c625b1b4fc2640ddf378a97e89b89167))
+- Renamed `FileClient` to `OpenAIFileClient` and the corresponding `GetFileClient()` method in `OpenAIClient` to `GetOpenAIFileClient()`. ([31c2ba6](https://github.com/openai/openai-dotnet/commit/31c2ba63c625b1b4fc2640ddf378a97e89b89167))
+- Renamed `ModelClient` to `OpenAIModelClient` and the corresponding `GetModelClient()` method in `OpenAIClient` to `GetOpenAIModelClient()`. ([31c2ba6](https://github.com/openai/openai-dotnet/commit/31c2ba63c625b1b4fc2640ddf378a97e89b89167))
 
 ## 2.0.0-beta.13 (2024-09-27)
 

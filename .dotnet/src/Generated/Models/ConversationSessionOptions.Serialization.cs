@@ -284,6 +284,7 @@ namespace OpenAI.RealtimeConversation
             return new ConversationSessionOptions(
                 voice,
                 instructions,
+                voice,
                 inputAudioFormat,
                 outputAudioFormat,
                 tools ?? new ChangeTrackingList<ConversationTool>(),

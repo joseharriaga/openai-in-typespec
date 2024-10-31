@@ -10,7 +10,7 @@ using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class UnknownRealtimeResponseStatusDetails : IJsonModel<InternalRealtimeResponseStatusDetails>
+    internal partial class UnknownRealtimeResponseStatusDetails : IJsonModel<ConversationStatusDetails>
     {
         internal UnknownRealtimeResponseStatusDetails()
         {
@@ -28,7 +28,7 @@ namespace OpenAI.RealtimeConversation
             string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalRealtimeResponseStatusDetails)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationStatusDetails)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
         }
@@ -40,10 +40,10 @@ namespace OpenAI.RealtimeConversation
             string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalRealtimeResponseStatusDetails)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationStatusDetails)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalRealtimeResponseStatusDetails(document.RootElement, options);
+            return DeserializeConversationStatusDetails(document.RootElement, options);
         }
 
         internal static UnknownRealtimeResponseStatusDetails DeserializeUnknownRealtimeResponseStatusDetails(JsonElement element, ModelReaderWriterOptions options)
@@ -79,7 +79,7 @@ namespace OpenAI.RealtimeConversation
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalRealtimeResponseStatusDetails)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationStatusDetails)} does not support writing '{options.Format}' format.");
             }
         }
 
@@ -96,7 +96,7 @@ namespace OpenAI.RealtimeConversation
                         return DeserializeInternalRealtimeResponseStatusDetails(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalRealtimeResponseStatusDetails)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationStatusDetails)} does not support reading '{options.Format}' format.");
             }
         }
 

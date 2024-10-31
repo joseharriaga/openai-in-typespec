@@ -216,7 +216,7 @@ namespace OpenAI.RealtimeConversation
                     List<InternalRealtimeRequestSessionUpdateCommandSessionModality> array = new List<InternalRealtimeRequestSessionUpdateCommandSessionModality>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(new InternalRealtimeRequestSessionUpdateCommandSessionModality(item.GetString()));
+                        array.Add(new InternalRealtimeRequestSessionModality(item.GetString()));
                     }
                     modalities = array;
                     continue;

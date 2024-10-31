@@ -12,13 +12,14 @@ namespace OpenAI.RealtimeConversation
         internal ConversationItemTruncatedUpdate(string itemId, int audioEndMs, int index, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemTruncated)
         {
             ItemId = itemId;
+            ContentIndex = contentIndex;
             AudioEndMs = audioEndMs;
-            Index = index;
         }
 
         internal ConversationItemTruncatedUpdate(string itemId, int audioEndMs, int index, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
             ItemId = itemId;
+            ContentIndex = contentIndex;
             AudioEndMs = audioEndMs;
             Index = index;
         }

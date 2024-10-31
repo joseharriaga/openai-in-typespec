@@ -11,7 +11,8 @@ namespace OpenAI.RealtimeConversation
     {
         internal InternalRealtimeResponseTextContentPart(string text, ConversationContentPartKind @type) : base(@type)
         {
-            Text = text;
+            Type = type;
+            InternalTextValue = internalTextValue;
         }
 
         internal InternalRealtimeResponseTextContentPart(string text, ConversationContentPartKind @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
@@ -19,6 +20,6 @@ namespace OpenAI.RealtimeConversation
             Text = text;
         }
 
-        public string Text { get; }
+        internal string Type { get; set; } = "text";
     }
 }

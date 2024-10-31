@@ -35,7 +35,7 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("error") != true)
             {
                 writer.WritePropertyName("error"u8);
-                writer.WriteObjectValue<InternalRealtimeResponseError>(_error, options);
+                writer.WriteObjectValue<InternalRealtimeServerEventErrorError>(_error, options);
             }
         }
 

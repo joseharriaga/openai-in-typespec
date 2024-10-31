@@ -27,7 +27,9 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatOutputTokenUsageDetails)} does not support writing '{format}' format.");
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("reasoning_tokens") != true)
+
+            writer.WriteStartObject();
+            if (SerializedAdditionalRawData?.ContainsKey("reasoning_tokens") != true)
             {
                 writer.WritePropertyName("reasoning_tokens"u8);
                 writer.WriteNumberValue(ReasoningTokenCount);

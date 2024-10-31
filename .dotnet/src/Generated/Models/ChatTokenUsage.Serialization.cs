@@ -100,26 +100,26 @@ namespace OpenAI.Chat
             {
                 if (prop.NameEquals("completion_tokens"u8))
                 {
-                    outputTokenCount = prop.Value.GetInt32();
+                    completionTokens = property.Value.GetInt32();
                     continue;
                 }
-                if (prop.NameEquals("prompt_tokens"u8))
+                if (property.NameEquals("prompt_tokens"u8))
                 {
-                    inputTokenCount = prop.Value.GetInt32();
+                    promptTokens = property.Value.GetInt32();
                     continue;
                 }
-                if (prop.NameEquals("total_tokens"u8))
+                if (property.NameEquals("total_tokens"u8))
                 {
-                    totalTokenCount = prop.Value.GetInt32();
+                    totalTokens = property.Value.GetInt32();
                     continue;
                 }
-                if (prop.NameEquals("completion_tokens_details"u8))
+                if (property.NameEquals("completion_tokens_details"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    outputTokenDetails = ChatOutputTokenUsageDetails.DeserializeChatOutputTokenUsageDetails(prop.Value, options);
+                    completionTokensDetails = ChatOutputTokenUsageDetails.DeserializeChatOutputTokenUsageDetails(property.Value, options);
                     continue;
                 }
                 if (true)

@@ -8,18 +8,13 @@ namespace OpenAI.RealtimeConversation;
 [CodeGenModel("RealtimeContentPart")]
 public partial class ConversationContentPart
 {
-    [CodeGenMember("Type")]
-    internal ConversationContentPartKind Type;
+    public string Text =>
+        (this as InternalRealtimeRequestTextContentPart)?.InternalTextValue
+        ?? (this as InternalRealtimeResponseTextContentPart)?.InternalTextValue;
 
-    public ConversationContentPartKind Kind => Type;
-
-    public string TextValue =>
-        (this as InternalRealtimeRequestTextContentPart)?.Text
-        ?? (this as InternalRealtimeResponseTextContentPart)?.Text;
-
-    public string AudioTranscriptValue =>
-        (this as InternalRealtimeRequestAudioContentPart)?.Transcript
-        ?? (this as InternalRealtimeResponseAudioContentPart)?.Transcript;
+    public string AudioTranscript =>
+        (this as InternalRealtimeRequestAudioContentPart)?.InternalTranscriptValue
+        ?? (this as InternalRealtimeResponseAudioContentPart)?.InternalTranscriptValue;
 
     public static ConversationContentPart FromInputText(string text)
         => new InternalRealtimeRequestTextContentPart(text, ConversationContentPartKind.Text);

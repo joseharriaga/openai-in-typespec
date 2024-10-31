@@ -11,6 +11,9 @@ namespace OpenAI.RealtimeConversation
     {
         internal ConversationInputSpeechFinishedUpdate(int audioEndMs, string itemId, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.InputAudioBufferSpeechStopped)
         {
+            Argument.AssertNotNull(itemId, nameof(itemId));
+
+            Kind = ConversationUpdateKind.InputAudioBufferSpeechStopped;
             AudioEndMs = audioEndMs;
             ItemId = itemId;
         }
@@ -23,6 +26,10 @@ namespace OpenAI.RealtimeConversation
 
         public int AudioEndMs { get; }
 
+
+        internal ConversationInputSpeechFinishedUpdate()
+        {
+        }
         public string ItemId { get; }
     }
 }

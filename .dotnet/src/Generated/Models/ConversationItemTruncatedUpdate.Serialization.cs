@@ -69,6 +69,7 @@ namespace OpenAI.RealtimeConversation
                 return null;
             }
             string itemId = default;
+            int contentIndex = default;
             int audioEndMs = default;
             int index = default;
             string eventId = default;

@@ -3,13 +3,14 @@ using System;
 
 namespace OpenAI.Moderations;
 
-// CUSTOM: 
+// CUSTOM:
 // - Removes the redundant classes `ModerationCategories` and `ModerationCategoryScores` and moves their properties into this type.
 [CodeGenModel("CreateModerationResponseResult")]
 [CodeGenSuppress("Categories")]
 [CodeGenSuppress("CategoryScores")]
-[CodeGenSuppress(nameof(ModerationResult), typeof(bool), typeof(InternalModerationCategories), typeof(InternalModerationCategoryScores))]
-[CodeGenSuppress(nameof(ModerationResult), typeof(bool), typeof(InternalModerationCategories), typeof(InternalModerationCategoryScores), typeof(IDictionary<string, BinaryData>))]
+[CodeGenSuppress("CategoryAppliedInputTypes")]
+[CodeGenSuppress(nameof(ModerationResult), typeof(bool), typeof(InternalModerationCategories), typeof(InternalModerationCategoryScores), typeof(InternalCreateModerationResponseResultCategoryAppliedInputTypes))]
+[CodeGenSuppress(nameof(ModerationResult), typeof(bool), typeof(InternalModerationCategories), typeof(InternalModerationCategoryScores), typeof(InternalCreateModerationResponseResultCategoryAppliedInputTypes), typeof(IDictionary<string, BinaryData>))]
 public partial class ModerationResult
 {
     internal ModerationResult(bool flagged, ModerationCategory hate, ModerationCategory hateThreatening, ModerationCategory harassment, ModerationCategory harassmentThreatening, ModerationCategory selfHarm, ModerationCategory selfHarmIntent, ModerationCategory selfHarmInstructions, ModerationCategory sexual, ModerationCategory sexualMinors, ModerationCategory violence, ModerationCategory violenceGraphic)
@@ -19,6 +20,8 @@ public partial class ModerationResult
         HateThreatening = hateThreatening;
         Harassment = harassment;
         HarassmentThreatening = harassmentThreatening;
+        Illicit = illicit;
+        IllicitViolent = illicitViolent;
         SelfHarm = selfHarm;
         SelfHarmIntent = selfHarmIntent;
         SelfHarmInstructions = selfHarmInstructions;
@@ -28,13 +31,15 @@ public partial class ModerationResult
         ViolenceGraphic = violenceGraphic;
     }
 
-    internal ModerationResult(bool flagged, ModerationCategory hate, ModerationCategory hateThreatening, ModerationCategory harassment, ModerationCategory harassmentThreatening, ModerationCategory selfHarm, ModerationCategory selfHarmIntent, ModerationCategory selfHarmInstructions, ModerationCategory sexual, ModerationCategory sexualMinors, ModerationCategory violence, ModerationCategory violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
+    internal ModerationResult(bool flagged, ModerationCategory hate, ModerationCategory hateThreatening, ModerationCategory harassment, ModerationCategory harassmentThreatening, ModerationCategory illicit, ModerationCategory illicitViolent, ModerationCategory selfHarm, ModerationCategory selfHarmIntent, ModerationCategory selfHarmInstructions, ModerationCategory sexual, ModerationCategory sexualMinors, ModerationCategory violence, ModerationCategory violenceGraphic, IDictionary<string, BinaryData> serializedAdditionalRawData)
     {
         Flagged = flagged;
         Hate = hate;
         HateThreatening = hateThreatening;
         Harassment = harassment;
         HarassmentThreatening = harassmentThreatening;
+        Illicit = illicit;
+        IllicitViolent = illicitViolent;
         SelfHarm = selfHarm;
         SelfHarmIntent = selfHarmIntent;
         SelfHarmInstructions = selfHarmInstructions;
@@ -56,6 +61,10 @@ public partial class ModerationResult
     public ModerationCategory Harassment { get; }
 
     public ModerationCategory HarassmentThreatening { get; }
+
+    public ModerationCategory Illicit { get; }
+
+    public ModerationCategory IllicitViolent { get; }
 
     public ModerationCategory SelfHarm { get; }
 

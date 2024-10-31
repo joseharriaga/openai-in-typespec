@@ -34,10 +34,10 @@ namespace OpenAI.RealtimeConversation
             base.JsonModelWriteCore(writer, options);
             if (_additionalBinaryDataProperties?.ContainsKey("transcript") != true)
             {
-                if (Transcript != null)
+                if (InternalTranscriptValue != null)
                 {
                     writer.WritePropertyName("transcript"u8);
-                    writer.WriteStringValue(Transcript);
+                    writer.WriteStringValue(InternalTranscriptValue);
                 }
                 else
                 {
@@ -65,6 +65,7 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
+            string type = default;
             string transcript = default;
             ConversationContentPartKind @type = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();

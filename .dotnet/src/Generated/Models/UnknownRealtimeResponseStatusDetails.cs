@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class UnknownRealtimeResponseStatusDetails : InternalRealtimeResponseStatusDetails
+    internal partial class UnknownRealtimeResponseStatusDetails : ConversationStatusDetails
     {
         internal UnknownRealtimeResponseStatusDetails(ConversationStatus @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type != default ? @type : "unknown", additionalBinaryDataProperties)
         {

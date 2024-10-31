@@ -130,6 +130,8 @@ namespace OpenAI.Moderations
             float hateThreatening = default;
             float harassment = default;
             float harassmentThreatening = default;
+            float illicit = default;
+            float illicitViolent = default;
             float selfHarm = default;
             float selfHarmIntent = default;
             float selfHarmInstructions = default;
@@ -205,6 +207,8 @@ namespace OpenAI.Moderations
                 hateThreatening,
                 harassment,
                 harassmentThreatening,
+                illicit,
+                illicitViolent,
                 selfHarm,
                 selfHarmIntent,
                 selfHarmInstructions,

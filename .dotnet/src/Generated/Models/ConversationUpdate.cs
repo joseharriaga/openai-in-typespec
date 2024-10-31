@@ -13,6 +13,8 @@ namespace OpenAI.RealtimeConversation
 
         private protected ConversationUpdate(string eventId, RealtimeConversation.ConversationUpdateKind kind)
         {
+            Argument.AssertNotNull(eventId, nameof(eventId));
+
             EventId = eventId;
             Kind = kind;
         }

@@ -35,7 +35,7 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("audio_end_ms") != true)
             {
                 writer.WritePropertyName("audio_end_ms"u8);
-                writer.WriteNumberValue(AudioEndMs);
+                writer.WriteNumberValue(_audioEndMs);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
             {

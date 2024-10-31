@@ -52,13 +52,13 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            ConversationContentPartKind @type = default;
+            ConversationContentPartKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = new ConversationContentPartKind(prop.Value.GetString());
+                    kind = new ConversationContentPartKind(prop.Value.GetString());
                     continue;
                 }
                 if (true)
@@ -66,7 +66,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new UnknownRealtimeContentPart(@type, additionalBinaryDataProperties);
+            return new UnknownRealtimeContentPart(kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ConversationContentPart>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

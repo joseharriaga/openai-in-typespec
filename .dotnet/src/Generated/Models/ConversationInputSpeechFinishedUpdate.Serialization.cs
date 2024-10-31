@@ -32,15 +32,20 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationInputSpeechFinishedUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (_additionalBinaryDataProperties?.ContainsKey("audio_end_ms") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("event_id") != true)
             {
-                writer.WritePropertyName("audio_end_ms"u8);
-                writer.WriteNumberValue(_audioEndMs);
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
             {
                 writer.WritePropertyName("item_id"u8);
                 writer.WriteStringValue(ItemId);
+            }
+            if (_additionalBinaryDataProperties?.ContainsKey("audio_end_ms") != true)
+            {
+                writer.WritePropertyName("audio_end_ms"u8);
+                writer.WriteNumberValue(_audioEndMs);
             }
         }
 
@@ -63,16 +68,16 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            int audioEndMs = default;
-            string itemId = default;
             string eventId = default;
+            string itemId = default;
+            int audioEndMs = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("audio_end_ms"u8))
+                if (prop.NameEquals("event_id"u8))
                 {
-                    audioEndMs = prop.Value.GetInt32();
+                    eventId = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("item_id"u8))
@@ -80,14 +85,9 @@ namespace OpenAI.RealtimeConversation
                     itemId = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("event_id"u8))
+                if (prop.NameEquals("audio_end_ms"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
-                    eventId = prop.Value.GetString();
+                    audioEndMs = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
@@ -100,7 +100,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationInputSpeechFinishedUpdate(audioEndMs, itemId, eventId, kind, additionalBinaryDataProperties);
+            return new ConversationInputSpeechFinishedUpdate(eventId, itemId, audioEndMs, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ConversationInputSpeechFinishedUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

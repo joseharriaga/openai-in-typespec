@@ -50,7 +50,7 @@ namespace OpenAI.RealtimeConversation
             {
                 writer.WritePropertyName("modalities"u8);
                 writer.WriteStartArray();
-                foreach (InternalRealtimeRequestSessionUpdateCommandSessionModality item in Modalities)
+                foreach (InternalRealtimeRequestSessionModality item in Modalities)
                 {
                     writer.WriteStringValue(item.ToString());
                 }
@@ -182,7 +182,7 @@ namespace OpenAI.RealtimeConversation
             InternalRealtimeResponseSessionObject @object = default;
             string id = default;
             string model = default;
-            IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> modalities = default;
+            IList<InternalRealtimeRequestSessionModality> modalities = default;
             string instructions = default;
             ConversationVoice voice = default;
             ConversationAudioFormat inputAudioFormat = default;
@@ -213,7 +213,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("modalities"u8))
                 {
-                    List<InternalRealtimeRequestSessionUpdateCommandSessionModality> array = new List<InternalRealtimeRequestSessionUpdateCommandSessionModality>();
+                    List<InternalRealtimeRequestSessionModality> array = new List<InternalRealtimeRequestSessionModality>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
                         array.Add(new InternalRealtimeRequestSessionModality(item.GetString()));

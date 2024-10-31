@@ -11,19 +11,19 @@ namespace OpenAI.RealtimeConversation
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        private protected ConversationItem(InternalRealtimeRequestItemType @type)
+        private protected ConversationItem(InternalRealtimeItemType @type)
         {
             Type = @type;
         }
 
-        internal ConversationItem(InternalRealtimeRequestItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ConversationItem(InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Type = @type;
             Id = id;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalRealtimeRequestItemType Type { get; set; }
+        internal InternalRealtimeItemType Type { get; set; }
 
         public string Id { get; set; }
 

@@ -27,15 +27,15 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(ConversationSessionOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Voice) && _additionalBinaryDataProperties?.ContainsKey("voice") != true)
-            {
-                writer.WritePropertyName("voice"u8);
-                writer.WriteStringValue(Voice.Value.ToString());
-            }
             if (Optional.IsDefined(Instructions) && _additionalBinaryDataProperties?.ContainsKey("instructions") != true)
             {
                 writer.WritePropertyName("instructions"u8);
                 writer.WriteStringValue(Instructions);
+            }
+            if (Optional.IsDefined(Voice) && _additionalBinaryDataProperties?.ContainsKey("voice") != true)
+            {
+                writer.WritePropertyName("voice"u8);
+                writer.WriteStringValue(Voice.Value.ToString());
             }
             if (Optional.IsDefined(InputAudioFormat) && _additionalBinaryDataProperties?.ContainsKey("input_audio_format") != true)
             {
@@ -62,26 +62,35 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
             }
-            if (Optional.IsDefined(Model) && _additionalBinaryDataProperties?.ContainsKey("model") != true)
-            {
-                writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model);
-            }
             if (Optional.IsDefined(TurnDetectionOptions) && _additionalBinaryDataProperties?.ContainsKey("turn_detection") != true)
             {
-                writer.WritePropertyName("turn_detection"u8);
-                writer.WriteObjectValue<ConversationTurnDetectionOptions>(TurnDetectionOptions, options);
+                if (TurnDetectionOptions != null)
+                {
+                    writer.WritePropertyName("turn_detection"u8);
+                    writer.WriteObjectValue<ConversationTurnDetectionOptions>(TurnDetectionOptions, options);
+                }
+                else
+                {
+                    writer.WriteNull("turnDetection"u8);
+                }
             }
             if (Optional.IsDefined(InputTranscriptionOptions) && _additionalBinaryDataProperties?.ContainsKey("input_audio_transcription") != true)
             {
-                writer.WritePropertyName("input_audio_transcription"u8);
-                writer.WriteObjectValue<ConversationInputTranscriptionOptions>(InputTranscriptionOptions, options);
+                if (InputTranscriptionOptions != null)
+                {
+                    writer.WritePropertyName("input_audio_transcription"u8);
+                    writer.WriteObjectValue<ConversationInputTranscriptionOptions>(InputTranscriptionOptions, options);
+                }
+                else
+                {
+                    writer.WriteNull("inputAudioTranscription"u8);
+                }
             }
             if (Optional.IsCollectionDefined(_internalModalities) && _additionalBinaryDataProperties?.ContainsKey("modalities") != true)
             {
                 writer.WritePropertyName("modalities"u8);
                 writer.WriteStartArray();
-                foreach (InternalRealtimeRequestSessionUpdateCommandSessionModality item in _internalModalities)
+                foreach (InternalRealtimeRequestSessionModality item in _internalModalities)
                 {
                     writer.WriteStringValue(item.ToString());
                 }
@@ -151,21 +160,25 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            ConversationVoice? voice = default;
             string instructions = default;
+            ConversationVoice? voice = default;
             ConversationAudioFormat? inputAudioFormat = default;
             ConversationAudioFormat? outputAudioFormat = default;
             IList<ConversationTool> tools = default;
             float? temperature = default;
-            string model = default;
             ConversationTurnDetectionOptions turnDetectionOptions = default;
             ConversationInputTranscriptionOptions inputTranscriptionOptions = default;
-            IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> internalModalities = default;
+            IList<InternalRealtimeRequestSessionModality> internalModalities = default;
             BinaryData internalToolChoice = default;
             BinaryData maxResponseOutputTokens = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("instructions"u8))
+                {
+                    instructions = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("voice"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -173,11 +186,6 @@ namespace OpenAI.RealtimeConversation
                         continue;
                     }
                     voice = new ConversationVoice(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("instructions"u8))
-                {
-                    instructions = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("input_audio_format"u8))
@@ -221,15 +229,11 @@ namespace OpenAI.RealtimeConversation
                     temperature = prop.Value.GetSingle();
                     continue;
                 }
-                if (prop.NameEquals("model"u8))
-                {
-                    model = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("turn_detection"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        turnDetectionOptions = null;
                         continue;
                     }
                     turnDetectionOptions = ConversationTurnDetectionOptions.DeserializeConversationTurnDetectionOptions(prop.Value, options);
@@ -239,6 +243,7 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        inputTranscriptionOptions = null;
                         continue;
                     }
                     inputTranscriptionOptions = ConversationInputTranscriptionOptions.DeserializeConversationInputTranscriptionOptions(prop.Value, options);
@@ -250,10 +255,10 @@ namespace OpenAI.RealtimeConversation
                     {
                         continue;
                     }
-                    List<InternalRealtimeRequestSessionUpdateCommandSessionModality> array = new List<InternalRealtimeRequestSessionUpdateCommandSessionModality>();
+                    List<InternalRealtimeRequestSessionModality> array = new List<InternalRealtimeRequestSessionModality>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(new InternalRealtimeRequestSessionUpdateCommandSessionModality(item.GetString()));
+                        array.Add(new InternalRealtimeRequestSessionModality(item.GetString()));
                     }
                     internalModalities = array;
                     continue;
@@ -282,14 +287,12 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             return new ConversationSessionOptions(
-                voice,
                 instructions,
                 voice,
                 inputAudioFormat,
                 outputAudioFormat,
                 tools ?? new ChangeTrackingList<ConversationTool>(),
                 temperature,
-                model,
                 turnDetectionOptions,
                 inputTranscriptionOptions,
                 internalModalities,

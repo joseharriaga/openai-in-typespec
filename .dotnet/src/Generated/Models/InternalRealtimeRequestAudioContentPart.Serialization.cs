@@ -13,10 +13,6 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestAudioContentPart : IJsonModel<InternalRealtimeRequestAudioContentPart>
     {
-        internal InternalRealtimeRequestAudioContentPart()
-        {
-        }
-
         void IJsonModel<InternalRealtimeRequestAudioContentPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -32,7 +28,12 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(InternalRealtimeRequestAudioContentPart)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (Optional.IsDefined(Transcript) && _additionalBinaryDataProperties?.ContainsKey("transcript") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Type);
+            }
+            if (Optional.IsDefined(InternalTranscriptValue) && _additionalBinaryDataProperties?.ContainsKey("transcript") != true)
             {
                 writer.WritePropertyName("transcript"u8);
                 writer.WriteStringValue(InternalTranscriptValue);
@@ -58,20 +59,25 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string type = default;
-            string transcript = default;
-            ConversationContentPartKind @type = default;
+            string @type = "input_audio";
+            string internalTranscriptValue = default;
+            ConversationContentPartKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("transcript"u8))
                 {
-                    transcript = prop.Value.GetString();
+                    internalTranscriptValue = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = new ConversationContentPartKind(prop.Value.GetString());
+                    kind = new ConversationContentPartKind(prop.Value.GetString());
                     continue;
                 }
                 if (true)
@@ -79,7 +85,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeRequestAudioContentPart(transcript, @type, additionalBinaryDataProperties);
+            return new InternalRealtimeRequestAudioContentPart(@type, internalTranscriptValue, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalRealtimeRequestAudioContentPart>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

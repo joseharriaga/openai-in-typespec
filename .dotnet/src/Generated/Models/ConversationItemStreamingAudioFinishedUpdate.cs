@@ -7,38 +7,32 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationAudioDoneUpdate : ConversationUpdate
+    public partial class ConversationItemStreamingAudioFinishedUpdate : ConversationUpdate
     {
-        internal ConversationAudioDoneUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex) : base(eventId)
+        internal ConversationItemStreamingAudioFinishedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemStreamingPartAudioFinished)
         {
-            Argument.AssertNotNull(responseId, nameof(responseId));
-            Argument.AssertNotNull(itemId, nameof(itemId));
-
-            Kind = ConversationUpdateKind.ResponseAudioDone;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
             ContentIndex = contentIndex;
         }
 
-        internal ConversationAudioDoneUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string type, string responseId, string itemId, int outputIndex, int contentIndex) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationItemStreamingAudioFinishedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
-            Type = type;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
             ContentIndex = contentIndex;
         }
 
-        internal ConversationAudioDoneUpdate()
-        {
-        }
-
-        internal string Type { get; set; } = "response.audio.done";
+        public new string EventId => _eventId ?? default;
 
         public string ResponseId { get; }
+
         public string ItemId { get; }
+
         public int OutputIndex { get; }
+
         public int ContentIndex { get; }
     }
 }

@@ -12,11 +12,11 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class UnknownRealtimeClientEvent : IJsonModel<InternalRealtimeClientEvent>
     {
-        internal UnknownRealtimeRequestCommand()
+        internal UnknownRealtimeClientEvent()
         {
         }
 
-        void IJsonModel<InternalRealtimeRequestCommand>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalRealtimeClientEvent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
             JsonModelWriteCore(writer, options);
@@ -25,7 +25,7 @@ namespace OpenAI.RealtimeConversation
 
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEvent>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeClientEvent)} does not support writing '{format}' format.");
@@ -33,11 +33,11 @@ namespace OpenAI.RealtimeConversation
             base.JsonModelWriteCore(writer, options);
         }
 
-        InternalRealtimeRequestCommand IJsonModel<InternalRealtimeRequestCommand>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownRealtimeRequestCommand)JsonModelCreateCore(ref reader, options);
+        InternalRealtimeClientEvent IJsonModel<InternalRealtimeClientEvent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownRealtimeClientEvent)JsonModelCreateCore(ref reader, options);
 
-        protected override InternalRealtimeRequestCommand JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        protected override InternalRealtimeClientEvent JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEvent>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeClientEvent)} does not support reading '{format}' format.");
@@ -46,20 +46,20 @@ namespace OpenAI.RealtimeConversation
             return DeserializeInternalRealtimeClientEvent(document.RootElement, options);
         }
 
-        internal static UnknownRealtimeRequestCommand DeserializeUnknownRealtimeRequestCommand(JsonElement element, ModelReaderWriterOptions options)
+        internal static UnknownRealtimeClientEvent DeserializeUnknownRealtimeClientEvent(JsonElement element, ModelReaderWriterOptions options)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            InternalRealtimeRequestCommandType kind = default;
+            InternalRealtimeClientEventType kind = default;
             string eventId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))
                 {
-                    kind = new InternalRealtimeRequestCommandType(prop.Value.GetString());
+                    kind = new InternalRealtimeClientEventType(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("event_id"u8))
@@ -72,14 +72,14 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new UnknownRealtimeRequestCommand(kind, eventId, additionalBinaryDataProperties);
+            return new UnknownRealtimeClientEvent(kind, eventId, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalRealtimeRequestCommand>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
+        BinaryData IPersistableModel<InternalRealtimeClientEvent>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
         protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEvent>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -89,23 +89,23 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        InternalRealtimeRequestCommand IPersistableModel<InternalRealtimeRequestCommand>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownRealtimeRequestCommand)PersistableModelCreateCore(data, options);
+        InternalRealtimeClientEvent IPersistableModel<InternalRealtimeClientEvent>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownRealtimeClientEvent)PersistableModelCreateCore(data, options);
 
-        protected override InternalRealtimeRequestCommand PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        protected override InternalRealtimeClientEvent PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEvent>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeInternalRealtimeRequestCommand(document.RootElement, options);
+                        return DeserializeInternalRealtimeClientEvent(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(InternalRealtimeClientEvent)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalRealtimeRequestCommand>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalRealtimeClientEvent>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
     }
 }

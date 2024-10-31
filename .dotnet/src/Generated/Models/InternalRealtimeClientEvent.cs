@@ -10,20 +10,21 @@ namespace OpenAI.RealtimeConversation
     internal abstract partial class InternalRealtimeClientEvent
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+        private protected string _eventId;
 
-        private protected InternalRealtimeRequestCommand(InternalRealtimeRequestCommandType kind)
+        private protected InternalRealtimeClientEvent(InternalRealtimeClientEventType kind)
         {
             Kind = kind;
         }
 
-        internal InternalRealtimeRequestCommand(InternalRealtimeRequestCommandType kind, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRealtimeClientEvent(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Kind = kind;
             EventId = eventId;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalRealtimeRequestCommandType Kind { get; set; }
+        internal InternalRealtimeClientEventType Kind { get; set; }
 
         public string EventId { get; set; }
 

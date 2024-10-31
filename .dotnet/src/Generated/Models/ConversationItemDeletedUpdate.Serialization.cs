@@ -32,6 +32,11 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationItemDeletedUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
+            if (_additionalBinaryDataProperties?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
             {
                 writer.WritePropertyName("item_id"u8);
@@ -58,25 +63,20 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string itemId = default;
             string eventId = default;
+            string itemId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("event_id"u8))
+                {
+                    eventId = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("item_id"u8))
                 {
                     itemId = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("event_id"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
-                    eventId = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
@@ -89,7 +89,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationItemDeletedUpdate(itemId, eventId, kind, additionalBinaryDataProperties);
+            return new ConversationItemDeletedUpdate(eventId, itemId, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ConversationItemDeletedUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

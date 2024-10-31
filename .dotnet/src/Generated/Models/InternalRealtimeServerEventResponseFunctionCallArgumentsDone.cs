@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeServerEventResponseFunctionCallArgumentsDone : ConversationUpdate
     {
-        internal ConversationFunctionCallArgumentsDoneUpdate(string responseId, string itemId, int outputIndex, string callId, string name, string arguments, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ResponseFunctionCallArgumentsDone)
+        internal InternalRealtimeServerEventResponseFunctionCallArgumentsDone(string eventId, string responseId, string itemId, int outputIndex, string callId, string arguments) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemStreamingFunctionCallArgumentsFinished)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -18,15 +18,16 @@ namespace OpenAI.RealtimeConversation
             Arguments = arguments;
         }
 
-        internal ConversationFunctionCallArgumentsDoneUpdate(string responseId, string itemId, int outputIndex, string callId, string name, string arguments, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
+        internal InternalRealtimeServerEventResponseFunctionCallArgumentsDone(string eventId, string responseId, string itemId, int outputIndex, string callId, string arguments, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
             CallId = callId;
-            Name = name;
             Arguments = arguments;
         }
+
+        public new string EventId => _eventId ?? default;
 
         public string ResponseId { get; }
 
@@ -35,8 +36,6 @@ namespace OpenAI.RealtimeConversation
         public int OutputIndex { get; }
 
         public string CallId { get; }
-
-        public string Name { get; }
 
         public string Arguments { get; }
     }

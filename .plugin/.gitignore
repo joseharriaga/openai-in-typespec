@@ -17,6 +17,8 @@ launchSettings.json
 # Default TypeSpec output
 tsp-output/
 
+temp/
+
 # Build results
 /artifacts
 binaries/

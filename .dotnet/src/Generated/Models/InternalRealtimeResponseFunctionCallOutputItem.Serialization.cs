@@ -66,7 +66,7 @@ namespace OpenAI.RealtimeConversation
             string callId = default;
             string output = default;
             InternalRealtimeResponseItemObject @object = default;
-            InternalRealtimeRequestItemType @type = default;
+            InternalRealtimeItemType @type = default;
             string id = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -88,7 +88,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = new InternalRealtimeRequestItemType(prop.Value.GetString());
+                    @type = new InternalRealtimeItemType(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("id"u8))

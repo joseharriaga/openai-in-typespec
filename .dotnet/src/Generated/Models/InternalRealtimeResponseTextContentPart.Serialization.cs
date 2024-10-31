@@ -32,6 +32,11 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(InternalRealtimeResponseTextContentPart)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Type);
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
@@ -58,20 +63,25 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string type = default;
-            string text = default;
-            ConversationContentPartKind @type = default;
+            string @type = "text";
+            string internalTextValue = default;
+            ConversationContentPartKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("text"u8))
                 {
-                    text = prop.Value.GetString();
+                    internalTextValue = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = new ConversationContentPartKind(prop.Value.GetString());
+                    kind = new ConversationContentPartKind(prop.Value.GetString());
                     continue;
                 }
                 if (true)
@@ -79,7 +89,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeResponseTextContentPart(text, @type, additionalBinaryDataProperties);
+            return new InternalRealtimeResponseTextContentPart(@type, internalTextValue, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalRealtimeResponseTextContentPart>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

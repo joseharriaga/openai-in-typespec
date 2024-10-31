@@ -11,7 +11,7 @@ namespace OpenAI.RealtimeConversation
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ConversationRateLimitDetailsItem(string name, int limit, int remaining, float resetSeconds)
+        internal ConversationRateLimitDetailsItem(string name, int maximumCount, int remainingCount, TimeSpan timeUntilReset)
         {
             Name = name;
             MaximumCount = maximumCount;
@@ -19,22 +19,16 @@ namespace OpenAI.RealtimeConversation
             TimeUntilReset = timeUntilReset;
         }
 
-        internal ConversationRateLimitDetailsItem(string name, int limit, int remaining, float resetSeconds, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ConversationRateLimitDetailsItem(string name, int maximumCount, int remainingCount, TimeSpan timeUntilReset, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Name = name;
-            Limit = limit;
-            Remaining = remaining;
-            ResetSeconds = resetSeconds;
+            MaximumCount = maximumCount;
+            RemainingCount = remainingCount;
+            TimeUntilReset = timeUntilReset;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public string Name { get; }
-
-        public int Limit { get; }
-
-        public int Remaining { get; }
-
-        public float ResetSeconds { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

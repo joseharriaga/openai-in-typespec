@@ -9,27 +9,20 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationInputSpeechFinishedUpdate : ConversationUpdate
     {
-        internal ConversationInputSpeechFinishedUpdate(int audioEndMs, string itemId, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.InputAudioBufferSpeechStopped)
+        internal ConversationInputSpeechFinishedUpdate(string eventId, string itemId, int audioEndMs) : base(eventId, RealtimeConversation.ConversationUpdateKind.InputSpeechStopped)
         {
-            Argument.AssertNotNull(itemId, nameof(itemId));
-
-            Kind = ConversationUpdateKind.InputAudioBufferSpeechStopped;
-            AudioEndMs = audioEndMs;
             ItemId = itemId;
+            _audioEndMs = audioEndMs;
         }
 
-        internal ConversationInputSpeechFinishedUpdate(int audioEndMs, string itemId, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
+        internal ConversationInputSpeechFinishedUpdate(string eventId, string itemId, int audioEndMs, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
-            AudioEndMs = audioEndMs;
             ItemId = itemId;
+            _audioEndMs = audioEndMs;
         }
 
-        public int AudioEndMs { get; }
+        public new string EventId => _eventId ?? default;
 
-
-        internal ConversationInputSpeechFinishedUpdate()
-        {
-        }
         public string ItemId { get; }
     }
 }

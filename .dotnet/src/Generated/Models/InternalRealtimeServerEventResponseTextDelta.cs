@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeServerEventResponseTextDelta : ConversationUpdate
     {
-        internal ConversationFunctionCallArgumentsDeltaUpdate(string responseId, string itemId, int outputIndex, string callId, string delta, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ResponseFunctionCallArgumentsDelta)
+        internal InternalRealtimeServerEventResponseTextDelta(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string delta) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemStreamingPartTextDelta)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -18,14 +18,16 @@ namespace OpenAI.RealtimeConversation
             Delta = delta;
         }
 
-        internal ConversationFunctionCallArgumentsDeltaUpdate(string responseId, string itemId, int outputIndex, string callId, string delta, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
+        internal InternalRealtimeServerEventResponseTextDelta(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string delta, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
-            CallId = callId;
+            ContentIndex = contentIndex;
             Delta = delta;
         }
+
+        public new string EventId => _eventId ?? default;
 
         public string ResponseId { get; }
 
@@ -33,7 +35,7 @@ namespace OpenAI.RealtimeConversation
 
         public int OutputIndex { get; }
 
-        public string CallId { get; }
+        public int ContentIndex { get; }
 
         public string Delta { get; }
     }

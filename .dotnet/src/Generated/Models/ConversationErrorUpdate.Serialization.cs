@@ -32,6 +32,11 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationErrorUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
+            if (_additionalBinaryDataProperties?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("error") != true)
             {
                 writer.WritePropertyName("error"u8);
@@ -58,25 +63,20 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            InternalRealtimeResponseError error = default;
             string eventId = default;
+            InternalRealtimeServerEventErrorError error = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("error"u8))
-                {
-                    error = InternalRealtimeResponseError.DeserializeInternalRealtimeResponseError(prop.Value, options);
-                    continue;
-                }
                 if (prop.NameEquals("event_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
                     eventId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("error"u8))
+                {
+                    error = InternalRealtimeServerEventErrorError.DeserializeInternalRealtimeServerEventErrorError(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
@@ -89,7 +89,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationErrorUpdate(error, eventId, kind, additionalBinaryDataProperties);
+            return new ConversationErrorUpdate(eventId, error, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ConversationErrorUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

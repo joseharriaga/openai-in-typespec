@@ -11,13 +11,11 @@ namespace OpenAI.RealtimeConversation
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalRealtimeResponseError(string @type, string message)
+        internal InternalRealtimeServerEventErrorError()
         {
-            Type = @type;
-            Message = message;
         }
 
-        internal InternalRealtimeResponseError(string @type, string code, string message, string @param, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRealtimeServerEventErrorError(string @type, string code, string message, string @param, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Type = @type;
             Code = code;

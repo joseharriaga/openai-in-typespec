@@ -15,19 +15,17 @@ namespace OpenAI.RealtimeConversation
         public ConversationSessionOptions()
         {
             Tools = new ChangeTrackingList<ConversationTool>();
-            _internalModalities = new ChangeTrackingList<InternalRealtimeRequestSessionUpdateCommandSessionModality>();
+            _internalModalities = new ChangeTrackingList<InternalRealtimeRequestSessionModality>();
         }
 
-        internal ConversationSessionOptions(ConversationVoice? voice, string instructions, ConversationAudioFormat? inputAudioFormat, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, string model, ConversationTurnDetectionOptions turnDetectionOptions, ConversationInputTranscriptionOptions inputTranscriptionOptions, IList<InternalRealtimeRequestSessionUpdateCommandSessionModality> internalModalities, BinaryData internalToolChoice, BinaryData maxResponseOutputTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ConversationSessionOptions(string instructions, ConversationVoice? voice, ConversationAudioFormat? inputAudioFormat, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, ConversationTurnDetectionOptions turnDetectionOptions, ConversationInputTranscriptionOptions inputTranscriptionOptions, IList<InternalRealtimeRequestSessionModality> internalModalities, BinaryData internalToolChoice, BinaryData maxResponseOutputTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Voice = voice;
             Instructions = instructions;
             Voice = voice;
             InputAudioFormat = inputAudioFormat;
             OutputAudioFormat = outputAudioFormat;
             Tools = tools;
             Temperature = temperature;
-            Model = model;
             TurnDetectionOptions = turnDetectionOptions;
             InputTranscriptionOptions = inputTranscriptionOptions;
             _internalModalities = internalModalities;
@@ -36,9 +34,9 @@ namespace OpenAI.RealtimeConversation
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public ConversationVoice? Voice { get; set; }
-
         public string Instructions { get; set; }
+
+        public ConversationVoice? Voice { get; set; }
 
         public ConversationAudioFormat? InputAudioFormat { get; set; }
 

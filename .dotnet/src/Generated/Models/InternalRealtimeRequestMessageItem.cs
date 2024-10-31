@@ -9,12 +9,12 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestMessageItem : ConversationItem
     {
-        public InternalRealtimeRequestMessageItem(ConversationMessageRole role) : base(InternalRealtimeRequestItemType.Message)
+        public InternalRealtimeRequestMessageItem(ConversationMessageRole role) : base(InternalRealtimeItemType.Message)
         {
             Role = role;
         }
 
-        internal InternalRealtimeRequestMessageItem(ConversationMessageRole role, ConversationItemStatus? status, InternalRealtimeRequestItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, id, additionalBinaryDataProperties)
+        internal InternalRealtimeRequestMessageItem(ConversationMessageRole role, ConversationItemStatus? status, InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, id, additionalBinaryDataProperties)
         {
             Role = role;
             Status = status;

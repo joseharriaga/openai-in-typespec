@@ -51,6 +51,16 @@ namespace OpenAI.Moderations
                 writer.WritePropertyName("harassment/threatening"u8);
                 writer.WriteNumberValue(HarassmentThreatening);
             }
+            if (_additionalBinaryDataProperties?.ContainsKey("illicit") != true)
+            {
+                writer.WritePropertyName("illicit"u8);
+                writer.WriteNumberValue(Illicit);
+            }
+            if (_additionalBinaryDataProperties?.ContainsKey("illicit/violent") != true)
+            {
+                writer.WritePropertyName("illicit/violent"u8);
+                writer.WriteNumberValue(IllicitViolent);
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("self-harm") != true)
             {
                 writer.WritePropertyName("self-harm"u8);
@@ -160,6 +170,16 @@ namespace OpenAI.Moderations
                 if (prop.NameEquals("harassment/threatening"u8))
                 {
                     harassmentThreatening = prop.Value.GetSingle();
+                    continue;
+                }
+                if (prop.NameEquals("illicit"u8))
+                {
+                    illicit = prop.Value.GetSingle();
+                    continue;
+                }
+                if (prop.NameEquals("illicit/violent"u8))
+                {
+                    illicitViolent = prop.Value.GetSingle();
                     continue;
                 }
                 if (prop.NameEquals("self-harm"u8))

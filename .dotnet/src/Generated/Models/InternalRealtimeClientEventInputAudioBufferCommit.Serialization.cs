@@ -22,19 +22,24 @@ namespace OpenAI.RealtimeConversation
 
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestInputAudioBufferCommitCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventInputAudioBufferCommit>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeClientEventInputAudioBufferCommit)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
+            if (Optional.IsDefined(EventId) && _additionalBinaryDataProperties?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
         }
 
-        InternalRealtimeRequestInputAudioBufferCommitCommand IJsonModel<InternalRealtimeRequestInputAudioBufferCommitCommand>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeRequestInputAudioBufferCommitCommand)JsonModelCreateCore(ref reader, options);
+        InternalRealtimeClientEventInputAudioBufferCommit IJsonModel<InternalRealtimeClientEventInputAudioBufferCommit>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeClientEventInputAudioBufferCommit)JsonModelCreateCore(ref reader, options);
 
-        protected override InternalRealtimeRequestCommand JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        protected override InternalRealtimeClientEvent JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestInputAudioBufferCommitCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventInputAudioBufferCommit>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeClientEventInputAudioBufferCommit)} does not support reading '{format}' format.");
@@ -43,25 +48,25 @@ namespace OpenAI.RealtimeConversation
             return DeserializeInternalRealtimeClientEventInputAudioBufferCommit(document.RootElement, options);
         }
 
-        internal static InternalRealtimeRequestInputAudioBufferCommitCommand DeserializeInternalRealtimeRequestInputAudioBufferCommitCommand(JsonElement element, ModelReaderWriterOptions options)
+        internal static InternalRealtimeClientEventInputAudioBufferCommit DeserializeInternalRealtimeClientEventInputAudioBufferCommit(JsonElement element, ModelReaderWriterOptions options)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            InternalRealtimeRequestCommandType kind = default;
             string eventId = default;
+            InternalRealtimeClientEventType kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("type"u8))
-                {
-                    kind = new InternalRealtimeRequestCommandType(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("event_id"u8))
                 {
                     eventId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = new InternalRealtimeClientEventType(prop.Value.GetString());
                     continue;
                 }
                 if (true)
@@ -69,14 +74,14 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeRequestInputAudioBufferCommitCommand(kind, eventId, additionalBinaryDataProperties);
+            return new InternalRealtimeClientEventInputAudioBufferCommit(eventId, kind, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalRealtimeRequestInputAudioBufferCommitCommand>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
+        BinaryData IPersistableModel<InternalRealtimeClientEventInputAudioBufferCommit>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
         protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestInputAudioBufferCommitCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventInputAudioBufferCommit>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -86,17 +91,17 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        InternalRealtimeRequestInputAudioBufferCommitCommand IPersistableModel<InternalRealtimeRequestInputAudioBufferCommitCommand>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalRealtimeRequestInputAudioBufferCommitCommand)PersistableModelCreateCore(data, options);
+        InternalRealtimeClientEventInputAudioBufferCommit IPersistableModel<InternalRealtimeClientEventInputAudioBufferCommit>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalRealtimeClientEventInputAudioBufferCommit)PersistableModelCreateCore(data, options);
 
-        protected override InternalRealtimeRequestCommand PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        protected override InternalRealtimeClientEvent PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestInputAudioBufferCommitCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventInputAudioBufferCommit>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeInternalRealtimeRequestInputAudioBufferCommitCommand(document.RootElement, options);
+                        return DeserializeInternalRealtimeClientEventInputAudioBufferCommit(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(InternalRealtimeClientEventInputAudioBufferCommit)} does not support reading '{options.Format}' format.");
@@ -105,20 +110,20 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<InternalRealtimeClientEventInputAudioBufferCommit>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        public static implicit operator BinaryContent(InternalRealtimeRequestInputAudioBufferCommitCommand internalRealtimeRequestInputAudioBufferCommitCommand)
+        public static implicit operator BinaryContent(InternalRealtimeClientEventInputAudioBufferCommit internalRealtimeClientEventInputAudioBufferCommit)
         {
-            if (internalRealtimeRequestInputAudioBufferCommitCommand == null)
+            if (internalRealtimeClientEventInputAudioBufferCommit == null)
             {
                 return null;
             }
-            return BinaryContent.Create(internalRealtimeRequestInputAudioBufferCommitCommand, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create(internalRealtimeClientEventInputAudioBufferCommit, ModelSerializationExtensions.WireOptions);
         }
 
-        public static explicit operator InternalRealtimeRequestInputAudioBufferCommitCommand(ClientResult result)
+        public static explicit operator InternalRealtimeClientEventInputAudioBufferCommit(ClientResult result)
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalRealtimeRequestInputAudioBufferCommitCommand(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return DeserializeInternalRealtimeClientEventInputAudioBufferCommit(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -7,145 +7,127 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class RealtimeResponseFailedStatusDetails : IJsonModel<RealtimeResponseFailedStatusDetails>
+    public partial class ConversationInputAudioClearedUpdate : IJsonModel<ConversationInputAudioClearedUpdate>
     {
-        void IJsonModel<RealtimeResponseFailedStatusDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        internal ConversationInputAudioClearedUpdate()
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RealtimeResponseFailedStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
-            if (format != "J")
-            {
-                throw new FormatException($"The model {nameof(RealtimeResponseFailedStatusDetails)} does not support writing '{format}' format.");
-            }
+        }
 
+        void IJsonModel<ConversationInputAudioClearedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
             writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("error") != true)
-            {
-                writer.WritePropertyName("error"u8);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(Error);
-#else
-                using (JsonDocument document = JsonDocument.Parse(Error))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
-            {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type.ToString());
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-            }
+            JsonModelWriteCore(writer, options);
             writer.WriteEndObject();
         }
 
-        RealtimeResponseFailedStatusDetails IJsonModel<RealtimeResponseFailedStatusDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RealtimeResponseFailedStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioClearedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(RealtimeResponseFailedStatusDetails)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationInputAudioClearedUpdate)} does not support writing '{format}' format.");
             }
-
-            using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeRealtimeResponseFailedStatusDetails(document.RootElement, options);
+            base.JsonModelWriteCore(writer, options);
+            if (_additionalBinaryDataProperties?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
         }
 
-        internal static RealtimeResponseFailedStatusDetails DeserializeRealtimeResponseFailedStatusDetails(JsonElement element, ModelReaderWriterOptions options = null)
-        {
-            options ??= ModelSerializationExtensions.WireOptions;
+        ConversationInputAudioClearedUpdate IJsonModel<ConversationInputAudioClearedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationInputAudioClearedUpdate)JsonModelCreateCore(ref reader, options);
 
+        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioClearedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            if (format != "J")
+            {
+                throw new FormatException($"The model {nameof(ConversationInputAudioClearedUpdate)} does not support reading '{format}' format.");
+            }
+            using JsonDocument document = JsonDocument.ParseValue(ref reader);
+            return DeserializeConversationInputAudioClearedUpdate(document.RootElement, options);
+        }
+
+        internal static ConversationInputAudioClearedUpdate DeserializeConversationInputAudioClearedUpdate(JsonElement element, ModelReaderWriterOptions options)
+        {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            BinaryData error = default;
-            ConversationStatus type = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string eventId = default;
+            RealtimeConversation.ConversationUpdateKind kind = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("error"u8))
+                if (prop.NameEquals("event_id"u8))
                 {
-                    error = BinaryData.FromString(property.Value.GetRawText());
+                    eventId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    type = new ConversationStatus(property.Value.GetString());
+                    kind = prop.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
                 if (true)
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new RealtimeResponseFailedStatusDetails(type, serializedAdditionalRawData, error);
+            return new ConversationInputAudioClearedUpdate(eventId, kind, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<RealtimeResponseFailedStatusDetails>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<RealtimeResponseFailedStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<ConversationInputAudioClearedUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioClearedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(RealtimeResponseFailedStatusDetails)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationInputAudioClearedUpdate)} does not support writing '{options.Format}' format.");
             }
         }
 
-        RealtimeResponseFailedStatusDetails IPersistableModel<RealtimeResponseFailedStatusDetails>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<RealtimeResponseFailedStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
+        ConversationInputAudioClearedUpdate IPersistableModel<ConversationInputAudioClearedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options) => (ConversationInputAudioClearedUpdate)PersistableModelCreateCore(data, options);
 
+        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioClearedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeRealtimeResponseFailedStatusDetails(document.RootElement, options);
+                        return DeserializeConversationInputAudioClearedUpdate(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(RealtimeResponseFailedStatusDetails)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationInputAudioClearedUpdate)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<RealtimeResponseFailedStatusDetails>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ConversationInputAudioClearedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new RealtimeResponseFailedStatusDetails FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(ConversationInputAudioClearedUpdate conversationInputAudioClearedUpdate)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeRealtimeResponseFailedStatusDetails(document.RootElement);
+            if (conversationInputAudioClearedUpdate == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(conversationInputAudioClearedUpdate, ModelSerializationExtensions.WireOptions);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        public static explicit operator ConversationInputAudioClearedUpdate(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeConversationInputAudioClearedUpdate(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

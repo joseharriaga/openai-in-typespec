@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeServerEventResponseAudioDelta : ConversationUpdate
     {
-        internal ConversationOutputTranscriptionFinishedUpdate(string responseId, string itemId, int outputIndex, int contentIndex, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ResponseAudioTranscriptDone)
+        internal InternalRealtimeServerEventResponseAudioDelta(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, BinaryData delta) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemStreamingPartAudioDelta)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -18,13 +18,16 @@ namespace OpenAI.RealtimeConversation
             Delta = delta;
         }
 
-        internal ConversationOutputTranscriptionFinishedUpdate(string responseId, string itemId, int outputIndex, int contentIndex, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
+        internal InternalRealtimeServerEventResponseAudioDelta(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, BinaryData delta, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
             ContentIndex = contentIndex;
+            Delta = delta;
         }
+
+        public new string EventId => _eventId ?? default;
 
         public string ResponseId { get; }
 
@@ -33,6 +36,7 @@ namespace OpenAI.RealtimeConversation
         public int OutputIndex { get; }
 
         public int ContentIndex { get; }
+
         public BinaryData Delta { get; }
     }
 }

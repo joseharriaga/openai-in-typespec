@@ -92,9 +92,9 @@ namespace OpenAI.RealtimeConversation
                 return null;
             }
             string name = default;
-            int limit = default;
-            int remaining = default;
-            float resetSeconds = default;
+            int maximumCount = default;
+            int remainingCount = default;
+            TimeSpan timeUntilReset = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -105,17 +105,17 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("limit"u8))
                 {
-                    limit = prop.Value.GetInt32();
+                    maximumCount = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("remaining"u8))
                 {
-                    remaining = prop.Value.GetInt32();
+                    remainingCount = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("reset_seconds"u8))
                 {
-                    resetSeconds = prop.Value.GetSingle();
+                    timeUntilReset = TimeSpan.FromSeconds(prop.Value.GetDouble());
                     continue;
                 }
                 if (true)
@@ -123,7 +123,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationRateLimitDetailsItem(name, limit, remaining, resetSeconds, additionalBinaryDataProperties);
+            return new ConversationRateLimitDetailsItem(name, maximumCount, remainingCount, timeUntilReset, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ConversationRateLimitDetailsItem>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

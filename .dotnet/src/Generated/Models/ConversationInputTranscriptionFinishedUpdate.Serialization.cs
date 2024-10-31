@@ -32,6 +32,11 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationInputTranscriptionFinishedUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
+            if (_additionalBinaryDataProperties?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
             {
                 writer.WritePropertyName("item_id"u8);
@@ -68,14 +73,19 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
+            string eventId = default;
             string itemId = default;
             int contentIndex = default;
             string transcript = default;
-            string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("event_id"u8))
+                {
+                    eventId = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("item_id"u8))
                 {
                     itemId = prop.Value.GetString();
@@ -91,16 +101,6 @@ namespace OpenAI.RealtimeConversation
                     transcript = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("event_id"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
-                    eventId = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
                     kind = prop.Value.GetString().ToConversationUpdateKind();
@@ -112,10 +112,10 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             return new ConversationInputTranscriptionFinishedUpdate(
+                eventId,
                 itemId,
                 contentIndex,
                 transcript,
-                eventId,
                 kind,
                 additionalBinaryDataProperties);
         }

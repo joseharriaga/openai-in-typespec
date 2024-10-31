@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class UnknownRealtimeContentPart : ConversationContentPart
     {
-        internal UnknownRealtimeContentPart(ConversationContentPartKind @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal UnknownRealtimeContentPart(ConversationContentPartKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind != default ? kind : "unknown", additionalBinaryDataProperties)
         {
         }
     }

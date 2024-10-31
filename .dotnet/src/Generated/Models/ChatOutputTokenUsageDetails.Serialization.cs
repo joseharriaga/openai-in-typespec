@@ -27,12 +27,15 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatOutputTokenUsageDetails)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("reasoning_tokens") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("reasoning_tokens") != true)
             {
                 writer.WritePropertyName("reasoning_tokens"u8);
                 writer.WriteNumberValue(ReasoningTokenCount);
+            }
+            if (Optional.IsDefined(AudioTokenCount) && _additionalBinaryDataProperties?.ContainsKey("audio_tokens") != true)
+            {
+                writer.WritePropertyName("audio_tokens"u8);
+                writer.WriteNumberValue(AudioTokenCount.Value);
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -75,6 +78,7 @@ namespace OpenAI.Chat
                 return null;
             }
             int reasoningTokenCount = default;
+            int? audioTokenCount = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -87,12 +91,21 @@ namespace OpenAI.Chat
                     reasoningTokenCount = prop.Value.GetInt32();
                     continue;
                 }
+                if (prop.NameEquals("audio_tokens"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    audioTokenCount = prop.Value.GetInt32();
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ChatOutputTokenUsageDetails(reasoningTokenCount, additionalBinaryDataProperties);
+            return new ChatOutputTokenUsageDetails(reasoningTokenCount, audioTokenCount, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ChatOutputTokenUsageDetails>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

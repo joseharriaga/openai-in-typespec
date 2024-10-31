@@ -51,6 +51,11 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("completion_tokens_details"u8);
                 writer.WriteObjectValue<ChatOutputTokenUsageDetails>(OutputTokenDetails, options);
             }
+            if (Optional.IsDefined(InputTokenDetails) && _additionalBinaryDataProperties?.ContainsKey("prompt_tokens_details") != true)
+            {
+                writer.WritePropertyName("prompt_tokens_details"u8);
+                writer.WriteObjectValue<ChatInputTokenUsageDetails>(InputTokenDetails, options);
+            }
             if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -95,31 +100,41 @@ namespace OpenAI.Chat
             int inputTokenCount = default;
             int totalTokenCount = default;
             ChatOutputTokenUsageDetails outputTokenDetails = default;
+            ChatInputTokenUsageDetails inputTokenDetails = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("completion_tokens"u8))
                 {
-                    completionTokens = property.Value.GetInt32();
+                    outputTokenCount = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("prompt_tokens"u8))
+                if (prop.NameEquals("prompt_tokens"u8))
                 {
-                    promptTokens = property.Value.GetInt32();
+                    inputTokenCount = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("total_tokens"u8))
+                if (prop.NameEquals("total_tokens"u8))
                 {
-                    totalTokens = property.Value.GetInt32();
+                    totalTokenCount = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("completion_tokens_details"u8))
+                if (prop.NameEquals("completion_tokens_details"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    completionTokensDetails = ChatOutputTokenUsageDetails.DeserializeChatOutputTokenUsageDetails(property.Value, options);
+                    outputTokenDetails = ChatOutputTokenUsageDetails.DeserializeChatOutputTokenUsageDetails(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("prompt_tokens_details"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    inputTokenDetails = ChatInputTokenUsageDetails.DeserializeChatInputTokenUsageDetails(prop.Value, options);
                     continue;
                 }
                 if (true)
@@ -127,7 +142,13 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ChatTokenUsage(outputTokenCount, inputTokenCount, totalTokenCount, outputTokenDetails, additionalBinaryDataProperties);
+            return new ChatTokenUsage(
+                outputTokenCount,
+                inputTokenCount,
+                totalTokenCount,
+                outputTokenDetails,
+                inputTokenDetails,
+                additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ChatTokenUsage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

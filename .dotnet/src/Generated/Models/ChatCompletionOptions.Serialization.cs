@@ -27,19 +27,7 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatCompletionOptions)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("messages") != true)
-            {
-                writer.WritePropertyName("messages"u8);
-                SerializeMessagesValue(writer, options);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("model") != true)
-            {
-                writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("frequency_penalty") != true && Optional.IsDefined(FrequencyPenalty))
+            if (Optional.IsDefined(FrequencyPenalty) && _additionalBinaryDataProperties?.ContainsKey("frequency_penalty") != true)
             {
                 if (FrequencyPenalty != null)
                 {
@@ -262,6 +250,41 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
+            if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
+            {
+                if (Metadata != null)
+                {
+                    writer.WritePropertyName("metadata"u8);
+                    writer.WriteStartObject();
+                    foreach (var item in Metadata)
+                    {
+                        writer.WritePropertyName(item.Key);
+                        if (item.Value == null)
+                        {
+                            writer.WriteNullValue();
+                            continue;
+                        }
+                        writer.WriteStringValue(item.Value);
+                    }
+                    writer.WriteEndObject();
+                }
+                else
+                {
+                    writer.WriteNull("metadata"u8);
+                }
+            }
+            if (Optional.IsDefined(StoredOutputEnabled) && _additionalBinaryDataProperties?.ContainsKey("store") != true)
+            {
+                if (StoredOutputEnabled != null)
+                {
+                    writer.WritePropertyName("store"u8);
+                    writer.WriteBooleanValue(StoredOutputEnabled.Value);
+                }
+                else
+                {
+                    writer.WriteNull("store"u8);
+                }
+            }
             if (Optional.IsDefined(_serviceTier) && _additionalBinaryDataProperties?.ContainsKey("service_tier") != true)
             {
                 if (_serviceTier != null)
@@ -314,8 +337,6 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            IList<ChatMessage> messages = default;
-            InternalCreateChatCompletionRequestModel model = default;
             float? frequencyPenalty = default;
             float? presencePenalty = default;
             ChatResponseFormat responseFormat = default;
@@ -339,6 +360,8 @@ namespace OpenAI.Chat
             int? deprecatedMaxTokens = default;
             int? maxOutputTokenCount = default;
             IList<ChatFunction> functions = default;
+            IDictionary<string, string> metadata = default;
+            bool? storedOutputEnabled = default;
             InternalCreateChatCompletionRequestServiceTier? serviceTier = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -363,7 +386,7 @@ namespace OpenAI.Chat
                     presencePenalty = prop.Value.GetSingle();
                     continue;
                 }
-                if (property.NameEquals("frequency_penalty"u8))
+                if (prop.NameEquals("response_format"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -557,6 +580,37 @@ namespace OpenAI.Chat
                     functions = array;
                     continue;
                 }
+                if (prop.NameEquals("metadata"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    Dictionary<string, string> dictionary = new Dictionary<string, string>();
+                    foreach (var prop0 in prop.Value.EnumerateObject())
+                    {
+                        if (prop0.Value.ValueKind == JsonValueKind.Null)
+                        {
+                            dictionary.Add(prop0.Name, null);
+                        }
+                        else
+                        {
+                            dictionary.Add(prop0.Name, prop0.Value.GetString());
+                        }
+                    }
+                    metadata = dictionary;
+                    continue;
+                }
+                if (prop.NameEquals("store"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        storedOutputEnabled = null;
+                        continue;
+                    }
+                    storedOutputEnabled = prop.Value.GetBoolean();
+                    continue;
+                }
                 if (prop.NameEquals("service_tier"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -573,8 +627,6 @@ namespace OpenAI.Chat
                 }
             }
             return new ChatCompletionOptions(
-                messages,
-                model,
                 frequencyPenalty,
                 presencePenalty,
                 responseFormat,
@@ -598,6 +650,8 @@ namespace OpenAI.Chat
                 deprecatedMaxTokens,
                 maxOutputTokenCount,
                 functions ?? new ChangeTrackingList<ChatFunction>(),
+                metadata ?? new ChangeTrackingDictionary<string, string>(),
+                storedOutputEnabled,
                 serviceTier,
                 additionalBinaryDataProperties);
         }

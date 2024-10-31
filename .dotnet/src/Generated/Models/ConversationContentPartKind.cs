@@ -11,12 +11,6 @@ namespace OpenAI.RealtimeConversation
     public readonly partial struct ConversationContentPartKind : IEquatable<ConversationContentPartKind>
     {
         private readonly string _value;
-
-        public ConversationContentPartKind(string value)
-        {
-            _value = value ?? throw new ArgumentNullException(nameof(value));
-        }
-
         private const string InputTextValue = "input_text";
         private const string InputAudioValue = "input_audio";
         private const string TextValue = "text";
@@ -32,10 +26,6 @@ namespace OpenAI.RealtimeConversation
         public static ConversationContentPartKind InputText { get; } = new ConversationContentPartKind(InputTextValue);
 
         public static ConversationContentPartKind InputAudio { get; } = new ConversationContentPartKind(InputAudioValue);
-
-        public static ConversationContentPartKind Text { get; } = new ConversationContentPartKind(TextValue);
-
-        public static ConversationContentPartKind Audio { get; } = new ConversationContentPartKind(AudioValue);
 
         public static bool operator ==(ConversationContentPartKind left, ConversationContentPartKind right) => left.Equals(right);
 

@@ -9,15 +9,15 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponseAudioContentPart : ConversationContentPart
     {
-        internal InternalRealtimeResponseAudioContentPart(string transcript, ConversationContentPartKind @type) : base(@type)
+        internal InternalRealtimeResponseAudioContentPart(string internalTranscriptValue) : base(ConversationContentPartKind.Audio)
         {
-            Type = type;
             InternalTranscriptValue = internalTranscriptValue;
         }
 
-        internal InternalRealtimeResponseAudioContentPart(string transcript, ConversationContentPartKind @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRealtimeResponseAudioContentPart(string @type, string internalTranscriptValue, ConversationContentPartKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, additionalBinaryDataProperties)
         {
-            Transcript = transcript;
+            Type = @type;
+            InternalTranscriptValue = internalTranscriptValue;
         }
 
         internal string Type { get; set; } = "audio";

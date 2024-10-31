@@ -10,7 +10,7 @@ namespace OpenAI.Models
 {
     internal partial class UnknownRealtimeRequestMessageItem : InternalRealtimeRequestMessageItem
     {
-        internal UnknownRealtimeRequestMessageItem(ConversationMessageRole role, ConversationItemStatus? status, InternalRealtimeRequestItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role != default ? role : "unknown", status, @type != default ? @type : "unknown", id, additionalBinaryDataProperties)
+        internal UnknownRealtimeRequestMessageItem(ConversationMessageRole role, ConversationItemStatus? status, InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role != default ? role : "unknown", status, @type != default ? @type : "unknown", id, additionalBinaryDataProperties)
         {
         }
     }

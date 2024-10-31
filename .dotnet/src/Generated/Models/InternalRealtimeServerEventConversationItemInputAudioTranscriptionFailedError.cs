@@ -11,13 +11,11 @@ namespace OpenAI.RealtimeConversation
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalRealtimeResponseApiError(string @type, string message)
+        internal InternalRealtimeServerEventConversationItemInputAudioTranscriptionFailedError()
         {
-            Type = @type;
-            Message = message;
         }
 
-        internal InternalRealtimeResponseApiError(string @type, string code, string message, string @param, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRealtimeServerEventConversationItemInputAudioTranscriptionFailedError(string @type, string code, string message, string @param, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Type = @type;
             Code = code;

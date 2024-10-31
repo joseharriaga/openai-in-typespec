@@ -13,11 +13,11 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeServerEventResponseAudioTranscriptDelta : IJsonModel<InternalRealtimeServerEventResponseAudioTranscriptDelta>
     {
-        internal ConversationOutputTranscriptionDeltaUpdate()
+        internal InternalRealtimeServerEventResponseAudioTranscriptDelta()
         {
         }
 
-        void IJsonModel<ConversationOutputTranscriptionDeltaUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalRealtimeServerEventResponseAudioTranscriptDelta>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
             JsonModelWriteCore(writer, options);
@@ -26,12 +26,17 @@ namespace OpenAI.RealtimeConversation
 
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<ConversationOutputTranscriptionDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeServerEventResponseAudioTranscriptDelta>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeServerEventResponseAudioTranscriptDelta)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
+            if (_additionalBinaryDataProperties?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("response_id") != true)
             {
                 writer.WritePropertyName("response_id"u8);
@@ -59,11 +64,11 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        ConversationOutputTranscriptionDeltaUpdate IJsonModel<ConversationOutputTranscriptionDeltaUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationOutputTranscriptionDeltaUpdate)JsonModelCreateCore(ref reader, options);
+        InternalRealtimeServerEventResponseAudioTranscriptDelta IJsonModel<InternalRealtimeServerEventResponseAudioTranscriptDelta>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeServerEventResponseAudioTranscriptDelta)JsonModelCreateCore(ref reader, options);
 
         protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<ConversationOutputTranscriptionDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeServerEventResponseAudioTranscriptDelta>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeServerEventResponseAudioTranscriptDelta)} does not support reading '{format}' format.");
@@ -72,22 +77,27 @@ namespace OpenAI.RealtimeConversation
             return DeserializeInternalRealtimeServerEventResponseAudioTranscriptDelta(document.RootElement, options);
         }
 
-        internal static ConversationOutputTranscriptionDeltaUpdate DeserializeConversationOutputTranscriptionDeltaUpdate(JsonElement element, ModelReaderWriterOptions options)
+        internal static InternalRealtimeServerEventResponseAudioTranscriptDelta DeserializeInternalRealtimeServerEventResponseAudioTranscriptDelta(JsonElement element, ModelReaderWriterOptions options)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
+            string eventId = default;
             string responseId = default;
             string itemId = default;
             int outputIndex = default;
             int contentIndex = default;
             string delta = default;
-            string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("event_id"u8))
+                {
+                    eventId = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("response_id"u8))
                 {
                     responseId = prop.Value.GetString();
@@ -113,16 +123,6 @@ namespace OpenAI.RealtimeConversation
                     delta = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("event_id"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
-                    eventId = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
                     kind = prop.Value.GetString().ToConversationUpdateKind();
@@ -133,22 +133,22 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationOutputTranscriptionDeltaUpdate(
+            return new InternalRealtimeServerEventResponseAudioTranscriptDelta(
+                eventId,
                 responseId,
                 itemId,
                 outputIndex,
                 contentIndex,
                 delta,
-                eventId,
                 kind,
                 additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<ConversationOutputTranscriptionDeltaUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
+        BinaryData IPersistableModel<InternalRealtimeServerEventResponseAudioTranscriptDelta>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
         protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<ConversationOutputTranscriptionDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeServerEventResponseAudioTranscriptDelta>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -158,17 +158,17 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        ConversationOutputTranscriptionDeltaUpdate IPersistableModel<ConversationOutputTranscriptionDeltaUpdate>.Create(BinaryData data, ModelReaderWriterOptions options) => (ConversationOutputTranscriptionDeltaUpdate)PersistableModelCreateCore(data, options);
+        InternalRealtimeServerEventResponseAudioTranscriptDelta IPersistableModel<InternalRealtimeServerEventResponseAudioTranscriptDelta>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalRealtimeServerEventResponseAudioTranscriptDelta)PersistableModelCreateCore(data, options);
 
         protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<ConversationOutputTranscriptionDeltaUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeServerEventResponseAudioTranscriptDelta>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeConversationOutputTranscriptionDeltaUpdate(document.RootElement, options);
+                        return DeserializeInternalRealtimeServerEventResponseAudioTranscriptDelta(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(InternalRealtimeServerEventResponseAudioTranscriptDelta)} does not support reading '{options.Format}' format.");
@@ -177,20 +177,20 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<InternalRealtimeServerEventResponseAudioTranscriptDelta>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        public static implicit operator BinaryContent(ConversationOutputTranscriptionDeltaUpdate conversationOutputTranscriptionDeltaUpdate)
+        public static implicit operator BinaryContent(InternalRealtimeServerEventResponseAudioTranscriptDelta internalRealtimeServerEventResponseAudioTranscriptDelta)
         {
-            if (conversationOutputTranscriptionDeltaUpdate == null)
+            if (internalRealtimeServerEventResponseAudioTranscriptDelta == null)
             {
                 return null;
             }
-            return BinaryContent.Create(conversationOutputTranscriptionDeltaUpdate, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create(internalRealtimeServerEventResponseAudioTranscriptDelta, ModelSerializationExtensions.WireOptions);
         }
 
-        public static explicit operator ConversationOutputTranscriptionDeltaUpdate(ClientResult result)
+        public static explicit operator InternalRealtimeServerEventResponseAudioTranscriptDelta(ClientResult result)
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeConversationOutputTranscriptionDeltaUpdate(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return DeserializeInternalRealtimeServerEventResponseAudioTranscriptDelta(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

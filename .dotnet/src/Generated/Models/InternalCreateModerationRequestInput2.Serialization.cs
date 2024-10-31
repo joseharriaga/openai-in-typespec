@@ -13,37 +13,60 @@ namespace OpenAI.Moderations
 {
     internal partial class InternalCreateModerationRequestInput2 : IJsonModel<InternalCreateModerationRequestInput2>
     {
-        internal InternalRealtimeResponseIncompleteStatusDetails()
+        internal InternalCreateModerationRequestInput2()
         {
         }
 
-        void IJsonModel<InternalRealtimeResponseIncompleteStatusDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalCreateModerationRequestInput2>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
             JsonModelWriteCore(writer, options);
             writer.WriteEndObject();
         }
 
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseIncompleteStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalCreateModerationRequestInput2>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalCreateModerationRequestInput2)} does not support writing '{format}' format.");
             }
-            base.JsonModelWriteCore(writer, options);
-            if (_additionalBinaryDataProperties?.ContainsKey("reason") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
-                writer.WritePropertyName("reason"u8);
-                writer.WriteStringValue(Reason.ToString());
+                writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Type.ToString());
+            }
+            if (_additionalBinaryDataProperties?.ContainsKey("image_url") != true)
+            {
+                writer.WritePropertyName("image_url"u8);
+                writer.WriteObjectValue(ImageUrl, options);
+            }
+            if (true && _additionalBinaryDataProperties != null)
+            {
+                foreach (var item in _additionalBinaryDataProperties)
+                {
+                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
+                    {
+                        continue;
+                    }
+                    writer.WritePropertyName(item.Key);
+#if NET6_0_OR_GREATER
+                    writer.WriteRawValue(item.Value);
+#else
+                    using (JsonDocument document = JsonDocument.Parse(item.Value))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
+#endif
+                }
             }
         }
 
-        InternalRealtimeResponseIncompleteStatusDetails IJsonModel<InternalRealtimeResponseIncompleteStatusDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeResponseIncompleteStatusDetails)JsonModelCreateCore(ref reader, options);
+        InternalCreateModerationRequestInput2 IJsonModel<InternalCreateModerationRequestInput2>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
-        protected override InternalRealtimeResponseStatusDetails JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        protected virtual InternalCreateModerationRequestInput2 JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseIncompleteStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalCreateModerationRequestInput2>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalCreateModerationRequestInput2)} does not support reading '{format}' format.");
@@ -52,25 +75,25 @@ namespace OpenAI.Moderations
             return DeserializeInternalCreateModerationRequestInput2(document.RootElement, options);
         }
 
-        internal static InternalRealtimeResponseIncompleteStatusDetails DeserializeInternalRealtimeResponseIncompleteStatusDetails(JsonElement element, ModelReaderWriterOptions options)
+        internal static InternalCreateModerationRequestInput2 DeserializeInternalCreateModerationRequestInput2(JsonElement element, ModelReaderWriterOptions options)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            InternalRealtimeResponseIncompleteStatusDetailsReason reason = default;
-            ConversationStatus @type = default;
+            InternalCreateModerationRequestInput2Type @type = default;
+            InternalCreateModerationRequestInputImageUrl imageUrl = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("reason"u8))
-                {
-                    reason = new InternalRealtimeResponseIncompleteStatusDetailsReason(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = new ConversationStatus(prop.Value.GetString());
+                    @type = new InternalCreateModerationRequestInput2Type(prop.Value.GetString());
+                    continue;
+                }
+                if (prop.NameEquals("image_url"u8))
+                {
+                    imageUrl = InternalCreateModerationRequestInputImageUrl.DeserializeInternalCreateModerationRequestInputImageUrl(prop.Value, options);
                     continue;
                 }
                 if (true)
@@ -78,14 +101,14 @@ namespace OpenAI.Moderations
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeResponseIncompleteStatusDetails(reason, @type, additionalBinaryDataProperties);
+            return new InternalCreateModerationRequestInput2(@type, imageUrl, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalRealtimeResponseIncompleteStatusDetails>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
+        BinaryData IPersistableModel<InternalCreateModerationRequestInput2>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseIncompleteStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalCreateModerationRequestInput2>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -95,17 +118,17 @@ namespace OpenAI.Moderations
             }
         }
 
-        InternalRealtimeResponseIncompleteStatusDetails IPersistableModel<InternalRealtimeResponseIncompleteStatusDetails>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalRealtimeResponseIncompleteStatusDetails)PersistableModelCreateCore(data, options);
+        InternalCreateModerationRequestInput2 IPersistableModel<InternalCreateModerationRequestInput2>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
-        protected override InternalRealtimeResponseStatusDetails PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        protected virtual InternalCreateModerationRequestInput2 PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseIncompleteStatusDetails>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalCreateModerationRequestInput2>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeInternalRealtimeResponseIncompleteStatusDetails(document.RootElement, options);
+                        return DeserializeInternalCreateModerationRequestInput2(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(InternalCreateModerationRequestInput2)} does not support reading '{options.Format}' format.");
@@ -114,20 +137,20 @@ namespace OpenAI.Moderations
 
         string IPersistableModel<InternalCreateModerationRequestInput2>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        public static implicit operator BinaryContent(InternalRealtimeResponseIncompleteStatusDetails internalRealtimeResponseIncompleteStatusDetails)
+        public static implicit operator BinaryContent(InternalCreateModerationRequestInput2 internalCreateModerationRequestInput2)
         {
-            if (internalRealtimeResponseIncompleteStatusDetails == null)
+            if (internalCreateModerationRequestInput2 == null)
             {
                 return null;
             }
-            return BinaryContent.Create(internalRealtimeResponseIncompleteStatusDetails, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create(internalCreateModerationRequestInput2, ModelSerializationExtensions.WireOptions);
         }
 
-        public static explicit operator InternalRealtimeResponseIncompleteStatusDetails(ClientResult result)
+        public static explicit operator InternalCreateModerationRequestInput2(ClientResult result)
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalRealtimeResponseIncompleteStatusDetails(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return DeserializeInternalCreateModerationRequestInput2(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

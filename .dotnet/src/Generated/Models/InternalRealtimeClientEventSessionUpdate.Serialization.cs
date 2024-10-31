@@ -13,11 +13,11 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeClientEventSessionUpdate : IJsonModel<InternalRealtimeClientEventSessionUpdate>
     {
-        internal InternalRealtimeRequestItemDeleteCommand()
+        internal InternalRealtimeClientEventSessionUpdate()
         {
         }
 
-        void IJsonModel<InternalRealtimeRequestItemDeleteCommand>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalRealtimeClientEventSessionUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
             JsonModelWriteCore(writer, options);
@@ -26,24 +26,29 @@ namespace OpenAI.RealtimeConversation
 
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestItemDeleteCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventSessionUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeClientEventSessionUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
+            if (Optional.IsDefined(EventId) && _additionalBinaryDataProperties?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
+            if (_additionalBinaryDataProperties?.ContainsKey("session") != true)
             {
                 writer.WritePropertyName("session"u8);
                 writer.WriteObjectValue(Session, options);
             }
         }
 
-        InternalRealtimeRequestItemDeleteCommand IJsonModel<InternalRealtimeRequestItemDeleteCommand>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeRequestItemDeleteCommand)JsonModelCreateCore(ref reader, options);
+        InternalRealtimeClientEventSessionUpdate IJsonModel<InternalRealtimeClientEventSessionUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeClientEventSessionUpdate)JsonModelCreateCore(ref reader, options);
 
-        protected override InternalRealtimeRequestCommand JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        protected override InternalRealtimeClientEvent JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestItemDeleteCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventSessionUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeClientEventSessionUpdate)} does not support reading '{format}' format.");
@@ -52,31 +57,31 @@ namespace OpenAI.RealtimeConversation
             return DeserializeInternalRealtimeClientEventSessionUpdate(document.RootElement, options);
         }
 
-        internal static InternalRealtimeRequestItemDeleteCommand DeserializeInternalRealtimeRequestItemDeleteCommand(JsonElement element, ModelReaderWriterOptions options)
+        internal static InternalRealtimeClientEventSessionUpdate DeserializeInternalRealtimeClientEventSessionUpdate(JsonElement element, ModelReaderWriterOptions options)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            string itemId = default;
-            InternalRealtimeRequestCommandType kind = default;
             string eventId = default;
+            ConversationSessionOptions session = default;
+            InternalRealtimeClientEventType kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("item_id"u8))
+                if (prop.NameEquals("event_id"u8))
                 {
-                    itemId = prop.Value.GetString();
+                    eventId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("session"u8))
+                {
+                    session = ConversationSessionOptions.DeserializeConversationSessionOptions(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
                 {
-                    kind = new InternalRealtimeRequestCommandType(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("event_id"u8))
-                {
-                    eventId = prop.Value.GetString();
+                    kind = new InternalRealtimeClientEventType(prop.Value.GetString());
                     continue;
                 }
                 if (true)
@@ -84,14 +89,14 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeRequestItemDeleteCommand(itemId, kind, eventId, additionalBinaryDataProperties);
+            return new InternalRealtimeClientEventSessionUpdate(eventId, session, kind, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalRealtimeRequestItemDeleteCommand>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
+        BinaryData IPersistableModel<InternalRealtimeClientEventSessionUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
         protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestItemDeleteCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventSessionUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -101,17 +106,17 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        InternalRealtimeRequestItemDeleteCommand IPersistableModel<InternalRealtimeRequestItemDeleteCommand>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalRealtimeRequestItemDeleteCommand)PersistableModelCreateCore(data, options);
+        InternalRealtimeClientEventSessionUpdate IPersistableModel<InternalRealtimeClientEventSessionUpdate>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalRealtimeClientEventSessionUpdate)PersistableModelCreateCore(data, options);
 
-        protected override InternalRealtimeRequestCommand PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        protected override InternalRealtimeClientEvent PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestItemDeleteCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventSessionUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeInternalRealtimeRequestItemDeleteCommand(document.RootElement, options);
+                        return DeserializeInternalRealtimeClientEventSessionUpdate(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(InternalRealtimeClientEventSessionUpdate)} does not support reading '{options.Format}' format.");
@@ -120,20 +125,20 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<InternalRealtimeClientEventSessionUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        public static implicit operator BinaryContent(InternalRealtimeRequestItemDeleteCommand internalRealtimeRequestItemDeleteCommand)
+        public static implicit operator BinaryContent(InternalRealtimeClientEventSessionUpdate internalRealtimeClientEventSessionUpdate)
         {
-            if (internalRealtimeRequestItemDeleteCommand == null)
+            if (internalRealtimeClientEventSessionUpdate == null)
             {
                 return null;
             }
-            return BinaryContent.Create(internalRealtimeRequestItemDeleteCommand, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create(internalRealtimeClientEventSessionUpdate, ModelSerializationExtensions.WireOptions);
         }
 
-        public static explicit operator InternalRealtimeRequestItemDeleteCommand(ClientResult result)
+        public static explicit operator InternalRealtimeClientEventSessionUpdate(ClientResult result)
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalRealtimeRequestItemDeleteCommand(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return DeserializeInternalRealtimeClientEventSessionUpdate(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

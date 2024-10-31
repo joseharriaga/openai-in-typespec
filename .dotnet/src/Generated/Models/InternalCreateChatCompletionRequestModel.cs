@@ -63,6 +63,11 @@ namespace OpenAI.Chat
         public static InternalCreateChatCompletionRequestModel Gpt4o20240806 { get; } = new InternalCreateChatCompletionRequestModel(Gpt4o20240806Value);
 
         public static InternalCreateChatCompletionRequestModel Gpt4o20240513 { get; } = new InternalCreateChatCompletionRequestModel(Gpt4o20240513Value);
+
+        public static InternalCreateChatCompletionRequestModel Gpt4oRealtimePreview { get; } = new InternalCreateChatCompletionRequestModel(Gpt4oRealtimePreviewValue);
+
+        public static InternalCreateChatCompletionRequestModel Gpt4oRealtimePreview20241001 { get; } = new InternalCreateChatCompletionRequestModel(Gpt4oRealtimePreview20241001Value);
+
         public static InternalCreateChatCompletionRequestModel Chatgpt4oLatest { get; } = new InternalCreateChatCompletionRequestModel(Chatgpt4oLatestValue);
 
         public static InternalCreateChatCompletionRequestModel Gpt4oMini { get; } = new InternalCreateChatCompletionRequestModel(Gpt4oMiniValue);

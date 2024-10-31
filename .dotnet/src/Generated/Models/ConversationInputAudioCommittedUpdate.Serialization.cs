@@ -7,172 +7,149 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationInputAudioBufferCommittedUpdate : IJsonModel<ConversationInputAudioBufferCommittedUpdate>
+    public partial class ConversationInputAudioCommittedUpdate : IJsonModel<ConversationInputAudioCommittedUpdate>
     {
-        void IJsonModel<ConversationInputAudioBufferCommittedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        internal ConversationInputAudioCommittedUpdate()
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioBufferCommittedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+        }
+
+        void IJsonModel<ConversationInputAudioCommittedUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioCommittedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationInputAudioBufferCommittedUpdate)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationInputAudioCommittedUpdate)} does not support writing '{format}' format.");
             }
-
-            writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("item_id") != true)
+            base.JsonModelWriteCore(writer, options);
+            if (_additionalBinaryDataProperties?.ContainsKey("event_id") != true)
             {
-                writer.WritePropertyName("item_id"u8);
-                writer.WriteStringValue(ItemId);
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("previous_item_id") != true && Optional.IsDefined(PreviousItemId))
+            if (_additionalBinaryDataProperties?.ContainsKey("previous_item_id") != true)
             {
                 writer.WritePropertyName("previous_item_id"u8);
                 writer.WriteStringValue(PreviousItemId);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("type") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
             {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Kind.ToSerialString());
+                writer.WritePropertyName("item_id"u8);
+                writer.WriteStringValue(ItemId);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("event_id") != true)
-            {
-                if (EventId != null)
-                {
-                    writer.WritePropertyName("event_id"u8);
-                    writer.WriteStringValue(EventId);
-                }
-                else
-                {
-                    writer.WriteNull("event_id");
-                }
-            }
-            if (SerializedAdditionalRawData != null)
-            {
-                foreach (var item in SerializedAdditionalRawData)
-                {
-                    if (ModelSerializationExtensions.IsSentinelValue(item.Value))
-                    {
-                        continue;
-                    }
-                    writer.WritePropertyName(item.Key);
-#if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
-#else
-                    using (JsonDocument document = JsonDocument.Parse(item.Value))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-            }
-            writer.WriteEndObject();
         }
 
-        ConversationInputAudioBufferCommittedUpdate IJsonModel<ConversationInputAudioBufferCommittedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ConversationInputAudioCommittedUpdate IJsonModel<ConversationInputAudioCommittedUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ConversationInputAudioCommittedUpdate)JsonModelCreateCore(ref reader, options);
+
+        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioBufferCommittedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioCommittedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationInputAudioBufferCommittedUpdate)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationInputAudioCommittedUpdate)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeConversationInputAudioBufferCommittedUpdate(document.RootElement, options);
+            return DeserializeConversationInputAudioCommittedUpdate(document.RootElement, options);
         }
 
-        internal static ConversationInputAudioBufferCommittedUpdate DeserializeConversationInputAudioBufferCommittedUpdate(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ConversationInputAudioCommittedUpdate DeserializeConversationInputAudioCommittedUpdate(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            string itemId = default;
-            string previousItemId = default;
-            ConversationUpdateKind type = default;
             string eventId = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string previousItemId = default;
+            string itemId = default;
+            RealtimeConversation.ConversationUpdateKind kind = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("item_id"u8))
+                if (prop.NameEquals("event_id"u8))
                 {
-                    itemId = property.Value.GetString();
+                    eventId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("previous_item_id"u8))
+                if (prop.NameEquals("previous_item_id"u8))
                 {
-                    previousItemId = property.Value.GetString();
+                    previousItemId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("item_id"u8))
                 {
-                    type = property.Value.GetString().ToConversationUpdateKind();
+                    itemId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("event_id"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
-                    eventId = property.Value.GetString();
+                    kind = prop.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
                 if (true)
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new ConversationInputAudioBufferCommittedUpdate(type, eventId, serializedAdditionalRawData, itemId, previousItemId);
+            return new ConversationInputAudioCommittedUpdate(eventId, previousItemId, itemId, kind, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<ConversationInputAudioBufferCommittedUpdate>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioBufferCommittedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<ConversationInputAudioCommittedUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioCommittedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ConversationInputAudioBufferCommittedUpdate)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationInputAudioCommittedUpdate)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ConversationInputAudioBufferCommittedUpdate IPersistableModel<ConversationInputAudioBufferCommittedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioBufferCommittedUpdate>)this).GetFormatFromOptions(options) : options.Format;
+        ConversationInputAudioCommittedUpdate IPersistableModel<ConversationInputAudioCommittedUpdate>.Create(BinaryData data, ModelReaderWriterOptions options) => (ConversationInputAudioCommittedUpdate)PersistableModelCreateCore(data, options);
 
+        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ConversationInputAudioCommittedUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeConversationInputAudioBufferCommittedUpdate(document.RootElement, options);
+                        return DeserializeConversationInputAudioCommittedUpdate(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ConversationInputAudioBufferCommittedUpdate)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationInputAudioCommittedUpdate)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ConversationInputAudioBufferCommittedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ConversationInputAudioCommittedUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new ConversationInputAudioBufferCommittedUpdate FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(ConversationInputAudioCommittedUpdate conversationInputAudioCommittedUpdate)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeConversationInputAudioBufferCommittedUpdate(document.RootElement);
+            if (conversationInputAudioCommittedUpdate == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(conversationInputAudioCommittedUpdate, ModelSerializationExtensions.WireOptions);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        public static explicit operator ConversationInputAudioCommittedUpdate(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeConversationInputAudioCommittedUpdate(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

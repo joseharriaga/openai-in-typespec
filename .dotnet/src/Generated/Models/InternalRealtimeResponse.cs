@@ -12,7 +12,7 @@ namespace OpenAI.RealtimeConversation
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalRealtimeResponse(string id, ConversationStatus status, InternalRealtimeResponseStatusDetails statusDetails, ConversationTokenUsage usage, IEnumerable<ConversationItem> output)
+        internal InternalRealtimeResponse(string id, ConversationStatus status, ConversationStatusDetails statusDetails, ConversationTokenUsage usage, IEnumerable<ConversationItem> output)
         {
             Id = id;
             Status = status;
@@ -21,7 +21,7 @@ namespace OpenAI.RealtimeConversation
             Output = output.ToList();
         }
 
-        internal InternalRealtimeResponse(InternalRealtimeResponseObject @object, string id, ConversationStatus status, InternalRealtimeResponseStatusDetails statusDetails, ConversationTokenUsage usage, IReadOnlyList<ConversationItem> output, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRealtimeResponse(InternalRealtimeResponseObject @object, string id, ConversationStatus status, ConversationStatusDetails statusDetails, ConversationTokenUsage usage, IReadOnlyList<ConversationItem> output, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Object = @object;
             Id = id;
@@ -38,7 +38,7 @@ namespace OpenAI.RealtimeConversation
 
         public ConversationStatus Status { get; }
 
-        public InternalRealtimeResponseStatusDetails StatusDetails { get; }
+        public ConversationStatusDetails StatusDetails { get; }
 
         public ConversationTokenUsage Usage { get; }
 

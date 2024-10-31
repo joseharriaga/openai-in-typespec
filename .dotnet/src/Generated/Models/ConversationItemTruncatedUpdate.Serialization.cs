@@ -32,20 +32,25 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationItemTruncatedUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
+            if (_additionalBinaryDataProperties?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
             {
                 writer.WritePropertyName("item_id"u8);
                 writer.WriteStringValue(ItemId);
             }
+            if (_additionalBinaryDataProperties?.ContainsKey("content_index") != true)
+            {
+                writer.WritePropertyName("content_index"u8);
+                writer.WriteNumberValue(ContentIndex);
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("audio_end_ms") != true)
             {
                 writer.WritePropertyName("audio_end_ms"u8);
                 writer.WriteNumberValue(AudioEndMs);
-            }
-            if (_additionalBinaryDataProperties?.ContainsKey("index") != true)
-            {
-                writer.WritePropertyName("index"u8);
-                writer.WriteNumberValue(Index);
             }
         }
 
@@ -68,38 +73,32 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
+            string eventId = default;
             string itemId = default;
             int contentIndex = default;
             int audioEndMs = default;
-            int index = default;
-            string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("event_id"u8))
+                {
+                    eventId = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("item_id"u8))
                 {
                     itemId = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("content_index"u8))
+                {
+                    contentIndex = prop.Value.GetInt32();
+                    continue;
+                }
                 if (prop.NameEquals("audio_end_ms"u8))
                 {
                     audioEndMs = prop.Value.GetInt32();
-                    continue;
-                }
-                if (prop.NameEquals("index"u8))
-                {
-                    index = prop.Value.GetInt32();
-                    continue;
-                }
-                if (prop.NameEquals("event_id"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
-                    eventId = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
@@ -113,10 +112,10 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             return new ConversationItemTruncatedUpdate(
-                itemId,
-                audioEndMs,
-                index,
                 eventId,
+                itemId,
+                contentIndex,
+                audioEndMs,
                 kind,
                 additionalBinaryDataProperties);
         }

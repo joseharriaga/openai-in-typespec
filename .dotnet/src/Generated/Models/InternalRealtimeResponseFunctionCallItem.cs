@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponseFunctionCallItem : InternalRealtimeResponseItem
     {
-        internal InternalRealtimeResponseFunctionCallItem(string name, string callId, string arguments, ConversationItemStatus status, string id) : base(InternalRealtimeRequestItemType.FunctionCall, id)
+        internal InternalRealtimeResponseFunctionCallItem(string name, string callId, string arguments, ConversationItemStatus status, string id) : base(InternalRealtimeItemType.FunctionCall, id)
         {
             Name = name;
             CallId = callId;
@@ -17,7 +17,7 @@ namespace OpenAI.RealtimeConversation
             Status = status;
         }
 
-        internal InternalRealtimeResponseFunctionCallItem(string name, string callId, string arguments, ConversationItemStatus status, InternalRealtimeResponseItemObject @object, InternalRealtimeRequestItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@object, @type, id, additionalBinaryDataProperties)
+        internal InternalRealtimeResponseFunctionCallItem(string name, string callId, string arguments, ConversationItemStatus status, InternalRealtimeResponseItemObject @object, InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@object, @type, id, additionalBinaryDataProperties)
         {
             Name = name;
             CallId = callId;

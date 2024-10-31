@@ -4,28 +4,30 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeClientEventResponseCreate : InternalRealtimeClientEvent
     {
-        public InternalRealtimeClientEventResponseCreate(InternalRealtimeClientEventResponseCreateResponse response)
+        public InternalRealtimeClientEventResponseCreate(InternalRealtimeClientEventResponseCreateResponse response) : base(InternalRealtimeClientEventType.ResponseCreate)
         {
             Argument.AssertNotNull(response, nameof(response));
 
-            Kind = InternalRealtimeClientEventType.ResponseCreate;
             Response = response;
         }
 
-        internal InternalRealtimeClientEventResponseCreate(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeClientEventResponseCreateResponse response) : base(kind, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeClientEventResponseCreate(string eventId, InternalRealtimeClientEventResponseCreateResponse response, InternalRealtimeClientEventType kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
         {
             Response = response;
         }
 
-        internal InternalRealtimeClientEventResponseCreate()
+        public new string EventId
         {
+            get => _eventId ?? default;
+            set => _eventId = value;
         }
 
-        public InternalRealtimeClientEventResponseCreateResponse Response { get; }
+        public InternalRealtimeClientEventResponseCreateResponse Response { get; set; }
     }
 }

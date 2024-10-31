@@ -22,19 +22,24 @@ namespace OpenAI.RealtimeConversation
 
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestResponseCancelCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventResponseCancel>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeClientEventResponseCancel)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
+            if (Optional.IsDefined(EventId) && _additionalBinaryDataProperties?.ContainsKey("event_id") != true)
+            {
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
+            }
         }
 
-        InternalRealtimeRequestResponseCancelCommand IJsonModel<InternalRealtimeRequestResponseCancelCommand>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeRequestResponseCancelCommand)JsonModelCreateCore(ref reader, options);
+        InternalRealtimeClientEventResponseCancel IJsonModel<InternalRealtimeClientEventResponseCancel>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalRealtimeClientEventResponseCancel)JsonModelCreateCore(ref reader, options);
 
-        protected override InternalRealtimeRequestCommand JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        protected override InternalRealtimeClientEvent JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestResponseCancelCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventResponseCancel>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeClientEventResponseCancel)} does not support reading '{format}' format.");
@@ -43,25 +48,25 @@ namespace OpenAI.RealtimeConversation
             return DeserializeInternalRealtimeClientEventResponseCancel(document.RootElement, options);
         }
 
-        internal static InternalRealtimeRequestResponseCancelCommand DeserializeInternalRealtimeRequestResponseCancelCommand(JsonElement element, ModelReaderWriterOptions options)
+        internal static InternalRealtimeClientEventResponseCancel DeserializeInternalRealtimeClientEventResponseCancel(JsonElement element, ModelReaderWriterOptions options)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            InternalRealtimeRequestCommandType kind = default;
             string eventId = default;
+            InternalRealtimeClientEventType kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("type"u8))
-                {
-                    kind = new InternalRealtimeRequestCommandType(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("event_id"u8))
                 {
                     eventId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = new InternalRealtimeClientEventType(prop.Value.GetString());
                     continue;
                 }
                 if (true)
@@ -69,14 +74,14 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeRequestResponseCancelCommand(kind, eventId, additionalBinaryDataProperties);
+            return new InternalRealtimeClientEventResponseCancel(eventId, kind, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalRealtimeRequestResponseCancelCommand>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
+        BinaryData IPersistableModel<InternalRealtimeClientEventResponseCancel>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
         protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestResponseCancelCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventResponseCancel>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -86,17 +91,17 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        InternalRealtimeRequestResponseCancelCommand IPersistableModel<InternalRealtimeRequestResponseCancelCommand>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalRealtimeRequestResponseCancelCommand)PersistableModelCreateCore(data, options);
+        InternalRealtimeClientEventResponseCancel IPersistableModel<InternalRealtimeClientEventResponseCancel>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalRealtimeClientEventResponseCancel)PersistableModelCreateCore(data, options);
 
-        protected override InternalRealtimeRequestCommand PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        protected override InternalRealtimeClientEvent PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestResponseCancelCommand>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventResponseCancel>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeInternalRealtimeRequestResponseCancelCommand(document.RootElement, options);
+                        return DeserializeInternalRealtimeClientEventResponseCancel(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(InternalRealtimeClientEventResponseCancel)} does not support reading '{options.Format}' format.");
@@ -105,20 +110,20 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<InternalRealtimeClientEventResponseCancel>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        public static implicit operator BinaryContent(InternalRealtimeRequestResponseCancelCommand internalRealtimeRequestResponseCancelCommand)
+        public static implicit operator BinaryContent(InternalRealtimeClientEventResponseCancel internalRealtimeClientEventResponseCancel)
         {
-            if (internalRealtimeRequestResponseCancelCommand == null)
+            if (internalRealtimeClientEventResponseCancel == null)
             {
                 return null;
             }
-            return BinaryContent.Create(internalRealtimeRequestResponseCancelCommand, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create(internalRealtimeClientEventResponseCancel, ModelSerializationExtensions.WireOptions);
         }
 
-        public static explicit operator InternalRealtimeRequestResponseCancelCommand(ClientResult result)
+        public static explicit operator InternalRealtimeClientEventResponseCancel(ClientResult result)
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalRealtimeRequestResponseCancelCommand(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return DeserializeInternalRealtimeClientEventResponseCancel(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

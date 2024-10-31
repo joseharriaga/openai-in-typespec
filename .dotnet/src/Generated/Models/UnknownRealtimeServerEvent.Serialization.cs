@@ -12,7 +12,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class UnknownRealtimeServerEvent : IJsonModel<ConversationUpdate>
     {
-        internal UnknownRealtimeResponseCommand()
+        internal UnknownRealtimeServerEvent()
         {
         }
 
@@ -33,7 +33,7 @@ namespace OpenAI.RealtimeConversation
             base.JsonModelWriteCore(writer, options);
         }
 
-        ConversationUpdate IJsonModel<ConversationUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownRealtimeResponseCommand)JsonModelCreateCore(ref reader, options);
+        ConversationUpdate IJsonModel<ConversationUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownRealtimeServerEvent)JsonModelCreateCore(ref reader, options);
 
         protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -43,10 +43,10 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationUpdate)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeConversationUpdate(document.RootElement, options);
+            return ConversationUpdate.DeserializeConversationUpdate(document.RootElement, options);
         }
 
-        internal static UnknownRealtimeResponseCommand DeserializeUnknownRealtimeResponseCommand(JsonElement element, ModelReaderWriterOptions options)
+        internal static UnknownRealtimeServerEvent DeserializeUnknownRealtimeServerEvent(JsonElement element, ModelReaderWriterOptions options)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -59,11 +59,6 @@ namespace OpenAI.RealtimeConversation
             {
                 if (prop.NameEquals("event_id"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        eventId = null;
-                        continue;
-                    }
                     eventId = prop.Value.GetString();
                     continue;
                 }
@@ -77,7 +72,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new UnknownRealtimeResponseCommand(eventId, kind, additionalBinaryDataProperties);
+            return new UnknownRealtimeServerEvent(eventId, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ConversationUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
@@ -94,7 +89,7 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        ConversationUpdate IPersistableModel<ConversationUpdate>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownRealtimeResponseCommand)PersistableModelCreateCore(data, options);
+        ConversationUpdate IPersistableModel<ConversationUpdate>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownRealtimeServerEvent)PersistableModelCreateCore(data, options);
 
         protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
@@ -104,7 +99,7 @@ namespace OpenAI.RealtimeConversation
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeConversationUpdate(document.RootElement, options);
+                        return ConversationUpdate.DeserializeConversationUpdate(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(ConversationUpdate)} does not support reading '{options.Format}' format.");

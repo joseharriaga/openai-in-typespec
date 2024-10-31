@@ -66,7 +66,7 @@ namespace OpenAI.Assistants
                     @type = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -109,6 +109,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(FileSearchToolDefinition fileSearchToolDefinition)
         {
+            if (fileSearchToolDefinition == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(fileSearchToolDefinition, ModelSerializationExtensions.WireOptions);
         }
 

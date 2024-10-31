@@ -41,7 +41,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("score_threshold"u8);
                 writer.WriteNumberValue(ScoreThreshold);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -96,7 +96,7 @@ namespace OpenAI.Assistants
                     scoreThreshold = prop.Value.GetSingle();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -139,6 +139,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(InternalRunStepDetailsToolCallsFileSearchRankingOptionsObject internalRunStepDetailsToolCallsFileSearchRankingOptionsObject)
         {
+            if (internalRunStepDetailsToolCallsFileSearchRankingOptionsObject == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalRunStepDetailsToolCallsFileSearchRankingOptionsObject, ModelSerializationExtensions.WireOptions);
         }
 

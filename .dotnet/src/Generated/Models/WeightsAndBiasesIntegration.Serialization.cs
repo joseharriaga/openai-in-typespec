@@ -73,7 +73,7 @@ namespace OpenAI.FineTuning
                     @type = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -116,6 +116,10 @@ namespace OpenAI.FineTuning
 
         public static implicit operator BinaryContent(WeightsAndBiasesIntegration weightsAndBiasesIntegration)
         {
+            if (weightsAndBiasesIntegration == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(weightsAndBiasesIntegration, ModelSerializationExtensions.WireOptions);
         }
 

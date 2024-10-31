@@ -32,7 +32,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("include_usage"u8);
                 writer.WriteBooleanValue(IncludeUsage.Value);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -85,7 +85,7 @@ namespace OpenAI.Chat
                     includeUsage = prop.Value.GetBoolean();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -128,6 +128,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(InternalChatCompletionStreamOptions internalChatCompletionStreamOptions)
         {
+            if (internalChatCompletionStreamOptions == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalChatCompletionStreamOptions, ModelSerializationExtensions.WireOptions);
         }
 

@@ -36,7 +36,7 @@ namespace OpenAI.VectorStores
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -126,6 +126,10 @@ namespace OpenAI.VectorStores
 
         public static implicit operator BinaryContent(FileChunkingStrategy fileChunkingStrategy)
         {
+            if (fileChunkingStrategy == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(fileChunkingStrategy, ModelSerializationExtensions.WireOptions);
         }
 

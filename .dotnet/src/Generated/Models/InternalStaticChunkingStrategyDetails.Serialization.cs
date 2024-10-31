@@ -41,7 +41,7 @@ namespace OpenAI.VectorStores
                 writer.WritePropertyName("chunk_overlap_tokens"u8);
                 writer.WriteNumberValue(ChunkOverlapTokens);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -96,7 +96,7 @@ namespace OpenAI.VectorStores
                     chunkOverlapTokens = prop.Value.GetInt32();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -139,6 +139,10 @@ namespace OpenAI.VectorStores
 
         public static implicit operator BinaryContent(InternalStaticChunkingStrategyDetails internalStaticChunkingStrategyDetails)
         {
+            if (internalStaticChunkingStrategyDetails == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalStaticChunkingStrategyDetails, ModelSerializationExtensions.WireOptions);
         }
 

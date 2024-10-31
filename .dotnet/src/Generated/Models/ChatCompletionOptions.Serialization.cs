@@ -262,7 +262,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("serviceTier"u8);
                 }
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -553,7 +553,7 @@ namespace OpenAI.Chat
                     serviceTier = new InternalCreateChatCompletionRequestServiceTier(prop.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -621,6 +621,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(ChatCompletionOptions chatCompletionOptions)
         {
+            if (chatCompletionOptions == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(chatCompletionOptions, ModelSerializationExtensions.WireOptions);
         }
 

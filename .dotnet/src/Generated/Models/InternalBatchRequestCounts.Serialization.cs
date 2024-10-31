@@ -46,7 +46,7 @@ namespace OpenAI.Batch
                 writer.WritePropertyName("failed"u8);
                 writer.WriteNumberValue(Failed);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -107,7 +107,7 @@ namespace OpenAI.Batch
                     failed = prop.Value.GetInt32();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -150,6 +150,10 @@ namespace OpenAI.Batch
 
         public static implicit operator BinaryContent(InternalBatchRequestCounts internalBatchRequestCounts)
         {
+            if (internalBatchRequestCounts == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalBatchRequestCounts, ModelSerializationExtensions.WireOptions);
         }
 

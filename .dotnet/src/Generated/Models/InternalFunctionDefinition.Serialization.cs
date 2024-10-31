@@ -64,7 +64,7 @@ namespace OpenAI
                 }
 #endif
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -140,7 +140,7 @@ namespace OpenAI
                     parameters = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -183,6 +183,10 @@ namespace OpenAI
 
         public static implicit operator BinaryContent(InternalFunctionDefinition internalFunctionDefinition)
         {
+            if (internalFunctionDefinition == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalFunctionDefinition, ModelSerializationExtensions.WireOptions);
         }
 

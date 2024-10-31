@@ -51,7 +51,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("completion_tokens_details"u8);
                 writer.WriteObjectValue<ChatOutputTokenUsageDetails>(OutputTokenDetails, options);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -122,7 +122,7 @@ namespace OpenAI.Chat
                     outputTokenDetails = ChatOutputTokenUsageDetails.DeserializeChatOutputTokenUsageDetails(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -165,6 +165,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(ChatTokenUsage chatTokenUsage)
         {
+            if (chatTokenUsage == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(chatTokenUsage, ModelSerializationExtensions.WireOptions);
         }
 

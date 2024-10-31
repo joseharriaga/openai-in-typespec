@@ -41,7 +41,7 @@ namespace OpenAI.Embeddings
                 writer.WritePropertyName("total_tokens"u8);
                 writer.WriteNumberValue(TotalTokenCount);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -96,7 +96,7 @@ namespace OpenAI.Embeddings
                     totalTokenCount = prop.Value.GetInt32();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -139,6 +139,10 @@ namespace OpenAI.Embeddings
 
         public static implicit operator BinaryContent(EmbeddingTokenUsage embeddingTokenUsage)
         {
+            if (embeddingTokenUsage == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(embeddingTokenUsage, ModelSerializationExtensions.WireOptions);
         }
 

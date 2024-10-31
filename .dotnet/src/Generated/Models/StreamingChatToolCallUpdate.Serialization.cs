@@ -51,7 +51,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(ToolCallId);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -126,7 +126,7 @@ namespace OpenAI.Chat
                     toolCallId = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -169,6 +169,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(StreamingChatToolCallUpdate streamingChatToolCallUpdate)
         {
+            if (streamingChatToolCallUpdate == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(streamingChatToolCallUpdate, ModelSerializationExtensions.WireOptions);
         }
 

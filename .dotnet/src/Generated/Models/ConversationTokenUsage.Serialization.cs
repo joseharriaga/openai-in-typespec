@@ -56,7 +56,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("output_token_details"u8);
                 writer.WriteObjectValue(OutputTokenDetails, options);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -129,7 +129,7 @@ namespace OpenAI.RealtimeConversation
                     outputTokenDetails = ConversationOutputTokenUsageDetails.DeserializeConversationOutputTokenUsageDetails(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -178,6 +178,10 @@ namespace OpenAI.RealtimeConversation
 
         public static implicit operator BinaryContent(ConversationTokenUsage conversationTokenUsage)
         {
+            if (conversationTokenUsage == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(conversationTokenUsage, ModelSerializationExtensions.WireOptions);
         }
 

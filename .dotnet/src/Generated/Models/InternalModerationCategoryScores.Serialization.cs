@@ -86,7 +86,7 @@ namespace OpenAI.Moderations
                 writer.WritePropertyName("violence/graphic"u8);
                 writer.WriteNumberValue(ViolenceGraphic);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -195,7 +195,7 @@ namespace OpenAI.Moderations
                     violenceGraphic = prop.Value.GetSingle();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -250,6 +250,10 @@ namespace OpenAI.Moderations
 
         public static implicit operator BinaryContent(InternalModerationCategoryScores internalModerationCategoryScores)
         {
+            if (internalModerationCategoryScores == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalModerationCategoryScores, ModelSerializationExtensions.WireOptions);
         }
 

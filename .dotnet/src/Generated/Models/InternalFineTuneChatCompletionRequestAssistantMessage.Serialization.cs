@@ -108,7 +108,7 @@ namespace OpenAI.FineTuning
                     DeserializeContentValue(prop, ref content);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -158,6 +158,10 @@ namespace OpenAI.FineTuning
 
         public static implicit operator BinaryContent(InternalFineTuneChatCompletionRequestAssistantMessage internalFineTuneChatCompletionRequestAssistantMessage)
         {
+            if (internalFineTuneChatCompletionRequestAssistantMessage == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalFineTuneChatCompletionRequestAssistantMessage, ModelSerializationExtensions.WireOptions);
         }
 

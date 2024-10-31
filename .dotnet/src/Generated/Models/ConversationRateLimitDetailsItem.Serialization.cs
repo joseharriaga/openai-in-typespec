@@ -51,7 +51,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("reset_seconds"u8);
                 writer.WriteNumberValue(ResetSeconds);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -118,7 +118,7 @@ namespace OpenAI.RealtimeConversation
                     resetSeconds = prop.Value.GetSingle();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -161,6 +161,10 @@ namespace OpenAI.RealtimeConversation
 
         public static implicit operator BinaryContent(ConversationRateLimitDetailsItem conversationRateLimitDetailsItem)
         {
+            if (conversationRateLimitDetailsItem == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(conversationRateLimitDetailsItem, ModelSerializationExtensions.WireOptions);
         }
 

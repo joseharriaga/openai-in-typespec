@@ -60,7 +60,7 @@ namespace OpenAI.Batch
                 }
                 writer.WriteEndObject();
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -141,7 +141,7 @@ namespace OpenAI.Batch
                     body = dictionary;
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -184,6 +184,10 @@ namespace OpenAI.Batch
 
         public static implicit operator BinaryContent(InternalBatchRequestOutputResponse internalBatchRequestOutputResponse)
         {
+            if (internalBatchRequestOutputResponse == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalBatchRequestOutputResponse, ModelSerializationExtensions.WireOptions);
         }
 

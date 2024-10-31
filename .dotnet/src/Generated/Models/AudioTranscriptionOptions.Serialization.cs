@@ -79,7 +79,7 @@ namespace OpenAI.Audio
                 }
                 writer.WriteEndArray();
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -188,7 +188,7 @@ namespace OpenAI.Audio
                     internalTimestampGranularities = array;
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -239,6 +239,10 @@ namespace OpenAI.Audio
 
         public static implicit operator BinaryContent(AudioTranscriptionOptions audioTranscriptionOptions)
         {
+            if (audioTranscriptionOptions == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(audioTranscriptionOptions, ModelSerializationExtensions.WireOptions);
         }
 

@@ -71,7 +71,7 @@ namespace OpenAI.Assistants
                     internalText = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -114,6 +114,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(InternalRequestMessageTextContent internalRequestMessageTextContent)
         {
+            if (internalRequestMessageTextContent == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalRequestMessageTextContent, ModelSerializationExtensions.WireOptions);
         }
 

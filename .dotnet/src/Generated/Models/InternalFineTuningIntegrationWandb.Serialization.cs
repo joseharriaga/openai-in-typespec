@@ -73,7 +73,7 @@ namespace OpenAI.FineTuning
                     @type = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -116,6 +116,10 @@ namespace OpenAI.FineTuning
 
         public static implicit operator BinaryContent(InternalFineTuningIntegrationWandb internalFineTuningIntegrationWandb)
         {
+            if (internalFineTuningIntegrationWandb == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalFineTuningIntegrationWandb, ModelSerializationExtensions.WireOptions);
         }
 

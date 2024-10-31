@@ -73,7 +73,7 @@ namespace OpenAI.Internal
                     @type = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -116,6 +116,10 @@ namespace OpenAI.Internal
 
         public static implicit operator BinaryContent(InternalResponseFormatJsonSchema internalResponseFormatJsonSchema)
         {
+            if (internalResponseFormatJsonSchema == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalResponseFormatJsonSchema, ModelSerializationExtensions.WireOptions);
         }
 

@@ -46,7 +46,7 @@ namespace OpenAI.VectorStores
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(this.Object.ToString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -107,7 +107,7 @@ namespace OpenAI.VectorStores
                     @object = new InternalDeleteVectorStoreResponseObject(prop.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -150,6 +150,10 @@ namespace OpenAI.VectorStores
 
         public static implicit operator BinaryContent(VectorStoreDeletionResult vectorStoreDeletionResult)
         {
+            if (vectorStoreDeletionResult == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(vectorStoreDeletionResult, ModelSerializationExtensions.WireOptions);
         }
 

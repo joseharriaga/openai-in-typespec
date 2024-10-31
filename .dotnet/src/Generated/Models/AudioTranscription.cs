@@ -21,7 +21,7 @@ namespace OpenAI.Audio
             Duration = duration;
         }
 
-        internal AudioTranscription(string language, string text, IList<TranscribedWord> words, IList<TranscribedSegment> segments, InternalCreateTranscriptionResponseVerboseJsonTask task, TimeSpan? duration, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal AudioTranscription(string language, string text, IReadOnlyList<TranscribedWord> words, IReadOnlyList<TranscribedSegment> segments, InternalCreateTranscriptionResponseVerboseJsonTask task, TimeSpan? duration, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Language = language;
             Text = text;
@@ -36,9 +36,9 @@ namespace OpenAI.Audio
 
         public string Text { get; }
 
-        public IList<TranscribedWord> Words { get; }
+        public IReadOnlyList<TranscribedWord> Words { get; }
 
-        public IList<TranscribedSegment> Segments { get; }
+        public IReadOnlyList<TranscribedSegment> Segments { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

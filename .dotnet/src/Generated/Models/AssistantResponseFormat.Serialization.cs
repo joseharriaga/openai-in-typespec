@@ -29,7 +29,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -90,6 +90,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(AssistantResponseFormat assistantResponseFormat)
         {
+            if (assistantResponseFormat == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(assistantResponseFormat, ModelSerializationExtensions.WireOptions);
         }
 

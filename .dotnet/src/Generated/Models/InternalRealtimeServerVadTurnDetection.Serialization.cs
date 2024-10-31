@@ -95,7 +95,7 @@ namespace OpenAI.RealtimeConversation
                     kind = prop.Value.GetString().ToConversationTurnDetectionKind();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -138,6 +138,10 @@ namespace OpenAI.RealtimeConversation
 
         public static implicit operator BinaryContent(InternalRealtimeServerVadTurnDetection internalRealtimeServerVadTurnDetection)
         {
+            if (internalRealtimeServerVadTurnDetection == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalRealtimeServerVadTurnDetection, ModelSerializationExtensions.WireOptions);
         }
 

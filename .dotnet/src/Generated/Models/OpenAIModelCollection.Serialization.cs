@@ -24,7 +24,7 @@ namespace OpenAI.Models
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(this.Object.ToString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -93,6 +93,10 @@ namespace OpenAI.Models
 
         public static implicit operator BinaryContent(OpenAIModelCollection openAIModelCollection)
         {
+            if (openAIModelCollection == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(openAIModelCollection, ModelSerializationExtensions.WireOptions);
         }
 

@@ -84,7 +84,7 @@ namespace OpenAI.RealtimeConversation
                     kind = prop.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -127,6 +127,10 @@ namespace OpenAI.RealtimeConversation
 
         public static implicit operator BinaryContent(ConversationSessionConfiguredUpdate conversationSessionConfiguredUpdate)
         {
+            if (conversationSessionConfiguredUpdate == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(conversationSessionConfiguredUpdate, ModelSerializationExtensions.WireOptions);
         }
 

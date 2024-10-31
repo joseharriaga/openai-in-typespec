@@ -56,7 +56,7 @@ namespace OpenAI.VectorStores
                 writer.WritePropertyName("total"u8);
                 writer.WriteNumberValue(Total);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -129,7 +129,7 @@ namespace OpenAI.VectorStores
                     total = prop.Value.GetInt32();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -178,6 +178,10 @@ namespace OpenAI.VectorStores
 
         public static implicit operator BinaryContent(InternalVectorStoreFileBatchObjectFileCounts internalVectorStoreFileBatchObjectFileCounts)
         {
+            if (internalVectorStoreFileBatchObjectFileCounts == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalVectorStoreFileBatchObjectFileCounts, ModelSerializationExtensions.WireOptions);
         }
 

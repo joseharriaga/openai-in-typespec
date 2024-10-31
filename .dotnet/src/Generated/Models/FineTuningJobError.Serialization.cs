@@ -53,7 +53,7 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("param"u8);
                 }
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -119,7 +119,7 @@ namespace OpenAI.FineTuning
                     @param = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -162,6 +162,10 @@ namespace OpenAI.FineTuning
 
         public static implicit operator BinaryContent(FineTuningJobError fineTuningJobError)
         {
+            if (fineTuningJobError == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(fineTuningJobError, ModelSerializationExtensions.WireOptions);
         }
 

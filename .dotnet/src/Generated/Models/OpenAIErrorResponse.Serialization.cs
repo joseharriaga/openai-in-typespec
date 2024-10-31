@@ -36,7 +36,7 @@ namespace OpenAI.Internal
                 writer.WritePropertyName("error"u8);
                 writer.WriteObjectValue(Error, options);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -85,7 +85,7 @@ namespace OpenAI.Internal
                     error = OpenAIError.DeserializeOpenAIError(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -128,6 +128,10 @@ namespace OpenAI.Internal
 
         public static implicit operator BinaryContent(OpenAIErrorResponse openAIErrorResponse)
         {
+            if (openAIErrorResponse == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(openAIErrorResponse, ModelSerializationExtensions.WireOptions);
         }
 

@@ -37,7 +37,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("arguments"u8);
                 this.SerializeFunctionArgumentsUpdateValue(writer, options);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -92,7 +92,7 @@ namespace OpenAI.Chat
                     DeserializeFunctionArgumentsUpdateValue(prop, ref functionArgumentsUpdate);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -135,6 +135,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(StreamingChatFunctionCallUpdate streamingChatFunctionCallUpdate)
         {
+            if (streamingChatFunctionCallUpdate == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(streamingChatFunctionCallUpdate, ModelSerializationExtensions.WireOptions);
         }
 

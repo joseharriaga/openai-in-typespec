@@ -83,7 +83,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("created"u8);
                 writer.WriteNumberValue(CreatedAt, "U");
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -188,7 +188,7 @@ namespace OpenAI.Chat
                     createdAt = DateTimeOffset.FromUnixTimeSeconds(prop.Value.GetInt64());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -240,6 +240,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(ChatCompletion chatCompletion)
         {
+            if (chatCompletion == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(chatCompletion, ModelSerializationExtensions.WireOptions);
         }
 

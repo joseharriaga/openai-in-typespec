@@ -74,7 +74,7 @@ namespace OpenAI.VectorStores
                     writer.WriteNull("expiresAfter"u8);
                 }
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -161,7 +161,7 @@ namespace OpenAI.VectorStores
                     expirationPolicy = VectorStoreExpirationPolicy.DeserializeVectorStoreExpirationPolicy(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -204,6 +204,10 @@ namespace OpenAI.VectorStores
 
         public static implicit operator BinaryContent(VectorStoreModificationOptions vectorStoreModificationOptions)
         {
+            if (vectorStoreModificationOptions == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(vectorStoreModificationOptions, ModelSerializationExtensions.WireOptions);
         }
 

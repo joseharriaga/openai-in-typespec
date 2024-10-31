@@ -37,7 +37,7 @@ namespace OpenAI.VectorStores
                 writer.WritePropertyName("days"u8);
                 writer.WriteNumberValue(_days);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -92,7 +92,7 @@ namespace OpenAI.VectorStores
                     days = prop.Value.GetInt32();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -135,6 +135,10 @@ namespace OpenAI.VectorStores
 
         public static implicit operator BinaryContent(VectorStoreExpirationPolicy vectorStoreExpirationPolicy)
         {
+            if (vectorStoreExpirationPolicy == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(vectorStoreExpirationPolicy, ModelSerializationExtensions.WireOptions);
         }
 

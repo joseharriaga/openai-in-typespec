@@ -37,7 +37,7 @@ namespace OpenAI.Batch
                 writer.WritePropertyName("message"u8);
                 writer.WriteStringValue(Message);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -92,7 +92,7 @@ namespace OpenAI.Batch
                     message = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -135,6 +135,10 @@ namespace OpenAI.Batch
 
         public static implicit operator BinaryContent(InternalBatchRequestOutputError internalBatchRequestOutputError)
         {
+            if (internalBatchRequestOutputError == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalBatchRequestOutputError, ModelSerializationExtensions.WireOptions);
         }
 

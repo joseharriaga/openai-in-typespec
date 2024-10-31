@@ -103,6 +103,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(InternalFunctionParameters internalFunctionParameters)
         {
+            if (internalFunctionParameters == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalFunctionParameters, ModelSerializationExtensions.WireOptions);
         }
 

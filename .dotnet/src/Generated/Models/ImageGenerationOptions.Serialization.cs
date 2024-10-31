@@ -102,7 +102,7 @@ namespace OpenAI.Images
                 writer.WritePropertyName("user"u8);
                 writer.WriteStringValue(EndUserId);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -222,7 +222,7 @@ namespace OpenAI.Images
                     endUserId = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -274,6 +274,10 @@ namespace OpenAI.Images
 
         public static implicit operator BinaryContent(ImageGenerationOptions imageGenerationOptions)
         {
+            if (imageGenerationOptions == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(imageGenerationOptions, ModelSerializationExtensions.WireOptions);
         }
 

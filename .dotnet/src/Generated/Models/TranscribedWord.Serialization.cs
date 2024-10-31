@@ -46,7 +46,7 @@ namespace OpenAI.Audio
                 writer.WritePropertyName("end"u8);
                 writer.WriteNumberValue(Convert.ToDouble(EndTime.ToString("s\\.FFF")));
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -107,7 +107,7 @@ namespace OpenAI.Audio
                     endTime = TimeSpan.FromSeconds(prop.Value.GetDouble());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

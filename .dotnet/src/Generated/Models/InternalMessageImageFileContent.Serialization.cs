@@ -71,7 +71,7 @@ namespace OpenAI.Assistants
                     imageFile = InternalMessageContentItemFileObjectImageFile.DeserializeInternalMessageContentItemFileObjectImageFile(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -114,6 +114,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(InternalMessageImageFileContent internalMessageImageFileContent)
         {
+            if (internalMessageImageFileContent == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalMessageImageFileContent, ModelSerializationExtensions.WireOptions);
         }
 

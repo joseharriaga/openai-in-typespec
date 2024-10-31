@@ -139,7 +139,7 @@ namespace OpenAI.Chat
                     DeserializeContentValue(prop, ref content);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -189,6 +189,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(AssistantChatMessage assistantChatMessage)
         {
+            if (assistantChatMessage == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(assistantChatMessage, ModelSerializationExtensions.WireOptions);
         }
 

@@ -132,7 +132,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("output_audio_format"u8);
                 writer.WriteStringValue(OutputAudioFormat.Value.ToString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -304,7 +304,7 @@ namespace OpenAI.RealtimeConversation
                     outputAudioFormat = new ConversationAudioFormat(prop.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -360,6 +360,10 @@ namespace OpenAI.RealtimeConversation
 
         public static implicit operator BinaryContent(InternalRealtimeRequestResponseCreateCommandResponse internalRealtimeRequestResponseCreateCommandResponse)
         {
+            if (internalRealtimeRequestResponseCreateCommandResponse == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalRealtimeRequestResponseCreateCommandResponse, ModelSerializationExtensions.WireOptions);
         }
 

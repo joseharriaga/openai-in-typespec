@@ -53,7 +53,7 @@ namespace OpenAI.Embeddings
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(this.Object.ToString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -114,7 +114,7 @@ namespace OpenAI.Embeddings
                     @object = new InternalEmbeddingObject(prop.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -157,6 +157,10 @@ namespace OpenAI.Embeddings
 
         public static implicit operator BinaryContent(OpenAIEmbedding openAIEmbedding)
         {
+            if (openAIEmbedding == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(openAIEmbedding, ModelSerializationExtensions.WireOptions);
         }
 

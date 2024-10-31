@@ -73,7 +73,7 @@ namespace OpenAI.VectorStores
                     @type = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -116,6 +116,10 @@ namespace OpenAI.VectorStores
 
         public static implicit operator BinaryContent(InternalStaticChunkingStrategyRequestParam internalStaticChunkingStrategyRequestParam)
         {
+            if (internalStaticChunkingStrategyRequestParam == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalStaticChunkingStrategyRequestParam, ModelSerializationExtensions.WireOptions);
         }
 

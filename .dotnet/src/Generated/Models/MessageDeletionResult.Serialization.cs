@@ -46,7 +46,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(this.Object.ToString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -107,7 +107,7 @@ namespace OpenAI.Assistants
                     @object = new InternalDeleteMessageResponseObject(prop.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -150,6 +150,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(MessageDeletionResult messageDeletionResult)
         {
+            if (messageDeletionResult == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(messageDeletionResult, ModelSerializationExtensions.WireOptions);
         }
 

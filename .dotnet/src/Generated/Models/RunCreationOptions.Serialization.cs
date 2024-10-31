@@ -92,15 +92,15 @@ namespace OpenAI.Assistants
                     writer.WriteNull("additionalInstructions"u8);
                 }
             }
-            if (Optional.IsCollectionDefined(AdditionalMessages) && _additionalBinaryDataProperties?.ContainsKey("additional_messages") != true)
+            if (Optional.IsCollectionDefined(InternalMessages) && _additionalBinaryDataProperties?.ContainsKey("additional_messages") != true)
             {
-                if (AdditionalMessages != null)
+                if (InternalMessages != null)
                 {
                     writer.WritePropertyName("additional_messages"u8);
                     writer.WriteStartArray();
-                    foreach (Assistants.ThreadInitializationMessage item in AdditionalMessages)
+                    foreach (MessageCreationOptions item in InternalMessages)
                     {
-                        writer.WriteObjectValue<Assistants.ThreadInitializationMessage>(item, options);
+                        writer.WriteObjectValue(item, options);
                     }
                     writer.WriteEndArray();
                 }
@@ -226,7 +226,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("toolChoice"u8);
                 }
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -272,7 +272,7 @@ namespace OpenAI.Assistants
             string modelOverride = default;
             string instructionsOverride = default;
             string additionalInstructions = default;
-            IList<Assistants.ThreadInitializationMessage> additionalMessages = default;
+            IList<MessageCreationOptions> internalMessages = default;
             bool? allowParallelToolCalls = default;
             IList<ToolDefinition> toolsOverride = default;
             IDictionary<string, string> metadata = default;
@@ -346,12 +346,12 @@ namespace OpenAI.Assistants
                     {
                         continue;
                     }
-                    List<Assistants.ThreadInitializationMessage> array = new List<Assistants.ThreadInitializationMessage>();
+                    List<MessageCreationOptions> array = new List<MessageCreationOptions>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(Assistants.ThreadInitializationMessage.DeserializeThreadInitializationMessage(item, options));
+                        array.Add(MessageCreationOptions.DeserializeMessageCreationOptions(item, options));
                     }
-                    additionalMessages = array;
+                    internalMessages = array;
                     continue;
                 }
                 if (prop.NameEquals("parallel_tool_calls"u8))
@@ -458,7 +458,7 @@ namespace OpenAI.Assistants
                     toolConstraint = ToolConstraint.DeserializeToolConstraint(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -470,7 +470,7 @@ namespace OpenAI.Assistants
                 modelOverride,
                 instructionsOverride,
                 additionalInstructions,
-                additionalMessages ?? new ChangeTrackingList<Assistants.ThreadInitializationMessage>(),
+                internalMessages ?? new ChangeTrackingList<MessageCreationOptions>(),
                 allowParallelToolCalls,
                 toolsOverride ?? new ChangeTrackingList<ToolDefinition>(),
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
@@ -518,6 +518,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(RunCreationOptions runCreationOptions)
         {
+            if (runCreationOptions == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(runCreationOptions, ModelSerializationExtensions.WireOptions);
         }
 

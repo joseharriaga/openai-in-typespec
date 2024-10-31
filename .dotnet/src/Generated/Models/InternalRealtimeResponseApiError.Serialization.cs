@@ -51,7 +51,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("param"u8);
                 writer.WriteStringValue(Param);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -118,7 +118,7 @@ namespace OpenAI.RealtimeConversation
                     @param = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -161,6 +161,10 @@ namespace OpenAI.RealtimeConversation
 
         public static implicit operator BinaryContent(InternalRealtimeResponseApiError internalRealtimeResponseApiError)
         {
+            if (internalRealtimeResponseApiError == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalRealtimeResponseApiError, ModelSerializationExtensions.WireOptions);
         }
 

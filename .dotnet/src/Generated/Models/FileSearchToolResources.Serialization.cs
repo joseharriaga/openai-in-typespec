@@ -47,7 +47,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("vector_stores"u8);
                 this.SerializeNewVectorStores(writer, options);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -127,7 +127,7 @@ namespace OpenAI.Assistants
                     newVectorStores = array;
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -170,6 +170,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(FileSearchToolResources fileSearchToolResources)
         {
+            if (fileSearchToolResources == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(fileSearchToolResources, ModelSerializationExtensions.WireOptions);
         }
 

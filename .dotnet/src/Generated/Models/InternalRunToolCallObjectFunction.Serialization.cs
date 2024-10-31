@@ -41,7 +41,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("arguments"u8);
                 writer.WriteStringValue(Arguments);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -96,7 +96,7 @@ namespace OpenAI.Assistants
                     arguments = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -139,6 +139,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(InternalRunToolCallObjectFunction internalRunToolCallObjectFunction)
         {
+            if (internalRunToolCallObjectFunction == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalRunToolCallObjectFunction, ModelSerializationExtensions.WireOptions);
         }
 

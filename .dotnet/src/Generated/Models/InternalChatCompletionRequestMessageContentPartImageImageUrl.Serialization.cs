@@ -41,7 +41,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("url"u8);
                 writer.WriteStringValue(Url);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -100,7 +100,7 @@ namespace OpenAI.Chat
                     url = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -143,6 +143,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(InternalChatCompletionRequestMessageContentPartImageImageUrl internalChatCompletionRequestMessageContentPartImageImageUrl)
         {
+            if (internalChatCompletionRequestMessageContentPartImageImageUrl == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalChatCompletionRequestMessageContentPartImageImageUrl, ModelSerializationExtensions.WireOptions);
         }
 

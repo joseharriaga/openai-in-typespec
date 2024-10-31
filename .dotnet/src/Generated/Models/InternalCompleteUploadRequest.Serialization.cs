@@ -51,7 +51,7 @@ namespace OpenAI.Files
                 writer.WritePropertyName("md5"u8);
                 writer.WriteStringValue(Md5);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -118,7 +118,7 @@ namespace OpenAI.Files
                     md5 = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -161,6 +161,10 @@ namespace OpenAI.Files
 
         public static implicit operator BinaryContent(InternalCompleteUploadRequest internalCompleteUploadRequest)
         {
+            if (internalCompleteUploadRequest == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalCompleteUploadRequest, ModelSerializationExtensions.WireOptions);
         }
 

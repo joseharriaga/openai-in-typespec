@@ -42,7 +42,7 @@ namespace OpenAI.Batch
                 writer.WritePropertyName("url"u8);
                 writer.WriteStringValue(Url.AbsoluteUri);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -111,7 +111,7 @@ namespace OpenAI.Batch
                     url = new Uri(prop.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -154,6 +154,10 @@ namespace OpenAI.Batch
 
         public static implicit operator BinaryContent(InternalBatchRequestInput internalBatchRequestInput)
         {
+            if (internalBatchRequestInput == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalBatchRequestInput, ModelSerializationExtensions.WireOptions);
         }
 

@@ -41,7 +41,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("tools"u8);
                 this.SerializeTools(writer, options);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -96,7 +96,7 @@ namespace OpenAI.Assistants
                     DeserializeTools(prop, ref tools);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -139,6 +139,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(MessageCreationAttachment messageCreationAttachment)
         {
+            if (messageCreationAttachment == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(messageCreationAttachment, ModelSerializationExtensions.WireOptions);
         }
 

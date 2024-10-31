@@ -53,7 +53,7 @@ namespace OpenAI.RealtimeConversation
                     writer.WriteNull("id"u8);
                 }
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -143,6 +143,10 @@ namespace OpenAI.RealtimeConversation
 
         public static implicit operator BinaryContent(InternalRealtimeResponseItem internalRealtimeResponseItem)
         {
+            if (internalRealtimeResponseItem == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalRealtimeResponseItem, ModelSerializationExtensions.WireOptions);
         }
 

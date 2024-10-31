@@ -41,7 +41,7 @@ namespace OpenAI.Audio
                 writer.WritePropertyName("text"u8);
                 writer.WriteStringValue(Text);
             }
-            if (Optional.IsCollectionDefined(Words) && _additionalBinaryDataProperties?.ContainsKey("words") != true)
+            if (true && Optional.IsCollectionDefined(Words) && _additionalBinaryDataProperties?.ContainsKey("words") != true)
             {
                 writer.WritePropertyName("words"u8);
                 writer.WriteStartArray();
@@ -51,7 +51,7 @@ namespace OpenAI.Audio
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsCollectionDefined(Segments) && _additionalBinaryDataProperties?.ContainsKey("segments") != true)
+            if (true && Optional.IsCollectionDefined(Segments) && _additionalBinaryDataProperties?.ContainsKey("segments") != true)
             {
                 writer.WritePropertyName("segments"u8);
                 writer.WriteStartArray();
@@ -71,7 +71,7 @@ namespace OpenAI.Audio
                 writer.WritePropertyName("duration"u8);
                 writer.WriteNumberValue(Convert.ToDouble(Duration.Value.ToString("s\\.FFF")));
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -113,8 +113,8 @@ namespace OpenAI.Audio
             }
             string language = default;
             string text = default;
-            IList<TranscribedWord> words = default;
-            IList<TranscribedSegment> segments = default;
+            IReadOnlyList<TranscribedWord> words = default;
+            IReadOnlyList<TranscribedSegment> segments = default;
             InternalCreateTranscriptionResponseVerboseJsonTask task = default;
             TimeSpan? duration = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
@@ -168,7 +168,7 @@ namespace OpenAI.Audio
                     duration = TimeSpan.FromSeconds(prop.Value.GetDouble());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -218,6 +218,10 @@ namespace OpenAI.Audio
 
         public static implicit operator BinaryContent(AudioTranscription audioTranscription)
         {
+            if (audioTranscription == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(audioTranscription, ModelSerializationExtensions.WireOptions);
         }
 

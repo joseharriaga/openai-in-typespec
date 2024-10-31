@@ -36,7 +36,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("input"u8);
                 writer.WriteStringValue(Input);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("outputs") != true)
+            if (true && _additionalBinaryDataProperties?.ContainsKey("outputs") != true)
             {
                 writer.WritePropertyName("outputs"u8);
                 writer.WriteStartArray();
@@ -46,7 +46,7 @@ namespace OpenAI.Assistants
                 }
                 writer.WriteEndArray();
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -106,7 +106,7 @@ namespace OpenAI.Assistants
                     outputs = array;
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -149,6 +149,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter internalRunStepDetailsToolCallsCodeObjectCodeInterpreter)
         {
+            if (internalRunStepDetailsToolCallsCodeObjectCodeInterpreter == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalRunStepDetailsToolCallsCodeObjectCodeInterpreter, ModelSerializationExtensions.WireOptions);
         }
 

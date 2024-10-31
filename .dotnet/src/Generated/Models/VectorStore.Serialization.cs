@@ -118,7 +118,7 @@ namespace OpenAI.VectorStores
                 writer.WritePropertyName("expires_after"u8);
                 writer.WriteObjectValue<VectorStoreExpirationPolicy>(ExpirationPolicy, options);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -258,7 +258,7 @@ namespace OpenAI.VectorStores
                     expirationPolicy = VectorStoreExpirationPolicy.DeserializeVectorStoreExpirationPolicy(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -313,6 +313,10 @@ namespace OpenAI.VectorStores
 
         public static implicit operator BinaryContent(VectorStore vectorStore)
         {
+            if (vectorStore == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(vectorStore, ModelSerializationExtensions.WireOptions);
         }
 

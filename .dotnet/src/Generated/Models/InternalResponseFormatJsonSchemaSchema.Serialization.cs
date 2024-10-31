@@ -103,6 +103,10 @@ namespace OpenAI.Internal
 
         public static implicit operator BinaryContent(InternalResponseFormatJsonSchemaSchema internalResponseFormatJsonSchemaSchema)
         {
+            if (internalResponseFormatJsonSchemaSchema == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalResponseFormatJsonSchemaSchema, ModelSerializationExtensions.WireOptions);
         }
 

@@ -30,8 +30,6 @@ public partial class OpenAIFileClient
     // CUSTOM: Added as a convenience.
     /// <summary> Initializes a new instance of <see cref="OpenAIFileClient"/>. </summary>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="model"/> or <paramref name="apiKey"/> is null. </exception>
-    /// <exception cref="ArgumentException"> <paramref name="model"/> is an empty string, and was expected to be non-empty. </exception>
     public OpenAIFileClient(string apiKey) : this(new ApiKeyCredential(apiKey), new OpenAIClientOptions())
     {
     }

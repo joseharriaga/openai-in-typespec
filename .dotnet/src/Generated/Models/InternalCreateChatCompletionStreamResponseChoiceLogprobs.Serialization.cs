@@ -65,7 +65,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("refusal"u8);
                 }
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -140,7 +140,7 @@ namespace OpenAI.Chat
                     refusal = array;
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -183,6 +183,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(InternalCreateChatCompletionStreamResponseChoiceLogprobs internalCreateChatCompletionStreamResponseChoiceLogprobs)
         {
+            if (internalCreateChatCompletionStreamResponseChoiceLogprobs == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalCreateChatCompletionStreamResponseChoiceLogprobs, ModelSerializationExtensions.WireOptions);
         }
 

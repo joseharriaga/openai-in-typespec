@@ -42,7 +42,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("role"u8);
                 writer.WriteStringValue(Role.Value.ToSerialString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -110,7 +110,7 @@ namespace OpenAI.Assistants
                     role = prop.Value.GetString().ToMessageRole();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -153,6 +153,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(InternalMessageDeltaObjectDelta internalMessageDeltaObjectDelta)
         {
+            if (internalMessageDeltaObjectDelta == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalMessageDeltaObjectDelta, ModelSerializationExtensions.WireOptions);
         }
 

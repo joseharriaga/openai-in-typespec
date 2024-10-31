@@ -64,7 +64,7 @@ namespace OpenAI.RealtimeConversation
                     eventId = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -107,6 +107,10 @@ namespace OpenAI.RealtimeConversation
 
         public static implicit operator BinaryContent(InternalRealtimeRequestInputAudioBufferClearCommand internalRealtimeRequestInputAudioBufferClearCommand)
         {
+            if (internalRealtimeRequestInputAudioBufferClearCommand == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalRealtimeRequestInputAudioBufferClearCommand, ModelSerializationExtensions.WireOptions);
         }
 

@@ -48,7 +48,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(_type.ToString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -108,7 +108,7 @@ namespace OpenAI.Assistants
                     @type = new InternalTruncationObjectType(prop.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -151,6 +151,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(RunTruncationStrategy runTruncationStrategy)
         {
+            if (runTruncationStrategy == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(runTruncationStrategy, ModelSerializationExtensions.WireOptions);
         }
 

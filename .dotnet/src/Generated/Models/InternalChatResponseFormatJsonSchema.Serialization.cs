@@ -67,7 +67,7 @@ namespace OpenAI.Chat
                     @type = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -110,6 +110,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(InternalChatResponseFormatJsonSchema internalChatResponseFormatJsonSchema)
         {
+            if (internalChatResponseFormatJsonSchema == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalChatResponseFormatJsonSchema, ModelSerializationExtensions.WireOptions);
         }
 

@@ -32,7 +32,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("reason"u8);
                 writer.WriteStringValue(Reason.Value.ToString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -85,7 +85,7 @@ namespace OpenAI.Assistants
                     reason = new RunIncompleteReason(prop.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -128,6 +128,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(RunIncompleteDetails runIncompleteDetails)
         {
+            if (runIncompleteDetails == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(runIncompleteDetails, ModelSerializationExtensions.WireOptions);
         }
 

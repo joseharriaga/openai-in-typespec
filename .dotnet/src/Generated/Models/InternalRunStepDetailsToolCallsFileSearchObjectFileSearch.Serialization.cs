@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalRunStepDetailsToolCallsFileSearchObjectFileSearch)} does not support writing '{format}' format.");
             }
-            if (options.Format != "W" && Optional.IsCollectionDefined(Results) && _additionalBinaryDataProperties?.ContainsKey("results") != true)
+            if (true && Optional.IsCollectionDefined(Results) && _additionalBinaryDataProperties?.ContainsKey("results") != true)
             {
                 writer.WritePropertyName("results"u8);
                 writer.WriteStartArray();
@@ -42,7 +42,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("ranking_options"u8);
                 writer.WriteObjectValue<FileSearchRankingOptions>(RankingOptions, options);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -110,7 +110,7 @@ namespace OpenAI.Assistants
                     rankingOptions = FileSearchRankingOptions.DeserializeFileSearchRankingOptions(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -153,6 +153,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(InternalRunStepDetailsToolCallsFileSearchObjectFileSearch internalRunStepDetailsToolCallsFileSearchObjectFileSearch)
         {
+            if (internalRunStepDetailsToolCallsFileSearchObjectFileSearch == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalRunStepDetailsToolCallsFileSearchObjectFileSearch, ModelSerializationExtensions.WireOptions);
         }
 

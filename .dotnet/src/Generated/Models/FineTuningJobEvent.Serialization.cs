@@ -56,7 +56,7 @@ namespace OpenAI.FineTuning
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.ToString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -129,7 +129,7 @@ namespace OpenAI.FineTuning
                     @object = new InternalFineTuningJobEventObject(prop.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -178,6 +178,10 @@ namespace OpenAI.FineTuning
 
         public static implicit operator BinaryContent(FineTuningJobEvent fineTuningJobEvent)
         {
+            if (fineTuningJobEvent == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(fineTuningJobEvent, ModelSerializationExtensions.WireOptions);
         }
 

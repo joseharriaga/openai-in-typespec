@@ -111,7 +111,7 @@ namespace OpenAI.RealtimeConversation
                 }
 #endif
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -276,7 +276,7 @@ namespace OpenAI.RealtimeConversation
                     maxResponseOutputTokens = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -332,6 +332,10 @@ namespace OpenAI.RealtimeConversation
 
         public static implicit operator BinaryContent(ConversationSessionOptions conversationSessionOptions)
         {
+            if (conversationSessionOptions == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(conversationSessionOptions, ModelSerializationExtensions.WireOptions);
         }
 

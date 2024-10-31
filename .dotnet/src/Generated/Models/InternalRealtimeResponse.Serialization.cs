@@ -73,7 +73,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 writer.WriteEndArray();
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -162,7 +162,7 @@ namespace OpenAI.RealtimeConversation
                     output = array;
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -212,6 +212,10 @@ namespace OpenAI.RealtimeConversation
 
         public static implicit operator BinaryContent(InternalRealtimeResponse internalRealtimeResponse)
         {
+            if (internalRealtimeResponse == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalRealtimeResponse, ModelSerializationExtensions.WireOptions);
         }
 

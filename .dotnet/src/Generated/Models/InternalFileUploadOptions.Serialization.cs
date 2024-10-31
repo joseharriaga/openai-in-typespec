@@ -45,7 +45,7 @@ namespace OpenAI.Files
                 writer.WritePropertyName("purpose"u8);
                 writer.WriteStringValue(Purpose.ToString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -100,7 +100,7 @@ namespace OpenAI.Files
                     purpose = new FileUploadPurpose(prop.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -143,6 +143,10 @@ namespace OpenAI.Files
 
         public static implicit operator BinaryContent(InternalFileUploadOptions internalFileUploadOptions)
         {
+            if (internalFileUploadOptions == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalFileUploadOptions, ModelSerializationExtensions.WireOptions);
         }
 

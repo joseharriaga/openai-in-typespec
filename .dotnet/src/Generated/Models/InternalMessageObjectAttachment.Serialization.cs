@@ -54,7 +54,7 @@ namespace OpenAI.Assistants
                 }
                 writer.WriteEndArray();
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -125,7 +125,7 @@ namespace OpenAI.Assistants
                     tools = array;
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -168,6 +168,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(InternalMessageObjectAttachment internalMessageObjectAttachment)
         {
+            if (internalMessageObjectAttachment == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalMessageObjectAttachment, ModelSerializationExtensions.WireOptions);
         }
 

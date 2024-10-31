@@ -83,7 +83,7 @@ namespace OpenAI.Files
                     writer.WriteNull("file"u8);
                 }
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -189,7 +189,7 @@ namespace OpenAI.Files
                     @file = OpenAIFile.DeserializeOpenAIFile(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -242,6 +242,10 @@ namespace OpenAI.Files
 
         public static implicit operator BinaryContent(InternalUpload internalUpload)
         {
+            if (internalUpload == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalUpload, ModelSerializationExtensions.WireOptions);
         }
 

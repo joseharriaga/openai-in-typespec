@@ -41,7 +41,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("function"u8);
                 writer.WriteObjectValue(Function, options);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -96,7 +96,7 @@ namespace OpenAI.Chat
                     function = InternalChatCompletionNamedToolChoiceFunction.DeserializeInternalChatCompletionNamedToolChoiceFunction(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -139,6 +139,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(InternalChatCompletionNamedToolChoice internalChatCompletionNamedToolChoice)
         {
+            if (internalChatCompletionNamedToolChoice == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalChatCompletionNamedToolChoice, ModelSerializationExtensions.WireOptions);
         }
 

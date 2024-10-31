@@ -36,7 +36,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Kind.ToString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -122,6 +122,10 @@ namespace OpenAI.RealtimeConversation
 
         public static implicit operator BinaryContent(ConversationTool conversationTool)
         {
+            if (conversationTool == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(conversationTool, ModelSerializationExtensions.WireOptions);
         }
 

@@ -313,7 +313,8 @@ public partial class AssistantClient
     /// <returns> A new thread. </returns>
     public virtual async Task<ClientResult<AssistantThread>> CreateThreadAsync(ThreadCreationOptions options = null, CancellationToken cancellationToken = default)
     {
-        ClientResult protocolResult = await CreateThreadAsync(options, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
+        var opt = options == null ? null : options;
+        ClientResult protocolResult = await CreateThreadAsync(opt, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return ClientResult.FromValue((AssistantThread)protocolResult, protocolResult.GetRawResponse());
     }
 

@@ -36,7 +36,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -124,6 +124,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(InternalMessageDeltaTextContentAnnotation internalMessageDeltaTextContentAnnotation)
         {
+            if (internalMessageDeltaTextContentAnnotation == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalMessageDeltaTextContentAnnotation, ModelSerializationExtensions.WireOptions);
         }
 

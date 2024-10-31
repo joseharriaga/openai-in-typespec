@@ -58,7 +58,7 @@ namespace OpenAI.VectorStores
                 }
 #endif
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -129,7 +129,7 @@ namespace OpenAI.VectorStores
                     chunkingStrategy = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -172,6 +172,10 @@ namespace OpenAI.VectorStores
 
         public static implicit operator BinaryContent(InternalCreateVectorStoreFileBatchRequest internalCreateVectorStoreFileBatchRequest)
         {
+            if (internalCreateVectorStoreFileBatchRequest == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalCreateVectorStoreFileBatchRequest, ModelSerializationExtensions.WireOptions);
         }
 

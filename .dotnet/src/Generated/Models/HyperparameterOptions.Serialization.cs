@@ -63,7 +63,7 @@ namespace OpenAI.FineTuning
                 }
 #endif
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -136,7 +136,7 @@ namespace OpenAI.FineTuning
                     learningRateMultiplier = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -179,6 +179,10 @@ namespace OpenAI.FineTuning
 
         public static implicit operator BinaryContent(HyperparameterOptions hyperparameterOptions)
         {
+            if (hyperparameterOptions == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(hyperparameterOptions, ModelSerializationExtensions.WireOptions);
         }
 

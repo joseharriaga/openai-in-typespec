@@ -27,7 +27,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(InternalCreateThreadRequestToolResourcesFileSearchBase)} does not support writing '{format}' format.");
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -70,7 +70,7 @@ namespace OpenAI.Assistants
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -113,6 +113,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(InternalCreateThreadRequestToolResourcesFileSearchBase internalCreateThreadRequestToolResourcesFileSearchBase)
         {
+            if (internalCreateThreadRequestToolResourcesFileSearchBase == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalCreateThreadRequestToolResourcesFileSearchBase, ModelSerializationExtensions.WireOptions);
         }
 

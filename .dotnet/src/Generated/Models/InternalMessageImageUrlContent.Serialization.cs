@@ -71,7 +71,7 @@ namespace OpenAI.Assistants
                     imageUrl = InternalMessageContentImageUrlObjectImageUrl.DeserializeInternalMessageContentImageUrlObjectImageUrl(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -114,6 +114,10 @@ namespace OpenAI.Assistants
 
         public static implicit operator BinaryContent(InternalMessageImageUrlContent internalMessageImageUrlContent)
         {
+            if (internalMessageImageUrlContent == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalMessageImageUrlContent, ModelSerializationExtensions.WireOptions);
         }
 

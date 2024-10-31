@@ -27,7 +27,7 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalCreateChatCompletionResponseChoiceLogprobs)} does not support writing '{format}' format.");
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("content") != true)
+            if (true && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 if (Content != null && Optional.IsCollectionDefined(Content))
                 {
@@ -44,7 +44,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("content"u8);
                 }
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties?.ContainsKey("refusal") != true)
+            if (true && _additionalBinaryDataProperties?.ContainsKey("refusal") != true)
             {
                 if (Refusal != null && Optional.IsCollectionDefined(Refusal))
                 {
@@ -61,7 +61,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("refusal"u8);
                 }
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -136,7 +136,7 @@ namespace OpenAI.Chat
                     refusal = array;
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
@@ -179,6 +179,10 @@ namespace OpenAI.Chat
 
         public static implicit operator BinaryContent(InternalCreateChatCompletionResponseChoiceLogprobs internalCreateChatCompletionResponseChoiceLogprobs)
         {
+            if (internalCreateChatCompletionResponseChoiceLogprobs == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalCreateChatCompletionResponseChoiceLogprobs, ModelSerializationExtensions.WireOptions);
         }
 

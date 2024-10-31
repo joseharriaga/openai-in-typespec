@@ -36,7 +36,7 @@ namespace OpenAI.FineTuning
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -122,6 +122,10 @@ namespace OpenAI.FineTuning
 
         public static implicit operator BinaryContent(InternalFineTuningIntegration internalFineTuningIntegration)
         {
+            if (internalFineTuningIntegration == null)
+            {
+                return null;
+            }
             return BinaryContent.Create(internalFineTuningIntegration, ModelSerializationExtensions.WireOptions);
         }
 

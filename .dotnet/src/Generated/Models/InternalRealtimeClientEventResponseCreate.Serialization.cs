@@ -78,7 +78,7 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            InternalRealtimeClientEventResponseCreateResponse response = default;
+            InternalRealtimeResponseOptions response = default;
             InternalRealtimeClientEventType type = default;
             string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -87,7 +87,7 @@ namespace OpenAI.RealtimeConversation
             {
                 if (property.NameEquals("response"u8))
                 {
-                    response = InternalRealtimeClientEventResponseCreateResponse.DeserializeInternalRealtimeClientEventResponseCreateResponse(property.Value, options);
+                    response = InternalRealtimeResponseOptions.DeserializeInternalRealtimeResponseOptions(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("type"u8))

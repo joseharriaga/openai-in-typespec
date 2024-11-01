@@ -1,4 +1,5 @@
 using System.ClientModel.Primitives;
+using System.Linq;
 using System.Text.Json;
 
 namespace OpenAI.Chat;
@@ -21,7 +22,7 @@ public partial class AssistantChatMessage : IJsonModel<AssistantChatMessage>
         // Content is optional, can be a single string or a collection of ChatMessageContentPart.
         if (Optional.IsDefined(Content) && Content.IsInnerCollectionDefined())
         {
-            if (Content.Count > 0)
+            if (Content.Count > 0 && Content.Any(contentPart => !contentPart.IsContrived))
             {
                 writer.WritePropertyName("content"u8);
                 if (Content.Count == 1 && Content[0].Text != null)
@@ -33,7 +34,10 @@ public partial class AssistantChatMessage : IJsonModel<AssistantChatMessage>
                     writer.WriteStartArray();
                     foreach (ChatMessageContentPart part in Content)
                     {
-                        writer.WriteObjectValue(part, options);
+                        if (!part.IsContrived)
+                        {
+                            writer.WriteObjectValue(part, options);
+                        }
                     }
                     writer.WriteEndArray();
                 }
@@ -44,6 +48,7 @@ public partial class AssistantChatMessage : IJsonModel<AssistantChatMessage>
         writer.WriteOptionalProperty("name"u8, ParticipantName, options);
         writer.WriteOptionalCollection("tool_calls"u8, ToolCalls, options);
         writer.WriteOptionalProperty("function_call"u8, FunctionCall, options);
+        writer.WriteOptionalProperty("audio"u8, Audio, options);
         writer.WriteSerializedAdditionalRawData(SerializedAdditionalRawData, options);
         writer.WriteEndObject();
     }

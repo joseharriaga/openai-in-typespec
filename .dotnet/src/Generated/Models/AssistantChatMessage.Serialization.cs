@@ -34,6 +34,7 @@ namespace OpenAI.Chat
             }
             string refusal = default;
             string name = default;
+            InternalChatCompletionRequestAssistantMessageAudio audio = default;
             IList<ChatToolCall> toolCalls = default;
             ChatFunctionCall functionCall = default;
             ChatMessageRole role = default;
@@ -55,6 +56,16 @@ namespace OpenAI.Chat
                 if (property.NameEquals("name"u8))
                 {
                     name = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("audio"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        audio = null;
+                        continue;
+                    }
+                    audio = InternalChatCompletionRequestAssistantMessageAudio.DeserializeInternalChatCompletionRequestAssistantMessageAudio(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("tool_calls"u8))
@@ -105,6 +116,7 @@ namespace OpenAI.Chat
                 serializedAdditionalRawData,
                 refusal,
                 name,
+                audio,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
                 functionCall);
         }

@@ -22,12 +22,22 @@ public static partial class OpenAIChatModelFactory
         DateTimeOffset createdAt = default,
         string model = null,
         string systemFingerprint = null,
-        ChatTokenUsage usage = null)
+        ChatTokenUsage usage = null,
+        BinaryData audioBytes = null,
+        string audioCorrelationId = null,
+        string audioTranscript = null,
+        DateTimeOffset? audioExpiresAt = null)
     {
         content ??= new ChatMessageContent();
         toolCalls ??= new List<ChatToolCall>();
         contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
+
+        InternalChatCompletionResponseMessageAudio audio = null;
+        if (audioCorrelationId is not null || audioExpiresAt is not null || audioBytes is not null || audioTranscript is not null)
+        {
+            audio = new(audioCorrelationId, audioExpiresAt ?? default, audioBytes, audioTranscript);
+        }
 
         InternalChatCompletionResponseMessage message = new InternalChatCompletionResponseMessage(
             content,
@@ -35,6 +45,7 @@ public static partial class OpenAIChatModelFactory
             toolCalls.ToList(),
             role,
             functionCall,
+            audio,
             serializedAdditionalRawData: null);
 
         InternalCreateChatCompletionResponseChoiceLogprobs logprobs = new InternalCreateChatCompletionResponseChoiceLogprobs(
@@ -113,7 +124,7 @@ public static partial class OpenAIChatModelFactory
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatOutputTokenUsageDetails"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.ChatOutputTokenusageDetails"/> instance for mocking. </returns>
-    public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default, int? audioTokenCount = null)
+    public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default, int audioTokenCount = default)
     {
         return new ChatOutputTokenUsageDetails(
             audioTokenCount: audioTokenCount,
@@ -136,14 +147,25 @@ public static partial class OpenAIChatModelFactory
         DateTimeOffset createdAt = default,
         string model = null,
         string systemFingerprint = null,
-        ChatTokenUsage usage = null)
+        ChatTokenUsage usage = null,
+        string audioCorrelationId = null,
+        string audioTranscript = null,
+        BinaryData audioBytes = null,
+        DateTimeOffset? audioExpiresAt = null)
     {
         contentUpdate ??= new ChatMessageContent();
         toolCallUpdates ??= new List<StreamingChatToolCallUpdate>();
         contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
+        InternalChatCompletionMessageAudioChunk audio = null;
+        if (audioCorrelationId is not null || audioTranscript is not null || audioBytes is not null || audioExpiresAt is not null)
+        {
+            audio = new(audioCorrelationId, audioTranscript, audioBytes, audioExpiresAt, serializedAdditionalRawData: null);
+        }
+
         InternalChatCompletionStreamResponseDelta delta = new InternalChatCompletionStreamResponseDelta(
+            audio,
             contentUpdate,
             functionCallUpdate,
             toolCallUpdates.ToList(),

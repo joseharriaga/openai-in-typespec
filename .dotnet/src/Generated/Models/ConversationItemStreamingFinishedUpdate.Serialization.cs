@@ -34,7 +34,7 @@ namespace OpenAI.RealtimeConversation
             if (SerializedAdditionalRawData?.ContainsKey("item") != true)
             {
                 writer.WritePropertyName("item"u8);
-                writer.WriteObjectValue<InternalRealtimeResponseItem>(_internalItem, options);
+                writer.WriteObjectValue<InternalRealtimeConversationResponseItem>(_internalItem, options);
             }
             if (SerializedAdditionalRawData?.ContainsKey("type") != true)
             {
@@ -90,7 +90,7 @@ namespace OpenAI.RealtimeConversation
             }
             string responseId = default;
             int outputIndex = default;
-            InternalRealtimeResponseItem item = default;
+            InternalRealtimeConversationResponseItem item = default;
             ConversationUpdateKind type = default;
             string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -109,7 +109,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (property.NameEquals("item"u8))
                 {
-                    item = InternalRealtimeResponseItem.DeserializeInternalRealtimeResponseItem(property.Value, options);
+                    item = InternalRealtimeConversationResponseItem.DeserializeInternalRealtimeConversationResponseItem(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("type"u8))

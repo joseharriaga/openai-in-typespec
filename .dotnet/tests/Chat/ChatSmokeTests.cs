@@ -534,6 +534,74 @@ public class ChatSmokeTests : SyncAsyncTestBase
     }
 
     [Test]
+    public void SerializeAudioThings()
+    {
+        AssistantChatMessage message = ModelReaderWriter.Read<AssistantChatMessage>(BinaryData.FromBytes("""
+            {
+                "role": "assistant",
+                "audio": {
+                    "id": "audio_correlated_id_1234"
+                }
+            }
+            """u8.ToArray()));
+        Assert.That(message.Content, Has.Count.EqualTo(1));
+        Assert.That(message.Content[0].AudioCorrelationId, Is.EqualTo("audio_correlated_id_1234"));
+        string serializedMessage = ModelReaderWriter.Write(message).ToString();
+        Assert.That(serializedMessage, Does.Contain(@"""audio"":{""id"":""audio_correlated_id_1234""}"));
+
+        BinaryData rawAudioResponse = BinaryData.FromBytes("""
+            {
+              "id": "chatcmpl-AOqyHuhjVDeGVbCZXJZ8mCLyl5nBq",
+              "object": "chat.completion",
+              "created": 1730486857,
+              "model": "gpt-4o-audio-preview-2024-10-01",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": null,
+                    "refusal": null,
+                    "audio": {
+                      "id": "audio_6725224ac62481908ab55dc283289d87",
+                      "data": "dHJ1bmNhdGVk",
+                      "expires_at": 1730490458,
+                      "transcript": "Hello there! How can I assist you with your test today?"
+                    }
+                  },
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 28,
+                "completion_tokens": 97,
+                "total_tokens": 125,
+                "prompt_tokens_details": {
+                  "cached_tokens": 0,
+                  "text_tokens": 11,
+                  "image_tokens": 0,
+                  "audio_tokens": 17
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 0,
+                  "text_tokens": 23,
+                  "audio_tokens": 74,
+                  "accepted_prediction_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              },
+              "system_fingerprint": "fp_49254d0e9b"
+            }
+            """u8.ToArray());
+        ChatCompletion audioCompletion = ModelReaderWriter.Read<ChatCompletion>(rawAudioResponse);
+        Assert.That(audioCompletion, Is.Not.Null);
+
+        AssistantChatMessage audioHistoryMessage = new(audioCompletion);
+        BinaryData serializedAudioHistoryMessage = ModelReaderWriter.Write(audioHistoryMessage);
+        Console.WriteLine(serializedAudioHistoryMessage.ToString());
+    }
+
+    [Test]
     [TestCase(true)]
     [TestCase(false)]
     public void SerializeChatMessageWithSingleStringContent(bool fromRawJson)

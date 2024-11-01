@@ -212,7 +212,7 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int? audioTokenCount = null, int reasoningTokenCount = default)
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int audioTokenCount = default, int reasoningTokenCount = default)
         {
             return new ChatOutputTokenUsageDetails(audioTokenCount, reasoningTokenCount, serializedAdditionalRawData: null);
         }
@@ -235,20 +235,6 @@ namespace OpenAI
         public static UserChatMessage UserChatMessage(ChatMessageContent content = null, string participantName = null)
         {
             return new UserChatMessage(ChatMessageRole.User, content, serializedAdditionalRawData: null, participantName);
-        }
-
-        public static AssistantChatMessage AssistantChatMessage(ChatMessageContent content = null, string refusal = null, string participantName = null, IEnumerable<ChatToolCall> toolCalls = null, ChatFunctionCall functionCall = null)
-        {
-            toolCalls ??= new List<ChatToolCall>();
-
-            return new AssistantChatMessage(
-                ChatMessageRole.Assistant,
-                content,
-                serializedAdditionalRawData: null,
-                refusal,
-                participantName,
-                toolCalls?.ToList(),
-                functionCall);
         }
 
         public static ToolChatMessage ToolChatMessage(ChatMessageContent content = null, string toolCallId = null)

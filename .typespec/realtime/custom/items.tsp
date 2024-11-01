@@ -5,13 +5,14 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 @discriminator("type")
-model RealtimeRequestItem {
+model RealtimeConversationRequestItem {
+  ...RealtimeConversationItemBase;
   type: RealtimeItemType;
   id?: string;
 }
 
 @discriminator("role")
-model RealtimeRequestMessageItem extends RealtimeRequestItem {
+model RealtimeRequestMessageItem extends RealtimeConversationRequestItem {
   type: RealtimeItemType.message;
   role: RealtimeMessageRole;
   status?: RealtimeItemStatus;
@@ -32,7 +33,7 @@ model RealtimeRequestAssistantMessageItem extends RealtimeRequestMessageItem {
   content: RealtimeRequestTextContentPart[];
 }
 
-model RealtimeRequestFunctionCallItem extends RealtimeRequestItem {
+model RealtimeRequestFunctionCallItem extends RealtimeConversationRequestItem {
   type: RealtimeItemType.function_call;
   name: string;
   call_id: string;
@@ -40,7 +41,8 @@ model RealtimeRequestFunctionCallItem extends RealtimeRequestItem {
   status?: RealtimeItemStatus;
 }
 
-model RealtimeRequestFunctionCallOutputItem extends RealtimeRequestItem {
+model RealtimeRequestFunctionCallOutputItem
+  extends RealtimeConversationRequestItem {
   type: RealtimeItemType.function_call_output;
   call_id: string;
   output: string;
@@ -49,26 +51,28 @@ model RealtimeRequestFunctionCallOutputItem extends RealtimeRequestItem {
 // TODO: representation of a doubly-discriminated type with an absent second discriminator
 //   (first discriminator: type = message; second discriminator: no role present)
 
-model RealtimeRequestMessageReferenceItem { // extends RealtimeRequestItem {
+model RealtimeRequestMessageReferenceItem { // extends RealtimeConversationRequestItem {
   type: RealtimeItemType.message;
   id: string;
 }
 
 @discriminator("type")
-model RealtimeResponseItem {
+model RealtimeConversationResponseItem {
+  ...RealtimeConversationItemBase;
   object: "realtime.item";
   type: RealtimeItemType;
   id: string | null;
 }
 
-model RealtimeResponseMessageItem extends RealtimeResponseItem {
+model RealtimeResponseMessageItem extends RealtimeConversationResponseItem {
   type: RealtimeItemType.message;
   role: RealtimeMessageRole;
   content: RealtimeContentPart[];
   status: RealtimeItemStatus;
 }
 
-model RealtimeResponseFunctionCallItem extends RealtimeResponseItem {
+model RealtimeResponseFunctionCallItem
+  extends RealtimeConversationResponseItem {
   type: RealtimeItemType.function_call;
   name: string;
   call_id: string;
@@ -76,7 +80,8 @@ model RealtimeResponseFunctionCallItem extends RealtimeResponseItem {
   status: RealtimeItemStatus;
 }
 
-model RealtimeResponseFunctionCallOutputItem extends RealtimeResponseItem {
+model RealtimeResponseFunctionCallOutputItem
+  extends RealtimeConversationResponseItem {
   type: RealtimeItemType.function_call_output;
   call_id: string;
   output: string;

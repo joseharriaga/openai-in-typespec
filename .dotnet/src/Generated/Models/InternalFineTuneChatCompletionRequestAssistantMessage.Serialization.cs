@@ -39,6 +39,18 @@ namespace OpenAI.FineTuning
                 writer.WritePropertyName("name"u8);
                 writer.WriteStringValue(ParticipantName);
             }
+            if (SerializedAdditionalRawData?.ContainsKey("audio") != true && Optional.IsDefined(Audio))
+            {
+                if (Audio != null)
+                {
+                    writer.WritePropertyName("audio"u8);
+                    writer.WriteObjectValue<InternalChatCompletionRequestAssistantMessageAudio>(Audio, options);
+                }
+                else
+                {
+                    writer.WriteNull("audio");
+                }
+            }
             if (SerializedAdditionalRawData?.ContainsKey("tool_calls") != true && Optional.IsCollectionDefined(ToolCalls))
             {
                 writer.WritePropertyName("tool_calls"u8);
@@ -116,6 +128,7 @@ namespace OpenAI.FineTuning
             }
             string refusal = default;
             string name = default;
+            InternalChatCompletionRequestAssistantMessageAudio audio = default;
             IList<ChatToolCall> toolCalls = default;
             ChatFunctionCall functionCall = default;
             ChatMessageRole role = default;
@@ -137,6 +150,16 @@ namespace OpenAI.FineTuning
                 if (property.NameEquals("name"u8))
                 {
                     name = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("audio"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        audio = null;
+                        continue;
+                    }
+                    audio = InternalChatCompletionRequestAssistantMessageAudio.DeserializeInternalChatCompletionRequestAssistantMessageAudio(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("tool_calls"u8))
@@ -187,6 +210,7 @@ namespace OpenAI.FineTuning
                 serializedAdditionalRawData,
                 refusal,
                 name,
+                audio,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
                 functionCall);
         }

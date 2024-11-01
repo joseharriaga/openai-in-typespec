@@ -76,7 +76,14 @@ public partial class ChatMessage
         {
             foreach (ChatMessageContentPart contentPart in contentParts)
             {
-                Content.Add(contentPart);
+                if (contentPart.Kind == ChatMessageContentPartKind.Audio && role == ChatMessageRole.Assistant)
+                {
+                    Content.Add(new ChatMessageContentPart(ChatMessageContentPartKind.Audio, audioReference: new(contentPart.AudioCorrelationId)));
+                }
+                else
+                {
+                    Content.Add(contentPart);
+                }
             }
         }
     }

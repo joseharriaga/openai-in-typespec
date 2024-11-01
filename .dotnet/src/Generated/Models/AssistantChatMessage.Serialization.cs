@@ -139,18 +139,19 @@ namespace OpenAI.Chat
                     DeserializeContentValue(prop, ref content);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
+            // CUSTOM: Initialize Content collection property.
             return new AssistantChatMessage(
                 refusal,
                 participantName,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
                 functionCall,
                 role,
-                content,
+                content ?? new ChatMessageContent(),
                 additionalBinaryDataProperties);
         }
 

@@ -68,12 +68,13 @@ namespace OpenAI.Chat
                     DeserializeContentValue(prop, ref content);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new SystemChatMessage(participantName, role, content, additionalBinaryDataProperties);
+            // CUSTOM: Initialize Content collection property.
+            return new SystemChatMessage(participantName, role, content ?? new ChatMessageContent(), additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<SystemChatMessage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

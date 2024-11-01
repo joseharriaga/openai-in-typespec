@@ -71,7 +71,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("usage"u8);
                 writer.WriteObjectValue(Usage, options);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -165,7 +165,7 @@ namespace OpenAI.Chat
                     usage = ChatTokenUsage.DeserializeChatTokenUsage(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

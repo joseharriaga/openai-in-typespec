@@ -18,13 +18,14 @@ interface Audio {
   @summary("Generates audio from the input text.")
   createSpeech(
     @header accept: "application/octet-stream",
-    
-    @body requestBody: CreateSpeechRequest): {
-      /** chunked */
-      @header("Transfer-Encoding") transferEncoding?: string;
-      @header contentType: "application/octet-stream";
-      @body responseBody: bytes;
-    };
+    @body requestBody: CreateSpeechRequest,
+  ): {
+    /** chunked */
+    @header("Transfer-Encoding") transferEncoding?: string;
+
+    @header contentType: "application/octet-stream";
+    @body responseBody: bytes;
+  };
 
   @route("transcriptions")
   @post

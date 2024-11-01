@@ -41,7 +41,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("arguments"u8);
                 this.SerializeArgumentsValue(writer, options);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -96,7 +96,7 @@ namespace OpenAI.Chat
                     DeserializeArgumentsValue(prop, ref arguments);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

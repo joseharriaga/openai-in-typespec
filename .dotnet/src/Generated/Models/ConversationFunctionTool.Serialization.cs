@@ -102,7 +102,7 @@ namespace OpenAI.RealtimeConversation
                     kind = new ConversationToolKind(prop.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

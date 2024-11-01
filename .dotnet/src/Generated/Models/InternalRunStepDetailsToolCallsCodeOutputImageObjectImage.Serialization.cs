@@ -36,7 +36,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("file_id"u8);
                 writer.WriteStringValue(FileId);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -85,7 +85,7 @@ namespace OpenAI.Assistants
                     fileId = prop.Value.GetString();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

@@ -69,7 +69,7 @@ namespace OpenAI.Batch
                     writer.WriteNull("metadata"u8);
                 }
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -152,7 +152,7 @@ namespace OpenAI.Batch
                     metadata = dictionary;
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

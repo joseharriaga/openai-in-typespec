@@ -5,12 +5,12 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
+    [PersistableModelProxy(typeof(UnknownRealtimeResponseStatusDetails))]
     public abstract partial class ConversationStatusDetails : IJsonModel<ConversationStatusDetails>
     {
         internal ConversationStatusDetails()
@@ -36,7 +36,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(StatusKind.ToString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -76,21 +76,7 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            ConversationStatus statusKind = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            foreach (var prop in element.EnumerateObject())
-            {
-                if (prop.NameEquals("type"u8))
-                {
-                    statusKind = new ConversationStatus(prop.Value.GetString());
-                    continue;
-                }
-                if (options.Format != "W")
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
-            }
-            return new RealtimeConversation.ConversationStatusDetails(statusKind, additionalBinaryDataProperties);
+            return UnknownRealtimeResponseStatusDetails.DeserializeUnknownRealtimeResponseStatusDetails(element, options);
         }
 
         BinaryData IPersistableModel<ConversationStatusDetails>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -1,6 +1,6 @@
 emit:
   - "@typespec/openapi3"
-  - "@typespec/http-client-csharp"
+  - "@open-ai/plugin"
 options:
   "@typespec/openapi3":
     output-file: "{project-root}/../.openapi3/openapi3-openai.yaml"

@@ -36,7 +36,7 @@ namespace OpenAI.Internal
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {

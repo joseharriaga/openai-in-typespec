@@ -14,4 +14,3 @@ using OpenAI;
 @@visibility(ListAssistantsResponse.data, "read");
 @@visibility(ListRunStepsResponse.data, "read");
 @@visibility(ListRunsResponse.data, "read");
-

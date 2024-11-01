@@ -46,7 +46,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("total_tokens"u8);
                 writer.WriteNumberValue(TotalTokens);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -107,7 +107,7 @@ namespace OpenAI.Chat
                     totalTokens = prop.Value.GetInt32();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

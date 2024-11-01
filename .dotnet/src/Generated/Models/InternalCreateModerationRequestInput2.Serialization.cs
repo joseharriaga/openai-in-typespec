@@ -41,7 +41,7 @@ namespace OpenAI.Moderations
                 writer.WritePropertyName("image_url"u8);
                 writer.WriteObjectValue(ImageUrl, options);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -96,7 +96,7 @@ namespace OpenAI.Moderations
                     imageUrl = InternalCreateModerationRequestInputImageUrl.DeserializeInternalCreateModerationRequestInputImageUrl(prop.Value, options);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

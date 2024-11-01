@@ -51,7 +51,7 @@ namespace OpenAI.Files
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(Object.ToString());
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -118,7 +118,7 @@ namespace OpenAI.Files
                     @object = new InternalUploadPartObject(prop.Value.GetString());
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

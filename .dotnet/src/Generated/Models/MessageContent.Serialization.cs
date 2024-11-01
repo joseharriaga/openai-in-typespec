@@ -19,7 +19,7 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(MessageContent)} does not support writing '{format}' format.");
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {

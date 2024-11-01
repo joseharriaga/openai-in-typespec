@@ -32,7 +32,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("function_call"u8);
                 writer.WriteObjectValue(FunctionCall, options);
             }
-            if (options.Format != "W" && Optional.IsCollectionDefined(ToolCalls) && _additionalBinaryDataProperties?.ContainsKey("tool_calls") != true)
+            if (true && Optional.IsCollectionDefined(ToolCalls) && _additionalBinaryDataProperties?.ContainsKey("tool_calls") != true)
             {
                 writer.WritePropertyName("tool_calls"u8);
                 writer.WriteStartArray();
@@ -59,7 +59,8 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("role"u8);
                 writer.WriteStringValue(Role.Value.ToSerialString());
             }
-            if (Optional.IsDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true)
+            // CUSTOM: Check inner collection is defined.
+            if (Optional.IsDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true && Content.IsInnerCollectionDefined())
             {
                 if (Content != null)
                 {
@@ -71,7 +72,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("content"u8);
                 }
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -166,17 +167,18 @@ namespace OpenAI.Chat
                     DeserializeContentValue(prop, ref content);
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
+            // CUSTOM: Initialize Content collection property.
             return new InternalChatCompletionStreamResponseDelta(
                 functionCall,
                 toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(),
                 refusal,
                 role,
-                content,
+                content ?? new ChatMessageContent(),
                 additionalBinaryDataProperties);
         }
 

@@ -4149,6 +4149,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ChatCompletionMessageToolCallChunk'
+          readOnly: true
         role:
           type: string
           enum:
@@ -4915,12 +4916,14 @@ components:
                       $ref: '#/components/schemas/ChatCompletionTokenLogprob'
                     nullable: true
                     description: A list of message content tokens with log probability information.
+                    readOnly: true
                   refusal:
                     type: array
                     items:
                       $ref: '#/components/schemas/ChatCompletionTokenLogprob'
                     nullable: true
                     description: A list of message refusal tokens with log probability information.
+                    readOnly: true
                 required:
                   - content
                   - refusal
@@ -6573,11 +6576,13 @@ components:
           items:
             $ref: '#/components/schemas/TranscriptionWord'
           description: Extracted words and their corresponding timestamps.
+          readOnly: true
         segments:
           type: array
           items:
             $ref: '#/components/schemas/TranscriptionSegment'
           description: Segments of the transcribed text and their corresponding details.
+          readOnly: true
       description: Represents a verbose json transcription response returned by model, based on the provided input.
     CreateTranslationRequestMultiPart:
       type: object

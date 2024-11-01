@@ -571,6 +571,12 @@ namespace OpenAI
             return new ConversationResponseStartedUpdate(eventId, internalResponse, RealtimeConversation.ConversationUpdateKind.ResponseStarted, additionalBinaryDataProperties: null);
         }
 
+        public static ConversationStatusDetails ConversationStatusDetails(string statusKind = default)
+        {
+
+            return new UnknownRealtimeResponseStatusDetails(new ConversationStatus(statusKind), additionalBinaryDataProperties: null);
+        }
+
         public static ConversationTokenUsage ConversationTokenUsage(int totalTokens = default, int inputTokens = default, int outputTokens = default, ConversationInputTokenUsageDetails inputTokenDetails = default, ConversationOutputTokenUsageDetails outputTokenDetails = default)
         {
 

@@ -37,7 +37,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("cached_tokens"u8);
                 writer.WriteNumberValue(CachedTokenCount.Value);
             }
-            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -100,7 +100,7 @@ namespace OpenAI.Chat
                     cachedTokenCount = prop.Value.GetInt32();
                     continue;
                 }
-                if (options.Format != "W")
+                if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }

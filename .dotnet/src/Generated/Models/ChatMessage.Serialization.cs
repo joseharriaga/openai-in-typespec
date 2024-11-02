@@ -71,7 +71,7 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            if (element.TryGetProperty("kind"u8, out JsonElement discriminator))
+            if (element.TryGetProperty("role"u8, out JsonElement discriminator))
             {
                 switch (discriminator.GetString())
                 {

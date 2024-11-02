@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Generator.CSharp.ClientModel" Version="1.0.0-alpha.20241101.2" />
+      <PackageReference Include="Microsoft.Generator.CSharp.ClientModel" Version="1.0.0-alpha.20241101.3" />
     </ItemGroup>
 
   <!-- Copy output to package dist path for local execution and  -->

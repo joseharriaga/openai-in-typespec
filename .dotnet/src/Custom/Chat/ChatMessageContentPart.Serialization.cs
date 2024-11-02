@@ -14,6 +14,13 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
 
     internal static void WriteCoreContentPart(ChatMessageContentPart instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
+        if (instance.IsContrived)
+        {
+            throw new InvalidOperationException(
+                $"Synthetic {nameof(ChatMessageContentPart)} instances cannot be directly serialized. "
+                + $"Instead, please serialize the owner of the {nameof(ChatMessageContent)} collection.");
+        }
+
         writer.WriteStartObject();
         writer.WritePropertyName("type"u8);
         writer.WriteStringValue(instance._kind.ToSerialString());

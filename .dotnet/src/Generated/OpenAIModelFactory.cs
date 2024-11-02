@@ -217,7 +217,7 @@ namespace OpenAI
             return new ChatOutputTokenUsageDetails(audioTokenCount, reasoningTokenCount, serializedAdditionalRawData: null);
         }
 
-        public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int? audioTokenCount = null, int? cachedTokenCount = null)
+        public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int audioTokenCount = default, int cachedTokenCount = default)
         {
             return new ChatInputTokenUsageDetails(audioTokenCount, cachedTokenCount, serializedAdditionalRawData: null);
         }

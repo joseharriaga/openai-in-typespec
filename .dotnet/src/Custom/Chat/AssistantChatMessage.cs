@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenAI.Chat;
 
@@ -109,15 +110,11 @@ public partial class AssistantChatMessage : ChatMessage
 
         Refusal = chatCompletion.Refusal;
         FunctionCall = chatCompletion.FunctionCall;
-        if (chatCompletion.Content.Count > 0 && chatCompletion.Content[0].AudioCorrelationId is not null)
-        {
-            Audio = new InternalChatCompletionRequestAssistantMessageAudio(chatCompletion.Content[0].AudioCorrelationId);
-
-        }
         foreach (ChatToolCall toolCall in chatCompletion.ToolCalls ?? [])
         {
             ToolCalls.Add(toolCall);
         }
+        // Note: The internal Audio property will be populated via reprojected Content upon serialization.
     }
 
     // CUSTOM: Renamed.
@@ -138,24 +135,4 @@ public partial class AssistantChatMessage : ChatMessage
     // CUSTOM: Made internal for reprojected representation within the content collection.
     [CodeGenMember("Audio")]
     internal InternalChatCompletionRequestAssistantMessageAudio Audio { get; set; }
-
-    public new ChatMessageContent Content => _contentWithContrivances ??= GetContentWithContrivances();
-    private ChatMessageContent _contentWithContrivances;
-
-    private ChatMessageContent GetContentWithContrivances()
-    {
-        if (Audio is null)
-        {
-            return base.Content;
-        }
-
-        ChatMessageContent wrappedResult = new();
-        wrappedResult.Add(new ChatMessageContentPart(ChatMessageContentPartKind.Audio, audioReference: Audio));
-        foreach (ChatMessageContentPart contentPart in base.Content ?? [])
-        {
-            wrappedResult.Add(contentPart);
-        }
-
-        return wrappedResult;
-    }
 }

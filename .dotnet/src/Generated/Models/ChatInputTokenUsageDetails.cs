@@ -14,7 +14,7 @@ namespace OpenAI.Chat
         {
         }
 
-        internal ChatInputTokenUsageDetails(int? audioTokenCount, int? cachedTokenCount, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatInputTokenUsageDetails(int audioTokenCount, int cachedTokenCount, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             AudioTokenCount = audioTokenCount;
             CachedTokenCount = cachedTokenCount;

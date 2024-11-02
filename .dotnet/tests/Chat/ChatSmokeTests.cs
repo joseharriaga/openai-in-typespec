@@ -536,6 +536,26 @@ public class ChatSmokeTests : SyncAsyncTestBase
     [Test]
     public void SerializeAudioThings()
     {
+        // User audio input: wire-correlated ("real") content parts should cleanly serialize/deserialize
+        ChatMessageContentPart inputAudioContentPart = ChatMessageContentPart.CreateAudioPart(
+            BinaryData.FromBytes([0x4, 0x2]),
+            ChatInputAudioFormat.Mp3);
+        Assert.That(inputAudioContentPart, Is.Not.Null);
+        BinaryData serializedInputAudioContentPart = ModelReaderWriter.Write(inputAudioContentPart);
+        Assert.That(serializedInputAudioContentPart.ToString(), Does.Contain(@"""format"":""mp3"""));
+        ChatMessageContentPart deserializedInputAudioContentPart = ModelReaderWriter.Read<ChatMessageContentPart>(serializedInputAudioContentPart);
+        Assert.That(deserializedInputAudioContentPart.AudioBytes.ToArray()[1], Is.EqualTo(0x2));
+
+        // Synthetic content parts wrapping input audio references should throw
+        ChatMessageContentPart audioReferenceContentPart = ChatMessageContentPart.CreateAudioPart("audio-id");
+        Assert.Throws<InvalidOperationException>(() => ModelReaderWriter.Write(audioReferenceContentPart));
+
+        // That same synthetic content part should serialize to the right place when added to a message
+        AssistantChatMessage messageWithAudioReference = new([audioReferenceContentPart]);
+        BinaryData serializedMessageWithAudioReference = ModelReaderWriter.Write(messageWithAudioReference);
+        Assert.That(serializedMessageWithAudioReference.ToString(), Does.Contain(@"""audio"":{""id"":""audio-id""}"));
+        Assert.That(serializedMessageWithAudioReference.ToString(), Does.Not.Contain(@"""content"""));
+
         AssistantChatMessage message = ModelReaderWriter.Read<AssistantChatMessage>(BinaryData.FromBytes("""
             {
                 "role": "assistant",
@@ -548,6 +568,12 @@ public class ChatSmokeTests : SyncAsyncTestBase
         Assert.That(message.Content[0].AudioCorrelationId, Is.EqualTo("audio_correlated_id_1234"));
         string serializedMessage = ModelReaderWriter.Write(message).ToString();
         Assert.That(serializedMessage, Does.Contain(@"""audio"":{""id"":""audio_correlated_id_1234""}"));
+
+        AssistantChatMessage ordinaryTextAssistantMessage = new(["This was a message from the assistant"]);
+        ordinaryTextAssistantMessage.Content.Add(ChatMessageContentPart.CreateAudioPart("extra-audio-id"));
+        BinaryData serializedLateAudioMessage = ModelReaderWriter.Write(ordinaryTextAssistantMessage);
+        Assert.That(serializedLateAudioMessage.ToString(), Does.Contain("was a message"));
+        Assert.That(serializedLateAudioMessage.ToString(), Does.Contain("extra-audio-id"));
 
         BinaryData rawAudioResponse = BinaryData.FromBytes("""
             {
@@ -595,6 +621,10 @@ public class ChatSmokeTests : SyncAsyncTestBase
             """u8.ToArray());
         ChatCompletion audioCompletion = ModelReaderWriter.Read<ChatCompletion>(rawAudioResponse);
         Assert.That(audioCompletion, Is.Not.Null);
+
+        // Synthetic response audio content parts (reprojecting internal choices[*].message.audio) should throw when
+        // attempting independent serialization
+        Assert.Throws<InvalidOperationException>(() => ModelReaderWriter.Write(audioCompletion.Content[0]));
 
         AssistantChatMessage audioHistoryMessage = new(audioCompletion);
         BinaryData serializedAudioHistoryMessage = ModelReaderWriter.Write(audioHistoryMessage);

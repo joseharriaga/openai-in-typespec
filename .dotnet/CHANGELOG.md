@@ -17,6 +17,7 @@
 
 - `ConversationRateLimitsUpdate` (previously `ConversationRateLimitsUpdatedUpdate`) now includes named `RequestDetails` and `TokenDetails` properties, mapping to the corresponding named items in the underlying `rate_limits` command payload
 - Several types have been renamed for consistency and clarity
+- Serialization and deserialization of `ConversationToolChoice` literal values (such as `"required"`) is fixed
 
 ## 2.0.1 (Unreleased)
 

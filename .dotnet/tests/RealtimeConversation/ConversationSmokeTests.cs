@@ -46,7 +46,7 @@ public class ConversationSmokeTests : ConversationTestFixtureBase
         Assert.That(mrwToolChoice.Kind, Is.EqualTo(ConversationToolChoiceKind.Unknown));
         Assert.That(ModelReaderWriter.Write(mrwToolChoice).ToString(), Does.Contain(@"""type"":""some_manual_type"""));
     }
-
+    
     [Test]
     public void ItemCreation()
     {

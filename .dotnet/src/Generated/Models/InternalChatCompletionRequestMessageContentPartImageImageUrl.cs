@@ -11,13 +11,6 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalChatCompletionRequestMessageContentPartImageImageUrl(ChatImageDetailLevel? detail, string url, IDictionary<string, BinaryData> additionalBinaryDataProperties)
-        {
-            Detail = detail;
-            Url = url;
-            _additionalBinaryDataProperties = additionalBinaryDataProperties;
-        }
-
         public ChatImageDetailLevel? Detail { get; set; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData

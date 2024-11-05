@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class InternalRealtimeClientEventResponseCreateResponse : IJsonModel<InternalRealtimeClientEventResponseCreateResponse>
+    internal partial class InternalRealtimeResponseOptions : IJsonModel<InternalRealtimeResponseOptions>
     {
-        void IJsonModel<InternalRealtimeClientEventResponseCreateResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalRealtimeResponseOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventResponseCreateResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalRealtimeClientEventResponseCreateResponse)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalRealtimeResponseOptions)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -27,7 +27,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WriteStartArray();
                 foreach (var item in Modalities)
                 {
-                    writer.WriteStringValue(item);
+                    writer.WriteStringValue(item.ToString());
                 }
                 writer.WriteEndArray();
             }
@@ -39,12 +39,12 @@ namespace OpenAI.RealtimeConversation
             if (SerializedAdditionalRawData?.ContainsKey("voice") != true && Optional.IsDefined(Voice))
             {
                 writer.WritePropertyName("voice"u8);
-                writer.WriteStringValue(Voice);
+                writer.WriteStringValue(Voice.Value.ToString());
             }
             if (SerializedAdditionalRawData?.ContainsKey("output_audio_format") != true && Optional.IsDefined(OutputAudioFormat))
             {
                 writer.WritePropertyName("output_audio_format"u8);
-                writer.WriteStringValue(OutputAudioFormat);
+                writer.WriteStringValue(OutputAudioFormat.Value.ToString());
             }
             if (SerializedAdditionalRawData?.ContainsKey("tools") != true && Optional.IsCollectionDefined(Tools))
             {
@@ -107,19 +107,19 @@ namespace OpenAI.RealtimeConversation
             writer.WriteEndObject();
         }
 
-        InternalRealtimeClientEventResponseCreateResponse IJsonModel<InternalRealtimeClientEventResponseCreateResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalRealtimeResponseOptions IJsonModel<InternalRealtimeResponseOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventResponseCreateResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalRealtimeClientEventResponseCreateResponse)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalRealtimeResponseOptions)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalRealtimeClientEventResponseCreateResponse(document.RootElement, options);
+            return DeserializeInternalRealtimeResponseOptions(document.RootElement, options);
         }
 
-        internal static InternalRealtimeClientEventResponseCreateResponse DeserializeInternalRealtimeClientEventResponseCreateResponse(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalRealtimeResponseOptions DeserializeInternalRealtimeResponseOptions(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -127,10 +127,10 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            IList<string> modalities = default;
+            IList<InternalRealtimeRequestSessionModality> modalities = default;
             string instructions = default;
-            string voice = default;
-            string outputAudioFormat = default;
+            ConversationVoice? voice = default;
+            ConversationAudioFormat? outputAudioFormat = default;
             IList<ConversationTool> tools = default;
             BinaryData toolChoice = default;
             float? temperature = default;
@@ -145,10 +145,10 @@ namespace OpenAI.RealtimeConversation
                     {
                         continue;
                     }
-                    List<string> array = new List<string>();
+                    List<InternalRealtimeRequestSessionModality> array = new List<InternalRealtimeRequestSessionModality>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(item.GetString());
+                        array.Add(new InternalRealtimeRequestSessionModality(item.GetString()));
                     }
                     modalities = array;
                     continue;
@@ -160,12 +160,20 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (property.NameEquals("voice"u8))
                 {
-                    voice = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    voice = new ConversationVoice(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("output_audio_format"u8))
                 {
-                    outputAudioFormat = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    outputAudioFormat = new ConversationAudioFormat(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("tools"u8))
@@ -216,8 +224,8 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalRealtimeClientEventResponseCreateResponse(
-                modalities ?? new ChangeTrackingList<string>(),
+            return new InternalRealtimeResponseOptions(
+                modalities ?? new ChangeTrackingList<InternalRealtimeRequestSessionModality>(),
                 instructions,
                 voice,
                 outputAudioFormat,
@@ -228,41 +236,41 @@ namespace OpenAI.RealtimeConversation
                 serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<InternalRealtimeClientEventResponseCreateResponse>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalRealtimeResponseOptions>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventResponseCreateResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalRealtimeClientEventResponseCreateResponse)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalRealtimeResponseOptions)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalRealtimeClientEventResponseCreateResponse IPersistableModel<InternalRealtimeClientEventResponseCreateResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalRealtimeResponseOptions IPersistableModel<InternalRealtimeResponseOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeClientEventResponseCreateResponse>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeResponseOptions>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalRealtimeClientEventResponseCreateResponse(document.RootElement, options);
+                        return DeserializeInternalRealtimeResponseOptions(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalRealtimeClientEventResponseCreateResponse)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalRealtimeResponseOptions)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalRealtimeClientEventResponseCreateResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalRealtimeResponseOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static InternalRealtimeClientEventResponseCreateResponse FromResponse(PipelineResponse response)
+        internal static InternalRealtimeResponseOptions FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalRealtimeClientEventResponseCreateResponse(document.RootElement);
+            return DeserializeInternalRealtimeResponseOptions(document.RootElement);
         }
 
         internal virtual BinaryContent ToBinaryContent()

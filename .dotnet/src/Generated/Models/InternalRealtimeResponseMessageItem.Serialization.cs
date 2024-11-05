@@ -32,7 +32,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WriteStartArray();
                 foreach (var item in Content)
                 {
-                    writer.WriteObjectValue(item, options);
+                    writer.WriteObjectValue<ConversationContentPart>(item, options);
                 }
                 writer.WriteEndArray();
             }
@@ -108,7 +108,7 @@ namespace OpenAI.RealtimeConversation
             ConversationMessageRole role = default;
             IReadOnlyList<ConversationContentPart> content = default;
             ConversationItemStatus status = default;
-            InternalRealtimeResponseItemObject @object = default;
+            InternalRealtimeConversationResponseItemObject @object = default;
             InternalRealtimeItemType type = default;
             string id = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -137,7 +137,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (property.NameEquals("object"u8))
                 {
-                    @object = new InternalRealtimeResponseItemObject(property.Value.GetString());
+                    @object = new InternalRealtimeConversationResponseItemObject(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("type"u8))

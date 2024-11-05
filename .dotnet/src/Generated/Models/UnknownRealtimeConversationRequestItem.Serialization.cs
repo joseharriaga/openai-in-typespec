@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class UnknownRealtimeRequestItem : IJsonModel<ConversationItem>
+    internal partial class UnknownRealtimeConversationRequestItem : IJsonModel<ConversationItem>
     {
         void IJsonModel<ConversationItem>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -65,7 +65,7 @@ namespace OpenAI.RealtimeConversation
             return DeserializeConversationItem(document.RootElement, options);
         }
 
-        internal static UnknownRealtimeRequestItem DeserializeUnknownRealtimeRequestItem(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static UnknownRealtimeConversationRequestItem DeserializeUnknownRealtimeConversationRequestItem(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -96,7 +96,7 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new UnknownRealtimeRequestItem(type, id, serializedAdditionalRawData);
+            return new UnknownRealtimeConversationRequestItem(type, id, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<ConversationItem>.Write(ModelReaderWriterOptions options)
@@ -130,10 +130,10 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<ConversationItem>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new UnknownRealtimeRequestItem FromResponse(PipelineResponse response)
+        internal static new UnknownRealtimeConversationRequestItem FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeUnknownRealtimeRequestItem(document.RootElement);
+            return DeserializeUnknownRealtimeConversationRequestItem(document.RootElement);
         }
 
         internal override BinaryContent ToBinaryContent()

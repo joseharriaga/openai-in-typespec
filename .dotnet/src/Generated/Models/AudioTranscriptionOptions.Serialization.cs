@@ -47,6 +47,7 @@ namespace OpenAI.Audio
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
             }
+            if (SerializedAdditionalRawData?.ContainsKey("timestamp_granularities[]") != true && Optional.IsCollectionDefined(InternalTimestampGranularities))
             if (_additionalBinaryDataProperties?.ContainsKey("file") != true)
             {
                 writer.WritePropertyName("file"u8);
@@ -59,7 +60,7 @@ namespace OpenAI.Audio
             }
             if (Optional.IsCollectionDefined(InternalTimestampGranularities) && _additionalBinaryDataProperties?.ContainsKey("timestamp_granularities") != true)
             {
-                writer.WritePropertyName("timestamp_granularities"u8);
+                writer.WritePropertyName("timestamp_granularities[]"u8);
                 writer.WriteStartArray();
                 foreach (BinaryData item in InternalTimestampGranularities)
                 {
@@ -198,15 +199,57 @@ namespace OpenAI.Audio
                 prompt,
                 responseFormat,
                 temperature,
-                @file,
-                model,
-                internalTimestampGranularities ?? new ChangeTrackingList<BinaryData>(),
-                additionalBinaryDataProperties);
+                timestampGranularities ?? new ChangeTrackingList<BinaryData>(),
+                serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<AudioTranscriptionOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
+        private BinaryData SerializeMultipart(ModelReaderWriterOptions options)
+        {
+            using MultipartFormDataBinaryContent content = ToMultipartBinaryBody();
+            using MemoryStream stream = new MemoryStream();
+            content.WriteTo(stream);
+            if (stream.Position > int.MaxValue)
+            {
+                return BinaryData.FromStream(stream);
+            }
+            else
+            {
+                return new BinaryData(stream.GetBuffer().AsMemory(0, (int)stream.Position));
+            }
+        }
 
-        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        internal virtual MultipartFormDataBinaryContent ToMultipartBinaryBody()
+        {
+            MultipartFormDataBinaryContent content = new MultipartFormDataBinaryContent();
+            content.Add(File, "file", "file");
+            content.Add(Model.ToString(), "model");
+            if (Optional.IsDefined(Language))
+            {
+                content.Add(Language, "language");
+            }
+            if (Optional.IsDefined(Prompt))
+            {
+                content.Add(Prompt, "prompt");
+            }
+            if (Optional.IsDefined(ResponseFormat))
+            {
+                content.Add(ResponseFormat.Value.ToString(), "response_format");
+            }
+            if (Optional.IsDefined(Temperature))
+            {
+                content.Add(Temperature.Value, "temperature");
+            }
+            if (Optional.IsCollectionDefined(InternalTimestampGranularities))
+            {
+                foreach (BinaryData item in InternalTimestampGranularities)
+                {
+                    content.Add(item, "timestamp_granularities", "timestamp_granularities");
+                }
+            }
+            return content;
+        }
+
+        BinaryData IPersistableModel<AudioTranscriptionOptions>.Write(ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<AudioTranscriptionOptions>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)

@@ -306,7 +306,7 @@ model RunStepDetailsToolCallsCodeObject
     /** The input to the Code Interpreter tool call. */
     input: string;
 
-    // Tool customization: replace unioned types with a custom, common base
+    // Tool customization: Apply read-only visibility via annotation
     @doc("""
       The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
       """)
@@ -359,6 +359,7 @@ model RunStepDetailsToolCallsFileSearchObject
   file_search: {
     ranking_options?: RunStepDetailsToolCallsFileSearchRankingOptionsObject;
 
+    // Tool customization: Apply read-only visibility via annotation
     /** The results of the file search. */
     @visibility("read")
     results?: RunStepDetailsToolCallsFileSearchResultObject[];
@@ -500,6 +501,7 @@ model RunObject {
 
     /** Details on the tool outputs needed for this run to continue. */
     submit_tool_outputs: {
+      // Tool customization: Apply read-only visibility via annotation
       /** A list of the relevant tool calls. */
       @visibility("read")
       tool_calls: RunToolCallObject[];
@@ -761,7 +763,7 @@ model RunStepDeltaStepDetailsToolCallsCodeObject
     /** The input to the Code Interpreter tool call. */
     input?: string;
 
-    // Tool customization: replace unioned types with a custom, common base
+    // Tool customization: Apply read-only visibility via annotation
     @doc("""
       The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type.
       """)

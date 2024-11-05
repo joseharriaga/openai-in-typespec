@@ -8,7 +8,6 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 model CreateFileRequest {
-  // Tool customization: binary payloads are encoded bytes
   /** The File object (not file name) to be uploaded. */
   file: bytes;
 

@@ -6529,7 +6529,7 @@ components:
           maximum: 1
           description: The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.
           default: 0
-        timestamp_granularities:
+        timestamp_granularities[]:
           type: array
           items:
             type: string
@@ -8992,9 +8992,6 @@ components:
         - type
         - item
       properties:
-        event_id:
-          type: string
-          description: Optional client-generated ID used to identify this event.
         type:
           type: string
           enum:
@@ -9016,9 +9013,6 @@ components:
         - type
         - item_id
       properties:
-        event_id:
-          type: string
-          description: Optional client-generated ID used to identify this event.
         type:
           type: string
           enum:
@@ -9038,9 +9032,6 @@ components:
         - content_index
         - audio_end_ms
       properties:
-        event_id:
-          type: string
-          description: Optional client-generated ID used to identify this event.
         type:
           type: string
           enum:
@@ -9066,9 +9057,6 @@ components:
         - type
         - audio
       properties:
-        event_id:
-          type: string
-          description: Optional client-generated ID used to identify this event.
         type:
           type: string
           enum:
@@ -9086,9 +9074,6 @@ components:
       required:
         - type
       properties:
-        event_id:
-          type: string
-          description: Optional client-generated ID used to identify this event.
         type:
           type: string
           enum:
@@ -9102,9 +9087,6 @@ components:
       required:
         - type
       properties:
-        event_id:
-          type: string
-          description: Optional client-generated ID used to identify this event.
         type:
           type: string
           enum:
@@ -9118,9 +9100,6 @@ components:
       required:
         - type
       properties:
-        event_id:
-          type: string
-          description: Optional client-generated ID used to identify this event.
         type:
           type: string
           enum:
@@ -9135,9 +9114,6 @@ components:
         - type
         - response
       properties:
-        event_id:
-          type: string
-          description: Optional client-generated ID used to identify this event.
         type:
           type: string
           enum:
@@ -9190,9 +9166,6 @@ components:
         - type
         - session
       properties:
-        event_id:
-          type: string
-          description: Optional client-generated ID used to identify this event.
         type:
           type: string
           enum:
@@ -9811,13 +9784,9 @@ components:
     RealtimeServerEventConversationCreated:
       type: object
       required:
-        - event_id
         - type
         - conversation
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -9839,14 +9808,10 @@ components:
     RealtimeServerEventConversationItemCreated:
       type: object
       required:
-        - event_id
         - type
         - previous_item_id
         - item
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -9865,13 +9830,9 @@ components:
     RealtimeServerEventConversationItemDeleted:
       type: object
       required:
-        - event_id
         - type
         - item_id
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -9886,15 +9847,11 @@ components:
     RealtimeServerEventConversationItemInputAudioTranscriptionCompleted:
       type: object
       required:
-        - event_id
         - type
         - item_id
         - content_index
         - transcript
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -9916,15 +9873,11 @@ components:
     RealtimeServerEventConversationItemInputAudioTranscriptionFailed:
       type: object
       required:
-        - event_id
         - type
         - item_id
         - content_index
         - error
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -9959,15 +9912,11 @@ components:
     RealtimeServerEventConversationItemTruncated:
       type: object
       required:
-        - event_id
         - type
         - item_id
         - content_index
         - audio_end_ms
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -9990,13 +9939,9 @@ components:
     RealtimeServerEventError:
       type: object
       required:
-        - event_id
         - type
         - error
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10027,12 +9972,8 @@ components:
     RealtimeServerEventInputAudioBufferCleared:
       type: object
       required:
-        - event_id
         - type
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10044,14 +9985,10 @@ components:
     RealtimeServerEventInputAudioBufferCommitted:
       type: object
       required:
-        - event_id
         - type
         - previous_item_id
         - item_id
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10069,14 +10006,10 @@ components:
     RealtimeServerEventInputAudioBufferSpeechStarted:
       type: object
       required:
-        - event_id
         - type
         - audio_start_ms
         - item_id
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10095,14 +10028,10 @@ components:
     RealtimeServerEventInputAudioBufferSpeechStopped:
       type: object
       required:
-        - event_id
         - type
         - audio_end_ms
         - item_id
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10121,13 +10050,9 @@ components:
     RealtimeServerEventRateLimitsUpdated:
       type: object
       required:
-        - event_id
         - type
         - rate_limits
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10167,7 +10092,6 @@ components:
     RealtimeServerEventResponseAudioDelta:
       type: object
       required:
-        - event_id
         - type
         - response_id
         - item_id
@@ -10175,9 +10099,6 @@ components:
         - content_index
         - delta
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10207,16 +10128,12 @@ components:
     RealtimeServerEventResponseAudioDone:
       type: object
       required:
-        - event_id
         - type
         - response_id
         - item_id
         - output_index
         - content_index
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10242,7 +10159,6 @@ components:
     RealtimeServerEventResponseAudioTranscriptDelta:
       type: object
       required:
-        - event_id
         - type
         - response_id
         - item_id
@@ -10250,9 +10166,6 @@ components:
         - content_index
         - delta
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10281,7 +10194,6 @@ components:
     RealtimeServerEventResponseAudioTranscriptDone:
       type: object
       required:
-        - event_id
         - type
         - response_id
         - item_id
@@ -10289,9 +10201,6 @@ components:
         - content_index
         - transcript
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10320,7 +10229,6 @@ components:
     RealtimeServerEventResponseContentPartAdded:
       type: object
       required:
-        - event_id
         - type
         - response_id
         - item_id
@@ -10328,9 +10236,6 @@ components:
         - content_index
         - part
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10360,7 +10265,6 @@ components:
     RealtimeServerEventResponseContentPartDone:
       type: object
       required:
-        - event_id
         - type
         - response_id
         - item_id
@@ -10368,9 +10272,6 @@ components:
         - content_index
         - part
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10400,13 +10301,9 @@ components:
     RealtimeServerEventResponseCreated:
       type: object
       required:
-        - event_id
         - type
         - response
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10422,13 +10319,9 @@ components:
     RealtimeServerEventResponseDone:
       type: object
       required:
-        - event_id
         - type
         - response
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10444,7 +10337,6 @@ components:
     RealtimeServerEventResponseFunctionCallArgumentsDelta:
       type: object
       required:
-        - event_id
         - type
         - response_id
         - item_id
@@ -10452,9 +10344,6 @@ components:
         - call_id
         - delta
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10482,7 +10371,6 @@ components:
     RealtimeServerEventResponseFunctionCallArgumentsDone:
       type: object
       required:
-        - event_id
         - type
         - response_id
         - item_id
@@ -10490,9 +10378,6 @@ components:
         - call_id
         - arguments
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10520,15 +10405,11 @@ components:
     RealtimeServerEventResponseOutputItemAdded:
       type: object
       required:
-        - event_id
         - type
         - response_id
         - output_index
         - item
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10551,15 +10432,11 @@ components:
     RealtimeServerEventResponseOutputItemDone:
       type: object
       required:
-        - event_id
         - type
         - response_id
         - output_index
         - item
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10582,7 +10459,6 @@ components:
     RealtimeServerEventResponseTextDelta:
       type: object
       required:
-        - event_id
         - type
         - response_id
         - item_id
@@ -10590,9 +10466,6 @@ components:
         - content_index
         - delta
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10621,7 +10494,6 @@ components:
     RealtimeServerEventResponseTextDone:
       type: object
       required:
-        - event_id
         - type
         - response_id
         - item_id
@@ -10629,9 +10501,6 @@ components:
         - content_index
         - text
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10660,13 +10529,9 @@ components:
     RealtimeServerEventSessionCreated:
       type: object
       required:
-        - event_id
         - type
         - session
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:
@@ -10682,13 +10547,9 @@ components:
     RealtimeServerEventSessionUpdated:
       type: object
       required:
-        - event_id
         - type
         - session
       properties:
-        event_id:
-          type: string
-          description: The unique ID of the server event.
         type:
           type: string
           enum:

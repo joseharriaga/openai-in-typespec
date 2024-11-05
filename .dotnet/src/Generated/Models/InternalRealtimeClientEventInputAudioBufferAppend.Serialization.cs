@@ -32,11 +32,6 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(InternalRealtimeClientEventInputAudioBufferAppend)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (Optional.IsDefined(EventId) && _additionalBinaryDataProperties?.ContainsKey("event_id") != true)
-            {
-                writer.WritePropertyName("event_id"u8);
-                writer.WriteStringValue(EventId);
-            }
             if (_additionalBinaryDataProperties?.ContainsKey("audio") != true)
             {
                 writer.WritePropertyName("audio"u8);
@@ -63,17 +58,12 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string eventId = default;
             BinaryData audio = default;
             InternalRealtimeClientEventType kind = default;
+            string eventId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("event_id"u8))
-                {
-                    eventId = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("audio"u8))
                 {
                     audio = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
@@ -84,12 +74,17 @@ namespace OpenAI.RealtimeConversation
                     kind = new InternalRealtimeClientEventType(prop.Value.GetString());
                     continue;
                 }
+                if (prop.NameEquals("event_id"u8))
+                {
+                    eventId = prop.Value.GetString();
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeClientEventInputAudioBufferAppend(eventId, audio, kind, additionalBinaryDataProperties);
+            return new InternalRealtimeClientEventInputAudioBufferAppend(audio, kind, eventId, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalRealtimeClientEventInputAudioBufferAppend>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

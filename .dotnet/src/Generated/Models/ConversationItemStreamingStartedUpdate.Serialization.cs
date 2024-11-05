@@ -32,11 +32,6 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationItemStreamingStartedUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (_additionalBinaryDataProperties?.ContainsKey("event_id") != true)
-            {
-                writer.WritePropertyName("event_id"u8);
-                writer.WriteStringValue(EventId);
-            }
             if (_additionalBinaryDataProperties?.ContainsKey("response_id") != true)
             {
                 writer.WritePropertyName("response_id"u8);
@@ -73,19 +68,14 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string eventId = default;
             string responseId = default;
             int itemIndex = default;
             InternalRealtimeResponseItem internalItem = default;
+            string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("event_id"u8))
-                {
-                    eventId = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("response_id"u8))
                 {
                     responseId = prop.Value.GetString();
@@ -101,6 +91,11 @@ namespace OpenAI.RealtimeConversation
                     internalItem = InternalRealtimeResponseItem.DeserializeInternalRealtimeResponseItem(prop.Value, options);
                     continue;
                 }
+                if (prop.NameEquals("event_id"u8))
+                {
+                    eventId = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("type"u8))
                 {
                     kind = prop.Value.GetString().ToConversationUpdateKind();
@@ -112,10 +107,10 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             return new ConversationItemStreamingStartedUpdate(
-                eventId,
                 responseId,
                 itemIndex,
                 internalItem,
+                eventId,
                 kind,
                 additionalBinaryDataProperties);
         }

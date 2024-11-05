@@ -32,11 +32,6 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationInputSpeechFinishedUpdate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (_additionalBinaryDataProperties?.ContainsKey("event_id") != true)
-            {
-                writer.WritePropertyName("event_id"u8);
-                writer.WriteStringValue(EventId);
-            }
             if (_additionalBinaryDataProperties?.ContainsKey("item_id") != true)
             {
                 writer.WritePropertyName("item_id"u8);
@@ -68,18 +63,13 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string eventId = default;
             string itemId = default;
             int audioEndMs = default;
+            string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("event_id"u8))
-                {
-                    eventId = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("item_id"u8))
                 {
                     itemId = prop.Value.GetString();
@@ -88,6 +78,11 @@ namespace OpenAI.RealtimeConversation
                 if (prop.NameEquals("audio_end_ms"u8))
                 {
                     audioEndMs = prop.Value.GetInt32();
+                    continue;
+                }
+                if (prop.NameEquals("event_id"u8))
+                {
+                    eventId = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("type"u8))
@@ -100,7 +95,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationInputSpeechFinishedUpdate(eventId, itemId, audioEndMs, kind, additionalBinaryDataProperties);
+            return new ConversationInputSpeechFinishedUpdate(itemId, audioEndMs, eventId, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ConversationInputSpeechFinishedUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

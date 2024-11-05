@@ -32,11 +32,6 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(InternalRealtimeClientEventConversationItemCreate)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            if (Optional.IsDefined(EventId) && _additionalBinaryDataProperties?.ContainsKey("event_id") != true)
-            {
-                writer.WritePropertyName("event_id"u8);
-                writer.WriteStringValue(EventId);
-            }
             if (Optional.IsDefined(PreviousItemId) && _additionalBinaryDataProperties?.ContainsKey("previous_item_id") != true)
             {
                 writer.WritePropertyName("previous_item_id"u8);
@@ -68,18 +63,13 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string eventId = default;
             string previousItemId = default;
             ConversationItem item = default;
             InternalRealtimeClientEventType kind = default;
+            string eventId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("event_id"u8))
-                {
-                    eventId = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("previous_item_id"u8))
                 {
                     previousItemId = prop.Value.GetString();
@@ -95,12 +85,17 @@ namespace OpenAI.RealtimeConversation
                     kind = new InternalRealtimeClientEventType(prop.Value.GetString());
                     continue;
                 }
+                if (prop.NameEquals("event_id"u8))
+                {
+                    eventId = prop.Value.GetString();
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeClientEventConversationItemCreate(eventId, previousItemId, item, kind, additionalBinaryDataProperties);
+            return new InternalRealtimeClientEventConversationItemCreate(previousItemId, item, kind, eventId, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<InternalRealtimeClientEventConversationItemCreate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -16,7 +16,5 @@ namespace OpenAI.RealtimeConversation
         internal ConversationInputAudioClearedUpdate(string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
         }
-
-        public new string EventId => _eventId ?? default;
     }
 }

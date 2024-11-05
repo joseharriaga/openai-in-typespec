@@ -10,7 +10,6 @@ namespace OpenAI.RealtimeConversation
     public abstract partial class ConversationUpdate
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
-        private protected string _eventId;
 
         private protected ConversationUpdate(string eventId, RealtimeConversation.ConversationUpdateKind kind)
         {

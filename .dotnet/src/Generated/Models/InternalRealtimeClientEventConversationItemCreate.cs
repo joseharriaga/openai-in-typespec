@@ -17,16 +17,10 @@ namespace OpenAI.RealtimeConversation
             Item = item;
         }
 
-        internal InternalRealtimeClientEventConversationItemCreate(string eventId, string previousItemId, ConversationItem item, InternalRealtimeClientEventType kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
+        internal InternalRealtimeClientEventConversationItemCreate(string previousItemId, ConversationItem item, InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
         {
             PreviousItemId = previousItemId;
             Item = item;
-        }
-
-        public new string EventId
-        {
-            get => _eventId ?? default;
-            set => _eventId = value;
         }
 
         public string PreviousItemId { get; set; }

@@ -14,27 +14,27 @@ namespace OpenAI.Audio
         private const string WordValue = "word";
         private const string SegmentValue = "segment";
 
-        public InternalCreateTranscriptionRequestTimestampGranularity(string value)
+        public InternalCreateTranscriptionRequestTimestampGranularities(string value)
         {
             Argument.AssertNotNull(value, nameof(value));
 
             _value = value;
         }
 
-        public static InternalCreateTranscriptionRequestTimestampGranularity Word { get; } = new InternalCreateTranscriptionRequestTimestampGranularity(WordValue);
+        public static InternalCreateTranscriptionRequestTimestampGranularities Word { get; } = new InternalCreateTranscriptionRequestTimestampGranularities(WordValue);
 
-        public static InternalCreateTranscriptionRequestTimestampGranularity Segment { get; } = new InternalCreateTranscriptionRequestTimestampGranularity(SegmentValue);
+        public static InternalCreateTranscriptionRequestTimestampGranularities Segment { get; } = new InternalCreateTranscriptionRequestTimestampGranularities(SegmentValue);
 
-        public static bool operator ==(InternalCreateTranscriptionRequestTimestampGranularity left, InternalCreateTranscriptionRequestTimestampGranularity right) => left.Equals(right);
+        public static bool operator ==(InternalCreateTranscriptionRequestTimestampGranularities left, InternalCreateTranscriptionRequestTimestampGranularities right) => left.Equals(right);
 
-        public static bool operator !=(InternalCreateTranscriptionRequestTimestampGranularity left, InternalCreateTranscriptionRequestTimestampGranularity right) => !left.Equals(right);
+        public static bool operator !=(InternalCreateTranscriptionRequestTimestampGranularities left, InternalCreateTranscriptionRequestTimestampGranularities right) => !left.Equals(right);
 
-        public static implicit operator InternalCreateTranscriptionRequestTimestampGranularity(string value) => new InternalCreateTranscriptionRequestTimestampGranularity(value);
+        public static implicit operator InternalCreateTranscriptionRequestTimestampGranularities(string value) => new InternalCreateTranscriptionRequestTimestampGranularities(value);
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj) => obj is InternalCreateTranscriptionRequestTimestampGranularity other && Equals(other);
+        public override bool Equals(object obj) => obj is InternalCreateTranscriptionRequestTimestampGranularities other && Equals(other);
 
-        public bool Equals(InternalCreateTranscriptionRequestTimestampGranularity other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
+        public bool Equals(InternalCreateTranscriptionRequestTimestampGranularities other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
         public override int GetHashCode() => _value != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(_value) : 0;
 

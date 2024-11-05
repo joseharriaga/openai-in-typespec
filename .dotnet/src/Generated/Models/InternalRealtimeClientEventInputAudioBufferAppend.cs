@@ -17,15 +17,9 @@ namespace OpenAI.RealtimeConversation
             Audio = audio;
         }
 
-        internal InternalRealtimeClientEventInputAudioBufferAppend(string eventId, BinaryData audio, InternalRealtimeClientEventType kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
+        internal InternalRealtimeClientEventInputAudioBufferAppend(BinaryData audio, InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
         {
             Audio = audio;
-        }
-
-        public new string EventId
-        {
-            get => _eventId ?? default;
-            set => _eventId = value;
         }
 
         public BinaryData Audio { get; set; }

@@ -9,21 +9,19 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationInputTranscriptionFailedUpdate : ConversationUpdate
     {
-        internal ConversationInputTranscriptionFailedUpdate(string eventId, string itemId, int contentIndex, InternalRealtimeServerEventConversationItemInputAudioTranscriptionFailedError error) : base(eventId, RealtimeConversation.ConversationUpdateKind.InputTranscriptionFailed)
+        internal ConversationInputTranscriptionFailedUpdate(string itemId, int contentIndex, InternalRealtimeServerEventConversationItemInputAudioTranscriptionFailedError error, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.InputTranscriptionFailed)
         {
             ItemId = itemId;
             ContentIndex = contentIndex;
             _error = error;
         }
 
-        internal ConversationInputTranscriptionFailedUpdate(string eventId, string itemId, int contentIndex, InternalRealtimeServerEventConversationItemInputAudioTranscriptionFailedError error, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
+        internal ConversationInputTranscriptionFailedUpdate(string itemId, int contentIndex, InternalRealtimeServerEventConversationItemInputAudioTranscriptionFailedError error, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
             ItemId = itemId;
             ContentIndex = contentIndex;
             _error = error;
         }
-
-        public new string EventId => _eventId ?? default;
 
         public string ItemId { get; }
 

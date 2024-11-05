@@ -17,15 +17,9 @@ namespace OpenAI.RealtimeConversation
             Response = response;
         }
 
-        internal InternalRealtimeClientEventResponseCreate(string eventId, InternalRealtimeClientEventResponseCreateResponse response, InternalRealtimeClientEventType kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
+        internal InternalRealtimeClientEventResponseCreate(InternalRealtimeClientEventResponseCreateResponse response, InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
         {
             Response = response;
-        }
-
-        public new string EventId
-        {
-            get => _eventId ?? default;
-            set => _eventId = value;
         }
 
         public InternalRealtimeClientEventResponseCreateResponse Response { get; set; }

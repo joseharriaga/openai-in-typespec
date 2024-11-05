@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationItemStreamingAudioTranscriptionFinishedUpdate : ConversationUpdate
     {
-        internal ConversationItemStreamingAudioTranscriptionFinishedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string transcript) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemStreamingPartAudioTranscriptionFinished)
+        internal ConversationItemStreamingAudioTranscriptionFinishedUpdate(string responseId, string itemId, int outputIndex, int contentIndex, string transcript, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemStreamingPartAudioTranscriptionFinished)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -18,7 +18,7 @@ namespace OpenAI.RealtimeConversation
             Transcript = transcript;
         }
 
-        internal ConversationItemStreamingAudioTranscriptionFinishedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string transcript, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
+        internal ConversationItemStreamingAudioTranscriptionFinishedUpdate(string responseId, string itemId, int outputIndex, int contentIndex, string transcript, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -26,8 +26,6 @@ namespace OpenAI.RealtimeConversation
             ContentIndex = contentIndex;
             Transcript = transcript;
         }
-
-        public new string EventId => _eventId ?? default;
 
         public string ResponseId { get; }
 

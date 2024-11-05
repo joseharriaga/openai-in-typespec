@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeServerEventResponseFunctionCallArgumentsDone : ConversationUpdate
     {
-        internal InternalRealtimeServerEventResponseFunctionCallArgumentsDone(string eventId, string responseId, string itemId, int outputIndex, string callId, string arguments) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemStreamingFunctionCallArgumentsFinished)
+        internal InternalRealtimeServerEventResponseFunctionCallArgumentsDone(string responseId, string itemId, int outputIndex, string callId, string arguments, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemStreamingFunctionCallArgumentsFinished)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -18,7 +18,7 @@ namespace OpenAI.RealtimeConversation
             Arguments = arguments;
         }
 
-        internal InternalRealtimeServerEventResponseFunctionCallArgumentsDone(string eventId, string responseId, string itemId, int outputIndex, string callId, string arguments, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
+        internal InternalRealtimeServerEventResponseFunctionCallArgumentsDone(string responseId, string itemId, int outputIndex, string callId, string arguments, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -26,8 +26,6 @@ namespace OpenAI.RealtimeConversation
             CallId = callId;
             Arguments = arguments;
         }
-
-        public new string EventId => _eventId ?? default;
 
         public string ResponseId { get; }
 

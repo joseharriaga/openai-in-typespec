@@ -9,21 +9,19 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationItemStreamingStartedUpdate : ConversationUpdate
     {
-        internal ConversationItemStreamingStartedUpdate(string eventId, string responseId, int itemIndex, InternalRealtimeResponseItem internalItem) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemStreamingStarted)
+        internal ConversationItemStreamingStartedUpdate(string responseId, int itemIndex, InternalRealtimeResponseItem internalItem, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemStreamingStarted)
         {
             ResponseId = responseId;
             ItemIndex = itemIndex;
             _internalItem = internalItem;
         }
 
-        internal ConversationItemStreamingStartedUpdate(string eventId, string responseId, int itemIndex, InternalRealtimeResponseItem internalItem, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
+        internal ConversationItemStreamingStartedUpdate(string responseId, int itemIndex, InternalRealtimeResponseItem internalItem, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
             ResponseId = responseId;
             ItemIndex = itemIndex;
             _internalItem = internalItem;
         }
-
-        public new string EventId => _eventId ?? default;
 
         public string ResponseId { get; }
     }

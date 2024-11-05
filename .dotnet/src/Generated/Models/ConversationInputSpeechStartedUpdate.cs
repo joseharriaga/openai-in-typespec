@@ -9,19 +9,17 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationInputSpeechStartedUpdate : ConversationUpdate
     {
-        internal ConversationInputSpeechStartedUpdate(string eventId, string itemId, int audioStartMs) : base(eventId, RealtimeConversation.ConversationUpdateKind.InputSpeechStarted)
+        internal ConversationInputSpeechStartedUpdate(string itemId, int audioStartMs, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.InputSpeechStarted)
         {
             ItemId = itemId;
             _audioStartMs = audioStartMs;
         }
 
-        internal ConversationInputSpeechStartedUpdate(string eventId, string itemId, int audioStartMs, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
+        internal ConversationInputSpeechStartedUpdate(string itemId, int audioStartMs, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
         {
             ItemId = itemId;
             _audioStartMs = audioStartMs;
         }
-
-        public new string EventId => _eventId ?? default;
 
         public string ItemId { get; }
     }

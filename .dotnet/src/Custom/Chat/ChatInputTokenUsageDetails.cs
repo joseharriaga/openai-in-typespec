@@ -6,11 +6,11 @@ namespace OpenAI.Chat;
 [CodeGenModel("CompletionUsagePromptTokensDetails")]
 public partial class ChatInputTokenUsageDetails
 {
-    // CUSTOM: Renamed.
+    // CUSTOM: Renamed; nullability removed.
     [CodeGenMember("AudioTokens")]
-    public int? AudioTokenCount { get; }
+    public int AudioTokenCount { get; }
 
-    // CUSTOM: Renamed.
+    // CUSTOM: Renamed; nullability removed.
     [CodeGenMember("CachedTokens")]
-    public int? CachedTokenCount { get; }
+    public int CachedTokenCount { get; }
 }

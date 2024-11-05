@@ -43,6 +43,7 @@ function Edit-InternalChatCompletionResponseMessageSerialization {
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
         "    role,"
         "    functionCall,"
+        "    audio,"
         "    serializedAdditionalRawData\);"
     )
     $outputString = @(
@@ -53,6 +54,7 @@ function Edit-InternalChatCompletionResponseMessageSerialization {
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
         "    role,"
         "    functionCall,"
+        "    audio,"
         "    serializedAdditionalRawData);"
     )
     Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
@@ -74,6 +76,7 @@ function Edit-InternalChatCompletionStreamResponseDeltaSerialization {
     # content deserialization
     $inputRegex = @(
         "return new InternalChatCompletionStreamResponseDelta\("
+        "    audio,"
         "    content,"
         "    functionCall,"
         "    toolCalls \?\? new ChangeTrackingList<StreamingChatToolCallUpdate>\(\),"
@@ -84,43 +87,13 @@ function Edit-InternalChatCompletionStreamResponseDeltaSerialization {
     $outputString = @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalChatCompletionStreamResponseDelta("
+        "    audio,"
         "    content ?? new ChatMessageContent(),"
         "    functionCall,"
         "    toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(),"
         "    role,"
         "    refusal,"
         "    serializedAdditionalRawData);"
-    )
-    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
-}
-
-function Edit-AssistantChatMessageSerialization {
-    $filename = "AssistantChatMessage.Serialization.cs"
-
-    # content serialization
-    # no-op
-
-    # content deserialization
-    $inputRegex = @(
-        "return new AssistantChatMessage\("
-        "    role,"
-        "    content,"
-        "    serializedAdditionalRawData,"
-        "    refusal,"
-        "    name,"
-        "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
-        "    functionCall\);"
-    )
-    $outputString = @(
-        "// CUSTOM: Initialize Content collection property."
-        "return new AssistantChatMessage("
-        "    role,"
-        "    content ?? new ChatMessageContent(),"
-        "    serializedAdditionalRawData,"
-        "    refusal,"
-        "    name,"
-        "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
-        "    functionCall);"
     )
     Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
 }
@@ -231,6 +204,7 @@ function Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization
         "    serializedAdditionalRawData,"
         "    refusal,"
         "    name,"
+        "    audio,"
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
         "    functionCall\);"
     )
@@ -242,6 +216,7 @@ function Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization
         "    serializedAdditionalRawData,"
         "    refusal,"
         "    name,"
+        "    audio,"
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
         "    functionCall);"
     )
@@ -250,7 +225,6 @@ function Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization
 
 Edit-InternalChatCompletionResponseMessageSerialization
 Edit-InternalChatCompletionStreamResponseDeltaSerialization
-Edit-AssistantChatMessageSerialization
 Edit-FunctionChatMessageSerialization
 Edit-SystemChatMessageSerialization
 Edit-ToolChatMessageSerialization

@@ -23,5 +23,5 @@ public partial class ChatOutputTokenUsageDetails
     public int ReasoningTokenCount { get; }
 
     [CodeGenMember("AudioTokens")]
-    public int? AudioTokenCount { get; }
+    public int AudioTokenCount { get; }
 }

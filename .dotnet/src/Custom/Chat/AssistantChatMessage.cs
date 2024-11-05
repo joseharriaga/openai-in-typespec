@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenAI.Chat;
 
@@ -113,6 +114,7 @@ public partial class AssistantChatMessage : ChatMessage
         {
             ToolCalls.Add(toolCall);
         }
+        // Note: The internal Audio property will be populated via reprojected Content upon serialization.
     }
 
     // CUSTOM: Renamed.
@@ -129,4 +131,8 @@ public partial class AssistantChatMessage : ChatMessage
 
     [Obsolete($"This property is obsolete. Please use {nameof(ToolCalls)} instead.")]
     public ChatFunctionCall FunctionCall { get; set; }
+
+    // CUSTOM: Made internal for reprojected representation within the content collection.
+    [CodeGenMember("Audio")]
+    internal InternalChatCompletionRequestAssistantMessageAudio Audio { get; set; }
 }

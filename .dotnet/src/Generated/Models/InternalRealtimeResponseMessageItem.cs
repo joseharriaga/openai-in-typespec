@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class InternalRealtimeResponseMessageItem : InternalRealtimeResponseItem
+    internal partial class InternalRealtimeResponseMessageItem : InternalRealtimeConversationResponseItem
     {
         internal InternalRealtimeResponseMessageItem(string id, ConversationMessageRole role, IEnumerable<ConversationContentPart> content, ConversationItemStatus status) : base(id)
         {
@@ -20,7 +20,7 @@ namespace OpenAI.RealtimeConversation
             Status = status;
         }
 
-        internal InternalRealtimeResponseMessageItem(InternalRealtimeResponseItemObject @object, InternalRealtimeItemType type, string id, IDictionary<string, BinaryData> serializedAdditionalRawData, ConversationMessageRole role, IReadOnlyList<ConversationContentPart> content, ConversationItemStatus status) : base(@object, type, id, serializedAdditionalRawData)
+        internal InternalRealtimeResponseMessageItem(InternalRealtimeConversationResponseItemObject @object, InternalRealtimeItemType type, string id, IDictionary<string, BinaryData> serializedAdditionalRawData, ConversationMessageRole role, IReadOnlyList<ConversationContentPart> content, ConversationItemStatus status) : base(@object, type, id, serializedAdditionalRawData)
         {
             Role = role;
             Content = content;
@@ -30,7 +30,6 @@ namespace OpenAI.RealtimeConversation
         internal InternalRealtimeResponseMessageItem()
         {
         }
-        public IReadOnlyList<ConversationContentPart> Content { get; }
         public ConversationItemStatus Status { get; }
     }
 }

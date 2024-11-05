@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeClientEventResponseCreate : InternalRealtimeClientEvent
     {
-        public InternalRealtimeClientEventResponseCreate(InternalRealtimeClientEventResponseCreateResponse response)
+        public InternalRealtimeClientEventResponseCreate(InternalRealtimeResponseOptions response)
         {
             Argument.AssertNotNull(response, nameof(response));
 
@@ -17,7 +17,7 @@ namespace OpenAI.RealtimeConversation
             Response = response;
         }
 
-        internal InternalRealtimeClientEventResponseCreate(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeClientEventResponseCreateResponse response) : base(kind, eventId, serializedAdditionalRawData)
+        internal InternalRealtimeClientEventResponseCreate(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeResponseOptions response) : base(kind, eventId, serializedAdditionalRawData)
         {
             Response = response;
         }
@@ -26,6 +26,6 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        public InternalRealtimeClientEventResponseCreateResponse Response { get; }
+        public InternalRealtimeResponseOptions Response { get; }
     }
 }

@@ -17,13 +17,14 @@ namespace OpenAI.Chat
             ToolCalls = new ChangeTrackingList<ChatToolCall>();
         }
 
-        internal InternalChatCompletionResponseMessage(ChatMessageContent content, string refusal, IReadOnlyList<ChatToolCall> toolCalls, ChatMessageRole role, ChatFunctionCall functionCall, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalChatCompletionResponseMessage(ChatMessageContent content, string refusal, IReadOnlyList<ChatToolCall> toolCalls, ChatMessageRole role, ChatFunctionCall functionCall, InternalChatCompletionResponseMessageAudio audio, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Content = content;
             Refusal = refusal;
             ToolCalls = toolCalls;
             Role = role;
             FunctionCall = functionCall;
+            Audio = audio;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
@@ -32,5 +33,6 @@ namespace OpenAI.Chat
         }
         public string Refusal { get; }
         public IReadOnlyList<ChatToolCall> ToolCalls { get; }
+        public InternalChatCompletionResponseMessageAudio Audio { get; }
     }
 }

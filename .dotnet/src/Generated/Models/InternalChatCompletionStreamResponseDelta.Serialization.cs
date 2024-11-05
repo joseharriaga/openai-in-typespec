@@ -21,6 +21,11 @@ namespace OpenAI.Chat
             }
 
             writer.WriteStartObject();
+            if (SerializedAdditionalRawData?.ContainsKey("audio") != true && Optional.IsDefined(Audio))
+            {
+                writer.WritePropertyName("audio"u8);
+                writer.WriteObjectValue(Audio, options);
+            }
             // CUSTOM: Check inner collection is defined.
             if (SerializedAdditionalRawData?.ContainsKey("content") != true && Optional.IsDefined(Content) && Content.IsInnerCollectionDefined())
             {
@@ -108,6 +113,7 @@ namespace OpenAI.Chat
             {
                 return null;
             }
+            InternalChatCompletionMessageAudioChunk audio = default;
             ChatMessageContent content = default;
             StreamingChatFunctionCallUpdate functionCall = default;
             IReadOnlyList<StreamingChatToolCallUpdate> toolCalls = default;
@@ -117,6 +123,15 @@ namespace OpenAI.Chat
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("audio"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    audio = InternalChatCompletionMessageAudioChunk.DeserializeInternalChatCompletionMessageAudioChunk(property.Value, options);
+                    continue;
+                }
                 if (property.NameEquals("content"u8))
                 {
                     DeserializeContentValue(property, ref content);
@@ -173,6 +188,7 @@ namespace OpenAI.Chat
             serializedAdditionalRawData = rawDataDictionary;
             // CUSTOM: Initialize Content collection property.
             return new InternalChatCompletionStreamResponseDelta(
+                audio,
                 content ?? new ChatMessageContent(),
                 functionCall,
                 toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(),

@@ -5,9 +5,9 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI;
+using OpenAI.Models;
 
 namespace OpenAI.RealtimeConversation
 {
@@ -63,43 +63,19 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            ConversationMessageRole role = default;
-            ConversationItemStatus? status = default;
-            InternalRealtimeItemType @type = default;
-            string id = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            foreach (var prop in element.EnumerateObject())
+            if (element.TryGetProperty("role"u8, out JsonElement discriminator))
             {
-                if (prop.NameEquals("role"u8))
+                switch (discriminator.GetString())
                 {
-                    role = new ConversationMessageRole(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("status"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    status = new ConversationItemStatus(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = new InternalRealtimeItemType(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("id"u8))
-                {
-                    id = prop.Value.GetString();
-                    continue;
-                }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
+                    case "system":
+                        return InternalRealtimeRequestSystemMessageItem.DeserializeInternalRealtimeRequestSystemMessageItem(element, options);
+                    case "user":
+                        return InternalRealtimeRequestUserMessageItem.DeserializeInternalRealtimeRequestUserMessageItem(element, options);
+                    case "assistant":
+                        return InternalRealtimeRequestAssistantMessageItem.DeserializeInternalRealtimeRequestAssistantMessageItem(element, options);
                 }
             }
-            return new InternalRealtimeRequestMessageItem(role, status, @type, id, additionalBinaryDataProperties);
+            return UnknownRealtimeRequestMessageItem.DeserializeUnknownRealtimeRequestMessageItem(element, options);
         }
 
         BinaryData IPersistableModel<InternalRealtimeRequestMessageItem>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

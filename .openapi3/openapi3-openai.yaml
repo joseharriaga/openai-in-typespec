@@ -2939,6 +2939,7 @@ components:
           description: A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
           x-oaiExpandable: true
           default: []
+          readOnly: true
         tool_resources:
           type: object
           properties:
@@ -2963,6 +2964,7 @@ components:
           nullable: true
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long.
           x-oaiTypeLabel: map
+          readOnly: true
         temperature:
           type: number
           format: float

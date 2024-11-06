@@ -82,7 +82,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("instructions"u8);
                 }
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("tools") != true)
+            if (true && _additionalBinaryDataProperties?.ContainsKey("tools") != true)
             {
                 writer.WritePropertyName("tools"u8);
                 writer.WriteStartArray();
@@ -104,7 +104,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("toolResources"u8);
                 }
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("metadata") != true)
+            if (true && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null && Optional.IsCollectionDefined(Metadata))
                 {
@@ -214,9 +214,9 @@ namespace OpenAI.Assistants
             string description = default;
             string model = default;
             string instructions = default;
-            IList<ToolDefinition> tools = default;
+            IReadOnlyList<ToolDefinition> tools = default;
             ToolResources toolResources = default;
-            IDictionary<string, string> metadata = default;
+            IReadOnlyDictionary<string, string> metadata = default;
             float? temperature = default;
             InternalAssistantObjectObject @object = default;
             AssistantResponseFormat responseFormat = default;

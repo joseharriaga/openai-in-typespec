@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
@@ -12,7 +12,7 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal Assistant(string id, DateTimeOffset createdAt, string name, string description, string model, string instructions, IEnumerable<ToolDefinition> tools, IDictionary<string, string> metadata)
+        internal Assistant(string id, DateTimeOffset createdAt, string name, string description, string model, string instructions)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -20,11 +20,11 @@ namespace OpenAI.Assistants
             Description = description;
             Model = model;
             Instructions = instructions;
-            Tools = tools.ToList();
-            Metadata = metadata;
+            Tools = new ChangeTrackingList<ToolDefinition>();
+            Metadata = new ChangeTrackingDictionary<string, string>();
         }
 
-        internal Assistant(string id, DateTimeOffset createdAt, string name, string description, string model, string instructions, IList<ToolDefinition> tools, ToolResources toolResources, IDictionary<string, string> metadata, float? temperature, InternalAssistantObjectObject @object, AssistantResponseFormat responseFormat, float? nucleusSamplingFactor, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal Assistant(string id, DateTimeOffset createdAt, string name, string description, string model, string instructions, IReadOnlyList<ToolDefinition> tools, ToolResources toolResources, IReadOnlyDictionary<string, string> metadata, float? temperature, InternalAssistantObjectObject @object, AssistantResponseFormat responseFormat, float? nucleusSamplingFactor, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             CreatedAt = createdAt;
@@ -54,11 +54,11 @@ namespace OpenAI.Assistants
 
         public string Instructions { get; }
 
-        public IList<ToolDefinition> Tools { get; }
+        public IReadOnlyList<ToolDefinition> Tools { get; }
 
         public ToolResources ToolResources { get; }
 
-        public IDictionary<string, string> Metadata { get; }
+        public IReadOnlyDictionary<string, string> Metadata { get; }
 
         public float? Temperature { get; }
 

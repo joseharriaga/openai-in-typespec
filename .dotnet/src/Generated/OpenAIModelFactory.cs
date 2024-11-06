@@ -1045,7 +1045,7 @@ namespace OpenAI
                 additionalBinaryDataProperties: null);
         }
 
-        public static Assistant Assistant(string id = default, DateTimeOffset createdAt = default, string name = default, string description = default, string model = default, string instructions = default, IEnumerable<ToolDefinition> tools = default, ToolResources toolResources = default, IDictionary<string, string> metadata = default, float? temperature = default, InternalAssistantObjectObject @object = default, AssistantResponseFormat responseFormat = default, float? nucleusSamplingFactor = default)
+        public static Assistant Assistant(string id = default, DateTimeOffset createdAt = default, string name = default, string description = default, string model = default, string instructions = default, IEnumerable<ToolDefinition> tools = default, ToolResources toolResources = default, IReadOnlyDictionary<string, string> metadata = default, float? temperature = default, InternalAssistantObjectObject @object = default, AssistantResponseFormat responseFormat = default, float? nucleusSamplingFactor = default)
         {
             tools ??= new ChangeTrackingList<ToolDefinition>();
             metadata ??= new ChangeTrackingDictionary<string, string>();

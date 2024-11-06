@@ -26,7 +26,7 @@ namespace OpenAI.Chat
             base.JsonModelWriteCore(writer, options);
         }
 
-        ChatResponseFormat IJsonModel<ChatResponseFormat>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalUnknownChatResponseFormat)JsonModelCreateCore(ref reader, options);
+        ChatResponseFormat IJsonModel<ChatResponseFormat>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override ChatResponseFormat JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -76,7 +76,7 @@ namespace OpenAI.Chat
             }
         }
 
-        ChatResponseFormat IPersistableModel<ChatResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalUnknownChatResponseFormat)PersistableModelCreateCore(data, options);
+        ChatResponseFormat IPersistableModel<ChatResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override ChatResponseFormat PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

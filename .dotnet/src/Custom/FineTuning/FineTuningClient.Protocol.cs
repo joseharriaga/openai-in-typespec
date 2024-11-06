@@ -8,16 +8,16 @@ namespace OpenAI.FineTuning;
 
 [CodeGenSuppress("CreateFineTuningJobAsync", typeof(BinaryContent), typeof(RequestOptions))]
 [CodeGenSuppress("CreateFineTuningJob", typeof(BinaryContent), typeof(RequestOptions))]
-[CodeGenSuppress("GetPaginatedFineTuningJobsAsync", typeof(string), typeof(int?), typeof(RequestOptions))]
-[CodeGenSuppress("GetPaginatedFineTuningJobs", typeof(string), typeof(int?), typeof(RequestOptions))]
+[CodeGenSuppress("ListPaginatedFineTuningJobsAsync", typeof(string), typeof(int?), typeof(RequestOptions))]
+[CodeGenSuppress("ListPaginatedFineTuningJobs", typeof(string), typeof(int?), typeof(RequestOptions))]
 [CodeGenSuppress("RetrieveFineTuningJobAsync", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("RetrieveFineTuningJob", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("CancelFineTuningJobAsync", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("CancelFineTuningJob", typeof(string), typeof(RequestOptions))]
-[CodeGenSuppress("GetFineTuningEventsAsync", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
-[CodeGenSuppress("GetFineTuningEvents", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
-[CodeGenSuppress("GetFineTuningJobCheckpointsAsync", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
-[CodeGenSuppress("GetFineTuningJobCheckpoints", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
+[CodeGenSuppress("ListFineTuningEventsAsync", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
+[CodeGenSuppress("ListFineTuningEvents", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
+[CodeGenSuppress("ListFineTuningJobCheckpointsAsync", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
+[CodeGenSuppress("ListFineTuningJobCheckpoints", typeof(string), typeof(string), typeof(int?), typeof(RequestOptions))]
 public partial class FineTuningClient
 {
     // CUSTOM:

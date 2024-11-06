@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace OpenAI.Models;
 
-[CodeGenSuppress("GetModelsAsync", typeof(RequestOptions))]
-[CodeGenSuppress("GetModels", typeof(RequestOptions))]
+[CodeGenSuppress("ListModelsAsync", typeof(RequestOptions))]
+[CodeGenSuppress("ListModels", typeof(RequestOptions))]
 [CodeGenSuppress("RetrieveModelAsync", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("RetrieveModel", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("DeleteModelAsync", typeof(string), typeof(RequestOptions))]

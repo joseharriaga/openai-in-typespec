@@ -5,8 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading.Tasks;
-using OpenAI;
 
 namespace OpenAI.Assistants
 {
@@ -22,33 +20,5 @@ namespace OpenAI.Assistants
         }
 
         public ClientPipeline Pipeline { get; }
-
-        public virtual ClientResult ListAssistants(int? limit, string order, string after, string before, RequestOptions options)
-        {
-            using PipelineMessage message = CreateListAssistantsRequest(limit, order, after, before, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> ListAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options)
-        {
-            using PipelineMessage message = CreateListAssistantsRequest(limit, order, after, before, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult<Assistant> GetAssistant(string assistantId)
-        {
-            Argument.AssertNotNull(assistantId, nameof(assistantId));
-
-            ClientResult result = this.GetAssistant(assistantId, null);
-            return ClientResult.FromValue((Assistant)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<Assistant>> GetAssistantAsync(string assistantId)
-        {
-            Argument.AssertNotNull(assistantId, nameof(assistantId));
-
-            ClientResult result = await this.GetAssistantAsync(assistantId, null).ConfigureAwait(false);
-            return ClientResult.FromValue((Assistant)result, result.GetRawResponse());
-        }
     }
 }

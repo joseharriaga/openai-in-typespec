@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
             base.JsonModelWriteCore(writer, options);
         }
 
-        AssistantResponseFormat IJsonModel<AssistantResponseFormat>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalUnknownAssistantResponseFormat)JsonModelCreateCore(ref reader, options);
+        AssistantResponseFormat IJsonModel<AssistantResponseFormat>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override AssistantResponseFormat JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -83,7 +83,7 @@ namespace OpenAI.Assistants
             }
         }
 
-        AssistantResponseFormat IPersistableModel<AssistantResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalUnknownAssistantResponseFormat)PersistableModelCreateCore(data, options);
+        AssistantResponseFormat IPersistableModel<AssistantResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override AssistantResponseFormat PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

@@ -33,7 +33,7 @@ namespace OpenAI.Internal
             base.JsonModelWriteCore(writer, options);
         }
 
-        InternalOmniTypedResponseFormat IJsonModel<InternalOmniTypedResponseFormat>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalUnknownOmniTypedResponseFormat)JsonModelCreateCore(ref reader, options);
+        InternalOmniTypedResponseFormat IJsonModel<InternalOmniTypedResponseFormat>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override InternalOmniTypedResponseFormat JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -83,7 +83,7 @@ namespace OpenAI.Internal
             }
         }
 
-        InternalOmniTypedResponseFormat IPersistableModel<InternalOmniTypedResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalUnknownOmniTypedResponseFormat)PersistableModelCreateCore(data, options);
+        InternalOmniTypedResponseFormat IPersistableModel<InternalOmniTypedResponseFormat>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override InternalOmniTypedResponseFormat PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

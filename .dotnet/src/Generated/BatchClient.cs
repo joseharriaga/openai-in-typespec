@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading.Tasks;
 
 namespace OpenAI.Batch
 {
@@ -21,17 +20,5 @@ namespace OpenAI.Batch
         }
 
         public ClientPipeline Pipeline { get; }
-
-        public virtual ClientResult ListBatches(string after, int? limit, RequestOptions options)
-        {
-            using PipelineMessage message = CreateListBatchesRequest(after, limit, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> ListBatchesAsync(string after, int? limit, RequestOptions options)
-        {
-            using PipelineMessage message = CreateListBatchesRequest(after, limit, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
     }
 }

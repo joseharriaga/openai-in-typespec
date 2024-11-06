@@ -8,6 +8,8 @@ namespace OpenAI.Batch;
 
 [CodeGenSuppress("RetrieveBatch", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("RetrieveBatchAsync", typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("ListBatches", typeof(string), typeof(int?), typeof(RequestOptions))]
+[CodeGenSuppress("ListBatchesAsync", typeof(string), typeof(int?), typeof(RequestOptions))]
 public partial class BatchClient
 {
     /// <summary>

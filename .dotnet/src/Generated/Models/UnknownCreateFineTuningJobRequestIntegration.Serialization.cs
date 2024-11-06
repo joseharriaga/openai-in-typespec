@@ -33,7 +33,7 @@ namespace OpenAI.FineTuning
             base.JsonModelWriteCore(writer, options);
         }
 
-        FineTuningIntegration IJsonModel<FineTuningIntegration>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownCreateFineTuningJobRequestIntegration)JsonModelCreateCore(ref reader, options);
+        FineTuningIntegration IJsonModel<FineTuningIntegration>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override FineTuningIntegration JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -83,7 +83,7 @@ namespace OpenAI.FineTuning
             }
         }
 
-        FineTuningIntegration IPersistableModel<FineTuningIntegration>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownCreateFineTuningJobRequestIntegration)PersistableModelCreateCore(data, options);
+        FineTuningIntegration IPersistableModel<FineTuningIntegration>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override FineTuningIntegration PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

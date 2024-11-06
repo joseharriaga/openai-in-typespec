@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
             base.JsonModelWriteCore(writer, options);
         }
 
-        InternalMessageContentTextObjectAnnotation IJsonModel<InternalMessageContentTextObjectAnnotation>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownMessageContentTextObjectAnnotation)JsonModelCreateCore(ref reader, options);
+        InternalMessageContentTextObjectAnnotation IJsonModel<InternalMessageContentTextObjectAnnotation>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override InternalMessageContentTextObjectAnnotation JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -83,7 +83,7 @@ namespace OpenAI.Assistants
             }
         }
 
-        InternalMessageContentTextObjectAnnotation IPersistableModel<InternalMessageContentTextObjectAnnotation>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownMessageContentTextObjectAnnotation)PersistableModelCreateCore(data, options);
+        InternalMessageContentTextObjectAnnotation IPersistableModel<InternalMessageContentTextObjectAnnotation>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override InternalMessageContentTextObjectAnnotation PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

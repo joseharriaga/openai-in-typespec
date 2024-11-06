@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
             base.JsonModelWriteCore(writer, options);
         }
 
-        RunStepCodeInterpreterOutput IJsonModel<RunStepCodeInterpreterOutput>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject)JsonModelCreateCore(ref reader, options);
+        RunStepCodeInterpreterOutput IJsonModel<RunStepCodeInterpreterOutput>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override RunStepCodeInterpreterOutput JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -83,7 +83,7 @@ namespace OpenAI.Assistants
             }
         }
 
-        RunStepCodeInterpreterOutput IPersistableModel<RunStepCodeInterpreterOutput>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject)PersistableModelCreateCore(data, options);
+        RunStepCodeInterpreterOutput IPersistableModel<RunStepCodeInterpreterOutput>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override RunStepCodeInterpreterOutput PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

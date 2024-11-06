@@ -33,7 +33,7 @@ namespace OpenAI.VectorStores
             base.JsonModelWriteCore(writer, options);
         }
 
-        InternalFileChunkingStrategyRequestParam IJsonModel<InternalFileChunkingStrategyRequestParam>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalUnknownFileChunkingStrategyRequestParamProxy)JsonModelCreateCore(ref reader, options);
+        InternalFileChunkingStrategyRequestParam IJsonModel<InternalFileChunkingStrategyRequestParam>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override InternalFileChunkingStrategyRequestParam JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -83,7 +83,7 @@ namespace OpenAI.VectorStores
             }
         }
 
-        InternalFileChunkingStrategyRequestParam IPersistableModel<InternalFileChunkingStrategyRequestParam>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalUnknownFileChunkingStrategyRequestParamProxy)PersistableModelCreateCore(data, options);
+        InternalFileChunkingStrategyRequestParam IPersistableModel<InternalFileChunkingStrategyRequestParam>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override InternalFileChunkingStrategyRequestParam PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

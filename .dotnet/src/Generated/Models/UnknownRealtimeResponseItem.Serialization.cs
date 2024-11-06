@@ -33,7 +33,7 @@ namespace OpenAI.RealtimeConversation
             base.JsonModelWriteCore(writer, options);
         }
 
-        InternalRealtimeResponseItem IJsonModel<InternalRealtimeResponseItem>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownRealtimeResponseItem)JsonModelCreateCore(ref reader, options);
+        InternalRealtimeResponseItem IJsonModel<InternalRealtimeResponseItem>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override InternalRealtimeResponseItem JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -100,7 +100,7 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        InternalRealtimeResponseItem IPersistableModel<InternalRealtimeResponseItem>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownRealtimeResponseItem)PersistableModelCreateCore(data, options);
+        InternalRealtimeResponseItem IPersistableModel<InternalRealtimeResponseItem>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override InternalRealtimeResponseItem PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

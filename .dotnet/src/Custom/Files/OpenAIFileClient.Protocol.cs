@@ -9,8 +9,8 @@ namespace OpenAI.Files;
 
 [CodeGenSuppress("CreateFileAsync", typeof(BinaryContent), typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("CreateFile", typeof(BinaryContent), typeof(string), typeof(RequestOptions))]
-[CodeGenSuppress("GetFilesAsync", typeof(string), typeof(RequestOptions))]
-[CodeGenSuppress("GetFiles", typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("ListFilesAsync", typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("ListFiles", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("RetrieveFileAsync", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("RetrieveFile", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("DeleteFileAsync", typeof(string), typeof(RequestOptions))]

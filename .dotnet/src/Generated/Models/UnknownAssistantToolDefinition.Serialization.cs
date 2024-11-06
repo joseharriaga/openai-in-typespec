@@ -26,7 +26,7 @@ namespace OpenAI.Assistants
             base.JsonModelWriteCore(writer, options);
         }
 
-        ToolDefinition IJsonModel<ToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownAssistantToolDefinition)JsonModelCreateCore(ref reader, options);
+        ToolDefinition IJsonModel<ToolDefinition>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override ToolDefinition JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -76,7 +76,7 @@ namespace OpenAI.Assistants
             }
         }
 
-        ToolDefinition IPersistableModel<ToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownAssistantToolDefinition)PersistableModelCreateCore(data, options);
+        ToolDefinition IPersistableModel<ToolDefinition>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override ToolDefinition PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

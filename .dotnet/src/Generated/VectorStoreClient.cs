@@ -23,18 +23,6 @@ namespace OpenAI.VectorStores
 
         public ClientPipeline Pipeline { get; }
 
-        public virtual ClientResult ListVectorStores(int? limit, string order, string after, string before, RequestOptions options)
-        {
-            using PipelineMessage message = CreateListVectorStoresRequest(limit, order, after, before, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> ListVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options)
-        {
-            using PipelineMessage message = CreateListVectorStoresRequest(limit, order, after, before, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
         public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options)
         {
             Argument.AssertNotNull(content, nameof(content));
@@ -48,112 +36,6 @@ namespace OpenAI.VectorStores
             Argument.AssertNotNull(content, nameof(content));
 
             using PipelineMessage message = this.CreateCreateVectorStoreRequest(content, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult<VectorStore> GetVectorStore(string vectorStoreId)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-
-            ClientResult result = this.GetVectorStore(vectorStoreId, null);
-            return ClientResult.FromValue((VectorStore)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<VectorStore>> GetVectorStoreAsync(string vectorStoreId)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-
-            ClientResult result = await this.GetVectorStoreAsync(vectorStoreId, null).ConfigureAwait(false);
-            return ClientResult.FromValue((VectorStore)result, result.GetRawResponse());
-        }
-
-        public virtual ClientResult GetVectorStoreFile(string vectorStoreId, string fileId, RequestOptions options)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-            Argument.AssertNotNull(fileId, nameof(fileId));
-
-            using PipelineMessage message = this.CreateGetVectorStoreFileRequest(vectorStoreId, fileId, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> GetVectorStoreFileAsync(string vectorStoreId, string fileId, RequestOptions options)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-            Argument.AssertNotNull(fileId, nameof(fileId));
-
-            using PipelineMessage message = this.CreateGetVectorStoreFileRequest(vectorStoreId, fileId, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult<VectorStoreFileAssociation> GetVectorStoreFile(string vectorStoreId, string fileId)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-            Argument.AssertNotNull(fileId, nameof(fileId));
-
-            ClientResult result = GetVectorStoreFile(vectorStoreId, fileId, null);
-            return ClientResult.FromValue((VectorStoreFileAssociation)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<VectorStoreFileAssociation>> GetVectorStoreFileAsync(string vectorStoreId, string fileId)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-            Argument.AssertNotNull(fileId, nameof(fileId));
-
-            ClientResult result = await GetVectorStoreFileAsync(vectorStoreId, fileId, null).ConfigureAwait(false);
-            return ClientResult.FromValue((VectorStoreFileAssociation)result, result.GetRawResponse());
-        }
-
-        public virtual ClientResult GetVectorStoreFileBatch(string vectorStoreId, string batchId, RequestOptions options)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-            Argument.AssertNotNull(batchId, nameof(batchId));
-
-            using PipelineMessage message = this.CreateGetVectorStoreFileBatchRequest(vectorStoreId, batchId, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> GetVectorStoreFileBatchAsync(string vectorStoreId, string batchId, RequestOptions options)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-            Argument.AssertNotNull(batchId, nameof(batchId));
-
-            using PipelineMessage message = this.CreateGetVectorStoreFileBatchRequest(vectorStoreId, batchId, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult<VectorStoreBatchFileJob> GetVectorStoreFileBatch(string vectorStoreId, string batchId)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-            Argument.AssertNotNull(batchId, nameof(batchId));
-
-            ClientResult result = GetVectorStoreFileBatch(vectorStoreId, batchId, null);
-            return ClientResult.FromValue((VectorStoreBatchFileJob)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<VectorStoreBatchFileJob>> GetVectorStoreFileBatchAsync(string vectorStoreId, string batchId)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-            Argument.AssertNotNull(batchId, nameof(batchId));
-
-            ClientResult result = await GetVectorStoreFileBatchAsync(vectorStoreId, batchId, null).ConfigureAwait(false);
-            return ClientResult.FromValue((VectorStoreBatchFileJob)result, result.GetRawResponse());
-        }
-
-        public virtual ClientResult ListFilesInVectorStoreBatch(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-            Argument.AssertNotNull(batchId, nameof(batchId));
-
-            using PipelineMessage message = CreateListFilesInVectorStoreBatchRequest(vectorStoreId, batchId, limit, order, after, before, filter, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> ListFilesInVectorStoreBatchAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
-        {
-            Argument.AssertNotNull(vectorStoreId, nameof(vectorStoreId));
-            Argument.AssertNotNull(batchId, nameof(batchId));
-
-            using PipelineMessage message = CreateListFilesInVectorStoreBatchRequest(vectorStoreId, batchId, limit, order, after, before, filter, options);
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
     }

@@ -5,7 +5,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Threading.Tasks;
 
 namespace OpenAI.Files
 {
@@ -21,29 +20,5 @@ namespace OpenAI.Files
         }
 
         public ClientPipeline Pipeline { get; }
-
-        public virtual ClientResult ListFiles(string purpose, RequestOptions options)
-        {
-            using PipelineMessage message = CreateListFilesRequest(purpose, options);
-            return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
-        }
-
-        public virtual async Task<ClientResult> ListFilesAsync(string purpose, RequestOptions options)
-        {
-            using PipelineMessage message = CreateListFilesRequest(purpose, options);
-            return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult<OpenAIFileCollection> ListFiles(string purpose)
-        {
-            ClientResult result = ListFiles(purpose, null);
-            return ClientResult.FromValue((OpenAIFileCollection)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<OpenAIFileCollection>> ListFilesAsync(string purpose)
-        {
-            ClientResult result = await ListFilesAsync(purpose, null).ConfigureAwait(false);
-            return ClientResult.FromValue((OpenAIFileCollection)result, result.GetRawResponse());
-        }
     }
 }

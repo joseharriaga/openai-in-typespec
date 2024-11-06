@@ -33,7 +33,7 @@ namespace OpenAI.RealtimeConversation
             base.JsonModelWriteCore(writer, options);
         }
 
-        ConversationTool IJsonModel<ConversationTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownRealtimeTool)JsonModelCreateCore(ref reader, options);
+        ConversationTool IJsonModel<ConversationTool>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override ConversationTool JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -83,7 +83,7 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        ConversationTool IPersistableModel<ConversationTool>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownRealtimeTool)PersistableModelCreateCore(data, options);
+        ConversationTool IPersistableModel<ConversationTool>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override ConversationTool PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

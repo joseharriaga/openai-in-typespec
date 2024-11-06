@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
 
+[CodeGenSuppress("ListAssistantsAsync", typeof(int?), typeof(string), typeof(string), typeof(string), typeof(RequestOptions))]
+[CodeGenSuppress("ListAssistants", typeof(int?), typeof(string), typeof(string), typeof(string), typeof(RequestOptions))]
 public partial class AssistantClient
 {
     /// <summary>

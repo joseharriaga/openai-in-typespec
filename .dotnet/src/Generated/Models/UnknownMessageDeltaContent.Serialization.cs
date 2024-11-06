@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
             base.JsonModelWriteCore(writer, options);
         }
 
-        InternalMessageDeltaContent IJsonModel<InternalMessageDeltaContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownMessageDeltaContent)JsonModelCreateCore(ref reader, options);
+        InternalMessageDeltaContent IJsonModel<InternalMessageDeltaContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override InternalMessageDeltaContent JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -83,7 +83,7 @@ namespace OpenAI.Assistants
             }
         }
 
-        InternalMessageDeltaContent IPersistableModel<InternalMessageDeltaContent>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownMessageDeltaContent)PersistableModelCreateCore(data, options);
+        InternalMessageDeltaContent IPersistableModel<InternalMessageDeltaContent>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override InternalMessageDeltaContent PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

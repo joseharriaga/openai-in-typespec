@@ -33,7 +33,7 @@ namespace OpenAI.RealtimeConversation
             base.JsonModelWriteCore(writer, options);
         }
 
-        ConversationTurnDetectionOptions IJsonModel<ConversationTurnDetectionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownRealtimeTurnDetection)JsonModelCreateCore(ref reader, options);
+        ConversationTurnDetectionOptions IJsonModel<ConversationTurnDetectionOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override ConversationTurnDetectionOptions JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -83,7 +83,7 @@ namespace OpenAI.RealtimeConversation
             }
         }
 
-        ConversationTurnDetectionOptions IPersistableModel<ConversationTurnDetectionOptions>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownRealtimeTurnDetection)PersistableModelCreateCore(data, options);
+        ConversationTurnDetectionOptions IPersistableModel<ConversationTurnDetectionOptions>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override ConversationTurnDetectionOptions PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

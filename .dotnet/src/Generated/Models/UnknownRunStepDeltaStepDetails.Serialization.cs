@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
             base.JsonModelWriteCore(writer, options);
         }
 
-        InternalRunStepDeltaStepDetails IJsonModel<InternalRunStepDeltaStepDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (UnknownRunStepDeltaStepDetails)JsonModelCreateCore(ref reader, options);
+        InternalRunStepDeltaStepDetails IJsonModel<InternalRunStepDeltaStepDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
         protected override InternalRunStepDeltaStepDetails JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
@@ -83,7 +83,7 @@ namespace OpenAI.Assistants
             }
         }
 
-        InternalRunStepDeltaStepDetails IPersistableModel<InternalRunStepDeltaStepDetails>.Create(BinaryData data, ModelReaderWriterOptions options) => (UnknownRunStepDeltaStepDetails)PersistableModelCreateCore(data, options);
+        InternalRunStepDeltaStepDetails IPersistableModel<InternalRunStepDeltaStepDetails>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
         protected override InternalRunStepDeltaStepDetails PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {

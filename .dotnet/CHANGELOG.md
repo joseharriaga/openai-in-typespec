@@ -1,5 +1,18 @@
 # Release History
 
+## 2.1.0-beta.3 (Unreleased)
+
+### Bugs fixed
+
+- `/realtime` (beta):
+  - Addressed serialization issues with `ConversationItem` creation of system and assistant messages
+  - Removed an extraneous `toolCallId` parameter from `ConversationItem.CreateSystemMessage()`
+
+### Other changes
+
+- `/realtime` (beta):
+  - Renamed `From*()` factory methods on `ConversationContentPart` to `Create*Part()`, aligning with other library types
+
 ## 2.1.0-beta.2 (2024-11-04)
 
 ### Features added

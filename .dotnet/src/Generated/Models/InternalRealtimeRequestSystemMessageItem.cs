@@ -4,20 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeRequestSystemMessageItem : InternalRealtimeRequestMessageItem
     {
-        public InternalRealtimeRequestSystemMessageItem(IEnumerable<ConversationContentPart> content) : base(ConversationMessageRole.System)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            Content = content.ToList();
-        }
-
         internal InternalRealtimeRequestSystemMessageItem(IList<ConversationContentPart> content, ConversationMessageRole role, ConversationItemStatus? status, InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, status, @type, id, additionalBinaryDataProperties)
         {
             Content = content;

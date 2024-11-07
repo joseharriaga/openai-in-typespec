@@ -225,6 +225,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(AssistantCollectionOrder other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(AssistantCollectionOrder left, AssistantCollectionOrder right);
         public static implicit operator AssistantCollectionOrder(string value);
@@ -379,6 +380,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(FileSearchRanker other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(FileSearchRanker left, FileSearchRanker right);
         public static implicit operator FileSearchRanker(string value);
@@ -466,6 +468,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(MessageCollectionOrder other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(MessageCollectionOrder left, MessageCollectionOrder right);
         public static implicit operator MessageCollectionOrder(string value);
@@ -577,6 +580,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(MessageFailureReason other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(MessageFailureReason left, MessageFailureReason right);
         public static implicit operator MessageFailureReason(string value);
@@ -616,6 +620,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(MessageStatus other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(MessageStatus left, MessageStatus right);
         public static implicit operator MessageStatus(string value);
@@ -650,6 +655,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(RunCollectionOrder other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunCollectionOrder left, RunCollectionOrder right);
         public static implicit operator RunCollectionOrder(string value);
@@ -708,6 +714,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(RunErrorCode other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunErrorCode left, RunErrorCode right);
         public static implicit operator RunErrorCode(string value);
@@ -737,6 +744,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(RunIncompleteReason other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunIncompleteReason left, RunIncompleteReason right);
         public static implicit operator RunIncompleteReason(string value);
@@ -774,6 +782,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(RunStatus other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunStatus left, RunStatus right);
         public static implicit operator RunStatus(string value);
@@ -838,6 +847,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(RunStepCollectionOrder other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunStepCollectionOrder left, RunStepCollectionOrder right);
         public static implicit operator RunStepCollectionOrder(string value);
@@ -894,6 +904,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(RunStepErrorCode other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunStepErrorCode left, RunStepErrorCode right);
         public static implicit operator RunStepErrorCode(string value);
@@ -928,6 +939,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(RunStepStatus other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunStepStatus left, RunStepStatus right);
         public static implicit operator RunStepStatus(string value);
@@ -988,6 +1000,7 @@ namespace OpenAI.Assistants {
         public readonly bool Equals(RunStepType other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(RunStepType left, RunStepType right);
         public static implicit operator RunStepType(string value);
@@ -1370,6 +1383,7 @@ namespace OpenAI.Audio {
         public readonly bool Equals(AudioTranscriptionFormat other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(AudioTranscriptionFormat left, AudioTranscriptionFormat right);
         public static implicit operator AudioTranscriptionFormat(string value);
@@ -1424,6 +1438,7 @@ namespace OpenAI.Audio {
         public readonly bool Equals(AudioTranslationFormat other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(AudioTranslationFormat left, AudioTranslationFormat right);
         public static implicit operator AudioTranslationFormat(string value);
@@ -1459,6 +1474,7 @@ namespace OpenAI.Audio {
         public readonly bool Equals(GeneratedSpeechFormat other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(GeneratedSpeechFormat left, GeneratedSpeechFormat right);
         public static implicit operator GeneratedSpeechFormat(string value);
@@ -1478,6 +1494,7 @@ namespace OpenAI.Audio {
         public readonly bool Equals(GeneratedSpeechVoice other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(GeneratedSpeechVoice left, GeneratedSpeechVoice right);
         public static implicit operator GeneratedSpeechVoice(string value);
@@ -1753,6 +1770,7 @@ namespace OpenAI.Chat {
         public readonly bool Equals(ChatImageDetailLevel other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ChatImageDetailLevel left, ChatImageDetailLevel right);
         public static implicit operator ChatImageDetailLevel(string value);
@@ -2262,6 +2280,7 @@ namespace OpenAI.Files {
         public readonly bool Equals(FileUploadPurpose other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(FileUploadPurpose left, FileUploadPurpose right);
         public static implicit operator FileUploadPurpose(string value);
@@ -2436,6 +2455,7 @@ namespace OpenAI.Images {
         public readonly bool Equals(GeneratedImageFormat other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(GeneratedImageFormat left, GeneratedImageFormat right);
         public static implicit operator GeneratedImageFormat(string value);
@@ -2451,6 +2471,7 @@ namespace OpenAI.Images {
         public readonly bool Equals(GeneratedImageQuality other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(GeneratedImageQuality left, GeneratedImageQuality right);
         public static implicit operator GeneratedImageQuality(string value);
@@ -2469,6 +2490,7 @@ namespace OpenAI.Images {
         public readonly bool Equals(GeneratedImageSize other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(GeneratedImageSize left, GeneratedImageSize right);
         public static implicit operator GeneratedImageSize(string value);
@@ -2484,6 +2506,7 @@ namespace OpenAI.Images {
         public readonly bool Equals(GeneratedImageStyle other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(GeneratedImageStyle left, GeneratedImageStyle right);
         public static implicit operator GeneratedImageStyle(string value);
@@ -2758,6 +2781,7 @@ namespace OpenAI.RealtimeConversation {
         public readonly bool Equals(ConversationAudioFormat other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ConversationAudioFormat left, ConversationAudioFormat right);
         public static implicit operator ConversationAudioFormat(string value);
@@ -2800,6 +2824,7 @@ namespace OpenAI.RealtimeConversation {
         public readonly bool Equals(ConversationContentPartKind other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ConversationContentPartKind left, ConversationContentPartKind right);
         public static implicit operator ConversationContentPartKind(string value);
@@ -3032,6 +3057,7 @@ namespace OpenAI.RealtimeConversation {
         public readonly bool Equals(ConversationItemStatus other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ConversationItemStatus left, ConversationItemStatus right);
         public static implicit operator ConversationItemStatus(string value);
@@ -3205,6 +3231,7 @@ namespace OpenAI.RealtimeConversation {
         public readonly bool Equals(ConversationMessageRole other);
         [EditorBrowsable(global::EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(global::EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ConversationMessageRole left, ConversationMessageRole right);
         public static implicit operator ConversationMessageRole(string value);
@@ -3383,6 +3410,7 @@ namespace OpenAI.RealtimeConversation {
         public readonly bool Equals(ConversationStatus other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ConversationStatus left, ConversationStatus right);
         public static implicit operator ConversationStatus(string value);
@@ -3464,6 +3492,7 @@ namespace OpenAI.RealtimeConversation {
         public readonly bool Equals(ConversationToolKind other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ConversationToolKind left, ConversationToolKind right);
         public static implicit operator ConversationToolKind(string value);
@@ -3478,6 +3507,7 @@ namespace OpenAI.RealtimeConversation {
         public readonly bool Equals(ConversationTranscriptionModel other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ConversationTranscriptionModel left, ConversationTranscriptionModel right);
         public static implicit operator ConversationTranscriptionModel(string value);
@@ -3561,6 +3591,7 @@ namespace OpenAI.RealtimeConversation {
         public readonly bool Equals(ConversationVoice other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(ConversationVoice left, ConversationVoice right);
         public static implicit operator ConversationVoice(string value);
@@ -3781,6 +3812,7 @@ namespace OpenAI.VectorStores {
         public readonly bool Equals(VectorStoreBatchFileJobStatus other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(VectorStoreBatchFileJobStatus left, VectorStoreBatchFileJobStatus right);
         public static implicit operator VectorStoreBatchFileJobStatus(string value);
@@ -3887,6 +3919,7 @@ namespace OpenAI.VectorStores {
         public readonly bool Equals(VectorStoreCollectionOrder other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(VectorStoreCollectionOrder left, VectorStoreCollectionOrder right);
         public static implicit operator VectorStoreCollectionOrder(string value);
@@ -3983,6 +4016,7 @@ namespace OpenAI.VectorStores {
         public readonly bool Equals(VectorStoreFileAssociationCollectionOrder other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(VectorStoreFileAssociationCollectionOrder left, VectorStoreFileAssociationCollectionOrder right);
         public static implicit operator VectorStoreFileAssociationCollectionOrder(string value);
@@ -4014,6 +4048,7 @@ namespace OpenAI.VectorStores {
         public readonly bool Equals(VectorStoreFileAssociationErrorCode other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(VectorStoreFileAssociationErrorCode left, VectorStoreFileAssociationErrorCode right);
         public static implicit operator VectorStoreFileAssociationErrorCode(string value);
@@ -4056,6 +4091,7 @@ namespace OpenAI.VectorStores {
         public readonly bool Equals(VectorStoreFileStatusFilter other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(VectorStoreFileStatusFilter left, VectorStoreFileStatusFilter right);
         public static implicit operator VectorStoreFileStatusFilter(string value);

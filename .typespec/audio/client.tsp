@@ -6,3 +6,5 @@ using OpenAI;
 
 @@visibility(CreateTranscriptionResponseVerboseJson.words, "read");
 @@visibility(CreateTranscriptionResponseVerboseJson.segments, "read");
+
+@@visibility(CreateTranslationResponseVerboseJson.segments, "read");

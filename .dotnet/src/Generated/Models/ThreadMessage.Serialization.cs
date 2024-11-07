@@ -87,7 +87,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("incompleteAt"u8);
                 }
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
+            if (true && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
                 writer.WriteStartArray();
@@ -121,7 +121,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("runId"u8);
                 }
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("metadata") != true)
+            if (true && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null && Optional.IsCollectionDefined(Metadata))
                 {
@@ -218,10 +218,10 @@ namespace OpenAI.Assistants
             MessageFailureDetails incompleteDetails = default;
             DateTimeOffset? completedAt = default;
             DateTimeOffset? incompleteAt = default;
-            IList<MessageContent> content = default;
+            IReadOnlyList<MessageContent> content = default;
             string assistantId = default;
             string runId = default;
-            IDictionary<string, string> metadata = default;
+            IReadOnlyDictionary<string, string> metadata = default;
             InternalMessageObjectObject @object = default;
             Assistants.MessageRole role = default;
             IReadOnlyList<MessageCreationAttachment> attachments = default;

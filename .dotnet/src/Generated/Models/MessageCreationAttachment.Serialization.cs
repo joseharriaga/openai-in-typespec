@@ -31,15 +31,15 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(MessageCreationAttachment)} does not support writing '{format}' format.");
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("tools") != true)
-            {
-                writer.WritePropertyName("tools"u8);
-                this.SerializeTools(writer, options);
-            }
             if (_additionalBinaryDataProperties?.ContainsKey("file_id") != true)
             {
                 writer.WritePropertyName("file_id"u8);
                 writer.WriteStringValue(FileId);
+            }
+            if (_additionalBinaryDataProperties?.ContainsKey("tools") != true)
+            {
+                writer.WritePropertyName("tools"u8);
+                this.SerializeTools(writer, options);
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -81,19 +81,19 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            IReadOnlyList<ToolDefinition> tools = default;
             string fileId = default;
+            IReadOnlyList<ToolDefinition> tools = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("tools"u8))
-                {
-                    DeserializeTools(prop, ref tools);
-                    continue;
-                }
                 if (prop.NameEquals("file_id"u8))
                 {
                     fileId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("tools"u8))
+                {
+                    DeserializeTools(prop, ref tools);
                     continue;
                 }
                 if (true)
@@ -101,7 +101,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new MessageCreationAttachment(tools, fileId, additionalBinaryDataProperties);
+            return new MessageCreationAttachment(fileId, tools, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<MessageCreationAttachment>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

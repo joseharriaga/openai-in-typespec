@@ -41,7 +41,7 @@ namespace OpenAI.Audio
                 writer.WritePropertyName("text"u8);
                 writer.WriteStringValue(Text);
             }
-            if (Optional.IsCollectionDefined(Segments) && _additionalBinaryDataProperties?.ContainsKey("segments") != true)
+            if (true && Optional.IsCollectionDefined(Segments) && _additionalBinaryDataProperties?.ContainsKey("segments") != true)
             {
                 writer.WritePropertyName("segments"u8);
                 writer.WriteStartArray();
@@ -103,7 +103,7 @@ namespace OpenAI.Audio
             }
             string language = default;
             string text = default;
-            IList<TranscribedSegment> segments = default;
+            IReadOnlyList<TranscribedSegment> segments = default;
             InternalCreateTranslationResponseVerboseJsonTask task = default;
             TimeSpan? duration = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();

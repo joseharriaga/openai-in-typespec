@@ -6652,6 +6652,7 @@ components:
           items:
             $ref: '#/components/schemas/TranscriptionSegment'
           description: Segments of the translated text and their corresponding details.
+          readOnly: true
     CreateUploadRequest:
       type: object
       required:
@@ -8277,6 +8278,7 @@ components:
             $ref: '#/components/schemas/MessageContent'
           description: The content of the message in array of text and/or images.
           x-oaiExpandable: true
+          readOnly: true
         assistant_id:
           type: string
           nullable: true
@@ -8298,6 +8300,7 @@ components:
           nullable: true
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long.
           x-oaiTypeLabel: map
+          readOnly: true
       description: Represents a message within a [thread](/docs/api-reference/threads).
     MessageObjectAttachmentsItem:
       type: array
@@ -10944,6 +10947,7 @@ components:
           description: The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.
           x-oaiExpandable: true
           default: []
+          readOnly: true
         metadata:
           type: object
           additionalProperties:
@@ -10951,6 +10955,7 @@ components:
           nullable: true
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long.
           x-oaiTypeLabel: map
+          readOnly: true
         usage:
           type: object
           allOf:
@@ -11626,6 +11631,7 @@ components:
           nullable: true
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long.
           x-oaiTypeLabel: map
+          readOnly: true
         usage:
           type: object
           allOf:
@@ -12395,6 +12401,7 @@ components:
           nullable: true
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long.
           x-oaiTypeLabel: map
+          readOnly: true
       description: A vector store is a collection of processed files can be used by the `file_search` tool.
   securitySchemes:
     BearerAuth:

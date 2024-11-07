@@ -150,7 +150,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("instructions"u8);
                 writer.WriteStringValue(Instructions);
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("tools") != true)
+            if (true && _additionalBinaryDataProperties?.ContainsKey("tools") != true)
             {
                 writer.WritePropertyName("tools"u8);
                 writer.WriteStartArray();
@@ -160,7 +160,7 @@ namespace OpenAI.Assistants
                 }
                 writer.WriteEndArray();
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("metadata") != true)
+            if (true && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null && Optional.IsCollectionDefined(Metadata))
                 {
@@ -355,8 +355,8 @@ namespace OpenAI.Assistants
             RunIncompleteDetails incompleteDetails = default;
             string model = default;
             string instructions = default;
-            IList<ToolDefinition> tools = default;
-            IDictionary<string, string> metadata = default;
+            IReadOnlyList<ToolDefinition> tools = default;
+            IReadOnlyDictionary<string, string> metadata = default;
             RunTokenUsage usage = default;
             float? temperature = default;
             RunTruncationStrategy truncationStrategy = default;

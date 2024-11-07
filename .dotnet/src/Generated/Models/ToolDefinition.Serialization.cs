@@ -13,10 +13,6 @@ namespace OpenAI.Assistants
     [PersistableModelProxy(typeof(UnknownAssistantToolDefinition))]
     public abstract partial class ToolDefinition : IJsonModel<ToolDefinition>
     {
-        internal ToolDefinition()
-        {
-        }
-
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             string format = options.Format == "W" ? ((IPersistableModel<ToolDefinition>)this).GetFormatFromOptions(options) : options.Format;

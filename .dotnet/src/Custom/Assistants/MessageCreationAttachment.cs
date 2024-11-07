@@ -36,9 +36,6 @@ public partial class MessageCreationAttachment
     [CodeGenMember("Tools")]
     public IReadOnlyList<ToolDefinition> Tools { get; } = new ChangeTrackingList<ToolDefinition>();
 
-    // Custom: Backcompat for new generator - Add setter.
-    public string FileId { get; set; }
-
     private void SerializeTools(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         => writer.WriteObjectValue(Tools, options);
 

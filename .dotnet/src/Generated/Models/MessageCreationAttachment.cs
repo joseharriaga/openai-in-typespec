@@ -11,12 +11,14 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal MessageCreationAttachment(IReadOnlyList<ToolDefinition> tools, string fileId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal MessageCreationAttachment(string fileId, IReadOnlyList<ToolDefinition> tools, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Tools = tools;
             FileId = fileId;
+            Tools = tools;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
+
+        public string FileId { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

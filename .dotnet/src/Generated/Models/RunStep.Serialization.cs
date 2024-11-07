@@ -126,7 +126,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("completedAt"u8);
                 }
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("metadata") != true)
+            if (true && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null && Optional.IsCollectionDefined(Metadata))
                 {
@@ -223,7 +223,7 @@ namespace OpenAI.Assistants
             DateTimeOffset? cancelledAt = default;
             DateTimeOffset? failedAt = default;
             DateTimeOffset? completedAt = default;
-            IDictionary<string, string> metadata = default;
+            IReadOnlyDictionary<string, string> metadata = default;
             RunStepTokenUsage usage = default;
             InternalRunStepObjectObject @object = default;
             RunStepDetails details = default;

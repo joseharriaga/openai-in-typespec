@@ -14,3 +14,5 @@ using OpenAI;
 
 @@visibility(ListVectorStoresResponse.data, "read");
 @@visibility(ListVectorStoreFilesResponse.data, "read");
+
+@@visibility(VectorStoreObject.metadata, "read");

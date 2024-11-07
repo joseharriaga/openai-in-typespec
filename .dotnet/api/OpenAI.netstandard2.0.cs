@@ -344,7 +344,6 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<AssistantThread>.Write(ModelReaderWriterOptions options);
     }
     public class CodeInterpreterToolDefinition : ToolDefinition, IJsonModel<CodeInterpreterToolDefinition>, IPersistableModel<CodeInterpreterToolDefinition> {
-        public CodeInterpreterToolDefinition() : base(default!);
         protected override ToolDefinition JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator CodeInterpreterToolDefinition(ClientResult result);
@@ -404,7 +403,6 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<FileSearchRankingOptions>.Write(ModelReaderWriterOptions options);
     }
     public class FileSearchToolDefinition : ToolDefinition, IJsonModel<FileSearchToolDefinition>, IPersistableModel<FileSearchToolDefinition> {
-        public FileSearchToolDefinition() : base(default!);
         public int? MaxResults { get; set; }
         public FileSearchRankingOptions RankingOptions { get; set; }
         protected override ToolDefinition JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -435,8 +433,8 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<FileSearchToolResources>.Write(ModelReaderWriterOptions options);
     }
     public class FunctionToolDefinition : ToolDefinition, IJsonModel<FunctionToolDefinition>, IPersistableModel<FunctionToolDefinition> {
-        public FunctionToolDefinition() : base(default!);
-        public FunctionToolDefinition(string name) : base(default!);
+        public FunctionToolDefinition();
+        public FunctionToolDefinition(string name);
         public string Description { get; set; }
         public required string FunctionName { get; set; }
         public BinaryData Parameters { get; set; }
@@ -509,7 +507,7 @@ namespace OpenAI.Assistants {
     }
     public class MessageCreationAttachment : IJsonModel<MessageCreationAttachment>, IPersistableModel<MessageCreationAttachment> {
         public MessageCreationAttachment(string fileId, IEnumerable<ToolDefinition> tools);
-        public string FileId { get; set; }
+        public string FileId { get; }
         public IReadOnlyList<ToolDefinition> Tools { get; }
         protected virtual MessageCreationAttachment JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -792,7 +790,7 @@ namespace OpenAI.Assistants {
         public DateTimeOffset? FailedAt { get; }
         public string Id { get; }
         public RunStepError LastError { get; }
-        public IDictionary<string, string> Metadata { get; }
+        public IReadOnlyDictionary<string, string> Metadata { get; }
         public string RunId { get; }
         public RunStepStatus Status { get; }
         public string ThreadId { get; }
@@ -1137,12 +1135,12 @@ namespace OpenAI.Assistants {
         public string AssistantId { get; }
         public IReadOnlyList<MessageCreationAttachment> Attachments { get; }
         public DateTimeOffset? CompletedAt { get; }
-        public IList<MessageContent> Content { get; }
+        public IReadOnlyList<MessageContent> Content { get; }
         public DateTimeOffset CreatedAt { get; }
         public string Id { get; }
         public DateTimeOffset? IncompleteAt { get; }
         public MessageFailureDetails IncompleteDetails { get; }
-        public IDictionary<string, string> Metadata { get; }
+        public IReadOnlyDictionary<string, string> Metadata { get; }
         public MessageRole Role { get; }
         public string RunId { get; }
         public MessageStatus Status { get; }
@@ -1188,7 +1186,7 @@ namespace OpenAI.Assistants {
         public RunError LastError { get; }
         public int? MaxInputTokenCount { get; }
         public int? MaxOutputTokenCount { get; }
-        public IDictionary<string, string> Metadata { get; }
+        public IReadOnlyDictionary<string, string> Metadata { get; }
         public string Model { get; }
         public float? NucleusSamplingFactor { get; }
         public IReadOnlyList<RequiredAction> RequiredActions { get; }
@@ -1198,7 +1196,7 @@ namespace OpenAI.Assistants {
         public float? Temperature { get; }
         public string ThreadId { get; }
         public ToolConstraint ToolConstraint { get; }
-        public IList<ToolDefinition> Tools { get; }
+        public IReadOnlyList<ToolDefinition> Tools { get; }
         public RunTruncationStrategy TruncationStrategy { get; }
         public RunTokenUsage Usage { get; }
         protected virtual ThreadRun JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
@@ -1237,6 +1235,7 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<ToolConstraint>.Write(ModelReaderWriterOptions options);
     }
     public abstract class ToolDefinition : IJsonModel<ToolDefinition>, IPersistableModel<ToolDefinition> {
+        protected ToolDefinition();
         protected ToolDefinition(string type);
         public static CodeInterpreterToolDefinition CreateCodeInterpreter();
         public static FileSearchToolDefinition CreateFileSearch(int? maxResults = null);
@@ -1398,7 +1397,7 @@ namespace OpenAI.Audio {
     public class AudioTranslation : IJsonModel<AudioTranslation>, IPersistableModel<AudioTranslation> {
         public TimeSpan? Duration { get; }
         public string Language { get; }
-        public IList<TranscribedSegment> Segments { get; }
+        public IReadOnlyList<TranscribedSegment> Segments { get; }
         public string Text { get; }
         protected virtual AudioTranslation JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -2104,7 +2103,7 @@ namespace OpenAI.Chat {
         public ToolChatMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts);
         public ToolChatMessage(string toolCallId, string content);
         public ToolChatMessage(string toolCallId);
-        public string ToolCallId { get; set; }
+        public string ToolCallId { get; }
         protected override ChatMessage JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ToolChatMessage(ClientResult result);
@@ -3737,7 +3736,7 @@ namespace OpenAI.VectorStores {
         public VectorStoreFileCounts FileCounts { get; }
         public string Id { get; }
         public DateTimeOffset? LastActiveAt { get; }
-        public IDictionary<string, string> Metadata { get; }
+        public IReadOnlyDictionary<string, string> Metadata { get; }
         public string Name { get; }
         public VectorStoreStatus Status { get; }
         public int UsageBytes { get; }

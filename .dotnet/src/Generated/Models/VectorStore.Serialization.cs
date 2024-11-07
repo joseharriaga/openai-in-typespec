@@ -85,7 +85,7 @@ namespace OpenAI.VectorStores
                     writer.WriteNull("lastActiveAt"u8);
                 }
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("metadata") != true)
+            if (true && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null && Optional.IsCollectionDefined(Metadata))
                 {
@@ -166,7 +166,7 @@ namespace OpenAI.VectorStores
             VectorStores.VectorStoreStatus status = default;
             DateTimeOffset? expiresAt = default;
             DateTimeOffset? lastActiveAt = default;
-            IDictionary<string, string> metadata = default;
+            IReadOnlyDictionary<string, string> metadata = default;
             InternalVectorStoreObjectObject @object = default;
             VectorStoreExpirationPolicy expirationPolicy = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();

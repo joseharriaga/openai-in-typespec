@@ -36,3 +36,8 @@ using OpenAI;
 
 @@access(RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject, Access.public);
 @@usage(RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject, Usage.output);
+
+@@visibility(RunStepObject.metadata, "read");
+
+@@visibility(RunObject.metadata, "read");
+@@visibility(RunObject.tools, "read");

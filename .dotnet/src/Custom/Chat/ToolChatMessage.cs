@@ -76,7 +76,4 @@ public partial class ToolChatMessage : ChatMessage
 
         ToolCallId = toolCallId;
     }
-
-    // Custom: Backcompat for new generator - Add setter.
-    public string ToolCallId { get; set; }
 }

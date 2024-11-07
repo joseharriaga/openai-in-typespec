@@ -22,6 +22,6 @@ namespace OpenAI.RealtimeConversation
             Response = response;
         }
 
-        public InternalRealtimeClientEventResponseCreateResponse Response { get; set; }
+        public InternalRealtimeClientEventResponseCreateResponse Response { get; }
     }
 }

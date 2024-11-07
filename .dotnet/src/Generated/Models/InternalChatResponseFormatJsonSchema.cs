@@ -23,6 +23,6 @@ namespace OpenAI.Chat
             JsonSchema = jsonSchema;
         }
 
-        public InternalResponseFormatJsonSchemaJsonSchema JsonSchema { get; set; }
+        public InternalResponseFormatJsonSchemaJsonSchema JsonSchema { get; }
     }
 }

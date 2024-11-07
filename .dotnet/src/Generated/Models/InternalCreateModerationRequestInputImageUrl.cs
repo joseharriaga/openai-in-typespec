@@ -25,7 +25,7 @@ namespace OpenAI.Moderations
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Url { get; set; }
+        public string Url { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

@@ -25,7 +25,7 @@ namespace OpenAI.Chat
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

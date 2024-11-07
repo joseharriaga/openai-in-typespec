@@ -22,6 +22,6 @@ namespace OpenAI.RealtimeConversation
             Audio = audio;
         }
 
-        public BinaryData Audio { get; set; }
+        public BinaryData Audio { get; }
     }
 }

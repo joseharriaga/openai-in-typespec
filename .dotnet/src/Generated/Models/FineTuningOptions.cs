@@ -33,9 +33,9 @@ namespace OpenAI.FineTuning
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public InternalCreateFineTuningJobRequestModel Model { get; set; }
+        public InternalCreateFineTuningJobRequestModel Model { get; }
 
-        public string TrainingFile { get; set; }
+        public string TrainingFile { get; }
 
         public HyperparameterOptions Hyperparameters { get; set; }
 

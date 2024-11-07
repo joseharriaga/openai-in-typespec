@@ -22,6 +22,6 @@ namespace OpenAI.VectorStores
             Static = @static;
         }
 
-        public InternalStaticChunkingStrategyDetails Static { get; set; }
+        public InternalStaticChunkingStrategyDetails Static { get; }
     }
 }

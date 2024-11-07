@@ -25,7 +25,7 @@ namespace OpenAI.Files
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public BinaryData Data { get; set; }
+        public BinaryData Data { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

@@ -23,6 +23,6 @@ namespace OpenAI.Assistants
             JsonSchema = jsonSchema;
         }
 
-        public InternalResponseFormatJsonSchemaJsonSchema JsonSchema { get; set; }
+        public InternalResponseFormatJsonSchemaJsonSchema JsonSchema { get; }
     }
 }

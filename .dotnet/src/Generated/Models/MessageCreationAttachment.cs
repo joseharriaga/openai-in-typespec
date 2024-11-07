@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using OpenAI;
 
 namespace OpenAI.Assistants
 {
@@ -13,23 +11,12 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public MessageCreationAttachment(string fileId, IEnumerable<ToolDefinition> tools)
+        internal MessageCreationAttachment(IReadOnlyList<ToolDefinition> tools, string fileId, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Argument.AssertNotNull(fileId, nameof(fileId));
-            Argument.AssertNotNull(tools, nameof(tools));
-
-            FileId = fileId;
-            Tools = tools.ToList();
-        }
-
-        internal MessageCreationAttachment(string fileId, IReadOnlyList<ToolDefinition> tools, IDictionary<string, BinaryData> additionalBinaryDataProperties)
-        {
-            FileId = fileId;
             Tools = tools;
+            FileId = fileId;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
-
-        public string FileId { get; set; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

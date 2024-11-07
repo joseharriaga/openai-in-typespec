@@ -25,8 +25,8 @@ namespace OpenAI.RealtimeConversation
             Output = output;
         }
 
-        public string CallId { get; set; }
+        public string CallId { get; }
 
-        public string Output { get; set; }
+        public string Output { get; }
     }
 }

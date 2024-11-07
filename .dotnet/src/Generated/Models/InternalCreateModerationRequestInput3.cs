@@ -28,7 +28,7 @@ namespace OpenAI.Moderations
 
         public InternalCreateModerationRequestInput3Type Type { get; } = "text";
 
-        public string Text { get; set; }
+        public string Text { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

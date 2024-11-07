@@ -28,7 +28,7 @@ namespace OpenAI.Chat
 
         public InternalChatCompletionNamedToolChoiceType Type { get; } = "function";
 
-        public InternalChatCompletionNamedToolChoiceFunction Function { get; set; }
+        public InternalChatCompletionNamedToolChoiceFunction Function { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

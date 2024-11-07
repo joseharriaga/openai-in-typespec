@@ -22,6 +22,6 @@ namespace OpenAI.FineTuning
             Wandb = wandb;
         }
 
-        public InternalCreateFineTuningJobRequestWandbIntegrationWandb Wandb { get; set; }
+        public InternalCreateFineTuningJobRequestWandbIntegrationWandb Wandb { get; }
     }
 }

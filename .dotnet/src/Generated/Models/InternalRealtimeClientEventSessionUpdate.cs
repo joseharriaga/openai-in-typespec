@@ -22,6 +22,6 @@ namespace OpenAI.RealtimeConversation
             Session = session;
         }
 
-        public ConversationSessionOptions Session { get; set; }
+        public ConversationSessionOptions Session { get; }
     }
 }

@@ -42,7 +42,7 @@ namespace OpenAI.Assistants
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string AssistantId { get; set; }
+        public string AssistantId { get; }
 
         public ThreadCreationOptions Thread { get; set; }
 

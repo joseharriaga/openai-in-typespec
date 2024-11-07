@@ -168,11 +168,11 @@ namespace OpenAI
             return new MessageCreationOptions(attachments?.ToList(), metadata, role, content?.ToList(), additionalBinaryDataProperties: null);
         }
 
-        public static MessageCreationAttachment MessageCreationAttachment(string fileId = default, IEnumerable<ToolDefinition> tools = default)
+        public static MessageCreationAttachment MessageCreationAttachment(IEnumerable<ToolDefinition> tools = default, string fileId = default)
         {
             tools ??= new ChangeTrackingList<ToolDefinition>();
 
-            return new MessageCreationAttachment(fileId, tools?.ToList(), additionalBinaryDataProperties: null);
+            return new MessageCreationAttachment(tools?.ToList(), fileId, additionalBinaryDataProperties: null);
         }
 
         public static CodeInterpreterToolDefinition CodeInterpreterToolDefinition()

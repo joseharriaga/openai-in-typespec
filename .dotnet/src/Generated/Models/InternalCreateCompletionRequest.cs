@@ -43,9 +43,9 @@ namespace OpenAI.LegacyCompletions
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public InternalCreateCompletionRequestModel Model { get; set; }
+        public InternalCreateCompletionRequestModel Model { get; }
 
-        public BinaryData Prompt { get; set; }
+        public BinaryData Prompt { get; }
 
         public int? BestOf { get; set; }
 

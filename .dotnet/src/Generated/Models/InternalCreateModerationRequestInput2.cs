@@ -28,7 +28,7 @@ namespace OpenAI.Moderations
 
         public InternalCreateModerationRequestInput2Type Type { get; } = "image_url";
 
-        public InternalCreateModerationRequestInputImageUrl ImageUrl { get; set; }
+        public InternalCreateModerationRequestInputImageUrl ImageUrl { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

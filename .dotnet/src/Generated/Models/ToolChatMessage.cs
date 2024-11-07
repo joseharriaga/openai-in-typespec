@@ -21,7 +21,5 @@ namespace OpenAI.Chat
         {
             ToolCallId = toolCallId;
         }
-
-        public string ToolCallId { get; set; }
     }
 }

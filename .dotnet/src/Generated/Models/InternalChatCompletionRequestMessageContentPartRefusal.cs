@@ -28,7 +28,7 @@ namespace OpenAI.Chat
 
         public InternalChatCompletionRequestMessageContentPartRefusalType Type { get; } = "refusal";
 
-        public string Refusal { get; set; }
+        public string Refusal { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

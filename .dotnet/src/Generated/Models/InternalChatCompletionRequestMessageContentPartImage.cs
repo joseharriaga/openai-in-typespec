@@ -28,7 +28,7 @@ namespace OpenAI.Chat
 
         public InternalChatCompletionRequestMessageContentPartImageType Type { get; } = "image_url";
 
-        public InternalChatCompletionRequestMessageContentPartImageImageUrl ImageUrl { get; set; }
+        public InternalChatCompletionRequestMessageContentPartImageImageUrl ImageUrl { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

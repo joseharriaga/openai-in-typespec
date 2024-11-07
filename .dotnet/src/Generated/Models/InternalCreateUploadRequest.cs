@@ -32,13 +32,13 @@ namespace OpenAI.Files
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Filename { get; set; }
+        public string Filename { get; }
 
-        public InternalCreateUploadRequestPurpose Purpose { get; set; }
+        public InternalCreateUploadRequestPurpose Purpose { get; }
 
-        public int Bytes { get; set; }
+        public int Bytes { get; }
 
-        public string MimeType { get; set; }
+        public string MimeType { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

@@ -26,7 +26,7 @@ namespace OpenAI.VectorStores
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string FileId { get; set; }
+        public string FileId { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

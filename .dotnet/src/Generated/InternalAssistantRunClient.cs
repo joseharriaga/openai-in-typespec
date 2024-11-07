@@ -39,22 +39,6 @@ namespace OpenAI.Assistants
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult<InternalListRunsResponse> ListRuns(string threadId, int? limit, RunCollectionOrder? order, string after, string before)
-        {
-            Argument.AssertNotNull(threadId, nameof(threadId));
-
-            ClientResult result = ListRuns(threadId, limit, order.ToString(), after, before, null);
-            return ClientResult.FromValue((InternalListRunsResponse)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<InternalListRunsResponse>> ListRunsAsync(string threadId, int? limit, RunCollectionOrder? order, string after, string before)
-        {
-            Argument.AssertNotNull(threadId, nameof(threadId));
-
-            ClientResult result = await ListRunsAsync(threadId, limit, order.ToString(), after, before, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListRunsResponse)result, result.GetRawResponse());
-        }
-
         public virtual ClientResult ListRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
         {
             Argument.AssertNotNull(threadId, nameof(threadId));
@@ -71,24 +55,6 @@ namespace OpenAI.Assistants
 
             using PipelineMessage message = CreateListRunStepsRequest(threadId, runId, limit, order, after, before, options);
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult<InternalListRunStepsResponse> ListRunSteps(string threadId, string runId, int? limit, RunStepCollectionOrder? order, string after, string before)
-        {
-            Argument.AssertNotNull(threadId, nameof(threadId));
-            Argument.AssertNotNull(runId, nameof(runId));
-
-            ClientResult result = ListRunSteps(threadId, runId, limit, order.ToString(), after, before, null);
-            return ClientResult.FromValue((InternalListRunStepsResponse)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<InternalListRunStepsResponse>> ListRunStepsAsync(string threadId, string runId, int? limit, RunStepCollectionOrder? order, string after, string before)
-        {
-            Argument.AssertNotNull(threadId, nameof(threadId));
-            Argument.AssertNotNull(runId, nameof(runId));
-
-            ClientResult result = await ListRunStepsAsync(threadId, runId, limit, order.ToString(), after, before, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListRunStepsResponse)result, result.GetRawResponse());
         }
     }
 }

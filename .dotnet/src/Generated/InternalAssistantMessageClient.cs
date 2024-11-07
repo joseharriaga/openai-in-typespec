@@ -38,21 +38,5 @@ namespace OpenAI.Assistants
             using PipelineMessage message = CreateListMessagesRequest(threadId, limit, order, after, before, options);
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
-
-        public virtual ClientResult<InternalListMessagesResponse> ListMessages(string threadId, int? limit, MessageCollectionOrder? order, string after, string before)
-        {
-            Argument.AssertNotNull(threadId, nameof(threadId));
-
-            ClientResult result = ListMessages(threadId, limit, order.ToString(), after, before, null);
-            return ClientResult.FromValue((InternalListMessagesResponse)result, result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult<InternalListMessagesResponse>> ListMessagesAsync(string threadId, int? limit, MessageCollectionOrder? order, string after, string before)
-        {
-            Argument.AssertNotNull(threadId, nameof(threadId));
-
-            ClientResult result = await ListMessagesAsync(threadId, limit, order.ToString(), after, before, null).ConfigureAwait(false);
-            return ClientResult.FromValue((InternalListMessagesResponse)result, result.GetRawResponse());
-        }
     }
 }

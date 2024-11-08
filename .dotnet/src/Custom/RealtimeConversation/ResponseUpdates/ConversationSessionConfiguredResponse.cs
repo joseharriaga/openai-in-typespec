@@ -1,12 +1,13 @@
 using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeResponseSessionCreatedCommand")]
-public partial class ConversationSessionStartedUpdate
+[CodeGenModel("RealtimeResponseSessionUpdatedCommand")]
+internal partial class ConversationSessionConfiguredResponse : IJsonModel<ConversationSessionConfiguredResponse>
 {
     [CodeGenMember("Session")]
     internal readonly InternalRealtimeResponseSession _internalSession;

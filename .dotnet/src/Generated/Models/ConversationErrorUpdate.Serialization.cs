@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationErrorUpdate : IJsonModel<ConversationErrorUpdate>
+    public partial class ConversationErrorResponse : IJsonModel<ConversationErrorResponse>
     {
-        void IJsonModel<ConversationErrorUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ConversationErrorResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationErrorUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationErrorResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationErrorUpdate)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationErrorResponse)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -65,19 +65,19 @@ namespace OpenAI.RealtimeConversation
             writer.WriteEndObject();
         }
 
-        ConversationErrorUpdate IJsonModel<ConversationErrorUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ConversationErrorResponse IJsonModel<ConversationErrorResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationErrorUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationErrorResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationErrorUpdate)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationErrorResponse)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeConversationErrorUpdate(document.RootElement, options);
         }
 
-        internal static ConversationErrorUpdate DeserializeConversationErrorUpdate(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ConversationErrorResponse DeserializeConversationErrorUpdate(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -86,7 +86,7 @@ namespace OpenAI.RealtimeConversation
                 return null;
             }
             InternalRealtimeResponseError error = default;
-            ConversationUpdateKind type = default;
+            ConversationResponseKind type = default;
             string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -119,25 +119,25 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ConversationErrorUpdate(type, eventId, serializedAdditionalRawData, error);
+            return new ConversationErrorResponse(type, eventId, serializedAdditionalRawData, error);
         }
 
-        BinaryData IPersistableModel<ConversationErrorUpdate>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ConversationErrorResponse>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationErrorUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationErrorResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ConversationErrorUpdate)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationErrorResponse)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ConversationErrorUpdate IPersistableModel<ConversationErrorUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ConversationErrorResponse IPersistableModel<ConversationErrorResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationErrorUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationErrorResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
@@ -147,13 +147,13 @@ namespace OpenAI.RealtimeConversation
                         return DeserializeConversationErrorUpdate(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ConversationErrorUpdate)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationErrorResponse)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ConversationErrorUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ConversationErrorResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new ConversationErrorUpdate FromResponse(PipelineResponse response)
+        internal static new ConversationErrorResponse FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
             return DeserializeConversationErrorUpdate(document.RootElement);

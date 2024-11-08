@@ -7,14 +7,14 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationInputAudioBufferClearedUpdate : ConversationUpdate
+    public partial class ConversationInputAudioBufferClearedUpdate : ConversationResponse
     {
         internal ConversationInputAudioBufferClearedUpdate(string eventId) : base(eventId)
         {
-            Kind = ConversationUpdateKind.InputAudioBufferCleared;
+            Kind = ConversationResponseKind.InputAudioBufferCleared;
         }
 
-        internal ConversationInputAudioBufferClearedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationInputAudioBufferClearedUpdate(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
         {
         }
 

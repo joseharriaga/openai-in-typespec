@@ -5,8 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeResponseSessionUpdatedCommand")]
-public partial class ConversationSessionConfiguredUpdate
+[CodeGenModel("RealtimeResponseSessionCreatedCommand")]
+public partial class ConversationSessionStartedResponse
 {
     [CodeGenMember("Session")]
     internal readonly InternalRealtimeResponseSession _internalSession;

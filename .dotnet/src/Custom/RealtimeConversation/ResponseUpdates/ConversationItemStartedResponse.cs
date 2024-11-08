@@ -6,7 +6,7 @@ namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
 [CodeGenModel("RealtimeResponseOutputItemAddedCommand")]
-public partial class ConversationItemStartedUpdate
+public partial class ConversationItemStartedResponse
 {
     [CodeGenMember("Item")]
     private readonly InternalRealtimeResponseItem _internalItem;

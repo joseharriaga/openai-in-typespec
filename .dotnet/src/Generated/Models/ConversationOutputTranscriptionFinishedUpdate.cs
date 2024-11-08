@@ -7,21 +7,21 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationOutputTranscriptionFinishedUpdate : ConversationUpdate
+    public partial class ConversationOutputTranscriptionFinishedUpdate : ConversationResponse
     {
         internal ConversationOutputTranscriptionFinishedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex) : base(eventId)
         {
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(itemId, nameof(itemId));
 
-            Kind = ConversationUpdateKind.ResponseAudioTranscriptDone;
+            Kind = ConversationResponseKind.ResponseAudioTranscriptDone;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
             ContentIndex = contentIndex;
         }
 
-        internal ConversationOutputTranscriptionFinishedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationOutputTranscriptionFinishedUpdate(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex) : base(kind, eventId, serializedAdditionalRawData)
         {
             ResponseId = responseId;
             ItemId = itemId;

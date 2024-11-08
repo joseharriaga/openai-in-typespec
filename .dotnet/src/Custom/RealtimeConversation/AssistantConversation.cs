@@ -135,7 +135,7 @@ public partial class AssistantConversation
         await SendCommandAsync(new InternalRealtimeRequestInputAudioBufferCommitCommand(), cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task StartResponseTurnAsync(CancellationToken cancellationToken = default)
+    public async Task StartTurnAsync(CancellationToken cancellationToken = default)
     {
         InternalRealtimeRequestResponseCreateCommand internalCommand = new()
         {
@@ -157,7 +157,7 @@ public partial class AssistantConversation
 
     // Convenience overload for protocol GetResponsesAsync method on the base
     // TwoWayResult type.
-    public IAsyncEnumerable<TwoWayResult<ConversationUpdate>> GetResponsesAsync(/*[EnumeratorCancellation]*/ CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<TwoWayResult<ConversationResponse>> GetResponseStreamAsync(/*[EnumeratorCancellation]*/ CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
 
@@ -168,7 +168,7 @@ public partial class AssistantConversation
         //}
     }
 
-    public IEnumerable<TwoWayResult<ConversationUpdate>> GetResponses(CancellationToken cancellationToken = default)
+    public IEnumerable<TwoWayResult<ConversationResponse>> GetResponseStream(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

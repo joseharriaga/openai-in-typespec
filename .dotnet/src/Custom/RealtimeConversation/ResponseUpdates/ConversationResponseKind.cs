@@ -6,7 +6,7 @@ namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
 [CodeGenModel("RealtimeResponseCommandType")]
-public enum ConversationUpdateKind
+public enum ConversationResponseKind
 {
     /// <summary>
     /// The <c>session.created</c> response command.

@@ -116,7 +116,7 @@ namespace OpenAI.RealtimeConversation
             string callId = default;
             string name = default;
             string arguments = default;
-            ConversationUpdateKind type = default;
+            ConversationResponseKind type = default;
             string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();

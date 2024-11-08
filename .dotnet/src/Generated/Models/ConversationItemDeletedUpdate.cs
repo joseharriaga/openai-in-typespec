@@ -7,17 +7,17 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationItemDeletedUpdate : ConversationUpdate
+    public partial class ConversationItemDeletedUpdate : ConversationResponse
     {
         internal ConversationItemDeletedUpdate(string eventId, string itemId) : base(eventId)
         {
             Argument.AssertNotNull(itemId, nameof(itemId));
 
-            Kind = ConversationUpdateKind.ItemDeleted;
+            Kind = ConversationResponseKind.ItemDeleted;
             ItemId = itemId;
         }
 
-        internal ConversationItemDeletedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationItemDeletedUpdate(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId) : base(kind, eventId, serializedAdditionalRawData)
         {
             ItemId = itemId;
         }

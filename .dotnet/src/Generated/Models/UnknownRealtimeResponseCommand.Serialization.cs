@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class UnknownRealtimeResponseCommand : IJsonModel<ConversationUpdate>
+    internal partial class UnknownRealtimeResponseCommand : IJsonModel<ConversationResponse>
     {
-        void IJsonModel<ConversationUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ConversationResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationUpdate)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationResponse)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -60,12 +60,12 @@ namespace OpenAI.RealtimeConversation
             writer.WriteEndObject();
         }
 
-        ConversationUpdate IJsonModel<ConversationUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ConversationResponse IJsonModel<ConversationResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationUpdate)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationResponse)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
@@ -80,7 +80,7 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            ConversationUpdateKind type = default;
+            ConversationResponseKind type = default;
             string eventId = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
@@ -111,22 +111,22 @@ namespace OpenAI.RealtimeConversation
             return new UnknownRealtimeResponseCommand(type, eventId, serializedAdditionalRawData);
         }
 
-        BinaryData IPersistableModel<ConversationUpdate>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ConversationResponse>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ConversationUpdate)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationResponse)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ConversationUpdate IPersistableModel<ConversationUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ConversationResponse IPersistableModel<ConversationResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
@@ -136,11 +136,11 @@ namespace OpenAI.RealtimeConversation
                         return DeserializeConversationUpdate(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ConversationUpdate)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationResponse)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ConversationUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ConversationResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
         internal static new UnknownRealtimeResponseCommand FromResponse(PipelineResponse response)
         {
@@ -150,7 +150,7 @@ namespace OpenAI.RealtimeConversation
 
         internal override BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create<ConversationUpdate>(this, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create<ConversationResponse>(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

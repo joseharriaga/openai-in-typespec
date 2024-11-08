@@ -8,7 +8,7 @@ namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
 [CodeGenModel("RealtimeResponseErrorCommand")]
-public partial class ConversationErrorUpdate
+public partial class ConversationErrorResponse
 {
     [CodeGenMember("Error")]
     private readonly InternalRealtimeResponseError _error;

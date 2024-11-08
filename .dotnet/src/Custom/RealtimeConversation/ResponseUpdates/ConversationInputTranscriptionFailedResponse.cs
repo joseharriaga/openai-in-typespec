@@ -8,7 +8,7 @@ namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
 [CodeGenModel("RealtimeResponseItemInputAudioTranscriptionFailedCommand")]
-public partial class ConversationInputTranscriptionFailedUpdate
+public partial class ConversationInputTranscriptionFailedResponse
 {
     [CodeGenMember("Error")]
     private readonly InternalRealtimeResponseApiError _error;

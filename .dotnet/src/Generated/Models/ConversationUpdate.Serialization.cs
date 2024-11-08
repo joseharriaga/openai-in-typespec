@@ -10,14 +10,14 @@ using System.Text.Json;
 namespace OpenAI.RealtimeConversation
 {
     [PersistableModelProxy(typeof(UnknownRealtimeResponseCommand))]
-    public partial class ConversationUpdate : IJsonModel<ConversationUpdate>
+    public partial class ConversationResponse : IJsonModel<ConversationResponse>
     {
-        void IJsonModel<ConversationUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<ConversationResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationUpdate)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationResponse)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -60,19 +60,19 @@ namespace OpenAI.RealtimeConversation
             writer.WriteEndObject();
         }
 
-        ConversationUpdate IJsonModel<ConversationUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ConversationResponse IJsonModel<ConversationResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(ConversationUpdate)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(ConversationResponse)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeConversationUpdate(document.RootElement, options);
         }
 
-        internal static ConversationUpdate DeserializeConversationUpdate(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ConversationResponse DeserializeConversationUpdate(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -84,12 +84,12 @@ namespace OpenAI.RealtimeConversation
             {
                 switch (discriminator.GetString())
                 {
-                    case "conversation.item.created": return ConversationItemAcknowledgedUpdate.DeserializeConversationItemAcknowledgedUpdate(element, options);
+                    case "conversation.item.created": return ConversationItemAcknowledgedResponse.DeserializeConversationItemAcknowledgedUpdate(element, options);
                     case "conversation.item.deleted": return ConversationItemDeletedUpdate.DeserializeConversationItemDeletedUpdate(element, options);
                     case "conversation.item.input_audio_transcription.completed": return ConversationInputTranscriptionFinishedUpdate.DeserializeConversationInputTranscriptionFinishedUpdate(element, options);
-                    case "conversation.item.input_audio_transcription.failed": return ConversationInputTranscriptionFailedUpdate.DeserializeConversationInputTranscriptionFailedUpdate(element, options);
+                    case "conversation.item.input_audio_transcription.failed": return ConversationInputTranscriptionFailedResponse.DeserializeConversationInputTranscriptionFailedUpdate(element, options);
                     case "conversation.item.truncated": return ConversationItemTruncatedUpdate.DeserializeConversationItemTruncatedUpdate(element, options);
-                    case "error": return ConversationErrorUpdate.DeserializeConversationErrorUpdate(element, options);
+                    case "error": return ConversationErrorResponse.DeserializeConversationErrorUpdate(element, options);
                     case "input_audio_buffer.cleared": return ConversationInputAudioBufferClearedUpdate.DeserializeConversationInputAudioBufferClearedUpdate(element, options);
                     case "input_audio_buffer.committed": return ConversationInputAudioBufferCommittedUpdate.DeserializeConversationInputAudioBufferCommittedUpdate(element, options);
                     case "input_audio_buffer.speech_started": return ConversationInputSpeechStartedUpdate.DeserializeConversationInputSpeechStartedUpdate(element, options);
@@ -99,39 +99,39 @@ namespace OpenAI.RealtimeConversation
                     case "response.audio_transcript.done": return ConversationOutputTranscriptionFinishedUpdate.DeserializeConversationOutputTranscriptionFinishedUpdate(element, options);
                     case "response.audio.delta": return ConversationAudioDeltaUpdate.DeserializeConversationAudioDeltaUpdate(element, options);
                     case "response.audio.done": return ConversationAudioDoneUpdate.DeserializeConversationAudioDoneUpdate(element, options);
-                    case "response.content_part.added": return ConversationContentPartStartedUpdate.DeserializeConversationContentPartStartedUpdate(element, options);
-                    case "response.content_part.done": return ConversationContentPartFinishedUpdate.DeserializeConversationContentPartFinishedUpdate(element, options);
-                    case "response.created": return ConversationResponseStartedUpdate.DeserializeConversationResponseStartedUpdate(element, options);
-                    case "response.done": return ConversationResponseFinishedUpdate.DeserializeConversationResponseFinishedUpdate(element, options);
+                    case "response.content_part.added": return ConversationContentPartStartedResponse.DeserializeConversationContentPartStartedUpdate(element, options);
+                    case "response.content_part.done": return ConversationContentPartFinishedResponse.DeserializeConversationContentPartFinishedUpdate(element, options);
+                    case "response.created": return ConversationResponseStartedResponse.DeserializeConversationResponseStartedUpdate(element, options);
+                    case "response.done": return ConversationResponseFinishedResponse.DeserializeConversationResponseFinishedUpdate(element, options);
                     case "response.function_call_arguments.delta": return ConversationFunctionCallArgumentsDeltaUpdate.DeserializeConversationFunctionCallArgumentsDeltaUpdate(element, options);
                     case "response.function_call_arguments.done": return ConversationFunctionCallArgumentsDoneUpdate.DeserializeConversationFunctionCallArgumentsDoneUpdate(element, options);
-                    case "response.output_item.added": return ConversationItemStartedUpdate.DeserializeConversationItemStartedUpdate(element, options);
-                    case "response.output_item.done": return ConversationItemFinishedUpdate.DeserializeConversationItemFinishedUpdate(element, options);
+                    case "response.output_item.added": return ConversationItemStartedResponse.DeserializeConversationItemStartedUpdate(element, options);
+                    case "response.output_item.done": return ConversationItemFinishedResponse.DeserializeConversationItemFinishedUpdate(element, options);
                     case "response.text.delta": return ConversationTextDeltaUpdate.DeserializeConversationTextDeltaUpdate(element, options);
                     case "response.text.done": return ConversationTextDoneUpdate.DeserializeConversationTextDoneUpdate(element, options);
-                    case "session.created": return ConversationSessionStartedUpdate.DeserializeConversationSessionStartedUpdate(element, options);
-                    case "session.updated": return ConversationSessionConfiguredUpdate.DeserializeConversationSessionConfiguredUpdate(element, options);
+                    case "session.created": return ConversationSessionStartedResponse.DeserializeConversationSessionStartedUpdate(element, options);
+                    case "session.updated": return ConversationSessionConfiguredResponse.DeserializeConversationSessionConfiguredUpdate(element, options);
                 }
             }
             return UnknownRealtimeResponseCommand.DeserializeUnknownRealtimeResponseCommand(element, options);
         }
 
-        BinaryData IPersistableModel<ConversationUpdate>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<ConversationResponse>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(ConversationUpdate)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationResponse)} does not support writing '{options.Format}' format.");
             }
         }
 
-        ConversationUpdate IPersistableModel<ConversationUpdate>.Create(BinaryData data, ModelReaderWriterOptions options)
+        ConversationResponse IPersistableModel<ConversationResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ConversationUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<ConversationResponse>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
@@ -141,13 +141,13 @@ namespace OpenAI.RealtimeConversation
                         return DeserializeConversationUpdate(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(ConversationUpdate)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(ConversationResponse)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<ConversationUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<ConversationResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static ConversationUpdate FromResponse(PipelineResponse response)
+        internal static ConversationResponse FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
             return DeserializeConversationUpdate(document.RootElement);

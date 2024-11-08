@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class UnknownRealtimeResponseCommand : ConversationUpdate
+    internal partial class UnknownRealtimeResponseCommand : ConversationResponse
     {
-        internal UnknownRealtimeResponseCommand(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
+        internal UnknownRealtimeResponseCommand(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, eventId, serializedAdditionalRawData)
         {
         }
 

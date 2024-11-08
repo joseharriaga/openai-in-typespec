@@ -7,22 +7,22 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public abstract partial class ConversationUpdate
+    public abstract partial class ConversationResponse
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        protected ConversationUpdate(string eventId)
+        protected ConversationResponse(string eventId)
         {
             EventId = eventId;
         }
 
-        internal ConversationUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ConversationResponse(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Kind = kind;
             EventId = eventId;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
 
-        internal ConversationUpdate()
+        internal ConversationResponse()
         {
         }
         public string EventId { get; }

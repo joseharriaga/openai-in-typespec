@@ -7,15 +7,15 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationContentPartFinishedUpdate : ConversationUpdate
+    public partial class ConversationContentPartFinishedResponse : ConversationResponse
     {
-        internal ConversationContentPartFinishedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(eventId)
+        internal ConversationContentPartFinishedResponse(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(eventId)
         {
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(itemId, nameof(itemId));
             Argument.AssertNotNull(internalContentPart, nameof(internalContentPart));
 
-            Kind = ConversationUpdateKind.ContentPartFinished;
+            Kind = ConversationResponseKind.ContentPartFinished;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -23,7 +23,7 @@ namespace OpenAI.RealtimeConversation
             _internalContentPart = internalContentPart;
         }
 
-        internal ConversationContentPartFinishedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationContentPartFinishedResponse(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(kind, eventId, serializedAdditionalRawData)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -32,7 +32,7 @@ namespace OpenAI.RealtimeConversation
             _internalContentPart = internalContentPart;
         }
 
-        internal ConversationContentPartFinishedUpdate()
+        internal ConversationContentPartFinishedResponse()
         {
         }
 

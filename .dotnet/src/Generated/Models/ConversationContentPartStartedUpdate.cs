@@ -7,15 +7,15 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationContentPartStartedUpdate : ConversationUpdate
+    public partial class ConversationContentPartStartedResponse : ConversationResponse
     {
-        internal ConversationContentPartStartedUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(eventId)
+        internal ConversationContentPartStartedResponse(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(eventId)
         {
             Argument.AssertNotNull(responseId, nameof(responseId));
             Argument.AssertNotNull(itemId, nameof(itemId));
             Argument.AssertNotNull(internalContentPart, nameof(internalContentPart));
 
-            Kind = ConversationUpdateKind.ContentPartStarted;
+            Kind = ConversationResponseKind.ContentPartStarted;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -23,7 +23,7 @@ namespace OpenAI.RealtimeConversation
             _internalContentPart = internalContentPart;
         }
 
-        internal ConversationContentPartStartedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationContentPartStartedResponse(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, ConversationContentPart internalContentPart) : base(kind, eventId, serializedAdditionalRawData)
         {
             ResponseId = responseId;
             ItemId = itemId;
@@ -32,7 +32,7 @@ namespace OpenAI.RealtimeConversation
             _internalContentPart = internalContentPart;
         }
 
-        internal ConversationContentPartStartedUpdate()
+        internal ConversationContentPartStartedResponse()
         {
         }
 

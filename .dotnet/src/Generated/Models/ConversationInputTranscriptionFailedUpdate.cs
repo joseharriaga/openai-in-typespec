@@ -7,27 +7,27 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationInputTranscriptionFailedUpdate : ConversationUpdate
+    public partial class ConversationInputTranscriptionFailedResponse : ConversationResponse
     {
-        internal ConversationInputTranscriptionFailedUpdate(string eventId, string itemId, int contentIndex, InternalRealtimeResponseApiError error) : base(eventId)
+        internal ConversationInputTranscriptionFailedResponse(string eventId, string itemId, int contentIndex, InternalRealtimeResponseApiError error) : base(eventId)
         {
             Argument.AssertNotNull(itemId, nameof(itemId));
             Argument.AssertNotNull(error, nameof(error));
 
-            Kind = ConversationUpdateKind.ItemInputAudioTranscriptionFailed;
+            Kind = ConversationResponseKind.ItemInputAudioTranscriptionFailed;
             ItemId = itemId;
             ContentIndex = contentIndex;
             _error = error;
         }
 
-        internal ConversationInputTranscriptionFailedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId, int contentIndex, InternalRealtimeResponseApiError error) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationInputTranscriptionFailedResponse(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId, int contentIndex, InternalRealtimeResponseApiError error) : base(kind, eventId, serializedAdditionalRawData)
         {
             ItemId = itemId;
             ContentIndex = contentIndex;
             _error = error;
         }
 
-        internal ConversationInputTranscriptionFailedUpdate()
+        internal ConversationInputTranscriptionFailedResponse()
         {
         }
 

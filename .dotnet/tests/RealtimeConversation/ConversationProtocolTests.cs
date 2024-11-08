@@ -52,7 +52,7 @@ public class ConversationProtocolTests : ConversationTestFixtureBase
 
         List<JsonNode> receivedCommands = [];
 
-        await foreach (ConversationUpdate update in session.GetResponsesAsync(CancellationToken))
+        await foreach (ConversationResponse update in session.GetResponseStreamAsync(CancellationToken))
         {
             BinaryData rawContentBytes = update.GetRawContent();
             JsonNode jsonNode = JsonNode.Parse(rawContentBytes);

@@ -7,17 +7,17 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationInputAudioBufferCommittedUpdate : ConversationUpdate
+    public partial class ConversationInputAudioBufferCommittedUpdate : ConversationResponse
     {
         internal ConversationInputAudioBufferCommittedUpdate(string eventId, string itemId) : base(eventId)
         {
             Argument.AssertNotNull(itemId, nameof(itemId));
 
-            Kind = ConversationUpdateKind.InputAudioBufferCommitted;
+            Kind = ConversationResponseKind.InputAudioBufferCommitted;
             ItemId = itemId;
         }
 
-        internal ConversationInputAudioBufferCommittedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId, string previousItemId) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationInputAudioBufferCommittedUpdate(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string itemId, string previousItemId) : base(kind, eventId, serializedAdditionalRawData)
         {
             ItemId = itemId;
             PreviousItemId = previousItemId;

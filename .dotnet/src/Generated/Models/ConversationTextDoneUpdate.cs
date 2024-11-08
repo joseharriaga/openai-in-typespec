@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationTextDoneUpdate : ConversationUpdate
+    public partial class ConversationTextDoneUpdate : ConversationResponse
     {
         internal ConversationTextDoneUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, string value) : base(eventId)
         {
@@ -15,7 +15,7 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(itemId, nameof(itemId));
             Argument.AssertNotNull(value, nameof(value));
 
-            Kind = ConversationUpdateKind.ResponseTextDone;
+            Kind = ConversationResponseKind.ResponseTextDone;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -23,7 +23,7 @@ namespace OpenAI.RealtimeConversation
             Value = value;
         }
 
-        internal ConversationTextDoneUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, string value) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationTextDoneUpdate(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, string value) : base(kind, eventId, serializedAdditionalRawData)
         {
             ResponseId = responseId;
             ItemId = itemId;

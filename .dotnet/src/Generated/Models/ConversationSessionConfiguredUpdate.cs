@@ -7,22 +7,22 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationSessionConfiguredUpdate : ConversationUpdate
+    public partial class ConversationSessionConfiguredResponse : ConversationResponse
     {
-        internal ConversationSessionConfiguredUpdate(string eventId, InternalRealtimeResponseSession internalSession) : base(eventId)
+        internal ConversationSessionConfiguredResponse(string eventId, InternalRealtimeResponseSession internalSession) : base(eventId)
         {
             Argument.AssertNotNull(internalSession, nameof(internalSession));
 
-            Kind = ConversationUpdateKind.SessionConfigured;
+            Kind = ConversationResponseKind.SessionConfigured;
             _internalSession = internalSession;
         }
 
-        internal ConversationSessionConfiguredUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeResponseSession internalSession) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationSessionConfiguredResponse(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, InternalRealtimeResponseSession internalSession) : base(kind, eventId, serializedAdditionalRawData)
         {
             _internalSession = internalSession;
         }
 
-        internal ConversationSessionConfiguredUpdate()
+        internal ConversationSessionConfiguredResponse()
         {
         }
     }

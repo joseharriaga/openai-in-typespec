@@ -9,5 +9,18 @@ namespace OpenAI.RealtimeConversation;
 
 public class AssistantConversationOptions : TwoWayPipelineOptions
 {
-    public ConversationSessionOptions? ConversationOptions { get; set; }
+    //public ConversationSessionOptions? ConversationOptions { get; set; }
+    public AssistantConversationOptions()
+    {
+        Instructions = "default instructions";
+        Tools = [];
+    }
+
+    public ConversationVoice? Voice { get; set; }
+    public string Instructions { get; set; }
+    public ConversationAudioFormat? InputAudioFormat { get; set; }
+    public ConversationAudioFormat? OutputAudioFormat { get; set; }
+    public IList<ConversationTool> Tools { get; }
+    public float? Temperature { get; set; }
+    public ConversationTurnDetectionOptions? TurnDetectionOptions { get; set; }
 }

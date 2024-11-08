@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationAudioDeltaUpdate : ConversationUpdate
+    public partial class ConversationAudioDeltaUpdate : ConversationResponse
     {
         internal ConversationAudioDeltaUpdate(string eventId, string responseId, string itemId, int outputIndex, int contentIndex, BinaryData delta) : base(eventId)
         {
@@ -15,7 +15,7 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(itemId, nameof(itemId));
             Argument.AssertNotNull(delta, nameof(delta));
 
-            Kind = ConversationUpdateKind.ResponseAudioDelta;
+            Kind = ConversationResponseKind.ResponseAudioDelta;
             ResponseId = responseId;
             ItemId = itemId;
             OutputIndex = outputIndex;
@@ -23,7 +23,7 @@ namespace OpenAI.RealtimeConversation
             Delta = delta;
         }
 
-        internal ConversationAudioDeltaUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, BinaryData delta) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationAudioDeltaUpdate(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, string responseId, string itemId, int outputIndex, int contentIndex, BinaryData delta) : base(kind, eventId, serializedAdditionalRawData)
         {
             ResponseId = responseId;
             ItemId = itemId;

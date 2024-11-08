@@ -8,17 +8,17 @@ using System.Linq;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationRateLimitsUpdatedUpdate : ConversationUpdate
+    public partial class ConversationRateLimitsUpdatedUpdate : ConversationResponse
     {
         internal ConversationRateLimitsUpdatedUpdate(string eventId, IEnumerable<ConversationRateLimitDetailsItem> rateLimits) : base(eventId)
         {
             Argument.AssertNotNull(rateLimits, nameof(rateLimits));
 
-            Kind = ConversationUpdateKind.RateLimitsUpdated;
+            Kind = ConversationResponseKind.RateLimitsUpdated;
             RateLimits = rateLimits.ToList();
         }
 
-        internal ConversationRateLimitsUpdatedUpdate(ConversationUpdateKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, IReadOnlyList<ConversationRateLimitDetailsItem> rateLimits) : base(kind, eventId, serializedAdditionalRawData)
+        internal ConversationRateLimitsUpdatedUpdate(ConversationResponseKind kind, string eventId, IDictionary<string, BinaryData> serializedAdditionalRawData, IReadOnlyList<ConversationRateLimitDetailsItem> rateLimits) : base(kind, eventId, serializedAdditionalRawData)
         {
             RateLimits = rateLimits;
         }

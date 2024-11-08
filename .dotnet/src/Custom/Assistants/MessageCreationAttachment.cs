@@ -8,19 +8,9 @@ namespace OpenAI.Assistants;
 
 [Experimental("OPENAI001")]
 [CodeGenModel("CreateMessageRequestAttachment")]
-[CodeGenSuppress(nameof(MessageCreationAttachment), typeof(IEnumerable<ToolDefinition>), typeof(string))]
 [CodeGenSerialization(nameof(Tools), "tools", SerializationValueHook = nameof(SerializeTools), DeserializationValueHook = nameof(DeserializeTools))]
 public partial class MessageCreationAttachment
 {
-    public MessageCreationAttachment(string fileId, IEnumerable<ToolDefinition> tools)
-    {
-        Argument.AssertNotNull(fileId, nameof(fileId));
-        Argument.AssertNotNull(tools, nameof(tools));
-
-        FileId = fileId;
-        Tools = tools.ToList();
-    }
-
     /// <summary>
     /// The tools to which the attachment applies to.
     /// </summary>
@@ -50,7 +40,7 @@ public partial class MessageCreationAttachment
             List<ToolDefinition> deserializedTools = [];
             foreach (JsonElement toolElement in property.Value.EnumerateArray())
             {
-                deserializedTools.Add(ToolDefinition.DeserializeToolDefinition(toolElement, null));
+                deserializedTools.Add(ToolDefinition.DeserializeToolDefinition(toolElement, ModelSerializationExtensions.WireOptions));
             }
             tools = deserializedTools;
         }

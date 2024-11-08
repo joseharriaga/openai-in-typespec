@@ -4,12 +4,23 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using OpenAI;
 
 namespace OpenAI.Assistants
 {
     public partial class MessageCreationAttachment
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
+        public MessageCreationAttachment(string fileId, IEnumerable<ToolDefinition> tools)
+        {
+            Argument.AssertNotNull(fileId, nameof(fileId));
+            Argument.AssertNotNull(tools, nameof(tools));
+
+            FileId = fileId;
+            Tools = tools.ToList();
+        }
 
         internal MessageCreationAttachment(string fileId, IReadOnlyList<ToolDefinition> tools, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {

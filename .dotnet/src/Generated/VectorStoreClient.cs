@@ -23,7 +23,7 @@ namespace OpenAI.VectorStores
 
         public ClientPipeline Pipeline { get; }
 
-        public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options)
+        public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));
 
@@ -31,7 +31,7 @@ namespace OpenAI.VectorStores
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options)
+        public virtual async Task<ClientResult> CreateVectorStoreAsync(BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));
 

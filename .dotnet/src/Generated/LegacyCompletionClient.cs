@@ -23,7 +23,7 @@ namespace OpenAI.LegacyCompletions
 
         public ClientPipeline Pipeline { get; }
 
-        public virtual ClientResult CreateCompletion(BinaryContent content, RequestOptions options)
+        public virtual ClientResult CreateCompletion(BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));
 
@@ -31,7 +31,7 @@ namespace OpenAI.LegacyCompletions
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> CreateCompletionAsync(BinaryContent content, RequestOptions options)
+        public virtual async Task<ClientResult> CreateCompletionAsync(BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));
 

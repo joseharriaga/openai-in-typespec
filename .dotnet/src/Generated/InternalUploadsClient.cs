@@ -23,7 +23,7 @@ namespace OpenAI.Files
 
         public ClientPipeline Pipeline { get; }
 
-        public virtual ClientResult CreateUpload(BinaryContent content, RequestOptions options)
+        public virtual ClientResult CreateUpload(BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));
 
@@ -31,7 +31,7 @@ namespace OpenAI.Files
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> CreateUploadAsync(BinaryContent content, RequestOptions options)
+        public virtual async Task<ClientResult> CreateUploadAsync(BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(content, nameof(content));
 
@@ -55,7 +55,7 @@ namespace OpenAI.Files
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 
-        public virtual ClientResult AddUploadPart(string uploadId, BinaryContent content, string contentType, RequestOptions options)
+        public virtual ClientResult AddUploadPart(string uploadId, BinaryContent content, string contentType, RequestOptions options = null)
         {
             Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(content, nameof(content));
@@ -64,7 +64,7 @@ namespace OpenAI.Files
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> AddUploadPartAsync(string uploadId, BinaryContent content, string contentType, RequestOptions options)
+        public virtual async Task<ClientResult> AddUploadPartAsync(string uploadId, BinaryContent content, string contentType, RequestOptions options = null)
         {
             Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(content, nameof(content));
@@ -73,7 +73,7 @@ namespace OpenAI.Files
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult CompleteUpload(string uploadId, BinaryContent content, RequestOptions options)
+        public virtual ClientResult CompleteUpload(string uploadId, BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(content, nameof(content));
@@ -82,7 +82,7 @@ namespace OpenAI.Files
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> CompleteUploadAsync(string uploadId, BinaryContent content, RequestOptions options)
+        public virtual async Task<ClientResult> CompleteUploadAsync(string uploadId, BinaryContent content, RequestOptions options = null)
         {
             Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(content, nameof(content));

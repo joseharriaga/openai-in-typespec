@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class InternalRealtimeRequestTextContentPart : IJsonModel<InternalRealtimeRequestTextContentPart>
+    internal partial class InternalRealtimeRequestInputTextContentPart : IJsonModel<InternalRealtimeRequestInputTextContentPart>
     {
-        void IJsonModel<InternalRealtimeRequestTextContentPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<InternalRealtimeRequestInputTextContentPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestTextContentPart>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestInputTextContentPart>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalRealtimeRequestTextContentPart)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalRealtimeRequestInputTextContentPart)} does not support writing '{format}' format.");
             }
 
             writer.WriteStartObject();
@@ -58,19 +58,19 @@ namespace OpenAI.RealtimeConversation
             writer.WriteEndObject();
         }
 
-        InternalRealtimeRequestTextContentPart IJsonModel<InternalRealtimeRequestTextContentPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalRealtimeRequestInputTextContentPart IJsonModel<InternalRealtimeRequestInputTextContentPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestTextContentPart>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestInputTextContentPart>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(InternalRealtimeRequestTextContentPart)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(InternalRealtimeRequestInputTextContentPart)} does not support reading '{format}' format.");
             }
 
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeInternalRealtimeRequestTextContentPart(document.RootElement, options);
+            return DeserializeInternalRealtimeRequestInputTextContentPart(document.RootElement, options);
         }
 
-        internal static InternalRealtimeRequestTextContentPart DeserializeInternalRealtimeRequestTextContentPart(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalRealtimeRequestInputTextContentPart DeserializeInternalRealtimeRequestInputTextContentPart(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -107,44 +107,44 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new InternalRealtimeRequestTextContentPart(type0, serializedAdditionalRawData, type, text);
+            return new InternalRealtimeRequestInputTextContentPart(type0, serializedAdditionalRawData, type, text);
         }
 
-        BinaryData IPersistableModel<InternalRealtimeRequestTextContentPart>.Write(ModelReaderWriterOptions options)
+        BinaryData IPersistableModel<InternalRealtimeRequestInputTextContentPart>.Write(ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestTextContentPart>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestInputTextContentPart>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(InternalRealtimeRequestTextContentPart)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalRealtimeRequestInputTextContentPart)} does not support writing '{options.Format}' format.");
             }
         }
 
-        InternalRealtimeRequestTextContentPart IPersistableModel<InternalRealtimeRequestTextContentPart>.Create(BinaryData data, ModelReaderWriterOptions options)
+        InternalRealtimeRequestInputTextContentPart IPersistableModel<InternalRealtimeRequestInputTextContentPart>.Create(BinaryData data, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestTextContentPart>)this).GetFormatFromOptions(options) : options.Format;
+            var format = options.Format == "W" ? ((IPersistableModel<InternalRealtimeRequestInputTextContentPart>)this).GetFormatFromOptions(options) : options.Format;
 
             switch (format)
             {
                 case "J":
                     {
                         using JsonDocument document = JsonDocument.Parse(data);
-                        return DeserializeInternalRealtimeRequestTextContentPart(document.RootElement, options);
+                        return DeserializeInternalRealtimeRequestInputTextContentPart(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(InternalRealtimeRequestTextContentPart)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(InternalRealtimeRequestInputTextContentPart)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<InternalRealtimeRequestTextContentPart>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<InternalRealtimeRequestInputTextContentPart>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new InternalRealtimeRequestTextContentPart FromResponse(PipelineResponse response)
+        internal static new InternalRealtimeRequestInputTextContentPart FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalRealtimeRequestTextContentPart(document.RootElement);
+            return DeserializeInternalRealtimeRequestInputTextContentPart(document.RootElement);
         }
 
         internal override BinaryContent ToBinaryContent()

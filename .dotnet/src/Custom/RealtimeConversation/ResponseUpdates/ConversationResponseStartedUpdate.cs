@@ -19,9 +19,8 @@ public partial class ConversationResponseStartedUpdate
 
     public string ResponseId => _internalResponse.Id;
 
-    public ConversationStatus Status => _internalResponse.Status;
-
-    public ConversationStatusDetails StatusDetails => _internalResponse.StatusDetails;
+    public ConversationResponseStatus Status => _status ??= new(_internalResponse.Status, _internalResponse.StatusDetails);
+    private ConversationResponseStatus _status;
 
     [CodeGenMember("Output")]
     public IReadOnlyList<ConversationItem> CreatedItems => _internalResponse?.Output ?? [];

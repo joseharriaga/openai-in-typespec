@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation;
 public partial class ConversationContentPart
 {
     public string Text =>
-        (this as InternalRealtimeRequestTextContentPart)?.InternalTextValue
+        (this as InternalRealtimeRequestInputTextContentPart)?.InternalTextValue
         ?? (this as InternalRealtimeResponseTextContentPart)?.InternalTextValue;
 
     public string AudioTranscript =>
@@ -17,7 +17,7 @@ public partial class ConversationContentPart
         ?? (this as InternalRealtimeResponseAudioContentPart)?.InternalTranscriptValue;
 
     public static ConversationContentPart CreateInputTextPart(string text)
-        => new InternalRealtimeRequestTextContentPart(text);
+        => new InternalRealtimeRequestInputTextContentPart(text);
 
     public static ConversationContentPart CreateInputAudioTranscriptPart(string transcript = null)
         => new InternalRealtimeRequestAudioContentPart()

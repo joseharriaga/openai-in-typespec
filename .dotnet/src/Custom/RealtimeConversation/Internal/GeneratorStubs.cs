@@ -18,7 +18,7 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("RealtimeRequestFunctionCallOutputItem")] internal partial class InternalRealtimeRequestFunctionCallOutputItem { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeRequestMessageItem")] internal partial class InternalRealtimeRequestMessageItem { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeRequestSessionModality")] internal readonly partial struct InternalRealtimeRequestSessionModality { }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeRequestTextContentPart")] internal partial class InternalRealtimeRequestTextContentPart { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeRequestInputTextContentPart")] internal partial class InternalRealtimeRequestInputTextContentPart { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseAudioContentPart")] internal partial class InternalRealtimeResponseAudioContentPart { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseFunctionCallItem")] internal partial class InternalRealtimeResponseFunctionCallItem { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseFunctionCallOutputItem")] internal partial class InternalRealtimeResponseFunctionCallOutputItem { }
@@ -42,3 +42,9 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("UnknownRealtimeTool")] internal partial class UnknownRealtimeTool { }
 [Experimental("OPENAI002")][CodeGenModel("UnknownRealtimeToolChoiceObject")] internal partial class UnknownRealtimeToolChoiceObject { }
 [Experimental("OPENAI002")][CodeGenModel("UnknownRealtimeTurnDetection")] internal partial class UnknownRealtimeTurnDetection { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatusDetailsCancelled")] internal partial class InternalRealtimeResponseStatusDetailsCancelled { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatusDetailsFailed")] internal partial class InternalRealtimeResponseStatusDetailsFailed { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatusDetailsFailedError")] internal partial class InternalRealtimeResponseStatusDetailsFailedError { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatusDetailsIncomplete")] internal partial class InternalRealtimeResponseStatusDetailsIncomplete { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatusKind")] internal readonly partial struct InternalRealtimeResponseStatusKind { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatusDetails")] internal partial class InternalRealtimeResponseStatusDetails { }

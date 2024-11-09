@@ -11,11 +11,10 @@ namespace OpenAI.RealtimeConversation
     internal partial class InternalRealtimeResponse
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal InternalRealtimeResponse(string id, ConversationStatus status, ConversationStatusDetails statusDetails, IEnumerable<ConversationItem> output, ConversationTokenUsage usage)
+        internal InternalRealtimeResponse(string id, InternalRealtimeResponseStatusKind status, InternalRealtimeResponseStatusDetails statusDetails, IEnumerable<ConversationItem> output, ConversationTokenUsage usage)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(output, nameof(output));
-            Argument.AssertNotNull(usage, nameof(usage));
 
             Id = id;
             Status = status;
@@ -24,7 +23,7 @@ namespace OpenAI.RealtimeConversation
             Usage = usage;
         }
 
-        internal InternalRealtimeResponse(InternalRealtimeResponseObject @object, string id, ConversationStatus status, ConversationStatusDetails statusDetails, IReadOnlyList<ConversationItem> output, ConversationTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal InternalRealtimeResponse(InternalRealtimeResponseObject @object, string id, InternalRealtimeResponseStatusKind status, InternalRealtimeResponseStatusDetails statusDetails, IReadOnlyList<ConversationItem> output, ConversationTokenUsage usage, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             Object = @object;
             Id = id;
@@ -42,8 +41,8 @@ namespace OpenAI.RealtimeConversation
         public InternalRealtimeResponseObject Object { get; } = InternalRealtimeResponseObject.RealtimeResponse;
 
         public string Id { get; }
-        public ConversationStatus Status { get; }
-        public ConversationStatusDetails StatusDetails { get; }
+        public InternalRealtimeResponseStatusKind Status { get; }
+        public InternalRealtimeResponseStatusDetails StatusDetails { get; }
         public ConversationTokenUsage Usage { get; }
     }
 }

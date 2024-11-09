@@ -34,13 +34,17 @@ public partial class ConversationSessionOptions
 
     [CodeGenMember("MaxResponseOutputTokens")]
     private BinaryData _maxResponseOutputTokens;
+    private bool _maxResponseOutputTokensHasValue;
 
     public ConversationMaxTokensChoice MaxOutputTokens
     {
-        get => ConversationMaxTokensChoice.FromBinaryData(_maxResponseOutputTokens);
+        get => _maxResponseOutputTokensHasValue
+            ? ConversationMaxTokensChoice.FromBinaryData(_maxResponseOutputTokens)
+            : null;
         set
         {
-            _maxResponseOutputTokens = value == null ? null : ModelReaderWriter.Write(value);
+            _maxResponseOutputTokensHasValue = value is not null;
+            _maxResponseOutputTokens = value is not null ? ModelReaderWriter.Write(value) : null;
         }
     }
 

@@ -5,12 +5,12 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class UnknownRealtimeResponseStatusDetails : IJsonModel<InternalRealtimeResponseStatusDetails>
+    [PersistableModelProxy(typeof(UnknownRealtimeResponseStatusDetails))]
+    internal partial class InternalRealtimeResponseStatusDetails : IJsonModel<InternalRealtimeResponseStatusDetails>
     {
         void IJsonModel<InternalRealtimeResponseStatusDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
@@ -60,7 +60,7 @@ namespace OpenAI.RealtimeConversation
             return DeserializeInternalRealtimeResponseStatusDetails(document.RootElement, options);
         }
 
-        internal static UnknownRealtimeResponseStatusDetails DeserializeUnknownRealtimeResponseStatusDetails(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalRealtimeResponseStatusDetails DeserializeInternalRealtimeResponseStatusDetails(JsonElement element, ModelReaderWriterOptions options = null)
         {
             options ??= ModelSerializationExtensions.WireOptions;
 
@@ -68,24 +68,16 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            InternalRealtimeResponseStatusKind type = "Unknown";
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            if (element.TryGetProperty("type", out JsonElement discriminator))
             {
-                if (property.NameEquals("type"u8))
+                switch (discriminator.GetString())
                 {
-                    type = new InternalRealtimeResponseStatusKind(property.Value.GetString());
-                    continue;
-                }
-                if (true)
-                {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    case "cancelled": return InternalRealtimeResponseStatusDetailsCancelled.DeserializeInternalRealtimeResponseStatusDetailsCancelled(element, options);
+                    case "failed": return InternalRealtimeResponseStatusDetailsFailed.DeserializeInternalRealtimeResponseStatusDetailsFailed(element, options);
+                    case "incomplete": return InternalRealtimeResponseStatusDetailsIncomplete.DeserializeInternalRealtimeResponseStatusDetailsIncomplete(element, options);
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new UnknownRealtimeResponseStatusDetails(type, serializedAdditionalRawData);
+            return UnknownRealtimeResponseStatusDetails.DeserializeUnknownRealtimeResponseStatusDetails(element, options);
         }
 
         BinaryData IPersistableModel<InternalRealtimeResponseStatusDetails>.Write(ModelReaderWriterOptions options)
@@ -119,15 +111,15 @@ namespace OpenAI.RealtimeConversation
 
         string IPersistableModel<InternalRealtimeResponseStatusDetails>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        internal static new UnknownRealtimeResponseStatusDetails FromResponse(PipelineResponse response)
+        internal static InternalRealtimeResponseStatusDetails FromResponse(PipelineResponse response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeUnknownRealtimeResponseStatusDetails(document.RootElement);
+            return DeserializeInternalRealtimeResponseStatusDetails(document.RootElement);
         }
 
-        internal override BinaryContent ToBinaryContent()
+        internal virtual BinaryContent ToBinaryContent()
         {
-            return BinaryContent.Create<InternalRealtimeResponseStatusDetails>(this, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
         }
     }
 }

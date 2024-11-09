@@ -19,17 +19,17 @@ model RealtimeRequestMessageItem extends RealtimeRequestItem {
 
 model RealtimeRequestSystemMessageItem extends RealtimeRequestMessageItem {
   role: RealtimeMessageRole.system;
-  content: RealtimeRequestTextContentPart[];
+  content: RealtimeRequestInputTextContentPart[];
 }
 
 model RealtimeRequestUserMessageItem extends RealtimeRequestMessageItem {
   role: RealtimeMessageRole.user;
-  content: (RealtimeRequestTextContentPart | RealtimeRequestAudioContentPart)[];
+  content: (RealtimeRequestInputTextContentPart | RealtimeRequestAudioContentPart)[];
 }
 
 model RealtimeRequestAssistantMessageItem extends RealtimeRequestMessageItem {
   role: RealtimeMessageRole.assistant;
-  content: RealtimeRequestTextContentPart[];
+  content: RealtimeResponseTextContentPart[];
 }
 
 model RealtimeRequestFunctionCallItem extends RealtimeRequestItem {

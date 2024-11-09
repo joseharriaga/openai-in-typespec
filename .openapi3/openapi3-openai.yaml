@@ -9191,7 +9191,7 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          input_text: '#/components/schemas/RealtimeRequestTextContentPart'
+          input_text: '#/components/schemas/RealtimeRequestInputTextContentPart'
           input_audio: '#/components/schemas/RealtimeRequestAudioContentPart'
           text: '#/components/schemas/RealtimeResponseTextContentPart'
           audio: '#/components/schemas/RealtimeResponseAudioContentPart'
@@ -9259,7 +9259,7 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/RealtimeRequestTextContentPart'
+            $ref: '#/components/schemas/RealtimeResponseTextContentPart'
       allOf:
         - $ref: '#/components/schemas/RealtimeRequestMessageItem'
     RealtimeRequestAudioContentPart:
@@ -9314,6 +9314,20 @@ components:
           type: string
       allOf:
         - $ref: '#/components/schemas/RealtimeRequestItem'
+    RealtimeRequestInputTextContentPart:
+      type: object
+      required:
+        - type
+        - text
+      properties:
+        type:
+          type: string
+          enum:
+            - input_text
+        text:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/RealtimeContentPart'
     RealtimeRequestItem:
       type: object
       required:
@@ -9420,23 +9434,9 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/RealtimeRequestTextContentPart'
+            $ref: '#/components/schemas/RealtimeRequestInputTextContentPart'
       allOf:
         - $ref: '#/components/schemas/RealtimeRequestMessageItem'
-    RealtimeRequestTextContentPart:
-      type: object
-      required:
-        - type
-        - text
-      properties:
-        type:
-          type: string
-          enum:
-            - input_text
-        text:
-          type: string
-      allOf:
-        - $ref: '#/components/schemas/RealtimeContentPart'
     RealtimeRequestUserMessageItem:
       type: object
       required:
@@ -9451,7 +9451,7 @@ components:
           type: array
           items:
             anyOf:
-              - $ref: '#/components/schemas/RealtimeRequestTextContentPart'
+              - $ref: '#/components/schemas/RealtimeRequestInputTextContentPart'
               - $ref: '#/components/schemas/RealtimeRequestAudioContentPart'
       allOf:
         - $ref: '#/components/schemas/RealtimeRequestMessageItem'
@@ -9472,9 +9472,7 @@ components:
         id:
           type: string
         status:
-          allOf:
-            - $ref: '#/components/schemas/RealtimeResponseStatus'
-          default: in_progress
+          $ref: '#/components/schemas/RealtimeResponseStatus'
         status_details:
           type: object
           allOf:
@@ -9530,6 +9528,7 @@ components:
             - output_tokens
             - input_token_details
             - output_token_details
+          nullable: true
     RealtimeResponseAudioContentPart:
       type: object
       required:
@@ -9693,7 +9692,6 @@ components:
             - type: string
               enum:
                 - inf
-          nullable: true
     RealtimeResponseStatus:
       anyOf:
         - type: string
@@ -9713,6 +9711,81 @@ components:
           $ref: '#/components/schemas/RealtimeResponseStatus'
       discriminator:
         propertyName: type
+        mapping:
+          cancelled: '#/components/schemas/RealtimeResponseStatusDetailsCancelled'
+          incomplete: '#/components/schemas/RealtimeResponseStatusDetailsIncomplete'
+          failed: '#/components/schemas/RealtimeResponseStatusDetailsFailed'
+    RealtimeResponseStatusDetailsCancelled:
+      type: object
+      required:
+        - type
+        - reason
+      properties:
+        type:
+          type: string
+          enum:
+            - cancelled
+        reason:
+          anyOf:
+            - type: string
+              enum:
+                - turn_detected
+            - type: string
+              enum:
+                - client_cancelled
+      allOf:
+        - $ref: '#/components/schemas/RealtimeResponseStatusDetails'
+    RealtimeResponseStatusDetailsFailed:
+      type: object
+      required:
+        - type
+        - error
+      properties:
+        type:
+          type: string
+          enum:
+            - failed
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+            code:
+              type: string
+          required:
+            - type
+            - code
+      allOf:
+        - $ref: '#/components/schemas/RealtimeResponseStatusDetails'
+    RealtimeResponseStatusDetailsIncomplete:
+      type: object
+      required:
+        - type
+        - reason
+      properties:
+        type:
+          type: string
+          enum:
+            - incomplete
+        reason:
+          anyOf:
+            - type: string
+              enum:
+                - max_output_tokens
+            - type: string
+              enum:
+                - content_filter
+      allOf:
+        - $ref: '#/components/schemas/RealtimeResponseStatusDetails'
+    RealtimeResponseStatusDetailsReason:
+      anyOf:
+        - type: string
+        - type: string
+          enum:
+            - turn_detected
+            - client_cancelled
+            - max_output_tokens
+            - content_filter
     RealtimeResponseTextContentPart:
       type: object
       required:

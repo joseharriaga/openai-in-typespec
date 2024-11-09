@@ -74,7 +74,7 @@ namespace OpenAI.RealtimeConversation
                 {
                     case "audio": return InternalRealtimeResponseAudioContentPart.DeserializeInternalRealtimeResponseAudioContentPart(element, options);
                     case "input_audio": return InternalRealtimeRequestAudioContentPart.DeserializeInternalRealtimeRequestAudioContentPart(element, options);
-                    case "input_text": return InternalRealtimeRequestTextContentPart.DeserializeInternalRealtimeRequestTextContentPart(element, options);
+                    case "input_text": return InternalRealtimeRequestInputTextContentPart.DeserializeInternalRealtimeRequestInputTextContentPart(element, options);
                     case "text": return InternalRealtimeResponseTextContentPart.DeserializeInternalRealtimeResponseTextContentPart(element, options);
                 }
             }

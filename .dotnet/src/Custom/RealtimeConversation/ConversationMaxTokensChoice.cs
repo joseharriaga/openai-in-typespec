@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
+using System.Transactions;
 
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-public partial class ConversationMaxTokensChoice
+public partial class ConversationMaxTokensChoice : IEquatable<ConversationMaxTokensChoice>
 {
     public int? NumericValue { get; }
     private readonly bool? _isDefaultNullValue;
@@ -18,6 +19,11 @@ public partial class ConversationMaxTokensChoice
         => new(isDefaultNullValue: true);
     public static ConversationMaxTokensChoice CreateNumericMaxTokensChoice(int maxTokens)
         => new(numberValue: maxTokens);
+
+    bool IEquatable<ConversationMaxTokensChoice>.Equals(ConversationMaxTokensChoice other)
+    {
+        return NumericValue == other.NumericValue && _isDefaultNullValue == other._isDefaultNullValue && _stringValue == other._stringValue;
+    }
 
     public ConversationMaxTokensChoice(int numberValue)
     {

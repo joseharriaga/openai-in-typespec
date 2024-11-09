@@ -9,7 +9,7 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponseTextContentPart : ConversationContentPart
     {
-        internal InternalRealtimeResponseTextContentPart(string internalTextValue)
+        public InternalRealtimeResponseTextContentPart(string internalTextValue)
         {
             Argument.AssertNotNull(internalTextValue, nameof(internalTextValue));
 

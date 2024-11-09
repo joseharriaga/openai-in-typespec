@@ -15,7 +15,7 @@ model RealtimeContentPart {
   type: RealtimeContentPartType;
 }
 
-model RealtimeRequestTextContentPart extends RealtimeContentPart {
+model RealtimeRequestInputTextContentPart extends RealtimeContentPart {
   type: RealtimeContentPartType.input_text;
   text: string;
 }

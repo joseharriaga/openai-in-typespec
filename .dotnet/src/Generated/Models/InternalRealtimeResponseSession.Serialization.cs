@@ -112,22 +112,15 @@ namespace OpenAI.RealtimeConversation
             }
             if (SerializedAdditionalRawData?.ContainsKey("max_response_output_tokens") != true)
             {
-                if (_maxResponseOutputTokens != null)
-                {
-                    writer.WritePropertyName("max_response_output_tokens"u8);
+                writer.WritePropertyName("max_response_output_tokens"u8);
 #if NET6_0_OR_GREATER
 				writer.WriteRawValue(_maxResponseOutputTokens);
 #else
-                    using (JsonDocument document = JsonDocument.Parse(_maxResponseOutputTokens))
-                    {
-                        JsonSerializer.Serialize(writer, document.RootElement);
-                    }
-#endif
-                }
-                else
+                using (JsonDocument document = JsonDocument.Parse(_maxResponseOutputTokens))
                 {
-                    writer.WriteNull("max_response_output_tokens");
+                    JsonSerializer.Serialize(writer, document.RootElement);
                 }
+#endif
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -271,11 +264,6 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (property.NameEquals("max_response_output_tokens"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        maxResponseOutputTokens = null;
-                        continue;
-                    }
                     maxResponseOutputTokens = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }

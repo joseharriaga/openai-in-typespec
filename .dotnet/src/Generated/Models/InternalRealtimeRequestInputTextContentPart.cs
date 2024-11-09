@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class InternalRealtimeRequestTextContentPart : ConversationContentPart
+    internal partial class InternalRealtimeRequestInputTextContentPart : ConversationContentPart
     {
-        public InternalRealtimeRequestTextContentPart(string internalTextValue)
+        public InternalRealtimeRequestInputTextContentPart(string internalTextValue)
         {
             Argument.AssertNotNull(internalTextValue, nameof(internalTextValue));
 
@@ -17,13 +17,13 @@ namespace OpenAI.RealtimeConversation
             InternalTextValue = internalTextValue;
         }
 
-        internal InternalRealtimeRequestTextContentPart(ConversationContentPartKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string type, string internalTextValue) : base(kind, serializedAdditionalRawData)
+        internal InternalRealtimeRequestInputTextContentPart(ConversationContentPartKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string type, string internalTextValue) : base(kind, serializedAdditionalRawData)
         {
             Type = type;
             InternalTextValue = internalTextValue;
         }
 
-        internal InternalRealtimeRequestTextContentPart()
+        internal InternalRealtimeRequestInputTextContentPart()
         {
         }
 

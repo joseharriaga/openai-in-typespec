@@ -12,8 +12,8 @@ model RealtimeRequestSession {
   voice?: RealtimeVoice;
   input_audio_format?: RealtimeAudioFormat;
   output_audio_format?: RealtimeAudioFormat;
-  input_audio_transcription?: RealtimeAudioInputTranscriptionSettings | null;
-  turn_detection?: RealtimeTurnDetection | null;
+  input_audio_transcription?: RealtimeAudioInputTranscriptionSettings | RealtimeFeatureOptionExplicitNull;
+  turn_detection?: RealtimeTurnDetection | RealtimeFeatureOptionExplicitNull;
   tools?: RealtimeTool[];
   tool_choice?: RealtimeToolChoice;
   temperature?: float32;
@@ -25,7 +25,7 @@ model RealtimeRequestSession {
 model RealtimeResponse {
   object: "realtime.response";
   id: string;
-  status: RealtimeResponseStatus = RealtimeResponseStatus.in_progress;
+  status: RealtimeResponseStatus;
   status_details: RealtimeResponseStatusDetails | null;
   output: RealtimeResponseItem[];
   usage: {
@@ -41,7 +41,7 @@ model RealtimeResponse {
       text_tokens: int32;
       audio_tokens: int32;
     };
-  };
+  } | null;
 }
 
 model RealtimeResponseSession {
@@ -58,7 +58,7 @@ model RealtimeResponseSession {
   tools: RealtimeTool[];
   tool_choice: RealtimeToolChoice;
   temperature: float32;
-  max_response_output_tokens: int32 | "inf" | null;
+  max_response_output_tokens: int32 | "inf";
 }
 
 union RealtimeVoice {
@@ -123,9 +123,38 @@ union RealtimeResponseStatus {
   failed: "failed",
 }
 
+union RealtimeResponseStatusDetailsReason {
+  string,
+  turn_detected: "turn_detected",
+  client_cancelled: "client_cancelled",
+  max_output_tokens: "max_output_tokens",
+  content_filter: "content_filter",
+}
+
 @discriminator("type")
 model RealtimeResponseStatusDetails {
   type: RealtimeResponseStatus;
+}
+
+model RealtimeResponseStatusDetailsCancelled
+  extends RealtimeResponseStatusDetails {
+  type: RealtimeResponseStatus.cancelled;
+  reason: RealtimeResponseStatusDetailsReason.turn_detected | RealtimeResponseStatusDetailsReason.client_cancelled;
+}
+
+model RealtimeResponseStatusDetailsIncomplete
+  extends RealtimeResponseStatusDetails {
+  type: RealtimeResponseStatus.incomplete;
+  reason: RealtimeResponseStatusDetailsReason.max_output_tokens | RealtimeResponseStatusDetailsReason.content_filter;
+}
+
+model RealtimeResponseStatusDetailsFailed
+  extends RealtimeResponseStatusDetails {
+  type: RealtimeResponseStatus.failed;
+  error: {
+    type: string;
+    code: string;
+  };
 }
 
 model RealtimeServerEventRateLimitsUpdatedRateLimitsItem {
@@ -142,3 +171,10 @@ model RealtimeServerEventRateLimitsUpdatedRateLimitsItem {
   @encode("seconds", float32)
   reset_seconds: duration;
 }
+
+/**
+ * This represents a semantically meaningful null value, distinct from a null value interpretable as
+ * default or omission, in a realtime request message. The meaning of such an explicit null value
+ * typically maps to the concept of disabling a feature.
+ */
+alias RealtimeFeatureOptionExplicitNull = null;

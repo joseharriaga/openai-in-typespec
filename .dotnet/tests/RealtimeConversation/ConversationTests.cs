@@ -6,6 +6,7 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,6 +87,112 @@ public class ConversationTests : ConversationTestFixtureBase
         Assert.That(GetReceivedUpdates<ConversationResponseFinishedUpdate>(), Has.Count.EqualTo(1));
         Assert.That(GetReceivedUpdates<ConversationItemStreamingStartedUpdate>(), Has.Count.EqualTo(1));
         Assert.That(GetReceivedUpdates<ConversationItemStreamingFinishedUpdate>(), Has.Count.EqualTo(1));
+    }
+
+    [Test]
+    public async Task MaxTokenConfigurationWorks()
+    {
+        RealtimeConversationClient client = GetTestClient();
+        using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
+
+        // The special "null" max tokens choice shouldn't be valid on session.update -- we'll check for an error event
+        await session.ConfigureSessionAsync(
+            new ConversationSessionOptions()
+            {
+                MaxOutputTokens = ConversationMaxTokensChoice.CreateDefaultMaxTokensChoice()
+            },
+            CancellationToken);
+
+        // We'll set the session-wide max tokens to a very low value to test response overrides
+        ConversationSessionOptions sessionUpdateOptions = new ConversationSessionOptions()
+        {
+            MaxOutputTokens = 3,
+            ContentModalities = ConversationContentModalities.Text,
+        };
+        await session.ConfigureSessionAsync(sessionUpdateOptions, CancellationToken);
+
+        await session.AddItemAsync(
+            ConversationItem.CreateUserMessage(["Provide a short greeting."]),
+            cancellationToken: CancellationToken);
+
+        int sessionCreatedCount = 0;
+        int sessionUpdatedCount = 0;
+        int errorCount = 0;
+        int responseCount = 0;
+
+        List<(ConversationMaxTokensChoice, ConversationResponseFinishReason)> pairsToTest =
+            [
+                // Implicit null should omit the property and honor the session-wide configuration, resulting in a length cutoff
+                (null, ConversationResponseFinishReason.MaxOutputTokens),
+                // Explicit null
+                // TODO: Confirm long-term status of "revert to global default" behavior for explicit null
+                (ConversationMaxTokensChoice.CreateDefaultMaxTokensChoice(), ConversationResponseFinishReason.MaxOutputTokens),
+                // A sufficiently high explicit numeric value should override the too-low session setting and work
+                (ConversationMaxTokensChoice.CreateNumericMaxTokensChoice(1024), ConversationResponseFinishReason.Completed),
+                // Another explicit low setting should still result in a length cutoff
+                (4, ConversationResponseFinishReason.MaxOutputTokens),
+                // The "inf" setting should explicitly apply the maximum possible value and work
+                (ConversationMaxTokensChoice.CreateInfiniteMaxTokensChoice(), ConversationResponseFinishReason.Completed),
+            ];
+
+        async Task<bool> StartNextTestResponseAsync()
+        {
+            if (responseCount >= pairsToTest.Count)
+            {
+                return false;
+            }
+            ConversationMaxTokensChoice choiceToTest = pairsToTest[responseCount].Item1;
+            await session.StartResponseAsync(
+                new ConversationSessionOptions()
+                {
+                    MaxOutputTokens = choiceToTest,
+                },
+                CancellationToken);
+            return true;
+        }
+
+        await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
+        {
+            if (update is ConversationSessionStartedUpdate sessionStartedUpdate)
+            {
+                // The default (which is always provided on session.created) should be "inf"
+                Assert.That(sessionStartedUpdate.MaxOutputTokens, Is.EqualTo(ConversationMaxTokensChoice.CreateInfiniteMaxTokensChoice()));
+                sessionCreatedCount++;
+            }
+
+            if (update is ConversationSessionConfiguredUpdate sessionConfiguredUpdate)
+            {
+                // The successful call to session.update should set the expected numeric value
+                Assert.That(sessionConfiguredUpdate.MaxOutputTokens, Is.EqualTo(sessionUpdateOptions.MaxOutputTokens));
+                Assert.That(sessionConfiguredUpdate.MaxOutputTokens.NumericValue, Is.EqualTo(sessionUpdateOptions.MaxOutputTokens.NumericValue));
+                Assert.That(await StartNextTestResponseAsync(), Is.True);
+                sessionUpdatedCount++;
+            }
+
+            if (update is ConversationErrorUpdate errorUpdate)
+            {
+                Assert.That(errorUpdate.ErrorCode, Is.EqualTo("invalid_type"));
+                Assert.That(errorUpdate.ParameterName, Is.EqualTo("session.max_response_output_tokens"));
+                Assert.That(errorUpdate.Message, Does.Contain("got null instead"));
+                errorCount++;
+            }
+
+            if (update is ConversationResponseFinishedUpdate responseFinishedUpdate)
+            {
+                Assert.That(responseFinishedUpdate.Status.FinishReason, Is.EqualTo(pairsToTest[responseCount].Item2));
+                responseCount++;
+                await Task.Delay(1200);
+                if (!await StartNextTestResponseAsync())
+                {
+                    break;
+                }
+            }
+        }
+
+        Assert.That(sessionCreatedCount, Is.EqualTo(1));
+        Assert.That(sessionUpdatedCount, Is.EqualTo(1));
+        Assert.That(responseCount, Is.EqualTo(pairsToTest.Count));
+        Assert.That(errorCount, Is.EqualTo(1));
     }
 
     [Test]

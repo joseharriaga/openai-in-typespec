@@ -60,8 +60,15 @@ namespace OpenAI.RealtimeConversation
             }
             if (SerializedAdditionalRawData?.ContainsKey("usage") != true)
             {
-                writer.WritePropertyName("usage"u8);
-                writer.WriteObjectValue(Usage, options);
+                if (Usage != null)
+                {
+                    writer.WritePropertyName("usage"u8);
+                    writer.WriteObjectValue(Usage, options);
+                }
+                else
+                {
+                    writer.WriteNull("usage");
+                }
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -107,8 +114,8 @@ namespace OpenAI.RealtimeConversation
             }
             InternalRealtimeResponseObject @object = default;
             string id = default;
-            ConversationStatus status = default;
-            ConversationStatusDetails statusDetails = default;
+            InternalRealtimeResponseStatusKind status = default;
+            InternalRealtimeResponseStatusDetails statusDetails = default;
             IReadOnlyList<ConversationItem> output = default;
             ConversationTokenUsage usage = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -127,7 +134,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (property.NameEquals("status"u8))
                 {
-                    status = new ConversationStatus(property.Value.GetString());
+                    status = new InternalRealtimeResponseStatusKind(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("status_details"u8))
@@ -137,7 +144,7 @@ namespace OpenAI.RealtimeConversation
                         statusDetails = null;
                         continue;
                     }
-                    statusDetails = ConversationStatusDetails.DeserializeConversationStatusDetails(property.Value, options);
+                    statusDetails = InternalRealtimeResponseStatusDetails.DeserializeInternalRealtimeResponseStatusDetails(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("output"u8))
@@ -152,6 +159,11 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (property.NameEquals("usage"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        usage = null;
+                        continue;
+                    }
                     usage = ConversationTokenUsage.DeserializeConversationTokenUsage(property.Value, options);
                     continue;
                 }

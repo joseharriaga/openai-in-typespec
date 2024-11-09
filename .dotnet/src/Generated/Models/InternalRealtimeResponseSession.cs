@@ -20,6 +20,7 @@ namespace OpenAI.RealtimeConversation
             Argument.AssertNotNull(turnDetection, nameof(turnDetection));
             Argument.AssertNotNull(tools, nameof(tools));
             Argument.AssertNotNull(toolChoice, nameof(toolChoice));
+            Argument.AssertNotNull(maxResponseOutputTokens, nameof(maxResponseOutputTokens));
 
             Id = id;
             Model = model;

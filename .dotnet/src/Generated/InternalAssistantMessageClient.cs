@@ -23,7 +23,7 @@ namespace OpenAI.Assistants
 
         public ClientPipeline Pipeline { get; }
 
-        public virtual ClientResult ListMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options = null)
+        public virtual ClientResult ListMessages(string threadId, int? limit = null, string order = null, string after = null, string before = null, RequestOptions options = null)
         {
             Argument.AssertNotNull(threadId, nameof(threadId));
 
@@ -31,7 +31,7 @@ namespace OpenAI.Assistants
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> ListMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options = null)
+        public virtual async Task<ClientResult> ListMessagesAsync(string threadId, int? limit = null, string order = null, string after = null, string before = null, RequestOptions options = null)
         {
             Argument.AssertNotNull(threadId, nameof(threadId));
 

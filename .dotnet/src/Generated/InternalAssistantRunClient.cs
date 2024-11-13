@@ -23,7 +23,7 @@ namespace OpenAI.Assistants
 
         public ClientPipeline Pipeline { get; }
 
-        public virtual ClientResult ListRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options = null)
+        public virtual ClientResult ListRuns(string threadId, int? limit = null, string order = null, string after = null, string before = null, RequestOptions options = null)
         {
             Argument.AssertNotNull(threadId, nameof(threadId));
 
@@ -31,7 +31,7 @@ namespace OpenAI.Assistants
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> ListRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options = null)
+        public virtual async Task<ClientResult> ListRunsAsync(string threadId, int? limit = null, string order = null, string after = null, string before = null, RequestOptions options = null)
         {
             Argument.AssertNotNull(threadId, nameof(threadId));
 
@@ -39,7 +39,7 @@ namespace OpenAI.Assistants
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult ListRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options = null)
+        public virtual ClientResult ListRunSteps(string threadId, string runId, int? limit = null, string order = null, string after = null, string before = null, RequestOptions options = null)
         {
             Argument.AssertNotNull(threadId, nameof(threadId));
             Argument.AssertNotNull(runId, nameof(runId));
@@ -48,7 +48,7 @@ namespace OpenAI.Assistants
             return ClientResult.FromResponse(Pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult> ListRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options = null)
+        public virtual async Task<ClientResult> ListRunStepsAsync(string threadId, string runId, int? limit = null, string order = null, string after = null, string before = null, RequestOptions options = null)
         {
             Argument.AssertNotNull(threadId, nameof(threadId));
             Argument.AssertNotNull(runId, nameof(runId));

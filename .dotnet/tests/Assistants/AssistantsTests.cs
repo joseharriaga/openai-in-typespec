@@ -934,37 +934,61 @@ public class AssistantsTests : SyncAsyncTestBase
         Assert.That(messageCount > 1);
         Assert.That(hasCake, Is.True);
 
-        RunStepCollectionOptions runStepCollectionOptions = new();
-        runStepCollectionOptions.IncludedRunStepProperties.Add(IncludedRunStepProperty.FileSearchResultContent);
-
-        CollectionResult<RunStep> runSteps = client.GetRunSteps(run.ThreadId, run.Id, runStepCollectionOptions);
+        // Validate GetRunSteps.
+        CollectionResult<RunStep> runSteps = client.GetRunSteps(run.ThreadId, run.Id);
         Assert.That(runSteps, Is.Not.Null.And.Not.Empty);
 
-        RunStepToolCall fileSearchToolCall = runSteps
-            .SelectMany(runStep => runStep.Details?.ToolCalls ?? [])
-            .FirstOrDefault(toolCall => toolCall.Kind == RunStepToolCallKind.FileSearch);
-        Assert.That(fileSearchToolCall, Is.Not.Null);
-        Assert.Multiple(() =>
-        {
-            Assert.That(fileSearchToolCall.FileSearchRanker, Is.EqualTo(fileSearchTool.RankingOptions.Ranker));
-            Assert.That(fileSearchToolCall.FileSearchScoreThreshold, Is.EqualTo(fileSearchTool.RankingOptions.ScoreThreshold));
-            Assert.That(fileSearchToolCall.FileSearchResults, Has.Count.GreaterThan(0));
-        });
+        List<RunStep> toolCallRunSteps = runSteps.Where(runStep => runStep.Kind == RunStepKind.ToolCall).ToList();
+        Assert.That(toolCallRunSteps, Is.Not.Null.And.Not.Empty);
 
-        RunStepFileSearchResult fileSearchResult = fileSearchToolCall.FileSearchResults[0];
-        Assert.Multiple(() =>
+        foreach (RunStep toolCallRunStep in toolCallRunSteps)
         {
-            Assert.That(fileSearchResult.FileId, Is.Not.Null.And.Not.Empty);
-            Assert.That(fileSearchResult.FileName, Is.Not.Null.And.Not.Empty);
-            Assert.That(fileSearchResult.Score, Is.GreaterThan(0));
-            Assert.That(fileSearchResult.Content, Has.Count.GreaterThan(0));
-        });
+            Assert.That(toolCallRunStep.Details, Is.Not.Null);
+            Assert.That(toolCallRunStep.Details.ToolCalls, Has.Count.GreaterThan(0));
 
-        RunStepFileSearchResultContent fileSearchResultContent = fileSearchResult.Content[0];
+            foreach (RunStepToolCall toolCall in toolCallRunStep.Details.ToolCalls)
+            {
+                Assert.That(toolCall.Kind == RunStepToolCallKind.FileSearch);
+                Assert.That(toolCall, Is.Not.Null);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(toolCall.FileSearchRanker, Is.EqualTo(fileSearchTool.RankingOptions.Ranker));
+                    Assert.That(toolCall.FileSearchScoreThreshold, Is.EqualTo(fileSearchTool.RankingOptions.ScoreThreshold));
+                    Assert.That(toolCall.FileSearchResults, Has.Count.GreaterThan(0));
+                });
+
+                RunStepFileSearchResult fileSearchResult = toolCall.FileSearchResults[0];
+                Assert.Multiple(() =>
+                {
+                    Assert.That(fileSearchResult.FileId, Is.Not.Null.And.Not.Empty);
+                    Assert.That(fileSearchResult.FileName, Is.Not.Null.And.Not.Empty);
+                    Assert.That(fileSearchResult.Score, Is.GreaterThan(0));
+
+                    // Confirm that we always get the Content property, since we are always passing the `include[]` query parameter.
+                    Assert.That(fileSearchResult.Content, Has.Count.GreaterThan(0));
+                });
+
+                RunStepFileSearchResultContent fileSearchResultContent = fileSearchResult.Content[0];
+                Assert.Multiple(() =>
+                {
+                    Assert.That(fileSearchResultContent.Kind, Is.EqualTo(RunStepFileSearchResultContentKind.Text));
+                    Assert.That(fileSearchResultContent.Text, Is.Not.Null.And.Not.Empty);
+                });
+            }
+        }
+
+        // Also validate GetRunStep.
+        RunStep runStep = client.GetRunStep(run.ThreadId, run.Id, toolCallRunSteps[0].Id);
+        Assert.That(runStep, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(fileSearchResultContent.Kind, Is.EqualTo(RunStepFileSearchResultContentKind.Text));
-            Assert.That(fileSearchResultContent.Text, Is.Not.Null.And.Not.Empty);
+            Assert.That(runStep.Kind, Is.EqualTo(RunStepKind.ToolCall));
+            Assert.That(runStep.Details, Is.Not.Null);
+            Assert.That(runStep.Details.ToolCalls, Has.Count.GreaterThan(0));
+            Assert.That(runStep.Details.ToolCalls[0].Kind, Is.EqualTo(RunStepToolCallKind.FileSearch));
+
+            // Confirm that we always get the Content property, since we are always passing the `include[]` query parameter.
+            Assert.That(runStep.Details.ToolCalls[0].FileSearchResults[0].Content, Has.Count.GreaterThan(0));
         });
     }
 

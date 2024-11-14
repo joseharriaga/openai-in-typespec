@@ -7,6 +7,9 @@ namespace OpenAI.Assistants;
 [Experimental("OPENAI001")]
 public class RunStepCollectionOptions
 {
+    /// <summary> A list of additional properties that each <see cref="RunStep"/> must include. </summary>
+    internal IList<InternalIncludedRunStepProperty> IncludedRunStepProperties { get; } = new ChangeTrackingList<InternalIncludedRunStepProperty>() { InternalIncludedRunStepProperty.FileSearchResultContent };
+
     /// <summary> Initializes a new instance of <see cref="RunStepCollectionOptions"/>. </summary>
     public RunStepCollectionOptions() { }
 
@@ -32,7 +35,4 @@ public class RunStepCollectionOptions
     ///     before this one.
     /// </summary>
     public string BeforeId { get; set; }
-
-    /// <summary> A list of additional properties that each <see cref="RunStep"/> must include. </summary>
-    public IList<IncludedRunStepProperty> IncludedRunStepProperties { get; } = new ChangeTrackingList<IncludedRunStepProperty>();
 }

@@ -4,6 +4,6 @@ namespace OpenAI.Assistants;
 
 [Experimental("OPENAI001")]
 [CodeGenModel("IncludedRunStepProperty")]
-public readonly partial struct IncludedRunStepProperty
+internal readonly partial struct InternalIncludedRunStepProperty
 {
 }

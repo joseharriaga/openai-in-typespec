@@ -666,12 +666,12 @@ namespace OpenAI.Assistants {
         public DateTimeOffset? ExpiredAt { get; }
         public DateTimeOffset? FailedAt { get; }
         public string Id { get; }
+        public RunStepKind Kind { get; }
         public RunStepError LastError { get; }
         public IReadOnlyDictionary<string, string> Metadata { get; }
         public string RunId { get; }
         public RunStepStatus Status { get; }
         public string ThreadId { get; }
-        public RunStepType Type { get; }
         public RunStepTokenUsage Usage { get; }
         RunStep IJsonModel<RunStep>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<RunStep>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -756,6 +756,7 @@ namespace OpenAI.Assistants {
         public override readonly string ToString();
     }
     public class RunStepFileSearchResult : IJsonModel<RunStepFileSearchResult>, IPersistableModel<RunStepFileSearchResult> {
+        public IReadOnlyList<RunStepFileSearchResultContent> Content { get; }
         public string FileId { get; }
         public string FileName { get; }
         public float Score { get; }
@@ -764,6 +765,22 @@ namespace OpenAI.Assistants {
         RunStepFileSearchResult IPersistableModel<RunStepFileSearchResult>.Create(BinaryData data, ModelReaderWriterOptions options);
         string IPersistableModel<RunStepFileSearchResult>.GetFormatFromOptions(ModelReaderWriterOptions options);
         BinaryData IPersistableModel<RunStepFileSearchResult>.Write(ModelReaderWriterOptions options);
+    }
+    public class RunStepFileSearchResultContent : IJsonModel<RunStepFileSearchResultContent>, IPersistableModel<RunStepFileSearchResultContent> {
+        public RunStepFileSearchResultContentKind Kind { get; }
+        public string Text { get; }
+        RunStepFileSearchResultContent IJsonModel<RunStepFileSearchResultContent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<RunStepFileSearchResultContent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        RunStepFileSearchResultContent IPersistableModel<RunStepFileSearchResultContent>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<RunStepFileSearchResultContent>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<RunStepFileSearchResultContent>.Write(ModelReaderWriterOptions options);
+    }
+    public enum RunStepFileSearchResultContentKind {
+        Text = 0
+    }
+    public enum RunStepKind {
+        CreatedMessage = 0,
+        ToolCall = 1
     }
     public readonly partial struct RunStepStatus : IEquatable<RunStepStatus> {
         private readonly object _dummy;
@@ -803,8 +820,8 @@ namespace OpenAI.Assistants {
         public string FunctionArguments { get; }
         public string FunctionName { get; }
         public string FunctionOutput { get; }
-        public string ToolCallId { get; }
-        public RunStepToolCallKind ToolKind { get; }
+        public string Id { get; }
+        public RunStepToolCallKind Kind { get; }
         RunStepToolCall IJsonModel<RunStepToolCall>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<RunStepToolCall>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         RunStepToolCall IPersistableModel<RunStepToolCall>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -812,26 +829,9 @@ namespace OpenAI.Assistants {
         BinaryData IPersistableModel<RunStepToolCall>.Write(ModelReaderWriterOptions options);
     }
     public enum RunStepToolCallKind {
-        Unknown = 0,
-        CodeInterpreter = 1,
-        FileSearch = 2,
-        Function = 3
-    }
-    public readonly partial struct RunStepType : IEquatable<RunStepType> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
-        public RunStepType(string value);
-        public static RunStepType MessageCreation { get; }
-        public static RunStepType ToolCalls { get; }
-        public readonly bool Equals(RunStepType other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(RunStepType left, RunStepType right);
-        public static implicit operator RunStepType(string value);
-        public static bool operator !=(RunStepType left, RunStepType right);
-        public override readonly string ToString();
+        CodeInterpreter = 0,
+        FileSearch = 1,
+        Function = 2
     }
     public class RunStepUpdate : StreamingUpdate<RunStep> {
     }

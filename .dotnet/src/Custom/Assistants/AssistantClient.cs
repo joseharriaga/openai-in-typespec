@@ -1137,31 +1137,8 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        return GetRunStepsAsync(threadId, runId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.IncludedRunStepProperties?.Select(s => s.ToString()), cancellationToken.ToRequestOptions())
+        return GetRunStepsAsync(threadId, runId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
             as AsyncCollectionResult<RunStep>;
-    }
-
-    /// <summary>
-    /// Rehydrates a page collection holding <see cref="RunStep"/> instances from a page token.
-    /// </summary>
-    /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
-    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
-    /// <returns> A collection of <see cref="RunStep"/>. </returns>
-    public virtual AsyncCollectionResult<RunStep> GetRunStepsAsync(
-        ContinuationToken firstPageToken,
-        CancellationToken cancellationToken = default)
-    {
-        Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
-
-        RunStepCollectionPageToken pageToken = RunStepCollectionPageToken.FromToken(firstPageToken);
-        AsyncCollectionResult result = GetRunStepsAsync(pageToken?.ThreadId, pageToken?.RunId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Include, cancellationToken.ToRequestOptions());
-
-        if (result is not AsyncCollectionResult<RunStep> collection)
-        {
-            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'AsyncCollectionResult<RunStep>'.");
-        }
-
-        return collection;
     }
 
     /// <summary>
@@ -1181,11 +1158,34 @@ public partial class AssistantClient
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        CollectionResult result = GetRunSteps(threadId, runId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.IncludedRunStepProperties?.Select(s => s.ToString()),cancellationToken.ToRequestOptions());
+        CollectionResult result = GetRunSteps(threadId, runId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions());
 
         if (result is not CollectionResult<RunStep> collection)
         {
             throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'CollectionResult<RunStep>'.");
+        }
+
+        return collection;
+    }
+
+    /// <summary>
+    /// Rehydrates a page collection holding <see cref="RunStep"/> instances from a page token.
+    /// </summary>
+    /// <param name="firstPageToken"> Page token corresponding to the first page of the collection to rehydrate. </param>
+    /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
+    /// <returns> A collection of <see cref="RunStep"/>. </returns>
+    public virtual AsyncCollectionResult<RunStep> GetRunStepsAsync(
+        ContinuationToken firstPageToken,
+        CancellationToken cancellationToken = default)
+    {
+        Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
+
+        RunStepCollectionPageToken pageToken = RunStepCollectionPageToken.FromToken(firstPageToken);
+        AsyncCollectionResult result = GetRunStepsAsync(pageToken?.ThreadId, pageToken?.RunId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions());
+
+        if (result is not AsyncCollectionResult<RunStep> collection)
+        {
+            throw new InvalidOperationException("Failed to cast protocol return type to expected collection type 'AsyncCollectionResult<RunStep>'.");
         }
 
         return collection;
@@ -1204,7 +1204,7 @@ public partial class AssistantClient
         Argument.AssertNotNull(firstPageToken, nameof(firstPageToken));
 
         RunStepCollectionPageToken pageToken = RunStepCollectionPageToken.FromToken(firstPageToken);
-        CollectionResult result = GetRunSteps(pageToken?.ThreadId, pageToken?.RunId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, pageToken?.Include, cancellationToken.ToRequestOptions());
+        CollectionResult result = GetRunSteps(pageToken?.ThreadId, pageToken?.RunId, pageToken?.Limit, pageToken?.Order, pageToken?.After, pageToken?.Before, cancellationToken.ToRequestOptions());
 
         if (result is not CollectionResult<RunStep> collection)
         {

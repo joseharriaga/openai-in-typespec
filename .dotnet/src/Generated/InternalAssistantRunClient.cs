@@ -39,42 +39,6 @@ namespace OpenAI.Assistants
             return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
         }
 
-        public virtual async Task<ClientResult<InternalListRunStepsResponse>> GetRunStepsAsync(string threadId, string runId, int? limit = null, RunStepCollectionOrder? order = null, string after = null, string before = null, IEnumerable<IncludedRunStepProperty> include = null)
-        {
-            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-            Argument.AssertNotNullOrEmpty(runId, nameof(runId));
-
-            ClientResult result = await GetRunStepsAsync(threadId, runId, limit, order?.ToString(), after, before, include, null).ConfigureAwait(false);
-            return ClientResult.FromValue(InternalListRunStepsResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        public virtual ClientResult<InternalListRunStepsResponse> GetRunSteps(string threadId, string runId, int? limit = null, RunStepCollectionOrder? order = null, string after = null, string before = null, IEnumerable<IncludedRunStepProperty> include = null)
-        {
-            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-            Argument.AssertNotNullOrEmpty(runId, nameof(runId));
-
-            ClientResult result = GetRunSteps(threadId, runId, limit, order?.ToString(), after, before, include, null);
-            return ClientResult.FromValue(InternalListRunStepsResponse.FromResponse(result.GetRawResponse()), result.GetRawResponse());
-        }
-
-        public virtual async Task<ClientResult> GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, IEnumerable<IncludedRunStepProperty> include, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-            Argument.AssertNotNullOrEmpty(runId, nameof(runId));
-
-            using PipelineMessage message = CreateGetRunStepsRequest(threadId, runId, limit, order, after, before, include, options);
-            return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
-        }
-
-        public virtual ClientResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, IEnumerable<IncludedRunStepProperty> include, RequestOptions options)
-        {
-            Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
-            Argument.AssertNotNullOrEmpty(runId, nameof(runId));
-
-            using PipelineMessage message = CreateGetRunStepsRequest(threadId, runId, limit, order, after, before, include, options);
-            return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
-        }
-
         internal PipelineMessage CreateCreateThreadAndRunRequest(BinaryContent content, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
@@ -222,7 +186,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateGetRunStepsRequest(string threadId, string runId, int? limit, string order, string after, string before, IEnumerable<IncludedRunStepProperty> include, RequestOptions options)
+        internal PipelineMessage CreateGetRunStepsRequest(string threadId, string runId, int? limit, string order, string after, string before, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -251,7 +215,7 @@ namespace OpenAI.Assistants
             {
                 uri.AppendQuery("before", before, true);
             }
-            if (include != null && !(include is ChangeTrackingList<IncludedRunStepProperty> changeTrackingList && changeTrackingList.IsUndefined))
+            if (include != null && !(include is ChangeTrackingList<InternalIncludedRunStepProperty> changeTrackingList && changeTrackingList.IsUndefined))
             {
                 uri.AppendQueryDelimited("include[]", include, ",", true);
             }
@@ -261,7 +225,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateGetRunStepRequest(string threadId, string runId, string stepId, RequestOptions options)
+        internal PipelineMessage CreateGetRunStepRequest(string threadId, string runId, string stepId, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -275,6 +239,10 @@ namespace OpenAI.Assistants
             uri.AppendPath(runId, true);
             uri.AppendPath("/steps/", false);
             uri.AppendPath(stepId, true);
+            if (include != null && !(include is ChangeTrackingList<InternalIncludedRunStepProperty> changeTrackingList && changeTrackingList.IsUndefined))
+            {
+                uri.AppendQueryDelimited("include[]", include, ",", true);
+            }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);

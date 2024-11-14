@@ -209,5 +209,16 @@ interface Runs {
 
     /** The ID of the run step to retrieve. */
     @path step_id: string,
+
+    /**
+     * A list of additional fields to include in the response. Currently the only supported value is
+     * `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result
+     * content.
+     * 
+     * See the 
+     * [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+     * for more information.
+     */
+    @query `include[]`?: IncludedRunStepProperty[],
   ): RunStepObject | ErrorResponse;
 }

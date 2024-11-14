@@ -1,7 +1,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
@@ -12,7 +11,7 @@ namespace OpenAI.Assistants;
 
 internal class RunStepCollectionPageToken : ContinuationToken
 {
-    protected RunStepCollectionPageToken(string threadId, string runId, int? limit, string? order, string? after, string? before, IEnumerable<string>? include)
+    protected RunStepCollectionPageToken(string threadId, string runId, int? limit, string? order, string? after, string? before)
     {
         ThreadId = threadId;
         RunId = runId;
@@ -21,7 +20,6 @@ internal class RunStepCollectionPageToken : ContinuationToken
         Order = order;
         After = after;
         Before = before;
-        Include = include;
     }
 
     public string ThreadId { get; }
@@ -35,8 +33,6 @@ internal class RunStepCollectionPageToken : ContinuationToken
     public string? After { get; }
 
     public string? Before { get; }
-
-    public IEnumerable<string>? Include { get; }
 
     public override BinaryData ToBytes()
     {
@@ -65,16 +61,6 @@ internal class RunStepCollectionPageToken : ContinuationToken
         if (Before is not null)
         {
             writer.WriteString("before", Before);
-        }
-
-        if (Include is not null)
-        {
-            writer.WriteStartArray("include");
-            foreach (string item in Include)
-            {
-                writer.WriteStringValue(item);
-            }
-            writer.WriteEndArray();
         }
 
         writer.WriteEndObject();
@@ -107,7 +93,6 @@ internal class RunStepCollectionPageToken : ContinuationToken
         string? order = null;
         string? after = null;
         string? before = null;
-        List<string>? include = null;
 
         reader.Read();
 
@@ -156,23 +141,6 @@ internal class RunStepCollectionPageToken : ContinuationToken
                     Debug.Assert(reader.TokenType == JsonTokenType.String);
                     before = reader.GetString();
                     break;
-                case "include":
-                    reader.Read();
-                    Debug.Assert(reader.TokenType == JsonTokenType.StartArray);
-
-                    include = [];
-                    while (reader.Read())
-                    {
-                        if (reader.TokenType == JsonTokenType.EndArray)
-                        {
-                            break;
-                        }
-
-                        Debug.Assert(reader.TokenType == JsonTokenType.String);
-                        include.Add(reader.GetString()!);
-                    }
-
-                    break;
                 default:
                     throw new JsonException($"Unrecognized property '{propertyName}'.");
             }
@@ -183,13 +151,13 @@ internal class RunStepCollectionPageToken : ContinuationToken
             throw new ArgumentException("Failed to create RunStepsPageToken from provided pageToken.", nameof(pageToken));
         }
 
-        return new(threadId, runId, limit, order, after, before, include);
+        return new(threadId, runId, limit, order, after, before);
     }
 
-    public static RunStepCollectionPageToken FromOptions(string threadId, string runId, int? limit, string? order, string? after, string? before, IEnumerable<string>? include)
-        => new(threadId, runId, limit, order, after, before, include);
+    public static RunStepCollectionPageToken FromOptions(string threadId, string runId, int? limit, string? order, string? after, string? before)
+        => new(threadId, runId, limit, order, after, before);
 
-    public static RunStepCollectionPageToken? FromResponse(ClientResult result, string threadId, string runId, int? limit, string? order, string? before, IEnumerable<string>? include)
+    public static RunStepCollectionPageToken? FromResponse(ClientResult result, string threadId, string runId, int? limit, string? order, string? before)
     {
         PipelineResponse response = result.GetRawResponse();
         using JsonDocument doc = JsonDocument.Parse(response.Content);
@@ -201,6 +169,6 @@ internal class RunStepCollectionPageToken : ContinuationToken
             return null;
         }
 
-        return new(threadId, runId, limit, order, lastId, before, include);
+        return new(threadId, runId, limit, order, lastId, before);
     }
 }

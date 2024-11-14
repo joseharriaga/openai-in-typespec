@@ -484,12 +484,15 @@ public partial class AssistantClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual AsyncCollectionResult GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, IEnumerable<string> include, RequestOptions options)
+    public virtual AsyncCollectionResult GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        return new AsyncRunStepCollectionResult(_runSubClient, options, threadId, runId, limit, order, after, before, include);
+        // Always request the included properties.
+        IEnumerable<string> includedRunStepProperties = [InternalIncludedRunStepProperty.FileSearchResultContent.ToString()];
+
+        return new AsyncRunStepCollectionResult(_runSubClient, options, threadId, runId, limit, order, after, before);
     }
 
     /// <summary>
@@ -521,12 +524,12 @@ public partial class AssistantClient
     /// <exception cref="ClientResultException"> Service returned a non-success status code. </exception>
     /// <returns> A collection of service responses, each holding a page of values. </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual CollectionResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, IEnumerable<string> include, RequestOptions options)
+    public virtual CollectionResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
 
-        return new RunStepCollectionResult(_runSubClient, options, threadId, runId, limit, order, after, before, include);
+        return new RunStepCollectionResult(_runSubClient, options, threadId, runId, limit, order, after, before);
     }
 
     /// <inheritdoc cref="InternalAssistantRunClient.GetRunStepAsync"/>

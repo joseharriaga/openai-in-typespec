@@ -1,7 +1,6 @@
 ﻿using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,13 +22,12 @@ internal class AsyncRunStepCollectionResult : AsyncCollectionResult<RunStep>
     private readonly string? _order;
     private readonly string? _after;
     private readonly string? _before;
-    private readonly IList<string>? _include;
 
     public AsyncRunStepCollectionResult(
         InternalAssistantRunClient runClient,
         RequestOptions? options,
         string threadId, string runId,
-        int? limit, string? order, string? after, string? before, IEnumerable<string>? include)
+        int? limit, string? order, string? after, string? before)
     {
         _runClient = runClient;
         _options = options;
@@ -41,7 +39,6 @@ internal class AsyncRunStepCollectionResult : AsyncCollectionResult<RunStep>
         _order = order;
         _after = after;
         _before = before;
-        _include = include?.ToList();
     }
 
     public async override IAsyncEnumerable<ClientResult> GetRawPagesAsync()
@@ -69,11 +66,11 @@ internal class AsyncRunStepCollectionResult : AsyncCollectionResult<RunStep>
     {
         Argument.AssertNotNull(page, nameof(page));
 
-        return RunStepCollectionPageToken.FromResponse(page, _threadId, _runId, _limit, _order, _before, _include);
+        return RunStepCollectionPageToken.FromResponse(page, _threadId, _runId, _limit, _order, _before);
     }
 
     public async Task<ClientResult> GetFirstPageAsync()
-        => await _runClient.GetRunStepsAsync(_threadId, _runId, _limit, _order, _after, _before, _include?.Select(s => new IncludedRunStepProperty(s)), _options).ConfigureAwait(false);
+        => await _runClient.GetRunStepsAsync(_threadId, _runId, _limit, _order, _after, _before, _options).ConfigureAwait(false);
 
     public async Task<ClientResult> GetNextPageAsync(ClientResult result)
     {
@@ -84,7 +81,7 @@ internal class AsyncRunStepCollectionResult : AsyncCollectionResult<RunStep>
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string lastId = doc.RootElement.GetProperty("last_id"u8).GetString()!;
 
-        return await _runClient.GetRunStepsAsync(_threadId, _runId, _limit, _order, lastId, _before, _include?.Select(s => new IncludedRunStepProperty(s)), _options).ConfigureAwait(false);
+        return await _runClient.GetRunStepsAsync(_threadId, _runId, _limit, _order, lastId, _before, _options).ConfigureAwait(false);
     }
 
     public static bool HasNextPage(ClientResult result)

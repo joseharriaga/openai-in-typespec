@@ -15,6 +15,14 @@ public partial class RunStepToolCall
     {
     }
 
+    // CUSTOM: Made internal.
+    internal RunStepToolCall(string id)
+    {
+        Argument.AssertNotNull(id, nameof(id));
+
+        Id = id;
+    }
+
     // CUSTOM:
     // - Made public.
     // - Made setter internal.

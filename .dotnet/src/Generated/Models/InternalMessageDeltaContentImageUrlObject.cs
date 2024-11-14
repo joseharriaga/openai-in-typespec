@@ -14,7 +14,7 @@ namespace OpenAI.Assistants
             Index = index;
         }
 
-        internal InternalMessageDeltaContentImageUrlObject(int index, InternalMessageDeltaContentImageUrlObjectImageUrl imageUrl, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalMessageDeltaContentImageUrlObject(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, int index, InternalMessageDeltaContentImageUrlObjectImageUrl imageUrl) : base(@type, additionalBinaryDataProperties)
         {
             Index = index;
             ImageUrl = imageUrl;

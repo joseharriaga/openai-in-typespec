@@ -9,14 +9,14 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationItemTruncatedUpdate : ConversationUpdate
     {
-        internal ConversationItemTruncatedUpdate(string itemId, int contentIndex, int audioEndMs, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemTruncated)
+        internal ConversationItemTruncatedUpdate(string eventId, string itemId, int contentIndex, int audioEndMs) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemTruncated)
         {
             ItemId = itemId;
             ContentIndex = contentIndex;
             AudioEndMs = audioEndMs;
         }
 
-        internal ConversationItemTruncatedUpdate(string itemId, int contentIndex, int audioEndMs, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
+        internal ConversationItemTruncatedUpdate(string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties, string itemId, int contentIndex, int audioEndMs) : base(eventId, kind, additionalBinaryDataProperties)
         {
             ItemId = itemId;
             ContentIndex = contentIndex;

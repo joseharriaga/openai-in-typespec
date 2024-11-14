@@ -64,13 +64,18 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
+            RealtimeConversation.ConversationTurnDetectionKind kind = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             float? threshold = default;
             TimeSpan? prefixPaddingMs = default;
             TimeSpan? silenceDurationMs = default;
-            RealtimeConversation.ConversationTurnDetectionKind kind = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = prop.Value.GetString().ToConversationTurnDetectionKind();
+                    continue;
+                }
                 if (prop.NameEquals("threshold"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -90,17 +95,12 @@ namespace OpenAI.RealtimeConversation
                     DeserializeMillisecondDuration(prop, ref silenceDurationMs);
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    kind = prop.Value.GetString().ToConversationTurnDetectionKind();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeServerVadTurnDetection(threshold, prefixPaddingMs, silenceDurationMs, kind, additionalBinaryDataProperties);
+            return new InternalRealtimeServerVadTurnDetection(kind, additionalBinaryDataProperties, threshold, prefixPaddingMs, silenceDurationMs);
         }
 
         BinaryData IPersistableModel<InternalRealtimeServerVadTurnDetection>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

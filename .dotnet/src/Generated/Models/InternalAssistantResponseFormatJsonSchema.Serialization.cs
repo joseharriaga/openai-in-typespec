@@ -59,19 +59,19 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            InternalResponseFormatJsonSchemaJsonSchema jsonSchema = default;
             string @type = "json_schema";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            InternalResponseFormatJsonSchemaJsonSchema jsonSchema = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("json_schema"u8))
-                {
-                    jsonSchema = InternalResponseFormatJsonSchemaJsonSchema.DeserializeInternalResponseFormatJsonSchemaJsonSchema(prop.Value, options);
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
                     @type = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("json_schema"u8))
+                {
+                    jsonSchema = InternalResponseFormatJsonSchemaJsonSchema.DeserializeInternalResponseFormatJsonSchemaJsonSchema(prop.Value, options);
                     continue;
                 }
                 if (true)
@@ -79,7 +79,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalAssistantResponseFormatJsonSchema(jsonSchema, @type, additionalBinaryDataProperties);
+            return new InternalAssistantResponseFormatJsonSchema(@type, additionalBinaryDataProperties, jsonSchema);
         }
 
         BinaryData IPersistableModel<InternalAssistantResponseFormatJsonSchema>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -14,7 +14,7 @@ namespace OpenAI.FineTuning
             Wandb = wandb;
         }
 
-        internal InternalFineTuningIntegrationWandb(FineTuningIntegrationWandbWandb wandb, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalFineTuningIntegrationWandb(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, FineTuningIntegrationWandbWandb wandb) : base(@type, additionalBinaryDataProperties)
         {
             Wandb = wandb;
         }

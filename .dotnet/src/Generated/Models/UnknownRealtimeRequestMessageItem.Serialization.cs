@@ -53,13 +53,23 @@ namespace OpenAI.Models
             {
                 return null;
             }
-            ConversationMessageRole role = default;
-            ConversationItemStatus? status = default;
             InternalRealtimeItemType @type = default;
             string id = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            ConversationMessageRole role = default;
+            ConversationItemStatus? status = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = new InternalRealtimeItemType(prop.Value.GetString());
+                    continue;
+                }
+                if (prop.NameEquals("id"u8))
+                {
+                    id = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("role"u8))
                 {
                     role = new ConversationMessageRole(prop.Value.GetString());
@@ -74,22 +84,12 @@ namespace OpenAI.Models
                     status = new ConversationItemStatus(prop.Value.GetString());
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = new InternalRealtimeItemType(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("id"u8))
-                {
-                    id = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new UnknownRealtimeRequestMessageItem(role, status, @type, id, additionalBinaryDataProperties);
+            return new UnknownRealtimeRequestMessageItem(@type, id, additionalBinaryDataProperties, role, status);
         }
 
         BinaryData IPersistableModel<InternalRealtimeRequestMessageItem>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

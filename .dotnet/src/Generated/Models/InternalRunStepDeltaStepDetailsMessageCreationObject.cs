@@ -13,7 +13,7 @@ namespace OpenAI.Assistants
         {
         }
 
-        internal InternalRunStepDeltaStepDetailsMessageCreationObject(InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation messageCreation, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRunStepDeltaStepDetailsMessageCreationObject(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation messageCreation) : base(@type, additionalBinaryDataProperties)
         {
             MessageCreation = messageCreation;
         }

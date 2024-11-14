@@ -54,11 +54,16 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation messageCreation = default;
             string @type = "message_creation";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation messageCreation = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("message_creation"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -68,17 +73,12 @@ namespace OpenAI.Assistants
                     messageCreation = InternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation.DeserializeInternalRunStepDeltaStepDetailsMessageCreationObjectMessageCreation(prop.Value, options);
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunStepDeltaStepDetailsMessageCreationObject(messageCreation, @type, additionalBinaryDataProperties);
+            return new InternalRunStepDeltaStepDetailsMessageCreationObject(@type, additionalBinaryDataProperties, messageCreation);
         }
 
         BinaryData IPersistableModel<InternalRunStepDeltaStepDetailsMessageCreationObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

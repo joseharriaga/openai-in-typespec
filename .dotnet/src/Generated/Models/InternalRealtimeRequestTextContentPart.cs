@@ -17,7 +17,7 @@ namespace OpenAI.RealtimeConversation
             InternalTextValue = internalTextValue;
         }
 
-        internal InternalRealtimeRequestTextContentPart(string @type, string internalTextValue, ConversationContentPartKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, additionalBinaryDataProperties)
+        internal InternalRealtimeRequestTextContentPart(ConversationContentPartKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties, string @type, string internalTextValue) : base(kind, additionalBinaryDataProperties)
         {
             Type = @type;
             InternalTextValue = internalTextValue;

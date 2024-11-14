@@ -21,7 +21,7 @@ namespace OpenAI.RealtimeConversation
             Arguments = arguments;
         }
 
-        internal InternalRealtimeRequestFunctionCallItem(string name, string callId, string arguments, ConversationItemStatus? status, InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, id, additionalBinaryDataProperties)
+        internal InternalRealtimeRequestFunctionCallItem(InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties, string name, string callId, string arguments, ConversationItemStatus? status) : base(@type, id, additionalBinaryDataProperties)
         {
             Name = name;
             CallId = callId;

@@ -14,7 +14,7 @@ namespace OpenAI.Assistants
             _messageCreation = messageCreation;
         }
 
-        internal InternalRunStepDetailsMessageCreationObject(InternalRunStepDetailsMessageCreationObjectMessageCreation messageCreation, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRunStepDetailsMessageCreationObject(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, InternalRunStepDetailsMessageCreationObjectMessageCreation messageCreation) : base(@type, additionalBinaryDataProperties)
         {
             _messageCreation = messageCreation;
         }

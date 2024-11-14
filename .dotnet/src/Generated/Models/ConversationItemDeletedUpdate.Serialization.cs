@@ -58,17 +58,12 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string itemId = default;
             string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            string itemId = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("item_id"u8))
-                {
-                    itemId = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("event_id"u8))
                 {
                     eventId = prop.Value.GetString();
@@ -79,12 +74,17 @@ namespace OpenAI.RealtimeConversation
                     kind = prop.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
+                if (prop.NameEquals("item_id"u8))
+                {
+                    itemId = prop.Value.GetString();
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationItemDeletedUpdate(itemId, eventId, kind, additionalBinaryDataProperties);
+            return new ConversationItemDeletedUpdate(eventId, kind, additionalBinaryDataProperties, itemId);
         }
 
         BinaryData IPersistableModel<ConversationItemDeletedUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

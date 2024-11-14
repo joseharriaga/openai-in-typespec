@@ -18,7 +18,7 @@ namespace OpenAI.Chat
             JsonSchema = jsonSchema;
         }
 
-        internal InternalChatResponseFormatJsonSchema(InternalResponseFormatJsonSchemaJsonSchema jsonSchema, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalChatResponseFormatJsonSchema(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, InternalResponseFormatJsonSchemaJsonSchema jsonSchema) : base(@type, additionalBinaryDataProperties)
         {
             JsonSchema = jsonSchema;
         }

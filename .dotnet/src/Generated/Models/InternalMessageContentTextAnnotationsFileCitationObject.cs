@@ -21,7 +21,7 @@ namespace OpenAI.Assistants
             EndIndex = endIndex;
         }
 
-        internal InternalMessageContentTextAnnotationsFileCitationObject(string text, InternalMessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation, int startIndex, int endIndex, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalMessageContentTextAnnotationsFileCitationObject(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, string text, InternalMessageContentTextAnnotationsFileCitationObjectFileCitation fileCitation, int startIndex, int endIndex) : base(@type, additionalBinaryDataProperties)
         {
             Text = text;
             FileCitation = fileCitation;

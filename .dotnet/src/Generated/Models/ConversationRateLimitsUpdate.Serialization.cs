@@ -63,22 +63,12 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            IReadOnlyList<ConversationRateLimitDetailsItem> allDetails = default;
             string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            IReadOnlyList<ConversationRateLimitDetailsItem> allDetails = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("rate_limits"u8))
-                {
-                    List<ConversationRateLimitDetailsItem> array = new List<ConversationRateLimitDetailsItem>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        array.Add(ConversationRateLimitDetailsItem.DeserializeConversationRateLimitDetailsItem(item, options));
-                    }
-                    allDetails = array;
-                    continue;
-                }
                 if (prop.NameEquals("event_id"u8))
                 {
                     eventId = prop.Value.GetString();
@@ -89,12 +79,22 @@ namespace OpenAI.RealtimeConversation
                     kind = prop.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
+                if (prop.NameEquals("rate_limits"u8))
+                {
+                    List<ConversationRateLimitDetailsItem> array = new List<ConversationRateLimitDetailsItem>();
+                    foreach (var item in prop.Value.EnumerateArray())
+                    {
+                        array.Add(ConversationRateLimitDetailsItem.DeserializeConversationRateLimitDetailsItem(item, options));
+                    }
+                    allDetails = array;
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationRateLimitsUpdate(allDetails, eventId, kind, additionalBinaryDataProperties);
+            return new ConversationRateLimitsUpdate(eventId, kind, additionalBinaryDataProperties, allDetails);
         }
 
         BinaryData IPersistableModel<ConversationRateLimitsUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

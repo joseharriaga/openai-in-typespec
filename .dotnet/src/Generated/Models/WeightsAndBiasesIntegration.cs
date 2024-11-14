@@ -17,7 +17,7 @@ namespace OpenAI.FineTuning
             Wandb = wandb;
         }
 
-        internal WeightsAndBiasesIntegration(InternalCreateFineTuningJobRequestWandbIntegrationWandb wandb, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal WeightsAndBiasesIntegration(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, InternalCreateFineTuningJobRequestWandbIntegrationWandb wandb) : base(@type, additionalBinaryDataProperties)
         {
             Wandb = wandb;
         }

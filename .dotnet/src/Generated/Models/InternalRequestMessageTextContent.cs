@@ -17,7 +17,7 @@ namespace OpenAI.Assistants
             InternalText = internalText;
         }
 
-        internal InternalRequestMessageTextContent(InternalMessageRequestContentTextObjectType @type, string internalText, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
+        internal InternalRequestMessageTextContent(IDictionary<string, BinaryData> additionalBinaryDataProperties, InternalMessageRequestContentTextObjectType @type, string internalText) : base(additionalBinaryDataProperties)
         {
             Type = @type;
             InternalText = internalText;

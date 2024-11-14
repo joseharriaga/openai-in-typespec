@@ -17,7 +17,7 @@ namespace OpenAI.Chat
             FunctionName = functionName;
         }
 
-        internal FunctionChatMessage(string functionName, Chat.ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, content, additionalBinaryDataProperties)
+        internal FunctionChatMessage(Chat.ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> additionalBinaryDataProperties, string functionName) : base(role, content, additionalBinaryDataProperties)
         {
             FunctionName = functionName;
         }

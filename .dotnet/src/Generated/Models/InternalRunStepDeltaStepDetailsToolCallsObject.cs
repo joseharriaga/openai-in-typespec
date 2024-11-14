@@ -15,7 +15,7 @@ namespace OpenAI.Assistants
             ToolCalls = new ChangeTrackingList<InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject>();
         }
 
-        internal InternalRunStepDeltaStepDetailsToolCallsObject(IList<InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject> toolCalls, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRunStepDeltaStepDetailsToolCallsObject(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, IList<InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject> toolCalls) : base(@type, additionalBinaryDataProperties)
         {
             ToolCalls = toolCalls;
         }

@@ -19,7 +19,7 @@ namespace OpenAI.RealtimeConversation
             Output = output;
         }
 
-        internal InternalRealtimeRequestFunctionCallOutputItem(string callId, string output, InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, id, additionalBinaryDataProperties)
+        internal InternalRealtimeRequestFunctionCallOutputItem(InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties, string callId, string output) : base(@type, id, additionalBinaryDataProperties)
         {
             CallId = callId;
             Output = output;

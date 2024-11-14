@@ -56,9 +56,9 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string @type = default;
             InternalMessageContentTextObjectText text = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))
@@ -76,7 +76,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalResponseMessageTextContent(@type, text, additionalBinaryDataProperties);
+            return new InternalResponseMessageTextContent(additionalBinaryDataProperties, @type, text);
         }
 
         BinaryData IPersistableModel<InternalResponseMessageTextContent>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

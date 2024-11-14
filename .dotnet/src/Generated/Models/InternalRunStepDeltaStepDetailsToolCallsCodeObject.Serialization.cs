@@ -68,13 +68,18 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
+            string @type = "code_interpreter";
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             int index = default;
             string id = default;
             InternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter = default;
-            string @type = "code_interpreter";
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("index"u8))
                 {
                     index = prop.Value.GetInt32();
@@ -94,17 +99,12 @@ namespace OpenAI.Assistants
                     codeInterpreter = InternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter.DeserializeInternalRunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreter(prop.Value, options);
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunStepDeltaStepDetailsToolCallsCodeObject(index, id, codeInterpreter, @type, additionalBinaryDataProperties);
+            return new InternalRunStepDeltaStepDetailsToolCallsCodeObject(@type, additionalBinaryDataProperties, index, id, codeInterpreter);
         }
 
         BinaryData IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

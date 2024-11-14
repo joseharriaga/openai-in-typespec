@@ -58,17 +58,12 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            ConversationSessionOptions session = default;
             InternalRealtimeClientEventType kind = default;
             string eventId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            ConversationSessionOptions session = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("session"u8))
-                {
-                    session = ConversationSessionOptions.DeserializeConversationSessionOptions(prop.Value, options);
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
                     kind = new InternalRealtimeClientEventType(prop.Value.GetString());
@@ -79,12 +74,17 @@ namespace OpenAI.RealtimeConversation
                     eventId = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("session"u8))
+                {
+                    session = ConversationSessionOptions.DeserializeConversationSessionOptions(prop.Value, options);
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeClientEventSessionUpdate(session, kind, eventId, additionalBinaryDataProperties);
+            return new InternalRealtimeClientEventSessionUpdate(kind, eventId, additionalBinaryDataProperties, session);
         }
 
         BinaryData IPersistableModel<InternalRealtimeClientEventSessionUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -63,24 +63,14 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string callId = default;
-            string output = default;
             InternalRealtimeResponseItemObject @object = default;
             InternalRealtimeItemType @type = default;
             string id = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            string callId = default;
+            string output = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("call_id"u8))
-                {
-                    callId = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("output"u8))
-                {
-                    output = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("object"u8))
                 {
                     @object = new InternalRealtimeResponseItemObject(prop.Value.GetString());
@@ -101,18 +91,28 @@ namespace OpenAI.RealtimeConversation
                     id = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("call_id"u8))
+                {
+                    callId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("output"u8))
+                {
+                    output = prop.Value.GetString();
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
             return new InternalRealtimeResponseFunctionCallOutputItem(
-                callId,
-                output,
                 @object,
                 @type,
                 id,
-                additionalBinaryDataProperties);
+                additionalBinaryDataProperties,
+                callId,
+                output);
         }
 
         BinaryData IPersistableModel<InternalRealtimeResponseFunctionCallOutputItem>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

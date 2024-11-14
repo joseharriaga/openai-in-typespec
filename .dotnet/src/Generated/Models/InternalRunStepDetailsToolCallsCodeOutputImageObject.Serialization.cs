@@ -58,19 +58,19 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            InternalRunStepDetailsToolCallsCodeOutputImageObjectImage image = default;
             string @type = "image";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            InternalRunStepDetailsToolCallsCodeOutputImageObjectImage image = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("image"u8))
-                {
-                    image = InternalRunStepDetailsToolCallsCodeOutputImageObjectImage.DeserializeInternalRunStepDetailsToolCallsCodeOutputImageObjectImage(prop.Value, options);
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
                     @type = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("image"u8))
+                {
+                    image = InternalRunStepDetailsToolCallsCodeOutputImageObjectImage.DeserializeInternalRunStepDetailsToolCallsCodeOutputImageObjectImage(prop.Value, options);
                     continue;
                 }
                 if (true)
@@ -78,7 +78,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunStepDetailsToolCallsCodeOutputImageObject(image, @type, additionalBinaryDataProperties);
+            return new InternalRunStepDetailsToolCallsCodeOutputImageObject(@type, additionalBinaryDataProperties, image);
         }
 
         BinaryData IPersistableModel<InternalRunStepDetailsToolCallsCodeOutputImageObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

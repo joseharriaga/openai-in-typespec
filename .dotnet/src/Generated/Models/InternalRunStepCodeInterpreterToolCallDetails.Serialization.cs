@@ -63,12 +63,17 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            string id = default;
-            InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter = default;
             string @type = "code_interpreter";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            string id = default;
+            InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("id"u8))
                 {
                     id = prop.Value.GetString();
@@ -79,17 +84,12 @@ namespace OpenAI.Assistants
                     codeInterpreter = InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter.DeserializeInternalRunStepDetailsToolCallsCodeObjectCodeInterpreter(prop.Value, options);
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunStepCodeInterpreterToolCallDetails(id, codeInterpreter, @type, additionalBinaryDataProperties);
+            return new InternalRunStepCodeInterpreterToolCallDetails(@type, additionalBinaryDataProperties, id, codeInterpreter);
         }
 
         BinaryData IPersistableModel<InternalRunStepCodeInterpreterToolCallDetails>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

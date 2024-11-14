@@ -14,7 +14,7 @@ namespace OpenAI.RealtimeConversation
             Role = role;
         }
 
-        internal InternalRealtimeRequestMessageItem(ConversationMessageRole role, ConversationItemStatus? status, InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, id, additionalBinaryDataProperties)
+        internal InternalRealtimeRequestMessageItem(InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties, ConversationMessageRole role, ConversationItemStatus? status) : base(@type, id, additionalBinaryDataProperties)
         {
             Role = role;
             Status = status;

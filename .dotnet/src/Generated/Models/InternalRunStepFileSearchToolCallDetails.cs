@@ -15,7 +15,7 @@ namespace OpenAI.Assistants
             FileSearch = fileSearch;
         }
 
-        internal InternalRunStepFileSearchToolCallDetails(string id, InternalRunStepDetailsToolCallsFileSearchObjectFileSearch fileSearch, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRunStepFileSearchToolCallDetails(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, string id, InternalRunStepDetailsToolCallsFileSearchObjectFileSearch fileSearch) : base(@type, additionalBinaryDataProperties)
         {
             Id = id;
             FileSearch = fileSearch;

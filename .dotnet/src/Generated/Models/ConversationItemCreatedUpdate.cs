@@ -9,13 +9,13 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationItemCreatedUpdate : ConversationUpdate
     {
-        internal ConversationItemCreatedUpdate(string previousItemId, InternalRealtimeResponseItem internalItem, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemCreated)
+        internal ConversationItemCreatedUpdate(string eventId, string previousItemId, InternalRealtimeResponseItem internalItem) : base(eventId, RealtimeConversation.ConversationUpdateKind.ItemCreated)
         {
             PreviousItemId = previousItemId;
             _internalItem = internalItem;
         }
 
-        internal ConversationItemCreatedUpdate(string previousItemId, InternalRealtimeResponseItem internalItem, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
+        internal ConversationItemCreatedUpdate(string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties, string previousItemId, InternalRealtimeResponseItem internalItem) : base(eventId, kind, additionalBinaryDataProperties)
         {
             PreviousItemId = previousItemId;
             _internalItem = internalItem;

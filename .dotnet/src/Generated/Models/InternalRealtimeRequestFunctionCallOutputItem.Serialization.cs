@@ -63,23 +63,13 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string callId = default;
-            string output = default;
             InternalRealtimeItemType @type = default;
             string id = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            string callId = default;
+            string output = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("call_id"u8))
-                {
-                    callId = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("output"u8))
-                {
-                    output = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
                     @type = new InternalRealtimeItemType(prop.Value.GetString());
@@ -90,12 +80,22 @@ namespace OpenAI.RealtimeConversation
                     id = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("call_id"u8))
+                {
+                    callId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("output"u8))
+                {
+                    output = prop.Value.GetString();
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeRequestFunctionCallOutputItem(callId, output, @type, id, additionalBinaryDataProperties);
+            return new InternalRealtimeRequestFunctionCallOutputItem(@type, id, additionalBinaryDataProperties, callId, output);
         }
 
         BinaryData IPersistableModel<InternalRealtimeRequestFunctionCallOutputItem>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

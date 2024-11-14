@@ -14,7 +14,7 @@ namespace OpenAI.Assistants
             Index = index;
         }
 
-        internal InternalMessageDeltaContentRefusalObject(int index, string refusal, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalMessageDeltaContentRefusalObject(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, int index, string refusal) : base(@type, additionalBinaryDataProperties)
         {
             Index = index;
             Refusal = refusal;

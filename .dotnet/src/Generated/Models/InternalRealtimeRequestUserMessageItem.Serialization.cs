@@ -63,22 +63,22 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            IList<ConversationContentPart> content = default;
-            ConversationMessageRole role = default;
-            ConversationItemStatus? status = default;
             InternalRealtimeItemType @type = default;
             string id = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            ConversationMessageRole role = default;
+            ConversationItemStatus? status = default;
+            IList<ConversationContentPart> content = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("content"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    List<ConversationContentPart> array = new List<ConversationContentPart>();
-                    foreach (var item in prop.Value.EnumerateArray())
-                    {
-                        array.Add(ConversationContentPart.DeserializeConversationContentPart(item, options));
-                    }
-                    content = array;
+                    @type = new InternalRealtimeItemType(prop.Value.GetString());
+                    continue;
+                }
+                if (prop.NameEquals("id"u8))
+                {
+                    id = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("role"u8))
@@ -95,14 +95,14 @@ namespace OpenAI.RealtimeConversation
                     status = new ConversationItemStatus(prop.Value.GetString());
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
+                if (prop.NameEquals("content"u8))
                 {
-                    @type = new InternalRealtimeItemType(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("id"u8))
-                {
-                    id = prop.Value.GetString();
+                    List<ConversationContentPart> array = new List<ConversationContentPart>();
+                    foreach (var item in prop.Value.EnumerateArray())
+                    {
+                        array.Add(ConversationContentPart.DeserializeConversationContentPart(item, options));
+                    }
+                    content = array;
                     continue;
                 }
                 if (true)
@@ -111,12 +111,12 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             return new InternalRealtimeRequestUserMessageItem(
-                content,
-                role,
-                status,
                 @type,
                 id,
-                additionalBinaryDataProperties);
+                additionalBinaryDataProperties,
+                role,
+                status,
+                content);
         }
 
         BinaryData IPersistableModel<InternalRealtimeRequestUserMessageItem>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

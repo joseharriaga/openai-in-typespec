@@ -18,7 +18,7 @@ namespace OpenAI.Assistants
             JsonSchema = jsonSchema;
         }
 
-        internal InternalAssistantResponseFormatJsonSchema(InternalResponseFormatJsonSchemaJsonSchema jsonSchema, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalAssistantResponseFormatJsonSchema(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, InternalResponseFormatJsonSchemaJsonSchema jsonSchema) : base(@type, additionalBinaryDataProperties)
         {
             JsonSchema = jsonSchema;
         }

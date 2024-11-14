@@ -68,14 +68,24 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string itemId = default;
-            int contentIndex = default;
-            int audioEndMs = default;
             InternalRealtimeClientEventType kind = default;
             string eventId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            string itemId = default;
+            int contentIndex = default;
+            int audioEndMs = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = new InternalRealtimeClientEventType(prop.Value.GetString());
+                    continue;
+                }
+                if (prop.NameEquals("event_id"u8))
+                {
+                    eventId = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("item_id"u8))
                 {
                     itemId = prop.Value.GetString();
@@ -91,28 +101,18 @@ namespace OpenAI.RealtimeConversation
                     audioEndMs = prop.Value.GetInt32();
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    kind = new InternalRealtimeClientEventType(prop.Value.GetString());
-                    continue;
-                }
-                if (prop.NameEquals("event_id"u8))
-                {
-                    eventId = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
             return new InternalRealtimeClientEventConversationItemTruncate(
-                itemId,
-                contentIndex,
-                audioEndMs,
                 kind,
                 eventId,
-                additionalBinaryDataProperties);
+                additionalBinaryDataProperties,
+                itemId,
+                contentIndex,
+                audioEndMs);
         }
 
         BinaryData IPersistableModel<InternalRealtimeClientEventConversationItemTruncate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

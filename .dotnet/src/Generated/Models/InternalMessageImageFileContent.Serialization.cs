@@ -56,9 +56,9 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string @type = default;
             InternalMessageContentItemFileObjectImageFile imageFile = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))
@@ -76,7 +76,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalMessageImageFileContent(@type, imageFile, additionalBinaryDataProperties);
+            return new InternalMessageImageFileContent(additionalBinaryDataProperties, @type, imageFile);
         }
 
         BinaryData IPersistableModel<InternalMessageImageFileContent>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

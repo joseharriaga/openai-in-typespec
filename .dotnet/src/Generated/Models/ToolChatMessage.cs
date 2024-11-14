@@ -17,7 +17,7 @@ namespace OpenAI.Chat
             ToolCallId = toolCallId;
         }
 
-        internal ToolChatMessage(string toolCallId, Chat.ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(role, content, additionalBinaryDataProperties)
+        internal ToolChatMessage(Chat.ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> additionalBinaryDataProperties, string toolCallId) : base(role, content, additionalBinaryDataProperties)
         {
             ToolCallId = toolCallId;
         }

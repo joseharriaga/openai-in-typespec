@@ -14,7 +14,7 @@ namespace OpenAI.Assistants
             Index = index;
         }
 
-        internal InternalMessageDeltaContentTextAnnotationsFilePathObject(int index, string text, InternalMessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath, int? startIndex, int? endIndex, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalMessageDeltaContentTextAnnotationsFilePathObject(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, int index, string text, InternalMessageDeltaContentTextAnnotationsFilePathObjectFilePath filePath, int? startIndex, int? endIndex) : base(@type, additionalBinaryDataProperties)
         {
             Index = index;
             Text = text;

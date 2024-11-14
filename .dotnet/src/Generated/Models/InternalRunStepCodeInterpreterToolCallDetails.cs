@@ -15,7 +15,7 @@ namespace OpenAI.Assistants
             _codeInterpreter = codeInterpreter;
         }
 
-        internal InternalRunStepCodeInterpreterToolCallDetails(string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRunStepCodeInterpreterToolCallDetails(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter) : base(@type, additionalBinaryDataProperties)
         {
             Id = id;
             _codeInterpreter = codeInterpreter;

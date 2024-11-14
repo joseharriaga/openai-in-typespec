@@ -68,14 +68,24 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string responseId = default;
-            int itemIndex = default;
-            InternalRealtimeResponseItem internalItem = default;
             string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            string responseId = default;
+            int itemIndex = default;
+            InternalRealtimeResponseItem internalItem = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("event_id"u8))
+                {
+                    eventId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = prop.Value.GetString().ToConversationUpdateKind();
+                    continue;
+                }
                 if (prop.NameEquals("response_id"u8))
                 {
                     responseId = prop.Value.GetString();
@@ -91,28 +101,18 @@ namespace OpenAI.RealtimeConversation
                     internalItem = InternalRealtimeResponseItem.DeserializeInternalRealtimeResponseItem(prop.Value, options);
                     continue;
                 }
-                if (prop.NameEquals("event_id"u8))
-                {
-                    eventId = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("type"u8))
-                {
-                    kind = prop.Value.GetString().ToConversationUpdateKind();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
             return new ConversationItemStreamingStartedUpdate(
-                responseId,
-                itemIndex,
-                internalItem,
                 eventId,
                 kind,
-                additionalBinaryDataProperties);
+                additionalBinaryDataProperties,
+                responseId,
+                itemIndex,
+                internalItem);
         }
 
         BinaryData IPersistableModel<ConversationItemStreamingStartedUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

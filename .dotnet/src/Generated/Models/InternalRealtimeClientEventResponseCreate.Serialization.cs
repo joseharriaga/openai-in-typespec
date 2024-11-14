@@ -58,17 +58,12 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            InternalRealtimeClientEventResponseCreateResponse response = default;
             InternalRealtimeClientEventType kind = default;
             string eventId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            InternalRealtimeClientEventResponseCreateResponse response = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("response"u8))
-                {
-                    response = InternalRealtimeClientEventResponseCreateResponse.DeserializeInternalRealtimeClientEventResponseCreateResponse(prop.Value, options);
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
                     kind = new InternalRealtimeClientEventType(prop.Value.GetString());
@@ -79,12 +74,17 @@ namespace OpenAI.RealtimeConversation
                     eventId = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("response"u8))
+                {
+                    response = InternalRealtimeClientEventResponseCreateResponse.DeserializeInternalRealtimeClientEventResponseCreateResponse(prop.Value, options);
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeClientEventResponseCreate(response, kind, eventId, additionalBinaryDataProperties);
+            return new InternalRealtimeClientEventResponseCreate(kind, eventId, additionalBinaryDataProperties, response);
         }
 
         BinaryData IPersistableModel<InternalRealtimeClientEventResponseCreate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

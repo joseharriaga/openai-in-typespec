@@ -63,12 +63,17 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            int index = default;
-            string internalLogs = default;
             string @type = "logs";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            int index = default;
+            string internalLogs = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("index"u8))
                 {
                     index = prop.Value.GetInt32();
@@ -79,17 +84,12 @@ namespace OpenAI.Assistants
                     internalLogs = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(index, internalLogs, @type, additionalBinaryDataProperties);
+            return new InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(@type, additionalBinaryDataProperties, index, internalLogs);
         }
 
         BinaryData IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

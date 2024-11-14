@@ -14,7 +14,7 @@ namespace OpenAI.Assistants
             Index = index;
         }
 
-        internal InternalMessageDeltaContentTextObject(int index, InternalMessageDeltaContentTextObjectText text, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalMessageDeltaContentTextObject(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, int index, InternalMessageDeltaContentTextObjectText text) : base(@type, additionalBinaryDataProperties)
         {
             Index = index;
             Text = text;

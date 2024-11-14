@@ -63,12 +63,17 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            int index = default;
-            InternalMessageDeltaContentImageUrlObjectImageUrl imageUrl = default;
             string @type = "image_url";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            int index = default;
+            InternalMessageDeltaContentImageUrlObjectImageUrl imageUrl = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("index"u8))
                 {
                     index = prop.Value.GetInt32();
@@ -83,17 +88,12 @@ namespace OpenAI.Assistants
                     imageUrl = InternalMessageDeltaContentImageUrlObjectImageUrl.DeserializeInternalMessageDeltaContentImageUrlObjectImageUrl(prop.Value, options);
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalMessageDeltaContentImageUrlObject(index, imageUrl, @type, additionalBinaryDataProperties);
+            return new InternalMessageDeltaContentImageUrlObject(@type, additionalBinaryDataProperties, index, imageUrl);
         }
 
         BinaryData IPersistableModel<InternalMessageDeltaContentImageUrlObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

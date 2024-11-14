@@ -78,16 +78,26 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
+            string eventId = default;
+            RealtimeConversation.ConversationUpdateKind kind = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string responseId = default;
             string itemId = default;
             int outputIndex = default;
             int contentIndex = default;
             string transcript = default;
-            string eventId = default;
-            RealtimeConversation.ConversationUpdateKind kind = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("event_id"u8))
+                {
+                    eventId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = prop.Value.GetString().ToConversationUpdateKind();
+                    continue;
+                }
                 if (prop.NameEquals("response_id"u8))
                 {
                     responseId = prop.Value.GetString();
@@ -113,30 +123,20 @@ namespace OpenAI.RealtimeConversation
                     transcript = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("event_id"u8))
-                {
-                    eventId = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("type"u8))
-                {
-                    kind = prop.Value.GetString().ToConversationUpdateKind();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
             return new ConversationItemStreamingAudioTranscriptionFinishedUpdate(
+                eventId,
+                kind,
+                additionalBinaryDataProperties,
                 responseId,
                 itemId,
                 outputIndex,
                 contentIndex,
-                transcript,
-                eventId,
-                kind,
-                additionalBinaryDataProperties);
+                transcript);
         }
 
         BinaryData IPersistableModel<ConversationItemStreamingAudioTranscriptionFinishedUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

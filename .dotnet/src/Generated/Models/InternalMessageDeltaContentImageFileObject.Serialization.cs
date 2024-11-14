@@ -63,12 +63,17 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            int index = default;
-            InternalMessageDeltaContentImageFileObjectImageFile imageFile = default;
             string @type = "image_file";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            int index = default;
+            InternalMessageDeltaContentImageFileObjectImageFile imageFile = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("index"u8))
                 {
                     index = prop.Value.GetInt32();
@@ -83,17 +88,12 @@ namespace OpenAI.Assistants
                     imageFile = InternalMessageDeltaContentImageFileObjectImageFile.DeserializeInternalMessageDeltaContentImageFileObjectImageFile(prop.Value, options);
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalMessageDeltaContentImageFileObject(index, imageFile, @type, additionalBinaryDataProperties);
+            return new InternalMessageDeltaContentImageFileObject(@type, additionalBinaryDataProperties, index, imageFile);
         }
 
         BinaryData IPersistableModel<InternalMessageDeltaContentImageFileObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

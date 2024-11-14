@@ -14,7 +14,7 @@ namespace OpenAI.Assistants
             Index = index;
         }
 
-        internal InternalRunStepDeltaStepDetailsToolCallsCodeOutputImageObject(int index, InternalRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage image, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRunStepDeltaStepDetailsToolCallsCodeOutputImageObject(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, int index, InternalRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectImage image) : base(@type, additionalBinaryDataProperties)
         {
             Index = index;
             Image = image;

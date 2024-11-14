@@ -58,17 +58,12 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            BinaryData audio = default;
             InternalRealtimeClientEventType kind = default;
             string eventId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            BinaryData audio = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("audio"u8))
-                {
-                    audio = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
                     kind = new InternalRealtimeClientEventType(prop.Value.GetString());
@@ -79,12 +74,17 @@ namespace OpenAI.RealtimeConversation
                     eventId = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("audio"u8))
+                {
+                    audio = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeClientEventInputAudioBufferAppend(audio, kind, eventId, additionalBinaryDataProperties);
+            return new InternalRealtimeClientEventInputAudioBufferAppend(kind, eventId, additionalBinaryDataProperties, audio);
         }
 
         BinaryData IPersistableModel<InternalRealtimeClientEventInputAudioBufferAppend>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

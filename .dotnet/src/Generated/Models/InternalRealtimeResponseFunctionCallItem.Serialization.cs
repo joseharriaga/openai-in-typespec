@@ -73,36 +73,16 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string name = default;
-            string callId = default;
-            string arguments = default;
-            ConversationItemStatus status = default;
             InternalRealtimeResponseItemObject @object = default;
             InternalRealtimeItemType @type = default;
             string id = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            string name = default;
+            string callId = default;
+            string arguments = default;
+            ConversationItemStatus status = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("name"u8))
-                {
-                    name = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("call_id"u8))
-                {
-                    callId = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("arguments"u8))
-                {
-                    arguments = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("status"u8))
-                {
-                    status = new ConversationItemStatus(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("object"u8))
                 {
                     @object = new InternalRealtimeResponseItemObject(prop.Value.GetString());
@@ -123,20 +103,40 @@ namespace OpenAI.RealtimeConversation
                     id = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("name"u8))
+                {
+                    name = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("call_id"u8))
+                {
+                    callId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("arguments"u8))
+                {
+                    arguments = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("status"u8))
+                {
+                    status = new ConversationItemStatus(prop.Value.GetString());
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
             return new InternalRealtimeResponseFunctionCallItem(
-                name,
-                callId,
-                arguments,
-                status,
                 @object,
                 @type,
                 id,
-                additionalBinaryDataProperties);
+                additionalBinaryDataProperties,
+                name,
+                callId,
+                arguments,
+                status);
         }
 
         BinaryData IPersistableModel<InternalRealtimeResponseFunctionCallItem>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

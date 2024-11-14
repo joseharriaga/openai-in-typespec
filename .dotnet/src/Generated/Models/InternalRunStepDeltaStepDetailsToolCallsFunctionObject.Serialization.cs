@@ -68,13 +68,18 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
+            string @type = "function";
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             int index = default;
             string id = default;
             InternalRunStepDeltaStepDetailsToolCallsFunctionObjectFunction function = default;
-            string @type = "function";
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("index"u8))
                 {
                     index = prop.Value.GetInt32();
@@ -94,17 +99,12 @@ namespace OpenAI.Assistants
                     function = InternalRunStepDeltaStepDetailsToolCallsFunctionObjectFunction.DeserializeInternalRunStepDeltaStepDetailsToolCallsFunctionObjectFunction(prop.Value, options);
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunStepDeltaStepDetailsToolCallsFunctionObject(index, id, function, @type, additionalBinaryDataProperties);
+            return new InternalRunStepDeltaStepDetailsToolCallsFunctionObject(@type, additionalBinaryDataProperties, index, id, function);
         }
 
         BinaryData IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsFunctionObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

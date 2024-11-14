@@ -63,12 +63,17 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            int index = default;
-            InternalMessageDeltaContentTextObjectText text = default;
             string @type = "text";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            int index = default;
+            InternalMessageDeltaContentTextObjectText text = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("index"u8))
                 {
                     index = prop.Value.GetInt32();
@@ -83,17 +88,12 @@ namespace OpenAI.Assistants
                     text = InternalMessageDeltaContentTextObjectText.DeserializeInternalMessageDeltaContentTextObjectText(prop.Value, options);
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalMessageDeltaContentTextObject(index, text, @type, additionalBinaryDataProperties);
+            return new InternalMessageDeltaContentTextObject(@type, additionalBinaryDataProperties, index, text);
         }
 
         BinaryData IPersistableModel<InternalMessageDeltaContentTextObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

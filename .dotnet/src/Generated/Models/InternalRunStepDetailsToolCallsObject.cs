@@ -15,7 +15,7 @@ namespace OpenAI.Assistants
             InternalToolCalls = internalToolCalls.ToList();
         }
 
-        internal InternalRunStepDetailsToolCallsObject(IReadOnlyList<RunStepToolCall> internalToolCalls, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRunStepDetailsToolCallsObject(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, IReadOnlyList<RunStepToolCall> internalToolCalls) : base(@type, additionalBinaryDataProperties)
         {
             InternalToolCalls = internalToolCalls;
         }

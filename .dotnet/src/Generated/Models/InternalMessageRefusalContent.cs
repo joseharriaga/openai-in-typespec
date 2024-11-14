@@ -17,7 +17,7 @@ namespace OpenAI.Assistants
             InternalRefusal = internalRefusal;
         }
 
-        internal InternalMessageRefusalContent(string internalRefusal, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(additionalBinaryDataProperties)
+        internal InternalMessageRefusalContent(IDictionary<string, BinaryData> additionalBinaryDataProperties, string internalRefusal, string @type) : base(additionalBinaryDataProperties)
         {
             InternalRefusal = internalRefusal;
             _type = @type;

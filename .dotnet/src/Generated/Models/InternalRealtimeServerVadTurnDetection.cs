@@ -13,7 +13,7 @@ namespace OpenAI.RealtimeConversation
         {
         }
 
-        internal InternalRealtimeServerVadTurnDetection(float? threshold, TimeSpan? prefixPaddingMs, TimeSpan? silenceDurationMs, RealtimeConversation.ConversationTurnDetectionKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, additionalBinaryDataProperties)
+        internal InternalRealtimeServerVadTurnDetection(RealtimeConversation.ConversationTurnDetectionKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties, float? threshold, TimeSpan? prefixPaddingMs, TimeSpan? silenceDurationMs) : base(kind, additionalBinaryDataProperties)
         {
             Threshold = threshold;
             PrefixPaddingMs = prefixPaddingMs;

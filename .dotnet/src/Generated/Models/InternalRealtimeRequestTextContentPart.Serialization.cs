@@ -63,12 +63,17 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string @type = "input_text";
-            string internalTextValue = default;
             ConversationContentPartKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            string @type = "input_text";
+            string internalTextValue = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = new ConversationContentPartKind(prop.Value.GetString());
+                    continue;
+                }
                 if (prop.NameEquals("type"u8))
                 {
                     @type = prop.Value.GetString();
@@ -79,17 +84,12 @@ namespace OpenAI.RealtimeConversation
                     internalTextValue = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    kind = new ConversationContentPartKind(prop.Value.GetString());
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeRequestTextContentPart(@type, internalTextValue, kind, additionalBinaryDataProperties);
+            return new InternalRealtimeRequestTextContentPart(kind, additionalBinaryDataProperties, @type, internalTextValue);
         }
 
         BinaryData IPersistableModel<InternalRealtimeRequestTextContentPart>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

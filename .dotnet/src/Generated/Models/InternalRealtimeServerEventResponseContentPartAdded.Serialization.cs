@@ -78,16 +78,26 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
+            string eventId = default;
+            RealtimeConversation.ConversationUpdateKind kind = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string responseId = default;
             string itemId = default;
             int outputIndex = default;
             int contentIndex = default;
             ConversationContentPart internalContentPart = default;
-            string eventId = default;
-            RealtimeConversation.ConversationUpdateKind kind = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("event_id"u8))
+                {
+                    eventId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = prop.Value.GetString().ToConversationUpdateKind();
+                    continue;
+                }
                 if (prop.NameEquals("response_id"u8))
                 {
                     responseId = prop.Value.GetString();
@@ -113,30 +123,20 @@ namespace OpenAI.RealtimeConversation
                     internalContentPart = ConversationContentPart.DeserializeConversationContentPart(prop.Value, options);
                     continue;
                 }
-                if (prop.NameEquals("event_id"u8))
-                {
-                    eventId = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("type"u8))
-                {
-                    kind = prop.Value.GetString().ToConversationUpdateKind();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
             return new InternalRealtimeServerEventResponseContentPartAdded(
+                eventId,
+                kind,
+                additionalBinaryDataProperties,
                 responseId,
                 itemId,
                 outputIndex,
                 contentIndex,
-                internalContentPart,
-                eventId,
-                kind,
-                additionalBinaryDataProperties);
+                internalContentPart);
         }
 
         BinaryData IPersistableModel<InternalRealtimeServerEventResponseContentPartAdded>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

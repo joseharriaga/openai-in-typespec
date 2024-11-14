@@ -17,7 +17,7 @@ namespace OpenAI.VectorStores
             Static = @static;
         }
 
-        internal InternalStaticChunkingStrategyRequestParam(InternalStaticChunkingStrategyDetails @static, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalStaticChunkingStrategyRequestParam(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, InternalStaticChunkingStrategyDetails @static) : base(@type, additionalBinaryDataProperties)
         {
             Static = @static;
         }

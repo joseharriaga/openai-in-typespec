@@ -17,7 +17,7 @@ namespace OpenAI.RealtimeConversation
             Function = function;
         }
 
-        internal InternalRealtimeToolChoiceFunctionObject(InternalRealtimeToolChoiceFunctionObjectFunction function, ConversationToolKind @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRealtimeToolChoiceFunctionObject(ConversationToolKind @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, InternalRealtimeToolChoiceFunctionObjectFunction function) : base(@type, additionalBinaryDataProperties)
         {
             Function = function;
         }

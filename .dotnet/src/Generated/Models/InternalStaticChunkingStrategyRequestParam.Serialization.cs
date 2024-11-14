@@ -58,19 +58,19 @@ namespace OpenAI.VectorStores
             {
                 return null;
             }
-            InternalStaticChunkingStrategyDetails @static = default;
             string @type = "static";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            InternalStaticChunkingStrategyDetails @static = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("static"u8))
-                {
-                    @static = InternalStaticChunkingStrategyDetails.DeserializeInternalStaticChunkingStrategyDetails(prop.Value, options);
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
                     @type = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("static"u8))
+                {
+                    @static = InternalStaticChunkingStrategyDetails.DeserializeInternalStaticChunkingStrategyDetails(prop.Value, options);
                     continue;
                 }
                 if (true)
@@ -78,7 +78,7 @@ namespace OpenAI.VectorStores
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalStaticChunkingStrategyRequestParam(@static, @type, additionalBinaryDataProperties);
+            return new InternalStaticChunkingStrategyRequestParam(@type, additionalBinaryDataProperties, @static);
         }
 
         BinaryData IPersistableModel<InternalStaticChunkingStrategyRequestParam>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

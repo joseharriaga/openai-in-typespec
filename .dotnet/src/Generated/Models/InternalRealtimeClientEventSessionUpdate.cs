@@ -17,7 +17,7 @@ namespace OpenAI.RealtimeConversation
             Session = session;
         }
 
-        internal InternalRealtimeClientEventSessionUpdate(ConversationSessionOptions session, InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(kind, eventId, additionalBinaryDataProperties)
+        internal InternalRealtimeClientEventSessionUpdate(InternalRealtimeClientEventType kind, string eventId, IDictionary<string, BinaryData> additionalBinaryDataProperties, ConversationSessionOptions session) : base(kind, eventId, additionalBinaryDataProperties)
         {
             Session = session;
         }

@@ -59,12 +59,17 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string @type = "input_audio";
-            string internalTranscriptValue = default;
             ConversationContentPartKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            string @type = "input_audio";
+            string internalTranscriptValue = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = new ConversationContentPartKind(prop.Value.GetString());
+                    continue;
+                }
                 if (prop.NameEquals("type"u8))
                 {
                     @type = prop.Value.GetString();
@@ -75,17 +80,12 @@ namespace OpenAI.RealtimeConversation
                     internalTranscriptValue = prop.Value.GetString();
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    kind = new ConversationContentPartKind(prop.Value.GetString());
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeRequestAudioContentPart(@type, internalTranscriptValue, kind, additionalBinaryDataProperties);
+            return new InternalRealtimeRequestAudioContentPart(kind, additionalBinaryDataProperties, @type, internalTranscriptValue);
         }
 
         BinaryData IPersistableModel<InternalRealtimeRequestAudioContentPart>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

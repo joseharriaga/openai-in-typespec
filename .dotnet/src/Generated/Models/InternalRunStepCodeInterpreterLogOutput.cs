@@ -14,7 +14,7 @@ namespace OpenAI.Assistants
             InternalLogs = internalLogs;
         }
 
-        internal InternalRunStepCodeInterpreterLogOutput(string internalLogs, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRunStepCodeInterpreterLogOutput(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, string internalLogs) : base(@type, additionalBinaryDataProperties)
         {
             InternalLogs = internalLogs;
         }

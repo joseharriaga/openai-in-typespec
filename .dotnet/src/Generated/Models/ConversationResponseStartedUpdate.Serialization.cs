@@ -58,17 +58,12 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            InternalRealtimeResponse internalResponse = default;
             string eventId = default;
             RealtimeConversation.ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            InternalRealtimeResponse internalResponse = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("response"u8))
-                {
-                    internalResponse = InternalRealtimeResponse.DeserializeInternalRealtimeResponse(prop.Value, options);
-                    continue;
-                }
                 if (prop.NameEquals("event_id"u8))
                 {
                     eventId = prop.Value.GetString();
@@ -79,12 +74,17 @@ namespace OpenAI.RealtimeConversation
                     kind = prop.Value.GetString().ToConversationUpdateKind();
                     continue;
                 }
+                if (prop.NameEquals("response"u8))
+                {
+                    internalResponse = InternalRealtimeResponse.DeserializeInternalRealtimeResponse(prop.Value, options);
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationResponseStartedUpdate(internalResponse, eventId, kind, additionalBinaryDataProperties);
+            return new ConversationResponseStartedUpdate(eventId, kind, additionalBinaryDataProperties, internalResponse);
         }
 
         BinaryData IPersistableModel<ConversationResponseStartedUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -59,11 +59,16 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            IList<InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject> toolCalls = default;
             string @type = "tool_calls";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            IList<InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject> toolCalls = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("tool_calls"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -78,17 +83,12 @@ namespace OpenAI.Assistants
                     toolCalls = array;
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunStepDeltaStepDetailsToolCallsObject(toolCalls ?? new ChangeTrackingList<InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject>(), @type, additionalBinaryDataProperties);
+            return new InternalRunStepDeltaStepDetailsToolCallsObject(@type, additionalBinaryDataProperties, toolCalls ?? new ChangeTrackingList<InternalRunStepDeltaStepDetailsToolCallsObjectToolCallsObject>());
         }
 
         BinaryData IPersistableModel<InternalRunStepDeltaStepDetailsToolCallsObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

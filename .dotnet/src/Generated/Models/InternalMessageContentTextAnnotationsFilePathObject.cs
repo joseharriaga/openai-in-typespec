@@ -21,7 +21,7 @@ namespace OpenAI.Assistants
             EndIndex = endIndex;
         }
 
-        internal InternalMessageContentTextAnnotationsFilePathObject(string text, InternalMessageContentTextAnnotationsFilePathObjectFilePath filePath, int startIndex, int endIndex, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalMessageContentTextAnnotationsFilePathObject(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, string text, InternalMessageContentTextAnnotationsFilePathObjectFilePath filePath, int startIndex, int endIndex) : base(@type, additionalBinaryDataProperties)
         {
             Text = text;
             FilePath = filePath;

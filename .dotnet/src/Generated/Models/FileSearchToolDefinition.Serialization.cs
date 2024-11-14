@@ -47,11 +47,16 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            InternalAssistantToolsFileSearchFileSearch fileSearch = default;
             string @type = "file_search";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            InternalAssistantToolsFileSearchFileSearch fileSearch = default;
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("file_search"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -61,17 +66,12 @@ namespace OpenAI.Assistants
                     fileSearch = InternalAssistantToolsFileSearchFileSearch.DeserializeInternalAssistantToolsFileSearchFileSearch(prop.Value, options);
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new FileSearchToolDefinition(fileSearch, @type, additionalBinaryDataProperties);
+            return new FileSearchToolDefinition(@type, additionalBinaryDataProperties, fileSearch);
         }
 
         BinaryData IPersistableModel<FileSearchToolDefinition>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -14,7 +14,7 @@ namespace OpenAI.Assistants
             Index = index;
         }
 
-        internal InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(int index, string internalLogs, string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
+        internal InternalRunStepDeltaStepDetailsToolCallsCodeOutputLogsObject(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, int index, string internalLogs) : base(@type, additionalBinaryDataProperties)
         {
             Index = index;
             InternalLogs = internalLogs;

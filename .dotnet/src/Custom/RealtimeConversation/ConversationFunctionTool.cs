@@ -40,13 +40,13 @@ public partial class ConversationFunctionTool : ConversationTool
 
     [SetsRequiredMembers]
     public ConversationFunctionTool(string name)
-        : this(name, null, null, ConversationToolKind.Function, null)
+        : this(ConversationToolKind.Function, null, name, null, null)
     {
         Argument.AssertNotNull(name, nameof(name));
     }
 
     [SetsRequiredMembers]
-    internal ConversationFunctionTool(string name, string description, BinaryData parameters, ConversationToolKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, serializedAdditionalRawData)
+    internal ConversationFunctionTool(ConversationToolKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData, string name, string description, BinaryData parameters) : base(kind, serializedAdditionalRawData)
     {
         _name = name;
         _description = description;

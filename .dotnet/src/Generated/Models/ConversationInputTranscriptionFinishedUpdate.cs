@@ -9,14 +9,14 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationInputTranscriptionFinishedUpdate : ConversationUpdate
     {
-        internal ConversationInputTranscriptionFinishedUpdate(string itemId, int contentIndex, string transcript, string eventId) : base(eventId, RealtimeConversation.ConversationUpdateKind.InputTranscriptionFinished)
+        internal ConversationInputTranscriptionFinishedUpdate(string eventId, string itemId, int contentIndex, string transcript) : base(eventId, RealtimeConversation.ConversationUpdateKind.InputTranscriptionFinished)
         {
             ItemId = itemId;
             ContentIndex = contentIndex;
             Transcript = transcript;
         }
 
-        internal ConversationInputTranscriptionFinishedUpdate(string itemId, int contentIndex, string transcript, string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(eventId, kind, additionalBinaryDataProperties)
+        internal ConversationInputTranscriptionFinishedUpdate(string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties, string itemId, int contentIndex, string transcript) : base(eventId, kind, additionalBinaryDataProperties)
         {
             ItemId = itemId;
             ContentIndex = contentIndex;

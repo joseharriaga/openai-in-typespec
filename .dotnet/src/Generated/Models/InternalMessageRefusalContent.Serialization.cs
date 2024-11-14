@@ -56,9 +56,9 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string internalRefusal = default;
             string @type = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("refusal"u8))
@@ -76,7 +76,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalMessageRefusalContent(internalRefusal, @type, additionalBinaryDataProperties);
+            return new InternalMessageRefusalContent(additionalBinaryDataProperties, internalRefusal, @type);
         }
 
         BinaryData IPersistableModel<InternalMessageRefusalContent>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

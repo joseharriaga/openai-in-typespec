@@ -58,19 +58,19 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            InternalRealtimeToolChoiceFunctionObjectFunction function = default;
             ConversationToolKind @type = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            InternalRealtimeToolChoiceFunctionObjectFunction function = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("function"u8))
-                {
-                    function = InternalRealtimeToolChoiceFunctionObjectFunction.DeserializeInternalRealtimeToolChoiceFunctionObjectFunction(prop.Value, options);
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
                     @type = new ConversationToolKind(prop.Value.GetString());
+                    continue;
+                }
+                if (prop.NameEquals("function"u8))
+                {
+                    function = InternalRealtimeToolChoiceFunctionObjectFunction.DeserializeInternalRealtimeToolChoiceFunctionObjectFunction(prop.Value, options);
                     continue;
                 }
                 if (true)
@@ -78,7 +78,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRealtimeToolChoiceFunctionObject(function, @type, additionalBinaryDataProperties);
+            return new InternalRealtimeToolChoiceFunctionObject(@type, additionalBinaryDataProperties, function);
         }
 
         BinaryData IPersistableModel<InternalRealtimeToolChoiceFunctionObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -73,14 +73,19 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
+            string @type = "file_path";
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string text = default;
             InternalMessageContentTextAnnotationsFilePathObjectFilePath filePath = default;
             int startIndex = default;
             int endIndex = default;
-            string @type = "file_path";
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    @type = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("text"u8))
                 {
                     text = prop.Value.GetString();
@@ -101,23 +106,18 @@ namespace OpenAI.Assistants
                     endIndex = prop.Value.GetInt32();
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = prop.Value.GetString();
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
             return new InternalMessageContentTextAnnotationsFilePathObject(
+                @type,
+                additionalBinaryDataProperties,
                 text,
                 filePath,
                 startIndex,
-                endIndex,
-                @type,
-                additionalBinaryDataProperties);
+                endIndex);
         }
 
         BinaryData IPersistableModel<InternalMessageContentTextAnnotationsFilePathObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

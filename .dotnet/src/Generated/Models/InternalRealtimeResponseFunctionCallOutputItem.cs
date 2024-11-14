@@ -9,13 +9,13 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponseFunctionCallOutputItem : InternalRealtimeResponseItem
     {
-        internal InternalRealtimeResponseFunctionCallOutputItem(string callId, string output, string id) : base(InternalRealtimeItemType.FunctionCallOutput, id)
+        internal InternalRealtimeResponseFunctionCallOutputItem(string id, string callId, string output) : base(InternalRealtimeItemType.FunctionCallOutput, id)
         {
             CallId = callId;
             Output = output;
         }
 
-        internal InternalRealtimeResponseFunctionCallOutputItem(string callId, string output, InternalRealtimeResponseItemObject @object, InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@object, @type, id, additionalBinaryDataProperties)
+        internal InternalRealtimeResponseFunctionCallOutputItem(InternalRealtimeResponseItemObject @object, InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties, string callId, string output) : base(@object, @type, id, additionalBinaryDataProperties)
         {
             CallId = callId;
             Output = output;

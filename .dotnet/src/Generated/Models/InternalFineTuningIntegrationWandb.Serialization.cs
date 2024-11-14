@@ -58,19 +58,19 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            FineTuningIntegrationWandbWandb wandb = default;
             string @type = "wandb";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            FineTuningIntegrationWandbWandb wandb = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("wandb"u8))
-                {
-                    wandb = FineTuningIntegrationWandbWandb.DeserializeFineTuningIntegrationWandbWandb(prop.Value, options);
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
                     @type = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("wandb"u8))
+                {
+                    wandb = FineTuningIntegrationWandbWandb.DeserializeFineTuningIntegrationWandbWandb(prop.Value, options);
                     continue;
                 }
                 if (true)
@@ -78,7 +78,7 @@ namespace OpenAI.FineTuning
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalFineTuningIntegrationWandb(wandb, @type, additionalBinaryDataProperties);
+            return new InternalFineTuningIntegrationWandb(@type, additionalBinaryDataProperties, wandb);
         }
 
         BinaryData IPersistableModel<InternalFineTuningIntegrationWandb>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

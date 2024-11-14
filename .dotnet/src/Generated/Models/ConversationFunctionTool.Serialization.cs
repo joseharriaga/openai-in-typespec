@@ -71,13 +71,18 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
+            ConversationToolKind kind = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string name = default;
             string description = default;
             BinaryData parameters = default;
-            ConversationToolKind kind = default;
-            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = new ConversationToolKind(prop.Value.GetString());
+                    continue;
+                }
                 if (prop.NameEquals("name"u8))
                 {
                     name = prop.Value.GetString();
@@ -97,17 +102,12 @@ namespace OpenAI.RealtimeConversation
                     parameters = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (prop.NameEquals("type"u8))
-                {
-                    kind = new ConversationToolKind(prop.Value.GetString());
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationFunctionTool(name, description, parameters, kind, additionalBinaryDataProperties);
+            return new ConversationFunctionTool(kind, additionalBinaryDataProperties, name, description, parameters);
         }
 
         BinaryData IPersistableModel<ConversationFunctionTool>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

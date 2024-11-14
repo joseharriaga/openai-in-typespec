@@ -1,6 +1,6 @@
 import "./content_parts.tsp";
 
-using TypeSpec.OpenAPI;
+// using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 

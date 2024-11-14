@@ -1,7 +1,7 @@
 import "./models.tsp";
 
 using TypeSpec.Http;
-using TypeSpec.OpenAPI;
+// using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 

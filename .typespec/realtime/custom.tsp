@@ -2,7 +2,7 @@ import "./custom/events.tsp";
 import "./custom/items.tsp";
 import "./custom/tools.tsp";
 
-using TypeSpec.OpenAPI;
+// using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 

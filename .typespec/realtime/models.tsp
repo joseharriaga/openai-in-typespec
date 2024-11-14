@@ -5,7 +5,7 @@
 
 import "./custom.tsp";
 
-using TypeSpec.OpenAPI;
+// using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 

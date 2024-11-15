@@ -723,6 +723,8 @@ namespace OpenAI.Assistants {
         public string CodeInterpreterInput { get; }
         public IReadOnlyList<RunStepUpdateCodeInterpreterOutput> CodeInterpreterOutputs { get; }
         public string CreatedMessageId { get; }
+        public FileSearchRankingOptions FileSearchRankingOptions { get; }
+        public IReadOnlyList<RunStepFileSearchResult> FileSearchResults { get; }
         public string FunctionArguments { get; }
         public string FunctionName { get; }
         public string FunctionOutput { get; }
@@ -814,9 +816,8 @@ namespace OpenAI.Assistants {
     public abstract class RunStepToolCall : IJsonModel<RunStepToolCall>, IPersistableModel<RunStepToolCall> {
         public string CodeInterpreterInput { get; }
         public IReadOnlyList<RunStepCodeInterpreterOutput> CodeInterpreterOutputs { get; }
-        public FileSearchRanker? FileSearchRanker { get; }
+        public FileSearchRankingOptions FileSearchRankingOptions { get; }
         public IReadOnlyList<RunStepFileSearchResult> FileSearchResults { get; }
-        public float? FileSearchScoreThreshold { get; }
         public string FunctionArguments { get; }
         public string FunctionName { get; }
         public string FunctionOutput { get; }

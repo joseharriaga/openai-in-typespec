@@ -813,7 +813,13 @@ model RunStepDeltaStepDetailsToolCallsFileSearchObject
 
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
-  file_search: Record<unknown>;
+  file_search: {
+    ranking_options?: RunStepDetailsToolCallsFileSearchRankingOptionsObject;
+
+    /** The results of the file search. */
+    @visibility("read")
+    results?: RunStepDetailsToolCallsFileSearchResultObject[];
+  };
 }
 
 // Tool customization: apply custom, common base type to union items

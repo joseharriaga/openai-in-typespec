@@ -1708,6 +1708,22 @@ paths:
           description: The ID of the thread to run.
           schema:
             type: string
+        - name: include[]
+          in: query
+          required: false
+          description: |-
+            A list of additional fields to include in the response. Currently the only supported value is
+            `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result
+            content.
+
+            See the 
+            [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+            for more information.
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/IncludedRunStepProperty'
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
@@ -11209,7 +11225,15 @@ components:
           description: The type of tool call. This is always going to be `file_search` for this type of tool call.
         file_search:
           type: object
-          additionalProperties: {}
+          properties:
+            ranking_options:
+              $ref: '#/components/schemas/RunStepDetailsToolCallsFileSearchRankingOptionsObject'
+            results:
+              type: array
+              items:
+                $ref: '#/components/schemas/RunStepDetailsToolCallsFileSearchResultObject'
+              description: The results of the file search.
+              readOnly: true
           description: For now, this is always going to be an empty object.
           x-oaiTypeLabel: map
       allOf:

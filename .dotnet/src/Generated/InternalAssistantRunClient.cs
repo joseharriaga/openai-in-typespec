@@ -56,7 +56,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, RequestOptions options)
+        internal PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
         {
             var message = _pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -67,6 +67,10 @@ namespace OpenAI.Assistants
             uri.AppendPath("/threads/", false);
             uri.AppendPath(threadId, true);
             uri.AppendPath("/runs", false);
+            if (include != null && !(include is ChangeTrackingList<InternalIncludedRunStepProperty> changeTrackingList && changeTrackingList.IsUndefined))
+            {
+                uri.AppendQueryDelimited("include[]", include, ",", true);
+            }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
 
+[CodeGenSuppress("CreateRunAsync", typeof(string), typeof(BinaryContent), typeof(IEnumerable<InternalIncludedRunStepProperty>), typeof(RequestOptions))]
+[CodeGenSuppress("CreateRun", typeof(string), typeof(BinaryContent), typeof(IEnumerable<InternalIncludedRunStepProperty>), typeof(RequestOptions))]
 [CodeGenSuppress("GetRunStepsAsync", typeof(string), typeof(string), typeof(int?), typeof(string), typeof(string), typeof(string), typeof(IEnumerable<InternalIncludedRunStepProperty>), typeof(RequestOptions))]
 [CodeGenSuppress("GetRunSteps", typeof(string), typeof(string), typeof(int?), typeof(string), typeof(string), typeof(string), typeof(IEnumerable<InternalIncludedRunStepProperty>), typeof(RequestOptions))]
 [CodeGenSuppress("GetRunStepAsync", typeof(string), typeof(string), typeof(string), typeof(IEnumerable<InternalIncludedRunStepProperty>), typeof(RequestOptions))]
@@ -84,7 +86,10 @@ internal partial class InternalAssistantRunClient
         PipelineMessage message = null;
         try
         {
-            message = CreateCreateRunRequest(threadId, content, options);
+            // Always request the included properties.
+            IEnumerable<InternalIncludedRunStepProperty> includedRunStepProperties = [InternalIncludedRunStepProperty.FileSearchResultContent];
+
+            message = CreateCreateRunRequest(threadId, content, includedRunStepProperties, options);
             return ClientResult.FromResponse(await _pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
         finally
@@ -114,7 +119,10 @@ internal partial class InternalAssistantRunClient
         PipelineMessage message = null;
         try
         {
-            message = CreateCreateRunRequest(threadId, content, options);
+            // Always request the included properties.
+            IEnumerable<InternalIncludedRunStepProperty> includedRunStepProperties = [InternalIncludedRunStepProperty.FileSearchResultContent];
+
+            message = CreateCreateRunRequest(threadId, content, includedRunStepProperties, options);
             return ClientResult.FromResponse(_pipeline.ProcessMessage(message, options));
         }
         finally

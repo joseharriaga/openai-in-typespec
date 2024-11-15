@@ -49,3 +49,4 @@ public readonly partial struct RunStepErrorCode { }
 [Experimental("OPENAI001")]
 [CodeGenModel("RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject")]
 public partial class RunStepCodeInterpreterOutput { }
+

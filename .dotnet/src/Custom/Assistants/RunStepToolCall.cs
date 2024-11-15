@@ -30,6 +30,7 @@ public partial class RunStepToolCall
     public RunStepToolCallKind Kind { get; internal set; }
 
     #region Code Interpreter
+
     // CUSTOM: Spread.
     /// <summary> The input of the code interpreter. </summary>
     public string CodeInterpreterInput => (this as InternalRunStepDetailsToolCallsCodeObject)?.CodeInterpreter.Input;
@@ -40,14 +41,13 @@ public partial class RunStepToolCall
         _codeInterpreterOutputs
             ??= (this as InternalRunStepDetailsToolCallsCodeObject)?.CodeInterpreter?.Outputs
                 ?? new ChangeTrackingList<RunStepCodeInterpreterOutput>();
+
     #endregion
 
     #region File Search
-    // CUSTOM: Spread.
-    public FileSearchRanker? FileSearchRanker => (this as InternalRunStepDetailsToolCallsFileSearchObject)?.FileSearch?.RankingOptions?.Ranker;
 
     // CUSTOM: Spread.
-    public float? FileSearchScoreThreshold => (this as InternalRunStepDetailsToolCallsFileSearchObject)?.FileSearch?.RankingOptions?.ScoreThreshold;
+    public FileSearchRankingOptions FileSearchRankingOptions => (this as InternalRunStepDetailsToolCallsFileSearchObject)?.FileSearch?.RankingOptions;
 
     // CUSTOM: Spread.
     /// <summary> The results of the file search. </summary>
@@ -55,9 +55,11 @@ public partial class RunStepToolCall
         _fileSearchResults
             ??= (this as InternalRunStepDetailsToolCallsFileSearchObject)?.FileSearch?.Results
                 ?? new ChangeTrackingList<RunStepFileSearchResult>();
+
     #endregion
 
     #region Function
+
     // CUSTOM: Spread.
     /// <summary> The name of the function. </summary>
     public string FunctionName => (this as InternalRunStepDetailsToolCallsFunctionObject)?.Function?.Name;
@@ -69,5 +71,6 @@ public partial class RunStepToolCall
     // CUSTOM: Spread.
     /// <summary> The output of the function, which will be null if not submitted yet. </summary>
     public string FunctionOutput => (this as InternalRunStepDetailsToolCallsFunctionObject)?.Function?.Output;
+
     #endregion
 }

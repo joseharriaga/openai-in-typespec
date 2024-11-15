@@ -952,8 +952,8 @@ public class AssistantsTests : SyncAsyncTestBase
                 Assert.That(toolCall, Is.Not.Null);
                 Assert.Multiple(() =>
                 {
-                    Assert.That(toolCall.FileSearchRanker, Is.EqualTo(fileSearchTool.RankingOptions.Ranker));
-                    Assert.That(toolCall.FileSearchScoreThreshold, Is.EqualTo(fileSearchTool.RankingOptions.ScoreThreshold));
+                    Assert.That(toolCall.FileSearchRankingOptions.Ranker, Is.EqualTo(fileSearchTool.RankingOptions.Ranker));
+                    Assert.That(toolCall.FileSearchRankingOptions.ScoreThreshold, Is.EqualTo(fileSearchTool.RankingOptions.ScoreThreshold));
                     Assert.That(toolCall.FileSearchResults, Has.Count.GreaterThan(0));
                 });
 
@@ -993,8 +993,10 @@ public class AssistantsTests : SyncAsyncTestBase
     }
 
     [Test]
-    public async Task BasicFileSearchStreamingWorks()
+    public void FileSearchStreamingWorksSync()
     {
+        AssertSyncOnly();
+
         const string fileContent = """
                 The favorite food of several people:
                 - Summanus Ferdinand: tacos
@@ -1041,27 +1043,124 @@ public class AssistantsTests : SyncAsyncTestBase
         string message = string.Empty;
 
         // Create run and stream the results.
-        if (IsAsync)
-        {
-            AsyncCollectionResult<StreamingUpdate> streamingResult = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+        CollectionResult<StreamingUpdate> streamingResult = client.CreateRunStreaming(thread.Id, assistant.Id);
 
-            await foreach (StreamingUpdate update in streamingResult)
+        foreach (StreamingUpdate update in streamingResult)
+        {
+            if (update is MessageContentUpdate contentUpdate)
             {
-                if (update is MessageContentUpdate contentUpdate)
+                message += $"{contentUpdate.Text}";
+            }
+            else if (update is RunStepUpdate runStepUpdate)
+            {
+                RunStep runStep = runStepUpdate.Value;
+                Assert.That(runStep, Is.Not.Null);
+
+                if (runStepUpdate.UpdateKind == StreamingUpdateReason.RunStepCompleted)
                 {
-                    message += $"{contentUpdate.Text}";
+                    if (runStep.Kind == RunStepKind.ToolCall)
+                    {
+                        Assert.Multiple(() =>
+                        {
+                            Assert.That(runStep.Kind, Is.EqualTo(RunStepKind.ToolCall));
+                            Assert.That(runStep.Details, Is.Not.Null);
+                            Assert.That(runStep.Details.ToolCalls, Has.Count.GreaterThan(0));
+                            Assert.That(runStep.Details.ToolCalls[0].Kind, Is.EqualTo(RunStepToolCallKind.FileSearch));
+
+                            // Confirm that we always get the Content property, since we are always passing the `include[]` query parameter.
+                            Assert.That(runStep.Details.ToolCalls[0].FileSearchResults[0].Content, Has.Count.GreaterThan(0));
+                        });
+                    }
                 }
             }
         }
-        else
-        {
-            CollectionResult<StreamingUpdate> streamingResult = client.CreateRunStreaming(thread.Id, assistant.Id);
 
-            foreach (StreamingUpdate update in streamingResult)
+
+        Assert.That(message, Does.Contain("cake"));
+    }
+
+    [Test]
+    public async Task FileSearchStreamingWorksAsync()
+    {
+        AssertAsyncOnly();
+
+        const string fileContent = """
+                The favorite food of several people:
+                - Summanus Ferdinand: tacos
+                - Tekakwitha Effie: pizza
+                - Filip Carola: cake
+                """;
+
+        const string fileName = "favorite_foods.txt";
+
+        OpenAIFileClient fileClient = GetTestClient<OpenAIFileClient>(TestScenario.Files);
+        AssistantClient client = GetTestClient<AssistantClient>(TestScenario.Assistants);
+
+        // First, upload a simple test file.
+        OpenAIFile testFile = await fileClient.UploadFileAsync(BinaryData.FromString(fileContent), fileName, FileUploadPurpose.Assistants);
+        Validate(testFile);
+
+        // Create an assistant, using the creation helper to make a new vector store.
+        AssistantCreationOptions assistantCreationOptions = new()
+        {
+            Tools = { new FileSearchToolDefinition() },
+            ToolResources = new()
             {
-                if (update is MessageContentUpdate contentUpdate)
+                FileSearch = new()
                 {
-                    message += $"{contentUpdate.Text}";
+                    NewVectorStores = { new VectorStoreCreationHelper([testFile.Id]) }
+                }
+            }
+        };
+        Assistant assistant = await client.CreateAssistantAsync("gpt-4o-mini", assistantCreationOptions);
+        Validate(assistant);
+
+        Assert.That(assistant.ToolResources?.FileSearch?.VectorStoreIds, Has.Count.EqualTo(1));
+        string vectorStoreId = assistant.ToolResources.FileSearch.VectorStoreIds[0];
+        _vectorStoreIdsToDelete.Add(vectorStoreId);
+
+        // Create a thread.
+        ThreadCreationOptions threadCreationOptions = new()
+        {
+            InitialMessages = { "Using the files you have available, what's Filip's favorite food?" }
+        };
+        AssistantThread thread = await client.CreateThreadAsync(threadCreationOptions);
+        Validate(thread);
+
+        string message = string.Empty;
+
+        // Create run and stream the results.
+        AsyncCollectionResult<StreamingUpdate> streamingResult = client.CreateRunStreamingAsync(thread.Id, assistant.Id);
+
+        await foreach (StreamingUpdate update in streamingResult)
+        {
+            if (update is MessageContentUpdate contentUpdate)
+            {
+                message += $"{contentUpdate.Text}";
+            }
+            else if (update is RunStepUpdate runStepUpdate)
+            {
+                if (runStepUpdate.UpdateKind == StreamingUpdateReason.RunStepCompleted)
+                {
+                    RunStep runStep = runStepUpdate.Value;
+                    Assert.That(runStep, Is.Not.Null);
+
+                    if (runStepUpdate.UpdateKind == StreamingUpdateReason.RunStepCompleted)
+                    {
+                        if (runStep.Kind == RunStepKind.ToolCall)
+                        {
+                            Assert.Multiple(() =>
+                            {
+                                Assert.That(runStep.Kind, Is.EqualTo(RunStepKind.ToolCall));
+                                Assert.That(runStep.Details, Is.Not.Null);
+                                Assert.That(runStep.Details.ToolCalls, Has.Count.GreaterThan(0));
+                                Assert.That(runStep.Details.ToolCalls[0].Kind, Is.EqualTo(RunStepToolCallKind.FileSearch));
+
+                                // Confirm that we always get the Content property, since we are always passing the `include[]` query parameter.
+                                Assert.That(runStep.Details.ToolCalls[0].FileSearchResults[0].Content, Has.Count.GreaterThan(0));
+                            });
+                        }
+                    }
                 }
             }
         }

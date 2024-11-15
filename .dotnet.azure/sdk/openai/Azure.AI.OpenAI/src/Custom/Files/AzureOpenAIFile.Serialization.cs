@@ -171,7 +171,6 @@ internal partial class AzureOpenAIFile : IJsonModel<AzureOpenAIFile>
     AzureOpenAIFile IJsonModel<AzureOpenAIFile>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         => CustomSerializationHelpers.DeserializeNewInstance(this, DeserializeAzureOpenAIFile, ref reader, options);
 
-
     BinaryData IPersistableModel<AzureOpenAIFile>.Write(ModelReaderWriterOptions options)
         => CustomSerializationHelpers.SerializeInstance(this, options);
 
@@ -182,7 +181,7 @@ internal partial class AzureOpenAIFile : IJsonModel<AzureOpenAIFile>
 
     /// <summary> Deserializes the model from a raw response. </summary>
     /// <param name="response"> The result to deserialize the model from. </param>
-    internal new static AzureOpenAIFile FromResponse(PipelineResponse response)
+    internal static new AzureOpenAIFile FromResponse(PipelineResponse response)
     {
         using var document = JsonDocument.Parse(response.Content);
         return DeserializeAzureOpenAIFile(document.RootElement);

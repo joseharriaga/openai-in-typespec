@@ -13,7 +13,7 @@ internal partial class AzureOpenAIFileCollection : OpenAIFileCollection
 
     internal InternalListFilesResponseObject Object { get; }
 
-    internal AzureOpenAIFileCollection() 
+    internal AzureOpenAIFileCollection()
         : this(
               new ChangeTrackingList<AzureOpenAIFile>(),
               InternalListFilesResponseObject.List,

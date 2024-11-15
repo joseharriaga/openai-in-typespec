@@ -173,7 +173,6 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// <summary>
     /// Gets a new <see cref="BatchClient"/> instance configured for batch operation use with the Azure OpenAI service.
     /// </summary>
-    /// <param name="deploymentName"> The model deployment name to use for the new client's audio operations. </param>
     /// <returns> A new <see cref="BatchClient"/> instance. </returns>
     [Experimental("OPENAI001")]
     public override BatchClient GetBatchClient()

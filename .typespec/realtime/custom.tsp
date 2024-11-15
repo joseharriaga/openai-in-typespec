@@ -106,12 +106,8 @@ model RealtimeTurnDetection {
 model RealtimeServerVadTurnDetection extends RealtimeTurnDetection {
   type: RealtimeTurnDetectionType.server_vad;
   threshold?: float32 = 0.5;
-
-  // @encode("milliseconds", int32)
-  prefix_padding_ms?: duration; // = 300ms
-
-  // @encode("milliseconds", int32)
-  silence_duration_ms?: duration; // = 200,s
+  prefix_padding_ms?: int32 = 300;
+  silence_duration_ms?: int32 = 200;
 }
 
 union RealtimeResponseStatus {

@@ -10596,11 +10596,13 @@ components:
           format: float
           default: 0.5
         prefix_padding_ms:
-          type: string
-          format: duration
+          type: integer
+          format: int32
+          default: 300
         silence_duration_ms:
-          type: string
-          format: duration
+          type: integer
+          format: int32
+          default: 200
       allOf:
         - $ref: '#/components/schemas/RealtimeTurnDetection'
     RealtimeTool:

@@ -1306,8 +1306,6 @@ namespace OpenAI.Batch {
         public static Task<CreateBatchOperation> RehydrateAsync(BatchClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
         public override ClientResult UpdateStatus(RequestOptions? options = null);
         public override ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null);
-        public void WaitForCompletion(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
-        public ValueTask WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default);
     }
 }
 namespace OpenAI.Chat {

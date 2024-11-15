@@ -51,18 +51,13 @@ public class BatchTests : AoaiTestBase<BatchClient>
         AzureOpenAIFileStatus azureStatus = newFile.Status.ToAzureOpenAIFileStatus();
         Assert.That(azureStatus, Is.EqualTo(AzureOpenAIFileStatus.Pending));
 
-        for (int i = 0; i < 10; i++)
+        TimeSpan filePollingInterval = Recording!.Mode == RecordedTestMode.Playback ? TimeSpan.FromMilliseconds(1) : TimeSpan.FromSeconds(5);
+
+        for (int i = 0; i < 10 && azureStatus == AzureOpenAIFileStatus.Pending; i++)
         {
-            if (azureStatus == AzureOpenAIFileStatus.Pending)
-            {
-                await Task.Delay(TimeSpan.FromSeconds(5));
-                newFile = await fileClient.GetFileAsync(newFile.Id);
-                azureStatus = newFile.Status.ToAzureOpenAIFileStatus();
-            }
-            else
-            {
-                break;
-            }
+            await Task.Delay(filePollingInterval);
+            newFile = await fileClient.GetFileAsync(newFile.Id);
+            azureStatus = newFile.Status.ToAzureOpenAIFileStatus();
         }
 
         Assert.That(azureStatus, Is.EqualTo(AzureOpenAIFileStatus.Error));
@@ -70,42 +65,137 @@ public class BatchTests : AoaiTestBase<BatchClient>
     }
 
     [RecordedTest]
+    public async Task CanCancelBatch()
+    {
+        BatchClient batchClient = GetTestClient();
+        OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(batchClient);
+        string deploymentName = TestConfig.GetConfig<BatchClient>()!.Deployment!;
+
+        TimeSpan pollingInterval = Recording!.Mode == RecordedTestMode.Playback ? TimeSpan.FromMilliseconds(1) : TimeSpan.FromSeconds(15);
+
+        BinaryData jsonlInputBytes = BinaryData.FromString($$$"""
+            {"custom_id": "request-1", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "{{{deploymentName}}}", "messages": [{"role": "system", "content": "You are a helpful assistant."},{"role": "user", "content": "Hello world!"}],"max_tokens": 1000}}
+            {"custom_id": "request-2", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "{{{deploymentName}}}", "messages": [{"role": "system", "content": "You are an unhelpful assistant."},{"role": "user", "content": "Hello world!"}],"max_tokens": 1000}}
+            """);
+        OpenAIFile batchInputFile = await fileClient.UploadFileAsync(jsonlInputBytes, "temp-test-batch-input.jsonl", FileUploadPurpose.Batch);
+        Validate(batchInputFile);
+
+        while (batchInputFile.Status.ToAzureOpenAIFileStatus() == AzureOpenAIFileStatus.Pending)
+        {
+            await Task.Delay(pollingInterval);
+            batchInputFile = await fileClient.GetFileAsync(batchInputFile.Id);
+        }
+        Assert.That(batchInputFile.Status, Is.EqualTo(FileStatus.Processed));
+
+        BinaryData createBatchRequestBytes = BinaryData.FromString($$"""
+            {
+              "input_file_id": "{{batchInputFile.Id}}",
+              "endpoint": "/v1/chat/completions",
+              "completion_window": "24h"
+            }
+            """);
+        CreateBatchOperation createBatchOperation = await batchClient.CreateBatchAsync(BinaryContent.Create(createBatchRequestBytes), waitUntilCompleted: false);
+        Validate(createBatchOperation);
+
+        _ = await createBatchOperation.CancelAsync(default);
+        _ = await createBatchOperation.UpdateStatusAsync();
+
+        Assert.That(createBatchOperation!.GetRawResponse()!.Content.ToString().Replace(" ", ""), Does.Contain(@"""status"":""cancelling"""));
+
+        while (!createBatchOperation.HasCompleted)
+        {
+            await Task.Delay(pollingInterval);
+            _ = await createBatchOperation.UpdateStatusAsync();
+        }
+
+        Assert.That(createBatchOperation!.GetRawResponse()!.Content.ToString().Replace(" ", ""), Does.Contain(@"""status"":""cancelled"""));
+    }
+
+    [RecordedTest]
+    [Category("LongRunning")] // observed live runtime typically varies from 6 - 15 minutes
     public async Task SimpleBatchCompletionsTest()
     {
         BatchClient batchClient = GetTestClient();
-        await using BatchOperations ops = new(this, batchClient);
-
-        // Create the batch operations to send and upload them
-        ops.ChatClient.CompleteChat([new SystemChatMessage("You are a saccharine AI"), new UserChatMessage("Tell me about yourself")]);
-        ops.ChatClient.CompleteChat([new UserChatMessage("Give me a large random number")]);
-        Assert.That(ops.Operations, Has.Count.EqualTo(2));
-        string inputFileId = await ops.UploadBatchFileAsync();
-
-        // Create the batch operation
-        using var requestContent = new BatchOptions()
-        {
-            InputFileId = inputFileId,
-            Endpoint = ops.Operations.Select(o => o.Url).Distinct().First(),
-            Metadata =
-            {
-                [ "description" ] = "Azure OpenAI .Net SDK integration test framework " + nameof(SimpleBatchCompletionsTest),
-            }
-        }.ToBinaryContent();
+        OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(batchClient);
+        string deploymentName = TestConfig.GetConfig<BatchClient>()!.Deployment!;
 
         TimeSpan pollingInterval = Recording!.Mode == RecordedTestMode.Playback ? TimeSpan.FromMilliseconds(1) : TimeSpan.FromSeconds(15);
-        CreateBatchOperation operation = await batchClient.CreateBatchAsync(requestContent, waitUntilCompleted: false);
-        await operation.WaitForCompletionAsync(pollingInterval);
 
-        ClientResult response = operation.GetBatch(null);
-        BatchObject batchObj = ExtractAndValidateBatchObj(response);
+        BinaryData jsonlInputBytes = BinaryData.FromString($$$"""
+            {"custom_id": "request-1", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "{{{deploymentName}}}", "messages": [{"role": "system", "content": "You are a helpful assistant."},{"role": "user", "content": "Hello world!"}],"max_tokens": 1000}}
+            {"custom_id": "request-2", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "{{{deploymentName}}}", "messages": [{"role": "system", "content": "You are an unhelpful assistant."},{"role": "user", "content": "Hello world!"}],"max_tokens": 1000}}
+            """);
+        OpenAIFile batchInputFile = await fileClient.UploadFileAsync(jsonlInputBytes, "temp-test-batch-input.jsonl", FileUploadPurpose.Batch);
+        Validate(batchInputFile);
 
-        Assert.That(batchObj.OutputFileID, Is.Not.Null.Or.Empty);
-        BinaryData outputData = await ops.DownloadAndValidateResultAsync(batchObj.OutputFileID!);
+        while (batchInputFile.Status.ToAzureOpenAIFileStatus() == AzureOpenAIFileStatus.Pending)
+        {
+            await Task.Delay(pollingInterval);
+            batchInputFile = await fileClient.GetFileAsync(batchInputFile.Id);
+        }
+        Assert.That(batchInputFile.Status, Is.EqualTo(FileStatus.Processed));
 
-        List<string> customIdsFromRequest = ops.Operations.Select(operation => operation.CustomId).ToList();
+        BinaryData createBatchRequestBytes = BinaryData.FromString($$"""
+            {
+              "input_file_id": "{{batchInputFile.Id}}",
+              "endpoint": "/v1/chat/completions",
+              "completion_window": "24h"
+            }
+            """);
+        CreateBatchOperation createBatchOperation = await batchClient.CreateBatchAsync(BinaryContent.Create(createBatchRequestBytes), waitUntilCompleted: false);
+        Validate(createBatchOperation);
+
+        BinaryData latestProtocolBatchBytes = createBatchOperation!.GetRawResponse()!.Content;
+
+        while (!createBatchOperation.HasCompleted)
+        {
+            await Task.Delay(pollingInterval);
+            _ = await createBatchOperation.UpdateStatusAsync();
+            latestProtocolBatchBytes = createBatchOperation.GetRawResponse()!.Content;
+            Assert.That(latestProtocolBatchBytes, Is.Not.Null);
+        }
+
+        string? resultBatchId = null;
+        string? resultInputFileId = null;
+        string? resultOutputFileId = null;
+        string? resultStatus = null;
+
+        using JsonDocument batchJsonDocument = JsonDocument.Parse(latestProtocolBatchBytes);
+        foreach (JsonProperty batchJsonProperty in batchJsonDocument.RootElement.EnumerateObject())
+        {
+            if (batchJsonProperty.NameEquals("id"u8))
+            {
+                resultBatchId = batchJsonProperty.Value.GetString();
+                continue;
+            }
+            if (batchJsonProperty.NameEquals("input_file_id"u8))
+            {
+                resultInputFileId = batchJsonProperty.Value.GetString();
+                continue;
+            }
+            if (batchJsonProperty.NameEquals("output_file_id"u8))
+            {
+                resultOutputFileId = batchJsonProperty.Value.GetString();
+                continue;
+            }
+            if (batchJsonProperty.NameEquals("status"u8))
+            {
+                resultStatus = batchJsonProperty.Value.GetString();
+                continue;
+            }
+        }
+
+        Assert.That(resultBatchId, Is.EqualTo(createBatchOperation.BatchId));
+        Assert.That(resultInputFileId, Is.EqualTo(batchInputFile.Id));
+        Assert.That(resultOutputFileId, Is.Not.Null.And.Not.Empty);
+        Assert.That(resultStatus, Is.EqualTo("completed"));
+
+        BinaryData batchOutputBytes = await fileClient.DownloadFileAsync(resultOutputFileId);
+        Assert.That(batchOutputBytes, Is.Not.Null);
+
         List<ChatCompletion> batchCompletions = GetVerifiedBatchOutputsOf<ChatCompletion>(
-            outputData,
-            customIdsFromRequest);
+            batchOutputBytes,
+            ["request-1", "request-2"]);
 
         foreach (ChatCompletion batchCompletion in batchCompletions)
         {
@@ -116,157 +206,6 @@ public class BatchTests : AoaiTestBase<BatchClient>
             Assert.That(batchCompletion.Content[0].Text, Is.Not.Null.Or.Empty);
         }
     }
-
-    #region helper methods
-
-    private BinaryData ValidateHasRawJsonResponse(ClientResult result)
-    {
-        Assert.That(result, Is.Not.Null);
-        PipelineResponse response = result.GetRawResponse();
-        Assert.That(response, Is.Not.Null);
-        Assert.That(response.Status, Is.GreaterThanOrEqualTo(200).And.LessThan(300));
-        Assert.That(response.Headers.GetFirstOrDefault("Content-Type"), Does.StartWith("application/json"));
-
-        return response.Content;
-    }
-
-    private void ValidateBatchResult(BatchObject batchObj)
-    {
-        Assert.That(batchObj, Is.Not.Null);
-        Assert.That(batchObj.Id, Is.Not.Null.Or.Empty);
-        Assert.That(batchObj.Status, Is.Not.Null);
-        Assert.That(batchObj.Status, Is.AnyOf("validating", "in_progress", "finalizing", "completed"));
-    }
-
-    private BatchObject ExtractAndValidateBatchObj(ClientResult result)
-    {
-        var binaryData = ValidateHasRawJsonResponse(result);
-        var batchObj = BatchObject.From(binaryData);
-        ValidateBatchResult(batchObj);
-        return batchObj;
-    }
-
-    #endregion
-
-    #region helper classes
-
-    private class BatchOperations : IAsyncDisposable
-    {
-        private MockHttpMessageHandler _handler;
-        private List<BatchOperation> _operations;
-        private string? _uploadId;
-        private OpenAIFileClient _fileClient;
-
-        public BatchOperations(AoaiTestBase<BatchClient> testBase, BatchClient batchClient)
-        {
-            _handler = new(MockHttpMessageHandler.ReturnEmptyJson);
-            _handler.OnRequest += HandleRequest;
-            _operations = new();
-
-            BatchFileName = "batch-" + Guid.NewGuid().ToString("D") + ".jsonl";
-
-            _fileClient = testBase.GetTestClientFrom<OpenAIFileClient>(batchClient);
-
-            // Generate the fake pipeline to capture requests and save them to a file later
-            AzureOpenAIClient fakeTopLevel = new AzureOpenAIClient(
-                new Uri("https://not.a.real.endpoint.fake"),
-                new ApiKeyCredential("not.a.real.key"),
-                new() { Transport = _handler.Transport });
-
-            ChatClient = fakeTopLevel.GetChatClient(testBase.TestConfig.GetConfig<BatchClient>().DeploymentOrThrow("batch chat client"));
-            EmbeddingClient = fakeTopLevel.GetEmbeddingClient(testBase.TestConfig.GetConfig<BatchClient>().DeploymentOrThrow("batch embedding client"));
-        }
-
-        public string BatchFileName { get; }
-        public IReadOnlyList<BatchOperation> Operations => _operations;
-        public ChatClient ChatClient { get; }
-        public EmbeddingClient EmbeddingClient { get; }
-
-        public async Task<string> UploadBatchFileAsync()
-        {
-            if (Operations.Count == 0)
-            {
-                throw new InvalidOperationException();
-            }
-
-            using MemoryStream stream = new MemoryStream();
-            using StreamWriter writer = new(stream);
-            foreach (BatchOperation operation in _operations)
-            {
-                await writer.WriteLineAsync(JsonSerializer.Serialize(operation, JsonOptions.OpenAIJsonOptions));
-            }
-            writer.Flush();
-            stream.Seek(0, SeekOrigin.Begin);
-            var data = BinaryData.FromStream(stream);
-
-            using var content = BinaryContent.Create(data);
-
-            OpenAIFile file = await _fileClient.UploadFileAsync(data, BatchFileName, FileUploadPurpose.Batch);
-            _uploadId = file.Id;
-            Assert.That(_uploadId, Is.Not.Null.Or.Empty);
-
-#pragma warning disable CS0618
-            while (file.Status != FileStatus.Processed)
-            {
-                await Task.Delay(TimeSpan.FromSeconds(5));
-                file = await _fileClient.GetFileAsync(file.Id);
-            }
-
-            return _uploadId;
-        }
-
-        public async Task<BinaryData> DownloadAndValidateResultAsync(string outputId)
-        {
-            ClientResult<BinaryData> response = await _fileClient.DownloadFileAsync(outputId);
-            Assert.That(response, Is.Not.Null);
-            Assert.That(response.Value, Is.Not.Null);
-            return response.Value;
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            // clean up any files
-            if (_uploadId != null)
-            {
-                await _fileClient.DeleteFileAsync(_uploadId);
-            }
-
-            _handler.OnRequest -= HandleRequest;
-            _handler.Dispose();
-            _operations.Clear();
-        }
-
-        private void HandleRequest(object? sender, CapturedRequest request)
-        {
-            JsonElement? element = null;
-            if (request.Content != null)
-            {
-                using var json = JsonDocument.Parse(request.Content.ToMemory());
-                element = json.RootElement.Clone();
-            }
-
-            BatchOperation operation = new()
-            {
-                Method = request.Method,
-                Body = element,
-                Url = request.Uri?.AbsolutePath?.Contains("/chat/completions") == true
-                    ? "/chat/completions"
-                    : throw new ArgumentOutOfRangeException(),
-            };
-
-            _operations.Add(operation);
-        }
-
-        public class BatchOperation
-        {
-            public string CustomId { get; } = Guid.NewGuid().ToString();
-            public HttpMethod Method { get; init; } = HttpMethod.Get;
-            public string Url { get; init; } = string.Empty;
-            public JsonElement? Body { get; init; }
-        }
-    }
-
-    #endregion
 
     private List<T> GetVerifiedBatchOutputsOf<T>(
         BinaryData downloadBytes,
@@ -319,14 +258,20 @@ public class BatchTests : AoaiTestBase<BatchClient>
                 }
             }
             Assert.That(customId, Is.Not.Null.And.Not.Empty);
-            // Assert.That(expectedCustomIds.Any(expectedId => expectedId == customId));
+            if (expectedCustomIds is not null)
+            {
+                Assert.That(expectedCustomIds.Any(expectedId => expectedId == customId));
+            }
             Assert.True(foundNullError);
             Assert.That(requestId, Is.Not.Null.And.Not.Empty);
             Assert.That(statusCode, Is.EqualTo(200));
             Assert.That(deserializedResponseBody, Is.Not.Null);
             deserializedBodyOutputs.Add(deserializedResponseBody!);
         }
-        Assert.That(deserializedBodyOutputs, Has.Count.EqualTo(expectedCustomIds.Count));
+        if (expectedCustomIds is not null)
+        {
+            Assert.That(deserializedBodyOutputs, Has.Count.EqualTo(expectedCustomIds.Count));
+        }
         return deserializedBodyOutputs;
     }
 }

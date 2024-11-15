@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Azure OpenAI Service
-  version: 2024-10-01-preview
+  version: 2024-10-21
 tags:
   - name: Chat
   - name: Images
@@ -1020,6 +1020,62 @@ components:
         error:
           $ref: '#/components/schemas/AzureOpenAIDalleError'
       description: A structured representation of an error an Azure OpenAI request.
+    AzureOpenAIFile:
+      type: object
+      required:
+        - id
+        - bytes
+        - created_at
+        - filename
+        - object
+        - purpose
+        - status
+      properties:
+        id:
+          type: string
+          description: The file identifier, which can be referenced in the API endpoints.
+        bytes:
+          type: integer
+          format: int32
+          nullable: true
+          description: The size of the file, in bytes.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the file was created.
+        filename:
+          type: string
+          description: The name of the file.
+        object:
+          type: string
+          enum:
+            - file
+          description: The object type, which is always `file`.
+        purpose:
+          type: string
+          enum:
+            - assistants
+            - assistants_output
+            - batch
+            - batch_output
+            - fine-tune
+            - fine-tune-results
+            - vision
+          description: The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results` and `vision`.
+        status_details:
+          type: string
+          description: Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
+          deprecated: true
+        status:
+          type: string
+          enum:
+            - uploaded
+            - pending
+            - running
+            - processed
+            - error
+            - deleting
+            - deleted
     AzureOpenAIServiceApiVersion:
       type: string
       enum:
@@ -2944,6 +3000,52 @@ components:
       type: object
       additionalProperties: {}
       description: The schema for the response format, described as a JSON Schema object.
+    OpenAIFileWithOmittedProperties:
+      type: object
+      required:
+        - id
+        - bytes
+        - created_at
+        - filename
+        - object
+        - purpose
+      properties:
+        id:
+          type: string
+          description: The file identifier, which can be referenced in the API endpoints.
+        bytes:
+          type: integer
+          format: int32
+          nullable: true
+          description: The size of the file, in bytes.
+        created_at:
+          type: integer
+          format: unixtime
+          description: The Unix timestamp (in seconds) for when the file was created.
+        filename:
+          type: string
+          description: The name of the file.
+        object:
+          type: string
+          enum:
+            - file
+          description: The object type, which is always `file`.
+        purpose:
+          type: string
+          enum:
+            - assistants
+            - assistants_output
+            - batch
+            - batch_output
+            - fine-tune
+            - fine-tune-results
+            - vision
+          description: The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results` and `vision`.
+        status_details:
+          type: string
+          description: Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
+          deprecated: true
+      description: The `File` object represents a document that has been uploaded to OpenAI.
     PineconeChatDataSource:
       type: object
       required:

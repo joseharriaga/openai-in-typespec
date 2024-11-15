@@ -20,15 +20,15 @@ using System.ClientModel.Primitives;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Azure.AI.OpenAI.Audio;
+using Azure.AI.OpenAI.Batch;
 using Azure.AI.OpenAI.Chat;
 using Azure.AI.OpenAI.Embeddings;
+using Azure.AI.OpenAI.Files;
 using Azure.AI.OpenAI.Images;
 using Azure.Core;
 
 #if !AZURE_OPENAI_GA
 using Azure.AI.OpenAI.Assistants;
-using Azure.AI.OpenAI.Batch;
-using Azure.AI.OpenAI.Files;
 using Azure.AI.OpenAI.FineTuning;
 using Azure.AI.OpenAI.RealtimeConversation;
 using Azure.AI.OpenAI.VectorStores;
@@ -175,24 +175,9 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// </summary>
     /// <param name="deploymentName"> The model deployment name to use for the new client's audio operations. </param>
     /// <returns> A new <see cref="BatchClient"/> instance. </returns>
-#if AZURE_OPENAI_GA
-    [EditorBrowsable(EditorBrowsableState.Never)]
-#endif
     [Experimental("OPENAI001")]
-    public BatchClient GetBatchClient(string deploymentName)
-#if !AZURE_OPENAI_GA
-        => new AzureBatchClient(Pipeline, deploymentName, _endpoint, _options);
-#else
-        => throw new InvalidOperationException($"The preview Batch feature area is not available in this GA release of the Azure OpenAI Service. To use this capability, please use a preview version of the library.");
-#endif
-
-    /// <remarks>
-    /// This method is unsupported for Azure OpenAI. Please use the alternate <see cref="GetBatchClient(string)"/>
-    /// method that accepts a model deployment name, instead.
-    /// </remarks>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Experimental("OPENAI001")]
-    public override BatchClient GetBatchClient() => GetBatchClient(deploymentName: null);
+    public override BatchClient GetBatchClient()
+        => new AzureBatchClient(Pipeline, _endpoint, _options);
 
     /// <summary>
     /// Gets a new <see cref="ChatClient"/> instance configured for chat completion operation use with the Azure OpenAI service.
@@ -214,15 +199,9 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// Gets a new <see cref="OpenAIFileClient"/> instance configured for file operation use with the Azure OpenAI service.
     /// </summary>
     /// <returns> A new <see cref="OpenAIFileClient"/> instance. </returns>
-#if AZURE_OPENAI_GA
-    [EditorBrowsable(EditorBrowsableState.Never)]
-#endif
+    [Experimental("AOAI001")]
     public override OpenAIFileClient GetOpenAIFileClient()
-#if !AZURE_OPENAI_GA
         => new AzureFileClient(Pipeline, _endpoint, _options);
-#else
-        => throw new InvalidOperationException($"FileClient is not supported in this GA version of the library. To use Files and related capabilities, please use a preview version of the library.");
-#endif
 
     /// <summary>
     /// Gets a new <see cref="FineTuningClient"/> instance configured for fine-tuning operation use with the Azure OpenAI service.

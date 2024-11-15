@@ -389,7 +389,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
                 clientObject = topLevelClient.GetAudioClient(getDeployment());
                 break;
             case nameof(BatchClient):
-                clientObject = topLevelClient.GetBatchClient(getDeployment());
+                clientObject = topLevelClient.GetBatchClient();
                 break;
             case nameof(ChatClient):
                 clientObject = topLevelClient.GetChatClient(getDeployment());

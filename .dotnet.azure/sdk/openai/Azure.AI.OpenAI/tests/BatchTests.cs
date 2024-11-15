@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -9,7 +9,9 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Azure.AI.OpenAI.Files;
 using Azure.AI.OpenAI.Tests.Models;
 using Azure.AI.OpenAI.Tests.Utils;
 using Azure.AI.OpenAI.Tests.Utils.Config;
@@ -23,21 +25,54 @@ using OpenAI.TestFramework.Utils;
 
 namespace Azure.AI.OpenAI.Tests;
 
+#pragma warning disable CS0618
+
 public class BatchTests : AoaiTestBase<BatchClient>
 {
     public BatchTests(bool isAsync) : base(isAsync)
     { }
 
-#if !AZURE_OPENAI_GA
     [Test]
     [Category("Smoke")]
     public void CanCreateClient() => Assert.That(GetTestClient(), Is.InstanceOf<BatchClient>());
 
     [RecordedTest]
-    [Ignore("Azure OpenAI does not yet support batch file uploads")]
+    public async Task CanUploadFileForBatch()
+    {
+        BatchClient batchClient = GetTestClient();
+        OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(batchClient);
+
+        OpenAIFile newFile = await fileClient.UploadFileAsync(
+            BinaryData.FromString("this isn't valid input for batch"),
+            "intentionally-bad-batch-input.jsonl",
+            FileUploadPurpose.Batch);
+        Validate(newFile);
+
+        AzureOpenAIFileStatus azureStatus = newFile.Status.ToAzureOpenAIFileStatus();
+        Assert.That(azureStatus, Is.EqualTo(AzureOpenAIFileStatus.Pending));
+
+        for (int i = 0; i < 10; i++)
+        {
+            if (azureStatus == AzureOpenAIFileStatus.Pending)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5));
+                newFile = await fileClient.GetFileAsync(newFile.Id);
+                azureStatus = newFile.Status.ToAzureOpenAIFileStatus();
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        Assert.That(azureStatus, Is.EqualTo(AzureOpenAIFileStatus.Error));
+        Assert.That(newFile.StatusDetails, Does.Contain("valid json"));
+    }
+
+    [RecordedTest]
     public async Task SimpleBatchCompletionsTest()
     {
-        BatchClient batchClient = GetTestClient(new TestClientOptions(AzureOpenAIClientOptions.ServiceVersion.V2024_06_01));
+        BatchClient batchClient = GetTestClient();
         await using BatchOperations ops = new(this, batchClient);
 
         // Create the batch operations to send and upload them
@@ -57,39 +92,30 @@ public class BatchTests : AoaiTestBase<BatchClient>
             }
         }.ToBinaryContent();
 
-        CreateBatchOperation operation = await batchClient.CreateBatchAsync(requestContent, true);
-
-        // Poll until we've completed, failed, or were canceled
-        operation.WaitForCompletion();
+        TimeSpan pollingInterval = Recording!.Mode == RecordedTestMode.Playback ? TimeSpan.FromMilliseconds(1) : TimeSpan.FromSeconds(15);
+        CreateBatchOperation operation = await batchClient.CreateBatchAsync(requestContent, waitUntilCompleted: false);
+        await operation.WaitForCompletionAsync(pollingInterval);
 
         ClientResult response = operation.GetBatch(null);
         BatchObject batchObj = ExtractAndValidateBatchObj(response);
 
         Assert.That(batchObj.OutputFileID, Is.Not.Null.Or.Empty);
         BinaryData outputData = await ops.DownloadAndValidateResultAsync(batchObj.OutputFileID!);
-        var parsedOutput = BatchResult<ChatCompletion>.From(outputData);
-        Assert.That(parsedOutput, Is.Not.Null);
-        Assert.That(parsedOutput, Has.Count.EqualTo(ops.Operations.Count));
-        for (int i = 0; i < parsedOutput.Count; i++)
-        {
-            Assert.That(parsedOutput[i].CustomId, Is.EqualTo(ops.Operations[i].CustomId), "Wrong custom ID at index {0}", i);
-            var completion = parsedOutput[i].Response!;
-            Assert.That(completion, Is.Not.Null);
-            Assert.That(completion.Role, Is.EqualTo(ChatMessageRole.Assistant));
-            Assert.That(completion.Content, Has.Count.EqualTo(1));
-            Assert.That(completion.Content[0].Kind, Is.EqualTo(ChatMessageContentPartKind.Text));
-            Assert.That(completion.Content[0].Text, Is.Not.Null.Or.Empty);
-        }
 
+        List<string> customIdsFromRequest = ops.Operations.Select(operation => operation.CustomId).ToList();
+        List<ChatCompletion> batchCompletions = GetVerifiedBatchOutputsOf<ChatCompletion>(
+            outputData,
+            customIdsFromRequest);
+
+        foreach (ChatCompletion batchCompletion in batchCompletions)
+        {
+            Assert.That(batchCompletion, Is.Not.Null);
+            Assert.That(batchCompletion.Role, Is.EqualTo(ChatMessageRole.Assistant));
+            Assert.That(batchCompletion.Content, Has.Count.EqualTo(1));
+            Assert.That(batchCompletion.Content[0].Kind, Is.EqualTo(ChatMessageContentPartKind.Text));
+            Assert.That(batchCompletion.Content[0].Text, Is.Not.Null.Or.Empty);
+        }
     }
-#else
-    [Test]
-    [SyncOnly]
-    public void UnsupportedVersionBatchClientThrows()
-    {
-        Assert.Throws<InvalidOperationException>(() => GetTestClient());
-    }
-#endif
 
     #region helper methods
 
@@ -137,7 +163,7 @@ public class BatchTests : AoaiTestBase<BatchClient>
             _handler.OnRequest += HandleRequest;
             _operations = new();
 
-            BatchFileName = "batch-" + Guid.NewGuid().ToString("D") + ".json";
+            BatchFileName = "batch-" + Guid.NewGuid().ToString("D") + ".jsonl";
 
             _fileClient = testBase.GetTestClientFrom<OpenAIFileClient>(batchClient);
 
@@ -147,8 +173,8 @@ public class BatchTests : AoaiTestBase<BatchClient>
                 new ApiKeyCredential("not.a.real.key"),
                 new() { Transport = _handler.Transport });
 
-            ChatClient = fakeTopLevel.GetChatClient(testBase.TestConfig.GetConfig<ChatClient>().DeploymentOrThrow("chat client"));
-            EmbeddingClient = fakeTopLevel.GetEmbeddingClient(testBase.TestConfig.GetConfig<EmbeddingClient>().DeploymentOrThrow("embedding client"));
+            ChatClient = fakeTopLevel.GetChatClient(testBase.TestConfig.GetConfig<BatchClient>().DeploymentOrThrow("batch chat client"));
+            EmbeddingClient = fakeTopLevel.GetEmbeddingClient(testBase.TestConfig.GetConfig<BatchClient>().DeploymentOrThrow("batch embedding client"));
         }
 
         public string BatchFileName { get; }
@@ -164,7 +190,12 @@ public class BatchTests : AoaiTestBase<BatchClient>
             }
 
             using MemoryStream stream = new MemoryStream();
-            JsonSerializer.Serialize(stream, _operations, JsonOptions.OpenAIJsonOptions);
+            using StreamWriter writer = new(stream);
+            foreach (BatchOperation operation in _operations)
+            {
+                await writer.WriteLineAsync(JsonSerializer.Serialize(operation, JsonOptions.OpenAIJsonOptions));
+            }
+            writer.Flush();
             stream.Seek(0, SeekOrigin.Begin);
             var data = BinaryData.FromStream(stream);
 
@@ -173,6 +204,14 @@ public class BatchTests : AoaiTestBase<BatchClient>
             OpenAIFile file = await _fileClient.UploadFileAsync(data, BatchFileName, FileUploadPurpose.Batch);
             _uploadId = file.Id;
             Assert.That(_uploadId, Is.Not.Null.Or.Empty);
+
+#pragma warning disable CS0618
+            while (file.Status != FileStatus.Processed)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5));
+                file = await _fileClient.GetFileAsync(file.Id);
+            }
+
             return _uploadId;
         }
 
@@ -209,8 +248,10 @@ public class BatchTests : AoaiTestBase<BatchClient>
             BatchOperation operation = new()
             {
                 Method = request.Method,
-                Url = request.Uri?.AbsolutePath ?? string.Empty,
-                Body = element
+                Body = element,
+                Url = request.Uri?.AbsolutePath?.Contains("/chat/completions") == true
+                    ? "/chat/completions"
+                    : throw new ArgumentOutOfRangeException(),
             };
 
             _operations.Add(operation);
@@ -226,4 +267,66 @@ public class BatchTests : AoaiTestBase<BatchClient>
     }
 
     #endregion
+
+    private List<T> GetVerifiedBatchOutputsOf<T>(
+        BinaryData downloadBytes,
+        IList<string> expectedCustomIds)
+            where T : IJsonModel<T>
+    {
+        using Stream outputStream = downloadBytes.ToStream();
+        using StreamReader outputReader = new(outputStream);
+
+        List<T> deserializedBodyOutputs = [];
+
+        for (string? line = outputReader.ReadLine(); !string.IsNullOrEmpty(line); line = outputReader.ReadLine())
+        {
+            string? customId = null;
+            bool foundNullError = false;
+            string? requestId = null;
+            int? statusCode = null;
+            T? deserializedResponseBody = default;
+
+            using JsonDocument resultDocument = JsonDocument.Parse(line);
+            foreach (JsonProperty documentProperty in resultDocument.RootElement.EnumerateObject())
+            {
+                if (documentProperty.NameEquals("custom_id"u8))
+                {
+                    customId = documentProperty.Value.GetString();
+                }
+                if (documentProperty.NameEquals("error"u8))
+                {
+                    Assert.IsTrue(documentProperty.Value.ValueKind == JsonValueKind.Null);
+                    foundNullError = true;
+                }
+                if (documentProperty.NameEquals("response"u8))
+                {
+                    foreach (JsonProperty responseProperty in documentProperty.Value.EnumerateObject())
+                    {
+                        if (responseProperty.NameEquals("request_id"u8))
+                        {
+                            requestId = responseProperty.Value.GetString();
+                        }
+                        if (responseProperty.NameEquals("status_code"u8))
+                        {
+                            statusCode = responseProperty.Value.GetInt32();
+                        }
+                        if (responseProperty.NameEquals("body"u8))
+                        {
+                            BinaryData responseBodyBytes = BinaryData.FromObjectAsJson(responseProperty.Value);
+                            deserializedResponseBody = ModelReaderWriter.Read<T>(responseBodyBytes);
+                        }
+                    }
+                }
+            }
+            Assert.That(customId, Is.Not.Null.And.Not.Empty);
+            // Assert.That(expectedCustomIds.Any(expectedId => expectedId == customId));
+            Assert.True(foundNullError);
+            Assert.That(requestId, Is.Not.Null.And.Not.Empty);
+            Assert.That(statusCode, Is.EqualTo(200));
+            Assert.That(deserializedResponseBody, Is.Not.Null);
+            deserializedBodyOutputs.Add(deserializedResponseBody!);
+        }
+        Assert.That(deserializedBodyOutputs, Has.Count.EqualTo(expectedCustomIds.Count));
+        return deserializedBodyOutputs;
+    }
 }

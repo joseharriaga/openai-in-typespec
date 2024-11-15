@@ -44,6 +44,7 @@ function Prune-Generated-Files {
       "*Citation*"
   )
   $patternsToDelete = @(
+      "AzureOpenAIFile*",
       "BingSearchToolDefinition.cs",
       "*Elasticsearch*QueryType*",
       "*FieldsMapping*",

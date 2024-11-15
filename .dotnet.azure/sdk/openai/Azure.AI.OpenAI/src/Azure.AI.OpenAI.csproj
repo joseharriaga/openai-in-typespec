@@ -22,6 +22,10 @@
     </InternalsVisibleTo>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Custom\Files\Internal\" />
+  </ItemGroup>
+
   <Choose>
     <When Condition="'$(GAServiceVersionLabel)' != ''">
       <PropertyGroup>

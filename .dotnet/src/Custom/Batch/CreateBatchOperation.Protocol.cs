@@ -117,6 +117,37 @@ public class CreateBatchOperation : OperationResult
         return result;
     }
 
+    public async ValueTask WaitForCompletionAsync(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+    {
+        while (!HasCompleted)
+        {
+            await Task.Delay(pollingInterval, cancellationToken).ConfigureAwait(false);
+            RequestOptions options = cancellationToken.ToRequestOptions();
+            ClientResult result = await UpdateStatusAsync(options).ConfigureAwait(false);
+
+            SetRawResponse(result.GetRawResponse());
+        }
+    }
+
+    public void WaitForCompletion(TimeSpan pollingInterval, CancellationToken cancellationToken = default)
+    {
+        while (!HasCompleted)
+        {
+            if (!cancellationToken.CanBeCanceled)
+            {
+                Thread.Sleep(pollingInterval);
+            }
+            else if (cancellationToken.WaitHandle.WaitOne(pollingInterval))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
+            ClientResult result = UpdateStatus(cancellationToken.ToRequestOptions());
+
+            SetRawResponse(result.GetRawResponse());
+        }
+    }
+
     internal async Task<CreateBatchOperation> WaitUntilAsync(bool waitUntilCompleted, RequestOptions? options)
     {
         if (!waitUntilCompleted) return this;

@@ -12,7 +12,7 @@ function Make-Internals-Settable {
   Get-ChildItem "$generatedFolder" -File -Filter "Internal*.cs" | ForEach-Object {
       $content = Get-Content $_.FullName -Raw
       $newContent = $content -replace 'public(.*?)\{ get; \}', 'internal$1{ get; set; }'
-      Set-Content -Path $_.FullName -Value $newContent
+      Set-Content -Path $_.FullName -Value $newContent -NoNewline
   }
 }
 

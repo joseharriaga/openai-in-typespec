@@ -518,24 +518,6 @@ components:
           format: int32
           description: Offset of the first UTF32 code point which is excluded from the span. This field is always equal to completion_start_offset for empty spans. This field is always larger than completion_start_offset for non-empty spans.
       description: A representation of a span of completion text as used by Azure OpenAI content filter results.
-    AzureContentFilterCompletionTextSpanDetectionResult:
-      type: object
-      required:
-        - filtered
-        - detected
-        - details
-      properties:
-        filtered:
-          type: boolean
-          description: Whether the content detection resulted in a content filtering action.
-        detected:
-          type: boolean
-          description: Whether the labeled content category was detected in the content.
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/AzureContentFilterCompletionTextSpan'
-          description: Detailed information about the detected completion text spans.
     AzureContentFilterDetectionResult:
       type: object
       required:
@@ -691,8 +673,6 @@ components:
             - filtered
             - detected
           description: A detection result that describes a match against licensed code or other protected source material.
-        ungrounded_material:
-          $ref: '#/components/schemas/AzureContentFilterCompletionTextSpanDetectionResult'
       description: A content filter result for a single response item produced by a generative AI system.
     AzureContentFilterResultForPrompt:
       type: object

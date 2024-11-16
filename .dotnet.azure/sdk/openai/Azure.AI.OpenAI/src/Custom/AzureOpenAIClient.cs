@@ -12,7 +12,6 @@ global using OpenAI.FineTuning;
 global using OpenAI.Images;
 global using OpenAI.Models;
 global using OpenAI.Moderations;
-global using OpenAI.RealtimeConversation;
 global using OpenAI.VectorStores;
 
 using System.ClientModel;
@@ -28,6 +27,7 @@ using Azure.AI.OpenAI.Images;
 using Azure.Core;
 
 #if !AZURE_OPENAI_GA
+global using OpenAI.RealtimeConversation;
 using Azure.AI.OpenAI.Assistants;
 using Azure.AI.OpenAI.FineTuning;
 using Azure.AI.OpenAI.RealtimeConversation;
@@ -258,13 +258,10 @@ public partial class AzureOpenAIClient : OpenAIClient
         => throw new InvalidOperationException($"VectorStoreClient is not supported with this GA version of the library. Please use a preview version of the library for this functionality.");
 #endif
 
-#if AZURE_OPENAI_GA
-    [EditorBrowsable(EditorBrowsableState.Never)]
-#endif
+#if !AZURE_OPENAI_GA
     [Experimental("OPENAI002")]
     public override RealtimeConversationClient GetRealtimeConversationClient(string deploymentName)
     {
-#if !AZURE_OPENAI_GA
         if (_tokenCredential is not null)
         {
             return new AzureRealtimeConversationClient(_endpoint, deploymentName, _tokenCredential, _options);
@@ -273,10 +270,10 @@ public partial class AzureOpenAIClient : OpenAIClient
         {
             return new AzureRealtimeConversationClient(_endpoint, deploymentName, _keyCredential, _options);
         }
-#else
-        throw new InvalidOperationException($"{nameof(RealtimeConversationClient)} is not supported with this GA version of the library. Please use a preview version of the library for this functionality.");
-#endif
     }
+#else
+    // Not yet present in OpenAI GA dependency
+#endif
 
     private static ClientPipeline CreatePipeline(PipelinePolicy authenticationPolicy, AzureOpenAIClientOptions options)
         => ClientPipeline.Create(

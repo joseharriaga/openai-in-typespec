@@ -93,6 +93,7 @@ public class ConversationTests : ConversationTestFixtureBase
     {
         RealtimeConversationClient client = GetTestClient();
         using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
+        await session.ConfigureSessionAsync(new ConversationSessionOptions() { ContentModalities = ConversationContentModalities.Text });
         await session.AddItemAsync(
             ConversationItem.CreateUserMessage(["Hello, world!"]),
             cancellationToken: CancellationToken);

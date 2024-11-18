@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ClientModel.Primitives.TwoWayClient;
+using System.ClientModel.Primitives.FullDuplexMessaging;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,7 +7,7 @@ using System.Text;
 
 namespace OpenAI.RealtimeConversation;
 
-public class AssistantConversationOptions : TwoWayPipelineOptions
+public class AssistantConversationOptions : DuplexPipelineOptions
 {
     //public ConversationSessionOptions? ConversationOptions { get; set; }
     public AssistantConversationOptions()

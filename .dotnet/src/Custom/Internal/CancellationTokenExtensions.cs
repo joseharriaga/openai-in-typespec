@@ -21,14 +21,14 @@ internal static class CancellationTokenExtensions
         };
     }
 
-    public static TwoWayMessageOptions ToMessageOptions(this CancellationToken cancellationToken)
+    public static DuplexRequestOptions ToMessageOptions(this CancellationToken cancellationToken)
     {
         if (cancellationToken == default)
         {
             return TwoWayOptions;
         }
 
-        return new TwoWayMessageOptions()
+        return new DuplexRequestOptions()
         {
             CancellationToken = cancellationToken
         };
@@ -37,7 +37,7 @@ internal static class CancellationTokenExtensions
     private static RequestOptions StreamRequestOptions => _streamRequestOptions ??= new() { BufferResponse = false };
     private static RequestOptions _streamRequestOptions;
 
-    private static TwoWayMessageOptions TwoWayOptions
+    private static DuplexRequestOptions TwoWayOptions
     {
         get
         {
@@ -50,5 +50,5 @@ internal static class CancellationTokenExtensions
             return _twoWayOptions;
         }
     }
-    private static TwoWayMessageOptions _twoWayOptions;
+    private static DuplexRequestOptions _twoWayOptions;
 }

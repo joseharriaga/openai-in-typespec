@@ -2,7 +2,7 @@ using System;
 using System.Buffers;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.ClientModel.Primitives.TwoWayClient;
+using System.ClientModel.Primitives.FullDuplexMessaging;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -24,7 +24,7 @@ public partial class AssistantConversation
 
     internal bool ShouldBufferTurnResponseData { get; set; }
 
-    internal AssistantConversation(PipelineResponse response, TwoWayPipelineOptions? options = default)
+    internal AssistantConversation(PipelineResponse response, DuplexPipelineOptions? options = default)
         : base(response, options)
     {
         //Argument.AssertNotNull(endpoint, nameof(endpoint));
@@ -156,8 +156,8 @@ public partial class AssistantConversation
     }
 
     // Convenience overload for protocol GetResponsesAsync method on the base
-    // TwoWayResult type.
-    public IAsyncEnumerable<TwoWayResult<ConversationResponse>> GetResponseStreamAsync(/*[EnumeratorCancellation]*/ CancellationToken cancellationToken = default)
+    // DuplexClientResult type.
+    public IAsyncEnumerable<DuplexClientResult<ConversationResponse>> GetResponseStreamAsync(/*[EnumeratorCancellation]*/ CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
 
@@ -168,7 +168,7 @@ public partial class AssistantConversation
         //}
     }
 
-    public IEnumerable<TwoWayResult<ConversationResponse>> GetResponseStream(CancellationToken cancellationToken = default)
+    public IEnumerable<DuplexClientResult<ConversationResponse>> GetResponseStream(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

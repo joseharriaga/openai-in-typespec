@@ -16,11 +16,11 @@ public partial class RealtimeConversationClient
     // Maybe that is only part of the convenience overload.
     public virtual async Task<AssistantConversation> StartConversationAsync(
         BinaryContent configuration,
-        // TODO: Maybe there is a subtype of TwoWayPipelineOptions specific to the
+        // TODO: Maybe there is a subtype of BidirectionalPipelineOptions specific to the
         // conversation?  Maybe it holds the configuration for the conversation, too?
         // What goes on these options and do they need to be different from request options?
         // Is there a story about the convenience overload that meshes well here?
-        TwoWayPipelineOptions conversationOptions,
+        BidirectionalPipelineOptions conversationOptions,
         RequestOptions requestOptions)
     {
         // TODO: are inputs needed to create a unique conversation?
@@ -54,7 +54,7 @@ public partial class RealtimeConversationClient
 
     public virtual AssistantConversation StartConversation(
         BinaryContent configuration,
-        TwoWayPipelineOptions conversationOptions,
+        BidirectionalPipelineOptions conversationOptions,
         RequestOptions requestOptions)
     {
         throw new NotImplementedException();

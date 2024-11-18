@@ -20,7 +20,7 @@ public class ConversationTestFixtureBase : SyncAsyncTestBase
 {
     public CancellationTokenSource CancellationTokenSource { get; }
     public CancellationToken CancellationToken => CancellationTokenSource?.Token ?? default;
-    public TwoWayMessageOptions CancellationOptions => new() { CancellationToken = CancellationToken };
+    public DuplexRequestOptions CancellationOptions => new() { CancellationToken = CancellationToken };
 
     public ConversationTestFixtureBase(bool isAsync) : base(isAsync)
     {

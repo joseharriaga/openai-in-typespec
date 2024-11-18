@@ -2,7 +2,7 @@
 using OpenAI.RealtimeConversation;
 using System;
 using System.ClientModel.Primitives;
-using System.ClientModel.Primitives.TwoWayClient;
+using System.ClientModel.Primitives.FullDuplexMessaging;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,7 +33,7 @@ public class ConversationTests : ConversationTestFixtureBase
 
         using AssistantConversation conversation = await client.StartConversationAsync(options, CancellationToken);
 
-        IAsyncEnumerable<TwoWayResult<ConversationResponse>> responseStream = conversation.GetResponseStreamAsync(CancellationToken);
+        IAsyncEnumerable<DuplexClientResult<ConversationResponse>> responseStream = conversation.GetResultsAsync(CancellationToken);
 
         await foreach (ConversationResponse response in responseStream)
         {
@@ -66,6 +66,9 @@ public class ConversationTests : ConversationTestFixtureBase
     public async Task TextOnlyWorks()
     {
         RealtimeConversationClient client = GetTestClient();
+
+
+
         using RealtimeConversation.AssistantConversation session = await client.StartConversationAsync(CancellationToken);
         await session.AddItemAsync(
             ConversationItem.CreateUserMessage(["Hello, world!"]),
@@ -74,7 +77,7 @@ public class ConversationTests : ConversationTestFixtureBase
 
         StringBuilder responseBuilder = new();
 
-        await foreach (ConversationResponse update in session.GetResponseStreamAsync(CancellationToken))
+        await foreach (ConversationResponse update in session.GetResultsAsync(CancellationToken))
         {
             if (update is ConversationSessionStartedResponse sessionStartedUpdate)
             {
@@ -151,7 +154,7 @@ public class ConversationTests : ConversationTestFixtureBase
 
         string userTranscript = null;
 
-        await foreach (ConversationResponse update in session.GetResponseStreamAsync(CancellationToken))
+        await foreach (ConversationResponse update in session.GetResultsAsync(CancellationToken))
         {
             Assert.That(update.EventId, Is.Not.Null.And.Not.Empty);
 
@@ -221,7 +224,7 @@ public class ConversationTests : ConversationTestFixtureBase
 
         await session.AddItemAsync(ConversationItem.CreateUserMessage(["Hello, assistant!"]), CancellationToken);
 
-        await foreach (ConversationResponse update in session.GetResponseStreamAsync(CancellationToken))
+        await foreach (ConversationResponse update in session.GetResultsAsync(CancellationToken))
         {
             if (update is ConversationErrorResponse errorUpdate)
             {

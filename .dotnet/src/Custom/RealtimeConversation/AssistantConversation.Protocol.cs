@@ -1,7 +1,6 @@
 using System;
 using System.ClientModel;
-using System.ClientModel.Primitives;
-using System.ClientModel.Primitives.TwoWayClient;
+using System.ClientModel.Primitives.FullDuplexMessaging;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OpenAI.RealtimeConversation;
 
-public partial class AssistantConversation : TwoWayConnectionResult
+public partial class AssistantConversation : DuplexConnectionResult
 {
     private readonly ClientWebSocket? _clientWebSocket;
 
@@ -19,22 +18,22 @@ public partial class AssistantConversation : TwoWayConnectionResult
 
     private AsyncWebsocketMessageCollectionResult? _receiveCollectionResult;
 
-    //public Task ConfigureSessionAsync(BinaryContent content, TwoWayMessageOptions? options = default)
+    //public Task ConfigureSessionAsync(BinaryContent content, DuplexRequestOptions? options = default)
     //{
     //    throw new NotImplementedException();
     //}
 
-    //public void ConfigureSession(BinaryContent content, TwoWayMessageOptions? options = default)
+    //public void ConfigureSession(BinaryContent content, DuplexRequestOptions? options = default)
     //{
     //    throw new NotImplementedException();
     //}
 
-    public Task CreateResponseAsync(BinaryContent content, TwoWayMessageOptions? options = default)
+    public Task CreateResponseAsync(BinaryContent content, DuplexRequestOptions? options = default)
     {
         throw new NotImplementedException();
     }
 
-    public void CreateResponse(BinaryContent content, TwoWayMessageOptions? options = default)
+    public void CreateResponse(BinaryContent content, DuplexRequestOptions? options = default)
     {
         throw new NotImplementedException();
     }
@@ -100,7 +99,7 @@ public partial class AssistantConversation : TwoWayConnectionResult
     ////       Could the two-way service message inherit from PipelineResponse?
     ////       If it did, we could return ClientResult here and GetRawResponse
     ////       would return a websocket-specific subtype...
-    //public virtual IAsyncEnumerable<TwoWayResult> GetResponsesAsync()
+    //public virtual IAsyncEnumerable<DuplexClientResult> GetResponsesAsync()
     //{
     //    // TODO: is there an equivalent of RequestOptions for two-way pipeline?
     //    //       - we would need it for CancellationToken, modification of pipeline
@@ -123,7 +122,7 @@ public partial class AssistantConversation : TwoWayConnectionResult
     //    //}
     //}
 
-    //public virtual IEnumerable<TwoWayResult> GetResponses()
+    //public virtual IEnumerable<DuplexClientResult> GetResponses()
     //{
     //    throw new NotImplementedException();
     //}

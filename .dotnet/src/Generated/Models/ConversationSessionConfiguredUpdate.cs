@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationSessionConfiguredResponse : ConversationResponse
+    internal partial class ConversationSessionConfiguredResponse : ConversationResponse
     {
         internal ConversationSessionConfiguredResponse(string eventId, InternalRealtimeResponseSession internalSession) : base(eventId)
         {

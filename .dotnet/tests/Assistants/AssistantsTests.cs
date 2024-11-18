@@ -1051,6 +1051,10 @@ public class AssistantsTests : SyncAsyncTestBase
             {
                 message += $"{contentUpdate.Text}";
             }
+            else if (update is RunStepDetailsUpdate detailUpdate)
+            {
+                Assert.That(detailUpdate.FunctionName, Is.Null);
+            }
             else if (update is RunStepUpdate runStepUpdate)
             {
                 RunStep runStep = runStepUpdate.Value;
@@ -1137,6 +1141,10 @@ public class AssistantsTests : SyncAsyncTestBase
             if (update is MessageContentUpdate contentUpdate)
             {
                 message += $"{contentUpdate.Text}";
+            }
+            else if (update is RunStepDetailsUpdate detailUpdate)
+            {
+                Assert.That(detailUpdate.FunctionName, Is.Null);
             }
             else if (update is RunStepUpdate runStepUpdate)
             {

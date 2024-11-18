@@ -127,7 +127,5 @@ namespace Azure.AI.OpenAI
         public ContentFilterDetectionResult ProtectedMaterialText { get; }
         /// <summary> A detection result that describes a match against licensed code or other protected source material. </summary>
         public ContentFilterProtectedMaterialResult ProtectedMaterialCode { get; }
-        /// <summary> Gets the ungrounded material. </summary>
-        public ContentFilterTextSpanResult UngroundedMaterial { get; }
     }
 }

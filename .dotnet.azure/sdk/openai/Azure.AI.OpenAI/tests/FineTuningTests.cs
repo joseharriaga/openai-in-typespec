@@ -28,12 +28,7 @@ namespace Azure.AI.OpenAI.Tests;
 public class FineTuningTests : AoaiTestBase<FineTuningClient>
 {
     public FineTuningTests(bool isAsync) : base(isAsync)
-    {
-        if (Mode == RecordedTestMode.Playback)
-        {
-            Assert.Inconclusive("Playback for fine-tuning temporarily disabled");
-        }
-    }
+    { }
 
 #if !AZURE_OPENAI_GA
     [Test]
@@ -145,24 +140,8 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         FineTuningClient client = GetTestClient();
         OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(client);
 
-        OpenAIFile uploadedFile;
-        try
-        {
-            ClientResult fileResult = await fileClient.GetFileAsync("file-db5f5bfe5ea04ffcaeba89947a872828", new RequestOptions() { });
-            uploadedFile = ValidateAndParse<OpenAIFile>(fileResult);
-        }
-        catch (ClientResultException e)
-        {
-            if (e.Message.Contains("ResourceNotFound"))
-            {
-                // upload training data
-                uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
-            }
-            else
-            {
-                throw;
-            }
-        }
+        OpenAIFile uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
+        Validate(uploadedFile);
 
         // Create the fine tuning job
         using var requestContent = new FineTuningOptions()
@@ -184,6 +163,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         // Wait for some events to become available
         ClientResult result;
         ListResponse<FineTuningJobEvent> events;
+        TimeSpan pollingInterval = Recording!.Mode == RecordedTestMode.Playback ? TimeSpan.FromMilliseconds(1) : TimeSpan.FromSeconds(2);
         int maxLoops = 10;
         do
         {
@@ -201,7 +181,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
                 break;
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(2));
+            await Task.Delay(pollingInterval);
 
         } while (maxLoops-- > 0);
 
@@ -221,24 +201,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
 
         FineTuningClient client = GetTestClient();
         OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(client);
-        OpenAIFile uploadedFile;
-        try
-        {
-            ClientResult fileResult = await fileClient.GetFileAsync("file-db5f5bfe5ea04ffcaeba89947a872828", new RequestOptions() { });
-            uploadedFile = ValidateAndParse<OpenAIFile>(fileResult);
-        }
-        catch (ClientResultException e)
-        {
-            if(e.Message.Contains("ResourceNotFound"))
-            {
-                // upload training data
-                uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
-            }
-            else
-            {
-                throw;
-            }
-        }
+        OpenAIFile uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
 
         // Create the fine tuning job
         using var requestContent = new FineTuningOptions()
@@ -402,7 +365,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     private async Task<bool> DeleteJobAndVerifyAsync(AzureFineTuningJobOperation operation, string jobId, TimeSpan? timeBetween = null, TimeSpan? maxWaitTime = null)
     {
         var stopTime = DateTimeOffset.Now + (maxWaitTime ?? TimeSpan.FromMinutes(1));
-        var sleepTime = timeBetween ?? TimeSpan.FromSeconds(2);
+        TimeSpan sleepTime = timeBetween ?? (Recording!.Mode == RecordedTestMode.Playback ? TimeSpan.FromMilliseconds(1): TimeSpan.FromSeconds(2));
 
         RequestOptions noThrow = new()
         {

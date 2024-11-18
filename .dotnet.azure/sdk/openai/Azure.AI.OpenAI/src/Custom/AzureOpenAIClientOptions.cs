@@ -58,8 +58,10 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
             ServiceVersion.V2024_08_01_Preview => "2024-08-01-preview",
             ServiceVersion.V2024_09_01_Preview => "2024-09-01-preview",
             ServiceVersion.V2024_10_01_Preview => "2024-10-01-preview",
+            ServiceVersion.V2024_11_01_Preview => "2024-11-01-preview",
 #endif
             ServiceVersion.V2024_06_01 => "2024-06-01",
+            ServiceVersion.V2024_10_21 => "2024-10-21",
             _ => throw new NotSupportedException()
         };
         RetryPolicy = new RetryWithDelaysPolicy();
@@ -73,6 +75,10 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
         V2024_08_01_Preview = 1,
         V2024_09_01_Preview = 2,
         V2024_10_01_Preview = 3,
+#endif
+        V2024_10_21 = 4,
+#if !AZURE_OPENAI_GA
+        V2024_11_01_Preview = 5,
 #endif
     }
 
@@ -105,8 +111,8 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
     }
 
 #if !AZURE_OPENAI_GA
-    private const ServiceVersion LatestVersion = ServiceVersion.V2024_10_01_Preview;
+    private const ServiceVersion LatestVersion = ServiceVersion.V2024_11_01_Preview;
 #else
-    private const ServiceVersion LatestVersion = ServiceVersion.V2024_06_01;
+    private const ServiceVersion LatestVersion = ServiceVersion.V2024_10_21;
 #endif
 }

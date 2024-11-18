@@ -2333,10 +2333,10 @@ namespace OpenAI.RealtimeConversation {
     public abstract class ConversationContentPart : IJsonModel<ConversationContentPart>, IPersistableModel<ConversationContentPart> {
         public string AudioTranscript { get; }
         public string Text { get; }
-        public static ConversationContentPart FromInputAudioTranscript(string transcript = null);
-        public static ConversationContentPart FromInputText(string text);
-        public static ConversationContentPart FromOutputAudioTranscript(string transcript = null);
-        public static ConversationContentPart FromOutputText(string text);
+        public static ConversationContentPart CreateInputAudioTranscriptPart(string transcript = null);
+        public static ConversationContentPart CreateInputTextPart(string text);
+        public static ConversationContentPart CreateOutputAudioTranscriptPart(string transcript = null);
+        public static ConversationContentPart CreateOutputTextPart(string text);
         public static implicit operator ConversationContentPart(string text);
         ConversationContentPart IJsonModel<ConversationContentPart>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationContentPart>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -2469,7 +2469,7 @@ namespace OpenAI.RealtimeConversation {
         public static ConversationItem CreateAssistantMessage(IEnumerable<ConversationContentPart> contentItems);
         public static ConversationItem CreateFunctionCall(string name, string callId, string arguments);
         public static ConversationItem CreateFunctionCallOutput(string callId, string output);
-        public static ConversationItem CreateSystemMessage(string toolCallId, IEnumerable<ConversationContentPart> contentItems);
+        public static ConversationItem CreateSystemMessage(IEnumerable<ConversationContentPart> contentItems);
         public static ConversationItem CreateUserMessage(IEnumerable<ConversationContentPart> contentItems);
         ConversationItem IJsonModel<ConversationItem>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ConversationItem>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);

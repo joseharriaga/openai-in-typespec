@@ -142,7 +142,6 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(sourcesFromOptions[1], Is.InstanceOf<CosmosChatDataSource>());
     }
 
-#if !AZURE_OPENAI_GA
     [Test]
     [Category("Smoke")]
     public async Task MaxTokensSerializationConfigurationWorks()
@@ -203,7 +202,6 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         options.MaxOutputTokenCount = 42;
         await AssertExpectedSerializationAsync(true, false);
     }
-#endif
 
     [RecordedTest]
     public async Task ChatCompletionBadKeyGivesHelpfulError()
@@ -236,6 +234,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
     [RecordedTest]
     [Ignore("Delay behavior not emulated by recordings, and needs to be run manually with some time in between iterations due to service throttling behavior")]
+    [Category("Live")]
     [TestCase("x-ms-retry-after-ms", "1000", 1000)]
     [TestCase("retry-after-ms", "1400", 1400)]
     [TestCase("Retry-After", "1", 1000)]

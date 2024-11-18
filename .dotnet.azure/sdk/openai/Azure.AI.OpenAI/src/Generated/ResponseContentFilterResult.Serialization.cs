@@ -69,7 +69,7 @@ namespace Azure.AI.OpenAI
             if (SerializedAdditionalRawData?.ContainsKey("ungrounded_material") != true && Optional.IsDefined(UngroundedMaterial))
             {
                 writer.WritePropertyName("ungrounded_material"u8);
-                writer.WriteObjectValue(UngroundedMaterial, options);
+                writer.WriteObjectValue<ContentFilterTextSpanResult>(UngroundedMaterial, options);
             }
             if (SerializedAdditionalRawData != null)
             {

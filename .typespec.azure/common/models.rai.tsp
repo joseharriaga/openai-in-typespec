@@ -58,6 +58,8 @@ model AzureContentFilterCompletionTextSpan {
 }
 
 @added(AzureOpenAIServiceApiVersion.v2024_10_01_preview)
+@removed(AzureOpenAIServiceApiVersion.v2024_10_21)
+@added(AzureOpenAIServiceApiVersion.v2024_11_01_preview)
 model AzureContentFilterCompletionTextSpanDetectionResult {
   ...AzureContentFilterDetectionResult;
 
@@ -65,6 +67,8 @@ model AzureContentFilterCompletionTextSpanDetectionResult {
    * Detailed information about the detected completion text spans.
    */
   @added(AzureOpenAIServiceApiVersion.v2024_10_01_preview)
+  @removed(AzureOpenAIServiceApiVersion.v2024_10_21)
+  @added(AzureOpenAIServiceApiVersion.v2024_11_01_preview)
   details: AzureContentFilterCompletionTextSpan[];
 }
 
@@ -168,6 +172,8 @@ model AzureContentFilterResultForChoice {
   };
 
   @added(AzureOpenAIServiceApiVersion.v2024_10_01_preview)
+  @removed(AzureOpenAIServiceApiVersion.v2024_10_21)
+  @added(AzureOpenAIServiceApiVersion.v2024_11_01_preview)
   ungrounded_material?: AzureContentFilterCompletionTextSpanDetectionResult;
 }
 

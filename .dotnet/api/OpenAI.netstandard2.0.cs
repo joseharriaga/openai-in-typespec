@@ -1457,8 +1457,8 @@ namespace OpenAI.Chat {
         public override readonly string ToString();
     }
     public class ChatInputTokenUsageDetails : IJsonModel<ChatInputTokenUsageDetails>, IPersistableModel<ChatInputTokenUsageDetails> {
-        public int? AudioTokenCount { get; }
-        public int? CachedTokenCount { get; }
+        public int AudioTokenCount { get; }
+        public int CachedTokenCount { get; }
         ChatInputTokenUsageDetails IJsonModel<ChatInputTokenUsageDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatInputTokenUsageDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         ChatInputTokenUsageDetails IPersistableModel<ChatInputTokenUsageDetails>.Create(BinaryData data, ModelReaderWriterOptions options);
@@ -1529,7 +1529,7 @@ namespace OpenAI.Chat {
         Function = 4
     }
     public class ChatOutputTokenUsageDetails : IJsonModel<ChatOutputTokenUsageDetails>, IPersistableModel<ChatOutputTokenUsageDetails> {
-        public int? AudioTokenCount { get; }
+        public int AudioTokenCount { get; }
         public int ReasoningTokenCount { get; }
         ChatOutputTokenUsageDetails IJsonModel<ChatOutputTokenUsageDetails>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         void IJsonModel<ChatOutputTokenUsageDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -1634,8 +1634,8 @@ namespace OpenAI.Chat {
     }
     public static class OpenAIChatModelFactory {
         public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, ChatMessageContent content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null);
-        public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int? audioTokenCount = null, int? cachedTokenCount = null);
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0, int? audioTokenCount = null);
+        public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int audioTokenCount = 0, int cachedTokenCount = 0);
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0, int audioTokenCount = 0);
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
         public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null, ChatInputTokenUsageDetails inputTokenDetails = null);

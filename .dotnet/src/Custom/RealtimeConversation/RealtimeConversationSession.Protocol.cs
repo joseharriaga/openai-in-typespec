@@ -78,11 +78,11 @@ public partial class RealtimeConversationSession
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public virtual async IAsyncEnumerable<ClientResult> ReceiveUpdatesAsync(RequestOptions options)
+    public virtual async IAsyncEnumerable<ClientResult> ReceiveUpdatesAsync(int heartbeatms, RequestOptions options)
     {
         lock (_singleReceiveLock)
         {
-            _receiveCollectionResult ??= new(WebSocket, options?.CancellationToken ?? default);
+            _receiveCollectionResult ??= new(heartbeatms, WebSocket, options?.CancellationToken ?? default);
         }
         await foreach (ClientResult result in _receiveCollectionResult)
         {

@@ -375,3 +375,6 @@ internal partial class InternalRunStepDetailsToolCallsFileSearchRankingOptionsOb
 
 [CodeGenModel("RunStepDetailsToolCallsFileSearchRankingOptionsObjectRanker")]
 internal readonly partial struct InternalRunStepDetailsToolCallsFileSearchRankingOptionsObjectRanker { }
+
+[CodeGenModel("IncludedRunStepProperty")]
+internal readonly partial struct InternalIncludedRunStepProperty { }

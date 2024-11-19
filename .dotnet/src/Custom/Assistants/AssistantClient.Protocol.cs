@@ -1,7 +1,6 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
@@ -488,9 +487,6 @@ public partial class AssistantClient
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
         Argument.AssertNotNullOrEmpty(runId, nameof(runId));
-
-        // Always request the included properties.
-        IEnumerable<string> includedRunStepProperties = [InternalIncludedRunStepProperty.FileSearchResultContent.ToString()];
 
         return new AsyncRunStepCollectionResult(_runSubClient, options, threadId, runId, limit, order, after, before);
     }

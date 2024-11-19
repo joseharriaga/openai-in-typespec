@@ -23,8 +23,7 @@ internal class AsyncRunStepCollectionResult : AsyncCollectionResult<RunStep>
     private readonly string? _after;
     private readonly string? _before;
 
-    public AsyncRunStepCollectionResult(
-        InternalAssistantRunClient runClient,
+    public AsyncRunStepCollectionResult(InternalAssistantRunClient runClient,
         RequestOptions? options,
         string threadId, string runId,
         int? limit, string? order, string? after, string? before)

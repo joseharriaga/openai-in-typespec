@@ -96,8 +96,13 @@ model RealtimeResponse {
 union RealtimeVoice {
   string,
   alloy: "alloy",
-  shimmer: "shimmer",
+  ash: "ash",
+  ballad: "ballad",
+  coral: "coral",
   echo: "echo",
+  sage: "sage",
+  shimmer: "shimmer",
+  verse: "verse",
 }
 
 union RealtimeAudioFormat {

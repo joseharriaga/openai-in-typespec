@@ -1628,11 +1628,13 @@ namespace OpenAI.Chat {
         private readonly int _dummyPrimitive;
         public ChatResponseVoice(string value);
         public static ChatResponseVoice Alloy { get; }
+        public static ChatResponseVoice Ash { get; }
+        public static ChatResponseVoice Ballad { get; }
+        public static ChatResponseVoice Coral { get; }
         public static ChatResponseVoice Echo { get; }
-        public static ChatResponseVoice Fable { get; }
-        public static ChatResponseVoice Nova { get; }
-        public static ChatResponseVoice Onyx { get; }
+        public static ChatResponseVoice Sage { get; }
         public static ChatResponseVoice Shimmer { get; }
+        public static ChatResponseVoice Verse { get; }
         public readonly bool Equals(ChatResponseVoice other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
@@ -2962,8 +2964,13 @@ namespace OpenAI.RealtimeConversation {
         private readonly int _dummyPrimitive;
         public ConversationVoice(string value);
         public static ConversationVoice Alloy { get; }
+        public static ConversationVoice Ash { get; }
+        public static ConversationVoice Ballad { get; }
+        public static ConversationVoice Coral { get; }
         public static ConversationVoice Echo { get; }
+        public static ConversationVoice Sage { get; }
         public static ConversationVoice Shimmer { get; }
+        public static ConversationVoice Verse { get; }
         public readonly bool Equals(ConversationVoice other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);

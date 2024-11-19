@@ -258,6 +258,7 @@ model CreateChatCompletionResponse {
   /** A unique identifier for the chat completion. */
   id: string;
 
+  // Tool customization: Apply read-only visibility to inner logprobs types
   @doc("""
     A list of chat completion choices. Can be more than one if `n` is greater than 1.
     """)
@@ -283,9 +284,11 @@ model CreateChatCompletionResponse {
     /** Log probability information for the choice. */
     logprobs: {
       /** A list of message content tokens with log probability information. */
+      @visibility("read")
       content: ChatCompletionTokenLogprob[] | null;
 
       /** A list of message refusal tokens with log probability information. */
+      @visibility("read")
       refusal: ChatCompletionTokenLogprob[] | null;
     } | null;
   }[];
@@ -786,6 +789,7 @@ model CreateChatCompletionStreamResponse {
   /** A unique identifier for the chat completion. Each chunk has the same ID. */
   id: string;
 
+  // Tool customization: Apply read-only visibility to inner logprobs types
   @doc("""
     A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
     last chunk if you set `stream_options: {"include_usage": true}`.
@@ -796,9 +800,11 @@ model CreateChatCompletionStreamResponse {
     /** Log probability information for the choice. */
     logprobs?: {
       /** A list of message content tokens with log probability information. */
+      @visibility("read")
       content: ChatCompletionTokenLogprob[] | null;
 
       /** A list of message refusal tokens with log probability information. */
+      @visibility("read")
       refusal: ChatCompletionTokenLogprob[] | null;
     } | null;
 

@@ -14,9 +14,6 @@ namespace OpenAI;
   Send this event to update the session’s default configuration. The client may send this event at any time to update the session configuration, and any field may be updated at any time, except for "voice". The server will respond with a `session.updated` event that shows the full effective configuration. Only fields that are present are updated, thus the correct way to clear a field like "instructions" is to pass an empty string.
   """)
 model RealtimeClientEventSessionUpdate extends RealtimeClientEvent {
-  /** Optional client-generated ID used to identify this event. */
-  event_id?: string;
-
   // Tool customization: apply discriminated type base
   /** The event type, must be "session.update". */
   type: RealtimeClientEventType.session_update;
@@ -43,9 +40,6 @@ model RealtimeResponseBase {
  * The client may choose how much audio to place in each event up to a maximum of 15 MiB, for example streaming smaller chunks from the client may allow the VAD to be more responsive. Unlike made other client events, the server will not send a confirmation response to this event.
  */
 model RealtimeClientEventInputAudioBufferAppend extends RealtimeClientEvent {
-  /** Optional client-generated ID used to identify this event. */
-  event_id?: string;
-
   // Tool customization: apply discriminated type base
   /** The event type, must be "input_audio_buffer.append". */
   type: RealtimeClientEventType.input_audio_buffer_append;
@@ -64,9 +58,6 @@ model RealtimeClientEventInputAudioBufferAppend extends RealtimeClientEvent {
   Committing the input audio buffer will trigger input audio transcription (if enabled in session configuration), but it will not create a response from the model. The server will respond with an `input_audio_buffer.committed` event.
   """)
 model RealtimeClientEventInputAudioBufferCommit extends RealtimeClientEvent {
-  /** Optional client-generated ID used to identify this event. */
-  event_id?: string;
-
   // Tool customization: apply discriminated type base
   /** The event type, must be "input_audio_buffer.commit". */
   type: RealtimeClientEventType.input_audio_buffer_commit;
@@ -77,9 +68,6 @@ model RealtimeClientEventInputAudioBufferCommit extends RealtimeClientEvent {
   Send this event to clear the audio bytes in the buffer. The server will respond with an `input_audio_buffer.cleared` event.
   """)
 model RealtimeClientEventInputAudioBufferClear extends RealtimeClientEvent {
-  /** Optional client-generated ID used to identify this event. */
-  event_id?: string;
-
   // Tool customization: apply discriminated type base
   /** The event type, must be "input_audio_buffer.clear". */
   type: RealtimeClientEventType.input_audio_buffer_clear;
@@ -91,9 +79,6 @@ model RealtimeClientEventInputAudioBufferClear extends RealtimeClientEvent {
   If successful, the server will respond with a `conversation.item.created` event, otherwise an `error` event will be sent.
   """)
 model RealtimeClientEventConversationItemCreate extends RealtimeClientEvent {
-  /** Optional client-generated ID used to identify this event. */
-  event_id?: string;
-
   // Tool customization: apply discriminated type base
   @doc("""
     The event type, must be `conversation.item.create`.
@@ -114,9 +99,6 @@ model RealtimeClientEventConversationItemCreate extends RealtimeClientEvent {
   If successful, the server will respond with a `conversation.item.truncated` event.
   """)
 model RealtimeClientEventConversationItemTruncate extends RealtimeClientEvent {
-  /** Optional client-generated ID used to identify this event. */
-  event_id?: string;
-
   // Tool customization: apply discriminated type base
   /** The event type, must be "conversation.item.truncate". */
   type: RealtimeClientEventType.conversation_item_truncate;
@@ -136,9 +118,6 @@ model RealtimeClientEventConversationItemTruncate extends RealtimeClientEvent {
   Send this event when you want to remove any item from the conversation history. The server will respond with a `conversation.item.deleted` event, unless the item does not exist in the conversation history, in which case the server will respond with an error.
   """)
 model RealtimeClientEventConversationItemDelete extends RealtimeClientEvent {
-  /** Optional client-generated ID used to identify this event. */
-  event_id?: string;
-
   // Tool customization: apply discriminated type base
   /** The event type, must be "conversation.item.delete". */
   type: RealtimeClientEventType.conversation_item_delete;
@@ -155,9 +134,6 @@ model RealtimeClientEventConversationItemDelete extends RealtimeClientEvent {
   The `response.create` event includes inference configuration like `instructions`, and `temperature`. These fields will override the Session's configuration for this Response only.
   """)
 model RealtimeClientEventResponseCreate extends RealtimeClientEvent {
-  /** Optional client-generated ID used to identify this event. */
-  event_id?: string;
-
   // Tool customization: apply discriminated type base
   @doc("""
     The event type, must be `response.create`.
@@ -173,9 +149,6 @@ model RealtimeClientEventResponseCreate extends RealtimeClientEvent {
   Send this event to cancel an in-progress response. The server will respond with a `response.cancelled` event or an error if there is no response to cancel.
   """)
 model RealtimeClientEventResponseCancel extends RealtimeClientEvent {
-  /** Optional client-generated ID used to identify this event. */
-  event_id?: string;
-
   // Tool customization: apply discriminated type base
   @doc("""
     The event type, must be `response.cancel`.
@@ -186,9 +159,6 @@ model RealtimeClientEventResponseCancel extends RealtimeClientEvent {
 // Tool customization: apply discriminated type base
 /** Returned when an error occurs, which could be a client problem or a server problem. Most errors are recoverable and the session will stay open, we recommend to implementors to monitor and log error messages by default. */
 model RealtimeServerEventError extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "error". */
   type: RealtimeServerEventType.error;
@@ -215,9 +185,6 @@ model RealtimeServerEventError extends RealtimeServerEvent {
 // Tool customization: apply discriminated type base
 /** Returned when a Session is created. Emitted automatically when a new connection is established as the first server event. This event will contain the default Session configuration. */
 model RealtimeServerEventSessionCreated extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `session.created`.
@@ -233,9 +200,6 @@ model RealtimeServerEventSessionCreated extends RealtimeServerEvent {
   Returned when a session is updated with a `session.update` event, unless there is an error.
   """)
 model RealtimeServerEventSessionUpdated extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "session.updated". */
   type: RealtimeServerEventType.session_updated;
@@ -251,9 +215,6 @@ model RealtimeSessionBase {}
 // Tool customization: apply discriminated type base
 /** Returned when a conversation is created. Emitted right after session creation. */
 model RealtimeServerEventConversationCreated extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "conversation.created". */
   type: RealtimeServerEventType.conversation_created;
@@ -273,9 +234,6 @@ model RealtimeServerEventConversationCreated extends RealtimeServerEvent {
   Returned when an input audio buffer is committed, either by the client or automatically in server VAD mode. The `item_id` property is the ID of the user message item that will be created, thus a `conversation.item.created` event will also be sent to the client.
   """)
 model RealtimeServerEventInputAudioBufferCommitted extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `input_audio_buffer.committed`.
@@ -294,9 +252,6 @@ model RealtimeServerEventInputAudioBufferCommitted extends RealtimeServerEvent {
   Returned when the input audio buffer is cleared by the client with a `input_audio_buffer.clear` event.
   """)
 model RealtimeServerEventInputAudioBufferCleared extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `input_audio_buffer.cleared`.
@@ -310,9 +265,6 @@ model RealtimeServerEventInputAudioBufferCleared extends RealtimeServerEvent {
   """)
 model RealtimeServerEventInputAudioBufferSpeechStarted
   extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `input_audio_buffer.speech_started`.
@@ -334,9 +286,6 @@ model RealtimeServerEventInputAudioBufferSpeechStarted
   """)
 model RealtimeServerEventInputAudioBufferSpeechStopped
   extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `input_audio_buffer.speech_stopped`.
@@ -360,9 +309,6 @@ model RealtimeServerEventInputAudioBufferSpeechStopped
     - The client has sent a `conversation.item.create` event to add a new Item to the Conversation.
   """)
 model RealtimeServerEventConversationItemCreated extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `conversation.item.created`.
@@ -383,9 +329,6 @@ model RealtimeServerEventConversationItemCreated extends RealtimeServerEvent {
   """)
 model RealtimeServerEventConversationItemInputAudioTranscriptionCompleted
   extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `conversation.item.input_audio_transcription.completed`.
@@ -408,9 +351,6 @@ model RealtimeServerEventConversationItemInputAudioTranscriptionCompleted
   """)
 model RealtimeServerEventConversationItemInputAudioTranscriptionFailed
   extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `conversation.item.input_audio_transcription.failed`.
@@ -445,9 +385,6 @@ model RealtimeServerEventConversationItemInputAudioTranscriptionFailed
   This action will truncate the audio and remove the server-side text transcript to ensure there is no text in the context that hasn't been heard by the user.
   """)
 model RealtimeServerEventConversationItemTruncated extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `conversation.item.truncated`.
@@ -469,9 +406,6 @@ model RealtimeServerEventConversationItemTruncated extends RealtimeServerEvent {
   Returned when an item in the conversation is deleted by the client with a `conversation.item.delete` event. This event is used to synchronize the server's understanding of the conversation history with the client's view.
   """)
 model RealtimeServerEventConversationItemDeleted extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `conversation.item.deleted`.
@@ -487,9 +421,6 @@ model RealtimeServerEventConversationItemDeleted extends RealtimeServerEvent {
   Returned when a new Response is created. The first event of response creation, where the response is in an initial state of `in_progress`.
   """)
 model RealtimeServerEventResponseCreated extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `response.created`.
@@ -504,9 +435,6 @@ model RealtimeServerEventResponseCreated extends RealtimeServerEvent {
   Returned when a Response is done streaming. Always emitted, no matter the final state. The Response object included in the `response.done` event will include all output Items in the Response but will omit the raw audio data.
   """)
 model RealtimeServerEventResponseDone extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "response.done". */
   type: RealtimeServerEventType.response_done;
@@ -517,9 +445,6 @@ model RealtimeServerEventResponseDone extends RealtimeServerEvent {
 // Tool customization: apply discriminated type base
 /** Returned when a new Item is created during Response generation. */
 model RealtimeServerEventResponseOutputItemAdded extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `response.output_item.added`.
@@ -539,9 +464,6 @@ model RealtimeServerEventResponseOutputItemAdded extends RealtimeServerEvent {
 // Tool customization: apply discriminated type base
 /** Returned when an Item is done streaming. Also emitted when a Response is interrupted, incomplete, or cancelled. */
 model RealtimeServerEventResponseOutputItemDone extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `response.output_item.done`.
@@ -561,9 +483,6 @@ model RealtimeServerEventResponseOutputItemDone extends RealtimeServerEvent {
 // Tool customization: apply discriminated type base
 /** Returned when a new content part is added to an assistant message item during response generation. */
 model RealtimeServerEventResponseContentPartAdded extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "response.content_part.added". */
   type: RealtimeServerEventType.response_content_part_added;
@@ -588,9 +507,6 @@ model RealtimeServerEventResponseContentPartAdded extends RealtimeServerEvent {
 // Tool customization: apply discriminated type base
 /** Returned when a content part is done streaming in an assistant message item. Also emitted when a Response is interrupted, incomplete, or cancelled. */
 model RealtimeServerEventResponseContentPartDone extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "response.content_part.done". */
   type: RealtimeServerEventType.response_content_part_done;
@@ -615,9 +531,6 @@ model RealtimeServerEventResponseContentPartDone extends RealtimeServerEvent {
 // Tool customization: apply discriminated type base
 /** Returned when the text value of a "text" content part is updated. */
 model RealtimeServerEventResponseTextDelta extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "response.text.delta". */
   type: RealtimeServerEventType.response_text_delta;
@@ -641,9 +554,6 @@ model RealtimeServerEventResponseTextDelta extends RealtimeServerEvent {
 // Tool customization: apply discriminated type base
 /** Returned when the text value of a "text" content part is done streaming. Also emitted when a Response is interrupted, incomplete, or cancelled. */
 model RealtimeServerEventResponseTextDone extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "response.text.done". */
   type: RealtimeServerEventType.response_text_done;
@@ -668,9 +578,6 @@ model RealtimeServerEventResponseTextDone extends RealtimeServerEvent {
 /** Returned when the model-generated transcription of audio output is updated. */
 model RealtimeServerEventResponseAudioTranscriptDelta
   extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "response.audio_transcript.delta". */
   type: RealtimeServerEventType.response_audio_transcript_delta;
@@ -695,9 +602,6 @@ model RealtimeServerEventResponseAudioTranscriptDelta
 /** Returned when the model-generated transcription of audio output is done streaming. Also emitted when a Response is interrupted, incomplete, or cancelled. */
 model RealtimeServerEventResponseAudioTranscriptDone
   extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "response.audio_transcript.done". */
   type: RealtimeServerEventType.response_audio_transcript_done;
@@ -721,9 +625,6 @@ model RealtimeServerEventResponseAudioTranscriptDone
 // Tool customization: apply discriminated type base
 /** Returned when the model-generated audio is updated. */
 model RealtimeServerEventResponseAudioDelta extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "response.audio.delta". */
   type: RealtimeServerEventType.response_audio_delta;
@@ -749,9 +650,6 @@ model RealtimeServerEventResponseAudioDelta extends RealtimeServerEvent {
 // Tool customization: apply discriminated type base
 /** Returned when the model-generated audio is done. Also emitted when a Response is interrupted, incomplete, or cancelled. */
 model RealtimeServerEventResponseAudioDone extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "response.audio.done". */
   type: RealtimeServerEventType.response_audio_done;
@@ -773,9 +671,6 @@ model RealtimeServerEventResponseAudioDone extends RealtimeServerEvent {
 /** Returned when the model-generated function call arguments are updated. */
 model RealtimeServerEventResponseFunctionCallArgumentsDelta
   extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "response.function_call_arguments.delta". */
   type: RealtimeServerEventType.response_function_call_arguments_delta;
@@ -800,9 +695,6 @@ model RealtimeServerEventResponseFunctionCallArgumentsDelta
 /** Returned when the model-generated function call arguments are done streaming. Also emitted when a Response is interrupted, incomplete, or cancelled. */
 model RealtimeServerEventResponseFunctionCallArgumentsDone
   extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   /** The event type, must be "response.function_call_arguments.done". */
   type: RealtimeServerEventType.response_function_call_arguments_done;
@@ -826,9 +718,6 @@ model RealtimeServerEventResponseFunctionCallArgumentsDone
 // Tool customization: apply discriminated type base
 /** Emitted at the beginning of a Response to indicate the updated rate limits. When a Response is created some tokens will be "reserved" for the output tokens, the rate limits shown here reflect that reservation, which is then adjusted accordingly once the Response is completed. */
 model RealtimeServerEventRateLimitsUpdated extends RealtimeServerEvent {
-  /** The unique ID of the server event. */
-  event_id: string;
-
   // Tool customization: apply discriminated type
   @doc("""
     The event type, must be `rate_limits.updated`.

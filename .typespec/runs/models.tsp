@@ -391,7 +391,7 @@ model RunStepDetailsToolCallsFileSearchResultObject {
     type: "text";
 
     /** The text content of the file. */
-    text: string;
+    text?: string;
   }[];
 }
 

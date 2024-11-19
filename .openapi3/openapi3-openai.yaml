@@ -11497,7 +11497,6 @@ components:
                 description: The text content of the file.
             required:
               - type
-              - text
           description: The content of the result that was found. The content is only included if requested via the include query parameter.
       description: A result instance of the file search.
       x-oaiTypeLabel: map

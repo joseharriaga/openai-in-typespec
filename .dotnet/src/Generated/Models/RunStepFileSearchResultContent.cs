@@ -10,11 +10,8 @@ namespace OpenAI.Assistants
     public partial class RunStepFileSearchResultContent
     {
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        internal RunStepFileSearchResultContent(string text)
+        internal RunStepFileSearchResultContent()
         {
-            Argument.AssertNotNull(text, nameof(text));
-
-            Text = text;
         }
 
         internal RunStepFileSearchResultContent(RunStepFileSearchResultContentKind kind, string text, IDictionary<string, BinaryData> serializedAdditionalRawData)
@@ -22,10 +19,6 @@ namespace OpenAI.Assistants
             Kind = kind;
             Text = text;
             SerializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        internal RunStepFileSearchResultContent()
-        {
         }
 
         public string Text { get; }

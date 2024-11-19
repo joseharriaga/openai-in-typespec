@@ -8,9 +8,9 @@ public partial class ChatInputTokenUsageDetails
 {
     // CUSTOM: Renamed.
     [CodeGenMember("AudioTokens")]
-    public int? AudioTokenCount { get; }
+    public int AudioTokenCount { get; }
 
     // CUSTOM: Renamed.
     [CodeGenMember("CachedTokens")]
-    public int? CachedTokenCount { get; }
+    public int CachedTokenCount { get; }
 }

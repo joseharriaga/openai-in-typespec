@@ -27,11 +27,16 @@ public class MockPage<TValue>
     /// </summary>
     /// <param name="result">The client result.</param>
     /// <returns>The created <see cref="MockPage{TValue}"/> instance.</returns>
-    public static MockPage<TValue> FromClientResult(ClientResult result)
+    public static MockPage<TValue>? FromClientResult(ClientResult result)
     {
         PipelineResponse response = result.GetRawResponse();
         response.BufferContent();
-        return response.Content.ToObjectFromJson<MockPage<TValue>>();
+        MockPage<TValue> mockPage = response.Content.ToObjectFromJson<MockPage<TValue>>() ?? new MockPage<TValue>
+        {
+            Values = [],
+            Next = 0
+        };
+        return mockPage;
     }
 
     /// <summary>

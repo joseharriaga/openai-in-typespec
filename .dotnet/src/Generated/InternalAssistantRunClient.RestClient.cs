@@ -5,6 +5,7 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Collections.Generic;
 using OpenAI;
 
 namespace OpenAI.Assistants
@@ -41,7 +42,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, RequestOptions options)
+        internal PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -52,6 +53,10 @@ namespace OpenAI.Assistants
             uri.AppendPath("/threads/", false);
             uri.AppendPath(threadId, true);
             uri.AppendPath("/runs", false);
+            if (include != null && !(include is ChangeTrackingList<InternalIncludedRunStepProperty> changeTrackingList && changeTrackingList.IsUndefined))
+            {
+                uri.AppendQueryDelimited("include[]", include, ",", null, true);
+            }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             request.Headers.Set("Content-Type", "application/json");
@@ -171,7 +176,7 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        internal PipelineMessage CreateListRunStepsRequest(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options)
+        internal PipelineMessage CreateListRunStepsRequest(string threadId, string runId, int? limit, string order, string after, string before, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -200,13 +205,17 @@ namespace OpenAI.Assistants
             {
                 uri.AppendQuery("before", before, true);
             }
+            if (include != null && !(include is ChangeTrackingList<InternalIncludedRunStepProperty> changeTrackingList && changeTrackingList.IsUndefined))
+            {
+                uri.AppendQueryDelimited("include[]", include, ",", null, true);
+            }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateGetRunStepRequest(string threadId, string runId, string stepId, RequestOptions options)
+        internal PipelineMessage CreateGetRunStepRequest(string threadId, string runId, string stepId, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -220,6 +229,10 @@ namespace OpenAI.Assistants
             uri.AppendPath(runId, true);
             uri.AppendPath("/steps/", false);
             uri.AppendPath(stepId, true);
+            if (include != null && !(include is ChangeTrackingList<InternalIncludedRunStepProperty> changeTrackingList && changeTrackingList.IsUndefined))
+            {
+                uri.AppendQueryDelimited("include[]", include, ",", null, true);
+            }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);

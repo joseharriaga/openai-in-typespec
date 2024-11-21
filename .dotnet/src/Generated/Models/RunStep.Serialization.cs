@@ -56,11 +56,6 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("run_id"u8);
                 writer.WriteStringValue(RunId);
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
-            {
-                writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type.ToString());
-            }
             if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
@@ -166,6 +161,11 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("object"u8);
                 writer.WriteStringValue(this.Object.ToString());
             }
+            if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
+            {
+                writer.WritePropertyName("type"u8);
+                writer.WriteStringValue(Kind.ToSerialString());
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("step_details") != true)
             {
                 writer.WritePropertyName("step_details"u8);
@@ -216,7 +216,6 @@ namespace OpenAI.Assistants
             string assistantId = default;
             string threadId = default;
             string runId = default;
-            RunStepType @type = default;
             RunStepStatus status = default;
             RunStepError lastError = default;
             DateTimeOffset? expiredAt = default;
@@ -226,6 +225,7 @@ namespace OpenAI.Assistants
             IReadOnlyDictionary<string, string> metadata = default;
             RunStepTokenUsage usage = default;
             InternalRunStepObjectObject @object = default;
+            Assistants.RunStepKind kind = default;
             RunStepDetails details = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -253,11 +253,6 @@ namespace OpenAI.Assistants
                 if (prop.NameEquals("run_id"u8))
                 {
                     runId = prop.Value.GetString();
-                    continue;
-                }
-                if (prop.NameEquals("type"u8))
-                {
-                    @type = new RunStepType(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("status"u8))
@@ -352,6 +347,11 @@ namespace OpenAI.Assistants
                     @object = new InternalRunStepObjectObject(prop.Value.GetString());
                     continue;
                 }
+                if (prop.NameEquals("type"u8))
+                {
+                    kind = prop.Value.GetString().ToRunStepKind();
+                    continue;
+                }
                 if (prop.NameEquals("step_details"u8))
                 {
                     details = RunStepDetails.DeserializeRunStepDetails(prop.Value, options);
@@ -368,7 +368,6 @@ namespace OpenAI.Assistants
                 assistantId,
                 threadId,
                 runId,
-                @type,
                 status,
                 lastError,
                 expiredAt,
@@ -378,6 +377,7 @@ namespace OpenAI.Assistants
                 metadata,
                 usage,
                 @object,
+                kind,
                 details,
                 additionalBinaryDataProperties);
         }

@@ -52,13 +52,19 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            string @type = "unknown";
+            string id = default;
+            Assistants.RunStepToolCallKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("id"u8))
+                {
+                    id = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = prop.Value.GetString();
+                    kind = prop.Value.GetString().ToRunStepToolCallKind();
                     continue;
                 }
                 if (true)
@@ -66,7 +72,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new UnknownRunStepDetailsToolCallsObjectToolCallsObject(@type, additionalBinaryDataProperties);
+            return new UnknownRunStepDetailsToolCallsObjectToolCallsObject(id, kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<RunStepToolCall>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -11,11 +11,13 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatInputTokenUsageDetails()
+        internal ChatInputTokenUsageDetails(int audioTokenCount, int cachedTokenCount)
         {
+            AudioTokenCount = audioTokenCount;
+            CachedTokenCount = cachedTokenCount;
         }
 
-        internal ChatInputTokenUsageDetails(int? audioTokenCount, int? cachedTokenCount, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatInputTokenUsageDetails(int audioTokenCount, int cachedTokenCount, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             AudioTokenCount = audioTokenCount;
             CachedTokenCount = cachedTokenCount;

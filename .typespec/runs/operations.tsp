@@ -32,6 +32,17 @@ interface Runs {
     /** The ID of the thread to run. */
     @path thread_id: string,
 
+    /**
+     * A list of additional fields to include in the response. Currently the only supported value is
+     * `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result
+     * content.
+     *
+     * See the
+     * [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+     * for more information.
+     */
+    @query `include[]`?: IncludedRunStepProperty[],
+
     @body requestBody: CreateRunRequest,
   ): RunObject | ErrorResponse;
 
@@ -180,6 +191,17 @@ interface Runs {
      * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
      */
     @query before?: string,
+
+    /**
+     * A list of additional fields to include in the response. Currently the only supported value is
+     * `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result
+     * content.
+     *
+     * See the
+     * [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+     * for more information.
+     */
+    @query `include[]`?: IncludedRunStepProperty[],
   ): ListRunStepsResponse | ErrorResponse;
 
   @route("{thread_id}/runs/{run_id}/steps/{step_id}")
@@ -198,5 +220,16 @@ interface Runs {
 
     /** The ID of the run step to retrieve. */
     @path step_id: string,
+
+    /**
+     * A list of additional fields to include in the response. Currently the only supported value is
+     * `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result
+     * content.
+     *
+     * See the
+     * [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+     * for more information.
+     */
+    @query `include[]`?: IncludedRunStepProperty[],
   ): RunStepObject | ErrorResponse;
 }

@@ -13,10 +13,6 @@ namespace OpenAI.Assistants
     [PersistableModelProxy(typeof(UnknownRunStepDetailsToolCallsObjectToolCallsObject))]
     public abstract partial class RunStepToolCall : IJsonModel<RunStepToolCall>
     {
-        internal RunStepToolCall()
-        {
-        }
-
         void IJsonModel<RunStepToolCall>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -31,10 +27,15 @@ namespace OpenAI.Assistants
             {
                 throw new FormatException($"The model {nameof(RunStepToolCall)} does not support writing '{format}' format.");
             }
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type);
+                writer.WriteStringValue(Kind.ToSerialString());
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -81,11 +82,11 @@ namespace OpenAI.Assistants
                 switch (discriminator.GetString())
                 {
                     case "code_interpreter":
-                        return InternalRunStepCodeInterpreterToolCallDetails.DeserializeInternalRunStepCodeInterpreterToolCallDetails(element, options);
+                        return InternalRunStepDetailsToolCallsCodeObject.DeserializeInternalRunStepDetailsToolCallsCodeObject(element, options);
                     case "file_search":
-                        return InternalRunStepFileSearchToolCallDetails.DeserializeInternalRunStepFileSearchToolCallDetails(element, options);
+                        return InternalRunStepDetailsToolCallsFileSearchObject.DeserializeInternalRunStepDetailsToolCallsFileSearchObject(element, options);
                     case "function":
-                        return InternalRunStepFunctionToolCallDetails.DeserializeInternalRunStepFunctionToolCallDetails(element, options);
+                        return InternalRunStepDetailsToolCallsFunctionObject.DeserializeInternalRunStepDetailsToolCallsFunctionObject(element, options);
                 }
             }
             return UnknownRunStepDetailsToolCallsObjectToolCallsObject.DeserializeUnknownRunStepDetailsToolCallsObjectToolCallsObject(element, options);

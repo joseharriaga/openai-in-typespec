@@ -65,7 +65,7 @@ internal class RunStepCollectionResult : CollectionResult<RunStep>
     }
 
     public ClientResult GetFirstPage()
-        => _runClient.ListRunSteps(_threadId, _runId, _limit, _order, _after, _before, _options);
+        => _runClient.GetRunSteps(_threadId, _runId, _limit, _order, _after, _before, _options);
 
     public ClientResult GetNextPage(ClientResult result)
     {
@@ -76,7 +76,7 @@ internal class RunStepCollectionResult : CollectionResult<RunStep>
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string lastId = doc.RootElement.GetProperty("last_id"u8).GetString()!;
 
-        return _runClient.ListRunSteps(_threadId, _runId, _limit, _order, lastId, _before, _options);
+        return _runClient.GetRunSteps(_threadId, _runId, _limit, _order, lastId, _before, _options);
     }
 
     public static bool HasNextPage(ClientResult result)

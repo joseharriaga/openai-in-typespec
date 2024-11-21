@@ -11,18 +11,20 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        private protected RunStepToolCall(string @type)
+        private protected RunStepToolCall(string id, Assistants.RunStepToolCallKind kind)
         {
-            Type = @type;
+            Id = id;
+            Kind = kind;
         }
 
-        internal RunStepToolCall(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal RunStepToolCall(string id, Assistants.RunStepToolCallKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = @type;
+            Id = id;
+            Kind = kind;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal string Type { get; set; }
+        public string Id { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

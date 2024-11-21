@@ -326,7 +326,7 @@ namespace OpenAI
             return new ToolOutput(toolCallId, output, additionalBinaryDataProperties: null);
         }
 
-        public static RunStep RunStep(string id = default, DateTimeOffset createdAt = default, string assistantId = default, string threadId = default, string runId = default, RunStepType @type = default, RunStepStatus status = default, RunStepError lastError = default, DateTimeOffset? expiredAt = default, DateTimeOffset? cancelledAt = default, DateTimeOffset? failedAt = default, DateTimeOffset? completedAt = default, IReadOnlyDictionary<string, string> metadata = default, RunStepTokenUsage usage = default, InternalRunStepObjectObject @object = default, RunStepDetails details = default)
+        public static RunStep RunStep(string id = default, DateTimeOffset createdAt = default, string assistantId = default, string threadId = default, string runId = default, RunStepStatus status = default, RunStepError lastError = default, DateTimeOffset? expiredAt = default, DateTimeOffset? cancelledAt = default, DateTimeOffset? failedAt = default, DateTimeOffset? completedAt = default, IReadOnlyDictionary<string, string> metadata = default, RunStepTokenUsage usage = default, InternalRunStepObjectObject @object = default, Assistants.RunStepKind kind = default, RunStepDetails details = default)
         {
             metadata ??= new ChangeTrackingDictionary<string, string>();
 
@@ -336,7 +336,6 @@ namespace OpenAI
                 assistantId,
                 threadId,
                 runId,
-                @type,
                 status,
                 lastError,
                 expiredAt,
@@ -346,6 +345,7 @@ namespace OpenAI
                 metadata,
                 usage,
                 @object,
+                kind,
                 details,
                 additionalBinaryDataProperties: null);
         }
@@ -356,10 +356,10 @@ namespace OpenAI
             return new UnknownRunStepObjectStepDetails(@type, additionalBinaryDataProperties: null);
         }
 
-        public static RunStepToolCall RunStepToolCall(string @type = default)
+        public static RunStepToolCall RunStepToolCall(string id = default, string kind = default)
         {
 
-            return new UnknownRunStepDetailsToolCallsObjectToolCallsObject(@type, additionalBinaryDataProperties: null);
+            return new UnknownRunStepDetailsToolCallsObjectToolCallsObject(id, kind.ToRunStepToolCallKind(), additionalBinaryDataProperties: null);
         }
 
         public static RunStepCodeInterpreterOutput RunStepCodeInterpreterOutput(string @type = default)
@@ -368,11 +368,17 @@ namespace OpenAI
             return new UnknownRunStepDetailsToolCallsCodeObjectCodeInterpreterOutputsObject(@type, additionalBinaryDataProperties: null);
         }
 
-        public static RunStepFileSearchResult RunStepFileSearchResult(string fileId = default, string fileName = default, float score = default, IEnumerable<InternalRunStepDetailsToolCallsFileSearchResultObjectContent> content = default)
+        public static RunStepFileSearchResult RunStepFileSearchResult(string fileId = default, string fileName = default, float score = default, IEnumerable<RunStepFileSearchResultContent> content = default)
         {
-            content ??= new ChangeTrackingList<InternalRunStepDetailsToolCallsFileSearchResultObjectContent>();
+            content ??= new ChangeTrackingList<RunStepFileSearchResultContent>();
 
             return new RunStepFileSearchResult(fileId, fileName, score, content?.ToList(), additionalBinaryDataProperties: null);
+        }
+
+        public static RunStepFileSearchResultContent RunStepFileSearchResultContent(string text = default, Assistants.RunStepFileSearchResultContentKind kind = default)
+        {
+
+            return new RunStepFileSearchResultContent(text, kind, additionalBinaryDataProperties: null);
         }
 
         public static RunStepError RunStepError(RunStepErrorCode code = default, string message = default)
@@ -872,13 +878,13 @@ namespace OpenAI
                 additionalBinaryDataProperties: null);
         }
 
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default, int? audioTokenCount = default)
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default, int audioTokenCount = default)
         {
 
             return new ChatOutputTokenUsageDetails(reasoningTokenCount, audioTokenCount, additionalBinaryDataProperties: null);
         }
 
-        public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int? audioTokenCount = default, int? cachedTokenCount = default)
+        public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int audioTokenCount = default, int cachedTokenCount = default)
         {
 
             return new ChatInputTokenUsageDetails(audioTokenCount, cachedTokenCount, additionalBinaryDataProperties: null);

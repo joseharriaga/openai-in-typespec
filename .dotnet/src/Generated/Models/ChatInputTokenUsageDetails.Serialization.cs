@@ -13,6 +13,10 @@ namespace OpenAI.Chat
 {
     public partial class ChatInputTokenUsageDetails : IJsonModel<ChatInputTokenUsageDetails>
     {
+        internal ChatInputTokenUsageDetails()
+        {
+        }
+
         void IJsonModel<ChatInputTokenUsageDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -27,15 +31,15 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatInputTokenUsageDetails)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(AudioTokenCount) && _additionalBinaryDataProperties?.ContainsKey("audio_tokens") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("audio_tokens") != true)
             {
                 writer.WritePropertyName("audio_tokens"u8);
-                writer.WriteNumberValue(AudioTokenCount.Value);
+                writer.WriteNumberValue(AudioTokenCount);
             }
-            if (Optional.IsDefined(CachedTokenCount) && _additionalBinaryDataProperties?.ContainsKey("cached_tokens") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("cached_tokens") != true)
             {
                 writer.WritePropertyName("cached_tokens"u8);
-                writer.WriteNumberValue(CachedTokenCount.Value);
+                writer.WriteNumberValue(CachedTokenCount);
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -77,26 +81,18 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            int? audioTokenCount = default;
-            int? cachedTokenCount = default;
+            int audioTokenCount = default;
+            int cachedTokenCount = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("audio_tokens"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     audioTokenCount = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("cached_tokens"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     cachedTokenCount = prop.Value.GetInt32();
                     continue;
                 }

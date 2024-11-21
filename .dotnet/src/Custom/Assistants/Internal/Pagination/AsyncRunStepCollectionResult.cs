@@ -69,7 +69,7 @@ internal class AsyncRunStepCollectionResult : AsyncCollectionResult<RunStep>
     }
 
     public async Task<ClientResult> GetFirstPageAsync()
-        => await _runClient.ListRunStepsAsync(_threadId, _runId, _limit, _order, _after, _before, _options).ConfigureAwait(false);
+        => await _runClient.GetRunStepsAsync(_threadId, _runId, _limit, _order, _after, _before, _options).ConfigureAwait(false);
 
     public async Task<ClientResult> GetNextPageAsync(ClientResult result)
     {
@@ -80,7 +80,7 @@ internal class AsyncRunStepCollectionResult : AsyncCollectionResult<RunStep>
         using JsonDocument doc = JsonDocument.Parse(response.Content);
         string lastId = doc.RootElement.GetProperty("last_id"u8).GetString()!;
 
-        return await _runClient.ListRunStepsAsync(_threadId, _runId, _limit, _order, lastId, _before, _options).ConfigureAwait(false);
+        return await _runClient.GetRunStepsAsync(_threadId, _runId, _limit, _order, lastId, _before, _options).ConfigureAwait(false);
     }
 
     public static bool HasNextPage(ClientResult result)

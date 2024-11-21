@@ -50,7 +50,7 @@ namespace OpenAI.Assistants
             {
                 writer.WritePropertyName("content"u8);
                 writer.WriteStartArray();
-                foreach (InternalRunStepDetailsToolCallsFileSearchResultObjectContent item in Content)
+                foreach (RunStepFileSearchResultContent item in Content)
                 {
                     writer.WriteObjectValue(item, options);
                 }
@@ -99,7 +99,7 @@ namespace OpenAI.Assistants
             string fileId = default;
             string fileName = default;
             float score = default;
-            IReadOnlyList<InternalRunStepDetailsToolCallsFileSearchResultObjectContent> content = default;
+            IList<RunStepFileSearchResultContent> content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -124,10 +124,10 @@ namespace OpenAI.Assistants
                     {
                         continue;
                     }
-                    List<InternalRunStepDetailsToolCallsFileSearchResultObjectContent> array = new List<InternalRunStepDetailsToolCallsFileSearchResultObjectContent>();
+                    List<RunStepFileSearchResultContent> array = new List<RunStepFileSearchResultContent>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(InternalRunStepDetailsToolCallsFileSearchResultObjectContent.DeserializeInternalRunStepDetailsToolCallsFileSearchResultObjectContent(item, options));
+                        array.Add(RunStepFileSearchResultContent.DeserializeRunStepFileSearchResultContent(item, options));
                     }
                     content = array;
                     continue;
@@ -137,7 +137,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new RunStepFileSearchResult(fileId, fileName, score, content ?? new ChangeTrackingList<InternalRunStepDetailsToolCallsFileSearchResultObjectContent>(), additionalBinaryDataProperties);
+            return new RunStepFileSearchResult(fileId, fileName, score, content ?? new ChangeTrackingList<RunStepFileSearchResultContent>(), additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<RunStepFileSearchResult>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

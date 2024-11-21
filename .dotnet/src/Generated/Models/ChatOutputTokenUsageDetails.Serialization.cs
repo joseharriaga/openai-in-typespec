@@ -13,6 +13,10 @@ namespace OpenAI.Chat
 {
     public partial class ChatOutputTokenUsageDetails : IJsonModel<ChatOutputTokenUsageDetails>
     {
+        internal ChatOutputTokenUsageDetails()
+        {
+        }
+
         void IJsonModel<ChatOutputTokenUsageDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -32,10 +36,10 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("reasoning_tokens"u8);
                 writer.WriteNumberValue(ReasoningTokenCount);
             }
-            if (Optional.IsDefined(AudioTokenCount) && _additionalBinaryDataProperties?.ContainsKey("audio_tokens") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("audio_tokens") != true)
             {
                 writer.WritePropertyName("audio_tokens"u8);
-                writer.WriteNumberValue(AudioTokenCount.Value);
+                writer.WriteNumberValue(AudioTokenCount);
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -78,25 +82,17 @@ namespace OpenAI.Chat
                 return null;
             }
             int reasoningTokenCount = default;
-            int? audioTokenCount = default;
+            int audioTokenCount = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("reasoning_tokens"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     reasoningTokenCount = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("audio_tokens"u8))
                 {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     audioTokenCount = prop.Value.GetInt32();
                     continue;
                 }

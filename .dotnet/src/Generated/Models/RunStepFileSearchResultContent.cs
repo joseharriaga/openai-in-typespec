@@ -7,22 +7,20 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    internal partial class InternalRunStepDetailsToolCallsFileSearchResultObjectContent
+    public partial class RunStepFileSearchResultContent
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalRunStepDetailsToolCallsFileSearchResultObjectContent()
+        internal RunStepFileSearchResultContent()
         {
         }
 
-        internal InternalRunStepDetailsToolCallsFileSearchResultObjectContent(InternalRunStepDetailsToolCallsFileSearchResultObjectContentType? @type, string text, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal RunStepFileSearchResultContent(string text, Assistants.RunStepFileSearchResultContentKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Type = @type;
             Text = text;
+            Kind = kind;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
-
-        public InternalRunStepDetailsToolCallsFileSearchResultObjectContentType? Type { get; }
 
         public string Text { get; }
 

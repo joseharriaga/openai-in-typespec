@@ -3,6 +3,7 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 
 namespace OpenAI.Batch;
 
@@ -15,17 +16,17 @@ namespace OpenAI.Batch;
 [CodeGenClient("Batches")]
 [CodeGenSuppress("BatchClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateBatch", typeof(string), typeof(InternalCreateBatchRequestEndpoint), typeof(InternalBatchCompletionTimeframe), typeof(IDictionary<string, string>))]
-[CodeGenSuppress("CreateBatchAsync", typeof(string), typeof(InternalCreateBatchRequestEndpoint), typeof(InternalBatchCompletionTimeframe), typeof(IDictionary<string, string>))]
+[CodeGenSuppress("CreateBatchAsync", typeof(string), typeof(InternalCreateBatchRequestEndpoint), typeof(InternalBatchCompletionTimeframe), typeof(IDictionary<string, string>), typeof(CancellationToken))]
 [CodeGenSuppress("CreateBatch", typeof(BinaryContent), typeof(RequestOptions))]
 [CodeGenSuppress("CreateBatchAsync", typeof(BinaryContent), typeof(RequestOptions))]
 [CodeGenSuppress("RetrieveBatch", typeof(string))]
-[CodeGenSuppress("RetrieveBatchAsync", typeof(string))]
+[CodeGenSuppress("RetrieveBatchAsync", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("CancelBatch", typeof(string))]
-[CodeGenSuppress("CancelBatchAsync", typeof(string))]
+[CodeGenSuppress("CancelBatchAsync", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("CancelBatch", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("CancelBatchAsync", typeof(string), typeof(RequestOptions))]
 [CodeGenSuppress("ListBatches", typeof(string), typeof(int?))]
-[CodeGenSuppress("ListBatchesAsync", typeof(string), typeof(int?))]
+[CodeGenSuppress("ListBatchesAsync", typeof(string), typeof(int?), typeof(CancellationToken))]
 public partial class BatchClient
 {
     // CUSTOM: Added as a convenience.

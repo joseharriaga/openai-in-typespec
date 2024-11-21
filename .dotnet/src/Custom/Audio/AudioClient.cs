@@ -14,7 +14,7 @@ namespace OpenAI.Audio;
 /// <summary> The service client for OpenAI audio operations. </summary>
 [CodeGenClient("Audio")]
 [CodeGenSuppress("AudioClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateSpeechAsync", typeof(SpeechGenerationOptions))]
+[CodeGenSuppress("CreateSpeechAsync", typeof(SpeechGenerationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateSpeech", typeof(SpeechGenerationOptions))]
 [CodeGenSuppress("CreateTranscriptionAsync", typeof(AudioTranscriptionOptions))]
 [CodeGenSuppress("CreateTranscription", typeof(AudioTranscriptionOptions))]

@@ -15,7 +15,7 @@ namespace OpenAI.Images;
 /// <summary> The service client for OpenAI image operations. </summary>
 [CodeGenClient("Images")]
 [CodeGenSuppress("ImageClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateImageAsync", typeof(ImageGenerationOptions))]
+[CodeGenSuppress("CreateImageAsync", typeof(ImageGenerationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateImage", typeof(ImageGenerationOptions))]
 [CodeGenSuppress("CreateImageEditAsync", typeof(ImageEditOptions))]
 [CodeGenSuppress("CreateImageEdit", typeof(ImageEditOptions))]

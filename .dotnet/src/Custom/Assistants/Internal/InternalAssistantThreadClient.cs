@@ -1,18 +1,19 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Threading;
 
 namespace OpenAI.Assistants;
 
 [CodeGenClient("Threads")]
 [CodeGenSuppress("InternalAssistantThreadClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateThreadAsync", typeof(ThreadCreationOptions))]
+[CodeGenSuppress("CreateThreadAsync", typeof(ThreadCreationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateThread", typeof(ThreadCreationOptions))]
-[CodeGenSuppress("GetThreadAsync", typeof(string))]
+[CodeGenSuppress("GetThreadAsync", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("GetThread", typeof(string))]
-[CodeGenSuppress("ModifyThreadAsync", typeof(string), typeof(ThreadModificationOptions))]
+[CodeGenSuppress("ModifyThreadAsync", typeof(string), typeof(ThreadModificationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("ModifyThread", typeof(string), typeof(ThreadModificationOptions))]
-[CodeGenSuppress("DeleteThreadAsync", typeof(string))]
+[CodeGenSuppress("DeleteThreadAsync", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("DeleteThread", typeof(string))]
 internal partial class InternalAssistantThreadClient
 {

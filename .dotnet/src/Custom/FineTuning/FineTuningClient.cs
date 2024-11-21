@@ -2,6 +2,7 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 
 namespace OpenAI.FineTuning;
 
@@ -13,17 +14,17 @@ namespace OpenAI.FineTuning;
 [Experimental("OPENAI001")]
 [CodeGenClient("FineTuning")]
 [CodeGenSuppress("FineTuningClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateFineTuningJobAsync", typeof(FineTuningOptions))]
+[CodeGenSuppress("CreateFineTuningJobAsync", typeof(FineTuningOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateFineTuningJob", typeof(FineTuningOptions))]
-[CodeGenSuppress("ListPaginatedFineTuningJobsAsync", typeof(string), typeof(int?))]
+[CodeGenSuppress("ListPaginatedFineTuningJobsAsync", typeof(string), typeof(int?), typeof(CancellationToken))]
 [CodeGenSuppress("ListPaginatedFineTuningJobs", typeof(string), typeof(int?))]
-[CodeGenSuppress("RetrieveFineTuningJobAsync", typeof(string))]
+[CodeGenSuppress("RetrieveFineTuningJobAsync", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("RetrieveFineTuningJob", typeof(string))]
-[CodeGenSuppress("CancelFineTuningJobAsync", typeof(string))]
+[CodeGenSuppress("CancelFineTuningJobAsync", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("CancelFineTuningJob", typeof(string))]
-[CodeGenSuppress("ListFineTuningEventsAsync", typeof(string), typeof(string), typeof(int?))]
+[CodeGenSuppress("ListFineTuningEventsAsync", typeof(string), typeof(string), typeof(int?), typeof(CancellationToken))]
 [CodeGenSuppress("ListFineTuningEvents", typeof(string), typeof(string), typeof(int?))]
-[CodeGenSuppress("ListFineTuningJobCheckpointsAsync", typeof(string), typeof(string), typeof(int?))]
+[CodeGenSuppress("ListFineTuningJobCheckpointsAsync", typeof(string), typeof(string), typeof(int?), typeof(CancellationToken))]
 [CodeGenSuppress("ListFineTuningJobCheckpoints", typeof(string), typeof(string), typeof(int?))]
 public partial class FineTuningClient
 {

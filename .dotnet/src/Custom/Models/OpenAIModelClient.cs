@@ -13,9 +13,9 @@ namespace OpenAI.Models;
 /// <summary> The service client for OpenAI model operations. </summary>
 [CodeGenClient("ModelsOps")]
 [CodeGenSuppress("OpenAIModelClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("ListModelsAsync")]
+[CodeGenSuppress("ListModelsAsync", typeof(CancellationToken))]
 [CodeGenSuppress("ListModels")]
-[CodeGenSuppress("RetrieveModelAsync", typeof(string))]
+[CodeGenSuppress("RetrieveModelAsync", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("RetrieveModel", typeof(string))]
 [CodeGenSuppress("DeleteModelAsync", typeof(string))]
 [CodeGenSuppress("DeleteModel", typeof(string))]

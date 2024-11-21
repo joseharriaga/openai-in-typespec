@@ -5,6 +5,7 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenAI;
 
@@ -43,15 +44,15 @@ namespace OpenAI.LegacyCompletions
         {
             Argument.AssertNotNull(requestBody, nameof(requestBody));
 
-            ClientResult result = CreateCompletion(requestBody, null);
+            ClientResult result = CreateCompletion(requestBody, options: null);
             return ClientResult.FromValue((InternalCreateCompletionResponse)result, result.GetRawResponse());
         }
 
-        public virtual async Task<ClientResult<InternalCreateCompletionResponse>> CreateCompletionAsync(InternalCreateCompletionRequest requestBody)
+        public virtual async Task<ClientResult<InternalCreateCompletionResponse>> CreateCompletionAsync(InternalCreateCompletionRequest requestBody, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(requestBody, nameof(requestBody));
 
-            ClientResult result = await CreateCompletionAsync(requestBody, null).ConfigureAwait(false);
+            ClientResult result = await CreateCompletionAsync(requestBody, cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null).ConfigureAwait(false);
             return ClientResult.FromValue((InternalCreateCompletionResponse)result, result.GetRawResponse());
         }
     }

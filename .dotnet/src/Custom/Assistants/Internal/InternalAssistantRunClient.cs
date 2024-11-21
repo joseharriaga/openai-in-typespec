@@ -2,28 +2,29 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace OpenAI.Assistants;
 
 [CodeGenClient("Runs")]
 [CodeGenSuppress("InternalAssistantRunClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateThreadAndRunAsync", typeof(InternalCreateThreadAndRunRequest))]
+[CodeGenSuppress("CreateThreadAndRunAsync", typeof(InternalCreateThreadAndRunRequest), typeof(CancellationToken))]
 [CodeGenSuppress("CreateThreadAndRun", typeof(InternalCreateThreadAndRunRequest))]
-[CodeGenSuppress("CreateRunAsync", typeof(string), typeof(RunCreationOptions), typeof(IEnumerable<InternalIncludedRunStepProperty>))]
+[CodeGenSuppress("CreateRunAsync", typeof(string), typeof(RunCreationOptions), typeof(IEnumerable<InternalIncludedRunStepProperty>), typeof(CancellationToken))]
 [CodeGenSuppress("CreateRun", typeof(string), typeof(RunCreationOptions), typeof(IEnumerable<InternalIncludedRunStepProperty>))]
-[CodeGenSuppress("ListRunsAsync", typeof(string), typeof(int?), typeof(RunCollectionOrder?), typeof(string), typeof(string))]
+[CodeGenSuppress("ListRunsAsync", typeof(string), typeof(int?), typeof(RunCollectionOrder?), typeof(string), typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("ListRuns", typeof(string), typeof(int?), typeof(RunCollectionOrder?), typeof(string), typeof(string))]
-[CodeGenSuppress("GetRunAsync", typeof(string), typeof(string))]
+[CodeGenSuppress("GetRunAsync", typeof(string), typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("GetRun", typeof(string), typeof(string))]
-[CodeGenSuppress("ModifyRunAsync", typeof(string), typeof(string), typeof(RunModificationOptions))]
+[CodeGenSuppress("ModifyRunAsync", typeof(string), typeof(string), typeof(RunModificationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("ModifyRun", typeof(string), typeof(string), typeof(RunModificationOptions))]
-[CodeGenSuppress("CancelRunAsync", typeof(string), typeof(string))]
+[CodeGenSuppress("CancelRunAsync", typeof(string), typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("CancelRun", typeof(string), typeof(string))]
-[CodeGenSuppress("SubmitToolOutputsToRunAsync", typeof(string), typeof(string), typeof(InternalSubmitToolOutputsRunRequest))]
+[CodeGenSuppress("SubmitToolOutputsToRunAsync", typeof(string), typeof(string), typeof(InternalSubmitToolOutputsRunRequest), typeof(CancellationToken))]
 [CodeGenSuppress("SubmitToolOutputsToRun", typeof(string), typeof(string), typeof(InternalSubmitToolOutputsRunRequest))]
-[CodeGenSuppress("ListRunStepsAsync", typeof(string), typeof(string), typeof(int?), typeof(RunStepCollectionOrder?), typeof(string), typeof(string), typeof(IEnumerable<InternalIncludedRunStepProperty>))]
+[CodeGenSuppress("ListRunStepsAsync", typeof(string), typeof(string), typeof(int?), typeof(RunStepCollectionOrder?), typeof(string), typeof(string), typeof(IEnumerable<InternalIncludedRunStepProperty>), typeof(CancellationToken))]
 [CodeGenSuppress("ListRunSteps", typeof(string), typeof(string), typeof(int?), typeof(RunStepCollectionOrder?), typeof(string), typeof(string), typeof(IEnumerable<InternalIncludedRunStepProperty>))]
-[CodeGenSuppress("GetRunStepAsync", typeof(string), typeof(string), typeof(string), typeof(IEnumerable<InternalIncludedRunStepProperty>))]
+[CodeGenSuppress("GetRunStepAsync", typeof(string), typeof(string), typeof(string), typeof(IEnumerable<InternalIncludedRunStepProperty>), typeof(CancellationToken))]
 [CodeGenSuppress("GetRunStep", typeof(string), typeof(string), typeof(string), typeof(IEnumerable<InternalIncludedRunStepProperty>))]
 internal partial class InternalAssistantRunClient
 {

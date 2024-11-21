@@ -5,6 +5,7 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenAI;
 
@@ -43,15 +44,15 @@ namespace OpenAI.Files
         {
             Argument.AssertNotNull(requestBody, nameof(requestBody));
 
-            ClientResult result = CreateUpload(requestBody, null);
+            ClientResult result = CreateUpload(requestBody, options: null);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 
-        public virtual async Task<ClientResult<InternalUpload>> CreateUploadAsync(InternalCreateUploadRequest requestBody)
+        public virtual async Task<ClientResult<InternalUpload>> CreateUploadAsync(InternalCreateUploadRequest requestBody, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(requestBody, nameof(requestBody));
 
-            ClientResult result = await CreateUploadAsync(requestBody, null).ConfigureAwait(false);
+            ClientResult result = await CreateUploadAsync(requestBody, cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null).ConfigureAwait(false);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 
@@ -96,16 +97,16 @@ namespace OpenAI.Files
             Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(requestBody, nameof(requestBody));
 
-            ClientResult result = CompleteUpload(uploadId, requestBody, null);
+            ClientResult result = CompleteUpload(uploadId, requestBody, options: null);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 
-        public virtual async Task<ClientResult<InternalUpload>> CompleteUploadAsync(string uploadId, InternalCompleteUploadRequest requestBody)
+        public virtual async Task<ClientResult<InternalUpload>> CompleteUploadAsync(string uploadId, InternalCompleteUploadRequest requestBody, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(requestBody, nameof(requestBody));
 
-            ClientResult result = await CompleteUploadAsync(uploadId, requestBody, null).ConfigureAwait(false);
+            ClientResult result = await CompleteUploadAsync(uploadId, requestBody, cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null).ConfigureAwait(false);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 
@@ -129,15 +130,15 @@ namespace OpenAI.Files
         {
             Argument.AssertNotNull(uploadId, nameof(uploadId));
 
-            ClientResult result = CancelUpload(uploadId, null);
+            ClientResult result = CancelUpload(uploadId, options: null);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 
-        public virtual async Task<ClientResult<InternalUpload>> CancelUploadAsync(string uploadId)
+        public virtual async Task<ClientResult<InternalUpload>> CancelUploadAsync(string uploadId, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(uploadId, nameof(uploadId));
 
-            ClientResult result = await CancelUploadAsync(uploadId, null).ConfigureAwait(false);
+            ClientResult result = await CancelUploadAsync(uploadId, cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null).ConfigureAwait(false);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
     }

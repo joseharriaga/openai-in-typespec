@@ -16,7 +16,7 @@ namespace OpenAI.Chat;
 /// <summary> The service client for OpenAI chat operations. </summary>
 [CodeGenClient("Chat")]
 [CodeGenSuppress("ChatClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateChatCompletionAsync", typeof(ChatCompletionOptions))]
+[CodeGenSuppress("CreateChatCompletionAsync", typeof(ChatCompletionOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateChatCompletion", typeof(ChatCompletionOptions))]
 public partial class ChatClient
 {

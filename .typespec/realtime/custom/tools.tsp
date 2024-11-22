@@ -1,5 +1,3 @@
-// using TypeSpec.OpenAPI;
-
 namespace OpenAI;
 
 /**

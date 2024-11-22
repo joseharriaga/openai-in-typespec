@@ -2,8 +2,7 @@ import "./custom/events.tsp";
 import "./custom/items.tsp";
 import "./custom/tools.tsp";
 import "./custom/dotnet.tsp";
-
-// using TypeSpec.OpenAPI;
+import "./custom/java.tsp";
 
 namespace OpenAI;
 

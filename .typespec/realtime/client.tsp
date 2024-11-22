@@ -1,4 +1,3 @@
-// import "./models.tsp";
 import "@typespec/http";
 
 import "./main.tsp";

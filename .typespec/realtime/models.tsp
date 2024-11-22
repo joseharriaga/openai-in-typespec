@@ -5,8 +5,6 @@
 
 import "./custom.tsp";
 
-// using TypeSpec.OpenAPI;
-
 namespace OpenAI;
 
 // Tool customization: apply discriminated type base

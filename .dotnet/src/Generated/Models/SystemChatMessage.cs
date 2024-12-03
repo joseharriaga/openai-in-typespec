@@ -9,10 +9,6 @@ namespace OpenAI.Chat
 {
     public partial class SystemChatMessage : ChatMessage
     {
-        public SystemChatMessage() : base(Chat.ChatMessageRole.System)
-        {
-        }
-
         internal SystemChatMessage(Chat.ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> additionalBinaryDataProperties, string participantName) : base(role, content, additionalBinaryDataProperties)
         {
             ParticipantName = participantName;

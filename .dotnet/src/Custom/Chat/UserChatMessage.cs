@@ -49,7 +49,7 @@ public partial class UserChatMessage : ChatMessage
         Argument.AssertNotNull(content, nameof(content));
     }
 
-    // CUSTOM: Hide the default constructor. Parameterless constructor required for smoke tests.
+    // CUSTOM: Hide the default constructor.
     internal UserChatMessage()
     {
     }

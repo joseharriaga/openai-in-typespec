@@ -106,4 +106,23 @@ public static partial class AzureChatExtensions
             chatUpdate?.Choices?.ElementAtOrDefault(0)?.SerializedAdditionalRawData,
             "content_filter_results");
     }
+
+    [Experimental("AOAI001")]
+    public static void SetUserSecurityContext(this ChatCompletionOptions options, UserSecurityContext userSecurityContext)
+    {
+        options.SerializedAdditionalRawData ??= new Dictionary<string, BinaryData>();
+
+        AdditionalPropertyHelpers.SetAdditionalProperty(
+            options.SerializedAdditionalRawData,
+            "user_security_context",
+            userSecurityContext);
+    }
+
+    [Experimental("AOAI001")]
+    public static UserSecurityContext GetUserSecurityContext(this ChatCompletionOptions options)
+    {
+        return AdditionalPropertyHelpers.GetAdditionalProperty<UserSecurityContext>(
+            options.SerializedAdditionalRawData,
+            "user_security_context");
+    }
 }

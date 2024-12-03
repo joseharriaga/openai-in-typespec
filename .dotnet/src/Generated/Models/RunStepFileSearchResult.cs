@@ -20,7 +20,7 @@ namespace OpenAI.Assistants
             Content = new ChangeTrackingList<RunStepFileSearchResultContent>();
         }
 
-        internal RunStepFileSearchResult(string fileId, string fileName, float score, IList<RunStepFileSearchResultContent> content, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal RunStepFileSearchResult(string fileId, string fileName, float score, IReadOnlyList<RunStepFileSearchResultContent> content, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             FileId = fileId;
             FileName = fileName;
@@ -35,7 +35,7 @@ namespace OpenAI.Assistants
 
         public float Score { get; }
 
-        public IList<RunStepFileSearchResultContent> Content { get; }
+        public IReadOnlyList<RunStepFileSearchResultContent> Content { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

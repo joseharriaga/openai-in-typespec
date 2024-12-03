@@ -49,3 +49,5 @@ using OpenAI;
 
 @@visibility(RunObject.metadata, "read");
 @@visibility(RunObject.tools, "read");
+
+@@visibility(RunStepDetailsToolCallsFileSearchResultObject.content, "read");

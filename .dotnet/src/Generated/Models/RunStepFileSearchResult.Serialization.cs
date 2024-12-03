@@ -46,7 +46,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("score"u8);
                 writer.WriteNumberValue(Score);
             }
-            if (Optional.IsCollectionDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true)
+            if (true && Optional.IsCollectionDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
                 writer.WriteStartArray();
@@ -99,7 +99,7 @@ namespace OpenAI.Assistants
             string fileId = default;
             string fileName = default;
             float score = default;
-            IList<RunStepFileSearchResultContent> content = default;
+            IReadOnlyList<RunStepFileSearchResultContent> content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {

@@ -914,7 +914,7 @@ namespace OpenAI.Assistants {
         public override readonly string ToString();
     }
     public class RunStepFileSearchResult : IJsonModel<RunStepFileSearchResult>, IPersistableModel<RunStepFileSearchResult> {
-        public IList<RunStepFileSearchResultContent> Content { get; }
+        public IReadOnlyList<RunStepFileSearchResultContent> Content { get; }
         public string FileId { get; }
         public string FileName { get; }
         public float Score { get; }

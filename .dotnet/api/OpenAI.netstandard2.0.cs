@@ -2128,7 +2128,6 @@ namespace OpenAI.Chat {
         public ToolChatMessage(string toolCallId, params ChatMessageContentPart[] contentParts);
         public ToolChatMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts);
         public ToolChatMessage(string toolCallId, string content);
-        public ToolChatMessage(string toolCallId);
         public string ToolCallId { get; }
         protected override ChatMessage JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
@@ -2143,7 +2142,6 @@ namespace OpenAI.Chat {
         BinaryData IPersistableModel<ToolChatMessage>.Write(ModelReaderWriterOptions options);
     }
     public class UserChatMessage : ChatMessage, IJsonModel<UserChatMessage>, IPersistableModel<UserChatMessage> {
-        public UserChatMessage();
         public UserChatMessage(params ChatMessageContentPart[] contentParts);
         public UserChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public UserChatMessage(string content);

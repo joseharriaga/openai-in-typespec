@@ -4,19 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI;
 
 namespace OpenAI.Chat
 {
     public partial class ToolChatMessage : ChatMessage
     {
-        public ToolChatMessage(string toolCallId) : base(Chat.ChatMessageRole.Tool)
-        {
-            Argument.AssertNotNull(toolCallId, nameof(toolCallId));
-
-            ToolCallId = toolCallId;
-        }
-
         internal ToolChatMessage(Chat.ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> additionalBinaryDataProperties, string toolCallId) : base(role, content, additionalBinaryDataProperties)
         {
             ToolCallId = toolCallId;

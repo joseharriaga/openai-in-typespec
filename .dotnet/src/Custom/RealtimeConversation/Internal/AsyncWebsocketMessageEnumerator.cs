@@ -6,17 +6,21 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace OpenAI.RealtimeConversation;
 
-internal partial class AsyncWebsocketMessageResultEnumerator : IAsyncEnumerator<ClientResult>
+internal partial class AsyncWebsocketMessageResultEnumerator : IAsyncEnumerator<ClientResult?>
 {
-    public ClientResult Current { get; private set; }
+    public ClientResult? Current { get; private set; }
     private readonly CancellationToken _cancellationToken;
+    private int _heartbeatms;
     private readonly WebSocket _webSocket;
     private readonly byte[] _receiveBuffer;
 
-    public AsyncWebsocketMessageResultEnumerator(WebSocket webSocket, CancellationToken cancellationToken)
+    public AsyncWebsocketMessageResultEnumerator(int heartbeatms, WebSocket webSocket, CancellationToken cancellationToken)
     {
+        _heartbeatms = heartbeatms;
         _webSocket = webSocket;
         // 18K buffer size based on traffic observation; the connection will appropriately negotiate and use
         // fragmented messages if the buffer size is inadequate.
@@ -33,6 +37,9 @@ internal partial class AsyncWebsocketMessageResultEnumerator : IAsyncEnumerator<
     public async ValueTask<bool> MoveNextAsync()
     {
         WebsocketPipelineResponse websocketPipelineResponse = new();
+
+
+
         for (int partialMessageCount = 1; !websocketPipelineResponse.IsComplete; partialMessageCount++)
         {
             WebSocketReceiveResult receiveResult = await _webSocket.ReceiveAsync(new(_receiveBuffer), _cancellationToken);

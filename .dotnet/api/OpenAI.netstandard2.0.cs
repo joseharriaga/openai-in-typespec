@@ -2392,7 +2392,6 @@ namespace OpenAI.FineTuning {
         public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public FineTuningClient(ApiKeyCredential credential);
         protected internal FineTuningClient(ClientPipeline pipeline, OpenAIClientOptions options);
-        public FineTuningClient(string apiKey, OpenAIClientOptions options);
         public FineTuningClient(string apiKey);
         public ClientPipeline Pipeline { get; }
         public virtual FineTuningJobOperation CreateFineTuningJob(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);

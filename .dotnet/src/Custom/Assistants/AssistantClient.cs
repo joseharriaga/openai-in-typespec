@@ -278,7 +278,6 @@ public partial class AssistantClient
 
         ClientResult protocolResult = await DeleteAssistantAsync(assistantId, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return ClientResult.FromValue((AssistantDeletionResult)protocolResult, protocolResult.GetRawResponse());
-
     }
 
     /// <summary>
@@ -293,7 +292,6 @@ public partial class AssistantClient
 
         ClientResult protocolResult = DeleteAssistant(assistantId, cancellationToken.ToRequestOptions());
         return ClientResult.FromValue((AssistantDeletionResult)protocolResult, protocolResult.GetRawResponse());
-
     }
 
     /// <summary>

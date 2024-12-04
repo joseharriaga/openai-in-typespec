@@ -7,14 +7,9 @@ using System.ComponentModel;
 
 namespace OpenAI.FineTuning
 {
-    internal readonly partial struct HyperparameterCycleCount : IEquatable<HyperparameterCycleCount>
+    public readonly partial struct HyperparameterCycleCount : IEquatable<HyperparameterCycleCount>
     {
         private readonly string _value;
-
-        public HyperparameterCycleCount(string value)
-        {
-            _value = value ?? throw new ArgumentNullException(nameof(value));
-        }
 
         private const string AutoValue = "auto";
 
@@ -22,9 +17,6 @@ namespace OpenAI.FineTuning
         public static bool operator ==(HyperparameterCycleCount left, HyperparameterCycleCount right) => left.Equals(right);
         public static bool operator !=(HyperparameterCycleCount left, HyperparameterCycleCount right) => !left.Equals(right);
         public static implicit operator HyperparameterCycleCount(string value) => new HyperparameterCycleCount(value);
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj) => obj is HyperparameterCycleCount other && Equals(other);
         public bool Equals(HyperparameterCycleCount other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
         [EditorBrowsable(EditorBrowsableState.Never)]

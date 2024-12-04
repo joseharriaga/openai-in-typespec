@@ -107,7 +107,7 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            IReadOnlyList<InternalFineTuningJobCheckpoint> data = default;
+            IReadOnlyList<FineTuningCheckpoint> data = default;
             InternalListFineTuningJobCheckpointsResponseObject @object = default;
             string firstId = default;
             string lastId = default;
@@ -118,10 +118,10 @@ namespace OpenAI.FineTuning
             {
                 if (property.NameEquals("data"u8))
                 {
-                    List<InternalFineTuningJobCheckpoint> array = new List<InternalFineTuningJobCheckpoint>();
+                    List<FineTuningCheckpoint> array = new List<FineTuningCheckpoint>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(InternalFineTuningJobCheckpoint.DeserializeInternalFineTuningJobCheckpoint(item, options));
+                        array.Add(FineTuningCheckpoint.DeserializeFineTuningCheckpoint(item, options));
                     }
                     data = array;
                     continue;

@@ -7,6 +7,12 @@ function Run-ModelsSubnamespaceCheck {
     $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs" -Recurse
 
     $exclusions = @(
+        "FineTuningJobObject.cs",
+        "FineTuningJobEventLevel.cs",
+        "FineTuningJobEventLevel.Serialization.cs",
+        "FineTuningJobEventObject.cs",
+        "ListFineTuningJobEventsResponseObject.cs",
+        "CreateFineTuningJobRequestModel.cs",
         "GeneratorStubs.cs",
         "InternalDeleteModelResponseObject.cs",
         "InternalListModelsResponseObject.cs",

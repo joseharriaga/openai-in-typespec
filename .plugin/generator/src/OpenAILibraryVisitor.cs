@@ -110,7 +110,7 @@ namespace OpenAILibraryPlugin
             }
 
             var updatedStatements = new List<MethodBodyStatement>();
-            var flattenedStatements = Flatten(statements).ToArray();
+            var flattenedStatements = statements.Flatten().ToArray();
 
             for (int line = 0; line < flattenedStatements.Length; line++)
             {
@@ -127,7 +127,7 @@ namespace OpenAILibraryPlugin
                     }
 
                     // Handle writing AdditionalProperties
-                    else if (Flatten(ifStatement.Body).First() is ForeachStatement foreachStatement)
+                    else if (ifStatement.Body.Flatten().First() is ForeachStatement foreachStatement)
                     {
                         foreachStatement.Body.Insert(
                             0,
@@ -181,24 +181,6 @@ namespace OpenAILibraryPlugin
             return This.Property(AdditionalPropertiesFieldName)
                 .NullConditional()
                 .Invoke("ContainsKey", Literal(propertyName)).NotEqual(True);
-        }
-
-        private IEnumerable<MethodBodyStatement> Flatten(MethodBodyStatement bodyStatement)
-        {
-            if (bodyStatement is MethodBodyStatements statements)
-            {
-                foreach (var statement in statements.Statements)
-                {
-                    foreach (var subStatement in Flatten(statement))
-                    {
-                        yield return subStatement;
-                    }
-                }
-            }
-            else
-            {
-                yield return bodyStatement;
-            }
         }
     }
 }

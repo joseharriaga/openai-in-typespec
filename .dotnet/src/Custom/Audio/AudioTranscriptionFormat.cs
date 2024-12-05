@@ -16,12 +16,12 @@ public readonly partial struct AudioTranscriptionFormat
     // CUSTOM: Rename, reflecting convergence with Text
     /// <summary> Plain text only. </summary>
     [CodeGenMember("Json")]
-    public static AudioTranscriptionFormat Simple { get; } = new(SimpleValue);
+    public static AudioTranscriptionFormat Simple { get; } = new AudioTranscriptionFormat(JsonValue);
 
     // CUSTOM: Rename.
     /// <summary> Plain text provided with additional metadata, such as duration and timestamps. </summary>
     [CodeGenMember("VerboseJson")]
-    public static AudioTranscriptionFormat Verbose { get; } = new(VerboseValue);
+    public static AudioTranscriptionFormat Verbose { get; } = new AudioTranscriptionFormat(VerboseJsonValue);
 
     // CUSTOM: Added custom doc comments.
     /// <summary> Text formatted as SubRip (.srt) file. </summary>

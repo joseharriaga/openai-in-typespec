@@ -20,9 +20,9 @@ model RunStepObjectStepDetails {
 
 union RunStepDetailsToolCallKind {
   string,
-  code_interpreter: "code_interpreter";
-  file_search: "file_search";
-  function: "function";
+  code_interpreter: "code_interpreter",
+  file_search: "file_search",
+  function: "function",
 }
 
 /**

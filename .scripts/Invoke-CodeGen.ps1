@@ -9,9 +9,12 @@ function Invoke([scriptblock]$script) {
 
 $scriptStartTime = Get-Date
 
-Push-Location $repoRoot/.typespec
+Push-Location $repoRoot
+
 try {
   Invoke { npm ci }
+  Invoke { npm run build -w .plugin }
+  Set-Location $repoRoot/.typespec
   Invoke { npm exec --no -- tsp format **/*tsp }
   Invoke { npm exec --no -- tsp compile . }
   Invoke { .$PSScriptRoot\Update-ClientModel.ps1 }

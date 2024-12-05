@@ -15,7 +15,7 @@ namespace OpenAI.Images;
 /// <summary> The service client for OpenAI image operations. </summary>
 [CodeGenClient("Images")]
 [CodeGenSuppress("ImageClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateImageAsync", typeof(ImageGenerationOptions))]
+[CodeGenSuppress("CreateImageAsync", typeof(ImageGenerationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateImage", typeof(ImageGenerationOptions))]
 [CodeGenSuppress("CreateImageEditAsync", typeof(ImageEditOptions))]
 [CodeGenSuppress("CreateImageEdit", typeof(ImageEditOptions))]
@@ -25,14 +25,8 @@ public partial class ImageClient
 {
     private readonly string _model;
 
-    // CUSTOM: Remove virtual keyword.
-    /// <summary>
-    /// The HTTP pipeline for sending and receiving REST requests and responses.
-    /// </summary>
-    public ClientPipeline Pipeline => _pipeline;
-
     // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="ImageClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ImageClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> or <paramref name="apiKey"/> is null. </exception>
@@ -45,7 +39,7 @@ public partial class ImageClient
     // - Added `model` parameter.
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="ImageClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ImageClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> or <paramref name="credential"/> is null. </exception>
@@ -58,7 +52,7 @@ public partial class ImageClient
     // - Added `model` parameter.
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="ImageClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ImageClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
@@ -71,7 +65,7 @@ public partial class ImageClient
         options ??= new OpenAIClientOptions();
 
         _model = model;
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -80,7 +74,7 @@ public partial class ImageClient
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
     // - Made protected.
-    /// <summary> Initializes a new instance of <see cref="ImageClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ImageClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline to send and receive REST requests and responses. </param>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="options"> The options to configure the client. </param>
@@ -93,7 +87,7 @@ public partial class ImageClient
         options ??= new OpenAIClientOptions();
 
         _model = model;
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -112,9 +106,9 @@ public partial class ImageClient
         options ??= new();
         CreateImageGenerationOptions(prompt, null, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = await GenerateImagesAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((GeneratedImageCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Generates an image based on a prompt. </summary>
@@ -130,9 +124,9 @@ public partial class ImageClient
         options ??= new();
         CreateImageGenerationOptions(prompt, null, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = GenerateImages(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((GeneratedImageCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Generates images based on a prompt. </summary>
@@ -149,9 +143,9 @@ public partial class ImageClient
         options ??= new();
         CreateImageGenerationOptions(prompt, imageCount, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = await GenerateImagesAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((GeneratedImageCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Generates images based on a prompt. </summary>
@@ -168,9 +162,9 @@ public partial class ImageClient
         options ??= new();
         CreateImageGenerationOptions(prompt, imageCount, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = GenerateImages(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((GeneratedImageCollection)result, result.GetRawResponse());
     }
 
     #endregion
@@ -203,7 +197,7 @@ public partial class ImageClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, null, null);
         ClientResult result = await GenerateImageEditsAsync(content, content.ContentType, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((GeneratedImageCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Generates an edited or extended image based on an original image and a prompt. </summary>
@@ -232,7 +226,7 @@ public partial class ImageClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, null, null);
         ClientResult result = GenerateImageEdits(content, content.ContentType, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((GeneratedImageCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Generates an edited or extended image based on an original image and a prompt. </summary>
@@ -309,7 +303,7 @@ public partial class ImageClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, mask, maskFilename);
         ClientResult result = await GenerateImageEditsAsync(content, content.ContentType, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((GeneratedImageCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Generates an edited or extended image based on an original image, a prompt, and a mask. </summary>
@@ -346,7 +340,7 @@ public partial class ImageClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, mask, maskFilename);
         ClientResult result = GenerateImageEdits(content, content.ContentType, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((GeneratedImageCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Generates an edited or extended image based on an original image, a prompt, and a mask. </summary>
@@ -432,7 +426,7 @@ public partial class ImageClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, null, null);
         ClientResult result = await GenerateImageEditsAsync(content, content.ContentType, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((GeneratedImageCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Generates edited or extended images based on an original image and a prompt. </summary>
@@ -462,7 +456,7 @@ public partial class ImageClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, null, null);
         ClientResult result = GenerateImageEdits(content, content.ContentType, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((GeneratedImageCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Generates edited or extended images based on an original image and a prompt. </summary>
@@ -542,7 +536,7 @@ public partial class ImageClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, mask, maskFilename);
         ClientResult result = await GenerateImageEditsAsync(content, content.ContentType, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((GeneratedImageCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Generates edited or extended images based on an original image, a prompt, and a mask. </summary>
@@ -580,7 +574,7 @@ public partial class ImageClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename, mask, maskFilename);
         ClientResult result = GenerateImageEdits(content, content.ContentType, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((GeneratedImageCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Generates edited or extended images based on an original image, a prompt, and a mask. </summary>
@@ -666,7 +660,7 @@ public partial class ImageClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename);
         ClientResult result = await GenerateImageVariationsAsync(content, content.ContentType, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((GeneratedImageCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Generates a variation of a given image. </summary>
@@ -690,7 +684,7 @@ public partial class ImageClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename);
         ClientResult result = GenerateImageVariations(content, content.ContentType, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((GeneratedImageCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Generates a variation of a given image. </summary>
@@ -751,7 +745,7 @@ public partial class ImageClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename);
         ClientResult result = await GenerateImageVariationsAsync(content, content.ContentType, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((GeneratedImageCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Generates variations of a given image. </summary>
@@ -776,7 +770,7 @@ public partial class ImageClient
 
         using MultipartFormDataBinaryContent content = options.ToMultipartContent(image, imageFilename);
         ClientResult result = GenerateImageVariations(content, content.ContentType, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(GeneratedImageCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((GeneratedImageCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Generates variations of a given image. </summary>

@@ -2496,7 +2496,6 @@ namespace OpenAI.Images {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
         public static bool operator ==(GeneratedImageSize left, GeneratedImageSize right);
-        public static implicit operator GeneratedImageSize(string value);
         public static bool operator !=(GeneratedImageSize left, GeneratedImageSize right);
         public override readonly string ToString();
     }

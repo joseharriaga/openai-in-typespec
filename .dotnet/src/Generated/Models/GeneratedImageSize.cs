@@ -20,8 +20,6 @@ namespace OpenAI.Images
 
         public static bool operator !=(GeneratedImageSize left, GeneratedImageSize right) => !left.Equals(right);
 
-        public static implicit operator GeneratedImageSize(string value) => new GeneratedImageSize(value);
-
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is GeneratedImageSize other && Equals(other);
 

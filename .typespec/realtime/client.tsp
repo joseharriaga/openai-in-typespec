@@ -83,3 +83,6 @@ using OpenAI;
 @@clientName(RealtimeServerVadTurnDetection.type, "Kind", "csharp");
 @@clientName(RealtimeContentPart.type, "Kind", "csharp");
 @@clientName(RealtimeResponseStatusDetails.type, "Kind", "csharp");
+
+@@visibility(RealtimeResponseMessageItem.content, "read");
+@@visibility(RealtimeResponseSession.tools, "read");

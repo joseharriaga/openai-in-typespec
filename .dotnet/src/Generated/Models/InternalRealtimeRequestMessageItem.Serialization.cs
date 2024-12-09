@@ -7,7 +7,6 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Text.Json;
 using OpenAI;
-using OpenAI.Models;
 
 namespace OpenAI.RealtimeConversation
 {

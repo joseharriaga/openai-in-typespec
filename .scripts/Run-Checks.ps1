@@ -20,8 +20,6 @@ function Run-ModelsSubnamespaceCheck {
         "OpenAIModelCollection.cs",
         "OpenAIModelCollection.Serialization.cs",
         "OpenAIModelsModelFactory.cs",
-        "UnknownRealtimeRequestMessageItem.cs",
-        "UnknownRealtimeRequestMessageItem.Serialization.cs",
         "OpenAIModelClient.RestClient.cs"
     )
 

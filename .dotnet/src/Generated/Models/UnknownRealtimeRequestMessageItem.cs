@@ -4,9 +4,8 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI.RealtimeConversation;
 
-namespace OpenAI.Models
+namespace OpenAI.RealtimeConversation
 {
     internal partial class UnknownRealtimeRequestMessageItem : InternalRealtimeRequestMessageItem
     {

@@ -7,9 +7,8 @@ using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI;
-using OpenAI.RealtimeConversation;
 
-namespace OpenAI.Models
+namespace OpenAI.RealtimeConversation
 {
     internal partial class UnknownRealtimeRequestMessageItem : IJsonModel<InternalRealtimeRequestMessageItem>
     {

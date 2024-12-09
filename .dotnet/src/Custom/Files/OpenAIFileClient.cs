@@ -26,10 +26,11 @@ namespace OpenAI.Files;
 public partial class OpenAIFileClient
 {
     private InternalUploadsClient _internalUploadsClient;
-    
+
     // CUSTOM: Added as a convenience.
     /// <summary> Initializes a new instance of <see cref="OpenAIFileClient"/>. </summary>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
+    /// <exception cref="ArgumentNullException"> <paramref name="apiKey"/> is null. </exception>
     public OpenAIFileClient(string apiKey) : this(new ApiKeyCredential(apiKey), new OpenAIClientOptions())
     {
     }

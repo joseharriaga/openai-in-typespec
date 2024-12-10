@@ -28,8 +28,9 @@
         "dist/**"
     ],
     "dependencies": {
+        "@azure-tools/cadl-ranch-expect": "latest",
         "@open-ai/plugin": "file:",
-        "openai-plugin-http-client-csharp": "npm:@typespec/http-client-csharp@0.1.9-alpha.20241206.3"
+        "@typespec/http-client-csharp": "latest"
     },
     "devDependencies": {
         "@types/node": "^22.8.1",

@@ -3,7 +3,7 @@ import { EmitContext } from "@typespec/compiler";
 import {
     $onEmit as $OnMGCEmit,
     NetEmitterOptions
-} from "@typespec/http-client-csharp";
+} from "openai-plugin-http-client-csharp";
 
 export async function $onEmit(context: EmitContext<NetEmitterOptions>) {
     context.options["plugin-name"] = "OpenAILibraryPlugin";

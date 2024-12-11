@@ -14,13 +14,21 @@ namespace Azure.AI.OpenAI
     {
         void IJsonModel<InternalAzureContentFilterResultForPromptContentFilterResultsError>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
+            writer.WriteStartObject();
+            JsonModelWriteCore(writer, options);
+            writer.WriteEndObject();
+        }
+
+        /// <param name="writer"> The JSON writer. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        {
             var format = options.Format == "W" ? ((IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResultsError>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalAzureContentFilterResultForPromptContentFilterResultsError)} does not support writing '{format}' format.");
             }
 
-            writer.WriteStartObject();
             if (SerializedAdditionalRawData?.ContainsKey("code") != true)
             {
                 writer.WritePropertyName("code"u8);
@@ -50,7 +58,6 @@ namespace Azure.AI.OpenAI
 #endif
                 }
             }
-            writer.WriteEndObject();
         }
 
         InternalAzureContentFilterResultForPromptContentFilterResultsError IJsonModel<InternalAzureContentFilterResultForPromptContentFilterResultsError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)

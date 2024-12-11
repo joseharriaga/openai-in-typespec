@@ -3033,7 +3033,7 @@ components:
             We generally recommend altering this or temperature but not both.
           default: 1
         response_format:
-          oneOf:
+          allOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
       description: Represents an `assistant` that can call the model and use tools.
@@ -4538,7 +4538,7 @@ components:
             We generally recommend altering this or temperature but not both.
           default: 1
         response_format:
-          oneOf:
+          allOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
     CreateChatCompletionFunctionResponse:
@@ -6275,14 +6275,14 @@ components:
             - $ref: '#/components/schemas/TruncationObject'
           nullable: true
         tool_choice:
-          oneOf:
+          allOf:
             - $ref: '#/components/schemas/AssistantsApiToolChoiceOption'
           nullable: true
         parallel_tool_calls:
           type: boolean
           default: true
         response_format:
-          oneOf:
+          allOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
     CreateRunRequestAdditional_messages:
@@ -6461,14 +6461,14 @@ components:
             - $ref: '#/components/schemas/TruncationObject'
           nullable: true
         tool_choice:
-          oneOf:
+          allOf:
             - $ref: '#/components/schemas/AssistantsApiToolChoiceOption'
           nullable: true
         parallel_tool_calls:
           type: boolean
           default: true
         response_format:
-          oneOf:
+          allOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
     CreateThreadAndRunRequestTools:
@@ -8499,7 +8499,7 @@ components:
             We generally recommend altering this or temperature but not both.
           default: 1
         response_format:
-          oneOf:
+          allOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
     ModifyMessageRequest:
@@ -11049,14 +11049,14 @@ components:
             - $ref: '#/components/schemas/TruncationObject'
           nullable: true
         tool_choice:
-          oneOf:
+          allOf:
             - $ref: '#/components/schemas/AssistantsApiToolChoiceOption'
           nullable: true
         parallel_tool_calls:
           type: boolean
           default: true
         response_format:
-          oneOf:
+          allOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
       description: Represents an execution run on a [thread](/docs/api-reference/threads).

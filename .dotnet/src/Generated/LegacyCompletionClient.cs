@@ -40,11 +40,11 @@ namespace OpenAI.LegacyCompletions
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult<InternalCreateCompletionResponse> CreateCompletion(InternalCreateCompletionRequest requestBody)
+        public virtual ClientResult<InternalCreateCompletionResponse> CreateCompletion(InternalCreateCompletionRequest requestBody, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(requestBody, nameof(requestBody));
 
-            ClientResult result = CreateCompletion(requestBody, options: null);
+            ClientResult result = CreateCompletion(requestBody, cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null);
             return ClientResult.FromValue((InternalCreateCompletionResponse)result, result.GetRawResponse());
         }
 

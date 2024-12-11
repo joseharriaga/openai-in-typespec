@@ -40,11 +40,11 @@ namespace OpenAI.Files
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult<InternalUpload> CreateUpload(InternalCreateUploadRequest requestBody)
+        public virtual ClientResult<InternalUpload> CreateUpload(InternalCreateUploadRequest requestBody, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(requestBody, nameof(requestBody));
 
-            ClientResult result = CreateUpload(requestBody, options: null);
+            ClientResult result = CreateUpload(requestBody, cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 
@@ -92,12 +92,12 @@ namespace OpenAI.Files
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult<InternalUpload> CompleteUpload(string uploadId, InternalCompleteUploadRequest requestBody)
+        public virtual ClientResult<InternalUpload> CompleteUpload(string uploadId, InternalCompleteUploadRequest requestBody, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(uploadId, nameof(uploadId));
             Argument.AssertNotNull(requestBody, nameof(requestBody));
 
-            ClientResult result = CompleteUpload(uploadId, requestBody, options: null);
+            ClientResult result = CompleteUpload(uploadId, requestBody, cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 
@@ -126,11 +126,11 @@ namespace OpenAI.Files
             return ClientResult.FromResponse(await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false));
         }
 
-        public virtual ClientResult<InternalUpload> CancelUpload(string uploadId)
+        public virtual ClientResult<InternalUpload> CancelUpload(string uploadId, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(uploadId, nameof(uploadId));
 
-            ClientResult result = CancelUpload(uploadId, options: null);
+            ClientResult result = CancelUpload(uploadId, cancellationToken.CanBeCanceled ? new RequestOptions { CancellationToken = cancellationToken } : null);
             return ClientResult.FromValue((InternalUpload)result, result.GetRawResponse());
         }
 

@@ -17,7 +17,7 @@ namespace OpenAI.Chat;
 [CodeGenClient("Chat")]
 [CodeGenSuppress("ChatClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateChatCompletionAsync", typeof(ChatCompletionOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateChatCompletion", typeof(ChatCompletionOptions))]
+[CodeGenSuppress("CreateChatCompletion", typeof(ChatCompletionOptions), typeof(CancellationToken))]
 public partial class ChatClient
 {
     private readonly string _model;

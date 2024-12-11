@@ -14,9 +14,9 @@ namespace OpenAI.Models;
 [CodeGenClient("ModelsOps")]
 [CodeGenSuppress("OpenAIModelClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("ListModelsAsync", typeof(CancellationToken))]
-[CodeGenSuppress("ListModels")]
+[CodeGenSuppress("ListModels", typeof(CancellationToken))]
 [CodeGenSuppress("RetrieveModelAsync", typeof(string), typeof(CancellationToken))]
-[CodeGenSuppress("RetrieveModel", typeof(string))]
+[CodeGenSuppress("RetrieveModel", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("DeleteModelAsync", typeof(string))]
 [CodeGenSuppress("DeleteModel", typeof(string))]
 

@@ -16,7 +16,7 @@ namespace OpenAI.Moderations;
 [CodeGenClient("Moderations")]
 [CodeGenSuppress("ModerationClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateModerationAsync", typeof(ModerationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateModeration", typeof(ModerationOptions))]
+[CodeGenSuppress("CreateModeration", typeof(ModerationOptions), typeof(CancellationToken))]
 public partial class ModerationClient
 {
     private readonly string _model;

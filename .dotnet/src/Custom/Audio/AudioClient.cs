@@ -15,7 +15,7 @@ namespace OpenAI.Audio;
 [CodeGenClient("Audio")]
 [CodeGenSuppress("AudioClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateSpeechAsync", typeof(SpeechGenerationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateSpeech", typeof(SpeechGenerationOptions))]
+[CodeGenSuppress("CreateSpeech", typeof(SpeechGenerationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateTranscriptionAsync", typeof(AudioTranscriptionOptions))]
 [CodeGenSuppress("CreateTranscription", typeof(AudioTranscriptionOptions))]
 [CodeGenSuppress("CreateTranslationAsync", typeof(AudioTranslationOptions))]

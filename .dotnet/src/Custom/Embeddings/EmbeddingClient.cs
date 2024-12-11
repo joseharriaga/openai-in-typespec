@@ -16,7 +16,7 @@ namespace OpenAI.Embeddings;
 [CodeGenClient("Embeddings")]
 [CodeGenSuppress("EmbeddingClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateEmbeddingAsync", typeof(EmbeddingGenerationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateEmbedding", typeof(EmbeddingGenerationOptions))]
+[CodeGenSuppress("CreateEmbedding", typeof(EmbeddingGenerationOptions), typeof(CancellationToken))]
 public partial class EmbeddingClient
 {
     private readonly string _model;

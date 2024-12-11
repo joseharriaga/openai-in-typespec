@@ -8,13 +8,13 @@ namespace OpenAI.Assistants;
 [CodeGenClient("Threads")]
 [CodeGenSuppress("InternalAssistantThreadClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateThreadAsync", typeof(ThreadCreationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("CreateThread", typeof(ThreadCreationOptions))]
+[CodeGenSuppress("CreateThread", typeof(ThreadCreationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("GetThreadAsync", typeof(string), typeof(CancellationToken))]
-[CodeGenSuppress("GetThread", typeof(string))]
+[CodeGenSuppress("GetThread", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("ModifyThreadAsync", typeof(string), typeof(ThreadModificationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("ModifyThread", typeof(string), typeof(ThreadModificationOptions))]
+[CodeGenSuppress("ModifyThread", typeof(string), typeof(ThreadModificationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("DeleteThreadAsync", typeof(string), typeof(CancellationToken))]
-[CodeGenSuppress("DeleteThread", typeof(string))]
+[CodeGenSuppress("DeleteThread", typeof(string), typeof(CancellationToken))]
 internal partial class InternalAssistantThreadClient
 {
     // CUSTOM:

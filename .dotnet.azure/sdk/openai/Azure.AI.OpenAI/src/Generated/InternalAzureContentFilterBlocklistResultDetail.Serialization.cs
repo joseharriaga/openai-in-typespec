@@ -152,4 +152,3 @@ namespace Azure.AI.OpenAI
         }
     }
 }
-

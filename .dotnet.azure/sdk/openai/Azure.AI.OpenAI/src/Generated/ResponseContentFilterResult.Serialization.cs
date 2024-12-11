@@ -74,11 +74,6 @@ namespace Azure.AI.OpenAI
                 writer.WritePropertyName("protected_material_code"u8);
                 writer.WriteObjectValue(ProtectedMaterialCode, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("ungrounded_material") != true && Optional.IsDefined(UngroundedMaterial))
-            {
-                writer.WritePropertyName("ungrounded_material"u8);
-                writer.WriteObjectValue(UngroundedMaterial, options);
-            }
             if (SerializedAdditionalRawData != null)
             {
                 foreach (var item in SerializedAdditionalRawData)
@@ -129,7 +124,6 @@ namespace Azure.AI.OpenAI
             InternalAzureContentFilterResultForPromptContentFilterResultsError error = default;
             ContentFilterDetectionResult protectedMaterialText = default;
             ContentFilterProtectedMaterialResult protectedMaterialCode = default;
-            ContentFilterTextSpanResult ungroundedMaterial = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -215,15 +209,6 @@ namespace Azure.AI.OpenAI
                     protectedMaterialCode = ContentFilterProtectedMaterialResult.DeserializeContentFilterProtectedMaterialResult(property.Value, options);
                     continue;
                 }
-                if (property.NameEquals("ungrounded_material"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    ungroundedMaterial = ContentFilterTextSpanResult.DeserializeContentFilterTextSpanResult(property.Value, options);
-                    continue;
-                }
                 if (options.Format != "W")
                 {
                     rawDataDictionary ??= new Dictionary<string, BinaryData>();
@@ -241,7 +226,6 @@ namespace Azure.AI.OpenAI
                 error,
                 protectedMaterialText,
                 protectedMaterialCode,
-                ungroundedMaterial,
                 serializedAdditionalRawData);
         }
 

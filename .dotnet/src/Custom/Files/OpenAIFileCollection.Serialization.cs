@@ -41,6 +41,9 @@ public partial class OpenAIFileCollection : IJsonModel<OpenAIFileCollection>
         }
         IReadOnlyList<OpenAIFile> data = default;
         string @object = default;
+        string firstId = default;
+        string lastId = default;
+        bool hasMore = false;
         IDictionary<string, BinaryData> serializedAdditionalRawData = default;
         Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
         foreach (var property in element.EnumerateObject())
@@ -60,13 +63,28 @@ public partial class OpenAIFileCollection : IJsonModel<OpenAIFileCollection>
                 @object = property.Value.GetString();
                 continue;
             }
+            if (property.NameEquals("first_id"u8))
+            {
+                firstId = property.Value.GetString();
+                continue;
+            }
+            if (property.NameEquals("last_id"u8))
+            {
+                lastId = property.Value.GetString();
+                continue;
+            }
+            if (property.NameEquals("has_more"u8))
+            {
+                hasMore = property.Value.GetBoolean();
+                continue;
+            }
             if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }
         }
         serializedAdditionalRawData = rawDataDictionary;
-        return new OpenAIFileCollection(data, @object, serializedAdditionalRawData);
+        return new OpenAIFileCollection(data, @object, firstId, lastId, hasMore, serializedAdditionalRawData);
     }
 
 }

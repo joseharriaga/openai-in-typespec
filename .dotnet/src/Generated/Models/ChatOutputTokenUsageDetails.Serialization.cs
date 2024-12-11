@@ -21,10 +21,10 @@ namespace OpenAI.Chat
             }
 
             writer.WriteStartObject();
-            if (SerializedAdditionalRawData?.ContainsKey("accepted_prediction_tokens") != true && Optional.IsDefined(AcceptedPredictionTokens))
+            if (SerializedAdditionalRawData?.ContainsKey("accepted_prediction_tokens") != true)
             {
                 writer.WritePropertyName("accepted_prediction_tokens"u8);
-                writer.WriteNumberValue(AcceptedPredictionTokens.Value);
+                writer.WriteNumberValue(AcceptedPredictionTokenCount);
             }
             if (SerializedAdditionalRawData?.ContainsKey("audio_tokens") != true)
             {
@@ -36,10 +36,10 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("reasoning_tokens"u8);
                 writer.WriteNumberValue(ReasoningTokenCount);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("rejected_prediction_tokens") != true && Optional.IsDefined(RejectedPredictionTokens))
+            if (SerializedAdditionalRawData?.ContainsKey("rejected_prediction_tokens") != true)
             {
                 writer.WritePropertyName("rejected_prediction_tokens"u8);
-                writer.WriteNumberValue(RejectedPredictionTokens.Value);
+                writer.WriteNumberValue(RejectedPredictionTokenCount);
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -83,10 +83,10 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            int? acceptedPredictionTokens = default;
+            int acceptedPredictionTokens = default;
             int audioTokens = default;
             int reasoningTokens = default;
-            int? rejectedPredictionTokens = default;
+            int rejectedPredictionTokens = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())

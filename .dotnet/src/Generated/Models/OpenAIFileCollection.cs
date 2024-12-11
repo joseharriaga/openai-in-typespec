@@ -10,28 +10,6 @@ namespace OpenAI.Files
 {
     public partial class OpenAIFileCollection : ReadOnlyCollection<OpenAIFile>
     {
-        internal OpenAIFileCollection(string @object, IEnumerable<OpenAIFile> data, string firstId, string lastId, bool hasMore)
-        {
-            Argument.AssertNotNull(@object, nameof(@object));
-            Argument.AssertNotNull(data, nameof(data));
-            Argument.AssertNotNull(firstId, nameof(firstId));
-            Argument.AssertNotNull(lastId, nameof(lastId));
-
-            Object = @object;
-            Data = data.ToList();
-            FirstId = firstId;
-            LastId = lastId;
-            HasMore = hasMore;
-        }
-
-        internal OpenAIFileCollection(string @object, IReadOnlyList<OpenAIFile> data, string firstId, string lastId, bool hasMore)
-        {
-            Object = @object;
-            Data = data;
-            FirstId = firstId;
-            LastId = lastId;
-            HasMore = hasMore;
-        }
         public string FirstId { get; }
         public string LastId { get; }
         public bool HasMore { get; }

@@ -42,7 +42,7 @@ public static partial class OpenAIFilesModelFactory
 
         return new OpenAIFileCollection(
             items.ToList(),
-            InternalListFilesResponseObject.List,
+            "list",
             serializedAdditionalRawData: null);
     }
 }

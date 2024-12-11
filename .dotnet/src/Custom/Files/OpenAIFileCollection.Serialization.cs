@@ -40,7 +40,7 @@ public partial class OpenAIFileCollection : IJsonModel<OpenAIFileCollection>
             return null;
         }
         IReadOnlyList<OpenAIFile> data = default;
-        InternalListFilesResponseObject @object = default;
+        string @object = default;
         IDictionary<string, BinaryData> serializedAdditionalRawData = default;
         Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
         foreach (var property in element.EnumerateObject())
@@ -57,7 +57,7 @@ public partial class OpenAIFileCollection : IJsonModel<OpenAIFileCollection>
             }
             if (property.NameEquals("object"u8))
             {
-                @object = new InternalListFilesResponseObject(property.Value.GetString());
+                @object = property.Value.GetString();
                 continue;
             }
             if (true)

@@ -212,9 +212,9 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int audioTokenCount = default, int reasoningTokenCount = default)
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int? acceptedPredictionTokens = null, int audioTokenCount = default, int reasoningTokenCount = default, int? rejectedPredictionTokens = null)
         {
-            return new ChatOutputTokenUsageDetails(audioTokenCount, reasoningTokenCount, serializedAdditionalRawData: null);
+            return new ChatOutputTokenUsageDetails(acceptedPredictionTokens, audioTokenCount, reasoningTokenCount, rejectedPredictionTokens, serializedAdditionalRawData: null);
         }
 
         public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int audioTokenCount = default, int cachedTokenCount = default)

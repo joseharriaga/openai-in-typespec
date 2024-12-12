@@ -12,6 +12,12 @@ namespace OpenAI.RealtimeConversation;
 [CodeGenSerialization(nameof(SilenceDurationMs), DeserializationValueHook = nameof(DeserializeMillisecondDuration), SerializationValueHook = nameof(SerializeSilenceDurationMs))]
 internal partial class InternalRealtimeServerVadTurnDetection
 {
+    // CUSTOM: Represent millisecond durations as timespans
+    [CodeGenMember("PrefixPaddingMs")]
+    public TimeSpan? PrefixPaddingMs { get; set; }
+    [CodeGenMember("SilenceDurationms")]
+    public TimeSpan? SilenceDurationMs { get; set; }
+
     private static void DeserializeMillisecondDuration(JsonProperty property, ref TimeSpan? duration)
     {
         if (property.Value.ValueKind == JsonValueKind.Number)

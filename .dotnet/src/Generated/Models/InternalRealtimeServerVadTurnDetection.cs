@@ -22,7 +22,5 @@ namespace OpenAI.RealtimeConversation
         }
 
         public float? Threshold { get; set; }
-        public TimeSpan? PrefixPaddingMs { get; set; }
-        public TimeSpan? SilenceDurationMs { get; set; }
     }
 }

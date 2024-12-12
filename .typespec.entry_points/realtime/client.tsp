@@ -1,6 +1,6 @@
 import "@typespec/http";
 
-import "../.typespec/realtime/main.tsp";
+import "./main.tsp";
 
 using TypeSpec.Http;
 

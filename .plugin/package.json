@@ -19,7 +19,7 @@
         "clean": "rimraf ./dist ./emitter/temp && dotnet clean ./generator",
         "build:emitter": "tsc -p ./tsconfig.build.json",
         "build:generator": "dotnet build ./generator",
-        "build": "npm run build:emitter && npm run build:generator && copyfiles -u 5 ./node_modules/@typespec/http-client-csharp/dist/generator/Microsoft.Generator.CSharp.runtimeconfig.json ./dist/generator",
+        "build": "npm run build:emitter && npm run build:generator && copyfiles -E -f ../node_modules/@typespec/http-client-csharp/dist/generator/Microsoft.Generator.CSharp.runtimeconfig.json ./dist/generator",
         "test:emitter": "vitest run -c ./emitter/vitest.config.ts",
         "test:generator": "dotnet test ./generator",
         "test": "npm run test:emitter && npm run test:generator"

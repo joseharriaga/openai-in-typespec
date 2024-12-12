@@ -1,3 +1,5 @@
+import "@typespec/http";
+
 import "./models.tsp";
 
 using TypeSpec.Http;

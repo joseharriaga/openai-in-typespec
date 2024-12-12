@@ -1,8 +1,6 @@
 import "./custom/events.tsp";
 import "./custom/items.tsp";
 import "./custom/tools.tsp";
-import "./custom/dotnet.tsp";
-import "./custom/java.tsp";
 
 namespace OpenAI;
 

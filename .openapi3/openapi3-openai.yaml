@@ -7057,7 +7057,6 @@ components:
         - error
         - fine_tuned_model
         - finished_at
-        - hyperparameters
         - model
         - object
         - organization_id
@@ -7194,8 +7193,8 @@ components:
           type: object
           properties:
             step:
-              type: number
-              format: float
+              type: integer
+              format: int32
             train_loss:
               type: number
               format: float
@@ -7214,6 +7213,10 @@ components:
             full_valid_mean_token_accuracy:
               type: number
               format: float
+          required:
+            - step
+            - train_loss
+            - train_mean_token_accuracy
           description: Metrics at the step number during the fine-tuning job.
         fine_tuning_job_id:
           type: string
@@ -7303,6 +7306,14 @@ components:
         $ref: '#/components/schemas/FineTuningIntegration'
       maxItems: 5
       x-oaiExpandable: true
+    FineTuningJobsPageToken:
+      type: object
+      properties:
+        limit:
+          type: integer
+          format: int32
+        after:
+          type: string
     FinetuneChatRequestInput:
       type: object
       properties:
@@ -7613,12 +7624,10 @@ components:
     ListFineTuningJobEventsResponse:
       type: object
       required:
-        - has_more
         - data
         - object
+        - has_more
       properties:
-        has_more:
-          type: boolean
         data:
           type: array
           items:
@@ -7627,6 +7636,8 @@ components:
           type: string
           enum:
             - list
+        has_more:
+          type: boolean
     ListMessagesResponse:
       type: object
       required:

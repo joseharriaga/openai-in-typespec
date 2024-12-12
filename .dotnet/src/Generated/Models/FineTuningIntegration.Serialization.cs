@@ -10,7 +10,7 @@ using System.Text.Json;
 namespace OpenAI.FineTuning
 {
     [PersistableModelProxy(typeof(UnknownCreateFineTuningJobRequestIntegration))]
-    internal partial class FineTuningIntegration : IJsonModel<FineTuningIntegration>
+    public partial class FineTuningIntegration : IJsonModel<FineTuningIntegration>
     {
         void IJsonModel<FineTuningIntegration>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {

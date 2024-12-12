@@ -9,3 +9,6 @@ using OpenAI;
 
 @@access(FinetuneCompletionRequestInput, Access.public);
 @@usage(FinetuneCompletionRequestInput, Usage.input);
+
+@@access(FineTuningJobsPageToken, Access.public);
+@@usage(FineTuningJobsPageToken, Usage.input);

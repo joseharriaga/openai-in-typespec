@@ -83,7 +83,7 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            IReadOnlyList<FineTuningJob> data = default;
+            IReadOnlyList<InternalFineTuningJob> data = default;
             bool hasMore = default;
             InternalListPaginatedFineTuningJobsResponseObject @object = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -92,10 +92,10 @@ namespace OpenAI.FineTuning
             {
                 if (property.NameEquals("data"u8))
                 {
-                    List<FineTuningJob> array = new List<FineTuningJob>();
+                    List<InternalFineTuningJob> array = new List<InternalFineTuningJob>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(FineTuningJob.DeserializeFineTuningJob(item, options));
+                        array.Add(InternalFineTuningJob.DeserializeInternalFineTuningJob(item, options));
                     }
                     data = array;
                     continue;

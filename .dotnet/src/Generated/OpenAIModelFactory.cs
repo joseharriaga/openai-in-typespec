@@ -9,6 +9,7 @@ using OpenAI.Assistants;
 using OpenAI.Audio;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
+using OpenAI.FineTuning;
 using OpenAI.Images;
 using OpenAI.Moderations;
 using OpenAI.RealtimeConversation;
@@ -211,6 +212,24 @@ namespace OpenAI
         public static GeneratedImage GeneratedImage(BinaryData imageBytes = null, Uri imageUri = null, string revisedPrompt = null)
         {
             return new GeneratedImage(imageBytes, imageUri, revisedPrompt, serializedAdditionalRawData: null);
+        }
+
+        public static FineTuningError FineTuningError(string code = null, string message = null, string invalidParameter = null)
+        {
+            return new FineTuningError(code, message, invalidParameter, serializedAdditionalRawData: null);
+        }
+
+        public static FineTuningCheckpointMetrics FineTuningCheckpointMetrics(int stepNumber = default, float trainLoss = default, float trainMeanTokenAccuracy = default, float? validLoss = null, float? validMeanTokenAccuracy = null, float? fullValidLoss = null, float? fullValidMeanTokenAccuracy = null)
+        {
+            return new FineTuningCheckpointMetrics(
+                stepNumber,
+                trainLoss,
+                trainMeanTokenAccuracy,
+                validLoss,
+                validMeanTokenAccuracy,
+                fullValidLoss,
+                fullValidMeanTokenAccuracy,
+                serializedAdditionalRawData: null);
         }
 
         public static EmbeddingTokenUsage EmbeddingTokenUsage(int inputTokenCount = default, int totalTokenCount = default)

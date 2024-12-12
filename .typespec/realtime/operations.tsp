@@ -1,7 +1,8 @@
+import "@typespec/http";
+
 import "./models.tsp";
 
 using TypeSpec.Http;
-using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 

@@ -10,5 +10,8 @@ namespace OpenAI.Files
 {
     public partial class OpenAIFileCollection : ReadOnlyCollection<OpenAIFile>
     {
+        public string FirstId { get; }
+        public string LastId { get; }
+        public bool HasMore { get; }
     }
 }

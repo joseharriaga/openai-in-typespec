@@ -21,6 +21,11 @@ namespace OpenAI.Chat
             }
 
             writer.WriteStartObject();
+            if (SerializedAdditionalRawData?.ContainsKey("accepted_prediction_tokens") != true)
+            {
+                writer.WritePropertyName("accepted_prediction_tokens"u8);
+                writer.WriteNumberValue(AcceptedPredictionTokenCount);
+            }
             if (SerializedAdditionalRawData?.ContainsKey("audio_tokens") != true)
             {
                 writer.WritePropertyName("audio_tokens"u8);
@@ -30,6 +35,11 @@ namespace OpenAI.Chat
             {
                 writer.WritePropertyName("reasoning_tokens"u8);
                 writer.WriteNumberValue(ReasoningTokenCount);
+            }
+            if (SerializedAdditionalRawData?.ContainsKey("rejected_prediction_tokens") != true)
+            {
+                writer.WritePropertyName("rejected_prediction_tokens"u8);
+                writer.WriteNumberValue(RejectedPredictionTokenCount);
             }
             if (SerializedAdditionalRawData != null)
             {
@@ -73,12 +83,23 @@ namespace OpenAI.Chat
             {
                 return null;
             }
+            int acceptedPredictionTokens = default;
             int audioTokens = default;
             int reasoningTokens = default;
+            int rejectedPredictionTokens = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
             {
+                if (property.NameEquals("accepted_prediction_tokens"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    acceptedPredictionTokens = property.Value.GetInt32();
+                    continue;
+                }
                 if (property.NameEquals("audio_tokens"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -97,6 +118,15 @@ namespace OpenAI.Chat
                     reasoningTokens = property.Value.GetInt32();
                     continue;
                 }
+                if (property.NameEquals("rejected_prediction_tokens"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    rejectedPredictionTokens = property.Value.GetInt32();
+                    continue;
+                }
                 if (true)
                 {
                     rawDataDictionary ??= new Dictionary<string, BinaryData>();
@@ -104,7 +134,7 @@ namespace OpenAI.Chat
                 }
             }
             serializedAdditionalRawData = rawDataDictionary;
-            return new ChatOutputTokenUsageDetails(audioTokens, reasoningTokens, serializedAdditionalRawData);
+            return new ChatOutputTokenUsageDetails(acceptedPredictionTokens, audioTokens, reasoningTokens, rejectedPredictionTokens, serializedAdditionalRawData);
         }
 
         BinaryData IPersistableModel<ChatOutputTokenUsageDetails>.Write(ModelReaderWriterOptions options)

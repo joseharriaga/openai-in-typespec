@@ -2925,7 +2925,7 @@ components:
           description: The description of the assistant. The maximum length is 512 characters.
         model:
           type: string
-          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.
+          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models) for descriptions of them.
         instructions:
           type: string
           nullable: true
@@ -3101,7 +3101,7 @@ components:
               description: |-
                 The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
 
-                Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
+                Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
             ranking_options:
               $ref: '#/components/schemas/FileSearchRankingOptions'
           description: Overrides for the file search tool.
@@ -3141,7 +3141,7 @@ components:
         - $ref: '#/components/schemas/ResponseFormatJsonObject'
         - $ref: '#/components/schemas/ResponseFormatJsonSchema'
       description: |-
-        Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4 Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+        Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
         Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
 
@@ -3380,6 +3380,48 @@ components:
               type: string
               description: The project ID.
           description: The details for events with this `type`.
+        rate_limit.updated:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The rate limit ID
+            changes_requested:
+              type: object
+              properties:
+                max_requests_per_1_minute:
+                  type: integer
+                  format: int32
+                  description: The maximum requests per minute.
+                max_tokens_per_1_minute:
+                  type: integer
+                  format: int32
+                  description: The maximum tokens per minute.
+                max_images_per_1_minute:
+                  type: integer
+                  format: int32
+                  description: The maximum images per minute. Only relevant for certain models.
+                max_audio_megabytes_per_1_minute:
+                  type: integer
+                  format: int32
+                  description: The maximum audio megabytes per minute. Only relevant for certain models.
+                max_requests_per_1_day:
+                  type: integer
+                  format: int32
+                  description: The maximum requests per day. Only relevant for certain models.
+                batch_1_day_max_input_tokens:
+                  type: integer
+                  format: int32
+                  description: The maximum batch input tokens per day. Only relevant for certain models.
+              description: The payload used to update the rate limits.
+          description: The details for events with this `type`.
+        rate_limit.deleted:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The rate limit ID
+          description: The details for events with this `type`.
         service_account.created:
           type: object
           properties:
@@ -3528,6 +3570,8 @@ components:
         - service_account.created
         - service_account.updated
         - service_account.deleted
+        - rate_limit.updated
+        - rate_limit.deleted
         - user.added
         - user.updated
         - user.deleted
@@ -4031,7 +4075,7 @@ components:
                 - auto
                 - low
                 - high
-              description: Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
+              description: Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision#low-or-high-fidelity-image-understanding).
               default: auto
           required:
             - url
@@ -4467,6 +4511,12 @@ components:
         completion_tokens_details:
           type: object
           properties:
+            accepted_prediction_tokens:
+              type: integer
+              format: int32
+              description: |-
+                When using Predicted Outputs, the number of tokens in the
+                prediction that appeared in the completion.
             audio_tokens:
               type: integer
               format: int32
@@ -4475,6 +4525,15 @@ components:
               type: integer
               format: int32
               description: Tokens generated by the model for reasoning.
+            rejected_prediction_tokens:
+              type: integer
+              format: int32
+              description: |-
+                When using Predicted Outputs, the number of tokens in the
+                prediction that did not appear in the completion. However, like
+                reasoning tokens, these tokens are still counted in the total
+                completion tokens for purposes of billing, output, and context window
+                limits.
           description: Breakdown of tokens used in a completion.
         prompt_tokens_details:
           type: object
@@ -4489,6 +4548,35 @@ components:
               description: Cached tokens present in the prompt.
           description: Breakdown of tokens used in the prompt.
       description: Usage statistics for the completion request.
+    CostsResult:
+      type: object
+      required:
+        - object
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.costs.result
+        amount:
+          type: object
+          properties:
+            value:
+              type: number
+              format: float
+              description: The numeric value of the cost.
+            currency:
+              type: string
+              description: Lowercase ISO-4217 currency e.g. "usd"
+          description: The monetary value in its associated currency.
+        line_item:
+          type: string
+          nullable: true
+          description: When `group_by=line_item`, this field provides the line item of the grouped costs result.
+        project_id:
+          type: string
+          nullable: true
+          description: When `group_by=project_id`, this field provides the project ID of the grouped costs result.
+      description: The aggregated costs details of the specific time bucket.
     CreateAssistantRequest:
       type: object
       required:
@@ -4500,6 +4588,7 @@ components:
             - type: string
               enum:
                 - gpt-4o
+                - gpt-4o-2024-11-20
                 - gpt-4o-2024-08-06
                 - gpt-4o-2024-05-13
                 - gpt-4o-mini
@@ -4522,7 +4611,7 @@ components:
                 - gpt-3.5-turbo-1106
                 - gpt-3.5-turbo-0125
                 - gpt-3.5-turbo-16k-0613
-          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.
+          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models) for descriptions of them.
           x-oaiTypeLabel: string
         name:
           type: string
@@ -4677,6 +4766,7 @@ components:
                 - o1-mini
                 - o1-mini-2024-09-12
                 - gpt-4o
+                - gpt-4o-2024-11-20
                 - gpt-4o-2024-08-06
                 - gpt-4o-2024-05-13
                 - gpt-4o-realtime-preview
@@ -4705,7 +4795,7 @@ components:
                 - gpt-3.5-turbo-1106
                 - gpt-3.5-turbo-0125
                 - gpt-3.5-turbo-16k-0613
-          description: ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility) table for details on which models work with the Chat API.
+          description: ID of the model to use. See the [model endpoint compatibility](/docs/models#model-endpoint-compatibility) table for details on which models work with the Chat API.
           x-oaiTypeLabel: string
         store:
           type: boolean
@@ -4731,7 +4821,7 @@ components:
           description: |-
             Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
 
-            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+            [See more information about frequency and presence penalties.](/docs/guides/text-generation)
           default: 0
         logit_bias:
           type: object
@@ -4784,6 +4874,17 @@ components:
           allOf:
             - $ref: '#/components/schemas/ChatCompletionModalities'
           nullable: true
+        prediction:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/PredictionContent'
+          nullable: true
+          description: |-
+            Configuration for a [Predicted Output](/docs/guides/predicted-outputs),
+            which can greatly improve response times when large parts of the model
+            response are known ahead of time. This is most common when you are
+            regenerating a file with only minor changes to most of the content.
+          x-oaiExpandable: true
         audio:
           type: object
           properties:
@@ -4791,14 +4892,14 @@ components:
               type: string
               enum:
                 - alloy
+                - ash
+                - ballad
+                - coral
                 - echo
-                - fable
-                - onyx
-                - nova
+                - sage
                 - shimmer
-              description: |-
-                Specifies the voice type. Supported voices are `alloy`, `echo`, 
-                `fable`, `onyx`, `nova`, and `shimmer`.
+                - verse
+              description: The voice the model uses to respond. Supported voices are `ash`, `ballad`, `coral`, `sage`, and `verse` (also supported but not recommended are `alloy`, `echo`, and `shimmer`; these voices are less expressive).
             format:
               type: string
               enum:
@@ -4827,13 +4928,13 @@ components:
           description: |-
             Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
 
-            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+            [See more information about frequency and presence penalties.](/docs/guides/text-generation)
           default: 0
         response_format:
           allOf:
             - $ref: '#/components/schemas/ChatResponseFormat'
           description: |-
-            An object specifying the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4o mini](/docs/models/gpt-4o-mini), [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
+            An object specifying the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4o mini](/docs/models#gpt-4o-mini), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
 
             Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
 
@@ -4859,7 +4960,7 @@ components:
           nullable: true
           description: |-
             Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
-              - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted. 
+              - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted.
               - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
               - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
               - When not set, the default behavior is 'auto'.
@@ -4920,7 +5021,7 @@ components:
           default: true
         user:
           type: string
-          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids).
         function_call:
           anyOf:
             - type: string
@@ -5170,7 +5271,7 @@ components:
                 - gpt-3.5-turbo-instruct
                 - davinci-002
                 - babbage-002
-          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.
+          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models) for descriptions of them.
           x-oaiTypeLabel: string
         prompt:
           anyOf:
@@ -5221,7 +5322,7 @@ components:
           description: |-
             Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
 
-            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+            [See more information about frequency and presence penalties.](/docs/guides/text-generation)
           default: 0
         logit_bias:
           type: object
@@ -5278,7 +5379,7 @@ components:
           description: |-
             Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
 
-            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+            [See more information about frequency and presence penalties.](/docs/guides/text-generation)
           default: 0
         seed:
           type: integer
@@ -5342,7 +5443,7 @@ components:
           default: 1
         user:
           type: string
-          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids).
     CreateCompletionResponse:
       type: object
       required:
@@ -5459,7 +5560,7 @@ components:
                 - text-embedding-ada-002
                 - text-embedding-3-small
                 - text-embedding-3-large
-          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.
+          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models) for descriptions of them.
           x-oaiTypeLabel: string
         encoding_format:
           type: string
@@ -5475,7 +5576,7 @@ components:
           description: The number of dimensions the resulting output embeddings should have. Only supported in `text-embedding-3` and later models.
         user:
           type: string
-          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids).
     CreateEmbeddingResponse:
       type: object
       required:
@@ -5549,7 +5650,7 @@ components:
                 - gpt-4o-mini
           description: |-
             The name of the model to fine-tune. You can select one of the
-            [supported models](/docs/guides/fine-tuning/which-models-can-be-fine-tuned).
+            [supported models](/docs/guides/fine-tuning#which-models-can-be-fine-tuned).
           x-oaiTypeLabel: string
         training_file:
           type: string
@@ -5749,7 +5850,7 @@ components:
           default: url
         user:
           type: string
-          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids).
     CreateImageRequest:
       type: object
       required:
@@ -5813,7 +5914,7 @@ components:
           default: vivid
         user:
           type: string
-          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids).
     CreateImageVariationRequestMultiPart:
       type: object
       required:
@@ -5859,7 +5960,7 @@ components:
           default: 1024x1024
         user:
           type: string
-          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids).
     CreateMessageRequest:
       type: object
       required:
@@ -5974,7 +6075,7 @@ components:
           description: |-
             The content moderation model you would like to use. Learn more in
             [the moderation guide](/docs/guides/moderation), and learn about
-            available models [here](/docs/models/moderation).
+            available models [here](/docs/models#moderation).
           x-oaiTypeLabel: string
           default: omni-moderation-latest
     CreateModerationResponse:
@@ -6281,6 +6382,7 @@ components:
             - type: string
               enum:
                 - gpt-4o
+                - gpt-4o-2024-11-20
                 - gpt-4o-2024-08-06
                 - gpt-4o-2024-05-13
                 - gpt-4o-mini
@@ -6408,7 +6510,7 @@ components:
               enum:
                 - tts-1
                 - tts-1-hd
-          description: 'One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`'
+          description: 'One of the available [TTS models](/docs/models#tts): `tts-1` or `tts-1-hd`'
           x-oaiTypeLabel: string
         input:
           type: string
@@ -6423,7 +6525,7 @@ components:
             - onyx
             - nova
             - shimmer
-          description: The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`, `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech guide](/docs/guides/text-to-speech/voice-options).
+          description: The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`, `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech guide](/docs/guides/text-to-speech#voice-options).
         response_format:
           type: string
           enum:
@@ -6460,6 +6562,7 @@ components:
             - type: string
               enum:
                 - gpt-4o
+                - gpt-4o-2024-11-20
                 - gpt-4o-2024-08-06
                 - gpt-4o-2024-05-13
                 - gpt-4o-mini
@@ -6672,7 +6775,7 @@ components:
           description: The language of the input audio. Supplying the input language in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy and latency.
         prompt:
           type: string
-          description: An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.
+          description: An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text#prompting) should match the audio language.
         response_format:
           allOf:
             - $ref: '#/components/schemas/TranscriptionAudioResponseFormat'
@@ -6756,7 +6859,7 @@ components:
           x-oaiTypeLabel: string
         prompt:
           type: string
-          description: An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should be in English.
+          description: An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text#prompting) should be in English.
         response_format:
           allOf:
             - $ref: '#/components/schemas/TranslationAudioResponseFormat'
@@ -7094,7 +7197,7 @@ components:
       description: |-
         The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
 
-        See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
+        See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
     FineTuneChatCompletionRequestAssistantMessage:
       type: object
       allOf:
@@ -7673,17 +7776,24 @@ components:
     ListFilesResponse:
       type: object
       required:
-        - data
         - object
+        - data
+        - first_id
+        - last_id
+        - has_more
       properties:
+        object:
+          type: string
         data:
           type: array
           items:
             $ref: '#/components/schemas/OpenAIFile'
-        object:
+        first_id:
           type: string
-          enum:
-            - list
+        last_id:
+          type: string
+        has_more:
+          type: boolean
     ListFineTuningJobCheckpointsResponse:
       type: object
       required:
@@ -8512,7 +8622,7 @@ components:
       properties:
         model:
           type: string
-          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.
+          description: ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models) for descriptions of them.
         name:
           type: string
           nullable: true
@@ -8710,6 +8820,33 @@ components:
       allOf:
         - $ref: '#/components/schemas/FileChunkingStrategyResponseParam'
       description: This is returned when the chunking strategy is unknown. Typically, this is because the file was indexed before the `chunking_strategy` concept was introduced in the API.
+    PredictionContent:
+      type: object
+      required:
+        - type
+        - content
+      properties:
+        type:
+          type: string
+          enum:
+            - content
+          description: |-
+            The type of the predicted content you want to provide. This type is
+            currently always `content`.
+        content:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
+          description: |-
+            The content that should be matched when generating a model response.
+            If generated tokens would match this content, the entire model response
+            can be returned much more quickly.
+          x-oaiExpandable: true
+      description: |-
+        Static predicted output content, such as the content of a text file that is
+        being regenerated.
     Project:
       type: object
       required:
@@ -8857,6 +8994,101 @@ components:
           type: string
         has_more:
           type: boolean
+    ProjectRateLimit:
+      type: object
+      required:
+        - object
+        - id
+        - model
+        - max_requests_per_1_minute
+        - max_tokens_per_1_minute
+      properties:
+        object:
+          type: string
+          enum:
+            - project.rate_limit
+          description: The object type, which is always `project.rate_limit`
+        id:
+          type: string
+          description: The identifier, which can be referenced in API endpoints.
+        model:
+          type: string
+          description: The model this rate limit applies to.
+        max_requests_per_1_minute:
+          type: integer
+          format: int32
+          description: The maximum requests per minute.
+        max_tokens_per_1_minute:
+          type: integer
+          format: int32
+          description: The maximum tokens per minute.
+        max_images_per_1_minute:
+          type: integer
+          format: int32
+          description: The maximum images per minute. Only present for relevant models.
+        max_audio_megabytes_per_1_minute:
+          type: integer
+          format: int32
+          description: The maximum audio megabytes per minute. Only present for relevant models.
+        max_requests_per_1_day:
+          type: integer
+          format: int32
+          description: The maximum requests per day. Only present for relevant models.
+        batch_1_day_max_input_tokens:
+          type: integer
+          format: int32
+          description: The maximum batch input tokens per day. Only present for relevant models.
+      description: Represents a project rate limit config.
+    ProjectRateLimitListResponse:
+      type: object
+      required:
+        - object
+        - data
+        - first_id
+        - last_id
+        - has_more
+      properties:
+        object:
+          type: string
+          enum:
+            - list
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectRateLimit'
+        first_id:
+          type: string
+        last_id:
+          type: string
+        has_more:
+          type: boolean
+    ProjectRateLimitUpdateRequest:
+      type: object
+      properties:
+        max_requests_per_1_minute:
+          type: integer
+          format: int32
+          description: The maximum requests per minute.
+        max_tokens_per_1_minute:
+          type: integer
+          format: int32
+          description: The maximum tokens per minute.
+        max_images_per_1_minute:
+          type: integer
+          format: int32
+          description: The maximum images per minute. Only relevant for certain models.
+        max_audio_megabytes_per_1_minute:
+          type: integer
+          format: int32
+          description: The maximum audio megabytes per minute. Only relevant for certain models.
+        max_requests_per_1_day:
+          type: integer
+          format: int32
+          description: The maximum requests per day. Only relevant for certain models.
+        batch_1_day_max_input_tokens:
+          type: integer
+          format: int32
+          description: The maximum batch input tokens per day. Only relevant for certain models.
     ProjectServiceAccount:
       type: object
       required:
@@ -9145,14 +9377,23 @@ components:
           description: The event type, must be `conversation.item.create`.
         previous_item_id:
           type: string
-          description: The ID of the preceding item after which the new item will be inserted. If not set, the new item will be appended to the end of the conversation. If set, it allows an item to be inserted mid-conversation. If the ID cannot be found, an error will be returned and the item will not be added.
+          description: |-
+            The ID of the preceding item after which the new item will be inserted.
+            If not set, the new item will be appended to the end of the conversation.
+            If set, it allows an item to be inserted mid-conversation. If the ID
+            cannot be found, an error will be returned and the item will not be added.
         item:
           $ref: '#/components/schemas/RealtimeConversationRequestItem'
       allOf:
         - $ref: '#/components/schemas/RealtimeClientEvent'
       description: |-
-        Add a new Item to the Conversation's context, including messages, function calls, and function call responses. This event can be used both to populate a "history" of the conversation and to add new items mid-stream, but has the current limitation that it cannot populate assistant audio messages.
-        If successful, the server will respond with a `conversation.item.created` event, otherwise an `error` event will be sent.
+        Add a new Item to the Conversation's context, including messages, function 
+        calls, and function call responses. This event can be used both to populate a 
+        "history" of the conversation and to add new items mid-stream, but has the 
+        current limitation that it cannot populate assistant audio messages.
+
+        If successful, the server will respond with a `conversation.item.created` 
+        event, otherwise an `error` event will be sent.
     RealtimeClientEventConversationItemDelete:
       type: object
       required:
@@ -9163,13 +9404,17 @@ components:
           type: string
           enum:
             - conversation.item.delete
-          description: The event type, must be "conversation.item.delete".
+          description: The event type, must be `conversation.item.delete`.
         item_id:
           type: string
           description: The ID of the item to delete.
       allOf:
         - $ref: '#/components/schemas/RealtimeClientEvent'
-      description: Send this event when you want to remove any item from the conversation history. The server will respond with a `conversation.item.deleted` event, unless the item does not exist in the conversation history, in which case the server will respond with an error.
+      description: |-
+        Send this event when you want to remove any item from the conversation 
+        history. The server will respond with a `conversation.item.deleted` event, 
+        unless the item does not exist in the conversation history, in which case the 
+        server will respond with an error.
     RealtimeClientEventConversationItemTruncate:
       type: object
       required:
@@ -9182,10 +9427,12 @@ components:
           type: string
           enum:
             - conversation.item.truncate
-          description: The event type, must be "conversation.item.truncate".
+          description: The event type, must be `conversation.item.truncate`.
         item_id:
           type: string
-          description: The ID of the assistant message item to truncate. Only assistant message items can be truncated.
+          description: |-
+            The ID of the assistant message item to truncate. Only assistant message
+            items can be truncated.
         content_index:
           type: integer
           format: int32
@@ -9193,13 +9440,24 @@ components:
         audio_end_ms:
           type: integer
           format: int32
-          description: Inclusive duration up to which audio is truncated, in milliseconds. If the audio_end_ms is greater than the actual audio duration, the server will respond with an error.
+          description: |-
+            Inclusive duration up to which audio is truncated, in milliseconds. If
+            the audio_end_ms is greater than the actual audio duration, the server
+            will respond with an error.
       allOf:
         - $ref: '#/components/schemas/RealtimeClientEvent'
       description: |-
-        Send this event to truncate a previous assistant message’s audio. The server will produce audio faster than realtime, so this event is useful when the user interrupts to truncate audio that has already been sent to the client but not yet played. This will synchronize the server's understanding of the audio with the client's playback.
-        Truncating audio will delete the server-side text transcript to ensure there is not text in the context that hasn't been heard by the user.
-        If successful, the server will respond with a `conversation.item.truncated` event.
+        Send this event to truncate a previous assistant message’s audio. The server 
+        will produce audio faster than realtime, so this event is useful when the user 
+        interrupts to truncate audio that has already been sent to the client but not 
+        yet played. This will synchronize the server's understanding of the audio with 
+        the client's playback.
+
+        Truncating audio will delete the server-side text transcript to ensure there 
+        is not text in the context that hasn't been heard by the user.
+
+        If successful, the server will respond with a `conversation.item.truncated` 
+        event.
     RealtimeClientEventInputAudioBufferAppend:
       type: object
       required:
@@ -9210,16 +9468,26 @@ components:
           type: string
           enum:
             - input_audio_buffer.append
-          description: The event type, must be "input_audio_buffer.append".
+          description: The event type, must be `input_audio_buffer.append`.
         audio:
           type: string
           format: base64
-          description: Base64-encoded audio bytes. This must be in the format specified by the `input_audio_format` field in the session configuration.
+          description: |-
+            Base64-encoded audio bytes. This must be in the format specified by the 
+            `input_audio_format` field in the session configuration.
       allOf:
         - $ref: '#/components/schemas/RealtimeClientEvent'
       description: |-
-        Send this event to append audio bytes to the input audio buffer. The audio buffer is temporary storage you can write to and later commit. In Server VAD mode, the audio buffer is used to detect speech and the server will decide when to commit. When Server VAD is disabled, you must commit the audio buffer manually.
-        The client may choose how much audio to place in each event up to a maximum of 15 MiB, for example streaming smaller chunks from the client may allow the VAD to be more responsive. Unlike made other client events, the server will not send a confirmation response to this event.
+        Send this event to append audio bytes to the input audio buffer. The audio
+        buffer is temporary storage you can write to and later commit. In Server VAD
+        mode, the audio buffer is used to detect speech and the server will decide
+        when to commit. When Server VAD is disabled, you must commit the audio buffer
+        manually.
+
+        The client may choose how much audio to place in each event up to a maximum
+        of 15 MiB, for example streaming smaller chunks from the client may allow the
+        VAD to be more responsive. Unlike made other client events, the server will
+        not send a confirmation response to this event.
     RealtimeClientEventInputAudioBufferClear:
       type: object
       required:
@@ -9229,10 +9497,12 @@ components:
           type: string
           enum:
             - input_audio_buffer.clear
-          description: The event type, must be "input_audio_buffer.clear".
+          description: The event type, must be `input_audio_buffer.clear`.
       allOf:
         - $ref: '#/components/schemas/RealtimeClientEvent'
-      description: Send this event to clear the audio bytes in the buffer. The server will respond with an `input_audio_buffer.cleared` event.
+      description: |-
+        Send this event to clear the audio bytes in the buffer. The server will 
+        respond with an `input_audio_buffer.cleared` event.
     RealtimeClientEventInputAudioBufferCommit:
       type: object
       required:
@@ -9242,12 +9512,20 @@ components:
           type: string
           enum:
             - input_audio_buffer.commit
-          description: The event type, must be "input_audio_buffer.commit".
+          description: The event type, must be `input_audio_buffer.commit`.
       allOf:
         - $ref: '#/components/schemas/RealtimeClientEvent'
       description: |-
-        Send this event to commit the user input audio buffer, which will create a new user message item in the conversation. This event will produce an error if the input audio buffer is empty. When in Server VAD mode, the client does not need to send this event, the server will commit the audio buffer automatically.
-        Committing the input audio buffer will trigger input audio transcription (if enabled in session configuration), but it will not create a response from the model. The server will respond with an `input_audio_buffer.committed` event.
+        Send this event to commit the user input audio buffer, which will create a 
+        new user message item in the conversation. This event will produce an error 
+        if the input audio buffer is empty. When in Server VAD mode, the client does 
+        not need to send this event, the server will commit the audio buffer 
+        automatically.
+
+        Committing the input audio buffer will trigger input audio transcription 
+        (if enabled in session configuration), but it will not create a response 
+        from the model. The server will respond with an `input_audio_buffer.committed` 
+        event.
     RealtimeClientEventResponseCancel:
       type: object
       required:
@@ -9260,7 +9538,10 @@ components:
           description: The event type, must be `response.cancel`.
       allOf:
         - $ref: '#/components/schemas/RealtimeClientEvent'
-      description: Send this event to cancel an in-progress response. The server will respond with a `response.cancelled` event or an error if there is no response to cancel.
+      description: |-
+        Send this event to cancel an in-progress response. The server will respond 
+        with a `response.cancelled` event or an error if there is no response to 
+        cancel.
     RealtimeClientEventResponseCreate:
       type: object
       required:
@@ -9277,10 +9558,21 @@ components:
       allOf:
         - $ref: '#/components/schemas/RealtimeClientEvent'
       description: |-
-        This event instructs the server to create a Response, which means triggering model inference. When in Server VAD mode, the server will create Responses automatically.
-        A Response will include at least one Item, and may have two, in which case the second will be a function call. These Items will be appended to the conversation history.
-        The server will respond with a `response.created` event, events for Items and content created, and finally a `response.done` event to indicate the Response is complete.
-        The `response.create` event includes inference configuration like `instructions`, and `temperature`. These fields will override the Session's configuration for this Response only.
+        This event instructs the server to create a Response, which means triggering 
+        model inference. When in Server VAD mode, the server will create Responses 
+        automatically.
+
+        A Response will include at least one Item, and may have two, in which case 
+        the second will be a function call. These Items will be appended to the 
+        conversation history.
+
+        The server will respond with a `response.created` event, events for Items 
+        and content created, and finally a `response.done` event to indicate the 
+        Response is complete.
+
+        The `response.create` event includes inference configuration like 
+        `instructions`, and `temperature`. These fields will override the Session's 
+        configuration for this Response only.
     RealtimeClientEventSessionUpdate:
       type: object
       required:
@@ -9291,12 +9583,18 @@ components:
           type: string
           enum:
             - session.update
-          description: The event type, must be "session.update".
+          description: The event type, must be `session.update`.
         session:
           $ref: '#/components/schemas/RealtimeRequestSession'
       allOf:
         - $ref: '#/components/schemas/RealtimeClientEvent'
-      description: Send this event to update the session’s default configuration. The client may send this event at any time to update the session configuration, and any field may be updated at any time, except for "voice". The server will respond with a `session.updated` event that shows the full effective configuration. Only fields that are present are updated, thus the correct way to clear a field like "instructions" is to pass an empty string.
+      description: |-
+        Send this event to update the session’s default configuration. The client may 
+        send this event at any time to update the session configuration, and any 
+        field may be updated at any time, except for "voice". The server will respond 
+        with a `session.updated` event that shows the full effective configuration. 
+        Only fields that are present are updated, thus the correct way to clear a 
+        field like "instructions" is to pass an empty string.
     RealtimeClientEventType:
       anyOf:
         - type: string
@@ -9337,6 +9635,7 @@ components:
     RealtimeConversationItemBase:
       type: object
       description: The item to add to the conversation.
+      x-oaiExpandable: true
     RealtimeConversationRequestItem:
       type: object
       required:
@@ -9957,7 +10256,7 @@ components:
           type: string
           enum:
             - conversation.created
-          description: The event type, must be "conversation.created".
+          description: The event type, must be `conversation.created`.
         conversation:
           type: object
           properties:
@@ -9966,7 +10265,7 @@ components:
               description: The unique ID of the conversation.
             object:
               type: string
-              description: The object type, must be "realtime.conversation".
+              description: The object type, must be `realtime.conversation`.
           description: The conversation resource.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
@@ -9985,16 +10284,24 @@ components:
           description: The event type, must be `conversation.item.created`.
         previous_item_id:
           type: string
-          description: The ID of the preceding item in the Conversation context, allows the client to understand the order of the conversation.
+          description: |-
+            The ID of the preceding item in the Conversation context, allows the
+            client to understand the order of the conversation.
         item:
           $ref: '#/components/schemas/RealtimeConversationResponseItem'
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
       description: |-
-        Returned when a conversation item is created. There are several scenarios that produce this event:
-          - The server is generating a Response, which if successful will produce either one or two Items, which will be of type `message` (role `assistant`) or type `function_call`.
-          - The input audio buffer has been committed, either by the client or the server (in `server_vad` mode). The server will take the content of the input audio buffer and add it to a new user message Item.
-          - The client has sent a `conversation.item.create` event to add a new Item to the Conversation.
+        Returned when a conversation item is created. There are several scenarios that 
+        produce this event:
+          - The server is generating a Response, which if successful will produce 
+            either one or two Items, which will be of type `message` 
+            (role `assistant`) or type `function_call`.
+          - The input audio buffer has been committed, either by the client or the 
+            server (in `server_vad` mode). The server will take the content of the 
+            input audio buffer and add it to a new user message Item.
+          - The client has sent a `conversation.item.create` event to add a new Item 
+            to the Conversation.
     RealtimeServerEventConversationItemDeleted:
       type: object
       required:
@@ -10011,7 +10318,10 @@ components:
           description: The ID of the item that was deleted.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when an item in the conversation is deleted by the client with a `conversation.item.delete` event. This event is used to synchronize the server's understanding of the conversation history with the client's view.
+      description: |-
+        Returned when an item in the conversation is deleted by the client with a 
+        `conversation.item.delete` event. This event is used to synchronize the 
+        server's understanding of the conversation history with the client's view.
     RealtimeServerEventConversationItemInputAudioTranscriptionCompleted:
       type: object
       required:
@@ -10024,7 +10334,9 @@ components:
           type: string
           enum:
             - conversation.item.input_audio_transcription.completed
-          description: The event type, must be `conversation.item.input_audio_transcription.completed`.
+          description: |-
+            The event type, must be
+            `conversation.item.input_audio_transcription.completed`.
         item_id:
           type: string
           description: The ID of the user message item containing the audio.
@@ -10038,8 +10350,16 @@ components:
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
       description: |-
-        This event is the output of audio transcription for user audio written to the user audio buffer. Transcription begins when the input audio buffer is committed by the client or server (in `server_vad` mode). Transcription runs asynchronously with Response creation, so this event may come before or after the Response events.
-        Realtime API models accept audio natively, and thus input transcription is a separate process run on a separate ASR (Automatic Speech Recognition) model, currently always `whisper-1`. Thus the transcript may diverge somewhat from the model's interpretation, and should be treated as a rough guide.
+        This event is the output of audio transcription for user audio written to the 
+        user audio buffer. Transcription begins when the input audio buffer is 
+        committed by the client or server (in `server_vad` mode). Transcription runs 
+        asynchronously with Response creation, so this event may come before or after 
+        the Response events.
+
+        Realtime API models accept audio natively, and thus input transcription is a 
+        separate process run on a separate ASR (Automatic Speech Recognition) model, 
+        currently always `whisper-1`. Thus the transcript may diverge somewhat from 
+        the model's interpretation, and should be treated as a rough guide.
     RealtimeServerEventConversationItemInputAudioTranscriptionFailed:
       type: object
       required:
@@ -10052,7 +10372,9 @@ components:
           type: string
           enum:
             - conversation.item.input_audio_transcription.failed
-          description: The event type, must be `conversation.item.input_audio_transcription.failed`.
+          description: |-
+            The event type, must be
+            `conversation.item.input_audio_transcription.failed`.
         item_id:
           type: string
           description: The ID of the user message item.
@@ -10078,7 +10400,10 @@ components:
           description: Details of the transcription error.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when input audio transcription is configured, and a transcription request for a user message failed. These events are separate from other `error` events so that the client can identify the related Item.
+      description: |-
+        Returned when input audio transcription is configured, and a transcription 
+        request for a user message failed. These events are separate from other 
+        `error` events so that the client can identify the related Item.
     RealtimeServerEventConversationItemTruncated:
       type: object
       required:
@@ -10106,8 +10431,12 @@ components:
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
       description: |-
-        Returned when an earlier assistant audio message item is truncated by the client with a `conversation.item.truncate` event. This event is used to synchronize the server's understanding of the audio with the client's playback.
-        This action will truncate the audio and remove the server-side text transcript to ensure there is no text in the context that hasn't been heard by the user.
+        Returned when an earlier assistant audio message item is truncated by the 
+        client with a `conversation.item.truncate` event. This event is used to 
+        synchronize the server's understanding of the audio with the client's playback.
+
+        This action will truncate the audio and remove the server-side text transcript 
+        to ensure there is no text in the context that hasn't been heard by the user.
     RealtimeServerEventError:
       type: object
       required:
@@ -10118,7 +10447,7 @@ components:
           type: string
           enum:
             - error
-          description: The event type, must be "error".
+          description: The event type, must be `error`.
         error:
           type: object
           properties:
@@ -10140,7 +10469,10 @@ components:
           description: Details of the error.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when an error occurs, which could be a client problem or a server problem. Most errors are recoverable and the session will stay open, we recommend to implementors to monitor and log error messages by default.
+      description: |-
+        Returned when an error occurs, which could be a client problem or a server
+        problem. Most errors are recoverable and the session will stay open, we
+        recommend to implementors to monitor and log error messages by default.
     RealtimeServerEventInputAudioBufferCleared:
       type: object
       required:
@@ -10153,7 +10485,9 @@ components:
           description: The event type, must be `input_audio_buffer.cleared`.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when the input audio buffer is cleared by the client with a `input_audio_buffer.clear` event.
+      description: |-
+        Returned when the input audio buffer is cleared by the client with a 
+        `input_audio_buffer.clear` event.
     RealtimeServerEventInputAudioBufferCommitted:
       type: object
       required:
@@ -10174,7 +10508,11 @@ components:
           description: The ID of the user message item that will be created.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when an input audio buffer is committed, either by the client or automatically in server VAD mode. The `item_id` property is the ID of the user message item that will be created, thus a `conversation.item.created` event will also be sent to the client.
+      description: |-
+        Returned when an input audio buffer is committed, either by the client or 
+        automatically in server VAD mode. The `item_id` property is the ID of the user
+        message item that will be created, thus a `conversation.item.created` event 
+        will also be sent to the client.
     RealtimeServerEventInputAudioBufferSpeechStarted:
       type: object
       required:
@@ -10190,13 +10528,27 @@ components:
         audio_start_ms:
           type: integer
           format: int32
-          description: Milliseconds from the start of all audio written to the buffer during the session when speech was first detected. This will correspond to the beginning of audio sent to the model, and thus includes the `prefix_padding_ms` configured in the Session.
+          description: |-
+            Milliseconds from the start of all audio written to the buffer during the 
+            session when speech was first detected. This will correspond to the 
+            beginning of audio sent to the model, and thus includes the 
+            `prefix_padding_ms` configured in the Session.
         item_id:
           type: string
           description: The ID of the user message item that will be created when speech stops.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Sent by the server when in `server_vad` mode to indicate that speech has been detected in the audio buffer. This can happen any time audio is added to the buffer (unless speech is already detected). The client may want to use this event to interrupt audio playback or provide visual feedback to the user. The client should expect to receive a `input_audio_buffer.speech_stopped` event when speech stops. The `item_id` property is the ID of the user message item that will be created when speech stops and will also be included in the `input_audio_buffer.speech_stopped` event (unless the client manually commits the audio buffer during VAD activation).
+      description: |-
+        Sent by the server when in `server_vad` mode to indicate that speech has been 
+        detected in the audio buffer. This can happen any time audio is added to the 
+        buffer (unless speech is already detected). The client may want to use this 
+        event to interrupt audio playback or provide visual feedback to the user. 
+
+        The client should expect to receive a `input_audio_buffer.speech_stopped` event 
+        when speech stops. The `item_id` property is the ID of the user message item 
+        that will be created when speech stops and will also be included in the 
+        `input_audio_buffer.speech_stopped` event (unless the client manually commits 
+        the audio buffer during VAD activation).
     RealtimeServerEventInputAudioBufferSpeechStopped:
       type: object
       required:
@@ -10212,13 +10564,19 @@ components:
         audio_end_ms:
           type: integer
           format: int32
-          description: Milliseconds since the session started when speech stopped. This will correspond to the end of audio sent to the model, and thus includes the `min_silence_duration_ms` configured in the Session.
+          description: |-
+            Milliseconds since the session started when speech stopped. This will 
+            correspond to the end of audio sent to the model, and thus includes the 
+            `min_silence_duration_ms` configured in the Session.
         item_id:
           type: string
           description: The ID of the user message item that will be created.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned in `server_vad` mode when the server detects the end of speech in the audio buffer. The server will also send an `conversation.item.created` event with the user message item that is created from the audio buffer.
+      description: |-
+        Returned in `server_vad` mode when the server detects the end of speech in 
+        the audio buffer. The server will also send an `conversation.item.created` 
+        event with the user message item that is created from the audio buffer.
     RealtimeServerEventRateLimitsUpdated:
       type: object
       required:
@@ -10237,7 +10595,11 @@ components:
           description: List of rate limit information.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Emitted at the beginning of a Response to indicate the updated rate limits. When a Response is created some tokens will be "reserved" for the output tokens, the rate limits shown here reflect that reservation, which is then adjusted accordingly once the Response is completed.
+      description: |-
+        Emitted at the beginning of a Response to indicate the updated rate limits.
+        When a Response is created some tokens will be "reserved" for the output
+        tokens, the rate limits shown here reflect that reservation, which is then
+        adjusted accordingly once the Response is completed.
     RealtimeServerEventRateLimitsUpdatedRateLimitsItem:
       type: object
       required:
@@ -10275,7 +10637,7 @@ components:
           type: string
           enum:
             - response.audio.delta
-          description: The event type, must be "response.audio.delta".
+          description: The event type, must be `response.audio.delta`.
         response_id:
           type: string
           description: The ID of the response.
@@ -10310,7 +10672,7 @@ components:
           type: string
           enum:
             - response.audio.done
-          description: The event type, must be "response.audio.done".
+          description: The event type, must be `response.audio.done`.
         response_id:
           type: string
           description: The ID of the response.
@@ -10327,7 +10689,9 @@ components:
           description: The index of the content part in the item's content array.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when the model-generated audio is done. Also emitted when a Response is interrupted, incomplete, or cancelled.
+      description: |-
+        Returned when the model-generated audio is done. Also emitted when a Response
+        is interrupted, incomplete, or cancelled.
     RealtimeServerEventResponseAudioTranscriptDelta:
       type: object
       required:
@@ -10342,7 +10706,7 @@ components:
           type: string
           enum:
             - response.audio_transcript.delta
-          description: The event type, must be "response.audio_transcript.delta".
+          description: The event type, must be `response.audio_transcript.delta`.
         response_id:
           type: string
           description: The ID of the response.
@@ -10377,7 +10741,7 @@ components:
           type: string
           enum:
             - response.audio_transcript.done
-          description: The event type, must be "response.audio_transcript.done".
+          description: The event type, must be `response.audio_transcript.done`.
         response_id:
           type: string
           description: The ID of the response.
@@ -10397,7 +10761,10 @@ components:
           description: The final transcript of the audio.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when the model-generated transcription of audio output is done streaming. Also emitted when a Response is interrupted, incomplete, or cancelled.
+      description: |-
+        Returned when the model-generated transcription of audio output is done
+        streaming. Also emitted when a Response is interrupted, incomplete, or
+        cancelled.
     RealtimeServerEventResponseContentPartAdded:
       type: object
       required:
@@ -10412,7 +10779,7 @@ components:
           type: string
           enum:
             - response.content_part.added
-          description: The event type, must be "response.content_part.added".
+          description: The event type, must be `response.content_part.added`.
         response_id:
           type: string
           description: The ID of the response.
@@ -10433,7 +10800,9 @@ components:
           description: The content part that was added.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when a new content part is added to an assistant message item during response generation.
+      description: |-
+        Returned when a new content part is added to an assistant message item during
+        response generation.
     RealtimeServerEventResponseContentPartDone:
       type: object
       required:
@@ -10448,7 +10817,7 @@ components:
           type: string
           enum:
             - response.content_part.done
-          description: The event type, must be "response.content_part.done".
+          description: The event type, must be `response.content_part.done`.
         response_id:
           type: string
           description: The ID of the response.
@@ -10469,7 +10838,9 @@ components:
           description: The content part that is done.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when a content part is done streaming in an assistant message item. Also emitted when a Response is interrupted, incomplete, or cancelled.
+      description: |-
+        Returned when a content part is done streaming in an assistant message item.
+        Also emitted when a Response is interrupted, incomplete, or cancelled.
     RealtimeServerEventResponseCreated:
       type: object
       required:
@@ -10485,7 +10856,9 @@ components:
           $ref: '#/components/schemas/RealtimeResponse'
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when a new Response is created. The first event of response creation, where the response is in an initial state of `in_progress`.
+      description: |-
+        Returned when a new Response is created. The first event of response creation,
+        where the response is in an initial state of `in_progress`.
     RealtimeServerEventResponseDone:
       type: object
       required:
@@ -10496,12 +10869,15 @@ components:
           type: string
           enum:
             - response.done
-          description: The event type, must be "response.done".
+          description: The event type, must be `response.done`.
         response:
           $ref: '#/components/schemas/RealtimeResponse'
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when a Response is done streaming. Always emitted, no matter the final state. The Response object included in the `response.done` event will include all output Items in the Response but will omit the raw audio data.
+      description: |-
+        Returned when a Response is done streaming. Always emitted, no matter the 
+        final state. The Response object included in the `response.done` event will 
+        include all output Items in the Response but will omit the raw audio data.
     RealtimeServerEventResponseFunctionCallArgumentsDelta:
       type: object
       required:
@@ -10516,7 +10892,7 @@ components:
           type: string
           enum:
             - response.function_call_arguments.delta
-          description: The event type, must be "response.function_call_arguments.delta".
+          description: The event type, must be `response.function_call_arguments.delta`.
         response_id:
           type: string
           description: The ID of the response.
@@ -10550,7 +10926,7 @@ components:
           type: string
           enum:
             - response.function_call_arguments.done
-          description: The event type, must be "response.function_call_arguments.done".
+          description: The event type, must be `response.function_call_arguments.done`.
         response_id:
           type: string
           description: The ID of the response.
@@ -10569,7 +10945,9 @@ components:
           description: The final arguments as a JSON string.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when the model-generated function call arguments are done streaming. Also emitted when a Response is interrupted, incomplete, or cancelled.
+      description: |-
+        Returned when the model-generated function call arguments are done streaming.
+        Also emitted when a Response is interrupted, incomplete, or cancelled.
     RealtimeServerEventResponseOutputItemAdded:
       type: object
       required:
@@ -10619,7 +10997,9 @@ components:
           $ref: '#/components/schemas/RealtimeConversationResponseItem'
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when an Item is done streaming. Also emitted when a Response is interrupted, incomplete, or cancelled.
+      description: |-
+        Returned when an Item is done streaming. Also emitted when a Response is
+        interrupted, incomplete, or cancelled.
     RealtimeServerEventResponseTextDelta:
       type: object
       required:
@@ -10634,7 +11014,7 @@ components:
           type: string
           enum:
             - response.text.delta
-          description: The event type, must be "response.text.delta".
+          description: The event type, must be `response.text.delta`.
         response_id:
           type: string
           description: The ID of the response.
@@ -10669,7 +11049,7 @@ components:
           type: string
           enum:
             - response.text.done
-          description: The event type, must be "response.text.done".
+          description: The event type, must be `response.text.done`.
         response_id:
           type: string
           description: The ID of the response.
@@ -10689,7 +11069,9 @@ components:
           description: The final text content.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when the text value of a "text" content part is done streaming. Also emitted when a Response is interrupted, incomplete, or cancelled.
+      description: |-
+        Returned when the text value of a "text" content part is done streaming. Also
+        emitted when a Response is interrupted, incomplete, or cancelled.
     RealtimeServerEventSessionCreated:
       type: object
       required:
@@ -10705,7 +11087,10 @@ components:
           $ref: '#/components/schemas/RealtimeResponseSession'
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when a Session is created. Emitted automatically when a new connection is established as the first server event. This event will contain the default Session configuration.
+      description: |-
+        Returned when a Session is created. Emitted automatically when a new
+        connection is established as the first server event. This event will contain
+        the default Session configuration.
     RealtimeServerEventSessionUpdated:
       type: object
       required:
@@ -10716,12 +11101,14 @@ components:
           type: string
           enum:
             - session.updated
-          description: The event type, must be "session.updated".
+          description: The event type, must be `session.updated`.
         session:
           $ref: '#/components/schemas/RealtimeResponseSession'
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
-      description: Returned when a session is updated with a `session.update` event, unless there is an error.
+      description: |-
+        Returned when a session is updated with a `session.update` event, unless 
+        there is an error.
     RealtimeServerEventType:
       anyOf:
         - type: string
@@ -12240,6 +12627,332 @@ components:
             - upload.part
           description: The object type, which is always `upload.part`.
       description: The upload Part represents a chunk of bytes we can add to an Upload object.
+    UsageAudioSpeechesResult:
+      type: object
+      required:
+        - object
+        - characters
+        - num_model_requests
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.usage.audio_speeches.result
+        characters:
+          type: integer
+          format: int32
+          description: The number of characters processed.
+        num_model_requests:
+          type: integer
+          format: int32
+          description: The count of requests made to the model.
+        project_id:
+          type: string
+          nullable: true
+          description: When `group_by=project_id`, this field provides the project ID of the grouped usage result.
+        user_id:
+          type: string
+          nullable: true
+          description: When `group_by=user_id`, this field provides the user ID of the grouped usage result.
+        api_key_id:
+          type: string
+          nullable: true
+          description: When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
+        model:
+          type: string
+          nullable: true
+          description: When `group_by=model`, this field provides the model name of the grouped usage result.
+      description: The aggregated audio speeches usage details of the specific time bucket.
+    UsageAudioTranscriptionsResult:
+      type: object
+      required:
+        - object
+        - seconds
+        - num_model_requests
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.usage.audio_transcriptions.result
+        seconds:
+          type: integer
+          format: int32
+          description: The number of seconds processed.
+        num_model_requests:
+          type: integer
+          format: int32
+          description: The count of requests made to the model.
+        project_id:
+          type: string
+          nullable: true
+          description: When `group_by=project_id`, this field provides the project ID of the grouped usage result.
+        user_id:
+          type: string
+          nullable: true
+          description: When `group_by=user_id`, this field provides the user ID of the grouped usage result.
+        api_key_id:
+          type: string
+          nullable: true
+          description: When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
+        model:
+          type: string
+          nullable: true
+          description: When `group_by=model`, this field provides the model name of the grouped usage result.
+      description: The aggregated audio transcriptions usage details of the specific time bucket.
+    UsageCodeInterpreterSessionsResult:
+      type: object
+      required:
+        - object
+        - sessions
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.usage.code_interpreter_sessions.result
+        sessions:
+          type: integer
+          format: int32
+          description: The number of code interpreter sessions.
+        project_id:
+          type: string
+          nullable: true
+          description: When `group_by=project_id`, this field provides the project ID of the grouped usage result.
+      description: The aggregated code interpreter sessions usage details of the specific time bucket.
+    UsageCompletionsResult:
+      type: object
+      required:
+        - object
+        - input_tokens
+        - output_tokens
+        - num_model_requests
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.usage.completions.result
+        input_tokens:
+          type: integer
+          format: int32
+          description: The aggregated number of input tokens used. For customers subscribe to scale tier, this includes scale tier tokens.
+        input_cached_tokens:
+          type: integer
+          format: int32
+          description: The aggregated number of input tokens that has been cached from previous requests. For customers subscribe to scale tier, this includes scale tier tokens.
+        output_tokens:
+          type: integer
+          format: int32
+          description: The aggregated number of output tokens used. For customers subscribe to scale tier, this includes scale tier tokens.
+        num_model_requests:
+          type: integer
+          format: int32
+          description: The count of requests made to the model.
+        project_id:
+          type: string
+          nullable: true
+          description: When `group_by=project_id`, this field provides the project ID of the grouped usage result.
+        user_id:
+          type: string
+          nullable: true
+          description: When `group_by=user_id`, this field provides the user ID of the grouped usage result.
+        api_key_id:
+          type: string
+          nullable: true
+          description: When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
+        model:
+          type: string
+          nullable: true
+          description: When `group_by=model`, this field provides the model name of the grouped usage result.
+        batch:
+          type: boolean
+          nullable: true
+          description: When `group_by=batch`, this field tells whether the grouped usage result is batch or not.
+      description: The aggregated completions usage details of the specific time bucket.
+    UsageEmbeddingsResult:
+      type: object
+      required:
+        - object
+        - input_tokens
+        - num_model_requests
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.usage.embeddings.result
+        input_tokens:
+          type: integer
+          format: int32
+          description: The aggregated number of input tokens used.
+        num_model_requests:
+          type: integer
+          format: int32
+          description: The count of requests made to the model.
+        project_id:
+          type: string
+          nullable: true
+          description: When `group_by=project_id`, this field provides the project ID of the grouped usage result.
+        user_id:
+          type: string
+          nullable: true
+          description: When `group_by=user_id`, this field provides the user ID of the grouped usage result.
+        api_key_id:
+          type: string
+          nullable: true
+          description: When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
+        model:
+          type: string
+          nullable: true
+          description: When `group_by=model`, this field provides the model name of the grouped usage result.
+      description: The aggregated embeddings usage details of the specific time bucket.
+    UsageImagesResult:
+      type: object
+      required:
+        - object
+        - images
+        - num_model_requests
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.usage.images.result
+        images:
+          type: integer
+          format: int32
+          description: The number of images processed.
+        num_model_requests:
+          type: integer
+          format: int32
+          description: The count of requests made to the model.
+        source:
+          type: string
+          nullable: true
+          description: When `group_by=source`, this field provides the source of the grouped usage result, possible values are `image.generation`, `image.edit`, `image.variation`.
+        size:
+          type: string
+          nullable: true
+          description: When `group_by=size`, this field provides the image size of the grouped usage result.
+        project_id:
+          type: string
+          nullable: true
+          description: When `group_by=project_id`, this field provides the project ID of the grouped usage result.
+        user_id:
+          type: string
+          nullable: true
+          description: When `group_by=user_id`, this field provides the user ID of the grouped usage result.
+        api_key_id:
+          type: string
+          nullable: true
+          description: When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
+        model:
+          type: string
+          nullable: true
+          description: When `group_by=model`, this field provides the model name of the grouped usage result.
+      description: The aggregated images usage details of the specific time bucket.
+    UsageModerationsResult:
+      type: object
+      required:
+        - object
+        - input_tokens
+        - num_model_requests
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.usage.moderations.result
+        input_tokens:
+          type: integer
+          format: int32
+          description: The aggregated number of input tokens used.
+        num_model_requests:
+          type: integer
+          format: int32
+          description: The count of requests made to the model.
+        project_id:
+          type: string
+          nullable: true
+          description: When `group_by=project_id`, this field provides the project ID of the grouped usage result.
+        user_id:
+          type: string
+          nullable: true
+          description: When `group_by=user_id`, this field provides the user ID of the grouped usage result.
+        api_key_id:
+          type: string
+          nullable: true
+          description: When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.
+        model:
+          type: string
+          nullable: true
+          description: When `group_by=model`, this field provides the model name of the grouped usage result.
+      description: The aggregated moderations usage details of the specific time bucket.
+    UsageResponse:
+      type: object
+      required:
+        - object
+        - data
+        - has_more
+        - next_page
+      properties:
+        object:
+          type: string
+          enum:
+            - page
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsageTimeBucket'
+        has_more:
+          type: boolean
+        next_page:
+          type: string
+    UsageTimeBucket:
+      type: object
+      required:
+        - object
+        - start_time
+        - end_time
+        - result
+      properties:
+        object:
+          type: string
+          enum:
+            - bucket
+        start_time:
+          type: integer
+          format: int32
+        end_time:
+          type: integer
+          format: int32
+        result:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/UsageCompletionsResult'
+              - $ref: '#/components/schemas/UsageEmbeddingsResult'
+              - $ref: '#/components/schemas/UsageModerationsResult'
+              - $ref: '#/components/schemas/UsageImagesResult'
+              - $ref: '#/components/schemas/UsageAudioSpeechesResult'
+              - $ref: '#/components/schemas/UsageAudioTranscriptionsResult'
+              - $ref: '#/components/schemas/UsageVectorStoresResult'
+              - $ref: '#/components/schemas/UsageCodeInterpreterSessionsResult'
+              - $ref: '#/components/schemas/CostsResult'
+    UsageVectorStoresResult:
+      type: object
+      required:
+        - object
+        - usage_bytes
+      properties:
+        object:
+          type: string
+          enum:
+            - organization.usage.vector_stores.result
+        usage_bytes:
+          type: integer
+          format: int32
+          description: The vector stores usage in bytes.
+        project_id:
+          type: string
+          nullable: true
+          description: When `group_by=project_id`, this field provides the project ID of the grouped usage result.
+      description: The aggregated vector stores usage details of the specific time bucket.
     User:
       type: object
       required:

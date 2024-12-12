@@ -162,6 +162,18 @@ namespace OpenAI.Chat
                     writer.WriteNull("modalities");
                 }
             }
+            if (SerializedAdditionalRawData?.ContainsKey("prediction") != true && Optional.IsDefined(PredictedContent))
+            {
+                if (PredictedContent != null)
+                {
+                    writer.WritePropertyName("prediction"u8);
+                    SerializePredictedContentValue(writer, options);
+                }
+                else
+                {
+                    writer.WriteNull("prediction");
+                }
+            }
             if (SerializedAdditionalRawData?.ContainsKey("audio") != true && Optional.IsDefined(_audioOptions))
             {
                 if (_audioOptions != null)
@@ -369,6 +381,7 @@ namespace OpenAI.Chat
             int? maxCompletionTokens = default;
             int? n = default;
             IList<InternalCreateChatCompletionRequestModality> modalities = default;
+            ChatMessageContent prediction = default;
             ChatAudioOptions audio = default;
             float? presencePenalty = default;
             ChatResponseFormat responseFormat = default;
@@ -505,6 +518,11 @@ namespace OpenAI.Chat
                         array.Add(new InternalCreateChatCompletionRequestModality(item.GetString()));
                     }
                     modalities = array;
+                    continue;
+                }
+                if (property.NameEquals("prediction"u8))
+                {
+                    DeserializePredictedContentValue(property, ref prediction);
                     continue;
                 }
                 if (property.NameEquals("audio"u8))
@@ -681,6 +699,7 @@ namespace OpenAI.Chat
                 maxCompletionTokens,
                 n,
                 modalities ?? new ChangeTrackingList<InternalCreateChatCompletionRequestModality>(),
+                prediction,
                 audio,
                 presencePenalty,
                 responseFormat,

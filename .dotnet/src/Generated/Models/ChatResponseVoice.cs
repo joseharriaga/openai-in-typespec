@@ -17,18 +17,22 @@ namespace OpenAI.Chat
         }
 
         private const string AlloyValue = "alloy";
+        private const string AshValue = "ash";
+        private const string BalladValue = "ballad";
+        private const string CoralValue = "coral";
         private const string EchoValue = "echo";
-        private const string FableValue = "fable";
-        private const string OnyxValue = "onyx";
-        private const string NovaValue = "nova";
+        private const string SageValue = "sage";
         private const string ShimmerValue = "shimmer";
+        private const string VerseValue = "verse";
 
         public static ChatResponseVoice Alloy { get; } = new ChatResponseVoice(AlloyValue);
+        public static ChatResponseVoice Ash { get; } = new ChatResponseVoice(AshValue);
+        public static ChatResponseVoice Ballad { get; } = new ChatResponseVoice(BalladValue);
+        public static ChatResponseVoice Coral { get; } = new ChatResponseVoice(CoralValue);
         public static ChatResponseVoice Echo { get; } = new ChatResponseVoice(EchoValue);
-        public static ChatResponseVoice Fable { get; } = new ChatResponseVoice(FableValue);
-        public static ChatResponseVoice Onyx { get; } = new ChatResponseVoice(OnyxValue);
-        public static ChatResponseVoice Nova { get; } = new ChatResponseVoice(NovaValue);
+        public static ChatResponseVoice Sage { get; } = new ChatResponseVoice(SageValue);
         public static ChatResponseVoice Shimmer { get; } = new ChatResponseVoice(ShimmerValue);
+        public static ChatResponseVoice Verse { get; } = new ChatResponseVoice(VerseValue);
         public static bool operator ==(ChatResponseVoice left, ChatResponseVoice right) => left.Equals(right);
         public static bool operator !=(ChatResponseVoice left, ChatResponseVoice right) => !left.Equals(right);
         public static implicit operator ChatResponseVoice(string value) => new ChatResponseVoice(value);

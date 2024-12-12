@@ -14,10 +14,12 @@ namespace OpenAI.Chat
         {
         }
 
-        internal ChatOutputTokenUsageDetails(int audioTokenCount, int reasoningTokenCount, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ChatOutputTokenUsageDetails(int acceptedPredictionTokenCount, int audioTokenCount, int reasoningTokenCount, int rejectedPredictionTokenCount, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
+            AcceptedPredictionTokenCount = acceptedPredictionTokenCount;
             AudioTokenCount = audioTokenCount;
             ReasoningTokenCount = reasoningTokenCount;
+            RejectedPredictionTokenCount = rejectedPredictionTokenCount;
             SerializedAdditionalRawData = serializedAdditionalRawData;
         }
     }

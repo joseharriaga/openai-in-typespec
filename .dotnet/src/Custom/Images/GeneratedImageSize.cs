@@ -6,6 +6,7 @@ namespace OpenAI.Images;
 /// <summary> The size of the image that will be generated. </summary>
 [CodeGenModel("CreateImageRequestSize")]
 [CodeGenSuppress("GeneratedImageSize", typeof(string))]
+// CUSTOM: remove the implicit operator
 [CodeGenSuppress("", typeof(string))]
 public readonly partial struct GeneratedImageSize : IEquatable<GeneratedImageSize>
 {

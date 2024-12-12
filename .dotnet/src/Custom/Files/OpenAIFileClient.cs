@@ -13,16 +13,10 @@ namespace OpenAI.Files;
 /// <summary> The service client for OpenAI file operations. </summary>
 [CodeGenClient("Files")]
 [CodeGenSuppress("OpenAIFileClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateFileAsync", typeof(InternalFileUploadOptions))]
-[CodeGenSuppress("CreateFile", typeof(InternalFileUploadOptions))]
 [CodeGenSuppress("ListFilesAsync", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("ListFiles", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("RetrieveFileAsync", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("RetrieveFile", typeof(string), typeof(CancellationToken))]
-[CodeGenSuppress("DeleteFileAsync", typeof(string))]
-[CodeGenSuppress("DeleteFile", typeof(string))]
-[CodeGenSuppress("DownloadFileAsync", typeof(string))]
-[CodeGenSuppress("DownloadFile", typeof(string))]
 public partial class OpenAIFileClient
 {
     private InternalUploadsClient _internalUploadsClient;

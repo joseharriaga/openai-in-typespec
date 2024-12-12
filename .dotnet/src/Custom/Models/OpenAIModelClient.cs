@@ -17,8 +17,6 @@ namespace OpenAI.Models;
 [CodeGenSuppress("ListModels", typeof(CancellationToken))]
 [CodeGenSuppress("RetrieveModelAsync", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("RetrieveModel", typeof(string), typeof(CancellationToken))]
-[CodeGenSuppress("DeleteModelAsync", typeof(string))]
-[CodeGenSuppress("DeleteModel", typeof(string))]
 
 public partial class OpenAIModelClient
 {

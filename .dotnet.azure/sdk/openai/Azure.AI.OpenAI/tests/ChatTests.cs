@@ -234,6 +234,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
     [RecordedTest]
     [Ignore("Delay behavior not emulated by recordings, and needs to be run manually with some time in between iterations due to service throttling behavior")]
+    [Category("Live")]
     [TestCase("x-ms-retry-after-ms", "1000", 1000)]
     [TestCase("retry-after-ms", "1400", 1400)]
     [TestCase("Retry-After", "1", 1000)]
@@ -514,6 +515,31 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.IsTrue(answerProperty.ValueKind == JsonValueKind.String);
         Assert.IsTrue(contentDocument.RootElement.TryGetProperty("steps", out JsonElement stepsProperty));
         Assert.IsTrue(stepsProperty.ValueKind == JsonValueKind.Array);
+    }
+
+    [RecordedTest]
+    public async Task UserSecurityContextWorks()
+    {
+        ChatClient client = GetTestClient();
+
+        string userId = Guid.NewGuid().ToString();
+        string sourceIp = "123.456.78.9";
+        UserSecurityContext userSecurityContext = new()
+        {
+            EndUserId = userId,
+            SourceIp = sourceIp,
+        };
+
+        ChatCompletionOptions options = new();
+        options.SetUserSecurityContext(userSecurityContext);
+
+        UserSecurityContext retrievedUserSecurityContext = options.GetUserSecurityContext();
+        Assert.That(retrievedUserSecurityContext, Is.Not.Null);
+        Assert.That(retrievedUserSecurityContext.EndUserId, Is.EqualTo(userId));
+        Assert.That(retrievedUserSecurityContext.SourceIp, Is.EqualTo(sourceIp));
+
+        ChatCompletion completion = await client.CompleteChatAsync([ChatMessage.CreateUserMessage("Hello, world!")]);
+        Assert.That(completion, Is.Not.Null);
     }
 
     #endregion

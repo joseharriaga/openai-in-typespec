@@ -65,6 +65,7 @@ public class BatchTests : AoaiTestBase<BatchClient>
     }
 
     [RecordedTest]
+    [Category("LongRunning")] // observed live runtime up to 5 minutes
     public async Task CanCancelBatch()
     {
         BatchClient batchClient = GetTestClient();

@@ -99,9 +99,22 @@ $content = $content -creplace ".*Diagnostics.DebuggerStepThrough.*\n", ""
 # Remove internal APIs.
 $content = $content -creplace "  * internal.*`n", ""
 
+# Remove IJsonModel/IPersistableModel interface method entries.
+$content = $content -creplace "        .*(IJsonModel|IPersistableModel).*`n", ""
+$content = $content -creplace "        protected virtual .* (Json|Persistable)Model(Create|Write)Core.*`n", ""
+
 # Other cosmetic simplifications.
 $content = $content -creplace "partial class", "class"
+$content = $content -creplace ".*private.*dummy.*`n", ""
 $content = $content -creplace " { throw null; }", ";"
 $content = $content -creplace " { }", ";"
+
+
+# protected virtual Assistant JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+# protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+# public static explicit operator Assistant(ClientResult result);
+# public static implicit operator BinaryContent(Assistant assistant);
+# protected virtual Assistant PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
+# protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
 
 Set-Content -Path $outputPath -Value $content -NoNewline

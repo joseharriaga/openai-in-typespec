@@ -109,12 +109,4 @@ $content = $content -creplace ".*private.*dummy.*`n", ""
 $content = $content -creplace " { throw null; }", ";"
 $content = $content -creplace " { }", ";"
 
-
-# protected virtual Assistant JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-# protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-# public static explicit operator Assistant(ClientResult result);
-# public static implicit operator BinaryContent(Assistant assistant);
-# protected virtual Assistant PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-# protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
-
 Set-Content -Path $outputPath -Value $content -NoNewline

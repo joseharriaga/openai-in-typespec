@@ -176,4 +176,24 @@ public partial class ChatCompletionOptions
     /// </summary>
     [CodeGenMember("Store")]
     public bool? StoredOutputEnabled { get; set; }
+
+    // CUSTOM: Made internal for automatic enablement via audio options.
+    [CodeGenMember("Modalities")]
+    private IList<InternalCreateChatCompletionRequestModality> _internalModalities = new ChangeTrackingList<InternalCreateChatCompletionRequestModality>();
+
+    // CUSTOM: supplemented with custom setter to internally enable audio output via modalities.
+    [CodeGenMember("Audio")]
+    private ChatAudioOptions _audioOptions;
+
+    public ChatAudioOptions AudioOptions
+    {
+        get => _audioOptions;
+        set
+        {
+            _audioOptions = value;
+            _internalModalities = value is null
+                ? new ChangeTrackingList<InternalCreateChatCompletionRequestModality>()
+                : [InternalCreateChatCompletionRequestModality.Text, InternalCreateChatCompletionRequestModality.Audio];
+        }
+    }
 }

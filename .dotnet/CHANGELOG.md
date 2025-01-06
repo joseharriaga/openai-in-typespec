@@ -1,5 +1,18 @@
 # Release History
 
+## 2.2.0-beta.1 (Unreleased)
+
+### Features added
+
+- Chat completion now supports audio input and output!
+  - To configure a chat completion to request audio output using the `gpt-4o-audio-preview` model, create a `ChatAudioOptions` instance and provide it on `ChatCompletionOptions.AudioOptions`.
+  - Audio is always represented as a `ChatMessageContentPart`:
+    - User audio input can be instantiated via `ChatMessageContentPart.CreateAudioPart(BinaryData, ChatAudioInputFormat)` and will populate the `AudioBytes` and `AudioInputFormat` properties on `ChatMessageContentPart`
+    - Response audio associated with the items in `Content` of a `ChatCompletion` or `ContentUpdate` of a `StreamingChatCompletionUpdate` will populate the `AudioBytes`, `AudioTranscript`, `AudioExpiresAt`, and `AudioCorrelationId` properties
+    - Audio referring to a previous response's output can be created via `ChatMessageContentPart.CreateAudioPart(string)` and will populate the `AudioCorrelationId` property.
+  - The `AssistantChatMessage(IEnumerable<ChatMessageContentPart>)` and `AssistantChatMessage(ChatCompletion)` constructors will automatically infer `AudioCorrelationId`, simplifying conversation history management
+  - For more information, see the example in the README
+
 ## 2.1.0 (2024-12-04)
 
 ### Features added

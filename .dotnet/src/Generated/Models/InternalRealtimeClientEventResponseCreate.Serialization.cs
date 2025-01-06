@@ -61,7 +61,7 @@ namespace OpenAI.RealtimeConversation
             InternalRealtimeClientEventType kind = default;
             string eventId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            InternalRealtimeClientEventResponseCreateResponse response = default;
+            InternalRealtimeResponseOptions response = default;
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))
@@ -76,7 +76,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 if (prop.NameEquals("response"u8))
                 {
-                    response = InternalRealtimeClientEventResponseCreateResponse.DeserializeInternalRealtimeClientEventResponseCreateResponse(prop.Value, options);
+                    response = InternalRealtimeResponseOptions.DeserializeInternalRealtimeResponseOptions(prop.Value, options);
                     continue;
                 }
                 if (true)

@@ -523,7 +523,7 @@ namespace OpenAI
             return new ConversationInputSpeechFinishedUpdate(eventId, RealtimeConversation.ConversationUpdateKind.InputSpeechStopped, additionalBinaryDataProperties: null, itemId, audioEndMs);
         }
 
-        public static ConversationItemCreatedUpdate ConversationItemCreatedUpdate(string eventId = default, string previousItemId = default, InternalRealtimeResponseItem internalItem = default)
+        public static ConversationItemCreatedUpdate ConversationItemCreatedUpdate(string eventId = default, string previousItemId = default, InternalRealtimeConversationResponseItem internalItem = default)
         {
 
             return new ConversationItemCreatedUpdate(eventId, RealtimeConversation.ConversationUpdateKind.ItemCreated, additionalBinaryDataProperties: null, previousItemId, internalItem);
@@ -613,7 +613,7 @@ namespace OpenAI
             return new ConversationResponseFinishedUpdate(eventId, RealtimeConversation.ConversationUpdateKind.ResponseFinished, additionalBinaryDataProperties: null, internalResponse);
         }
 
-        public static ConversationItemStreamingStartedUpdate ConversationItemStreamingStartedUpdate(string eventId = default, string responseId = default, int itemIndex = default, InternalRealtimeResponseItem internalItem = default)
+        public static ConversationItemStreamingStartedUpdate ConversationItemStreamingStartedUpdate(string eventId = default, string responseId = default, int itemIndex = default, InternalRealtimeConversationResponseItem internalItem = default)
         {
 
             return new ConversationItemStreamingStartedUpdate(
@@ -625,7 +625,7 @@ namespace OpenAI
                 internalItem);
         }
 
-        public static ConversationItemStreamingFinishedUpdate ConversationItemStreamingFinishedUpdate(string eventId = default, string responseId = default, int outputIndex = default, InternalRealtimeResponseItem internalItem = default)
+        public static ConversationItemStreamingFinishedUpdate ConversationItemStreamingFinishedUpdate(string eventId = default, string responseId = default, int outputIndex = default, InternalRealtimeConversationResponseItem internalItem = default)
         {
 
             return new ConversationItemStreamingFinishedUpdate(
@@ -890,7 +890,7 @@ namespace OpenAI
             return new ChatInputTokenUsageDetails(audioTokenCount, cachedTokenCount, additionalBinaryDataProperties: null);
         }
 
-        public static ChatCompletionOptions ChatCompletionOptions(float? frequencyPenalty = default, float? presencePenalty = default, ChatResponseFormat responseFormat = default, float? temperature = default, float? topP = default, IEnumerable<ChatTool> tools = default, IEnumerable<ChatMessage> messages = default, InternalCreateChatCompletionRequestModel model = default, int? n = default, bool? stream = default, InternalChatCompletionStreamOptions streamOptions = default, bool? includeLogProbabilities = default, int? topLogProbabilityCount = default, IEnumerable<string> stopSequences = default, IDictionary<int, int> logitBiases = default, ChatToolChoice toolChoice = default, ChatFunctionChoice functionChoice = default, bool? allowParallelToolCalls = default, string endUserId = default, long? seed = default, int? deprecatedMaxTokens = default, int? maxOutputTokenCount = default, IEnumerable<ChatFunction> functions = default, IDictionary<string, string> metadata = default, bool? storedOutputEnabled = default, InternalCreateChatCompletionRequestServiceTier? serviceTier = default)
+        public static ChatCompletionOptions ChatCompletionOptions(float? frequencyPenalty = default, float? presencePenalty = default, ChatResponseFormat responseFormat = default, float? temperature = default, float? topP = default, IEnumerable<ChatTool> tools = default, IEnumerable<ChatMessage> messages = default, InternalCreateChatCompletionRequestModel model = default, int? n = default, bool? stream = default, InternalChatCompletionStreamOptions streamOptions = default, bool? includeLogProbabilities = default, int? topLogProbabilityCount = default, IEnumerable<string> stopSequences = default, IDictionary<int, int> logitBiases = default, ChatToolChoice toolChoice = default, ChatFunctionChoice functionChoice = default, bool? allowParallelToolCalls = default, string endUserId = default, long? seed = default, int? deprecatedMaxTokens = default, int? maxOutputTokenCount = default, IEnumerable<ChatFunction> functions = default, IDictionary<string, string> metadata = default, bool? storedOutputEnabled = default, InternalCreateChatCompletionRequestServiceTier? serviceTier = default, IEnumerable<InternalCreateChatCompletionRequestModality> internalModalities = default, ChatAudioOptions audioOptions = default)
         {
             tools ??= new ChangeTrackingList<ChatTool>();
             messages ??= new ChangeTrackingList<ChatMessage>();
@@ -898,6 +898,7 @@ namespace OpenAI
             logitBiases ??= new ChangeTrackingDictionary<int, int>();
             functions ??= new ChangeTrackingList<ChatFunction>();
             metadata ??= new ChangeTrackingDictionary<string, string>();
+            internalModalities ??= new ChangeTrackingList<InternalCreateChatCompletionRequestModality>();
 
             return new ChatCompletionOptions(
                 frequencyPenalty,
@@ -926,39 +927,42 @@ namespace OpenAI
                 metadata,
                 storedOutputEnabled,
                 serviceTier,
+                internalModalities?.ToList(),
+                audioOptions,
                 additionalBinaryDataProperties: null);
         }
 
-        public static ChatMessage ChatMessage(string role = default, ChatMessageContent content = default)
+        public static ChatMessage ChatMessage(ChatMessageContent content = default, string role = default)
         {
 
-            return new InternalUnknownChatMessage(role.ToChatMessageRole(), content, additionalBinaryDataProperties: null);
+            return new InternalUnknownChatMessage(content, role.ToChatMessageRole(), additionalBinaryDataProperties: null);
         }
 
         public static SystemChatMessage SystemChatMessage(ChatMessageContent content = default, string participantName = default)
         {
 
-            return new SystemChatMessage(Chat.ChatMessageRole.System, content, additionalBinaryDataProperties: null, participantName);
+            return new SystemChatMessage(content, Chat.ChatMessageRole.System, additionalBinaryDataProperties: null, participantName);
         }
 
         public static UserChatMessage UserChatMessage(ChatMessageContent content = default, string participantName = default)
         {
 
-            return new UserChatMessage(Chat.ChatMessageRole.User, content, additionalBinaryDataProperties: null, participantName);
+            return new UserChatMessage(content, Chat.ChatMessageRole.User, additionalBinaryDataProperties: null, participantName);
         }
 
-        public static AssistantChatMessage AssistantChatMessage(ChatMessageContent content = default, string refusal = default, string participantName = default, IEnumerable<ChatToolCall> toolCalls = default, ChatFunctionCall functionCall = default)
+        public static AssistantChatMessage AssistantChatMessage(ChatMessageContent content = default, string refusal = default, string participantName = default, IEnumerable<ChatToolCall> toolCalls = default, ChatFunctionCall functionCall = default, InternalChatCompletionRequestAssistantMessageAudio audio = default)
         {
             toolCalls ??= new ChangeTrackingList<ChatToolCall>();
 
             return new AssistantChatMessage(
-                Chat.ChatMessageRole.Assistant,
                 content,
+                Chat.ChatMessageRole.Assistant,
                 additionalBinaryDataProperties: null,
                 refusal,
                 participantName,
                 toolCalls?.ToList(),
-                functionCall);
+                functionCall,
+                audio);
         }
 
         public static ChatToolCall ChatToolCall(string id = default, InternalChatCompletionMessageToolCallFunction function = default, Chat.ChatToolCallKind kind = default)
@@ -976,13 +980,19 @@ namespace OpenAI
         public static ToolChatMessage ToolChatMessage(ChatMessageContent content = default, string toolCallId = default)
         {
 
-            return new ToolChatMessage(Chat.ChatMessageRole.Tool, content, additionalBinaryDataProperties: null, toolCallId);
+            return new ToolChatMessage(content, Chat.ChatMessageRole.Tool, additionalBinaryDataProperties: null, toolCallId);
         }
 
         public static FunctionChatMessage FunctionChatMessage(ChatMessageContent content = default, string functionName = default)
         {
 
-            return new FunctionChatMessage(Chat.ChatMessageRole.Function, content, additionalBinaryDataProperties: null, functionName);
+            return new FunctionChatMessage(content, Chat.ChatMessageRole.Function, additionalBinaryDataProperties: null, functionName);
+        }
+
+        public static ChatAudioOptions ChatAudioOptions(ChatResponseVoice responseVoice = default, ChatOutputAudioFormat outputAudioFormat = default)
+        {
+
+            return new ChatAudioOptions(responseVoice, outputAudioFormat, additionalBinaryDataProperties: null);
         }
 
         public static ChatResponseFormat ChatResponseFormat(string @type = default)
@@ -1225,10 +1235,19 @@ namespace OpenAI
             return new ChatMessageContent(additionalBinaryDataProperties: null);
         }
 
-        public static ChatMessageContentPart ChatMessageContentPart(Chat.ChatMessageContentPartKind kind = default, string text = default, InternalChatCompletionRequestMessageContentPartImageImageUrl imageUri = default, string refusal = default)
+        public static ChatMessageContentPart ChatMessageContentPart(Chat.ChatMessageContentPartKind kind = default, string text = default, InternalChatCompletionRequestMessageContentPartImageImageUrl imageUri = default, string refusal = default, InternalChatCompletionRequestMessageContentPartAudioInputAudio inputAudio = default, InternalChatCompletionResponseMessageAudio outputAudio = default, InternalChatCompletionMessageAudioChunk responseAudioUpdate = default, InternalChatCompletionRequestAssistantMessageAudio audioReference = default)
         {
 
-            return new ChatMessageContentPart(kind, text, imageUri, refusal, serializedAdditionalRawData: null);
+            return new ChatMessageContentPart(
+                kind,
+                text,
+                imageUri,
+                refusal,
+                inputAudio,
+                outputAudio,
+                responseAudioUpdate,
+                audioReference,
+                serializedAdditionalRawData: null);
         }
 
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = default, BinaryData functionArgumentsUpdate = default)

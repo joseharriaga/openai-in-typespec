@@ -8,17 +8,17 @@ using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal partial class InternalRealtimeClientEventResponseCreateResponse
+    internal partial class InternalRealtimeResponseOptions
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public InternalRealtimeClientEventResponseCreateResponse()
+        public InternalRealtimeResponseOptions()
         {
-            Modalities = new ChangeTrackingList<string>();
+            Modalities = new ChangeTrackingList<InternalRealtimeRequestSessionModality>();
             Tools = new ChangeTrackingList<ConversationTool>();
         }
 
-        internal InternalRealtimeClientEventResponseCreateResponse(IList<string> modalities, string instructions, string voice, string outputAudioFormat, IList<ConversationTool> tools, float? temperature, BinaryData maxOutputTokens, BinaryData toolChoice, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRealtimeResponseOptions(IList<InternalRealtimeRequestSessionModality> modalities, string instructions, ConversationVoice? voice, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, BinaryData maxOutputTokens, BinaryData toolChoice, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Modalities = modalities;
             Instructions = instructions;
@@ -31,13 +31,13 @@ namespace OpenAI.RealtimeConversation
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public IList<string> Modalities { get; }
+        public IList<InternalRealtimeRequestSessionModality> Modalities { get; }
 
         public string Instructions { get; set; }
 
-        public string Voice { get; set; }
+        public ConversationVoice? Voice { get; set; }
 
-        public string OutputAudioFormat { get; set; }
+        public ConversationAudioFormat? OutputAudioFormat { get; set; }
 
         public IList<ConversationTool> Tools { get; }
 

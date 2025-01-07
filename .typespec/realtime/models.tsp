@@ -10,32 +10,53 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 // Tool customization: apply discriminated type base
-/** Send this event to update the session’s default configuration. */
+@doc("""
+  Send this event to update the session’s default configuration. The client may send this event at any time to update the session configuration, and any field may be updated at any time, except for "voice". The server will respond with a `session.updated` event that shows the full effective configuration. Only fields that are present are updated, thus the correct way to clear a field like "instructions" is to pass an empty string.
+  """)
 model RealtimeClientEventSessionUpdate extends RealtimeClientEvent {
   // Tool customization: apply discriminated type base
   /** The event type, must be "session.update". */
   type: RealtimeClientEventType.session_update;
 
-  // Tool customization: apply shared session type
-  /** Session configuration to update. */
+  // Tool customization: apply enriched request-specific model
   session: RealtimeRequestSession;
 }
 
+// Tool customization: establish custom, enriched discriminated type hierarchy
+/** The item to add to the conversation. */
+model RealtimeConversationItemBase {
+  /** Customized to enriched RealtimeConversation{Request,Response}Item models */
+}
+
+// Tool customization: apply enriched response type
+/** The response resource. */
+model RealtimeResponseBase {
+  /** applied in enriched RealtimeResponse */
+}
+
 // Tool customization: apply discriminated type base
-/** Send this event to append audio bytes to the input audio buffer. */
+/**
+ * Send this event to append audio bytes to the input audio buffer. The audio buffer is temporary storage you can write to and later commit. In Server VAD mode, the audio buffer is used to detect speech and the server will decide when to commit. When Server VAD is disabled, you must commit the audio buffer manually.
+ * The client may choose how much audio to place in each event up to a maximum of 15 MiB, for example streaming smaller chunks from the client may allow the VAD to be more responsive. Unlike made other client events, the server will not send a confirmation response to this event.
+ */
 model RealtimeClientEventInputAudioBufferAppend extends RealtimeClientEvent {
   // Tool customization: apply discriminated type base
   /** The event type, must be "input_audio_buffer.append". */
   type: RealtimeClientEventType.input_audio_buffer_append;
 
   // Tool customization: use encoded type for audio data
-  /** Base64-encoded audio bytes. */
+  @doc("""
+    Base64-encoded audio bytes. This must be in the format specified by the `input_audio_format` field in the session configuration.
+    """)
   @encode("base64")
   audio: bytes;
 }
 
 // Tool customization: apply discriminated type base
-/** Send this event to commit audio bytes to a user message. */
+@doc("""
+  Send this event to commit the user input audio buffer, which will create a new user message item in the conversation. This event will produce an error if the input audio buffer is empty. When in Server VAD mode, the client does not need to send this event, the server will commit the audio buffer automatically.
+  Committing the input audio buffer will trigger input audio transcription (if enabled in session configuration), but it will not create a response from the model. The server will respond with an `input_audio_buffer.committed` event.
+  """)
 model RealtimeClientEventInputAudioBufferCommit extends RealtimeClientEvent {
   // Tool customization: apply discriminated type base
   /** The event type, must be "input_audio_buffer.commit". */
@@ -43,7 +64,9 @@ model RealtimeClientEventInputAudioBufferCommit extends RealtimeClientEvent {
 }
 
 // Tool customization: apply discriminated type base
-/** Send this event to clear the audio bytes in the buffer. */
+@doc("""
+  Send this event to clear the audio bytes in the buffer. The server will respond with an `input_audio_buffer.cleared` event.
+  """)
 model RealtimeClientEventInputAudioBufferClear extends RealtimeClientEvent {
   // Tool customization: apply discriminated type base
   /** The event type, must be "input_audio_buffer.clear". */
@@ -51,39 +74,49 @@ model RealtimeClientEventInputAudioBufferClear extends RealtimeClientEvent {
 }
 
 // Tool customization: apply discriminated type base
-/** Send this event when adding an item to the conversation. */
+@doc("""
+  Add a new Item to the Conversation's context, including messages, function calls, and function call responses. This event can be used both to populate a "history" of the conversation and to add new items mid-stream, but has the current limitation that it cannot populate assistant audio messages.
+  If successful, the server will respond with a `conversation.item.created` event, otherwise an `error` event will be sent.
+  """)
 model RealtimeClientEventConversationItemCreate extends RealtimeClientEvent {
   // Tool customization: apply discriminated type base
-  /** The event type, must be "conversation.item.create". */
+  @doc("""
+    The event type, must be `conversation.item.create`.
+    """)
   type: RealtimeClientEventType.conversation_item_create;
 
-  /** The ID of the preceding item after which the new item will be inserted. */
+  /** The ID of the preceding item after which the new item will be inserted. If not set, the new item will be appended to the end of the conversation. If set, it allows an item to be inserted mid-conversation. If the ID cannot be found, an error will be returned and the item will not be added. */
   previous_item_id?: string;
 
   // Tool customization: apply enriched item definition hierarchy
-  /** The item to add to the conversation. */
-  item: RealtimeRequestItem;
+  item: RealtimeConversationRequestItem;
 }
 
 // Tool customization: apply discriminated type base
-/** Send this event when you want to truncate a previous assistant message’s audio. */
+@doc("""
+  Send this event to truncate a previous assistant message’s audio. The server will produce audio faster than realtime, so this event is useful when the user interrupts to truncate audio that has already been sent to the client but not yet played. This will synchronize the server's understanding of the audio with the client's playback.
+  Truncating audio will delete the server-side text transcript to ensure there is not text in the context that hasn't been heard by the user.
+  If successful, the server will respond with a `conversation.item.truncated` event.
+  """)
 model RealtimeClientEventConversationItemTruncate extends RealtimeClientEvent {
   // Tool customization: apply discriminated type base
   /** The event type, must be "conversation.item.truncate". */
   type: RealtimeClientEventType.conversation_item_truncate;
 
-  /** The ID of the assistant message item to truncate. */
+  /** The ID of the assistant message item to truncate. Only assistant message items can be truncated. */
   item_id: string;
 
-  /** The index of the content part to truncate. */
+  /** The index of the content part to truncate. Set this to 0. */
   content_index: int32;
 
-  /** Inclusive duration up to which audio is truncated, in milliseconds. */
+  /** Inclusive duration up to which audio is truncated, in milliseconds. If the audio_end_ms is greater than the actual audio duration, the server will respond with an error. */
   audio_end_ms: int32;
 }
 
 // Tool customization: apply discriminated type base
-/** Send this event when you want to remove any item from the conversation history. */
+@doc("""
+  Send this event when you want to remove any item from the conversation history. The server will respond with a `conversation.item.deleted` event, unless the item does not exist in the conversation history, in which case the server will respond with an error.
+  """)
 model RealtimeClientEventConversationItemDelete extends RealtimeClientEvent {
   // Tool customization: apply discriminated type base
   /** The event type, must be "conversation.item.delete". */
@@ -94,53 +127,37 @@ model RealtimeClientEventConversationItemDelete extends RealtimeClientEvent {
 }
 
 // Tool customization: apply discriminated type base
-/** Send this event to trigger a response generation. */
+@doc("""
+  This event instructs the server to create a Response, which means triggering model inference. When in Server VAD mode, the server will create Responses automatically.
+  A Response will include at least one Item, and may have two, in which case the second will be a function call. These Items will be appended to the conversation history.
+  The server will respond with a `response.created` event, events for Items and content created, and finally a `response.done` event to indicate the Response is complete.
+  The `response.create` event includes inference configuration like `instructions`, and `temperature`. These fields will override the Session's configuration for this Response only.
+  """)
 model RealtimeClientEventResponseCreate extends RealtimeClientEvent {
   // Tool customization: apply discriminated type base
-  /** The event type, must be "response.create". */
+  @doc("""
+    The event type, must be `response.create`.
+    """)
   type: RealtimeClientEventType.response_create;
 
-  /** Configuration for the response. */
-  response: {
-    /** The modalities for the response. */
-    modalities?: string[];
-
-    /** Instructions for the model. */
-    instructions?: string;
-
-    @doc("""
-      The voice the model uses to respond - one of `alloy`, `echo`, or `shimmer`.
-      """)
-    voice?: string;
-
-    /** The format of output audio. */
-    output_audio_format?: string;
-
-    // Tool customization: apply enriched tool definition hierarchy
-    /** Tools (functions) available to the model. */
-    tools?: RealtimeTool[];
-
-    /** How the model chooses tools. */
-    tool_choice?: string;
-
-    /** Sampling temperature. */
-    temperature?: float32;
-
-    /** Maximum number of output tokens for a single assistant response, inclusive of tool calls. Provide an integer between 1 and 4096 to limit output tokens, or "inf" for the maximum available tokens for a given model. Defaults to "inf". */
-    max_output_tokens?: int32 | "inf";
-  };
+  // Tool customization: apply custom, distinct type for request-side response options
+  response: RealtimeResponseOptions;
 }
 
 // Tool customization: apply discriminated type base
-/** Send this event to cancel an in-progress response. */
+@doc("""
+  Send this event to cancel an in-progress response. The server will respond with a `response.cancelled` event or an error if there is no response to cancel.
+  """)
 model RealtimeClientEventResponseCancel extends RealtimeClientEvent {
   // Tool customization: apply discriminated type base
-  /** The event type, must be "response.cancel". */
+  @doc("""
+    The event type, must be `response.cancel`.
+    """)
   type: RealtimeClientEventType.response_cancel;
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when an error occurs. */
+/** Returned when an error occurs, which could be a client problem or a server problem. Most errors are recoverable and the session will stay open, we recommend to implementors to monitor and log error messages by default. */
 model RealtimeServerEventError extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
   /** The event type, must be "error". */
@@ -166,28 +183,34 @@ model RealtimeServerEventError extends RealtimeServerEvent {
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when a session is created. Emitted automatically when a new connection is established. */
+/** Returned when a Session is created. Emitted automatically when a new connection is established as the first server event. This event will contain the default Session configuration. */
 model RealtimeServerEventSessionCreated extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "session.created". */
+  @doc("""
+    The event type, must be `session.created`.
+    """)
   type: RealtimeServerEventType.session_created;
 
-  // Tool customization: apply shared session type
-  /** The session resource. */
+  // Tool customization: apply enriched response-specific model
   session: RealtimeResponseSession;
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when a session is updated. */
+@doc("""
+  Returned when a session is updated with a `session.update` event, unless there is an error.
+  """)
 model RealtimeServerEventSessionUpdated extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
   /** The event type, must be "session.updated". */
   type: RealtimeServerEventType.session_updated;
 
-  // Tool customization: apply shared session type
-  /** The updated session resource. */
+  // Tool customization: apply enriched response-specific model
   session: RealtimeResponseSession;
 }
+
+// Tool customization: establish base for enriched request/response split models
+/** Realtime session object configuration. */
+model RealtimeSessionBase {}
 
 // Tool customization: apply discriminated type base
 /** Returned when a conversation is created. Emitted right after session creation. */
@@ -207,10 +230,14 @@ model RealtimeServerEventConversationCreated extends RealtimeServerEvent {
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when an input audio buffer is committed, either by the client or automatically in server VAD mode. */
+@doc("""
+  Returned when an input audio buffer is committed, either by the client or automatically in server VAD mode. The `item_id` property is the ID of the user message item that will be created, thus a `conversation.item.created` event will also be sent to the client.
+  """)
 model RealtimeServerEventInputAudioBufferCommitted extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "input_audio_buffer.committed". */
+  @doc("""
+    The event type, must be `input_audio_buffer.committed`.
+    """)
   type: RealtimeServerEventType.input_audio_buffer_committed;
 
   /** The ID of the preceding item after which the new item will be inserted. */
@@ -221,22 +248,32 @@ model RealtimeServerEventInputAudioBufferCommitted extends RealtimeServerEvent {
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when the input audio buffer is cleared by the client. */
+@doc("""
+  Returned when the input audio buffer is cleared by the client with a `input_audio_buffer.clear` event.
+  """)
 model RealtimeServerEventInputAudioBufferCleared extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "input_audio_buffer.cleared". */
+  @doc("""
+    The event type, must be `input_audio_buffer.cleared`.
+    """)
   type: RealtimeServerEventType.input_audio_buffer_cleared;
 }
 
 // Tool customization: apply discriminated type base
-/** Returned in server turn detection mode when speech is detected. */
+@doc("""
+  Sent by the server when in `server_vad` mode to indicate that speech has been detected in the audio buffer. This can happen any time audio is added to the buffer (unless speech is already detected). The client may want to use this event to interrupt audio playback or provide visual feedback to the user. The client should expect to receive a `input_audio_buffer.speech_stopped` event when speech stops. The `item_id` property is the ID of the user message item that will be created when speech stops and will also be included in the `input_audio_buffer.speech_stopped` event (unless the client manually commits the audio buffer during VAD activation).
+  """)
 model RealtimeServerEventInputAudioBufferSpeechStarted
   extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "input_audio_buffer.speech_started". */
+  @doc("""
+    The event type, must be `input_audio_buffer.speech_started`.
+    """)
   type: RealtimeServerEventType.input_audio_buffer_speech_started;
 
-  /** Milliseconds since the session started when speech was detected. */
+  @doc("""
+    Milliseconds from the start of all audio written to the buffer during the session when speech was first detected. This will correspond to the beginning of audio sent to the model, and thus includes the `prefix_padding_ms` configured in the Session.
+    """)
   audio_start_ms: int32;
 
   /** The ID of the user message item that will be created when speech stops. */
@@ -244,14 +281,20 @@ model RealtimeServerEventInputAudioBufferSpeechStarted
 }
 
 // Tool customization: apply discriminated type base
-/** Returned in server turn detection mode when speech stops. */
+@doc("""
+  Returned in `server_vad` mode when the server detects the end of speech in the audio buffer. The server will also send an `conversation.item.created` event with the user message item that is created from the audio buffer.
+  """)
 model RealtimeServerEventInputAudioBufferSpeechStopped
   extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "input_audio_buffer.speech_stopped". */
+  @doc("""
+    The event type, must be `input_audio_buffer.speech_stopped`.
+    """)
   type: RealtimeServerEventType.input_audio_buffer_speech_stopped;
 
-  /** Milliseconds since the session started when speech stopped. */
+  @doc("""
+    Milliseconds since the session started when speech stopped. This will correspond to the end of audio sent to the model, and thus includes the `min_silence_duration_ms` configured in the Session.
+    """)
   audio_end_ms: int32;
 
   /** The ID of the user message item that will be created. */
@@ -259,29 +302,40 @@ model RealtimeServerEventInputAudioBufferSpeechStopped
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when a conversation item is created. */
+@doc("""
+  Returned when a conversation item is created. There are several scenarios that produce this event:
+    - The server is generating a Response, which if successful will produce either one or two Items, which will be of type `message` (role `assistant`) or type `function_call`.
+    - The input audio buffer has been committed, either by the client or the server (in `server_vad` mode). The server will take the content of the input audio buffer and add it to a new user message Item.
+    - The client has sent a `conversation.item.create` event to add a new Item to the Conversation.
+  """)
 model RealtimeServerEventConversationItemCreated extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "conversation.item.created". */
+  @doc("""
+    The event type, must be `conversation.item.created`.
+    """)
   type: RealtimeServerEventType.conversation_item_created;
 
-  /** The ID of the preceding item. */
+  /** The ID of the preceding item in the Conversation context, allows the client to understand the order of the conversation. */
   previous_item_id: string;
 
   // Tool customization: apply enriched item definition hierarchy
-  /** The item that was created. */
-  item: RealtimeResponseItem;
+  item: RealtimeConversationResponseItem;
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when input audio transcription is enabled and a transcription succeeds. */
+@doc("""
+  This event is the output of audio transcription for user audio written to the user audio buffer. Transcription begins when the input audio buffer is committed by the client or server (in `server_vad` mode). Transcription runs asynchronously with Response creation, so this event may come before or after the Response events.
+  Realtime API models accept audio natively, and thus input transcription is a separate process run on a separate ASR (Automatic Speech Recognition) model, currently always `whisper-1`. Thus the transcript may diverge somewhat from the model's interpretation, and should be treated as a rough guide.
+  """)
 model RealtimeServerEventConversationItemInputAudioTranscriptionCompleted
   extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "conversation.item.input_audio_transcription.completed". */
+  @doc("""
+    The event type, must be `conversation.item.input_audio_transcription.completed`.
+    """)
   type: RealtimeServerEventType.conversation_item_input_audio_transcription_completed;
 
-  /** The ID of the user message item. */
+  /** The ID of the user message item containing the audio. */
   item_id: string;
 
   /** The index of the content part containing the audio. */
@@ -292,11 +346,15 @@ model RealtimeServerEventConversationItemInputAudioTranscriptionCompleted
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when input audio transcription is configured, and a transcription request for a user message failed. */
+@doc("""
+  Returned when input audio transcription is configured, and a transcription request for a user message failed. These events are separate from other `error` events so that the client can identify the related Item.
+  """)
 model RealtimeServerEventConversationItemInputAudioTranscriptionFailed
   extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "conversation.item.input_audio_transcription.failed". */
+  @doc("""
+    The event type, must be `conversation.item.input_audio_transcription.failed`.
+    """)
   type: RealtimeServerEventType.conversation_item_input_audio_transcription_failed;
 
   /** The ID of the user message item. */
@@ -322,10 +380,15 @@ model RealtimeServerEventConversationItemInputAudioTranscriptionFailed
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when an earlier assistant audio message item is truncated by the client. */
+@doc("""
+  Returned when an earlier assistant audio message item is truncated by the client with a `conversation.item.truncate` event. This event is used to synchronize the server's understanding of the audio with the client's playback.
+  This action will truncate the audio and remove the server-side text transcript to ensure there is no text in the context that hasn't been heard by the user.
+  """)
 model RealtimeServerEventConversationItemTruncated extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "conversation.item.truncated". */
+  @doc("""
+    The event type, must be `conversation.item.truncated`.
+    """)
   type: RealtimeServerEventType.conversation_item_truncated;
 
   /** The ID of the assistant message item that was truncated. */
@@ -339,10 +402,14 @@ model RealtimeServerEventConversationItemTruncated extends RealtimeServerEvent {
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when an item in the conversation is deleted. */
+@doc("""
+  Returned when an item in the conversation is deleted by the client with a `conversation.item.delete` event. This event is used to synchronize the server's understanding of the conversation history with the client's view.
+  """)
 model RealtimeServerEventConversationItemDeleted extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "conversation.item.deleted". */
+  @doc("""
+    The event type, must be `conversation.item.deleted`.
+    """)
   type: RealtimeServerEventType.conversation_item_deleted;
 
   /** The ID of the item that was deleted. */
@@ -350,63 +417,67 @@ model RealtimeServerEventConversationItemDeleted extends RealtimeServerEvent {
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when a new Response is created. The first event of response creation, where the response is in an initial state of "in_progress". */
+@doc("""
+  Returned when a new Response is created. The first event of response creation, where the response is in an initial state of `in_progress`.
+  """)
 model RealtimeServerEventResponseCreated extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "response.created". */
+  @doc("""
+    The event type, must be `response.created`.
+    """)
   type: RealtimeServerEventType.response_created;
 
-  // Tool customization: apply shared response type
-  /** The response resource. */
   response: RealtimeResponse;
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when a Response is done streaming. Always emitted, no matter the final state. */
+@doc("""
+  Returned when a Response is done streaming. Always emitted, no matter the final state. The Response object included in the `response.done` event will include all output Items in the Response but will omit the raw audio data.
+  """)
 model RealtimeServerEventResponseDone extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
   /** The event type, must be "response.done". */
   type: RealtimeServerEventType.response_done;
 
-  // Tool customization: apply shared response type
-  /** The response resource. */
   response: RealtimeResponse;
 }
 
 // Tool customization: apply discriminated type base
-/** Returned when a new Item is created during response generation. */
+/** Returned when a new Item is created during Response generation. */
 model RealtimeServerEventResponseOutputItemAdded extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "response.output_item.added". */
+  @doc("""
+    The event type, must be `response.output_item.added`.
+    """)
   type: RealtimeServerEventType.response_output_item_added;
 
-  /** The ID of the response to which the item belongs. */
+  /** The ID of the Response to which the item belongs. */
   response_id: string;
 
-  /** The index of the output item in the response. */
+  /** The index of the output item in the Response. */
   output_index: int32;
 
   // Tool customization: apply enriched item definition hierarchy
-  /** The item that was added. */
-  item: RealtimeResponseItem;
+  item: RealtimeConversationResponseItem;
 }
 
 // Tool customization: apply discriminated type base
 /** Returned when an Item is done streaming. Also emitted when a Response is interrupted, incomplete, or cancelled. */
 model RealtimeServerEventResponseOutputItemDone extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "response.output_item.done". */
+  @doc("""
+    The event type, must be `response.output_item.done`.
+    """)
   type: RealtimeServerEventType.response_output_item_done;
 
-  /** The ID of the response to which the item belongs. */
+  /** The ID of the Response to which the item belongs. */
   response_id: string;
 
-  /** The index of the output item in the response. */
+  /** The index of the output item in the Response. */
   output_index: int32;
 
   // Tool customization: apply enriched item definition hierarchy
-  /** The completed item. */
-  item: RealtimeResponseItem;
+  item: RealtimeConversationResponseItem;
 }
 
 // Tool customization: apply discriminated type base
@@ -645,10 +716,12 @@ model RealtimeServerEventResponseFunctionCallArgumentsDone
 }
 
 // Tool customization: apply discriminated type base
-/** Emitted after every "response.done" event to indicate the updated rate limits. */
+/** Emitted at the beginning of a Response to indicate the updated rate limits. When a Response is created some tokens will be "reserved" for the output tokens, the rate limits shown here reflect that reservation, which is then adjusted accordingly once the Response is completed. */
 model RealtimeServerEventRateLimitsUpdated extends RealtimeServerEvent {
   // Tool customization: apply discriminated type
-  /** The event type, must be "rate_limits.updated". */
+  @doc("""
+    The event type, must be `rate_limits.updated`.
+    """)
   type: RealtimeServerEventType.rate_limits_updated;
 
   // Tool customization: use custom type for rate limit items (applying encoded duration)

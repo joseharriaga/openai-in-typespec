@@ -7,17 +7,17 @@ using System.Collections.Generic;
 
 namespace OpenAI.RealtimeConversation
 {
-    internal abstract partial class InternalRealtimeResponseItem
+    internal abstract partial class InternalRealtimeConversationResponseItem
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        private protected InternalRealtimeResponseItem(InternalRealtimeItemType @type, string id)
+        private protected InternalRealtimeConversationResponseItem(InternalRealtimeItemType @type, string id)
         {
             Type = @type;
             Id = id;
         }
 
-        internal InternalRealtimeResponseItem(InternalRealtimeResponseItemObject @object, InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRealtimeConversationResponseItem(InternalRealtimeConversationResponseItemObject @object, InternalRealtimeItemType @type, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Object = @object;
             Type = @type;
@@ -25,7 +25,7 @@ namespace OpenAI.RealtimeConversation
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public InternalRealtimeResponseItemObject Object { get; } = "realtime.item";
+        public InternalRealtimeConversationResponseItemObject Object { get; } = "realtime.item";
 
         internal InternalRealtimeItemType Type { get; set; }
 

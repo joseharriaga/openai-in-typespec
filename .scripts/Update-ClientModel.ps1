@@ -1,6 +1,6 @@
 function Remove-MultipartFormDataBinaryContent {
     $root = Split-Path $PSScriptRoot -Parent
-    $filePath = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Internal\MultipartFormDataBinaryContent.cs"
+    $filePath = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Internal\MultiPartFormDataBinaryContent.cs"
     $file = Get-ChildItem -Path $filePath
 
     Write-Output "Removing $($file.FullName)"

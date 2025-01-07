@@ -14,6 +14,13 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
 
     internal static void WriteCoreContentPart(ChatMessageContentPart instance, Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
+        if (instance.IsContrived)
+        {
+            throw new InvalidOperationException(
+                $"Synthetic {nameof(ChatMessageContentPart)} instances cannot be directly serialized. "
+                + $"Instead, please serialize the owner of the {nameof(ChatMessageContent)} collection.");
+        }
+
         writer.WriteStartObject();
         writer.WritePropertyName("type"u8);
         writer.WriteStringValue(instance._kind.ToSerialString());
@@ -33,6 +40,11 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
             writer.WritePropertyName("image_url"u8);
             writer.WriteObjectValue(instance._imageUri, options);
         }
+        else if (instance._kind == ChatMessageContentPartKind.Audio)
+        {
+            writer.WritePropertyName("input_audio"u8);
+            writer.WriteObjectValue(instance._inputAudio, options);
+        }
         writer.WriteSerializedAdditionalRawData(instance._additionalBinaryDataProperties, options);
         writer.WriteEndObject();
     }
@@ -50,6 +62,7 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
         string text = default;
         string refusal = default;
         InternalChatCompletionRequestMessageContentPartImageImageUrl imageUri = default;
+        InternalChatCompletionRequestMessageContentPartAudioInputAudio inputAudio = default;
         IDictionary<string, BinaryData> serializedAdditionalRawData = default;
         Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
         foreach (var property in element.EnumerateObject())
@@ -74,12 +87,18 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
                 refusal = property.Value.GetString();
                 continue;
             }
+            if (property.NameEquals("input_audio"u8))
+            {
+                inputAudio = InternalChatCompletionRequestMessageContentPartAudioInputAudio
+                    .DeserializeInternalChatCompletionRequestMessageContentPartAudioInputAudio(property.Value, options);
+                continue;
+            }
             if (true)
             {
                 rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
             }
         }
         serializedAdditionalRawData = rawDataDictionary;
-        return new ChatMessageContentPart(kind, text, imageUri, refusal, serializedAdditionalRawData);
+        return new ChatMessageContentPart(kind, text, imageUri, refusal, inputAudio, outputAudio: null, responseAudioUpdate: null, audioReference: null, serializedAdditionalRawData);
     }
 }

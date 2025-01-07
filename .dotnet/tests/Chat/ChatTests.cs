@@ -93,8 +93,6 @@ public class ChatTests : SyncAsyncTestBase
             latestTokenReceiptTime = stopwatch.Elapsed;
             usage ??= chatUpdate.Usage;
             updateCount++;
-
-            Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
         }
 
         stopwatch.Stop();
@@ -366,6 +364,71 @@ public class ChatTests : SyncAsyncTestBase
             : client.CompleteChat(messages, options);
         Console.WriteLine(result.Value.Content[0].Text);
         Assert.That(result.Value.Content[0].Text.ToLowerInvariant(), Does.Contain("dog").Or.Contain("cat").IgnoreCase);
+    }
+
+    [Test]
+    public async Task ChatWithAudio()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "gpt-4o-audio-preview");
+
+        string helloWorldAudioPath = Path.Join("Assets", "audio_hello_world.mp3");
+        BinaryData helloWorldAudioBytes = BinaryData.FromBytes(File.ReadAllBytes(helloWorldAudioPath));
+        ChatMessageContentPart helloWorldAudioContentPart = ChatMessageContentPart.CreateAudioPart(
+            helloWorldAudioBytes,
+            ChatInputAudioFormat.Mp3);
+        string whatsTheWeatherAudioPath = Path.Join("Assets", "whats_the_weather_pcm16_24khz_mono.wav");
+        BinaryData whatsTheWeatherAudioBytes = BinaryData.FromBytes(File.ReadAllBytes(whatsTheWeatherAudioPath));
+        ChatMessageContentPart whatsTheWeatherAudioContentPart = ChatMessageContentPart.CreateAudioPart(
+            whatsTheWeatherAudioBytes,
+            ChatInputAudioFormat.Wav);
+
+        List<ChatMessage> messages = [new UserChatMessage([helloWorldAudioContentPart])];
+
+        ChatCompletionOptions options = new()
+        {
+            AudioOptions = new(ChatResponseVoice.Alloy, ChatOutputAudioFormat.Pcm16)
+        };
+
+        ChatCompletion completion = await client.CompleteChatAsync(messages, options);
+        Assert.That(completion, Is.Not.Null);
+        Assert.That(completion.Content, Is.Not.Null);
+        Assert.That(completion.Content[0].Kind, Is.EqualTo(ChatMessageContentPartKind.Audio));
+        Assert.That(completion.Content[0].AudioCorrelationId, Is.Not.Null.And.Not.Empty);
+        Assert.That(completion.Content[0].AudioBytes, Is.Not.Null);
+        Assert.That(completion.Content[0].AudioTranscript, Is.Not.Null.And.Not.Empty);
+
+        AssistantChatMessage audioHistoryMessage = ChatMessage.CreateAssistantMessage(completion);
+        Assert.That(audioHistoryMessage, Is.InstanceOf<AssistantChatMessage>());
+        Assert.That(audioHistoryMessage.Content, Is.Not.Null.And.Not.Empty);
+        Assert.That(audioHistoryMessage.Content[0].Kind, Is.EqualTo(ChatMessageContentPartKind.Audio));
+        Assert.That(audioHistoryMessage.Content[0].AudioCorrelationId, Is.EqualTo(completion.Content[0].AudioCorrelationId));
+        Assert.That(audioHistoryMessage.Content[0].AudioBytes, Is.Null);
+        messages.Add(audioHistoryMessage);
+
+        messages.Add(
+            new UserChatMessage(
+                [
+                    "Please answer the following spoken question:",
+                    ChatMessageContentPart.CreateAudioPart(whatsTheWeatherAudioBytes, ChatInputAudioFormat.Wav),
+                ]));
+
+        string streamedCorrelationId = null;
+        using MemoryStream responseAudioStream = new();
+        await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(messages, options))
+        {
+            Assert.That(update.ContentUpdate, Is.Not.Null);
+            if (update.ContentUpdate.Count > 0)
+            {
+                if (!string.IsNullOrEmpty(update.ContentUpdate[0].AudioCorrelationId))
+                {
+                    Assert.That(streamedCorrelationId, Is.Null.Or.EqualTo(update.ContentUpdate[0].AudioCorrelationId));
+                    streamedCorrelationId = update.ContentUpdate[0].AudioCorrelationId;
+                }
+                responseAudioStream.Write(update.ContentUpdate[0].AudioBytes);
+            }
+        }
+        Assert.That(streamedCorrelationId, Is.Not.Null.And.Not.Empty);
+        Assert.That(responseAudioStream.Length, Is.GreaterThan(9000));
     }
 
     [Test]

@@ -17,7 +17,7 @@ function Edit-Serialization {
 
     if ($content -cnotmatch $regex)
     {
-        throw "The code does not match the expected pattern. If this is by design, please update or disable this edit."
+        throw "The code does not match the expected pattern. If this is by design, please update or disable this edit.`n`n$regex"
     }
     else
     {
@@ -40,6 +40,7 @@ function Edit-InternalChatCompletionResponseMessageSerialization {
         "return new InternalChatCompletionResponseMessage\("
         "    refusal,"
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
+        "    audio,"
         "    role,"
         "    content,"
         "    functionCall,"
@@ -50,6 +51,7 @@ function Edit-InternalChatCompletionResponseMessageSerialization {
         "return new InternalChatCompletionResponseMessage("
         "    refusal,"
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
+        "    audio,"
         "    role,"
         "    content ?? new ChatMessageContent(),"
         "    functionCall,"
@@ -74,6 +76,7 @@ function Edit-InternalChatCompletionStreamResponseDeltaSerialization {
     # content deserialization
     $inputRegex = @(
         "return new InternalChatCompletionStreamResponseDelta\("
+        "    audio,"
         "    functionCall,"
         "    toolCalls \?\? new ChangeTrackingList<StreamingChatToolCallUpdate>\(\),"
         "    refusal,"
@@ -84,6 +87,7 @@ function Edit-InternalChatCompletionStreamResponseDeltaSerialization {
     $outputString = @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalChatCompletionStreamResponseDelta("
+        "    audio,"
         "    functionCall,"
         "    toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(),"
         "    refusal,"
@@ -111,38 +115,6 @@ function Edit-ChatMessageSerialization {
     # no-op
 }
 
-
-function Edit-AssistantChatMessageSerialization {
-    $filename = "AssistantChatMessage.Serialization.cs"
-
-    # content serialization
-    # no-op
-
-    # content deserialization
-    $inputRegex = @(
-        "return new AssistantChatMessage\("
-        "    role,"
-        "    content,"
-        "    additionalBinaryDataProperties,"
-        "    refusal,"
-        "    participantName,"
-        "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
-        "    functionCall\);"
-    )
-    $outputString = @(
-        "// CUSTOM: Initialize Content collection property."
-        "return new AssistantChatMessage("
-        "    role,"
-        "    content ?? new ChatMessageContent(),"
-        "    additionalBinaryDataProperties,"
-        "    refusal,"
-        "    participantName,"
-        "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
-        "    functionCall);"
-    )
-    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
-}
-
 function Edit-FunctionChatMessageSerialization {
     $filename = "FunctionChatMessage.Serialization.cs"
 
@@ -151,11 +123,11 @@ function Edit-FunctionChatMessageSerialization {
 
     # content deserialization
     $inputRegex = @(
-        "return new FunctionChatMessage\(role, content, additionalBinaryDataProperties, functionName\);"
+        "return new FunctionChatMessage\(content, role, additionalBinaryDataProperties, functionName\);"
     )
     $outputString = @(
         "// CUSTOM: Initialize Content collection property."
-        "return new FunctionChatMessage(role, content ?? new ChatMessageContent(), additionalBinaryDataProperties, functionName);"
+        "return new FunctionChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, functionName);"
     )
     Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
 }
@@ -168,11 +140,11 @@ function Edit-SystemChatMessageSerialization {
 
     # content deserialization
     $inputRegex = @(
-        "return new SystemChatMessage\(role, content, additionalBinaryDataProperties, participantName\);"
+        "return new SystemChatMessage\(content, role, additionalBinaryDataProperties, participantName\);"
     )
     $outputString = @(
         "// CUSTOM: Initialize Content collection property."
-        "return new SystemChatMessage(role, content ?? new ChatMessageContent(), additionalBinaryDataProperties, participantName);"
+        "return new SystemChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, participantName);"
     )
     Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
 }
@@ -185,11 +157,11 @@ function Edit-ToolChatMessageSerialization {
 
     # content deserialization
     $inputRegex = @(
-        "return new ToolChatMessage\(role, content, additionalBinaryDataProperties, toolCallId\);"
+        "return new ToolChatMessage\(content, role, additionalBinaryDataProperties, toolCallId\);"
     )
     $outputString = @(
         "// CUSTOM: Initialize Content collection property."
-        "return new ToolChatMessage(role, content ?? new ChatMessageContent(), additionalBinaryDataProperties, toolCallId);"
+        "return new ToolChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, toolCallId);"
     )
     Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
 }
@@ -202,11 +174,11 @@ function Edit-UserChatMessageSerialization {
 
     # content deserialization
     $inputRegex = @(
-        "return new UserChatMessage\(role, content, additionalBinaryDataProperties, participantName\);"
+        "return new UserChatMessage\(content, role, additionalBinaryDataProperties, participantName\);"
     )
     $outputString = @(
         "// CUSTOM: Initialize Content collection property."
-        "return new UserChatMessage(role, content ?? new ChatMessageContent(), additionalBinaryDataProperties, participantName);"
+        "return new UserChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, participantName);"
     )
     Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
 }
@@ -219,11 +191,11 @@ function Edit-InternalUnknownChatMessageSerialization {
 
     # content deserialization
     $inputRegex = @(
-        "return new InternalUnknownChatMessage\(role, content, additionalBinaryDataProperties\);"
+        "return new InternalUnknownChatMessage\(content, role, additionalBinaryDataProperties\);"
     )
     $outputString = @(
         "// CUSTOM: Initialize Content collection property."
-        "return new InternalUnknownChatMessage(role, content ?? new ChatMessageContent(), additionalBinaryDataProperties);"
+        "return new InternalUnknownChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties);"
     )
     Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
 }
@@ -237,24 +209,26 @@ function Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization
     # content deserialization
     $inputRegex = @(
         "return new InternalFineTuneChatCompletionRequestAssistantMessage\("
-        "    role,"
         "    content,"
+        "    role,"
         "    additionalBinaryDataProperties,"
         "    refusal,"
         "    participantName,"
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
-        "    functionCall\);"
+        "    functionCall,"
+        "    audio\);"
     )
     $outputString = @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalFineTuneChatCompletionRequestAssistantMessage("
-        "    role,"
         "    content ?? new ChatMessageContent(),"
+        "    role,"
         "    additionalBinaryDataProperties,"
         "    refusal,"
         "    participantName,"
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
-        "    functionCall);"
+        "    functionCall,"
+        "    audio);"
     )
     Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
 }
@@ -262,7 +236,6 @@ function Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization
 Edit-InternalChatCompletionResponseMessageSerialization
 Edit-InternalChatCompletionStreamResponseDeltaSerialization
 Edit-ChatMessageSerialization
-Edit-AssistantChatMessageSerialization
 Edit-FunctionChatMessageSerialization
 Edit-SystemChatMessageSerialization
 Edit-ToolChatMessageSerialization

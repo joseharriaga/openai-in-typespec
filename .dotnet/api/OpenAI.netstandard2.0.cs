@@ -1150,17 +1150,8 @@ namespace OpenAI.Chat {
         public ChatAudioOptions(ChatResponseVoice responseVoice, ChatOutputAudioFormat outputAudioFormat);
         public ChatOutputAudioFormat OutputAudioFormat { get; set; }
         public ChatResponseVoice ResponseVoice { get; set; }
-        protected virtual ChatAudioOptions JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public static explicit operator ChatAudioOptions(ClientResult result);
         public static implicit operator BinaryContent(ChatAudioOptions chatAudioOptions);
-        protected virtual ChatAudioOptions PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
-        ChatAudioOptions IJsonModel<ChatAudioOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        void IJsonModel<ChatAudioOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
-        ChatAudioOptions IPersistableModel<ChatAudioOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
-        string IPersistableModel<ChatAudioOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
-        BinaryData IPersistableModel<ChatAudioOptions>.Write(ModelReaderWriterOptions options);
     }
     public class ChatClient {
         protected ChatClient();
@@ -1274,8 +1265,6 @@ namespace OpenAI.Chat {
         public override readonly string ToString();
     }
     public readonly partial struct ChatInputAudioFormat : IEquatable<ChatInputAudioFormat> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
         public ChatInputAudioFormat(string value);
         public static ChatInputAudioFormat Mp3 { get; }
         public static ChatInputAudioFormat Wav { get; }
@@ -1361,8 +1350,6 @@ namespace OpenAI.Chat {
         Function = 4
     }
     public readonly partial struct ChatOutputAudioFormat : IEquatable<ChatOutputAudioFormat> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
         public ChatOutputAudioFormat(string value);
         public static ChatOutputAudioFormat Flac { get; }
         public static ChatOutputAudioFormat Mp3 { get; }
@@ -1393,8 +1380,6 @@ namespace OpenAI.Chat {
         public static implicit operator BinaryContent(ChatResponseFormat chatResponseFormat);
     }
     public readonly partial struct ChatResponseVoice : IEquatable<ChatResponseVoice> {
-        private readonly object _dummy;
-        private readonly int _dummyPrimitive;
         public ChatResponseVoice(string value);
         public static ChatResponseVoice Alloy { get; }
         public static ChatResponseVoice Echo { get; }

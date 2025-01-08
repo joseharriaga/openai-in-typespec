@@ -90,6 +90,11 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
+            if (Optional.IsDefined(ReasoningEffort) && _additionalBinaryDataProperties?.ContainsKey("reasoning_effort") != true)
+            {
+                writer.WritePropertyName("reasoning_effort"u8);
+                writer.WriteStringValue(ReasoningEffort.Value.ToString());
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("messages") != true)
             {
                 writer.WritePropertyName("messages"u8);
@@ -384,6 +389,7 @@ namespace OpenAI.Chat
             float? temperature = default;
             float? topP = default;
             IList<ChatTool> tools = default;
+            InternalTodoCreateChatCompletionRequestReasoningEffort? reasoningEffort = default;
             IList<ChatMessage> messages = default;
             InternalCreateChatCompletionRequestModel model = default;
             int? n = default;
@@ -471,6 +477,15 @@ namespace OpenAI.Chat
                         array.Add(ChatTool.DeserializeChatTool(item, options));
                     }
                     tools = array;
+                    continue;
+                }
+                if (prop.NameEquals("reasoning_effort"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    reasoningEffort = new InternalTodoCreateChatCompletionRequestReasoningEffort(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("messages"u8))
@@ -706,6 +721,7 @@ namespace OpenAI.Chat
                 temperature,
                 topP,
                 tools ?? new ChangeTrackingList<ChatTool>(),
+                reasoningEffort,
                 messages,
                 model,
                 n,

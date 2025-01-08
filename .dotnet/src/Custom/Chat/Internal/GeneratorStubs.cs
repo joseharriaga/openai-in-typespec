@@ -116,3 +116,10 @@ internal partial class InternalPredictionContent { }
 
 [CodeGenModel("PredictionContentType")]
 internal readonly partial struct InternalPredictionContentType { }
+
+
+// TODO: not yet integrated
+
+[CodeGenModel("CreateChatCompletionRequestReasoningEffort")]
+internal readonly partial struct InternalTodoCreateChatCompletionRequestReasoningEffort { }
+

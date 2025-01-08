@@ -7,24 +7,21 @@ using System.Collections.Generic;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class InternalFinetuneCompletionRequestInput
+    internal partial class InternalTodoFineTuneDPOMethod
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public InternalFinetuneCompletionRequestInput()
+        public InternalTodoFineTuneDPOMethod()
         {
         }
 
-        internal InternalFinetuneCompletionRequestInput(string prompt, string completion, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalTodoFineTuneDPOMethod(InternalTodoFineTuneDPOMethodHyperparameters hyperparameters, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Prompt = prompt;
-            Completion = completion;
+            Hyperparameters = hyperparameters;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public string Prompt { get; set; }
-
-        public string Completion { get; set; }
+        public InternalTodoFineTuneDPOMethodHyperparameters Hyperparameters { get; set; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

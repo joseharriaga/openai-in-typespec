@@ -37,26 +37,6 @@ union CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum {
   auto: "auto",
 }
 
-model FineTuningJobHyperparameters {
-  /**
-   * The number of epochs to train the model for. An epoch refers to one full cycle
-   * through the training dataset.
-   */
-  n_epochs: FineTuningJobHyperparametersNEpochsChoiceEnum | int32 = FineTuningJobHyperparametersNEpochsChoiceEnum.auto;
-
-  /**
-   * Number of examples in each batch. A larger batch size means that model parameters
-   * are updated less frequently, but with lower variance.
-   */
-  batch_size: FineTuningJobHyperparametersBatchSizeChoiceEnum | int32 = FineTuningJobHyperparametersBatchSizeChoiceEnum.auto;
-
-  /**
-   * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
-   * overfitting.
-   */
-  learning_rate_multiplier: FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum | float32 = FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum.auto;
-}
-
 union FineTuningJobHyperparametersBatchSizeChoiceEnum {
   auto: "auto",
 }

@@ -27,6 +27,11 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(ConversationSessionOptions)} does not support writing '{format}' format.");
             }
+            if (Optional.IsDefined(Id) && _additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
+            }
             if (Optional.IsDefined(Instructions) && _additionalBinaryDataProperties?.ContainsKey("instructions") != true)
             {
                 writer.WritePropertyName("instructions"u8);
@@ -61,6 +66,11 @@ namespace OpenAI.RealtimeConversation
             {
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
+            }
+            if (Optional.IsDefined(Model) && _additionalBinaryDataProperties?.ContainsKey("model") != true)
+            {
+                writer.WritePropertyName("model"u8);
+                writer.WriteStringValue(Model.Value.ToString());
             }
             if (Optional.IsDefined(TurnDetectionOptions) && _additionalBinaryDataProperties?.ContainsKey("turn_detection") != true)
             {
@@ -160,12 +170,14 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
+            string id = default;
             string instructions = default;
             ConversationVoice? voice = default;
             ConversationAudioFormat? inputAudioFormat = default;
             ConversationAudioFormat? outputAudioFormat = default;
             IList<ConversationTool> tools = default;
             float? temperature = default;
+            InternalTodoRealtimeRequestSessionModel? model = default;
             ConversationTurnDetectionOptions turnDetectionOptions = default;
             ConversationInputTranscriptionOptions inputTranscriptionOptions = default;
             IList<InternalRealtimeRequestSessionModality> internalModalities = default;
@@ -174,6 +186,11 @@ namespace OpenAI.RealtimeConversation
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("id"u8))
+                {
+                    id = prop.Value.GetString();
+                    continue;
+                }
                 if (prop.NameEquals("instructions"u8))
                 {
                     instructions = prop.Value.GetString();
@@ -227,6 +244,15 @@ namespace OpenAI.RealtimeConversation
                         continue;
                     }
                     temperature = prop.Value.GetSingle();
+                    continue;
+                }
+                if (prop.NameEquals("model"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    model = new InternalTodoRealtimeRequestSessionModel(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("turn_detection"u8))
@@ -287,12 +313,14 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             return new ConversationSessionOptions(
+                id,
                 instructions,
                 voice,
                 inputAudioFormat,
                 outputAudioFormat,
                 tools ?? new ChangeTrackingList<ConversationTool>(),
                 temperature,
+                model,
                 turnDetectionOptions,
                 inputTranscriptionOptions,
                 internalModalities,

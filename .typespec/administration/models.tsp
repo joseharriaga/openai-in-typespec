@@ -458,6 +458,15 @@ model Invite {
   /** The Unix timestamp (in seconds) of when the invite was accepted. */
   @encode("unixTimestamp", int32)
   accepted_at?: utcDateTime;
+
+  /** The projects that were granted membership upon acceptance of the invite. */
+  projects?: {
+    /** Project's public ID */
+    id?: string;
+
+    /** Project membership role */
+    role?: "member" | "owner";
+  }[];
 }
 
 model InviteListResponse {
@@ -492,6 +501,15 @@ model InviteRequest {
     `owner` or `reader`
     """)
   role: "reader" | "owner";
+
+  /** An array of projects to which membership is granted at the same time the org invite is accepted. If omitted, the user will be invited to the default project for compatibility with legacy behavior. */
+  projects?: {
+    /** Project's public ID */
+    id: string;
+
+    /** Project membership role */
+    role: "member" | "owner";
+  }[];
 }
 
 model InviteDeleteResponse {
@@ -951,14 +969,20 @@ model UsageCodeInterpreterSessionsResult {
 model UsageCompletionsResult {
   object: "organization.usage.completions.result";
 
-  /** The aggregated number of input tokens used. For customers subscribe to scale tier, this includes scale tier tokens. */
+  /** The aggregated number of text input tokens used, including cached tokens. For customers subscribe to scale tier, this includes scale tier tokens. */
   input_tokens: int32;
 
-  /** The aggregated number of input tokens that has been cached from previous requests. For customers subscribe to scale tier, this includes scale tier tokens. */
+  /** The aggregated number of text input tokens that has been cached from previous requests. For customers subscribe to scale tier, this includes scale tier tokens. */
   input_cached_tokens?: int32;
 
-  /** The aggregated number of output tokens used. For customers subscribe to scale tier, this includes scale tier tokens. */
+  /** The aggregated number of text output tokens used. For customers subscribe to scale tier, this includes scale tier tokens. */
   output_tokens: int32;
+
+  /** The aggregated number of audio input tokens used, including cached tokens. */
+  input_audio_tokens?: int32;
+
+  /** The aggregated number of audio output tokens used. */
+  output_audio_tokens?: int32;
 
   /** The count of requests made to the model. */
   num_model_requests: int32;

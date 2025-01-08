@@ -9,6 +9,9 @@ namespace OpenAI.RealtimeConversation;
 [CodeGenModel("RealtimeRequestSession")]
 public partial class ConversationSessionOptions
 {
+    // ToDo: implement
+    internal InternalTodoRealtimeRequestSessionModel? Model { get; }
+
     [CodeGenMember("Modalities")]
     private IList<InternalRealtimeRequestSessionModality> _internalModalities;
 

@@ -2936,6 +2936,36 @@ components:
         data:
           type: string
           format: binary
+    AdminApiKey:
+      type: object
+      properties:
+        object:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        redacted_value:
+          type: string
+        value:
+          type: string
+        created_at:
+          type: integer
+          format: unixtime
+        owner:
+          type: object
+          properties:
+            type:
+              type: string
+            id:
+              type: string
+            name:
+              type: string
+            created_at:
+              type: integer
+              format: unixtime
+            role:
+              type: string
     AssistantObject:
       type: object
       required:
@@ -4029,11 +4059,39 @@ components:
           deprecated: true
       allOf:
         - $ref: '#/components/schemas/ChatCompletionRequestMessage'
+      description: Messages sent by the model in response to user messages.
     ChatCompletionRequestAssistantMessageContentPart:
       anyOf:
         - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
         - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartRefusal'
       x-oaiExpandable: true
+    ChatCompletionRequestDeveloperMessage:
+      type: object
+      required:
+        - content
+        - role
+      properties:
+        content:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
+          description: The contents of the developer message.
+        role:
+          type: string
+          enum:
+            - developer
+          description: The role of the messages author, in this case `developer`.
+        name:
+          type: string
+          description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
+      allOf:
+        - $ref: '#/components/schemas/ChatCompletionRequestMessage'
+      description: |-
+        Developer-provided instructions that the model should follow, regardless of
+        messages sent by the user. With o1 models and newer, `developer` messages
+        replace the previous `system` messages.
     ChatCompletionRequestFunctionMessage:
       type: object
       required:
@@ -4068,6 +4126,7 @@ components:
         propertyName: role
         mapping:
           system: '#/components/schemas/ChatCompletionRequestSystemMessage'
+          developer: '#/components/schemas/ChatCompletionRequestDeveloperMessage'
           user: '#/components/schemas/ChatCompletionRequestUserMessage'
           assistant: '#/components/schemas/ChatCompletionRequestAssistantMessage'
           tool: '#/components/schemas/ChatCompletionRequestToolMessage'
@@ -4182,6 +4241,10 @@ components:
           description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
       allOf:
         - $ref: '#/components/schemas/ChatCompletionRequestMessage'
+      description: |-
+        Developer-provided instructions that the model should follow, regardless of
+        messages sent by the user. With o1 models and newer, use `developer` messages
+        for this purpose instead.
     ChatCompletionRequestSystemMessageContentPart:
       type: object
       allOf:
@@ -4240,6 +4303,9 @@ components:
           description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
       allOf:
         - $ref: '#/components/schemas/ChatCompletionRequestMessage'
+      description: |-
+        Messages sent by an end user, containing prompts or additional context
+        information.
     ChatCompletionRequestUserMessageContentPart:
       anyOf:
         - $ref: '#/components/schemas/ChatCompletionRequestMessageContentPartText'
@@ -4586,8 +4652,6 @@ components:
                 reasoning tokens, these tokens are still counted in the total
                 completion tokens for purposes of billing, output, and context window
                 limits.
-          required:
-            - audio_tokens
           description: Breakdown of tokens used in a completion.
         prompt_tokens_details:
           type: object
@@ -4600,9 +4664,6 @@ components:
               type: integer
               format: int32
               description: Cached tokens present in the prompt.
-          required:
-            - audio_tokens
-            - cached_tokens
           description: Breakdown of tokens used in the prompt.
       description: Usage statistics for the completion request.
     CostsResult:
@@ -4818,6 +4879,8 @@ components:
             - type: string
             - type: string
               enum:
+                - o1
+                - o1-2024-12-17
                 - o1-preview
                 - o1-preview-2024-09-12
                 - o1-mini
@@ -4826,10 +4889,11 @@ components:
                 - gpt-4o-2024-11-20
                 - gpt-4o-2024-08-06
                 - gpt-4o-2024-05-13
-                - gpt-4o-realtime-preview
-                - gpt-4o-realtime-preview-2024-10-01
                 - gpt-4o-audio-preview
                 - gpt-4o-audio-preview-2024-10-01
+                - gpt-4o-audio-preview-2024-12-17
+                - gpt-4o-mini-audio-preview
+                - gpt-4o-mini-audio-preview-2024-12-17
                 - chatgpt-4o-latest
                 - gpt-4o-mini
                 - gpt-4o-mini-2024-07-18
@@ -4858,9 +4922,25 @@ components:
           type: boolean
           nullable: true
           description: |-
-            Whether or not to store the output of this chat completion request
-            for use in our [model distillation](/docs/guides/distillation) or [evals](/docs/guides/evals) products.
+            Whether or not to store the output of this chat completion request for
+            use in our [model distillation](/docs/guides/distillation) or
+            [evals](/docs/guides/evals) products.
           default: false
+        reasoning_effort:
+          type: string
+          enum:
+            - low
+            - medium
+            - high
+          description: |-
+            **o1 models only** 
+
+            Constrains effort on reasoning for 
+            [reasoning models](https://platform.openai.com/docs/guides/reasoning).
+            Currently supported values are `low`, `medium`, and `high`. Reducing
+            reasoning effort can result in faster responses and fewer tokens used
+            on reasoning in a response.
+          default: medium
         metadata:
           type: object
           additionalProperties:
@@ -4876,9 +4956,9 @@ components:
           minimum: -2
           maximum: 2
           description: |-
-            Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
-
-            [See more information about frequency and presence penalties.](/docs/guides/text-generation)
+            Number between -2.0 and 2.0. Positive values penalize new tokens based on
+            their existing frequency in the text so far, decreasing the model's
+            likelihood to repeat the same line verbatim.
           default: 0
         logit_bias:
           type: object
@@ -4889,13 +4969,21 @@ components:
           description: |-
             Modify the likelihood of specified tokens appearing in the completion.
 
-            Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an associated bias value from -100 to 100. Mathematically, the bias is added to the logits generated by the model prior to sampling. The exact effect will vary per model, but values between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100 should result in a ban or exclusive selection of the relevant token.
+            Accepts a JSON object that maps tokens (specified by their token ID in the
+            tokenizer) to an associated bias value from -100 to 100. Mathematically,
+            the bias is added to the logits generated by the model prior to sampling.
+            The exact effect will vary per model, but values between -1 and 1 should
+            decrease or increase likelihood of selection; values like -100 or 100
+            should result in a ban or exclusive selection of the relevant token.
           x-oaiTypeLabel: map
           default: null
         logprobs:
           type: boolean
           nullable: true
-          description: Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`.
+          description: |-
+            Whether to return log probabilities of the output tokens or not. If true,
+            returns the log probabilities of each output token returned in the
+            `content` of `message`.
           default: false
         top_logprobs:
           type: integer
@@ -4903,15 +4991,21 @@ components:
           nullable: true
           minimum: 0
           maximum: 20
-          description: An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used.
+          description: |-
+            An integer between 0 and 20 specifying the number of most likely tokens to
+            return at each token position, each with an associated log probability.
+            `logprobs` must be set to `true` if this parameter is used.
         max_tokens:
           type: integer
           format: int32
           nullable: true
           description: |-
-            The maximum number of [tokens](/tokenizer) that can be generated in the chat completion. This value can be used to control [costs](https://openai.com/api/pricing/) for text generated via API.
+            The maximum number of [tokens](/tokenizer) that can be generated in the
+            chat completion. This value can be used to control
+            [costs](https://openai.com/api/pricing/) for text generated via API.
 
-            This value is now deprecated in favor of `max_completion_tokens`, and is not compatible with [o1 series models](/docs/guides/reasoning).
+            This value is now deprecated in favor of `max_completion_tokens`, and is
+            not compatible with [o1 series models](/docs/guides/reasoning).
           deprecated: true
         max_completion_tokens:
           type: integer
@@ -4983,21 +5077,31 @@ components:
           minimum: -2
           maximum: 2
           description: |-
-            Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
-
-            [See more information about frequency and presence penalties.](/docs/guides/text-generation)
+            Number between -2.0 and 2.0. Positive values penalize new tokens based on
+            whether they appear in the text so far, increasing the model's likelihood
+            to talk about new topics.
           default: 0
         response_format:
           allOf:
             - $ref: '#/components/schemas/ChatResponseFormat'
           description: |-
-            An object specifying the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4o mini](/docs/models#gpt-4o-mini), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
+            An object specifying the format that the model must output.
 
-            Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+            Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+            Structured Outputs which ensures the model will match your supplied JSON
+            schema. Learn more in the [Structured Outputs
+            guide](/docs/guides/structured-outputs).
 
-            Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
+            Setting to `{ "type": "json_object" }` enables JSON mode, which ensures
+            the message the model generates is valid JSON.
 
-            **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+            **Important:** when using JSON mode, you **must** also instruct the model
+            to produce JSON yourself via a system or user message. Without this, the
+            model may generate an unending stream of whitespace until the generation
+            reaches the token limit, resulting in a long-running and seemingly "stuck"
+            request. Also note that the message content may be partially cut off if
+            `finish_reason="length"`, which indicates the generation exceeded
+            `max_tokens` or the conversation exceeded the max context length.
           x-oaiExpandable: true
         seed:
           type: integer
@@ -5052,7 +5156,6 @@ components:
           maximum: 2
           description: |-
             What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
-
             We generally recommend altering this or `top_p` but not both.
           default: 1
         top_p:
@@ -5062,7 +5165,10 @@ components:
           minimum: 0
           maximum: 1
           description: |-
-            An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+            An alternative to sampling with temperature, called nucleus sampling,
+            where the model considers the results of the tokens with top_p probability
+            mass. So 0.1 means only the tokens comprising the top 10% probability mass
+            are considered.
 
             We generally recommend altering this or `temperature` but not both.
           default: 1
@@ -5090,11 +5196,18 @@ components:
             Deprecated in favor of `tool_choice`.
 
             Controls which (if any) function is called by the model.
-            `none` means the model will not call a function and instead generates a message.
-            `auto` means the model can pick between generating a message or calling a function.
-            Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
 
-            `none` is the default when no functions are present. `auto` is the default if functions are present.
+            `none` means the model will not call a function and instead generates a
+            message.
+
+            `auto` means the model can pick between generating a message or calling a
+            function.
+
+            Specifying a particular function via `{"name": "my_function"}` forces the
+            model to call that function.
+
+            `none` is the default when no functions are present. `auto` is the default
+            if functions are present.
           deprecated: true
           x-oaiExpandable: true
         functions:
@@ -5607,7 +5720,7 @@ components:
                 items:
                   type: integer
                   format: int32
-          description: Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and any array must be 2048 dimensions or less. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
+          description: Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and any array must be 2048 dimensions or less. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens. Some models may also impose a limit on total number of tokens summed across inputs.
           x-oaiExpandable: true
         model:
           anyOf:
@@ -5718,13 +5831,16 @@ components:
 
             Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
 
-            The contents of the file should differ depending on if the model uses the [chat](/docs/api-reference/fine-tuning/chat-input) or [completions](/docs/api-reference/fine-tuning/completions-input) format.
+            The contents of the file should differ depending on if the model uses the [chat](/docs/api-reference/fine-tuning/chat-input), [completions](/docs/api-reference/fine-tuning/completions-input) format, or if the fine-tuning method uses the [preference](/docs/api-reference/fine-tuning/preference-input) format.
 
             See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         hyperparameters:
           allOf:
             - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparameters'
-          description: The hyperparameters used for the fine-tuning job.
+          description: |-
+            The hyperparameters used for the fine-tuning job.
+            This value is now deprecated in favor of `method`, and should be passed in under the `method` parameter.
+          deprecated: true
         suffix:
           type: string
           nullable: true
@@ -5764,6 +5880,8 @@ components:
           description: |-
             The seed controls the reproducibility of the job. Passing in the same seed and job parameters should produce the same results, but may differ in rare cases.
             If a seed is not specified, one will be generated for you.
+        method:
+          $ref: '#/components/schemas/FineTuneMethod'
     CreateFineTuningJobRequestHyperparameters:
       type: object
       properties:
@@ -6577,12 +6695,15 @@ components:
           type: string
           enum:
             - alloy
+            - ash
+            - coral
             - echo
             - fable
             - onyx
             - nova
+            - sage
             - shimmer
-          description: The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`, `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech guide](/docs/guides/text-to-speech#voice-options).
+          description: The voice to use when generating the audio. Supported voices are `alloy`, `ash`, `coral`, `echo`, `fable`, `onyx`, `nova`, `sage` and `shimmer`. Previews of the voices are available in the [Text to speech guide](/docs/guides/text-to-speech#voice-options).
         response_format:
           type: string
           enum:
@@ -7262,6 +7383,180 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/ChatCompletionRequestAssistantMessage'
+    FineTuneChatRequestInput:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/ChatCompletionRequestSystemMessage'
+              - $ref: '#/components/schemas/ChatCompletionRequestUserMessage'
+              - $ref: '#/components/schemas/FineTuneChatCompletionRequestAssistantMessage'
+              - $ref: '#/components/schemas/ChatCompletionRequestToolMessage'
+              - $ref: '#/components/schemas/ChatCompletionRequestFunctionMessage'
+          minItems: 1
+          x-oaiExpandable: true
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatCompletionTool'
+          description: A list of tools the model may generate JSON inputs for.
+        parallel_tool_calls:
+          type: boolean
+          default: true
+        functions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatCompletionFunctions'
+          minItems: 1
+          maxItems: 128
+          description: A list of functions the model may generate JSON inputs for.
+          deprecated: true
+      description: The per-line training example of a fine-tuning input file for chat models using the supervised method.
+    FineTuneCompletionRequestInput:
+      type: object
+      properties:
+        prompt:
+          type: string
+          description: The input prompt for this training example.
+        completion:
+          type: string
+          description: The desired completion for this training example.
+      description: The per-line training example of a fine-tuning input file for completions models
+    FineTuneDPOMethod:
+      type: object
+      properties:
+        hyperparameters:
+          type: object
+          properties:
+            beta:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: number
+                  format: float
+              description: The beta value for the DPO method. A higher beta value will increase the weight of the penalty between the policy and reference model.
+              default: auto
+            batch_size:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: Number of examples in each batch. A larger batch size means that model parameters are updated less frequently, but with lower variance.
+              default: auto
+            learning_rate_multiplier:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: number
+                  format: float
+              description: Scaling factor for the learning rate. A smaller learning rate may be useful to avoid overfitting.
+              default: auto
+            n_epochs:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: The number of epochs to train the model for. An epoch refers to one full cycle through the training dataset.
+              default: auto
+          description: The hyperparameters used for the fine-tuning job.
+      description: Configuration for the DPO fine-tuning method.
+    FineTuneMethod:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - supervised
+            - dpo
+          description: The type of method. Is either `supervised` or `dpo`.
+        supervised:
+          $ref: '#/components/schemas/FineTuneSupervisedMethod'
+        dpo:
+          $ref: '#/components/schemas/FineTuneDPOMethod'
+      description: The method used for fine-tuning.
+    FineTunePreferenceRequestInput:
+      type: object
+      properties:
+        input:
+          type: object
+          properties:
+            messages:
+              type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/ChatCompletionRequestSystemMessage'
+                  - $ref: '#/components/schemas/ChatCompletionRequestUserMessage'
+                  - $ref: '#/components/schemas/FineTuneChatCompletionRequestAssistantMessage'
+                  - $ref: '#/components/schemas/ChatCompletionRequestToolMessage'
+                  - $ref: '#/components/schemas/ChatCompletionRequestFunctionMessage'
+              minItems: 1
+              x-oaiExpandable: true
+            tools:
+              type: array
+              items:
+                $ref: '#/components/schemas/ChatCompletionTool'
+              description: A list of tools the model may generate JSON inputs for.
+            parallel_tool_calls:
+              type: boolean
+              default: true
+        preferred_completion:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatCompletionRequestAssistantMessage'
+          maxItems: 1
+          description: The preferred completion message for the output.
+          x-oaiExpandable: true
+        non_preferred_completion:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatCompletionRequestAssistantMessage'
+          maxItems: 1
+          description: The non-preferred completion message for the output.
+          x-oaiExpandable: true
+      description: The per-line training example of a fine-tuning input file for chat models using the dpo method.
+    FineTuneSupervisedMethod:
+      type: object
+      properties:
+        hyperparameters:
+          type: object
+          properties:
+            batch_size:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: Number of examples in each batch. A larger batch size means that model parameters are updated less frequently, but with lower variance.
+              default: auto
+            learning_rate_multiplier:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: number
+                  format: float
+              description: Scaling factor for the learning rate. A smaller learning rate may be useful to avoid overfitting.
+              default: auto
+            n_epochs:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: The number of epochs to train the model for. An epoch refers to one full cycle through the training dataset.
+              default: auto
+          description: The hyperparameters used for the fine-tuning job.
+      description: Configuration for the supervised fine-tuning method.
     FineTuningIntegration:
       type: object
       required:
@@ -7374,9 +7669,42 @@ components:
           nullable: true
           description: The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be null if the fine-tuning job is still running.
         hyperparameters:
-          allOf:
-            - $ref: '#/components/schemas/FineTuningJobHyperparameters'
-          description: The hyperparameters used for the fine-tuning job. See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+          type: object
+          properties:
+            batch_size:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: |-
+                Number of examples in each batch. A larger batch size means that model parameters
+                are updated less frequently, but with lower variance.
+              default: auto
+            learning_rate_multiplier:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: number
+                  format: float
+              description: |-
+                Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
+                overfitting.
+              default: auto
+            n_epochs:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: |-
+                The number of epochs to train the model for. An epoch refers to one full cycle
+                through the training dataset.
+              default: auto
+          description: The hyperparameters used for the fine-tuning job. This value will only be returned when running `supervised` jobs.
         model:
           type: string
           description: The base model that is being fine-tuned.
@@ -7430,6 +7758,8 @@ components:
           format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value will be null if the fine-tuning job is not running.
+        method:
+          $ref: '#/components/schemas/FineTuneMethod'
       description: The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
     FineTuningJobCheckpoint:
       type: object
@@ -7493,64 +7823,43 @@ components:
     FineTuningJobEvent:
       type: object
       required:
+        - object
         - id
         - created_at
         - level
         - message
-        - object
       properties:
+        object:
+          type: string
+          enum:
+            - fine_tuning.job.event
+          description: The object type, which is always "fine_tuning.job.event".
         id:
           type: string
+          description: The object identifier.
         created_at:
           type: integer
           format: unixtime
+          description: The Unix timestamp (in seconds) for when the fine-tuning job was created.
         level:
           type: string
           enum:
             - info
             - warn
             - error
+          description: The log level of the event.
         message:
           type: string
-        object:
+          description: The message of the event.
+        type:
           type: string
           enum:
-            - fine_tuning.job.event
+            - message
+            - metrics
+          description: The type of event.
+        data:
+          description: The data associated with the event.
       description: Fine-tuning job event object
-    FineTuningJobHyperparameters:
-      type: object
-      required:
-        - n_epochs
-        - batch_size
-        - learning_rate_multiplier
-      properties:
-        n_epochs:
-          anyOf:
-            - $ref: '#/components/schemas/FineTuningJobHyperparametersNEpochsChoiceEnum'
-            - type: integer
-              format: int32
-          description: |-
-            The number of epochs to train the model for. An epoch refers to one full cycle
-            through the training dataset.
-          default: auto
-        batch_size:
-          anyOf:
-            - $ref: '#/components/schemas/FineTuningJobHyperparametersBatchSizeChoiceEnum'
-            - type: integer
-              format: int32
-          description: |-
-            Number of examples in each batch. A larger batch size means that model parameters
-            are updated less frequently, but with lower variance.
-          default: auto
-        learning_rate_multiplier:
-          anyOf:
-            - $ref: '#/components/schemas/FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum'
-            - type: number
-              format: float
-          description: |-
-            Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
-            overfitting.
-          default: auto
     FineTuningJobHyperparametersBatchSizeChoiceEnum:
       type: string
       enum:
@@ -7569,47 +7878,6 @@ components:
         $ref: '#/components/schemas/FineTuningIntegration'
       maxItems: 5
       x-oaiExpandable: true
-    FinetuneChatRequestInput:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            anyOf:
-              - $ref: '#/components/schemas/ChatCompletionRequestSystemMessage'
-              - $ref: '#/components/schemas/ChatCompletionRequestUserMessage'
-              - $ref: '#/components/schemas/FineTuneChatCompletionRequestAssistantMessage'
-              - $ref: '#/components/schemas/ChatCompletionRequestToolMessage'
-              - $ref: '#/components/schemas/ChatCompletionRequestFunctionMessage'
-          minItems: 1
-          x-oaiExpandable: true
-        tools:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatCompletionTool'
-          description: A list of tools the model may generate JSON inputs for.
-        parallel_tool_calls:
-          type: boolean
-          default: true
-        functions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatCompletionFunctions'
-          minItems: 1
-          maxItems: 128
-          description: A list of functions the model may generate JSON inputs for.
-          deprecated: true
-      description: The per-line training example of a fine-tuning input file for chat models
-    FinetuneCompletionRequestInput:
-      type: object
-      properties:
-        prompt:
-          type: string
-          description: The input prompt for this training example.
-        completion:
-          type: string
-          description: The desired completion for this training example.
-      description: The per-line training example of a fine-tuning input file for completions models
     FunctionObject:
       type: object
       required:
@@ -7716,6 +7984,21 @@ components:
           type: integer
           format: unixtime
           description: The Unix timestamp (in seconds) of when the invite was accepted.
+        projects:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Project's public ID
+              role:
+                type: string
+                enum:
+                  - member
+                  - owner
+                description: Project membership role
+          description: The projects that were granted membership upon acceptance of the invite.
       description: Represents an individual `invite` to the organization.
     InviteDeleteResponse:
       type: object
@@ -7772,6 +8055,24 @@ components:
             - reader
             - owner
           description: '`owner` or `reader`'
+        projects:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Project's public ID
+              role:
+                type: string
+                enum:
+                  - member
+                  - owner
+                description: Project membership role
+            required:
+              - id
+              - role
+          description: An array of projects to which membership is granted at the same time the org invite is accepted. If omitted, the user will be invited to the default project for compatibility with legacy behavior.
     ListAssistantsResponse:
       type: object
       required:
@@ -9611,6 +9912,11 @@ components:
           enum:
             - response.cancel
           description: The event type, must be `response.cancel`.
+        response_id:
+          type: string
+          description: |-
+            A specific response ID to cancel - if not provided, will cancel an
+            in-progress response in the default conversation.
       allOf:
         - $ref: '#/components/schemas/RealtimeClientEvent'
       description: |-
@@ -9621,7 +9927,6 @@ components:
       type: object
       required:
         - type
-        - response
       properties:
         type:
           type: string
@@ -9629,7 +9934,7 @@ components:
             - response.create
           description: The event type, must be `response.create`.
         response:
-          $ref: '#/components/schemas/RealtimeResponseOptions'
+          $ref: '#/components/schemas/RealtimeResponseCreateParams'
       allOf:
         - $ref: '#/components/schemas/RealtimeClientEvent'
       description: |-
@@ -9895,6 +10200,8 @@ components:
     RealtimeRequestSession:
       type: object
       properties:
+        id:
+          type: string
         modalities:
           type: array
           items:
@@ -9904,6 +10211,16 @@ components:
               - audio
         instructions:
           type: string
+        model:
+          anyOf:
+            - type: string
+            - type: string
+              enum:
+                - gpt-4o-realtime-preview
+                - gpt-4o-realtime-preview-2024-10-01
+                - gpt-4o-realtime-preview-2024-12-17
+                - gpt-4o-mini-realtime-preview
+                - gpt-4o-mini-realtime-preview-2024-12-17
         voice:
           $ref: '#/components/schemas/RealtimeVoice'
         input_audio_format:
@@ -10077,6 +10394,132 @@ components:
     RealtimeResponseBase:
       type: object
       description: The response resource.
+    RealtimeResponseCreateParams:
+      type: object
+      properties:
+        modalities:
+          type: array
+          items:
+            type: string
+            enum:
+              - text
+              - audio
+          description: |-
+            The set of modalities the model can respond with. To disable audio,
+            set this to ["text"].
+        instructions:
+          type: string
+          description: |-
+            The default system instructions (i.e. system message) prepended to model 
+            calls. This field allows the client to guide the model on desired 
+            responses. The model can be instructed on response content and format, 
+            (e.g. "be extremely succinct", "act friendly", "here are examples of good 
+            responses") and on audio behavior (e.g. "talk quickly", "inject emotion 
+            into your voice", "laugh frequently"). The instructions are not guaranteed 
+            to be followed by the model, but they provide guidance to the model on the 
+            desired behavior.
+
+            Note that the server sets default instructions which will be used if this 
+            field is not set and are visible in the `session.created` event at the 
+            start of the session.
+        voice:
+          type: string
+          enum:
+            - alloy
+            - ash
+            - ballad
+            - coral
+            - echo
+            - sage
+            - shimmer
+            - verse
+          description: |-
+            The voice the model uses to respond. Voice cannot be changed during the 
+            session once the model has responded with audio at least once. Current 
+            voice options are `alloy`, `ash`, `ballad`, `coral`, `echo` `sage`, 
+            `shimmer` and `verse`.
+        output_audio_format:
+          type: string
+          enum:
+            - pcm16
+            - g711_ulaw
+            - g711_alaw
+          description: The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+        tools:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                  - function
+                description: The type of the tool, i.e. `function`.
+              name:
+                type: string
+                description: The name of the function.
+              description:
+                type: string
+                description: |-
+                  The description of the function, including guidance on when and how
+                  to call it, and guidance about what to tell the user when calling
+                  (if anything).
+              parameters:
+                description: Parameters of the function in JSON Schema.
+          description: Tools (functions) available to the model.
+        tool_choice:
+          type: string
+          description: |-
+            How the model chooses tools. Options are `auto`, `none`, `required`, or 
+            specify a function, like `{"type": "function", "function": {"name": "my_function"}}`.
+        temperature:
+          type: number
+          format: float
+          description: Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8.
+        max_response_output_tokens:
+          anyOf:
+            - type: integer
+              format: int32
+            - type: string
+              enum:
+                - inf
+          description: |-
+            Maximum number of output tokens for a single assistant response,
+            inclusive of tool calls. Provide an integer between 1 and 4096 to
+            limit output tokens, or `inf` for the maximum available tokens for a
+            given model. Defaults to `inf`.
+        conversation:
+          anyOf:
+            - type: string
+            - type: string
+              enum:
+                - auto
+                - none
+          description: |-
+            Controls which conversation the response is added to. Currently supports
+            `auto` and `none`, with `auto` as the default value. The `auto` value
+            means that the contents of the response will be added to the default
+            conversation. Set this to `none` to create an out-of-band response which 
+            will not add items to default conversation.
+        metadata:
+          type: object
+          additionalProperties: {}
+          nullable: true
+          description: |-
+            Set of 16 key-value pairs that can be attached to an object. This can be
+            useful for storing additional information about the object in a structured
+            format. Keys can be a maximum of 64 characters long and values can be a
+            maximum of 512 characters long.
+          x-oaiTypeLabel: map
+        input:
+          type: array
+          items:
+            $ref: '#/components/schemas/RealtimeConversationRequestItem'
+          description: |-
+            Input items to include in the prompt for the model. Creates a new context
+            for this response, without including the default conversation. Can include
+            references to items from the default conversation.
+      description: Create a new Realtime response with these parameters
     RealtimeResponseFunctionCallItem:
       type: object
       required:
@@ -10140,49 +10583,6 @@ components:
           $ref: '#/components/schemas/RealtimeItemStatus'
       allOf:
         - $ref: '#/components/schemas/RealtimeConversationResponseItem'
-    RealtimeResponseOptions:
-      type: object
-      properties:
-        modalities:
-          type: array
-          items:
-            type: string
-            enum:
-              - text
-              - audio
-          description: The modalities for the response.
-        instructions:
-          type: string
-          description: Instructions for the model.
-        voice:
-          allOf:
-            - $ref: '#/components/schemas/RealtimeVoice'
-          description: The voice the model uses to respond - one of `alloy`, `echo`, or `shimmer`.
-        output_audio_format:
-          allOf:
-            - $ref: '#/components/schemas/RealtimeAudioFormat'
-          description: The format of output audio.
-        tools:
-          type: array
-          items:
-            $ref: '#/components/schemas/RealtimeTool'
-          description: Tools (functions) available to the model.
-        tool_choice:
-          allOf:
-            - $ref: '#/components/schemas/RealtimeToolChoice'
-          description: How the model chooses tools.
-        temperature:
-          type: number
-          format: float
-          description: Sampling temperature.
-        max_output_tokens:
-          anyOf:
-            - type: integer
-              format: int32
-            - type: string
-              enum:
-                - inf
-          description: Maximum number of output tokens for a single assistant response, inclusive of tool calls. Provide an integer between 1 and 4096 to limit output tokens, or "inf" for the maximum available tokens for a given model. Defaults to "inf".
     RealtimeResponseSession:
       type: object
       required:
@@ -10533,16 +10933,22 @@ components:
               description: The type of error (e.g., "invalid_request_error", "server_error").
             code:
               type: string
+              nullable: true
               description: Error code, if any.
             message:
               type: string
               description: A human-readable error message.
             param:
               type: string
+              nullable: true
               description: Parameter related to the error, if any.
             event_id:
               type: string
+              nullable: true
               description: The event_id of the client event that caused the error, if applicable.
+          required:
+            - type
+            - message
           description: Details of the error.
       allOf:
         - $ref: '#/components/schemas/RealtimeServerEvent'
@@ -11243,6 +11649,325 @@ components:
     RealtimeSessionBase:
       type: object
       description: Realtime session object configuration.
+    RealtimeSessionCreateRequest:
+      type: object
+      required:
+        - model
+      properties:
+        modalities:
+          type: array
+          items:
+            type: string
+            enum:
+              - text
+              - audio
+          description: |-
+            The set of modalities the model can respond with. To disable audio,
+            set this to ["text"].
+        model:
+          type: string
+          enum:
+            - gpt-4o-realtime-preview
+            - gpt-4o-realtime-preview-2024-10-01
+            - gpt-4o-realtime-preview-2024-12-17
+            - gpt-4o-mini-realtime-preview
+            - gpt-4o-mini-realtime-preview-2024-12-17
+          description: The Realtime model used for this session.
+        instructions:
+          type: string
+          description: |-
+            The default system instructions (i.e. system message) prepended to model 
+            calls. This field allows the client to guide the model on desired 
+            responses. The model can be instructed on response content and format, 
+            (e.g. "be extremely succinct", "act friendly", "here are examples of good 
+            responses") and on audio behavior (e.g. "talk quickly", "inject emotion 
+            into your voice", "laugh frequently"). The instructions are not guaranteed 
+            to be followed by the model, but they provide guidance to the model on the 
+            desired behavior.
+
+            Note that the server sets default instructions which will be used if this 
+            field is not set and are visible in the `session.created` event at the 
+            start of the session.
+        voice:
+          type: string
+          enum:
+            - alloy
+            - ash
+            - ballad
+            - coral
+            - echo
+            - sage
+            - shimmer
+            - verse
+          description: |-
+            The voice the model uses to respond. Voice cannot be changed during the 
+            session once the model has responded with audio at least once. Current 
+            voice options are `alloy`, `ash`, `ballad`, `coral`, `echo` `sage`, 
+            `shimmer` and `verse`.
+        input_audio_format:
+          type: string
+          enum:
+            - pcm16
+            - g711_ulaw
+            - g711_alaw
+          description: The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+        output_audio_format:
+          type: string
+          enum:
+            - pcm16
+            - g711_ulaw
+            - g711_alaw
+          description: The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+        input_audio_transcription:
+          type: object
+          properties:
+            model:
+              type: string
+              description: |-
+                The model to use for transcription, `whisper-1` is the only currently 
+                supported model.
+          description: |-
+            Configuration for input audio transcription, defaults to off and can be 
+            set to `null` to turn off once on. Input audio transcription is not native 
+            to the model, since the model consumes audio directly. Transcription runs 
+            asynchronously through Whisper and should be treated as rough guidance 
+            rather than the representation understood by the model.
+        turn_detection:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of turn detection, only `server_vad` is currently supported.
+            threshold:
+              type: number
+              format: float
+              description: |-
+                Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
+                higher threshold will require louder audio to activate the model, and
+                thus might perform better in noisy environments.
+            prefix_padding_ms:
+              type: integer
+              format: int32
+              description: |-
+                Amount of audio to include before the VAD detected speech (in
+                milliseconds). Defaults to 300ms.
+            silence_duration_ms:
+              type: integer
+              format: int32
+              description: |-
+                Duration of silence to detect speech stop (in milliseconds). Defaults
+                to 500ms. With shorter values the model will respond more quickly,
+                but may jump in on short pauses from the user.
+            create_response:
+              type: boolean
+              description: |-
+                Whether or not to automatically generate a response when VAD is
+                enabled. `true` by default.
+              default: true
+          description: |-
+            Configuration for turn detection. Can be set to `null` to turn off. Server 
+            VAD means that the model will detect the start and end of speech based on 
+            audio volume and respond at the end of user speech.
+        tools:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                  - function
+                description: The type of the tool, i.e. `function`.
+              name:
+                type: string
+                description: The name of the function.
+              description:
+                type: string
+                description: |-
+                  The description of the function, including guidance on when and how
+                  to call it, and guidance about what to tell the user when calling
+                  (if anything).
+              parameters:
+                description: Parameters of the function in JSON Schema.
+          description: Tools (functions) available to the model.
+        tool_choice:
+          type: string
+          description: |-
+            How the model chooses tools. Options are `auto`, `none`, `required`, or 
+            specify a function.
+        temperature:
+          type: number
+          format: float
+          description: Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8.
+        max_response_output_tokens:
+          anyOf:
+            - type: integer
+              format: int32
+            - type: string
+              enum:
+                - inf
+          description: |-
+            Maximum number of output tokens for a single assistant response,
+            inclusive of tool calls. Provide an integer between 1 and 4096 to
+            limit output tokens, or `inf` for the maximum available tokens for a
+            given model. Defaults to `inf`.
+      description: Realtime session object configuration.
+    RealtimeSessionCreateResponse:
+      type: object
+      properties:
+        client_secret:
+          type: object
+          properties:
+            value:
+              type: string
+              description: |-
+                Ephemeral key usable in client environments to authenticate connections
+                to the Realtime API. Use this in client-side environments rather than
+                a standard API token, which should only be used server-side.
+            expires_at:
+              type: integer
+              format: unixtime
+              description: |-
+                Timestamp for when the token expires. Currently, all tokens expire
+                after one minute.
+          description: Ephemeral key returned by the API.
+        modalities:
+          type: array
+          items:
+            type: string
+            enum:
+              - text
+              - audio
+          description: |-
+            The set of modalities the model can respond with. To disable audio,
+            set this to ["text"].
+        instructions:
+          type: string
+          description: |-
+            The default system instructions (i.e. system message) prepended to model 
+            calls. This field allows the client to guide the model on desired 
+            responses. The model can be instructed on response content and format, 
+            (e.g. "be extremely succinct", "act friendly", "here are examples of good 
+            responses") and on audio behavior (e.g. "talk quickly", "inject emotion 
+            into your voice", "laugh frequently"). The instructions are not guaranteed 
+            to be followed by the model, but they provide guidance to the model on the 
+            desired behavior.
+
+            Note that the server sets default instructions which will be used if this 
+            field is not set and are visible in the `session.created` event at the 
+            start of the session.
+        voice:
+          type: string
+          enum:
+            - alloy
+            - ash
+            - ballad
+            - coral
+            - echo
+            - sage
+            - shimmer
+            - verse
+          description: |-
+            The voice the model uses to respond. Voice cannot be changed during the 
+            session once the model has responded with audio at least once. Current 
+            voice options are `alloy`, `ash`, `ballad`, `coral`, `echo` `sage`, 
+            `shimmer` and `verse`.
+        input_audio_format:
+          type: string
+          description: The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+        output_audio_format:
+          type: string
+          description: The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+        input_audio_transcription:
+          type: object
+          properties:
+            model:
+              type: string
+              description: |-
+                The model to use for transcription, `whisper-1` is the only currently 
+                supported model.
+          description: |-
+            Configuration for input audio transcription, defaults to off and can be 
+            set to `null` to turn off once on. Input audio transcription is not native 
+            to the model, since the model consumes audio directly. Transcription runs 
+            asynchronously through Whisper and should be treated as rough guidance 
+            rather than the representation understood by the model.
+        turn_detection:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of turn detection, only `server_vad` is currently supported.
+            threshold:
+              type: number
+              format: float
+              description: |-
+                Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
+                higher threshold will require louder audio to activate the model, and
+                thus might perform better in noisy environments.
+            prefix_padding_ms:
+              type: integer
+              format: int32
+              description: |-
+                Amount of audio to include before the VAD detected speech (in
+                milliseconds). Defaults to 300ms.
+            silence_duration_ms:
+              type: integer
+              format: int32
+              description: |-
+                Duration of silence to detect speech stop (in milliseconds). Defaults
+                to 500ms. With shorter values the model will respond more quickly,
+                but may jump in on short pauses from the user.
+          description: |-
+            Configuration for turn detection. Can be set to `null` to turn off. Server 
+            VAD means that the model will detect the start and end of speech based on 
+            audio volume and respond at the end of user speech.
+        tools:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                  - function
+                description: The type of the tool, i.e. `function`.
+              name:
+                type: string
+                description: The name of the function.
+              description:
+                type: string
+                description: |-
+                  The description of the function, including guidance on when and how
+                  to call it, and guidance about what to tell the user when calling
+                  (if anything).
+              parameters:
+                description: Parameters of the function in JSON Schema.
+          description: Tools (functions) available to the model.
+        tool_choice:
+          type: string
+          description: |-
+            How the model chooses tools. Options are `auto`, `none`, `required`, or 
+            specify a function.
+        temperature:
+          type: number
+          format: float
+          description: Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8.
+        max_response_output_tokens:
+          anyOf:
+            - type: integer
+              format: int32
+            - type: string
+              enum:
+                - inf
+          description: |-
+            Maximum number of output tokens for a single assistant response,
+            inclusive of tool calls. Provide an integer between 1 and 4096 to
+            limit output tokens, or `inf` for the maximum available tokens for a
+            given model. Defaults to `inf`.
+      description: |-
+        A new Realtime session configuration, with an ephermeral key. Default TTL
+        for keys is one minute.
     RealtimeTool:
       type: object
       required:
@@ -11335,8 +12060,13 @@ components:
         - type: string
           enum:
             - alloy
-            - shimmer
+            - ash
+            - ballad
+            - coral
             - echo
+            - sage
+            - shimmer
+            - verse
     ResponseFormatJsonObject:
       type: object
       required:
@@ -11813,15 +12543,7 @@ components:
           description: The type of tool call. This is always going to be `file_search` for this type of tool call.
         file_search:
           type: object
-          properties:
-            ranking_options:
-              $ref: '#/components/schemas/RunStepDetailsToolCallsFileSearchRankingOptionsObject'
-            results:
-              type: array
-              items:
-                $ref: '#/components/schemas/RunStepDetailsToolCallsFileSearchResultObject'
-              description: The results of the file search.
-              readOnly: true
+          additionalProperties: {}
           description: For now, this is always going to be an empty object.
           x-oaiTypeLabel: map
       allOf:
@@ -11927,9 +12649,13 @@ components:
     RunStepDetailsToolCallsCodeObject:
       type: object
       required:
+        - id
         - type
         - code_interpreter
       properties:
+        id:
+          type: string
+          description: The ID of the tool call.
         type:
           type: string
           enum:
@@ -12010,9 +12736,13 @@ components:
     RunStepDetailsToolCallsFileSearchObject:
       type: object
       required:
+        - id
         - type
         - file_search
       properties:
+        id:
+          type: string
+          description: The ID of the tool call object.
         type:
           type: string
           enum:
@@ -12083,8 +12813,6 @@ components:
               text:
                 type: string
                 description: The text content of the file.
-            required:
-              - type
           description: The content of the result that was found. The content is only included if requested via the include query parameter.
           readOnly: true
       description: A result instance of the file search.
@@ -12092,9 +12820,13 @@ components:
     RunStepDetailsToolCallsFunctionObject:
       type: object
       required:
+        - id
         - type
         - function
       properties:
+        id:
+          type: string
+          description: The ID of the tool call object.
         type:
           type: string
           enum:
@@ -12826,15 +13558,23 @@ components:
         input_tokens:
           type: integer
           format: int32
-          description: The aggregated number of input tokens used. For customers subscribe to scale tier, this includes scale tier tokens.
+          description: The aggregated number of text input tokens used, including cached tokens. For customers subscribe to scale tier, this includes scale tier tokens.
         input_cached_tokens:
           type: integer
           format: int32
-          description: The aggregated number of input tokens that has been cached from previous requests. For customers subscribe to scale tier, this includes scale tier tokens.
+          description: The aggregated number of text input tokens that has been cached from previous requests. For customers subscribe to scale tier, this includes scale tier tokens.
         output_tokens:
           type: integer
           format: int32
-          description: The aggregated number of output tokens used. For customers subscribe to scale tier, this includes scale tier tokens.
+          description: The aggregated number of text output tokens used. For customers subscribe to scale tier, this includes scale tier tokens.
+        input_audio_tokens:
+          type: integer
+          format: int32
+          description: The aggregated number of audio input tokens used, including cached tokens.
+        output_audio_tokens:
+          type: integer
+          format: int32
+          description: The aggregated number of audio output tokens used.
         num_model_requests:
           type: integer
           format: int32

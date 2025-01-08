@@ -8,8 +8,16 @@ namespace OpenAI;
 
 model RealtimeRequestSession {
   ...RealtimeSessionBase;
+  id?: string;
   modalities?: RealtimeModalities;
   instructions?: string;
+  `model`?:
+    | string
+    | "gpt-4o-realtime-preview"
+    | "gpt-4o-realtime-preview-2024-10-01"
+    | "gpt-4o-realtime-preview-2024-12-17"
+    | "gpt-4o-mini-realtime-preview"
+    | "gpt-4o-mini-realtime-preview-2024-12-17";
   voice?: RealtimeVoice;
   input_audio_format?: RealtimeAudioFormat;
   output_audio_format?: RealtimeAudioFormat;
@@ -39,37 +47,6 @@ model RealtimeResponseSession {
   max_response_output_tokens: int32 | "inf" | null;
 }
 
-model RealtimeResponseOptions {
-  ...RealtimeResponseBase;
-
-  /** The modalities for the response. */
-  modalities?: RealtimeModalities;
-
-  /** Instructions for the model. */
-  instructions?: string;
-
-  @doc("""
-    The voice the model uses to respond - one of `alloy`, `echo`, or `shimmer`.
-    """)
-  voice?: RealtimeVoice;
-
-  /** The format of output audio. */
-  output_audio_format?: RealtimeAudioFormat;
-
-  // Tool customization: apply enriched tool definition hierarchy
-  /** Tools (functions) available to the model. */
-  tools?: RealtimeTool[];
-
-  /** How the model chooses tools. */
-  tool_choice?: RealtimeToolChoice;
-
-  /** Sampling temperature. */
-  temperature?: float32;
-
-  /** Maximum number of output tokens for a single assistant response, inclusive of tool calls. Provide an integer between 1 and 4096 to limit output tokens, or "inf" for the maximum available tokens for a given model. Defaults to "inf". */
-  max_output_tokens?: int32 | "inf";
-}
-
 model RealtimeResponse {
   ...RealtimeResponseBase;
   object: "realtime.response";
@@ -96,8 +73,13 @@ model RealtimeResponse {
 union RealtimeVoice {
   string,
   alloy: "alloy",
-  shimmer: "shimmer",
+  ash: "ash",
+  ballad: "ballad",
+  coral: "coral",
   echo: "echo",
+  sage: "sage",
+  shimmer: "shimmer",
+  verse: "verse",
 }
 
 union RealtimeAudioFormat {

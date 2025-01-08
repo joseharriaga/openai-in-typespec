@@ -43,3 +43,13 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("UnknownRealtimeTool")] internal partial class UnknownRealtimeTool { }
 [Experimental("OPENAI002")][CodeGenModel("UnknownRealtimeToolChoiceObject")] internal partial class UnknownRealtimeToolChoiceObject { }
 [Experimental("OPENAI002")][CodeGenModel("UnknownRealtimeTurnDetection")] internal partial class UnknownRealtimeTurnDetection { }
+
+// TODO: not yet integrated
+
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseCreateParamsConversation")] internal readonly partial struct InternalTodoRealtimeResponseCreateParamsConversation { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseCreateParamsModality")] internal readonly partial struct InternalTodoRealtimeResponseCreateParamsModality { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseCreateParamsOutputAudioFormat")] internal readonly partial struct InternalTodoRealtimeResponseCreateParamsOutputAudioFormat { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseCreateParamsTool")] internal partial class InternalTodoRealtimeResponseCreateParamsTool { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseCreateParamsVoice")] internal readonly partial struct InternalTodoRealtimeResponseCreateParamsVoice { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeRequestSessionModel")] internal readonly partial struct InternalTodoRealtimeRequestSessionModel { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseCreateParamsToolType")] internal readonly partial struct InternalTodoRealtimeResponseCreateParamsToolType { }

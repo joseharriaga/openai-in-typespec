@@ -14,11 +14,13 @@ namespace OpenAI.RealtimeConversation
 
         public InternalRealtimeResponseOptions()
         {
-            Modalities = new ChangeTrackingList<InternalRealtimeRequestSessionModality>();
-            Tools = new ChangeTrackingList<ConversationTool>();
+            Modalities = new ChangeTrackingList<InternalTodoRealtimeResponseCreateParamsModality>();
+            Tools = new ChangeTrackingList<InternalTodoRealtimeResponseCreateParamsTool>();
+            Metadata = new ChangeTrackingDictionary<string, BinaryData>();
+            Input = new ChangeTrackingList<ConversationItem>();
         }
 
-        internal InternalRealtimeResponseOptions(IList<InternalRealtimeRequestSessionModality> modalities, string instructions, ConversationVoice? voice, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, BinaryData maxOutputTokens, BinaryData toolChoice, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRealtimeResponseOptions(IList<InternalTodoRealtimeResponseCreateParamsModality> modalities, string instructions, InternalTodoRealtimeResponseCreateParamsVoice? voice, InternalTodoRealtimeResponseCreateParamsOutputAudioFormat? outputAudioFormat, IList<InternalTodoRealtimeResponseCreateParamsTool> tools, float? temperature, BinaryData maxResponseOutputTokens, InternalTodoRealtimeResponseCreateParamsConversation? conversation, IDictionary<string, BinaryData> metadata, IList<ConversationItem> input, BinaryData toolChoice, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Modalities = modalities;
             Instructions = instructions;
@@ -26,24 +28,33 @@ namespace OpenAI.RealtimeConversation
             OutputAudioFormat = outputAudioFormat;
             Tools = tools;
             Temperature = temperature;
-            MaxOutputTokens = maxOutputTokens;
+            MaxResponseOutputTokens = maxResponseOutputTokens;
+            Conversation = conversation;
+            Metadata = metadata;
+            Input = input;
             ToolChoice = toolChoice;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public IList<InternalRealtimeRequestSessionModality> Modalities { get; }
+        public IList<InternalTodoRealtimeResponseCreateParamsModality> Modalities { get; }
 
         public string Instructions { get; set; }
 
-        public ConversationVoice? Voice { get; set; }
+        public InternalTodoRealtimeResponseCreateParamsVoice? Voice { get; set; }
 
-        public ConversationAudioFormat? OutputAudioFormat { get; set; }
+        public InternalTodoRealtimeResponseCreateParamsOutputAudioFormat? OutputAudioFormat { get; set; }
 
-        public IList<ConversationTool> Tools { get; }
+        public IList<InternalTodoRealtimeResponseCreateParamsTool> Tools { get; }
 
         public float? Temperature { get; set; }
 
-        public BinaryData MaxOutputTokens { get; set; }
+        public BinaryData MaxResponseOutputTokens { get; set; }
+
+        public InternalTodoRealtimeResponseCreateParamsConversation? Conversation { get; set; }
+
+        public IDictionary<string, BinaryData> Metadata { get; set; }
+
+        public IList<ConversationItem> Input { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

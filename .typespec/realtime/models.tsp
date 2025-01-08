@@ -215,8 +215,7 @@ model RealtimeClientEventResponseCreate extends RealtimeClientEvent {
     """)
   type: RealtimeClientEventType.response_create;
 
-  // Tool customization: apply custom, distinct type for request-side response options
-  response: RealtimeResponseOptions;
+  response?: RealtimeResponseCreateParams;
 }
 
 // Tool customization: apply discriminated type base
@@ -231,6 +230,12 @@ model RealtimeClientEventResponseCancel extends RealtimeClientEvent {
     The event type, must be `response.cancel`.
     """)
   type: RealtimeClientEventType.response_cancel;
+
+  /**
+   * A specific response ID to cancel - if not provided, will cancel an
+   * in-progress response in the default conversation.
+   */
+  response_id?: string;
 }
 
 // Tool customization: apply discriminated type base
@@ -249,19 +254,19 @@ model RealtimeServerEventError extends RealtimeServerEvent {
   /** Details of the error. */
   error: {
     /** The type of error (e.g., "invalid_request_error", "server_error"). */
-    type?: string;
+    type: string;
 
     /** Error code, if any. */
-    code?: string;
+    code?: string | null;
 
     /** A human-readable error message. */
-    message?: string;
+    message: string;
 
     /** Parameter related to the error, if any. */
-    param?: string;
+    param?: string | null;
 
     /** The event_id of the client event that caused the error, if applicable. */
-    event_id?: string;
+    event_id?: string | null;
   };
 }
 
@@ -920,4 +925,421 @@ model RealtimeServerEventRateLimitsUpdated extends RealtimeServerEvent {
   // Tool customization: use custom type for rate limit items (applying encoded duration)
   /** List of rate limit information. */
   rate_limits: RealtimeServerEventRateLimitsUpdatedRateLimitsItem[];
+}
+
+/** Create a new Realtime response with these parameters */
+model RealtimeResponseCreateParams {
+  /**
+   * The set of modalities the model can respond with. To disable audio,
+   * set this to ["text"].
+   */
+  modalities?: ("text" | "audio")[];
+
+  @doc("""
+    The default system instructions (i.e. system message) prepended to model 
+    calls. This field allows the client to guide the model on desired 
+    responses. The model can be instructed on response content and format, 
+    (e.g. "be extremely succinct", "act friendly", "here are examples of good 
+    responses") and on audio behavior (e.g. "talk quickly", "inject emotion 
+    into your voice", "laugh frequently"). The instructions are not guaranteed 
+    to be followed by the model, but they provide guidance to the model on the 
+    desired behavior.
+    
+    Note that the server sets default instructions which will be used if this 
+    field is not set and are visible in the `session.created` event at the 
+    start of the session.
+    """)
+  instructions?: string;
+
+  @doc("""
+    The voice the model uses to respond. Voice cannot be changed during the 
+    session once the model has responded with audio at least once. Current 
+    voice options are `alloy`, `ash`, `ballad`, `coral`, `echo` `sage`, 
+    `shimmer` and `verse`.
+    """)
+  voice?:
+    | "alloy"
+    | "ash"
+    | "ballad"
+    | "coral"
+    | "echo"
+    | "sage"
+    | "shimmer"
+    | "verse";
+
+  @doc("""
+    The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+    """)
+  output_audio_format?: "pcm16" | "g711_ulaw" | "g711_alaw";
+
+  /** Tools (functions) available to the model. */
+  tools?: {
+    @doc("""
+      The type of the tool, i.e. `function`.
+      """)
+    type?: "function";
+
+    /** The name of the function. */
+    name?: string;
+
+    /**
+     * The description of the function, including guidance on when and how
+     * to call it, and guidance about what to tell the user when calling
+     * (if anything).
+     */
+    description?: string;
+
+    /** Parameters of the function in JSON Schema. */
+    parameters?: unknown;
+  }[];
+
+  @doc("""
+    How the model chooses tools. Options are `auto`, `none`, `required`, or 
+    specify a function, like `{"type": "function", "function": {"name": "my_function"}}`.
+    """)
+  tool_choice?: string;
+
+  /** Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8. */
+  temperature?: float32;
+
+  @doc("""
+    Maximum number of output tokens for a single assistant response,
+    inclusive of tool calls. Provide an integer between 1 and 4096 to
+    limit output tokens, or `inf` for the maximum available tokens for a
+    given model. Defaults to `inf`.
+    """)
+  max_response_output_tokens?: int32 | "inf";
+
+  @doc("""
+    Controls which conversation the response is added to. Currently supports
+    `auto` and `none`, with `auto` as the default value. The `auto` value
+    means that the contents of the response will be added to the default
+    conversation. Set this to `none` to create an out-of-band response which 
+    will not add items to default conversation.
+    """)
+  conversation?: string | "auto" | "none";
+
+  /**
+   * Set of 16 key-value pairs that can be attached to an object. This can be
+   * useful for storing additional information about the object in a structured
+   * format. Keys can be a maximum of 64 characters long and values can be a
+   * maximum of 512 characters long.
+   */
+  @extension("x-oaiTypeLabel", "map")
+  metadata?: Record<unknown> | null;
+
+  // Tool customization: apply a customized, specific item type
+  /**
+   * Input items to include in the prompt for the model. Creates a new context
+   * for this response, without including the default conversation. Can include
+   * references to items from the default conversation.
+   */
+  input?: RealtimeConversationRequestItem[];
+}
+
+/** Realtime session object configuration. */
+model RealtimeSessionCreateRequest {
+  /**
+   * The set of modalities the model can respond with. To disable audio,
+   * set this to ["text"].
+   */
+  modalities?: ("text" | "audio")[];
+
+  /** The Realtime model used for this session. */
+  `model`:
+    | "gpt-4o-realtime-preview"
+    | "gpt-4o-realtime-preview-2024-10-01"
+    | "gpt-4o-realtime-preview-2024-12-17"
+    | "gpt-4o-mini-realtime-preview"
+    | "gpt-4o-mini-realtime-preview-2024-12-17";
+
+  @doc("""
+    The default system instructions (i.e. system message) prepended to model 
+    calls. This field allows the client to guide the model on desired 
+    responses. The model can be instructed on response content and format, 
+    (e.g. "be extremely succinct", "act friendly", "here are examples of good 
+    responses") and on audio behavior (e.g. "talk quickly", "inject emotion 
+    into your voice", "laugh frequently"). The instructions are not guaranteed 
+    to be followed by the model, but they provide guidance to the model on the 
+    desired behavior.
+    
+    Note that the server sets default instructions which will be used if this 
+    field is not set and are visible in the `session.created` event at the 
+    start of the session.
+    """)
+  instructions?: string;
+
+  @doc("""
+    The voice the model uses to respond. Voice cannot be changed during the 
+    session once the model has responded with audio at least once. Current 
+    voice options are `alloy`, `ash`, `ballad`, `coral`, `echo` `sage`, 
+    `shimmer` and `verse`.
+    """)
+  voice?:
+    | "alloy"
+    | "ash"
+    | "ballad"
+    | "coral"
+    | "echo"
+    | "sage"
+    | "shimmer"
+    | "verse";
+
+  @doc("""
+    The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+    """)
+  input_audio_format?: "pcm16" | "g711_ulaw" | "g711_alaw";
+
+  @doc("""
+    The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+    """)
+  output_audio_format?: "pcm16" | "g711_ulaw" | "g711_alaw";
+
+  @doc("""
+    Configuration for input audio transcription, defaults to off and can be 
+    set to `null` to turn off once on. Input audio transcription is not native 
+    to the model, since the model consumes audio directly. Transcription runs 
+    asynchronously through Whisper and should be treated as rough guidance 
+    rather than the representation understood by the model.
+    """)
+  input_audio_transcription?: {
+    @doc("""
+      The model to use for transcription, `whisper-1` is the only currently 
+      supported model.
+      """)
+    `model`?: string;
+  };
+
+  @doc("""
+    Configuration for turn detection. Can be set to `null` to turn off. Server 
+    VAD means that the model will detect the start and end of speech based on 
+    audio volume and respond at the end of user speech.
+    """)
+  turn_detection?: {
+    @doc("""
+      Type of turn detection, only `server_vad` is currently supported.
+      """)
+    type?: string;
+
+    /**
+     * Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
+     * higher threshold will require louder audio to activate the model, and
+     * thus might perform better in noisy environments.
+     */
+    threshold?: float32;
+
+    /**
+     * Amount of audio to include before the VAD detected speech (in
+     * milliseconds). Defaults to 300ms.
+     */
+    prefix_padding_ms?: int32;
+
+    /**
+     * Duration of silence to detect speech stop (in milliseconds). Defaults
+     * to 500ms. With shorter values the model will respond more quickly,
+     * but may jump in on short pauses from the user.
+     */
+    silence_duration_ms?: int32;
+
+    @doc("""
+      Whether or not to automatically generate a response when VAD is
+      enabled. `true` by default.
+      """)
+    create_response?: boolean = true;
+  };
+
+  /** Tools (functions) available to the model. */
+  tools?: {
+    @doc("""
+      The type of the tool, i.e. `function`.
+      """)
+    type?: "function";
+
+    /** The name of the function. */
+    name?: string;
+
+    /**
+     * The description of the function, including guidance on when and how
+     * to call it, and guidance about what to tell the user when calling
+     * (if anything).
+     */
+    description?: string;
+
+    /** Parameters of the function in JSON Schema. */
+    parameters?: unknown;
+  }[];
+
+  @doc("""
+    How the model chooses tools. Options are `auto`, `none`, `required`, or 
+    specify a function.
+    """)
+  tool_choice?: string;
+
+  /** Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8. */
+  temperature?: float32;
+
+  @doc("""
+    Maximum number of output tokens for a single assistant response,
+    inclusive of tool calls. Provide an integer between 1 and 4096 to
+    limit output tokens, or `inf` for the maximum available tokens for a
+    given model. Defaults to `inf`.
+    """)
+  max_response_output_tokens?: int32 | "inf";
+}
+
+/**
+ * A new Realtime session configuration, with an ephermeral key. Default TTL
+ * for keys is one minute.
+ */
+model RealtimeSessionCreateResponse {
+  /** Ephemeral key returned by the API. */
+  client_secret?: {
+    /**
+     * Ephemeral key usable in client environments to authenticate connections
+     * to the Realtime API. Use this in client-side environments rather than
+     * a standard API token, which should only be used server-side.
+     */
+    value?: string;
+
+    // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
+    /**
+     * Timestamp for when the token expires. Currently, all tokens expire
+     * after one minute.
+     */
+    @encode("unixTimestamp", int32)
+    expires_at?: utcDateTime;
+  };
+
+  /**
+   * The set of modalities the model can respond with. To disable audio,
+   * set this to ["text"].
+   */
+  modalities?: ("text" | "audio")[];
+
+  @doc("""
+    The default system instructions (i.e. system message) prepended to model 
+    calls. This field allows the client to guide the model on desired 
+    responses. The model can be instructed on response content and format, 
+    (e.g. "be extremely succinct", "act friendly", "here are examples of good 
+    responses") and on audio behavior (e.g. "talk quickly", "inject emotion 
+    into your voice", "laugh frequently"). The instructions are not guaranteed 
+    to be followed by the model, but they provide guidance to the model on the 
+    desired behavior.
+    
+    Note that the server sets default instructions which will be used if this 
+    field is not set and are visible in the `session.created` event at the 
+    start of the session.
+    """)
+  instructions?: string;
+
+  @doc("""
+    The voice the model uses to respond. Voice cannot be changed during the 
+    session once the model has responded with audio at least once. Current 
+    voice options are `alloy`, `ash`, `ballad`, `coral`, `echo` `sage`, 
+    `shimmer` and `verse`.
+    """)
+  voice?:
+    | "alloy"
+    | "ash"
+    | "ballad"
+    | "coral"
+    | "echo"
+    | "sage"
+    | "shimmer"
+    | "verse";
+
+  @doc("""
+    The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+    """)
+  input_audio_format?: string;
+
+  @doc("""
+    The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+    """)
+  output_audio_format?: string;
+
+  @doc("""
+    Configuration for input audio transcription, defaults to off and can be 
+    set to `null` to turn off once on. Input audio transcription is not native 
+    to the model, since the model consumes audio directly. Transcription runs 
+    asynchronously through Whisper and should be treated as rough guidance 
+    rather than the representation understood by the model.
+    """)
+  input_audio_transcription?: {
+    @doc("""
+      The model to use for transcription, `whisper-1` is the only currently 
+      supported model.
+      """)
+    `model`?: string;
+  };
+
+  @doc("""
+    Configuration for turn detection. Can be set to `null` to turn off. Server 
+    VAD means that the model will detect the start and end of speech based on 
+    audio volume and respond at the end of user speech.
+    """)
+  turn_detection?: {
+    @doc("""
+      Type of turn detection, only `server_vad` is currently supported.
+      """)
+    type?: string;
+
+    /**
+     * Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A
+     * higher threshold will require louder audio to activate the model, and
+     * thus might perform better in noisy environments.
+     */
+    threshold?: float32;
+
+    /**
+     * Amount of audio to include before the VAD detected speech (in
+     * milliseconds). Defaults to 300ms.
+     */
+    prefix_padding_ms?: int32;
+
+    /**
+     * Duration of silence to detect speech stop (in milliseconds). Defaults
+     * to 500ms. With shorter values the model will respond more quickly,
+     * but may jump in on short pauses from the user.
+     */
+    silence_duration_ms?: int32;
+  };
+
+  /** Tools (functions) available to the model. */
+  tools?: {
+    @doc("""
+      The type of the tool, i.e. `function`.
+      """)
+    type?: "function";
+
+    /** The name of the function. */
+    name?: string;
+
+    /**
+     * The description of the function, including guidance on when and how
+     * to call it, and guidance about what to tell the user when calling
+     * (if anything).
+     */
+    description?: string;
+
+    /** Parameters of the function in JSON Schema. */
+    parameters?: unknown;
+  }[];
+
+  @doc("""
+    How the model chooses tools. Options are `auto`, `none`, `required`, or 
+    specify a function.
+    """)
+  tool_choice?: string;
+
+  /** Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8. */
+  temperature?: float32;
+
+  @doc("""
+    Maximum number of output tokens for a single assistant response,
+    inclusive of tool calls. Provide an integer between 1 and 4096 to
+    limit output tokens, or `inf` for the maximum available tokens for a
+    given model. Defaults to `inf`.
+    """)
+  max_response_output_tokens?: int32 | "inf";
 }

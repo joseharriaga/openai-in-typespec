@@ -20,8 +20,7 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatMessage)} does not support writing '{format}' format.");
             }
-            // CUSTOM: Check inner collection is defined.
-            if (true && Optional.IsDefined(Content) && Content.IsInnerCollectionDefined() && _additionalBinaryDataProperties?.ContainsKey("content") != true)
+            if (true && Optional.IsDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
                 this.SerializeContentValue(writer, options);

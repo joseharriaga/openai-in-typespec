@@ -23,7 +23,7 @@ model CreateChatCompletionRequest {
   @minItems(1)
   messages: ChatCompletionRequestMessage[];
 
-  /** ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility) table for details on which models work with the Chat API. */
+  /** ID of the model to use. See the [model endpoint compatibility](/docs/models#model-endpoint-compatibility) table for details on which models work with the Chat API. */
   @extension("x-oaiTypeLabel", "string")
   `model`:
     | string
@@ -32,6 +32,7 @@ model CreateChatCompletionRequest {
     | "o1-mini"
     | "o1-mini-2024-09-12"
     | "gpt-4o"
+    | "gpt-4o-2024-11-20"
     | "gpt-4o-2024-08-06"
     | "gpt-4o-2024-05-13"
     | "gpt-4o-realtime-preview"
@@ -76,7 +77,7 @@ model CreateChatCompletionRequest {
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
    *
-   * [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+   * [See more information about frequency and presence penalties.](/docs/guides/text-generation)
    */
   @minValue(-2)
   @maxValue(2)
@@ -122,6 +123,15 @@ model CreateChatCompletionRequest {
 
   modalities?: ChatCompletionModalities | null;
 
+  /**
+   * Configuration for a [Predicted Output](/docs/guides/predicted-outputs),
+   * which can greatly improve response times when large parts of the model
+   * response are known ahead of time. This is most common when you are
+   * regenerating a file with only minor changes to most of the content.
+   */
+  @extension("x-oaiExpandable", true)
+  prediction?: PredictionContent | null;
+
   @doc("""
     Parameters for audio output. Required when audio output is requested with
     `modalities: ["audio"]`. [Learn more](/docs/guides/audio).
@@ -129,10 +139,17 @@ model CreateChatCompletionRequest {
   @extension("x-oaiExpandable", true)
   audio?: {
     @doc("""
-      Specifies the voice type. Supported voices are `alloy`, `echo`, 
-      `fable`, `onyx`, `nova`, and `shimmer`.
+      The voice the model uses to respond. Supported voices are `ash`, `ballad`, `coral`, `sage`, and `verse` (also supported but not recommended are `alloy`, `echo`, and `shimmer`; these voices are less expressive).
       """)
-    voice: "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
+    voice:
+      | "alloy"
+      | "ash"
+      | "ballad"
+      | "coral"
+      | "echo"
+      | "sage"
+      | "shimmer"
+      | "verse";
 
     @doc("""
       Specifies the output audio format. Must be one of `wav`, `mp3`, `flac`,
@@ -144,7 +161,7 @@ model CreateChatCompletionRequest {
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
    *
-   * [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+   * [See more information about frequency and presence penalties.](/docs/guides/text-generation)
    */
   @minValue(-2)
   @maxValue(2)
@@ -152,7 +169,7 @@ model CreateChatCompletionRequest {
 
   // Tool customization: apply a named union type
   @doc("""
-    An object specifying the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4o mini](/docs/models/gpt-4o-mini), [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
+    An object specifying the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4o mini](/docs/models#gpt-4o-mini), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
     
     Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
     
@@ -174,7 +191,7 @@ model CreateChatCompletionRequest {
 
   @doc("""
     Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
-      - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted. 
+      - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted.
       - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
       - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
       - When not set, the default behavior is 'auto'.
@@ -217,7 +234,7 @@ model CreateChatCompletionRequest {
   tool_choice?: ChatCompletionToolChoiceOption;
   parallel_tool_calls?: ParallelToolCalls = true;
 
-  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). */
+  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids). */
   user?: string;
 
   #deprecated "This field is marked as deprecated."
@@ -369,7 +386,7 @@ model ChatCompletionRequestMessageContentPartImage {
     /** Either a URL of the image or the base64 encoded image data. */
     url: url;
 
-    /** Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding). */
+    /** Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision#low-or-high-fidelity-image-understanding). */
     detail?: "auto" | "low" | "high" = "auto";
   };
 }
@@ -860,3 +877,23 @@ model CreateChatCompletionStreamResponse {
 
 /** Represents a streamed chunk of a chat completion response returned by model, based on the provided input. */
 alias CreateChatCompletionImageResponse = unknown;
+
+/**
+ * Static predicted output content, such as the content of a text file that is
+ * being regenerated.
+ */
+model PredictionContent {
+  @doc("""
+    The type of the predicted content you want to provide. This type is
+    currently always `content`.
+    """)
+  type: "content";
+
+  /**
+   * The content that should be matched when generating a model response.
+   * If generated tokens would match this content, the entire model response
+   * can be returned much more quickly.
+   */
+  @extension("x-oaiExpandable", true)
+  content: string | ChatCompletionRequestMessageContentPartText[];
+}

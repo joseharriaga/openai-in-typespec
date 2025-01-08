@@ -115,6 +115,38 @@ function Edit-ChatMessageSerialization {
     # no-op
 }
 
+
+function Edit-AssistantChatMessageSerialization {
+    $filename = "AssistantChatMessage.Serialization.cs"
+
+    # content serialization
+    # no-op
+
+    # content deserialization
+    $inputRegex = @(
+        "return new AssistantChatMessage\("
+        "    role,"
+        "    content,"
+        "    additionalBinaryDataProperties,"
+        "    refusal,"
+        "    participantName,"
+        "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
+        "    functionCall\);"
+    )
+    $outputString = @(
+        "// CUSTOM: Initialize Content collection property."
+        "return new AssistantChatMessage("
+        "    role,"
+        "    content ?? new ChatMessageContent(),"
+        "    additionalBinaryDataProperties,"
+        "    refusal,"
+        "    participantName,"
+        "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
+        "    functionCall);"
+    )
+    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
+}
+
 function Edit-FunctionChatMessageSerialization {
     $filename = "FunctionChatMessage.Serialization.cs"
 
@@ -235,7 +267,6 @@ function Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization
 
 Edit-InternalChatCompletionResponseMessageSerialization
 Edit-InternalChatCompletionStreamResponseDeltaSerialization
-Edit-ChatMessageSerialization
 Edit-FunctionChatMessageSerialization
 Edit-SystemChatMessageSerialization
 Edit-ToolChatMessageSerialization

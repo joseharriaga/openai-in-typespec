@@ -2415,6 +2415,21 @@ namespace OpenAI.RealtimeConversation {
         protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
         protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
+    public class ConversationResponseOptions : IJsonModel<ConversationResponseOptions>, IPersistableModel<ConversationResponseOptions> {
+        public ConversationContentModalities ContentModalities { get; set; }
+        public ResponseConversationSelection? ConversationSelection { get; set; }
+        public string Instructions { get; set; }
+        public ConversationMaxTokensChoice MaxOutputTokens { get; set; }
+        public IDictionary<string, string> Metadata { get; set; }
+        public ConversationAudioFormat? OutputAudioFormat { get; set; }
+        public IList<ConversationItem> OverrideItems { get; }
+        public float? Temperature { get; set; }
+        public ConversationToolChoice ToolChoice { get; set; }
+        public IList<ConversationTool> Tools { get; }
+        public ConversationVoice? Voice { get; set; }
+        public static explicit operator ConversationResponseOptions(ClientResult result);
+        public static implicit operator BinaryContent(ConversationResponseOptions conversationResponseOptions);
+    }
     public class ConversationResponseStartedUpdate : ConversationUpdate, IJsonModel<ConversationResponseStartedUpdate>, IPersistableModel<ConversationResponseStartedUpdate> {
         public IReadOnlyList<ConversationItem> CreatedItems { get; }
         public string ResponseId { get; }
@@ -2684,12 +2699,26 @@ namespace OpenAI.RealtimeConversation {
         public virtual void SendInputAudio(Stream audio, CancellationToken cancellationToken = default);
         public virtual Task SendInputAudioAsync(BinaryData audio, CancellationToken cancellationToken = default);
         public virtual Task SendInputAudioAsync(Stream audio, CancellationToken cancellationToken = default);
-        public virtual void StartResponse(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default);
-        public virtual void StartResponse(CancellationToken cancellationToken = default);
-        public virtual Task StartResponseAsync(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default);
+        public virtual void StartResponse(ConversationResponseOptions options, CancellationToken cancellationToken = default);
+        public void StartResponse(CancellationToken cancellationToken = default);
+        public virtual Task StartResponseAsync(ConversationResponseOptions options, CancellationToken cancellationToken = default);
         public virtual Task StartResponseAsync(CancellationToken cancellationToken = default);
         public virtual void TruncateItem(string itemId, int contentPartIndex, TimeSpan audioDuration, CancellationToken cancellationToken = default);
         public virtual Task TruncateItemAsync(string itemId, int contentPartIndex, TimeSpan audioDuration, CancellationToken cancellationToken = default);
+    }
+    public readonly partial struct ResponseConversationSelection : IEquatable<ResponseConversationSelection> {
+        public ResponseConversationSelection(string value);
+        public static ResponseConversationSelection Auto { get; }
+        public static ResponseConversationSelection None { get; }
+        public readonly bool Equals(ResponseConversationSelection other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ResponseConversationSelection left, ResponseConversationSelection right);
+        public static implicit operator ResponseConversationSelection(string value);
+        public static bool operator !=(ResponseConversationSelection left, ResponseConversationSelection right);
+        public override readonly string ToString();
     }
 }
 namespace OpenAI.VectorStores {

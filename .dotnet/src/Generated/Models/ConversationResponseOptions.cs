@@ -8,27 +8,28 @@ using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
-    public partial class ConversationSessionOptions
+    public partial class ConversationResponseOptions
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public ConversationSessionOptions()
+        public ConversationResponseOptions()
         {
             Tools = new ChangeTrackingList<ConversationTool>();
+            Metadata = new ChangeTrackingDictionary<string, string>();
+            OverrideItems = new ChangeTrackingList<ConversationItem>();
             _internalModalities = new ChangeTrackingList<InternalRealtimeRequestSessionModality>();
         }
 
-        internal ConversationSessionOptions(string instructions, ConversationVoice? voice, ConversationAudioFormat? inputAudioFormat, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, InternalRealtimeRequestSessionModel? model, ConversationTurnDetectionOptions turnDetectionOptions, ConversationInputTranscriptionOptions inputTranscriptionOptions, IList<InternalRealtimeRequestSessionModality> internalModalities, BinaryData internalToolChoice, BinaryData maxResponseOutputTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ConversationResponseOptions(string instructions, ConversationVoice? voice, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, IDictionary<string, string> metadata, ResponseConversationSelection? conversationSelection, IList<ConversationItem> overrideItems, IList<InternalRealtimeRequestSessionModality> internalModalities, BinaryData internalToolChoice, BinaryData maxResponseOutputTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Instructions = instructions;
             Voice = voice;
-            InputAudioFormat = inputAudioFormat;
             OutputAudioFormat = outputAudioFormat;
             Tools = tools;
             Temperature = temperature;
-            Model = model;
-            TurnDetectionOptions = turnDetectionOptions;
-            InputTranscriptionOptions = inputTranscriptionOptions;
+            Metadata = metadata;
+            ConversationSelection = conversationSelection;
+            OverrideItems = overrideItems;
             _internalModalities = internalModalities;
             _internalToolChoice = internalToolChoice;
             _maxResponseOutputTokens = maxResponseOutputTokens;
@@ -39,13 +40,13 @@ namespace OpenAI.RealtimeConversation
 
         public ConversationVoice? Voice { get; set; }
 
-        public ConversationAudioFormat? InputAudioFormat { get; set; }
-
         public ConversationAudioFormat? OutputAudioFormat { get; set; }
 
         public IList<ConversationTool> Tools { get; }
 
         public float? Temperature { get; set; }
+
+        public IDictionary<string, string> Metadata { get; set; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

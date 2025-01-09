@@ -419,7 +419,7 @@ namespace OpenAI
             return new ThreadDeletionResult(deleted, threadId, @object, additionalBinaryDataProperties: null);
         }
 
-        public static ConversationSessionOptions ConversationSessionOptions(string instructions = default, ConversationVoice? voice = default, ConversationAudioFormat? inputAudioFormat = default, ConversationAudioFormat? outputAudioFormat = default, IEnumerable<ConversationTool> tools = default, float? temperature = default, InternalTodoRealtimeRequestSessionModel? model = default, ConversationTurnDetectionOptions turnDetectionOptions = default, ConversationInputTranscriptionOptions inputTranscriptionOptions = default, IEnumerable<InternalRealtimeRequestSessionModality> internalModalities = default, BinaryData internalToolChoice = default, BinaryData maxResponseOutputTokens = default)
+        public static ConversationSessionOptions ConversationSessionOptions(string instructions = default, ConversationVoice? voice = default, ConversationAudioFormat? inputAudioFormat = default, ConversationAudioFormat? outputAudioFormat = default, IEnumerable<ConversationTool> tools = default, float? temperature = default, InternalRealtimeRequestSessionModel? model = default, ConversationTurnDetectionOptions turnDetectionOptions = default, ConversationInputTranscriptionOptions inputTranscriptionOptions = default, IEnumerable<InternalRealtimeRequestSessionModality> internalModalities = default, BinaryData internalToolChoice = default, BinaryData maxResponseOutputTokens = default)
         {
             tools ??= new ChangeTrackingList<ConversationTool>();
             internalModalities ??= new ChangeTrackingList<InternalRealtimeRequestSessionModality>();
@@ -474,6 +474,28 @@ namespace OpenAI
         {
 
             return new UnknownRealtimeContentPart(new ConversationContentPartKind(kind), additionalBinaryDataProperties: null);
+        }
+
+        public static ConversationResponseOptions ConversationResponseOptions(string instructions = default, ConversationVoice? voice = default, ConversationAudioFormat? outputAudioFormat = default, IEnumerable<ConversationTool> tools = default, float? temperature = default, IDictionary<string, string> metadata = default, ResponseConversationSelection? conversationSelection = default, IEnumerable<ConversationItem> overrideItems = default, IEnumerable<InternalRealtimeRequestSessionModality> internalModalities = default, BinaryData internalToolChoice = default, BinaryData maxResponseOutputTokens = default)
+        {
+            tools ??= new ChangeTrackingList<ConversationTool>();
+            metadata ??= new ChangeTrackingDictionary<string, string>();
+            overrideItems ??= new ChangeTrackingList<ConversationItem>();
+            internalModalities ??= new ChangeTrackingList<InternalRealtimeRequestSessionModality>();
+
+            return new ConversationResponseOptions(
+                instructions,
+                voice,
+                outputAudioFormat,
+                tools?.ToList(),
+                temperature,
+                metadata,
+                conversationSelection,
+                overrideItems?.ToList(),
+                internalModalities?.ToList(),
+                internalToolChoice,
+                maxResponseOutputTokens,
+                additionalBinaryDataProperties: null);
         }
 
         public static ConversationUpdate ConversationUpdate(string eventId = default, string kind = default)

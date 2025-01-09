@@ -171,7 +171,7 @@ namespace OpenAI.RealtimeConversation
             ConversationAudioFormat? outputAudioFormat = default;
             IList<ConversationTool> tools = default;
             float? temperature = default;
-            InternalTodoRealtimeRequestSessionModel? model = default;
+            InternalRealtimeRequestSessionModel? model = default;
             ConversationTurnDetectionOptions turnDetectionOptions = default;
             ConversationInputTranscriptionOptions inputTranscriptionOptions = default;
             IList<InternalRealtimeRequestSessionModality> internalModalities = default;
@@ -241,7 +241,7 @@ namespace OpenAI.RealtimeConversation
                     {
                         continue;
                     }
-                    model = new InternalTodoRealtimeRequestSessionModel(prop.Value.GetString());
+                    model = new InternalRealtimeRequestSessionModel(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("turn_detection"u8))

@@ -14,11 +14,11 @@ namespace OpenAI.RealtimeConversation
 
         internal InternalRealtimeResponse()
         {
-            Metadata = new ChangeTrackingDictionary<string, BinaryData>();
+            Metadata = new ChangeTrackingDictionary<string, string>();
             Output = new ChangeTrackingList<ConversationItem>();
         }
 
-        internal InternalRealtimeResponse(string id, InternalRealtimeResponseObject? @object, ConversationStatus? status, ConversationStatusDetails statusDetails, IDictionary<string, BinaryData> metadata, ConversationTokenUsage usage, IReadOnlyList<ConversationItem> output, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRealtimeResponse(string id, InternalRealtimeResponseObject? @object, ConversationStatus? status, ConversationStatusDetails statusDetails, IDictionary<string, string> metadata, ConversationTokenUsage usage, IReadOnlyList<ConversationItem> output, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             Object = @object;
@@ -38,7 +38,7 @@ namespace OpenAI.RealtimeConversation
 
         public ConversationStatusDetails StatusDetails { get; }
 
-        public IDictionary<string, BinaryData> Metadata { get; }
+        public IDictionary<string, string> Metadata { get; }
 
         public ConversationTokenUsage Usage { get; }
 

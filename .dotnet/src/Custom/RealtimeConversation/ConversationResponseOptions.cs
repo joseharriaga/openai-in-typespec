@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.ClientModel.Primitives;
+using System.Text.Json;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeRequestSession")]
-public partial class ConversationSessionOptions
+[CodeGenModel("RealtimeResponseCreateParams")]
+public partial class ConversationResponseOptions
 {
-    [CodeGenMember("Model")]
-    internal InternalRealtimeRequestSessionModel? Model { get; set; }
+    [CodeGenMember("Conversation")]
+    public ResponseConversationSelection? ConversationSelection { get; set; }
 
     [CodeGenMember("Modalities")]
     private IList<InternalRealtimeRequestSessionModality> _internalModalities;
@@ -47,9 +49,6 @@ public partial class ConversationSessionOptions
         }
     }
 
-    [CodeGenMember("TurnDetection")]
-    public ConversationTurnDetectionOptions TurnDetectionOptions { get; set; }
-
-    [CodeGenMember("InputAudioTranscription")]
-    public ConversationInputTranscriptionOptions InputTranscriptionOptions { get; set; }
+    [CodeGenMember("Input")]
+    public IList<ConversationItem> OverrideItems { get; }
 }

@@ -61,14 +61,7 @@ namespace OpenAI.RealtimeConversation
                             writer.WriteNullValue();
                             continue;
                         }
-#if NET6_0_OR_GREATER
-                        writer.WriteRawValue(item.Value);
-#else
-                        using (JsonDocument document = JsonDocument.Parse(item.Value))
-                        {
-                            JsonSerializer.Serialize(writer, document.RootElement);
-                        }
-#endif
+                        writer.WriteStringValue(item.Value);
                     }
                     writer.WriteEndObject();
                 }
@@ -136,7 +129,7 @@ namespace OpenAI.RealtimeConversation
             InternalRealtimeResponseObject? @object = default;
             ConversationStatus? status = default;
             ConversationStatusDetails statusDetails = default;
-            IDictionary<string, BinaryData> metadata = default;
+            IDictionary<string, string> metadata = default;
             ConversationTokenUsage usage = default;
             IReadOnlyList<ConversationItem> output = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
@@ -180,7 +173,7 @@ namespace OpenAI.RealtimeConversation
                     {
                         continue;
                     }
-                    Dictionary<string, BinaryData> dictionary = new Dictionary<string, BinaryData>();
+                    Dictionary<string, string> dictionary = new Dictionary<string, string>();
                     foreach (var prop0 in prop.Value.EnumerateObject())
                     {
                         if (prop0.Value.ValueKind == JsonValueKind.Null)
@@ -189,7 +182,7 @@ namespace OpenAI.RealtimeConversation
                         }
                         else
                         {
-                            dictionary.Add(prop0.Name, BinaryData.FromString(prop0.Value.GetRawText()));
+                            dictionary.Add(prop0.Name, prop0.Value.GetString());
                         }
                     }
                     metadata = dictionary;
@@ -228,7 +221,7 @@ namespace OpenAI.RealtimeConversation
                 @object,
                 status,
                 statusDetails,
-                metadata ?? new ChangeTrackingDictionary<string, BinaryData>(),
+                metadata ?? new ChangeTrackingDictionary<string, string>(),
                 usage,
                 output ?? new ChangeTrackingList<ConversationItem>(),
                 additionalBinaryDataProperties);

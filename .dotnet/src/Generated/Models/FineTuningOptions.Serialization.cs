@@ -11,12 +11,8 @@ using OpenAI;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class FineTuningOptions : IJsonModel<FineTuningOptions>
+    public partial class FineTuningOptions : IJsonModel<FineTuningOptions>
     {
-        internal FineTuningOptions()
-        {
-        }
-
         void IJsonModel<FineTuningOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -31,6 +27,11 @@ namespace OpenAI.FineTuning
             {
                 throw new FormatException($"The model {nameof(FineTuningOptions)} does not support writing '{format}' format.");
             }
+            if (Optional.IsDefined(TrainingMethod) && _additionalBinaryDataProperties?.ContainsKey("method") != true)
+            {
+                writer.WritePropertyName("method"u8);
+                writer.WriteObjectValue(TrainingMethod, options);
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
@@ -44,7 +45,7 @@ namespace OpenAI.FineTuning
             if (Optional.IsDefined(Hyperparameters) && _additionalBinaryDataProperties?.ContainsKey("hyperparameters") != true)
             {
                 writer.WritePropertyName("hyperparameters"u8);
-                writer.WriteObjectValue(Hyperparameters, options);
+                writer.WriteObjectValue<HyperparameterOptions>(Hyperparameters, options);
             }
             if (Optional.IsDefined(Suffix) && _additionalBinaryDataProperties?.ContainsKey("suffix") != true)
             {
@@ -139,7 +140,8 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            InternalCreateFineTuningJobRequestModel model = default;
+            FineTuningTrainingMethod @method = default;
+            CreateFineTuningJobRequestModel model = default;
             string trainingFile = default;
             HyperparameterOptions hyperparameters = default;
             string suffix = default;
@@ -149,9 +151,18 @@ namespace OpenAI.FineTuning
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("method"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    @method = FineTuningTrainingMethod.DeserializeFineTuningTrainingMethod(prop.Value, options);
+                    continue;
+                }
                 if (prop.NameEquals("model"u8))
                 {
-                    model = new InternalCreateFineTuningJobRequestModel(prop.Value.GetString());
+                    model = new CreateFineTuningJobRequestModel(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("training_file"u8))
@@ -218,6 +229,7 @@ namespace OpenAI.FineTuning
                 }
             }
             return new FineTuningOptions(
+                @method,
                 model,
                 trainingFile,
                 hyperparameters,

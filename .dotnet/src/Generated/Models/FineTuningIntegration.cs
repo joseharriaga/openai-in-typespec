@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.FineTuning
 {
-    internal abstract partial class FineTuningIntegration
+    public abstract partial class FineTuningIntegration
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 

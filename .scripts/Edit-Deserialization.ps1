@@ -12,7 +12,23 @@ foreach ($file in $files) {
     $content = Get-Content -Path $file.FullName
     $updatedContent = $content -replace "options.Format != `"W`"", "true"
     if ($content -ne $updatedContent) {
-        Set-Content -Path $file.FullName -Value $updatedContent
+
+        # Retry Set-Content until it succeeds
+        # Set-Content -Path $file.FullName -Value $updatedContent
+        $retryCount = 0
+        $retryLimit = 5
+        $retryDelay = 1
+        $retry = $true
+        while ($retry -and $retryCount -lt $retryLimit) {
+            try {
+                Set-Content -Path $file.FullName -Value $updatedContent
+                $retry = $false
+            } catch {
+                $retryCount++
+                Write-Output "Failed to write to file. Retrying in $retryDelay seconds..."
+                Start-Sleep -Seconds $retryDelay
+            }
+        }
     }
     $editedFilesCount++
 }

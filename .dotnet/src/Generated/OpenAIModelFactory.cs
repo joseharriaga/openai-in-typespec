@@ -10,6 +10,7 @@ using OpenAI.Audio;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using OpenAI.Files;
+using OpenAI.FineTuning;
 using OpenAI.Images;
 using OpenAI.Models;
 using OpenAI.Moderations;
@@ -819,6 +820,94 @@ namespace OpenAI
                 size,
                 responseFormat,
                 endUserId,
+                additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningOptions FineTuningOptions(FineTuningTrainingMethod @method = default, CreateFineTuningJobRequestModel model = default, string trainingFile = default, HyperparameterOptions hyperparameters = default, string suffix = default, string validationFile = default, IEnumerable<FineTuningIntegration> integrations = default, int? seed = default)
+        {
+            integrations ??= new ChangeTrackingList<FineTuningIntegration>();
+
+            return new FineTuningOptions(
+                @method,
+                model,
+                trainingFile,
+                hyperparameters,
+                suffix,
+                validationFile,
+                integrations?.ToList(),
+                seed,
+                additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningIntegration FineTuningIntegration(string @type = default)
+        {
+
+            return new UnknownCreateFineTuningJobRequestIntegration(@type, additionalBinaryDataProperties: null);
+        }
+
+        public static WeightsAndBiasesIntegration WeightsAndBiasesIntegration(string @type = default, InternalCreateFineTuningJobRequestWandbIntegrationWandb wandb = default)
+        {
+
+            return new WeightsAndBiasesIntegration(@type, serializedAdditionalRawData: null, wandb);
+        }
+
+        public static FineTuningTrainingMethod FineTuningTrainingMethod(InternalFineTuneMethodType? @type = default, InternalFineTuningJobRequestMethodSupervised supervised = default, InternalFineTuningJobRequestMethodDpo dpo = default)
+        {
+
+            return new FineTuningTrainingMethod(@type, supervised, dpo, additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningError FineTuningError(string code = default, string message = default, string invalidParameter = default)
+        {
+
+            return new FineTuningError(code, message, invalidParameter, additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningHyperparameters FineTuningHyperparameters(BinaryData cycleCount = default, BinaryData batchSize = default, BinaryData learningRateMultiplier = default)
+        {
+
+            return new FineTuningHyperparameters(cycleCount, batchSize, learningRateMultiplier, additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningCheckpoint FineTuningCheckpoint(string checkpointId = default, DateTimeOffset createdAt = default, string fineTunedModelCheckpointId = default, int stepNumber = default, FineTuningCheckpointMetrics metrics = default, string jobId = default, string @object = default)
+        {
+
+            return new FineTuningCheckpoint(
+                checkpointId,
+                createdAt,
+                fineTunedModelCheckpointId,
+                stepNumber,
+                metrics,
+                jobId,
+                @object,
+                additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningCheckpointMetrics FineTuningCheckpointMetrics(float? trainLoss = default, float? trainMeanTokenAccuracy = default, float? validLoss = default, float? validMeanTokenAccuracy = default, float? fullValidLoss = default, float? fullValidMeanTokenAccuracy = default, int stepNumber = default)
+        {
+
+            return new FineTuningCheckpointMetrics(
+                trainLoss,
+                trainMeanTokenAccuracy,
+                validLoss,
+                validMeanTokenAccuracy,
+                fullValidLoss,
+                fullValidMeanTokenAccuracy,
+                stepNumber,
+                additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningEvent FineTuningEvent(string id = default, DateTimeOffset createdAt = default, string message = default, FineTuningJobEventType? @type = default, BinaryData data = default, string level = default, string @object = default)
+        {
+
+            return new FineTuningEvent(
+                id,
+                createdAt,
+                message,
+                @type,
+                data,
+                level,
+                @object,
                 additionalBinaryDataProperties: null);
         }
 

@@ -33,9 +33,9 @@ internal partial class AzureFineTuningClient : FineTuningClient
     protected AzureFineTuningClient()
     { }
 
-    internal override FineTuningJobOperation CreateCreateJobOperation(string jobId, string status, PipelineResponse response)
+    internal override FineTuningJob CreateJobFromResponse(PipelineResponse response)
     {
-        return new AzureFineTuningJobOperation(Pipeline, _endpoint, jobId, status, response, _apiVersion);
+        return new AzureFineTuningJob(Pipeline, _endpoint, response, _apiVersion);
     }
 }
 

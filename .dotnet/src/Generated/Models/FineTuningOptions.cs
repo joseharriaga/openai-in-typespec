@@ -4,25 +4,16 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class FineTuningOptions
+    public partial class FineTuningOptions
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public FineTuningOptions(InternalCreateFineTuningJobRequestModel model, string trainingFile)
+        internal FineTuningOptions(FineTuningTrainingMethod @method, CreateFineTuningJobRequestModel model, string trainingFile, HyperparameterOptions hyperparameters, string suffix, string validationFile, IList<FineTuningIntegration> integrations, int? seed, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Argument.AssertNotNull(trainingFile, nameof(trainingFile));
-
-            Model = model;
-            TrainingFile = trainingFile;
-            Integrations = new ChangeTrackingList<FineTuningIntegration>();
-        }
-
-        internal FineTuningOptions(InternalCreateFineTuningJobRequestModel model, string trainingFile, HyperparameterOptions hyperparameters, string suffix, string validationFile, IList<FineTuningIntegration> integrations, int? seed, IDictionary<string, BinaryData> additionalBinaryDataProperties)
-        {
+            TrainingMethod = @method;
             Model = model;
             TrainingFile = trainingFile;
             Hyperparameters = hyperparameters;
@@ -32,20 +23,6 @@ namespace OpenAI.FineTuning
             Seed = seed;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
-
-        public InternalCreateFineTuningJobRequestModel Model { get; }
-
-        public string TrainingFile { get; }
-
-        public HyperparameterOptions Hyperparameters { get; set; }
-
-        public string Suffix { get; set; }
-
-        public string ValidationFile { get; set; }
-
-        public IList<FineTuningIntegration> Integrations { get; set; }
-
-        public int? Seed { get; set; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

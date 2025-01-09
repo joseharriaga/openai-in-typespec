@@ -5450,7 +5450,7 @@ components:
                 - gpt-4o-mini
           description: |-
             The name of the model to fine-tune. You can select one of the
-            [supported models](/docs/guides/fine-tuning/which-models-can-be-fine-tuned).
+            [supported models](/docs/guides/fine-tuning#which-models-can-be-fine-tuned).
           x-oaiTypeLabel: string
         training_file:
           type: string
@@ -5461,13 +5461,49 @@ components:
 
             Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
 
-            The contents of the file should differ depending on if the model uses the [chat](/docs/api-reference/fine-tuning/chat-input) or [completions](/docs/api-reference/fine-tuning/completions-input) format.
+            The contents of the file should differ depending on if the model uses the [chat](/docs/api-reference/fine-tuning/chat-input), [completions](/docs/api-reference/fine-tuning/completions-input) format, or if the fine-tuning method uses the [preference](/docs/api-reference/fine-tuning/preference-input) format.
 
             See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         hyperparameters:
-          allOf:
-            - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparameters'
-          description: The hyperparameters used for the fine-tuning job.
+          type: object
+          properties:
+            batch_size:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: |-
+                Number of examples in each batch. A larger batch size means that model parameters
+                are updated less frequently, but with lower variance.
+              default: auto
+            learning_rate_multiplier:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: number
+                  format: float
+              description: |-
+                Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
+                overfitting.
+              default: auto
+            n_epochs:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: |-
+                The number of epochs to train the model for. An epoch refers to one full cycle
+                through the training dataset.
+              default: auto
+          description: |-
+            The hyperparameters used for the fine-tuning job.
+            This value is now deprecated in favor of `method`, and should be passed in under the `method` parameter.
+          deprecated: true
         suffix:
           type: string
           nullable: true
@@ -5507,53 +5543,44 @@ components:
           description: |-
             The seed controls the reproducibility of the job. Passing in the same seed and job parameters should produce the same results, but may differ in rare cases.
             If a seed is not specified, one will be generated for you.
-    CreateFineTuningJobRequestHyperparameters:
-      type: object
-      properties:
-        n_epochs:
-          anyOf:
-            - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum'
-            - type: integer
-              format: int32
-          minimum: 1
-          maximum: 50
-          description: |-
-            The number of epochs to train the model for. An epoch refers to one full cycle
-            through the training dataset.
-          default: auto
-        batch_size:
-          anyOf:
-            - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum'
-            - type: integer
-              format: int32
-          minimum: 1
-          maximum: 256
-          description: |-
-            Number of examples in each batch. A larger batch size means that model parameters
-            are updated less frequently, but with lower variance.
-          default: auto
-        learning_rate_multiplier:
-          anyOf:
-            - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum'
-            - type: number
-              format: float
-          minimum: 0
-          description: |-
-            Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
-            overfitting.
-          default: auto
+        method:
+          $ref: '#/components/schemas/FineTuneMethod'
     CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum:
       type: string
       enum:
         - auto
+    CreateFineTuningJobRequestHyperparametersBatchSizeOption:
+      anyOf:
+        - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum'
+        - type: integer
+          format: int32
+    CreateFineTuningJobRequestHyperparametersBetaChoiceEnum:
+      type: string
+      enum:
+        - auto
+    CreateFineTuningJobRequestHyperparametersBetaOption:
+      anyOf:
+        - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum'
+        - type: integer
+          format: int32
     CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum:
       type: string
       enum:
         - auto
+    CreateFineTuningJobRequestHyperparametersLearningRateMultiplierOption:
+      anyOf:
+        - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum'
+        - type: number
+          format: float
     CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum:
       type: string
       enum:
         - auto
+    CreateFineTuningJobRequestHyperparametersNEpochsOption:
+      anyOf:
+        - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum'
+        - type: integer
+          format: int32
     CreateFineTuningJobRequestIntegration:
       type: object
       required:
@@ -7003,6 +7030,180 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/ChatCompletionRequestAssistantMessage'
+    FineTuneChatRequestInput:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/ChatCompletionRequestSystemMessage'
+              - $ref: '#/components/schemas/ChatCompletionRequestUserMessage'
+              - $ref: '#/components/schemas/FineTuneChatCompletionRequestAssistantMessage'
+              - $ref: '#/components/schemas/ChatCompletionRequestToolMessage'
+              - $ref: '#/components/schemas/ChatCompletionRequestFunctionMessage'
+          minItems: 1
+          x-oaiExpandable: true
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatCompletionTool'
+          description: A list of tools the model may generate JSON inputs for.
+        parallel_tool_calls:
+          type: boolean
+          default: true
+        functions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatCompletionFunctions'
+          minItems: 1
+          maxItems: 128
+          description: A list of functions the model may generate JSON inputs for.
+          deprecated: true
+      description: The per-line training example of a fine-tuning input file for chat models using the supervised method.
+    FineTuneCompletionRequestInput:
+      type: object
+      properties:
+        prompt:
+          type: string
+          description: The input prompt for this training example.
+        completion:
+          type: string
+          description: The desired completion for this training example.
+      description: The per-line training example of a fine-tuning input file for completions models
+    FineTuneDPOMethod:
+      type: object
+      properties:
+        hyperparameters:
+          type: object
+          properties:
+            beta:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: number
+                  format: float
+              description: The beta value for the DPO method. A higher beta value will increase the weight of the penalty between the policy and reference model.
+              default: auto
+            batch_size:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: Number of examples in each batch. A larger batch size means that model parameters are updated less frequently, but with lower variance.
+              default: auto
+            learning_rate_multiplier:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: number
+                  format: float
+              description: Scaling factor for the learning rate. A smaller learning rate may be useful to avoid overfitting.
+              default: auto
+            n_epochs:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: The number of epochs to train the model for. An epoch refers to one full cycle through the training dataset.
+              default: auto
+          description: The hyperparameters used for the fine-tuning job.
+      description: Configuration for the DPO fine-tuning method.
+    FineTuneMethod:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - supervised
+            - dpo
+          description: The type of method. Is either `supervised` or `dpo`.
+        supervised:
+          $ref: '#/components/schemas/FineTuneSupervisedMethod'
+        dpo:
+          $ref: '#/components/schemas/FineTuneDPOMethod'
+      description: The method used for fine-tuning.
+    FineTunePreferenceRequestInput:
+      type: object
+      properties:
+        input:
+          type: object
+          properties:
+            messages:
+              type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/ChatCompletionRequestSystemMessage'
+                  - $ref: '#/components/schemas/ChatCompletionRequestUserMessage'
+                  - $ref: '#/components/schemas/FineTuneChatCompletionRequestAssistantMessage'
+                  - $ref: '#/components/schemas/ChatCompletionRequestToolMessage'
+                  - $ref: '#/components/schemas/ChatCompletionRequestFunctionMessage'
+              minItems: 1
+              x-oaiExpandable: true
+            tools:
+              type: array
+              items:
+                $ref: '#/components/schemas/ChatCompletionTool'
+              description: A list of tools the model may generate JSON inputs for.
+            parallel_tool_calls:
+              type: boolean
+              default: true
+        preferred_completion:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatCompletionRequestAssistantMessage'
+          maxItems: 1
+          description: The preferred completion message for the output.
+          x-oaiExpandable: true
+        non_preferred_completion:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatCompletionRequestAssistantMessage'
+          maxItems: 1
+          description: The non-preferred completion message for the output.
+          x-oaiExpandable: true
+      description: The per-line training example of a fine-tuning input file for chat models using the dpo method.
+    FineTuneSupervisedMethod:
+      type: object
+      properties:
+        hyperparameters:
+          type: object
+          properties:
+            batch_size:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: Number of examples in each batch. A larger batch size means that model parameters are updated less frequently, but with lower variance.
+              default: auto
+            learning_rate_multiplier:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: number
+                  format: float
+              description: Scaling factor for the learning rate. A smaller learning rate may be useful to avoid overfitting.
+              default: auto
+            n_epochs:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: The number of epochs to train the model for. An epoch refers to one full cycle through the training dataset.
+              default: auto
+          description: The hyperparameters used for the fine-tuning job.
+      description: Configuration for the supervised fine-tuning method.
     FineTuningIntegration:
       type: object
       required:
@@ -7115,9 +7316,42 @@ components:
           nullable: true
           description: The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be null if the fine-tuning job is still running.
         hyperparameters:
-          allOf:
-            - $ref: '#/components/schemas/FineTuningJobHyperparameters'
-          description: The hyperparameters used for the fine-tuning job. See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+          type: object
+          properties:
+            batch_size:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: |-
+                Number of examples in each batch. A larger batch size means that model parameters
+                are updated less frequently, but with lower variance.
+              default: auto
+            learning_rate_multiplier:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: number
+                  format: float
+              description: |-
+                Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
+                overfitting.
+              default: auto
+            n_epochs:
+              anyOf:
+                - type: string
+                  enum:
+                    - auto
+                - type: integer
+                  format: int32
+              description: |-
+                The number of epochs to train the model for. An epoch refers to one full cycle
+                through the training dataset.
+              default: auto
+          description: The hyperparameters used for the fine-tuning job. This value will only be returned when running `supervised` jobs.
         model:
           type: string
           description: The base model that is being fine-tuned.
@@ -7171,6 +7405,8 @@ components:
           format: unixtime
           nullable: true
           description: The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value will be null if the fine-tuning job is not running.
+        method:
+          $ref: '#/components/schemas/FineTuneMethod'
       description: The `fine_tuning.job` object represents a fine-tuning job that has been created through the API.
     FineTuningJobCheckpoint:
       type: object
@@ -7234,123 +7470,57 @@ components:
     FineTuningJobEvent:
       type: object
       required:
+        - object
         - id
         - created_at
         - level
         - message
-        - object
       properties:
+        object:
+          type: string
+          enum:
+            - fine_tuning.job.event
+          description: The object type, which is always "fine_tuning.job.event".
         id:
           type: string
+          description: The object identifier.
         created_at:
           type: integer
           format: unixtime
+          description: The Unix timestamp (in seconds) for when the fine-tuning job was created.
         level:
           type: string
           enum:
             - info
             - warn
             - error
+          description: The log level of the event.
         message:
           type: string
-        object:
+          description: The message of the event.
+        type:
           type: string
           enum:
-            - fine_tuning.job.event
+            - message
+            - metrics
+          description: The type of event.
+        data:
+          description: The data associated with the event.
       description: Fine-tuning job event object
-    FineTuningJobHyperparameters:
-      type: object
-      required:
-        - n_epochs
-        - batch_size
-        - learning_rate_multiplier
-      properties:
-        n_epochs:
-          anyOf:
-            - $ref: '#/components/schemas/FineTuningJobHyperparametersNEpochsChoiceEnum'
-            - type: integer
-              format: int32
-          description: |-
-            The number of epochs to train the model for. An epoch refers to one full cycle
-            through the training dataset.
-          default: auto
-        batch_size:
-          anyOf:
-            - $ref: '#/components/schemas/FineTuningJobHyperparametersBatchSizeChoiceEnum'
-            - type: integer
-              format: int32
-          description: |-
-            Number of examples in each batch. A larger batch size means that model parameters
-            are updated less frequently, but with lower variance.
-          default: auto
-        learning_rate_multiplier:
-          anyOf:
-            - $ref: '#/components/schemas/FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum'
-            - type: number
-              format: float
-          description: |-
-            Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
-            overfitting.
-          default: auto
-    FineTuningJobHyperparametersBatchSizeChoiceEnum:
-      type: string
-      enum:
-        - auto
-    FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum:
-      type: string
-      enum:
-        - auto
-    FineTuningJobHyperparametersNEpochsChoiceEnum:
-      type: string
-      enum:
-        - auto
     FineTuningJobIntegrationsItem:
       type: array
       items:
         $ref: '#/components/schemas/FineTuningIntegration'
       maxItems: 5
       x-oaiExpandable: true
-    FinetuneChatRequestInput:
+    FineTuningJobsPageToken:
       type: object
       properties:
-        messages:
-          type: array
-          items:
-            anyOf:
-              - $ref: '#/components/schemas/ChatCompletionRequestSystemMessage'
-              - $ref: '#/components/schemas/ChatCompletionRequestUserMessage'
-              - $ref: '#/components/schemas/FineTuneChatCompletionRequestAssistantMessage'
-              - $ref: '#/components/schemas/ChatCompletionRequestToolMessage'
-              - $ref: '#/components/schemas/ChatCompletionRequestFunctionMessage'
-          minItems: 1
-          x-oaiExpandable: true
-        tools:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatCompletionTool'
-          description: A list of tools the model may generate JSON inputs for.
-        parallel_tool_calls:
-          type: boolean
-          default: true
-        functions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatCompletionFunctions'
-          minItems: 1
-          maxItems: 128
-          description: A list of functions the model may generate JSON inputs for.
-          deprecated: true
-      description: The per-line training example of a fine-tuning input file for chat models
-    FinetuneCompletionRequestInput:
-      type: object
-      properties:
-        prompt:
+        limit:
+          type: integer
+          format: int32
+        after:
           type: string
-          description: The input prompt for this training example.
-        completion:
-          type: string
-          description: The desired completion for this training example.
-      description: The per-line training example of a fine-tuning input file for completions models
     FunctionObject:
       type: object
       required:

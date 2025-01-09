@@ -2,69 +2,36 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-model CreateFineTuningJobRequestHyperparameters {
-  /**
-   * The number of epochs to train the model for. An epoch refers to one full cycle
-   * through the training dataset.
-   */
-  @minValue(1)
-  @maxValue(50)
-  n_epochs?: CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum | int32 = CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum.auto;
-
-  /**
-   * Number of examples in each batch. A larger batch size means that model parameters
-   * are updated less frequently, but with lower variance.
-   */
-  @minValue(1)
-  @maxValue(256)
-  batch_size?: CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum | int32 = CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum.auto;
-
-  /**
-   * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
-   * overfitting.
-   */
-  @minValue(0)
-  learning_rate_multiplier?: CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum | float32 = CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum.auto;
-}
-
 union CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum {
   auto: "auto",
 }
+union CreateFineTuningJobRequestHyperparametersBatchSizeOption {
+  CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum,
+  int32,
+}
+
 union CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum {
   auto: "auto",
 }
+union CreateFineTuningJobRequestHyperparametersLearningRateMultiplierOption {
+  CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum,
+  float32,
+}
+
 union CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum {
   auto: "auto",
 }
-
-model FineTuningJobHyperparameters {
-  /**
-   * The number of epochs to train the model for. An epoch refers to one full cycle
-   * through the training dataset.
-   */
-  n_epochs: FineTuningJobHyperparametersNEpochsChoiceEnum | int32 = FineTuningJobHyperparametersNEpochsChoiceEnum.auto;
-
-  /**
-   * Number of examples in each batch. A larger batch size means that model parameters
-   * are updated less frequently, but with lower variance.
-   */
-  batch_size: FineTuningJobHyperparametersBatchSizeChoiceEnum | int32 = FineTuningJobHyperparametersBatchSizeChoiceEnum.auto;
-
-  /**
-   * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
-   * overfitting.
-   */
-  learning_rate_multiplier: FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum | float32 = FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum.auto;
+union CreateFineTuningJobRequestHyperparametersNEpochsOption {
+  CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum,
+  int32,
 }
 
-union FineTuningJobHyperparametersBatchSizeChoiceEnum {
+union CreateFineTuningJobRequestHyperparametersBetaChoiceEnum {
   auto: "auto",
 }
-union FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum {
-  auto: "auto",
-}
-union FineTuningJobHyperparametersNEpochsChoiceEnum {
-  auto: "auto",
+union CreateFineTuningJobRequestHyperparametersBetaOption {
+  CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum,
+  int32,
 }
 
 @discriminator("type")
@@ -86,4 +53,9 @@ model CreateFineTuningJobRequestWandbIntegration
 @discriminator("type")
 model FineTuningIntegration {
   type: string;
+}
+
+model FineTuningJobsPageToken {
+  limit?: int32;
+  after?: string;
 }

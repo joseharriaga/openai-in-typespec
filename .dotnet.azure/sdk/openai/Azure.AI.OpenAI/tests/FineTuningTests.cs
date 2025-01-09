@@ -17,6 +17,8 @@ using OpenAI.Files;
 using OpenAI.FineTuning;
 using OpenAI.TestFramework;
 using OpenAI.TestFramework.Utils;
+using NUnit.Framework.Internal.Commands;
+
 
 #if !AZURE_OPENAI_GA
 using Azure.AI.OpenAI.FineTuning;
@@ -47,7 +49,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
 
         int count = 25;
 
-        await foreach (FineTuningJob job in EnumerateJobsAsync(client))
+        await foreach (FineTuningJob job in client.ListJobsAsync())
         {
             if (count-- <= 0)
             {
@@ -55,10 +57,8 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             }
 
             Assert.That(job, Is.Not.Null);
-            Assert.That(job.ID, !(Is.Null.Or.Empty));
-            Assert.That(job.FineTunedModel, Is.Null.Or.Not.Empty); // this either null or set to some non-empty value
+            Assert.That(job.Value, Is.Null.Or.Not.Empty); // this either null or set to some non-empty value
             Assert.That(job.Status, !(Is.Null.Or.Empty));
-            Assert.That(job.Object, Is.EqualTo("fine_tuning.job"));
         }
     }
 
@@ -69,15 +69,15 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         FineTuningClient client = GetTestClient();
 
         // Check if the model exists by searching all jobs
-        FineTuningJob job = await EnumerateJobsAsync(client)
-            .FirstOrDefaultAsync(j => j.FineTunedModel == fineTunedModel)!;
+        FineTuningJob job = await client.ListJobsAsync()
+            .FirstOrDefaultAsync(j => j.Value == fineTunedModel)!;
         Assert.That(job, Is.Not.Null);
         Assert.That(job!.Status, Is.EqualTo("succeeded"));
 
-        FineTuningJobOperation fineTuningJobOperation = await FineTuningJobOperation.RehydrateAsync(UnWrap(client), job.ID);
+        FineTuningJob job2 = await FineTuningJob.RehydrateAsync(UnWrap(client), job.JobId);
 
         int count = 25;
-        await foreach (FineTuningCheckpoint checkpoint in EnumerateCheckpoints(fineTuningJobOperation))
+        await foreach (FineTuningCheckpoint checkpoint in job2.GetCheckpointsAsync())
         {
             if (count-- <= 0)
             {
@@ -85,11 +85,11 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             }
 
             Assert.That(checkpoint, Is.Not.Null);
-            Assert.That(checkpoint.ID, !(Is.Null.Or.Empty));
+            Assert.That(checkpoint.JobId, !(Is.Null.Or.Empty));
             Assert.That(checkpoint.CreatedAt, Is.GreaterThan(START_2024));
-            Assert.That(checkpoint.FineTunedModelCheckpoint, !(Is.Null.Or.Empty));
+            Assert.That(checkpoint.CheckpointId, !(Is.Null.Or.Empty));
             Assert.That(checkpoint.Metrics, Is.Not.Null);
-            Assert.That(checkpoint.Metrics.Step, Is.GreaterThan(0));
+            Assert.That(checkpoint.Metrics.StepNumber, Is.GreaterThan(0));
             Assert.That(checkpoint.Metrics.TrainLoss, Is.GreaterThan(0));
             Assert.That(checkpoint.Metrics.TrainMeanTokenAccuracy, Is.GreaterThan(0));
             //Assert.That(checkpoint.Metrics.ValidLoss, Is.GreaterThan(0));
@@ -106,19 +106,20 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         FineTuningClient client = GetTestClient();
 
         // Check if the model exists by searching all jobs
-        FineTuningJob job = await EnumerateJobsAsync(client)
-            .FirstOrDefaultAsync(j => j.FineTunedModel == fineTunedModel)!;
+        FineTuningJob job = await client.ListJobsAsync()
+            .FirstOrDefaultAsync(j => j.Value == fineTunedModel)!;
         Assert.That(job, Is.Not.Null);
         Assert.That(job!.Status, Is.EqualTo("succeeded"));
 
         HashSet<string> ids = new();
 
         //TODO fix unwrapping so you don't have to unwrap here.
-        FineTuningJobOperation fineTuningJobOperation = await FineTuningJobOperation.RehydrateAsync(UnWrap(client), job.ID);
+        FineTuningJob job2 = await FineTuningJob.RehydrateAsync(UnWrap(client), job.JobId);
 
         int count = 25;
-        var asyncEnum = EnumerateAsync<FineTuningJobEvent>((after, limit, opt) => fineTuningJobOperation.GetJobEventsAsync(after, limit, opt));
-        await foreach (FineTuningJobEvent evt in asyncEnum)
+        var asyncEnum = job2.GetEventsAsync(new(){ PageSize = count });
+
+        await foreach (FineTuningEvent evt in asyncEnum)
         {
             if (count-- <= 0)
             {
@@ -126,14 +127,13 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             }
 
             Assert.That(evt, Is.Not.Null);
-            Assert.That(evt.ID, !(Is.Null.Or.Empty));
-            Assert.That(evt.Object, Is.EqualTo("fine_tuning.job.event"));
+            Assert.That(evt.Id, !(Is.Null.Or.Empty));
             Assert.That(evt.CreatedAt, Is.GreaterThan(START_2024));
             Assert.That(evt.Level, !(Is.Null.Or.Empty));
             Assert.That(evt.Message, !(Is.Null.Or.Empty));
 
-            bool added = ids.Add(evt.ID);
-            Assert.That(added, Is.True, "Duplicate event ID detected {0}", evt.ID);
+            bool added = ids.Add(evt.Id);
+            Assert.That(added, Is.True, "Duplicate event ID detected {0}", evt.Id);
         }
     }
 
@@ -165,35 +165,29 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         }
 
         // Create the fine tuning job
-        using var requestContent = new FineTuningOptions()
-        {
-            Model = client.DeploymentOrThrow(),
-            TrainingFile = uploadedFile.Id
-        }.ToBinaryContent();
-
-        FineTuningJobOperation operation = await client.CreateFineTuningJobAsync(requestContent, waitUntilCompleted: false);
+        FineTuningJob operation = await client.FineTuneAsync("gpt-3.5-turbo", uploadedFile.Id);
         FineTuningJob job = ValidateAndParse<FineTuningJob>(ClientResult.FromResponse(operation.GetRawResponse()));
-        Assert.That(job.ID, !(Is.Null.Or.Empty));
+        Assert.That(job.JobId, !(Is.Null.Or.Empty));
 
         await using RunOnScopeExit _ = new(async () =>
         {
-            bool deleted = await DeleteJobAndVerifyAsync((AzureFineTuningJobOperation)operation, job.ID);
-            Assert.True(deleted, "Failed to delete fine tuning job: {0}", job.ID);
+            bool deleted = await DeleteJobAndVerifyAsync((AzureFineTuningJob)operation, job.JobId, client);
+            Assert.True(deleted, "Failed to delete fine tuning job: {0}", job.JobId);
         });
 
         // Wait for some events to become available
         ClientResult result;
-        ListResponse<FineTuningJobEvent> events;
+        ListResponse<FineTuningEvent> events;
         int maxLoops = 10;
         do
         {
-            result = await operation.GetJobEventsAsync(null, 10, new()).GetRawPagesAsync().FirstOrDefaultAsync();
-            events = ValidateAndParse<ListResponse<FineTuningJobEvent>>(result);
+            result = await operation.GetEventsAsync(null, 10, new()).GetRawPagesAsync().FirstOrDefaultAsync();
+            events = ValidateAndParse<ListResponse<FineTuningEvent>>(result);
 
             if (events.Data?.Count > 0)
             {
                 Assert.That(events.Data[0], Is.Not.Null);
-                Assert.That(events.Data[0].ID, !(Is.Null.Or.Empty));
+                Assert.That(events.Data[0].Id, !(Is.Null.Or.Empty));
                 Assert.That(events.Data[0].Level, !(Is.Null.Or.Empty));
                 Assert.That(events.Data[0].Message, !(Is.Null.Or.Empty));
                 Assert.That(events.Data[0].CreatedAt, Is.GreaterThan(START_2024));
@@ -206,8 +200,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         } while (maxLoops-- > 0);
 
         // Cancel the fine tuning job
-        result = await operation.CancelAsync(options: null);
-        job = ValidateAndParse<FineTuningJob>(result);
+        await operation.CancelAndUpdateAsync();
 
         // Make sure the job status shows as cancelled
         await operation.WaitForCompletionAsync();
@@ -241,32 +234,29 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         }
 
         // Create the fine tuning job
-        using var requestContent = new FineTuningOptions()
+        var requestContent = new FineTuningOptions()
         {
-            Model = client.DeploymentOrThrow(),
-            TrainingFile = uploadedFile.Id,
-            Hyperparameters = new FineTuningHyperparameters()
+            Hyperparameters = new()
             {
-                NumEpochs = 1,
-                BatchSize = 11
+                CycleCount = 1,
+                BatchSize = 11,
             }
-        }.ToBinaryContent();
+        };
 
-        FineTuningJobOperation operation = await client.CreateFineTuningJobAsync(requestContent, waitUntilCompleted: false);
-        FineTuningJob job = ValidateAndParse<FineTuningJob>(ClientResult.FromResponse(operation.GetRawResponse()));
-        Assert.That(job.ID, Is.Not.Null.Or.Empty);
-        Assert.That(job.Error, Is.Null);
+        FineTuningJob job = await client.FineTuneAsync("gpt-3.5-turbo", uploadedFile.Id, requestContent);
+        Assert.That(job.JobId, Is.Not.Null.Or.Empty);
         Assert.That(job.Status, !(Is.Null.Or.EqualTo("failed").Or.EqualTo("cancelled")));
-        await operation.CancelAsync(options: null);
+        await job.CancelAndUpdateAsync();
 
         // Wait for the fine tuning to complete
-        await operation.WaitForCompletionAsync();
-        job = ValidateAndParse<FineTuningJob>(await operation.GetJobAsync(null));
+        await job.WaitForCompletionAsync();
+
+        
         Assert.That(job.Status, Is.EqualTo("cancelled"), "Fine tuning did not cancel");
 
         // Delete the fine tuned model
-        bool deleted = await DeleteJobAndVerifyAsync((AzureFineTuningJobOperation)operation, job.ID);
-        Assert.True(deleted, "Failed to delete fine tuning model: {0}", job.FineTunedModel);
+        bool deleted = await DeleteJobAndVerifyAsync((AzureFineTuningJob)job, job.JobId, client);
+        Assert.True(deleted, "Failed to delete fine tuning model: {0}", job.Value);
     }
 
     [RecordedTest]//AutomaticRecord = false)]
@@ -287,8 +277,8 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         });
 
         // Check if the model exists by searching all jobs
-        FineTuningJob? job = await EnumerateJobsAsync(client)
-            .FirstOrDefaultAsync(j => j.FineTunedModel == fineTunedModel);
+        FineTuningJob? job = await client.ListJobsAsync()
+            .FirstOrDefaultAsync(j => j.Value == fineTunedModel);
         Assert.That(job, Is.Not.Null);
         Assert.That(job!.Status, Is.EqualTo("succeeded"));
 
@@ -374,32 +364,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         return uploadedFile;
     }
 
-    private IAsyncEnumerable<FineTuningJob> EnumerateJobsAsync(FineTuningClient client)
-        => EnumerateAsync<FineTuningJob>(client.GetJobsAsync);
-
-    private IAsyncEnumerable<FineTuningCheckpoint> EnumerateCheckpoints(FineTuningJobOperation operation)
-        => EnumerateAsync<FineTuningCheckpoint>((after, limit, opt) => operation.GetJobCheckpointsAsync(after, limit, opt));
-
-    private async IAsyncEnumerable<T> EnumerateAsync<T>(Func<string?, int?, RequestOptions, AsyncCollectionResult> getAsyncEnumerable)
-        where T : FineTuningModelBase
-    {
-        int numPerFetch = 10;
-        RequestOptions reqOptions = new();
-
-        await foreach (ClientResult pageResult in getAsyncEnumerable(null, numPerFetch, reqOptions).GetRawPagesAsync())
-        {
-            ListResponse<T> items = ValidateAndParse<ListResponse<T>>(pageResult);
-            if (items.Data?.Count > 0)
-            {
-                foreach (T item in items.Data)
-                {
-                    yield return item;
-                }
-            }
-        }
-    }
-
-    private async Task<bool> DeleteJobAndVerifyAsync(AzureFineTuningJobOperation operation, string jobId, TimeSpan? timeBetween = null, TimeSpan? maxWaitTime = null)
+    private async Task<bool> DeleteJobAndVerifyAsync(AzureFineTuningJob operation, string jobId, FineTuningClient client, TimeSpan? timeBetween = null, TimeSpan? maxWaitTime = null)
     {
         var stopTime = DateTimeOffset.Now + (maxWaitTime ?? TimeSpan.FromMinutes(1));
         var sleepTime = timeBetween ?? TimeSpan.FromSeconds(2);
@@ -419,8 +384,9 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
             Assert.That(result, Is.Not.Null);
 
             // verify the deletion actually succeeded
-            result = await operation.GetJobAsync(noThrow).ConfigureAwait(false);
-            var rawResponse = result.GetRawResponse();
+            var result2 = await client.GetJobAsync(jobId, noThrow.CancellationToken).ConfigureAwait(false);
+            
+            var rawResponse = result2.GetRawResponse();
             success = rawResponse.Status == 404;
             if (success)
             {

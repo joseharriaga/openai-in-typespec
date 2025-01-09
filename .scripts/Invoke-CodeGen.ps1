@@ -1,3 +1,5 @@
+#!/usr/bin/env pwsh
+
 $repoRoot = Join-Path $PSScriptRoot .. -Resolve
 $dotnetFolder = Join-Path $repoRoot .dotnet\src
 
@@ -16,7 +18,7 @@ try {
   Invoke { npm run build -w .plugin }
   Set-Location $repoRoot/.typespec
   Invoke { npm exec --no -- tsp format **/*tsp }
-  Invoke { npm exec --no -- tsp compile . }
+  Invoke { npm exec --no -- tsp compile . --pretty }
   Invoke { .$PSScriptRoot\Update-ClientModel.ps1 }
   Invoke { .$PSScriptRoot\Edit-Deserialization.ps1 }
   Invoke { .$PSScriptRoot\Remove-Abstract.ps1 }

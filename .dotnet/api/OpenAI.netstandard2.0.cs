@@ -1646,6 +1646,64 @@ namespace OpenAI.Files {
     }
 }
 namespace OpenAI.FineTuning {
+    public readonly partial struct CreateFineTuningJobRequestModel : IEquatable<CreateFineTuningJobRequestModel> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public CreateFineTuningJobRequestModel(string value);
+        public static CreateFineTuningJobRequestModel Babbage002 { get; }
+        public static CreateFineTuningJobRequestModel Davinci002 { get; }
+        public static CreateFineTuningJobRequestModel Gpt35Turbo { get; }
+        public static CreateFineTuningJobRequestModel Gpt4oMini { get; }
+        public readonly bool Equals(CreateFineTuningJobRequestModel other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(CreateFineTuningJobRequestModel left, CreateFineTuningJobRequestModel right);
+        public static implicit operator CreateFineTuningJobRequestModel(string value);
+        public static bool operator !=(CreateFineTuningJobRequestModel left, CreateFineTuningJobRequestModel right);
+        public override readonly string ToString();
+    }
+    public class FineTuningCheckpoint : IJsonModel<FineTuningCheckpoint>, IPersistableModel<FineTuningCheckpoint> {
+        public string CheckpointId { get; }
+        public DateTimeOffset CreatedAt { get; }
+        public string FineTunedModelCheckpointId { get; }
+        public string JobId { get; }
+        public FineTuningCheckpointMetrics Metrics { get; }
+        public int StepNumber { get; }
+        protected virtual FineTuningCheckpoint JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        public static explicit operator FineTuningCheckpoint(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningCheckpoint fineTuningCheckpoint);
+        protected virtual FineTuningCheckpoint PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
+        FineTuningCheckpoint IJsonModel<FineTuningCheckpoint>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<FineTuningCheckpoint>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        FineTuningCheckpoint IPersistableModel<FineTuningCheckpoint>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<FineTuningCheckpoint>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<FineTuningCheckpoint>.Write(ModelReaderWriterOptions options);
+        public override string ToString();
+    }
+    public class FineTuningCheckpointMetrics : IJsonModel<FineTuningCheckpointMetrics>, IPersistableModel<FineTuningCheckpointMetrics> {
+        public float? FullValidLoss { get; }
+        public float? FullValidMeanTokenAccuracy { get; }
+        public int StepNumber { get; }
+        public float? TrainLoss { get; }
+        public float? TrainMeanTokenAccuracy { get; }
+        public float? ValidLoss { get; }
+        public float? ValidMeanTokenAccuracy { get; }
+        protected virtual FineTuningCheckpointMetrics JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        public static explicit operator FineTuningCheckpointMetrics(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningCheckpointMetrics fineTuningCheckpointMetrics);
+        protected virtual FineTuningCheckpointMetrics PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
+        FineTuningCheckpointMetrics IJsonModel<FineTuningCheckpointMetrics>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<FineTuningCheckpointMetrics>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        FineTuningCheckpointMetrics IPersistableModel<FineTuningCheckpointMetrics>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<FineTuningCheckpointMetrics>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<FineTuningCheckpointMetrics>.Write(ModelReaderWriterOptions options);
+    }
     public class FineTuningClient {
         protected FineTuningClient();
         public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options);
@@ -1653,30 +1711,331 @@ namespace OpenAI.FineTuning {
         protected internal FineTuningClient(ClientPipeline pipeline, OpenAIClientOptions options);
         public FineTuningClient(string apiKey);
         public ClientPipeline Pipeline { get; }
-        public virtual FineTuningJobOperation CreateFineTuningJob(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
-        public virtual Task<FineTuningJobOperation> CreateFineTuningJobAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
-        public virtual ClientResult GetJob(string fineTuningJobId, RequestOptions options);
-        public virtual Task<ClientResult> GetJobAsync(string fineTuningJobId, RequestOptions options);
-        public virtual CollectionResult GetJobs(string after, int? limit, RequestOptions options);
-        public virtual AsyncCollectionResult GetJobsAsync(string after, int? limit, RequestOptions options);
+        public virtual FineTuningJob FineTune(BinaryContent content, bool waitUntilCompleted, RequestOptions options);
+        public virtual FineTuningJob FineTune(string baseModel, string trainingFileId, FineTuningOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<FineTuningJob> FineTuneAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options);
+        public virtual Task<FineTuningJob> FineTuneAsync(string baseModel, string trainingFileId, FineTuningOptions options = null, CancellationToken cancellationToken = default);
+        public FineTuningJob GetJob(string JobId, CancellationToken cancellationToken = default);
+        public Task<FineTuningJob> GetJobAsync(string JobId, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<FineTuningJob> ListJobs(ListJobsOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<FineTuningJob> ListJobsAsync(ListJobsOptions options = null, CancellationToken cancellationToken = default);
     }
-    public class FineTuningJobOperation : OperationResult {
+    public class FineTuningError : IJsonModel<FineTuningError>, IPersistableModel<FineTuningError> {
+        public string Code { get; }
+        public string InvalidParameter { get; }
+        public string Message { get; }
+        protected virtual FineTuningError JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        public static explicit operator FineTuningError(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningError fineTuningError);
+        protected virtual FineTuningError PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
+        FineTuningError IJsonModel<FineTuningError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<FineTuningError>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        FineTuningError IPersistableModel<FineTuningError>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<FineTuningError>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<FineTuningError>.Write(ModelReaderWriterOptions options);
+    }
+    public class FineTuningEvent : IJsonModel<FineTuningEvent>, IPersistableModel<FineTuningEvent> {
+        public string Level;
+        public DateTimeOffset CreatedAt { get; }
+        public BinaryData Data { get; }
+        public string Id { get; }
+        public string Message { get; }
+        public FineTuningJobEventType? Type { get; }
+        protected virtual FineTuningEvent JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        public static explicit operator FineTuningEvent(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningEvent fineTuningEvent);
+        protected virtual FineTuningEvent PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
+        FineTuningEvent IJsonModel<FineTuningEvent>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<FineTuningEvent>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        FineTuningEvent IPersistableModel<FineTuningEvent>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<FineTuningEvent>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<FineTuningEvent>.Write(ModelReaderWriterOptions options);
+    }
+    public readonly partial struct FineTuningHyperparameters : IJsonModel<FineTuningHyperparameters>, IPersistableModel<FineTuningHyperparameters>, IJsonModel<object>, IPersistableModel<object> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public int BatchSize { get; }
+        public int CycleCount { get; }
+        public float LearningRateMultiplier { get; }
+        public static explicit operator FineTuningHyperparameters(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningHyperparameters fineTuningHyperparameters);
+        readonly FineTuningHyperparameters IJsonModel<FineTuningHyperparameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        readonly void IJsonModel<FineTuningHyperparameters>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        readonly object IJsonModel<object>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        readonly void IJsonModel<object>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        readonly FineTuningHyperparameters IPersistableModel<FineTuningHyperparameters>.Create(BinaryData data, ModelReaderWriterOptions options);
+        readonly string IPersistableModel<FineTuningHyperparameters>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        readonly BinaryData IPersistableModel<FineTuningHyperparameters>.Write(ModelReaderWriterOptions options);
+        readonly object IPersistableModel<object>.Create(BinaryData data, ModelReaderWriterOptions options);
+        readonly string IPersistableModel<object>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        readonly BinaryData IPersistableModel<object>.Write(ModelReaderWriterOptions options);
+    }
+    public abstract class FineTuningIntegration : IJsonModel<FineTuningIntegration>, IPersistableModel<FineTuningIntegration> {
+        protected virtual FineTuningIntegration JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        public static explicit operator FineTuningIntegration(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningIntegration fineTuningIntegration);
+        protected virtual FineTuningIntegration PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
+        FineTuningIntegration IJsonModel<FineTuningIntegration>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<FineTuningIntegration>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        FineTuningIntegration IPersistableModel<FineTuningIntegration>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<FineTuningIntegration>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<FineTuningIntegration>.Write(ModelReaderWriterOptions options);
+    }
+    public class FineTuningJob : OperationResult {
+        public string? Value;
+        public string BaseModel { get; }
+        public int? BillableTrainedTokens { get; }
+        public DateTimeOffset? EstimatedFinishAt { get; }
+        public IReadOnlyList<FineTuningIntegration> Integrations { get; }
         public string JobId { get; }
         public override ContinuationToken? RehydrationToken { get; protected set; }
-        public virtual ClientResult Cancel(RequestOptions? options);
-        public virtual Task<ClientResult> CancelAsync(RequestOptions? options);
-        public virtual ClientResult GetJob(RequestOptions? options);
-        public virtual Task<ClientResult> GetJobAsync(RequestOptions? options);
-        public virtual CollectionResult GetJobCheckpoints(string? after, int? limit, RequestOptions? options);
-        public virtual AsyncCollectionResult GetJobCheckpointsAsync(string? after, int? limit, RequestOptions? options);
-        public virtual CollectionResult GetJobEvents(string? after, int? limit, RequestOptions options);
-        public virtual AsyncCollectionResult GetJobEventsAsync(string? after, int? limit, RequestOptions options);
-        public static FineTuningJobOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
-        public static FineTuningJobOperation Rehydrate(FineTuningClient client, string fineTuningJobId, CancellationToken cancellationToken = default);
-        public static Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
-        public static Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, string fineTuningJobId, CancellationToken cancellationToken = default);
-        public override ClientResult UpdateStatus(RequestOptions? options = null);
-        public override ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null);
+        public IReadOnlyList<string> ResultFileIds { get; }
+        public int? Seed { get; }
+        public FineTuningStatus Status { get; }
+        public string TrainingFileId { get; }
+        public FineTuningTrainingMethod? TrainingMethod { get; }
+        public string? UserProvidedSuffix { get; }
+        public string ValidationFileId { get; }
+        public virtual ClientResult Cancel(RequestOptions options);
+        public virtual ClientResult CancelAndUpdate(CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult> CancelAndUpdateAsync(CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult> CancelAsync(RequestOptions options);
+        public virtual CollectionResult<FineTuningCheckpoint> GetCheckpoints(ListCheckpointsOptions? options = null, CancellationToken cancellationToken = default);
+        public virtual CollectionResult GetCheckpoints(string? after, int? limit, RequestOptions? options);
+        public virtual AsyncCollectionResult<FineTuningCheckpoint> GetCheckpointsAsync(ListCheckpointsOptions? options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult GetCheckpointsAsync(string? after, int? limit, RequestOptions? options);
+        public virtual CollectionResult<FineTuningEvent> GetEvents(ListEventsOptions options, CancellationToken cancellationToken = default);
+        public virtual CollectionResult GetEvents(string? after, int? limit, RequestOptions options);
+        public virtual AsyncCollectionResult<FineTuningEvent> GetEventsAsync(ListEventsOptions options, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult GetEventsAsync(string? after, int? limit, RequestOptions options);
+        public static FineTuningJob Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, RequestOptions options);
+        public static FineTuningJob Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static FineTuningJob Rehydrate(FineTuningClient client, string JobId, RequestOptions options);
+        public static FineTuningJob Rehydrate(FineTuningClient client, string JobId, CancellationToken cancellationToken = default);
+        public static Task<FineTuningJob> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, RequestOptions options);
+        public static Task<FineTuningJob> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<FineTuningJob> RehydrateAsync(FineTuningClient client, string JobId, RequestOptions options);
+        public static Task<FineTuningJob> RehydrateAsync(FineTuningClient client, string JobId, CancellationToken cancellationToken = default);
+        public override ClientResult UpdateStatus(RequestOptions? options);
+        public ClientResult UpdateStatus(CancellationToken cancellationToken = default);
+        public override ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options);
+        public ValueTask<ClientResult> UpdateStatusAsync(CancellationToken cancellationToken = default);
+        public override void WaitForCompletion(CancellationToken cancellationToken = default);
+        public override ValueTask WaitForCompletionAsync(CancellationToken cancellationToken = default);
+    }
+    public readonly partial struct FineTuningJobEventObject : IEquatable<FineTuningJobEventObject> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public FineTuningJobEventObject(string value);
+        public static FineTuningJobEventObject FineTuningJobEvent { get; }
+        public readonly bool Equals(FineTuningJobEventObject other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(FineTuningJobEventObject left, FineTuningJobEventObject right);
+        public static implicit operator FineTuningJobEventObject(string value);
+        public static bool operator !=(FineTuningJobEventObject left, FineTuningJobEventObject right);
+        public override readonly string ToString();
+    }
+    public readonly partial struct FineTuningJobEventType : IEquatable<FineTuningJobEventType> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public FineTuningJobEventType(string value);
+        public static FineTuningJobEventType Message { get; }
+        public static FineTuningJobEventType Metrics { get; }
+        public readonly bool Equals(FineTuningJobEventType other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(FineTuningJobEventType left, FineTuningJobEventType right);
+        public static implicit operator FineTuningJobEventType(string value);
+        public static bool operator !=(FineTuningJobEventType left, FineTuningJobEventType right);
+        public override readonly string ToString();
+    }
+    public class FineTuningOptions : IJsonModel<FineTuningOptions>, IPersistableModel<FineTuningOptions> {
+        public IList<FineTuningIntegration> Integrations { get; }
+        public int? Seed { get; set; }
+        public string Suffix { get; set; }
+        public FineTuningTrainingMethod TrainingMethod { get; set; }
+        public string ValidationFile { get; set; }
+        protected virtual FineTuningOptions JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        public static explicit operator FineTuningOptions(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningOptions fineTuningOptions);
+        protected virtual FineTuningOptions PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
+        FineTuningOptions IJsonModel<FineTuningOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<FineTuningOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        FineTuningOptions IPersistableModel<FineTuningOptions>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<FineTuningOptions>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<FineTuningOptions>.Write(ModelReaderWriterOptions options);
+    }
+    public readonly partial struct FineTuningStatus : IEquatable<FineTuningStatus> {
+        private readonly object _dummy;
+        private readonly int _dummyPrimitive;
+        public FineTuningStatus(string value);
+        public static FineTuningStatus Cancelled { get; }
+        public static FineTuningStatus Failed { get; }
+        public bool InProgress { get; }
+        public static FineTuningStatus Queued { get; }
+        public static FineTuningStatus Running { get; }
+        public static FineTuningStatus Succeeded { get; }
+        public static FineTuningStatus ValidatingFiles { get; }
+        public readonly bool Equals(FineTuningStatus other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(FineTuningStatus left, FineTuningStatus right);
+        public static implicit operator FineTuningStatus(string value);
+        public static bool operator !=(FineTuningStatus left, FineTuningStatus right);
+        public override readonly string ToString();
+    }
+    public class FineTuningTrainingMethod : IJsonModel<FineTuningTrainingMethod>, IPersistableModel<FineTuningTrainingMethod> {
+        public static FineTuningTrainingMethod CreateDirectPreferenceOptimization(HyperparameterBatchSize batchSize = null, HyperparameterCycleCount cycleCount = null, HyperparameterLearningRate learningRate = null, HyperparameterBetaFactor betaFactor = null);
+        public static FineTuningTrainingMethod CreateSupervised(HyperparameterBatchSize batchSize = null, HyperparameterCycleCount cycleCount = null, HyperparameterLearningRate learningRate = null);
+        protected virtual FineTuningTrainingMethod JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        public static explicit operator FineTuningTrainingMethod(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningTrainingMethod fineTuningTrainingMethod);
+        protected virtual FineTuningTrainingMethod PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
+        FineTuningTrainingMethod IJsonModel<FineTuningTrainingMethod>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<FineTuningTrainingMethod>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        FineTuningTrainingMethod IPersistableModel<FineTuningTrainingMethod>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<FineTuningTrainingMethod>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<FineTuningTrainingMethod>.Write(ModelReaderWriterOptions options);
+    }
+    public class HyperparameterBatchSize : IEquatable<int>, IEquatable<string>, IJsonModel<HyperparameterBatchSize>, IPersistableModel<HyperparameterBatchSize> {
+        public HyperparameterBatchSize(int batchSize);
+        public static HyperparameterBatchSize CreateAutoCount();
+        public static HyperparameterBatchSize CreateSize(int batchSize);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(int other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(string other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode();
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator ==(HyperparameterBatchSize first, HyperparameterBatchSize second);
+        public static implicit operator HyperparameterBatchSize(int batchSize);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator !=(HyperparameterBatchSize first, HyperparameterBatchSize second);
+        HyperparameterBatchSize IJsonModel<HyperparameterBatchSize>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<HyperparameterBatchSize>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        HyperparameterBatchSize IPersistableModel<HyperparameterBatchSize>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<HyperparameterBatchSize>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<HyperparameterBatchSize>.Write(ModelReaderWriterOptions options);
+    }
+    public class HyperparameterBetaFactor : IEquatable<double>, IEquatable<string>, IJsonModel<HyperparameterBetaFactor>, IPersistableModel<HyperparameterBetaFactor> {
+        public HyperparameterBetaFactor(int beta);
+        public static HyperparameterBetaFactor CreateAuto();
+        public static HyperparameterBetaFactor CreateBeta(int beta);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(double other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(string other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode();
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator ==(HyperparameterBetaFactor first, HyperparameterBetaFactor second);
+        public static implicit operator HyperparameterBetaFactor(int beta);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator !=(HyperparameterBetaFactor first, HyperparameterBetaFactor second);
+        HyperparameterBetaFactor IJsonModel<HyperparameterBetaFactor>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<HyperparameterBetaFactor>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        HyperparameterBetaFactor IPersistableModel<HyperparameterBetaFactor>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<HyperparameterBetaFactor>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<HyperparameterBetaFactor>.Write(ModelReaderWriterOptions options);
+    }
+    public class HyperparameterCycleCount : IEquatable<int>, IEquatable<string>, IJsonModel<HyperparameterCycleCount>, IPersistableModel<HyperparameterCycleCount> {
+        public HyperparameterCycleCount(int epochCount);
+        public static HyperparameterCycleCount CreateAuto();
+        public static HyperparameterCycleCount CreateEpochCount(int epochCount);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(int other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(string other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode();
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator ==(HyperparameterCycleCount first, HyperparameterCycleCount second);
+        public static implicit operator HyperparameterCycleCount(int epochCount);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator !=(HyperparameterCycleCount first, HyperparameterCycleCount second);
+        HyperparameterCycleCount IJsonModel<HyperparameterCycleCount>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<HyperparameterCycleCount>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        HyperparameterCycleCount IPersistableModel<HyperparameterCycleCount>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<HyperparameterCycleCount>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<HyperparameterCycleCount>.Write(ModelReaderWriterOptions options);
+    }
+    public class HyperparameterLearningRate : IEquatable<double>, IEquatable<string>, IJsonModel<HyperparameterLearningRate>, IPersistableModel<HyperparameterLearningRate> {
+        public HyperparameterLearningRate(double learningRateMultiplier);
+        public static HyperparameterLearningRate CreateAuto();
+        public static HyperparameterLearningRate CreateMultiplier(double learningRateMultiplier);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(double other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(string other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode();
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator ==(HyperparameterLearningRate first, HyperparameterLearningRate second);
+        public static implicit operator HyperparameterLearningRate(double learningRateMultiplier);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator !=(HyperparameterLearningRate first, HyperparameterLearningRate second);
+        HyperparameterLearningRate IJsonModel<HyperparameterLearningRate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<HyperparameterLearningRate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        HyperparameterLearningRate IPersistableModel<HyperparameterLearningRate>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<HyperparameterLearningRate>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<HyperparameterLearningRate>.Write(ModelReaderWriterOptions options);
+    }
+    public class ListCheckpointsOptions {
+        public string AfterCheckpointId { get; set; }
+        public int? PageSize { get; set; }
+    }
+    public class ListEventsOptions {
+        public string AfterEventId { get; set; }
+        public int? PageSize { get; set; }
+    }
+    public class ListJobsOptions {
+        public string AfterJobId { get; set; }
+        public int? PageSize { get; set; }
+    }
+    public class WeightsAndBiasesIntegration : FineTuningIntegration, IJsonModel<WeightsAndBiasesIntegration>, IPersistableModel<WeightsAndBiasesIntegration> {
+        public WeightsAndBiasesIntegration();
+        public WeightsAndBiasesIntegration(string projectName);
+        public string DisplayName { get; set; }
+        public string EntityName { get; set; }
+        public required string ProjectName { get; set; }
+        public IList<string> Tags { get; }
+        protected override FineTuningIntegration JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        public new static explicit operator WeightsAndBiasesIntegration(ClientResult result);
+        public static implicit operator BinaryContent(WeightsAndBiasesIntegration weightsAndBiasesIntegration);
+        protected override FineTuningIntegration PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
+        WeightsAndBiasesIntegration IJsonModel<WeightsAndBiasesIntegration>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
+        void IJsonModel<WeightsAndBiasesIntegration>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options);
+        WeightsAndBiasesIntegration IPersistableModel<WeightsAndBiasesIntegration>.Create(BinaryData data, ModelReaderWriterOptions options);
+        string IPersistableModel<WeightsAndBiasesIntegration>.GetFormatFromOptions(ModelReaderWriterOptions options);
+        BinaryData IPersistableModel<WeightsAndBiasesIntegration>.Write(ModelReaderWriterOptions options);
     }
 }
 namespace OpenAI.Images {

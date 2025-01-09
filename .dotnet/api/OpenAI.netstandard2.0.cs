@@ -1376,10 +1376,10 @@ namespace OpenAI.Chat {
         public override readonly string ToString();
     }
     public class ChatOutputTokenUsageDetails : IJsonModel<ChatOutputTokenUsageDetails>, IPersistableModel<ChatOutputTokenUsageDetails> {
-        public int AcceptedPredictionTokenCount { get; }
         public int AudioTokenCount { get; }
+        public int PredictionAcceptedTokenCount { get; }
+        public int PredictionRejectedTokenCount { get; }
         public int ReasoningTokenCount { get; }
-        public int RejectedPredictionTokenCount { get; }
         public static explicit operator ChatOutputTokenUsageDetails(ClientResult result);
         public static implicit operator BinaryContent(ChatOutputTokenUsageDetails chatOutputTokenUsageDetails);
     }
@@ -1508,7 +1508,7 @@ namespace OpenAI.Chat {
     public static class OpenAIChatModelFactory {
         public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, ChatMessageContent content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null, BinaryData audioBytes = null, string audioCorrelationId = null, string audioTranscript = null, DateTimeOffset? audioExpiresAt = null);
         public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int audioTokenCount = 0, int cachedTokenCount = 0);
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0, int audioTokenCount = 0, int acceptedPredictionTokenCount = 0, int rejectedPredictionTokenCount = 0);
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0, int audioTokenCount = 0, int predictionAcceptedTokenCount = 0, int predictionRejectedTokenCount = 0);
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
         public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null, ChatInputTokenUsageDetails inputTokenDetails = null);
@@ -1741,9 +1741,6 @@ namespace OpenAI.Files {
         public virtual Task<ClientResult<OpenAIFile>> UploadFileAsync(string filePath, FileUploadPurpose purpose);
     }
     public class OpenAIFileCollection : ObjectModel.ReadOnlyCollection<OpenAIFile>, IJsonModel<OpenAIFileCollection>, IPersistableModel<OpenAIFileCollection> {
-        public string FirstId { get; }
-        public bool HasMore { get; }
-        public string LastId { get; }
         public static explicit operator OpenAIFileCollection(ClientResult result);
         public static implicit operator BinaryContent(OpenAIFileCollection openAIFileCollection);
     }
@@ -2163,9 +2160,9 @@ namespace OpenAI.RealtimeConversation {
         protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationInputTokenUsageDetails : IJsonModel<ConversationInputTokenUsageDetails>, IPersistableModel<ConversationInputTokenUsageDetails> {
-        public int? AudioTokens { get; }
-        public int? CachedTokens { get; }
-        public int? TextTokens { get; }
+        public int AudioTokenCount { get; }
+        public int CachedTokenCount { get; }
+        public int TextTokenCount { get; }
         public static explicit operator ConversationInputTokenUsageDetails(ClientResult result);
         public static implicit operator BinaryContent(ConversationInputTokenUsageDetails conversationInputTokenUsageDetails);
     }
@@ -2381,8 +2378,8 @@ namespace OpenAI.RealtimeConversation {
         public override readonly string ToString();
     }
     public class ConversationOutputTokenUsageDetails : IJsonModel<ConversationOutputTokenUsageDetails>, IPersistableModel<ConversationOutputTokenUsageDetails> {
-        public int? AudioTokens { get; }
-        public int? TextTokens { get; }
+        public int AudioTokenCount { get; }
+        public int TextTokenCount { get; }
         public static explicit operator ConversationOutputTokenUsageDetails(ClientResult result);
         public static implicit operator BinaryContent(ConversationOutputTokenUsageDetails conversationOutputTokenUsageDetails);
     }
@@ -2454,7 +2451,6 @@ namespace OpenAI.RealtimeConversation {
     }
     public class ConversationSessionOptions : IJsonModel<ConversationSessionOptions>, IPersistableModel<ConversationSessionOptions> {
         public ConversationContentModalities ContentModalities { get; set; }
-        public string Id { get; set; }
         public ConversationAudioFormat? InputAudioFormat { get; set; }
         public ConversationInputTranscriptionOptions InputTranscriptionOptions { get; set; }
         public string Instructions { get; set; }

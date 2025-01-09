@@ -7,14 +7,24 @@ namespace OpenAI.Files;
 [CodeGenModel("ListFilesResponse")]
 [CodeGenSuppress("Data")]
 [CodeGenSuppress(nameof(OpenAIFileCollection))]
-[CodeGenSuppress(nameof(OpenAIFileCollection), typeof(string), typeof(string), typeof(bool), typeof(string))]
-[CodeGenSuppress(nameof(OpenAIFileCollection), typeof(string), typeof(string), typeof(bool), typeof(string), typeof(IDictionary<string, BinaryData>))]
+[CodeGenSuppress(nameof(OpenAIFileCollection), typeof(string), typeof(string), typeof(string), typeof(bool))]
+[CodeGenSuppress(nameof(OpenAIFileCollection), typeof(string), typeof(string), typeof(string), typeof(bool), typeof(IDictionary<string, BinaryData>))]
 public partial class OpenAIFileCollection : ReadOnlyCollection<OpenAIFile>
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
     /// <summary> Gets the object. </summary>
     private string Object { get; }
     
+    // CUSTOM: Internalizing pending stanardized pagination representation for the list operation.
+    [CodeGenMember("FirstId")]
+    internal string FirstId { get; }
+
+    [CodeGenMember("LastId")]
+    internal string LastId { get; }
+
+    [CodeGenMember("HasMore")]
+    internal bool HasMore { get; }
+
     /// <summary> Initializes a new instance of <see cref="OpenAIFileCollection"/>. </summary>
     /// <param name="data"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="data"/> is null. </exception>

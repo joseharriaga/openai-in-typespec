@@ -11,12 +11,6 @@ namespace OpenAI.Files
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public string FirstId { get; }
-
-        public string LastId { get; }
-
-        public bool HasMore { get; }
-
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

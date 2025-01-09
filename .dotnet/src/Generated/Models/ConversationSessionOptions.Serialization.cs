@@ -27,11 +27,6 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(ConversationSessionOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(Id) && _additionalBinaryDataProperties?.ContainsKey("id") != true)
-            {
-                writer.WritePropertyName("id"u8);
-                writer.WriteStringValue(Id);
-            }
             if (Optional.IsDefined(Instructions) && _additionalBinaryDataProperties?.ContainsKey("instructions") != true)
             {
                 writer.WritePropertyName("instructions"u8);
@@ -170,7 +165,6 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            string id = default;
             string instructions = default;
             ConversationVoice? voice = default;
             ConversationAudioFormat? inputAudioFormat = default;
@@ -186,11 +180,6 @@ namespace OpenAI.RealtimeConversation
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("id"u8))
-                {
-                    id = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("instructions"u8))
                 {
                     instructions = prop.Value.GetString();
@@ -313,7 +302,6 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             return new ConversationSessionOptions(
-                id,
                 instructions,
                 voice,
                 inputAudioFormat,

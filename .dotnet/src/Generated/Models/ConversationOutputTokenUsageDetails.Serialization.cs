@@ -27,15 +27,15 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(ConversationOutputTokenUsageDetails)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(TextTokens) && _additionalBinaryDataProperties?.ContainsKey("text_tokens") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("text_tokens") != true)
             {
                 writer.WritePropertyName("text_tokens"u8);
-                writer.WriteNumberValue(TextTokens.Value);
+                writer.WriteNumberValue(TextTokenCount);
             }
-            if (Optional.IsDefined(AudioTokens) && _additionalBinaryDataProperties?.ContainsKey("audio_tokens") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("audio_tokens") != true)
             {
                 writer.WritePropertyName("audio_tokens"u8);
-                writer.WriteNumberValue(AudioTokens.Value);
+                writer.WriteNumberValue(AudioTokenCount);
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -77,8 +77,8 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            int? textTokens = default;
-            int? audioTokens = default;
+            int textTokenCount = default;
+            int audioTokenCount = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -88,7 +88,7 @@ namespace OpenAI.RealtimeConversation
                     {
                         continue;
                     }
-                    textTokens = prop.Value.GetInt32();
+                    textTokenCount = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("audio_tokens"u8))
@@ -97,7 +97,7 @@ namespace OpenAI.RealtimeConversation
                     {
                         continue;
                     }
-                    audioTokens = prop.Value.GetInt32();
+                    audioTokenCount = prop.Value.GetInt32();
                     continue;
                 }
                 if (true)
@@ -105,7 +105,7 @@ namespace OpenAI.RealtimeConversation
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ConversationOutputTokenUsageDetails(textTokens, audioTokens, additionalBinaryDataProperties);
+            return new ConversationOutputTokenUsageDetails(textTokenCount, audioTokenCount, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ConversationOutputTokenUsageDetails>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

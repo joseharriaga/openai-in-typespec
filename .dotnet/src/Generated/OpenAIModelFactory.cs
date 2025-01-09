@@ -419,13 +419,12 @@ namespace OpenAI
             return new ThreadDeletionResult(deleted, threadId, @object, additionalBinaryDataProperties: null);
         }
 
-        public static ConversationSessionOptions ConversationSessionOptions(string id = default, string instructions = default, ConversationVoice? voice = default, ConversationAudioFormat? inputAudioFormat = default, ConversationAudioFormat? outputAudioFormat = default, IEnumerable<ConversationTool> tools = default, float? temperature = default, InternalTodoRealtimeRequestSessionModel? model = default, ConversationTurnDetectionOptions turnDetectionOptions = default, ConversationInputTranscriptionOptions inputTranscriptionOptions = default, IEnumerable<InternalRealtimeRequestSessionModality> internalModalities = default, BinaryData internalToolChoice = default, BinaryData maxResponseOutputTokens = default)
+        public static ConversationSessionOptions ConversationSessionOptions(string instructions = default, ConversationVoice? voice = default, ConversationAudioFormat? inputAudioFormat = default, ConversationAudioFormat? outputAudioFormat = default, IEnumerable<ConversationTool> tools = default, float? temperature = default, InternalTodoRealtimeRequestSessionModel? model = default, ConversationTurnDetectionOptions turnDetectionOptions = default, ConversationInputTranscriptionOptions inputTranscriptionOptions = default, IEnumerable<InternalRealtimeRequestSessionModality> internalModalities = default, BinaryData internalToolChoice = default, BinaryData maxResponseOutputTokens = default)
         {
             tools ??= new ChangeTrackingList<ConversationTool>();
             internalModalities ??= new ChangeTrackingList<InternalRealtimeRequestSessionModality>();
 
             return new ConversationSessionOptions(
-                id,
                 instructions,
                 voice,
                 inputAudioFormat,
@@ -597,16 +596,16 @@ namespace OpenAI
                 additionalBinaryDataProperties: null);
         }
 
-        public static ConversationInputTokenUsageDetails ConversationInputTokenUsageDetails(int? cachedTokens = default, int? textTokens = default, int? audioTokens = default)
+        public static ConversationInputTokenUsageDetails ConversationInputTokenUsageDetails(int audioTokenCount = default, int cachedTokenCount = default, int textTokenCount = default)
         {
 
-            return new ConversationInputTokenUsageDetails(cachedTokens, textTokens, audioTokens, additionalBinaryDataProperties: null);
+            return new ConversationInputTokenUsageDetails(audioTokenCount, cachedTokenCount, textTokenCount, additionalBinaryDataProperties: null);
         }
 
-        public static ConversationOutputTokenUsageDetails ConversationOutputTokenUsageDetails(int? textTokens = default, int? audioTokens = default)
+        public static ConversationOutputTokenUsageDetails ConversationOutputTokenUsageDetails(int textTokenCount = default, int audioTokenCount = default)
         {
 
-            return new ConversationOutputTokenUsageDetails(textTokens, audioTokens, additionalBinaryDataProperties: null);
+            return new ConversationOutputTokenUsageDetails(textTokenCount, audioTokenCount, additionalBinaryDataProperties: null);
         }
 
         public static ConversationResponseFinishedUpdate ConversationResponseFinishedUpdate(string eventId = default, InternalRealtimeResponse internalResponse = default)
@@ -886,10 +885,10 @@ namespace OpenAI
                 additionalBinaryDataProperties: null);
         }
 
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default, int audioTokenCount = default, int acceptedPredictionTokenCount = default, int rejectedPredictionTokenCount = default)
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default, int audioTokenCount = default, int predictionAcceptedTokenCount = default, int predictionRejectedTokenCount = default)
         {
 
-            return new ChatOutputTokenUsageDetails(reasoningTokenCount, audioTokenCount, acceptedPredictionTokenCount, rejectedPredictionTokenCount, additionalBinaryDataProperties: null);
+            return new ChatOutputTokenUsageDetails(reasoningTokenCount, audioTokenCount, predictionAcceptedTokenCount, predictionRejectedTokenCount, additionalBinaryDataProperties: null);
         }
 
         public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int audioTokenCount = default, int cachedTokenCount = default)

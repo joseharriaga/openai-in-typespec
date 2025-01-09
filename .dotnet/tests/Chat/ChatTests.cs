@@ -900,7 +900,7 @@ public class ChatTests : SyncAsyncTestBase
 
         ChatCompletion completion = await client.CompleteChatAsync([message], options);
 
-        Assert.That(completion.Usage.OutputTokenDetails.AcceptedPredictionTokenCount, Is.GreaterThan(0));
+        Assert.That(completion.Usage.OutputTokenDetails.PredictionAcceptedTokenCount, Is.GreaterThan(0));
     }
 
     [Test]

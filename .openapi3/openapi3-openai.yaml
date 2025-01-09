@@ -10206,8 +10206,6 @@ components:
     RealtimeRequestSession:
       type: object
       properties:
-        id:
-          type: string
         modalities:
           type: array
           items:

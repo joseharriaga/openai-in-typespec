@@ -8,7 +8,6 @@ namespace OpenAI;
 
 model RealtimeRequestSession {
   ...RealtimeSessionBase;
-  id?: string;
   modalities?: RealtimeModality[];
   instructions?: string;
   `model`?:

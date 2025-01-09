@@ -21,6 +21,7 @@ public partial class OpenAIFileCollection : ReadOnlyCollection<OpenAIFile>
     internal OpenAIFileCollection(IEnumerable<OpenAIFile> data, string firstId, string lastId, bool hasMore)
         : base([.. data])
     {
+        Object = "list";
         Argument.AssertNotNull(data, nameof(data));
         FirstId = firstId;
         LastId = lastId;

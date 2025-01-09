@@ -18,7 +18,7 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("RealtimeRequestFunctionCallItem")] internal partial class InternalRealtimeRequestFunctionCallItem { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeRequestFunctionCallOutputItem")] internal partial class InternalRealtimeRequestFunctionCallOutputItem { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeRequestMessageItem")] internal partial class InternalRealtimeRequestMessageItem { }
-[Experimental("OPENAI002")][CodeGenModel("RealtimeRequestSessionModality")] internal readonly partial struct InternalRealtimeRequestSessionModality { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeModality")] internal readonly partial struct InternalRealtimeRequestSessionModality { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeRequestTextContentPart")] internal partial class InternalRealtimeRequestTextContentPart { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseAudioContentPart")] internal partial class InternalRealtimeResponseAudioContentPart { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseFunctionCallItem")] internal partial class InternalRealtimeResponseFunctionCallItem { }
@@ -43,3 +43,15 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("UnknownRealtimeTool")] internal partial class UnknownRealtimeTool { }
 [Experimental("OPENAI002")][CodeGenModel("UnknownRealtimeToolChoiceObject")] internal partial class UnknownRealtimeToolChoiceObject { }
 [Experimental("OPENAI002")][CodeGenModel("UnknownRealtimeTurnDetection")] internal partial class UnknownRealtimeTurnDetection { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatusDetailsError")] internal partial class InternalRealtimeResponseStatusDetailsError { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatusDetailsType")] internal readonly partial struct InternalRealtimeResponseStatusDetailsType { }
+
+// TODO: not yet integrated
+
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseCreateParamsConversation")] internal readonly partial struct InternalTodoRealtimeResponseCreateParamsConversation { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseCreateParamsModality")] internal readonly partial struct InternalTodoRealtimeResponseCreateParamsModality { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseCreateParamsOutputAudioFormat")] internal readonly partial struct InternalTodoRealtimeResponseCreateParamsOutputAudioFormat { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseCreateParamsTool")] internal partial class InternalTodoRealtimeResponseCreateParamsTool { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseCreateParamsVoice")] internal readonly partial struct InternalTodoRealtimeResponseCreateParamsVoice { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeRequestSessionModel")] internal readonly partial struct InternalTodoRealtimeRequestSessionModel { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseCreateParamsToolType")] internal readonly partial struct InternalTodoRealtimeResponseCreateParamsToolType { }

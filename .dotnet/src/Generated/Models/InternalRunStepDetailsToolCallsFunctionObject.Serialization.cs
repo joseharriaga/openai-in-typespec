@@ -32,6 +32,11 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(InternalRunStepDetailsToolCallsFunctionObject)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
+            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            {
+                writer.WritePropertyName("id"u8);
+                writer.WriteStringValue(Id);
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("function") != true)
             {
                 writer.WritePropertyName("function"u8);
@@ -58,20 +63,20 @@ namespace OpenAI.Assistants
             {
                 return null;
             }
-            string id = default;
             Assistants.RunStepToolCallKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            string id = default;
             InternalRunStepDetailsToolCallsFunctionObjectFunction function = default;
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("id"u8))
-                {
-                    id = prop.Value.GetString();
-                    continue;
-                }
                 if (prop.NameEquals("type"u8))
                 {
                     kind = prop.Value.GetString().ToRunStepToolCallKind();
+                    continue;
+                }
+                if (prop.NameEquals("id"u8))
+                {
+                    id = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("function"u8))
@@ -84,7 +89,7 @@ namespace OpenAI.Assistants
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalRunStepDetailsToolCallsFunctionObject(id, kind, additionalBinaryDataProperties, function);
+            return new InternalRunStepDetailsToolCallsFunctionObject(kind, additionalBinaryDataProperties, id, function);
         }
 
         BinaryData IPersistableModel<InternalRunStepDetailsToolCallsFunctionObject>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -12,8 +12,12 @@ namespace OpenAI.Chat;
 [CodeGenSerialization(nameof(Messages), SerializationValueHook = nameof(SerializeMessagesValue))]
 [CodeGenSerialization(nameof(StopSequences), SerializationValueHook = nameof(SerializeStopSequencesValue), DeserializationValueHook = nameof(DeserializeStopSequencesValue))]
 [CodeGenSerialization(nameof(LogitBiases), SerializationValueHook = nameof(SerializeLogitBiasesValue), DeserializationValueHook = nameof(DeserializeLogitBiasesValue))]
+[CodeGenSerialization(nameof(PredictedContent), SerializationValueHook = nameof(SerializePredictedContentValue), DeserializationValueHook = nameof(DeserializePredictedContentValue))]
 public partial class ChatCompletionOptions
 {
+    // CUSTOM: To do -- implement
+    internal InternalTodoCreateChatCompletionRequestReasoningEffort? ReasoningEffort { get; set; }
+
     // CUSTOM:
     // - Made internal. This value comes from a parameter on the client method.
     // - Added setter.
@@ -196,4 +200,7 @@ public partial class ChatCompletionOptions
                 : [InternalCreateChatCompletionRequestModality.Text, InternalCreateChatCompletionRequestModality.Audio];
         }
     }
+
+    [CodeGenMember("Prediction")]
+    public ChatMessageContent PredictedContent { get; set; }
 }

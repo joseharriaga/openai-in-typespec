@@ -13,10 +13,6 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationOutputTokenUsageDetails : IJsonModel<ConversationOutputTokenUsageDetails>
     {
-        internal ConversationOutputTokenUsageDetails()
-        {
-        }
-
         void IJsonModel<ConversationOutputTokenUsageDetails>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -31,15 +27,15 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(ConversationOutputTokenUsageDetails)} does not support writing '{format}' format.");
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("text_tokens") != true)
+            if (Optional.IsDefined(TextTokens) && _additionalBinaryDataProperties?.ContainsKey("text_tokens") != true)
             {
                 writer.WritePropertyName("text_tokens"u8);
-                writer.WriteNumberValue(TextTokens);
+                writer.WriteNumberValue(TextTokens.Value);
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("audio_tokens") != true)
+            if (Optional.IsDefined(AudioTokens) && _additionalBinaryDataProperties?.ContainsKey("audio_tokens") != true)
             {
                 writer.WritePropertyName("audio_tokens"u8);
-                writer.WriteNumberValue(AudioTokens);
+                writer.WriteNumberValue(AudioTokens.Value);
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -81,18 +77,26 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            int textTokens = default;
-            int audioTokens = default;
+            int? textTokens = default;
+            int? audioTokens = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("text_tokens"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     textTokens = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("audio_tokens"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     audioTokens = prop.Value.GetInt32();
                     continue;
                 }

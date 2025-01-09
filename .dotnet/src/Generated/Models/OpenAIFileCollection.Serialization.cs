@@ -19,10 +19,25 @@ namespace OpenAI.Files
             {
                 throw new FormatException($"The model {nameof(OpenAIFileCollection)} does not support writing '{format}' format.");
             }
+            if (_additionalBinaryDataProperties?.ContainsKey("first_id") != true)
+            {
+                writer.WritePropertyName("first_id"u8);
+                writer.WriteStringValue(FirstId);
+            }
+            if (_additionalBinaryDataProperties?.ContainsKey("last_id") != true)
+            {
+                writer.WritePropertyName("last_id"u8);
+                writer.WriteStringValue(LastId);
+            }
+            if (_additionalBinaryDataProperties?.ContainsKey("has_more") != true)
+            {
+                writer.WritePropertyName("has_more"u8);
+                writer.WriteBooleanValue(HasMore);
+            }
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object.ToString());
+                writer.WriteStringValue(this.Object);
             }
             if (true && _additionalBinaryDataProperties != null)
             {

@@ -16,9 +16,11 @@ namespace OpenAI.RealtimeConversation
         {
             Modalities = new ChangeTrackingList<InternalRealtimeRequestSessionModality>();
             Tools = new ChangeTrackingList<ConversationTool>();
+            Metadata = new ChangeTrackingDictionary<string, BinaryData>();
+            Input = new ChangeTrackingList<ConversationItem>();
         }
 
-        internal InternalRealtimeResponseOptions(IList<InternalRealtimeRequestSessionModality> modalities, string instructions, ConversationVoice? voice, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, BinaryData maxOutputTokens, BinaryData toolChoice, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRealtimeResponseOptions(IList<InternalRealtimeRequestSessionModality> modalities, string instructions, ConversationVoice? voice, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, BinaryData maxResponseOutputTokens, InternalTodoRealtimeResponseCreateParamsConversation? conversation, IDictionary<string, BinaryData> metadata, IList<ConversationItem> input, BinaryData toolChoice, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Modalities = modalities;
             Instructions = instructions;
@@ -26,7 +28,10 @@ namespace OpenAI.RealtimeConversation
             OutputAudioFormat = outputAudioFormat;
             Tools = tools;
             Temperature = temperature;
-            MaxOutputTokens = maxOutputTokens;
+            MaxResponseOutputTokens = maxResponseOutputTokens;
+            Conversation = conversation;
+            Metadata = metadata;
+            Input = input;
             ToolChoice = toolChoice;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
@@ -43,7 +48,13 @@ namespace OpenAI.RealtimeConversation
 
         public float? Temperature { get; set; }
 
-        public BinaryData MaxOutputTokens { get; set; }
+        public BinaryData MaxResponseOutputTokens { get; set; }
+
+        public InternalTodoRealtimeResponseCreateParamsConversation? Conversation { get; set; }
+
+        public IDictionary<string, BinaryData> Metadata { get; set; }
+
+        public IList<ConversationItem> Input { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

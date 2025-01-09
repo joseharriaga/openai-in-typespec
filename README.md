@@ -3,8 +3,19 @@
 For information on spec ingestion, see the Sorento wiki page:
 https://dev.azure.com/project-argos/Sorento/_wiki/wikis/Sorento.wiki/3021/Generate-OpenAI's-YAML-Spec
 
-Snapshot: https://project-argos@dev.azure.com/project-argos/Sorento/_git/export-api@54593e37
-Ingestion tool: https://project-argos@dev.azure.com/project-argos/Sorento/_git/sdk@da3aa64
+Snapshot: https://project-argos@dev.azure.com/project-argos/Sorento/_git/export-api
+```
+commit 2b12183ef3a0ddd81b3b4f51c201479183b34788 (HEAD -> main, origin/main)
+Author: Git-Mirror-Tool Synchronizer <git-sync-vm-umi@microsoft.com>
+Date:   Mon Jan 6 22:44:48 2025 +0000
+```
+
+Ingestion tool: https://project-argos@dev.azure.com/project-argos/Sorento/_git/sdk
+```
+commit f623e2a568c751f420b0304b30266e4bcdea82b6 (HEAD -> user/travisw/migrate-spec-ingestion-tool, origin/user/travisw/migrate-spec-ingestion-tool)
+Author: Travis Wilson <travisw@microsoft.com>
+Date:   Wed Jan 8 17:53:55 2025 -0800
+```
 
 There are some deltas:
 

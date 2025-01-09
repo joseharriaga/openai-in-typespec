@@ -67,17 +67,62 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("temperature"u8);
                 writer.WriteNumberValue(Temperature.Value);
             }
-            if (Optional.IsDefined(MaxOutputTokens) && _additionalBinaryDataProperties?.ContainsKey("max_output_tokens") != true)
+            if (Optional.IsDefined(MaxResponseOutputTokens) && _additionalBinaryDataProperties?.ContainsKey("max_response_output_tokens") != true)
             {
-                writer.WritePropertyName("max_output_tokens"u8);
+                writer.WritePropertyName("max_response_output_tokens"u8);
 #if NET6_0_OR_GREATER
-                writer.WriteRawValue(MaxOutputTokens);
+                writer.WriteRawValue(MaxResponseOutputTokens);
 #else
-                using (JsonDocument document = JsonDocument.Parse(MaxOutputTokens))
+                using (JsonDocument document = JsonDocument.Parse(MaxResponseOutputTokens))
                 {
                     JsonSerializer.Serialize(writer, document.RootElement);
                 }
 #endif
+            }
+            if (Optional.IsDefined(Conversation) && _additionalBinaryDataProperties?.ContainsKey("conversation") != true)
+            {
+                writer.WritePropertyName("conversation"u8);
+                writer.WriteStringValue(Conversation.Value.ToString());
+            }
+            if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
+            {
+                if (Metadata != null)
+                {
+                    writer.WritePropertyName("metadata"u8);
+                    writer.WriteStartObject();
+                    foreach (var item in Metadata)
+                    {
+                        writer.WritePropertyName(item.Key);
+                        if (item.Value == null)
+                        {
+                            writer.WriteNullValue();
+                            continue;
+                        }
+#if NET6_0_OR_GREATER
+                        writer.WriteRawValue(item.Value);
+#else
+                        using (JsonDocument document = JsonDocument.Parse(item.Value))
+                        {
+                            JsonSerializer.Serialize(writer, document.RootElement);
+                        }
+#endif
+                    }
+                    writer.WriteEndObject();
+                }
+                else
+                {
+                    writer.WriteNull("metadata"u8);
+                }
+            }
+            if (Optional.IsCollectionDefined(Input) && _additionalBinaryDataProperties?.ContainsKey("input") != true)
+            {
+                writer.WritePropertyName("input"u8);
+                writer.WriteStartArray();
+                foreach (ConversationItem item in Input)
+                {
+                    writer.WriteObjectValue(item, options);
+                }
+                writer.WriteEndArray();
             }
             if (Optional.IsDefined(ToolChoice) && _additionalBinaryDataProperties?.ContainsKey("tool_choice") != true)
             {
@@ -137,7 +182,10 @@ namespace OpenAI.RealtimeConversation
             ConversationAudioFormat? outputAudioFormat = default;
             IList<ConversationTool> tools = default;
             float? temperature = default;
-            BinaryData maxOutputTokens = default;
+            BinaryData maxResponseOutputTokens = default;
+            InternalTodoRealtimeResponseCreateParamsConversation? conversation = default;
+            IDictionary<string, BinaryData> metadata = default;
+            IList<ConversationItem> input = default;
             BinaryData toolChoice = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -202,13 +250,57 @@ namespace OpenAI.RealtimeConversation
                     temperature = prop.Value.GetSingle();
                     continue;
                 }
-                if (prop.NameEquals("max_output_tokens"u8))
+                if (prop.NameEquals("max_response_output_tokens"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    maxOutputTokens = BinaryData.FromString(prop.Value.GetRawText());
+                    maxResponseOutputTokens = BinaryData.FromString(prop.Value.GetRawText());
+                    continue;
+                }
+                if (prop.NameEquals("conversation"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    conversation = new InternalTodoRealtimeResponseCreateParamsConversation(prop.Value.GetString());
+                    continue;
+                }
+                if (prop.NameEquals("metadata"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    Dictionary<string, BinaryData> dictionary = new Dictionary<string, BinaryData>();
+                    foreach (var prop0 in prop.Value.EnumerateObject())
+                    {
+                        if (prop0.Value.ValueKind == JsonValueKind.Null)
+                        {
+                            dictionary.Add(prop0.Name, null);
+                        }
+                        else
+                        {
+                            dictionary.Add(prop0.Name, BinaryData.FromString(prop0.Value.GetRawText()));
+                        }
+                    }
+                    metadata = dictionary;
+                    continue;
+                }
+                if (prop.NameEquals("input"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<ConversationItem> array = new List<ConversationItem>();
+                    foreach (var item in prop.Value.EnumerateArray())
+                    {
+                        array.Add(ConversationItem.DeserializeConversationItem(item, options));
+                    }
+                    input = array;
                     continue;
                 }
                 if (prop.NameEquals("tool_choice"u8))
@@ -232,7 +324,10 @@ namespace OpenAI.RealtimeConversation
                 outputAudioFormat,
                 tools ?? new ChangeTrackingList<ConversationTool>(),
                 temperature,
-                maxOutputTokens,
+                maxResponseOutputTokens,
+                conversation,
+                metadata ?? new ChangeTrackingDictionary<string, BinaryData>(),
+                input ?? new ChangeTrackingList<ConversationItem>(),
                 toolChoice,
                 additionalBinaryDataProperties);
         }

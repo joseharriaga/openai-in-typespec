@@ -8,7 +8,7 @@ using System.Linq;
 namespace OpenAI.RealtimeConversation;
 
 [Experimental("OPENAI002")]
-[CodeGenModel("RealtimeResponseOptions")]
+[CodeGenModel("RealtimeResponseCreateParams")]
 internal partial class InternalRealtimeResponseOptions
 {
     [CodeGenMember("ToolChoice")]
@@ -37,9 +37,12 @@ internal partial class InternalRealtimeResponseOptions
             voice: sessionOptions.Voice,
             outputAudioFormat: sessionOptions.OutputAudioFormat,
             tools: sessionOptions.Tools,
-            toolChoice: toolChoice,
             temperature: sessionOptions.Temperature,
-            maxOutputTokens: maxTokensChoice,
+            maxResponseOutputTokens: maxTokensChoice,
+            conversation: null,
+            metadata: new ChangeTrackingDictionary<string, BinaryData>(),
+            input: new ChangeTrackingList<ConversationItem>(),
+            toolChoice,
             additionalBinaryDataProperties: null);
         return internalOptions;
     }

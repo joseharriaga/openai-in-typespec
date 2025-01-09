@@ -1209,6 +1209,7 @@ namespace OpenAI.Chat {
         public IDictionary<string, string> Metadata { get; }
         public ChatMessageContent PredictedContent { get; set; }
         public float? PresencePenalty { get; set; }
+        public ChatReasoningEffort? ReasoningEffort { get; set; }
         public ChatResponseFormat ResponseFormat { get; set; }
         public long? Seed { get; set; }
         public IList<string> StopSequences { get; }
@@ -1381,6 +1382,21 @@ namespace OpenAI.Chat {
         public int RejectedPredictionTokenCount { get; }
         public static explicit operator ChatOutputTokenUsageDetails(ClientResult result);
         public static implicit operator BinaryContent(ChatOutputTokenUsageDetails chatOutputTokenUsageDetails);
+    }
+    public readonly partial struct ChatReasoningEffort : IEquatable<ChatReasoningEffort> {
+        public ChatReasoningEffort(string value);
+        public static ChatReasoningEffort High { get; }
+        public static ChatReasoningEffort Low { get; }
+        public static ChatReasoningEffort Medium { get; }
+        public readonly bool Equals(ChatReasoningEffort other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ChatReasoningEffort left, ChatReasoningEffort right);
+        public static implicit operator ChatReasoningEffort(string value);
+        public static bool operator !=(ChatReasoningEffort left, ChatReasoningEffort right);
+        public override readonly string ToString();
     }
     public class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
         public static ChatResponseFormat CreateJsonObjectFormat();

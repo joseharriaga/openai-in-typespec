@@ -90,11 +90,6 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            if (Optional.IsDefined(ReasoningEffort) && _additionalBinaryDataProperties?.ContainsKey("reasoning_effort") != true)
-            {
-                writer.WritePropertyName("reasoning_effort"u8);
-                writer.WriteStringValue(ReasoningEffort.Value.ToString());
-            }
             if (_additionalBinaryDataProperties?.ContainsKey("messages") != true)
             {
                 writer.WritePropertyName("messages"u8);
@@ -290,6 +285,11 @@ namespace OpenAI.Chat
                     writer.WriteNull("store"u8);
                 }
             }
+            if (Optional.IsDefined(ReasoningEffort) && _additionalBinaryDataProperties?.ContainsKey("reasoning_effort") != true)
+            {
+                writer.WritePropertyName("reasoning_effort"u8);
+                writer.WriteStringValue(ReasoningEffort.Value.ToString());
+            }
             if (Optional.IsDefined(PredictedContent) && _additionalBinaryDataProperties?.ContainsKey("prediction") != true)
             {
                 if (PredictedContent != null)
@@ -389,7 +389,6 @@ namespace OpenAI.Chat
             float? temperature = default;
             float? topP = default;
             IList<ChatTool> tools = default;
-            InternalTodoCreateChatCompletionRequestReasoningEffort? reasoningEffort = default;
             IList<ChatMessage> messages = default;
             InternalCreateChatCompletionRequestModel model = default;
             int? n = default;
@@ -409,6 +408,7 @@ namespace OpenAI.Chat
             IList<ChatFunction> functions = default;
             IDictionary<string, string> metadata = default;
             bool? storedOutputEnabled = default;
+            ChatReasoningEffort? reasoningEffort = default;
             ChatMessageContent predictedContent = default;
             InternalCreateChatCompletionRequestServiceTier? serviceTier = default;
             IList<InternalCreateChatCompletionRequestModality> internalModalities = default;
@@ -477,15 +477,6 @@ namespace OpenAI.Chat
                         array.Add(ChatTool.DeserializeChatTool(item, options));
                     }
                     tools = array;
-                    continue;
-                }
-                if (prop.NameEquals("reasoning_effort"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    reasoningEffort = new InternalTodoCreateChatCompletionRequestReasoningEffort(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("messages"u8))
@@ -670,6 +661,15 @@ namespace OpenAI.Chat
                     storedOutputEnabled = prop.Value.GetBoolean();
                     continue;
                 }
+                if (prop.NameEquals("reasoning_effort"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    reasoningEffort = new ChatReasoningEffort(prop.Value.GetString());
+                    continue;
+                }
                 if (prop.NameEquals("prediction"u8))
                 {
                     DeserializePredictedContentValue(prop, ref predictedContent);
@@ -721,7 +721,6 @@ namespace OpenAI.Chat
                 temperature,
                 topP,
                 tools ?? new ChangeTrackingList<ChatTool>(),
-                reasoningEffort,
                 messages,
                 model,
                 n,
@@ -741,6 +740,7 @@ namespace OpenAI.Chat
                 functions ?? new ChangeTrackingList<ChatFunction>(),
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
                 storedOutputEnabled,
+                reasoningEffort,
                 predictedContent,
                 serviceTier,
                 internalModalities,

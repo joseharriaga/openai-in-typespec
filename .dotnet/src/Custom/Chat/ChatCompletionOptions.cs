@@ -15,9 +15,6 @@ namespace OpenAI.Chat;
 [CodeGenSerialization(nameof(PredictedContent), SerializationValueHook = nameof(SerializePredictedContentValue), DeserializationValueHook = nameof(DeserializePredictedContentValue))]
 public partial class ChatCompletionOptions
 {
-    // CUSTOM: To do -- implement
-    internal InternalTodoCreateChatCompletionRequestReasoningEffort? ReasoningEffort { get; set; }
-
     // CUSTOM:
     // - Made internal. This value comes from a parameter on the client method.
     // - Added setter.
@@ -180,6 +177,13 @@ public partial class ChatCompletionOptions
     /// </summary>
     [CodeGenMember("Store")]
     public bool? StoredOutputEnabled { get; set; }
+
+    /// <summary>
+    /// (o1 and newer reasoning models only) Constrains effort on reasoning for reasoning models.
+    /// Currently supported values are <see cref="ChatReasoningEffort.Low"/>, <see cref="ChatReasoningEffort.Medium"/>, and <see cref="ChatReasoningEffort.High"/>.
+    /// Reducing reasoning effort can result in faster responses and fewer tokens used on reasoning in a response.
+    /// </summary>
+    public ChatReasoningEffort? ReasoningEffort { get; set; }
 
     // CUSTOM: Made internal for automatic enablement via audio options.
     [CodeGenMember("Modalities")]

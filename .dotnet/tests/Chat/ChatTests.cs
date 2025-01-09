@@ -912,8 +912,13 @@ public class ChatTests : SyncAsyncTestBase
             ChatMessage.CreateUserMessage("What's the best route to sail from San Francisco to New York?")
         ];
 
+        ChatCompletionOptions options = new()
+        {
+            ReasoningEffort = ChatReasoningEffort.Low,
+        };
+
         ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "o1");
-        ChatCompletion completion = await client.CompleteChatAsync(messages);
+        ChatCompletion completion = await client.CompleteChatAsync(messages, options);
 
         List<string> expectedPossibles = ["arr", "matey", "hearty", "avast"];
         Assert.That(expectedPossibles.Any(expected => completion.Content[0].Text.ToLower().Contains(expected)));

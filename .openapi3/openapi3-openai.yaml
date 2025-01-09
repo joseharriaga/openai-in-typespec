@@ -4384,6 +4384,7 @@ components:
       type: string
       enum:
         - system
+        - developer
         - user
         - assistant
         - tool

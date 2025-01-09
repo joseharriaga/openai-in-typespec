@@ -662,10 +662,11 @@ model ChatCompletionMessageToolCalls is ChatCompletionMessageToolCall[];
   """)
 model ChatCompletionModalities is ("text" | "audio")[];
 
-// Tool customization: convert to enum
+// Tool customization: convert to enum (and add developer)
 /** The role of the author of a message */
 enum ChatCompletionRole {
   system,
+  developer,
   user,
   assistant,
   tool,

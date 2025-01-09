@@ -902,4 +902,20 @@ public class ChatTests : SyncAsyncTestBase
 
         Assert.That(completion.Usage.OutputTokenDetails.AcceptedPredictionTokenCount, Is.GreaterThan(0));
     }
+
+    [Test]
+    public async Task O1DeveloperMessagesWork()
+    {
+        List<ChatMessage> messages =
+        [
+            ChatMessage.CreateDeveloperMessage("When asked questions about naval topics, you always talk like a pirate."),
+            ChatMessage.CreateUserMessage("What's the best route to sail from San Francisco to New York?")
+        ];
+
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "o1");
+        ChatCompletion completion = await client.CompleteChatAsync(messages);
+
+        List<string> expectedPossibles = ["arr", "matey", "hearty", "avast"];
+        Assert.That(expectedPossibles.Any(expected => completion.Content[0].Text.ToLower().Contains(expected)));
+    }
 }

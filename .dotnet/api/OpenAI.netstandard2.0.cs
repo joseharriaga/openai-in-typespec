@@ -1296,6 +1296,9 @@ namespace OpenAI.Chat {
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls);
         public static AssistantChatMessage CreateAssistantMessage(string content);
+        public static DeveloperChatMessage CreateDeveloperMessage(params ChatMessageContentPart[] contentParts);
+        public static DeveloperChatMessage CreateDeveloperMessage(IEnumerable<ChatMessageContentPart> contentParts);
+        public static DeveloperChatMessage CreateDeveloperMessage(string content);
         [Obsolete("This method is obsolete. Please use CreateToolMessage instead.")]
         public static FunctionChatMessage CreateFunctionMessage(string functionName, string content);
         public static SystemChatMessage CreateSystemMessage(params ChatMessageContentPart[] contentParts);

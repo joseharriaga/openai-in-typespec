@@ -50,7 +50,7 @@ model CreateImageRequest {
     """)
   style?: "vivid" | "natural" | null = "vivid";
 
-  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). */
+  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids). */
   user?: string;
 }
 
@@ -87,7 +87,7 @@ model CreateImageEditRequest {
     """)
   response_format?: "url" | "b64_json" | null = "url";
 
-  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). */
+  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids). */
   user?: string;
 }
 
@@ -118,7 +118,7 @@ model CreateImageVariationRequest {
     """)
   size?: "256x256" | "512x512" | "1024x1024" | null = "1024x1024";
 
-  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). */
+  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids). */
   user?: string;
 }
 

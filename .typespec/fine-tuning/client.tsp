@@ -4,8 +4,8 @@ import "./models.tsp";
 using Azure.ClientGenerator.Core;
 using OpenAI;
 
-@@access(FinetuneChatRequestInput, Access.public);
-@@usage(FinetuneChatRequestInput, Usage.input);
+@@access(FineTuneChatRequestInput, Access.public);
+@@usage(FineTuneChatRequestInput, Usage.input);
 
-@@access(FinetuneCompletionRequestInput, Access.public);
-@@usage(FinetuneCompletionRequestInput, Usage.input);
+@@access(FineTuneCompletionRequestInput, Access.public);
+@@usage(FineTuneCompletionRequestInput, Usage.input);

@@ -11,6 +11,11 @@ namespace OpenAI.Chat;
 ///     <note>Description</note>
 /// </listheader>
 /// <item>
+///     <type><see cref="Developer"/> -</type>
+///     <role><c>developer</c> -</role>
+///     <note>Instructions to the model that guide the behavior of future <c>assistant</c> messages. Replaces <c>system</c> in o1 and newer models.</note>
+/// </item>
+/// <item>
 ///     <type><see cref="System"/> -</type>
 ///     <role><c>system</c> -</role>
 ///     <note>Instructions to the model that guide the behavior of future <c>assistant</c> messages.</note>
@@ -58,6 +63,16 @@ public enum ChatMessageRole
     /// </summary>
     [CodeGenMember("System")]
     System,
+
+    /// <summary>
+    /// The <c>developer</c> role, which provides instructions to the model that guide the behavior of future
+    /// <c>assistant</c> messages
+    /// </summary>
+    /// <remarks>
+    /// <c>developer</c> replaces <c>system</c> when using o1 and newer models.
+    /// </remarks>
+    [CodeGenMember("Developer")]
+    Developer,
 
     /// <summary>
     /// The <c>user</c> role that provides input from the caller as a prompt for model responses.

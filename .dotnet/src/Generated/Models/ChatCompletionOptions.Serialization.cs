@@ -285,6 +285,23 @@ namespace OpenAI.Chat
                     writer.WriteNull("store"u8);
                 }
             }
+            if (Optional.IsDefined(ReasoningEffort) && _additionalBinaryDataProperties?.ContainsKey("reasoning_effort") != true)
+            {
+                writer.WritePropertyName("reasoning_effort"u8);
+                writer.WriteStringValue(ReasoningEffort.Value.ToString());
+            }
+            if (Optional.IsDefined(PredictedContent) && _additionalBinaryDataProperties?.ContainsKey("prediction") != true)
+            {
+                if (PredictedContent != null)
+                {
+                    writer.WritePropertyName("prediction"u8);
+                    this.SerializePredictedContentValue(writer, options);
+                }
+                else
+                {
+                    writer.WriteNull("prediction"u8);
+                }
+            }
             if (Optional.IsDefined(_serviceTier) && _additionalBinaryDataProperties?.ContainsKey("service_tier") != true)
             {
                 if (_serviceTier != null)
@@ -391,6 +408,8 @@ namespace OpenAI.Chat
             IList<ChatFunction> functions = default;
             IDictionary<string, string> metadata = default;
             bool? storedOutputEnabled = default;
+            ChatReasoningEffort? reasoningEffort = default;
+            ChatMessageContent predictedContent = default;
             InternalCreateChatCompletionRequestServiceTier? serviceTier = default;
             IList<InternalCreateChatCompletionRequestModality> internalModalities = default;
             ChatAudioOptions audioOptions = default;
@@ -642,6 +661,20 @@ namespace OpenAI.Chat
                     storedOutputEnabled = prop.Value.GetBoolean();
                     continue;
                 }
+                if (prop.NameEquals("reasoning_effort"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    reasoningEffort = new ChatReasoningEffort(prop.Value.GetString());
+                    continue;
+                }
+                if (prop.NameEquals("prediction"u8))
+                {
+                    DeserializePredictedContentValue(prop, ref predictedContent);
+                    continue;
+                }
                 if (prop.NameEquals("service_tier"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -707,6 +740,8 @@ namespace OpenAI.Chat
                 functions ?? new ChangeTrackingList<ChatFunction>(),
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
                 storedOutputEnabled,
+                reasoningEffort,
+                predictedContent,
                 serviceTier,
                 internalModalities,
                 audioOptions,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Generator.CSharp.ClientModel;
 using Microsoft.Generator.CSharp.ClientModel.Providers;
+using Microsoft.Generator.CSharp.Expressions;
 using Microsoft.Generator.CSharp.Primitives;
 using Microsoft.Generator.CSharp.Providers;
 using Microsoft.Generator.CSharp.Snippets;
@@ -88,6 +89,35 @@ namespace OpenAILibraryPlugin
                 field.Modifiers &= ~FieldModifiers.ReadOnly;
             }
             return field;
+        }
+
+        protected override ConstructorProvider? Visit(ConstructorProvider constructor)
+        {
+            foreach (ParameterProvider parameterProvider in constructor.Signature.Parameters)
+            {
+                if (parameterProvider.Type.Name.Equals("ChatMessageContent"))
+                {
+                    // Rule: generated types that hold a ChatMessageContent instance should initialize a default
+                    //       instance if provided a null value.
+
+                    IList<MethodBodyStatement> updatedStatements = constructor.BodyStatements?.Flatten().ToList() ?? [];
+                    for (int i = 0; i < updatedStatements.Count; i++)
+                    {
+                        var bodyStatement = updatedStatements[i];
+                        if (bodyStatement is ExpressionStatement expressionStatement
+                            && expressionStatement.Expression is AssignmentExpression assignmentExpression
+                            && assignmentExpression.Value.ToDisplayString() == parameterProvider.Name)
+                        {
+                            updatedStatements[i] = new ExpressionStatement(
+                                assignmentExpression.Variable.Assign(
+                                    assignmentExpression.Value.NullCoalesce(
+                                        new NewInstanceExpression(parameterProvider.Type, []))));
+                        }
+                    }
+                    constructor.Update(bodyStatements: new MethodBodyStatements(updatedStatements.AsReadOnly()));
+                }
+            }
+            return constructor;
         }
 
         protected override MethodProvider Visit(MethodProvider method)

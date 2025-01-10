@@ -113,10 +113,9 @@ namespace OpenAI.FineTuning
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            // CUSTOM: Initialize Content collection property.
             return new InternalFineTuneChatCompletionRequestAssistantMessage(
                 role,
-                content ?? new ChatMessageContent(),
+                content,
                 additionalBinaryDataProperties,
                 refusal,
                 participantName,

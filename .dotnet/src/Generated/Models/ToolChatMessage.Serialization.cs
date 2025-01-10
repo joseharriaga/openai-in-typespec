@@ -77,8 +77,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            // CUSTOM: Initialize Content collection property.
-            return new ToolChatMessage(role, content ?? new ChatMessageContent(), additionalBinaryDataProperties, toolCallId);
+            return new ToolChatMessage(role, content, additionalBinaryDataProperties, toolCallId);
         }
 
         BinaryData IPersistableModel<ToolChatMessage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -144,10 +144,9 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            // CUSTOM: Initialize Content collection property.
             return new AssistantChatMessage(
                 role,
-                content ?? new ChatMessageContent(),
+                content,
                 additionalBinaryDataProperties,
                 refusal,
                 participantName,

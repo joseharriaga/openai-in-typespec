@@ -1,4 +1,4 @@
-function Update-In-File-With-Lock-And-Retry {
+function Update-In-File-With-Retry {
     param(
         [string]$filePath,
         [string]$searchPattern,
@@ -11,7 +11,7 @@ function Update-In-File-With-Lock-And-Retry {
         [int]$delayMilliseconds = 200
     )
 
-    $indent = (" " * $outputIndentation)
+    $multilineIndent = (" " * $outputIndentation)
 
     if ($searchPatternLines) {
         $searchPattern = "(?s)"
@@ -20,7 +20,7 @@ function Update-In-File-With-Lock-And-Retry {
 
     if ($replacePatternLines) {
         $replacePattern = ""
-        foreach ($line in $replacePatternLines) { $replacePattern += "`n" + $indent + $line }
+        foreach ($line in $replacePatternLines) { $replacePattern += "`n" + $multilineIndent + $line }
     }
 
     $retryCount = 0
@@ -28,34 +28,21 @@ function Update-In-File-With-Lock-And-Retry {
 
     while (-not $success -and $retryCount -lt $maxRetries) {
         try {
-            $fileStream = [System.IO.File]::Open($filePath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::Read)
-            try {
-                $reader = New-Object System.IO.StreamReader($fileStream)
-                $content = $reader.ReadToEnd()
-                $reader.Close()
-                $updatedContent = $content -replace $searchPattern, $replacePattern
-                if ($content -ne $updatedContent) {
-                    $fileStream.Close()  # Close the read stream before writing
-                    $writerStream = [System.IO.File]::Open($filePath, [System.IO.FileMode]::Create, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
-                    $writer = New-Object System.IO.StreamWriter($writerStream)
-                    $writer.Write($updatedContent)
-                    $writer.Flush()  # Ensure all data is written to the file
-                    $writer.Close()
-                    $success = $true
-                }
-                elseif ($requirePresence) {
-                    $retryCount = $maxRetries
-                    throw "Failed to find pattern '$searchPattern' in file '$filePath'."
-                }
-                else {
-                    $success = $true
-                }
-            } finally {
-                $fileStream.Close()
+            $content = Get-Content -Path $filePath -Raw
+            $updatedContent = $content -replace $searchPattern, $replacePattern
+            if ($content -ne $updatedContent) {
+                Set-Content -Path $filePath -Value $updatedContent -NoNewLine
+                $success = $true
+            } elseif ($RequirePresence) {
+                $retryCount = $maxRetries
+                throw "Failed to find pattern '$searchPattern' in file '$filePath'."
+            } else {
+                $success = $true
             }
-        } catch {
+        }
+        catch {
             $exceptionMessage = $_.Exception.Message
-            Write-Host "Retrying for error: $exceptionMessage"
+            Write-Warning "Retrying for error: $exceptionMessage"
             Start-Sleep -Milliseconds $delayMilliseconds
             $retryCount++
         }

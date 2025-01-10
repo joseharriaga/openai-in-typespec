@@ -3,7 +3,7 @@
 $root = Split-Path $PSScriptRoot -Parent
 $directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Models"
 
-Update-In-File-With-Lock-And-Retry `
+Update-In-File-With-Retry `
     -FilePath "$directory\InternalChatCompletionResponseMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalChatCompletionResponseMessage\("
@@ -27,7 +27,7 @@ Update-In-File-With-Lock-And-Retry `
     -OutputIndentation 12 `
     -RequirePresence
 
-Update-In-File-With-Lock-And-Retry `
+Update-In-File-With-Retry `
     -FilePath "$directory\InternalChatCompletionStreamResponseDelta.Serialization.cs" `
     -SearchPatternLines @(
         "if \(Optional\.IsDefined\(Content\) && _additionalBinaryDataProperties\?\.ContainsKey\(`"content`"\) != true\)"
@@ -39,7 +39,7 @@ Update-In-File-With-Lock-And-Retry `
     -OutputIndentation 12 `
     -RequirePresence
 
-Update-In-File-With-Lock-And-Retry `
+Update-In-File-With-Retry `
     -FilePath "$directory\InternalChatCompletionStreamResponseDelta.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalChatCompletionStreamResponseDelta\("
@@ -63,7 +63,7 @@ Update-In-File-With-Lock-And-Retry `
     -OutputIndentation 12 `
     -RequirePresence
 
-Update-In-File-With-Lock-And-Retry `
+Update-In-File-With-Retry `
     -FilePath "$directory\ChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "if \(true && Optional\.IsDefined\(Content\) && _additionalBinaryDataProperties\?\.ContainsKey\(`"content`"\) != true\)"
@@ -75,7 +75,7 @@ Update-In-File-With-Lock-And-Retry `
     -OutputIndentation 12 `
     -RequirePresence
 
-Update-In-File-With-Lock-And-Retry `
+Update-In-File-With-Retry `
     -FilePath "$directory\AssistantChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new AssistantChatMessage\("
@@ -101,7 +101,7 @@ Update-In-File-With-Lock-And-Retry `
     -OutputIndentation 12 `
     -RequirePresence
 
-Update-In-File-With-Lock-And-Retry `
+Update-In-File-With-Retry `
     -FilePath "$directory\FunctionChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new FunctionChatMessage\(role, content, additionalBinaryDataProperties, functionName\);"
@@ -113,7 +113,7 @@ Update-In-File-With-Lock-And-Retry `
     -OutputIndentation 12 `
     -RequirePresence
 
-Update-In-File-With-Lock-And-Retry `
+Update-In-File-With-Retry `
     -FilePath "$directory\SystemChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new SystemChatMessage\(role, content, additionalBinaryDataProperties, participantName\);"
@@ -125,7 +125,7 @@ Update-In-File-With-Lock-And-Retry `
     -OutputIndentation 12 `
     -RequirePresence
 
-Update-In-File-With-Lock-And-Retry `
+Update-In-File-With-Retry `
     -FilePath "$directory\ToolChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new ToolChatMessage\(role, content, additionalBinaryDataProperties, toolCallId\);"
@@ -137,7 +137,7 @@ Update-In-File-With-Lock-And-Retry `
     -OutputIndentation 12 `
     -RequirePresence
 
-Update-In-File-With-Lock-And-Retry `
+Update-In-File-With-Retry `
     -FilePath "$directory\UserChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new UserChatMessage\(role, content, additionalBinaryDataProperties, participantName\);"
@@ -149,7 +149,7 @@ Update-In-File-With-Lock-And-Retry `
     -OutputIndentation 12 `
     -RequirePresence
 
-Update-In-File-With-Lock-And-Retry `
+Update-In-File-With-Retry `
     -FilePath "$directory\InternalUnknownChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalUnknownChatMessage\(role, content, additionalBinaryDataProperties\);"
@@ -161,7 +161,7 @@ Update-In-File-With-Lock-And-Retry `
     -OutputIndentation 12 `
     -RequirePresence
 
-Update-In-File-With-Lock-And-Retry `
+Update-In-File-With-Retry `
     -FilePath "$directory\InternalFineTuneChatCompletionRequestAssistantMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalFineTuneChatCompletionRequestAssistantMessage\("

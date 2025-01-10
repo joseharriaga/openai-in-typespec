@@ -11,7 +11,7 @@ foreach ($file in $files) {
     $statusText = "{0:D3}/{1:D3} : Processing codegen fixup for response deserialization..." -f $editedFilesCount, $files.Count
     $percentComplete = [math]::Round(($editedFilesCount / $files.Count) * 100)
     Write-Progress -Activity "Editing" -Status $statusText -PercentComplete $percentComplete
-    Update-In-File-With-Lock-And-Retry `
+    Update-In-File-With-Retry `
         -FilePath $file.FullName `
         -SearchPattern "options.Format != `"W`"" `
         -ReplacePattern "true"

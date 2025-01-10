@@ -12,7 +12,7 @@ $targetFilenames = (
 
 foreach ($targetFilename in $targetFilenames) {
     $filePath = Join-Path $generatedModelFolder $targetFilename -Resolve
-    Update-In-File-With-Lock-And-Retry `
+    Update-In-File-With-Retry `
         -FilePath $filePath `
         -SearchPattern "public abstract" `
         -ReplacePattern "public" `

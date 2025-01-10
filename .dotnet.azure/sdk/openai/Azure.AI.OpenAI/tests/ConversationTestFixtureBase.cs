@@ -16,6 +16,7 @@ namespace Azure.AI.OpenAI.Tests;
 
 [Parallelizable(ParallelScope.All)]
 [Category("Conversation")]
+[Category("Live")]
 public class ConversationTestFixtureBase
 {
     internal TestConfig TestConfig { get; } = new(() => RecordedTestMode.Live);

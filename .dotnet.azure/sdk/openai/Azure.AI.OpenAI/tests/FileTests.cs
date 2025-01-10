@@ -11,7 +11,12 @@ namespace Azure.AI.OpenAI.Tests;
 public class FileTests : AoaiTestBase<OpenAIFileClient>
 {
     public FileTests(bool isAsync) : base(isAsync)
-    { }
+    {
+        if (new AzureOpenAIClientOptions().Version == "2024-12-01-preview")
+        {
+            Assert.Inconclusive("2024-12-01-preview not currently supported for files, fine-tuning, and related routes");
+        }
+    }
 
     [Test]
     [Category("Smoke")]

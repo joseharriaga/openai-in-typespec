@@ -112,11 +112,11 @@ jobs:
           --no-build
           --filter "(TestCategory!=Live)"
           --logger "trx;LogFileName=Azure.AI.OpenAI.Tests.trx"
-          --logger:"console;verbosity=quiet"
           --blame-crash-dump-type full
           --blame-hang-dump-type full
           --blame-hang-timeout 15minutes
           --results-directory "${{github.workspace}}/TestResults"
+          -e AOAI_SUPPRESS_TRAFFIC_DUMP="true"
           Azure.AI.OpenAI/tests/Azure.AI.OpenAI.Tests.csproj
         working-directory: .dotnet.azure/sdk/openai
 

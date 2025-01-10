@@ -16,7 +16,7 @@ namespace OpenAI.Chat
         {
             Refusal = refusal;
             ToolCalls = new ChangeTrackingList<ChatToolCall>();
-            Content = content;
+            Content = content ?? new ChatMessageContent();
         }
 
         internal InternalChatCompletionResponseMessage(string refusal, IReadOnlyList<ChatToolCall> toolCalls, Chat.ChatMessageRole role, ChatMessageContent content, ChatFunctionCall functionCall, IDictionary<string, BinaryData> additionalBinaryDataProperties)
@@ -24,7 +24,7 @@ namespace OpenAI.Chat
             Refusal = refusal;
             ToolCalls = toolCalls;
             Role = role;
-            Content = content;
+            Content = content ?? new ChatMessageContent();
             FunctionCall = functionCall;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }

@@ -17,7 +17,7 @@ namespace OpenAI.Chat
             ToolCalls = toolCalls;
             Refusal = refusal;
             Role = role;
-            Content = content;
+            Content = content ?? new ChatMessageContent();
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 

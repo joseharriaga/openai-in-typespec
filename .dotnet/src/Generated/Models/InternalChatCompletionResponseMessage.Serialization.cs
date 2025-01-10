@@ -171,12 +171,11 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            // CUSTOM: Initialize Content collection property.
             return new InternalChatCompletionResponseMessage(
                 refusal,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
                 role,
-                content ?? new ChatMessageContent(),
+                content,
                 functionCall,
                 additionalBinaryDataProperties);
         }

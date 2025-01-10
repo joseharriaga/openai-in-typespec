@@ -103,7 +103,7 @@ function Run-TopLevelNamespaceCheck {
         "CodeGenTypeAttribute.cs",
         "CustomSerializationHelpers.cs",
         "GenericActionPipelinePolicy.cs",
-        "MultipartFormDataBinaryContent.cs",
+        "MultiPartFormDataBinaryContent.cs",
         "PageCollectionHelpers.cs",
         "PageEnumerator.cs",
         "PageResultEnumerator.cs",

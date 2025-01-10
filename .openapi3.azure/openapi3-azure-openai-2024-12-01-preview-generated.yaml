@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Azure OpenAI Service
-  version: 2024-10-21
+  version: 2024-12-01-preview
 tags:
   - name: Chat
   - name: Images
@@ -518,6 +518,24 @@ components:
           format: int32
           description: Offset of the first UTF32 code point which is excluded from the span. This field is always equal to completion_start_offset for empty spans. This field is always larger than completion_start_offset for non-empty spans.
       description: A representation of a span of completion text as used by Azure OpenAI content filter results.
+    AzureContentFilterCompletionTextSpanDetectionResult:
+      type: object
+      required:
+        - filtered
+        - detected
+        - details
+      properties:
+        filtered:
+          type: boolean
+          description: Whether the content detection resulted in a content filtering action.
+        detected:
+          type: boolean
+          description: Whether the labeled content category was detected in the content.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/AzureContentFilterCompletionTextSpan'
+          description: Detailed information about the detected completion text spans.
     AzureContentFilterDetectionResult:
       type: object
       required:
@@ -673,6 +691,8 @@ components:
             - filtered
             - detected
           description: A detection result that describes a match against licensed code or other protected source material.
+        ungrounded_material:
+          $ref: '#/components/schemas/AzureContentFilterCompletionTextSpanDetectionResult'
       description: A content filter result for a single response item produced by a generative AI system.
     AzureContentFilterResultForPrompt:
       type: object
@@ -882,6 +902,8 @@ components:
           items:
             $ref: '#/components/schemas/AzureChatDataSource'
           description: The data sources to use for the On Your Data feature, exclusive to Azure OpenAI.
+        user_security_context:
+          $ref: '#/components/schemas/AzureUserSecurityContext'
       allOf:
         - $ref: '#/components/schemas/OpenAI.CreateChatCompletionRequest'
       description: |-
@@ -1198,6 +1220,22 @@ components:
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
       description: Represents a data source configuration that will use an Azure Search resource.
+    AzureUserSecurityContext:
+      type: object
+      properties:
+        application_name:
+          type: string
+          description: The name of the application. Sensitive personal information should not be included in this field.
+        end_user_id:
+          type: string
+          description: This identifier is the Microsoft Entra ID (formerly Azure Active Directory) user object ID used to authenticate end-users within the generative AI application. Sensitive personal information should not be included in this field.
+        end_user_tenant_id:
+          type: string
+          description: The Microsoft 365 tenant ID the end user belongs to. It's required when the generative AI application is multitenant.
+        source_ip:
+          type: string
+          description: Captures the original client's IP address.
+      description: User security context contains several parameters that describe the application itself, and the end user that interacts with the application. These fields assist your security operations teams to investigate and mitigate security incidents by providing a comprehensive approach to protecting your AI applications. [Learn more](https://aka.ms/TP4AI/Documentation/EndUserContext) about protecting AI applications using Microsoft Defender for Cloud.
     ChatCompletionMessageToolCallsItem:
       type: array
       items:

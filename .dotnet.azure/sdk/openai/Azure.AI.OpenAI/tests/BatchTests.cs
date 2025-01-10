@@ -30,7 +30,12 @@ namespace Azure.AI.OpenAI.Tests;
 public class BatchTests : AoaiTestBase<BatchClient>
 {
     public BatchTests(bool isAsync) : base(isAsync)
-    { }
+    {
+        if (new AzureOpenAIClientOptions().Version == "2024-12-01-preview")
+        {
+            Assert.Inconclusive("2024-12-01-preview not currently supported for files, fine-tuning, and related routes");
+        }
+    }
 
     [Test]
     [Category("Smoke")]
@@ -65,6 +70,7 @@ public class BatchTests : AoaiTestBase<BatchClient>
     }
 
     [RecordedTest]
+    [Category("LongRunning")] // observed live runtime up to 5 minutes
     public async Task CanCancelBatch()
     {
         BatchClient batchClient = GetTestClient();

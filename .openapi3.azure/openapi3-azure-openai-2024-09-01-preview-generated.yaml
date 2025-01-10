@@ -993,6 +993,7 @@ components:
         - 2024-09-01-preview
         - 2024-10-01-preview
         - 2024-10-21
+        - 2024-12-01-preview
       description: Known service API versions for Azure OpenAI.
     AzureSearchChatDataSource:
       type: object

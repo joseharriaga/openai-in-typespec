@@ -109,10 +109,7 @@ namespace OpenAILibraryPlugin
                             && assignmentExpression.Value.ToDisplayString() == parameterProvider.Name)
                         {
                             updatedStatements[i] = assignmentExpression.Variable.Assign(
-        assignmentExpression.Value.NullCoalesce(New.Instance(parameterProvider.Type))).Terminate();
-                                assignmentExpression.Variable.Assign(
-                                    assignmentExpression.Value.NullCoalesce(
-                                        new NewInstanceExpression(parameterProvider.Type, []))));
+                                assignmentExpression.Value.NullCoalesce(New.Instance(parameterProvider.Type))).Terminate();
                         }
                     }
                     constructor.Update(bodyStatements: new MethodBodyStatements(updatedStatements.AsReadOnly()));

@@ -108,7 +108,8 @@ namespace OpenAILibraryPlugin
                             && expressionStatement.Expression is AssignmentExpression assignmentExpression
                             && assignmentExpression.Value.ToDisplayString() == parameterProvider.Name)
                         {
-                            updatedStatements[i] = new ExpressionStatement(
+                            updatedStatements[i] = assignmentExpression.Variable.Assign(
+        assignmentExpression.Value.NullCoalesce(New.Instance(parameterProvider.Type))).Terminate();
                                 assignmentExpression.Variable.Assign(
                                     assignmentExpression.Value.NullCoalesce(
                                         new NewInstanceExpression(parameterProvider.Type, []))));

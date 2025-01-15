@@ -1,3 +1,5 @@
+. $PSScriptRoot\Helpers.ps1
+
 $repoRoot = Join-Path $PSScriptRoot .. -Resolve
 $generatedModelFolder = Join-Path $repoRoot .dotnet\src\Generated\Models
 
@@ -10,10 +12,9 @@ $targetFilenames = (
 
 foreach ($targetFilename in $targetFilenames) {
     $filePath = Join-Path $generatedModelFolder $targetFilename -Resolve
-    $content = Get-Content -Path $filePath
-    $updatedContent = $content -replace "public abstract", "public"
-    if ($content -ne $updatedContent) {
-        Write-Output "Removing abstract class modifier from file: $targetFilename"
-        Set-Content -Path $filePath -Value $updatedContent
-    }
+    Update-In-File-With-Retry `
+        -FilePath $filePath `
+        -SearchPattern "public abstract" `
+        -ReplacePattern "public" `
+        -RequirePresence
 }

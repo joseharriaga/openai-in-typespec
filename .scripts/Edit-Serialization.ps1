@@ -1,42 +1,11 @@
-function Edit-Serialization {
-    param(
-        [string] $Filename,
-        [string[]] $InputRegex,
-        [string[]] $OutputString,
-        [int] $OutputIndentation
-    )
-    $root = Split-Path $PSScriptRoot -Parent
-    $directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Models"
-    $file = Get-ChildItem -Path $directory -Filter $Filename
-    $content = Get-Content -Path $file -Raw
+. $PSScriptRoot\Helpers.ps1
 
-    Write-Output "Editing $($file.FullName)"
+$root = Split-Path $PSScriptRoot -Parent
+$directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Models"
 
-    $regex = "(?s)"
-    foreach ($line in $InputRegex) { $regex += "\s+" + $line }
-
-    if ($content -cnotmatch $regex)
-    {
-        throw "The code does not match the expected pattern. If this is by design, please update or disable this edit.`n`n$regex"
-    }
-    else
-    {
-        $output = ""
-        foreach ($line in $OutputString) { $output += "`r`n" + $line.PadLeft($line.Length + $OutputIndentation) }
-
-        $content = $content -creplace $regex, $output
-        $content | Set-Content -Path $file.FullName -NoNewline
-    }
-}
-
-function Edit-InternalChatCompletionResponseMessageSerialization {
-    $filename = "InternalChatCompletionResponseMessage.Serialization.cs"
-
-    # content serialization
-    # no-op
-
-    # content deserialization
-    $inputRegex = @(
+Update-In-File-With-Retry `
+    -FilePath "$directory\InternalChatCompletionResponseMessage.Serialization.cs" `
+    -SearchPatternLines @(
         "return new InternalChatCompletionResponseMessage\("
         "    refusal,"
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
@@ -45,8 +14,8 @@ function Edit-InternalChatCompletionResponseMessageSerialization {
         "    content,"
         "    functionCall,"
         "    additionalBinaryDataProperties\);"
-    )
-    $outputString = @(
+    ) `
+    -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalChatCompletionResponseMessage("
         "    refusal,"
@@ -56,25 +25,25 @@ function Edit-InternalChatCompletionResponseMessageSerialization {
         "    content ?? new ChatMessageContent(),"
         "    functionCall,"
         "    additionalBinaryDataProperties);"
-    )
-    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
-}
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence
 
-function Edit-InternalChatCompletionStreamResponseDeltaSerialization {
-    $filename = "InternalChatCompletionStreamResponseDelta.Serialization.cs"
-
-    # content serialization
-    $inputRegex = @(
+Update-In-File-With-Retry `
+    -FilePath "$directory\InternalChatCompletionStreamResponseDelta.Serialization.cs" `
+    -SearchPatternLines @(
         "if \(Optional\.IsDefined\(Content\) && _additionalBinaryDataProperties\?\.ContainsKey\(`"content`"\) != true\)"
-    )
-    $outputString = @(
+    ) `
+    -ReplacePatternLines @(
         "// CUSTOM: Check inner collection is defined."
         "if (Optional.IsDefined(Content) && _additionalBinaryDataProperties?.ContainsKey(`"content`") != true && Content.IsInnerCollectionDefined())"
-    )
-    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence
 
-    # content deserialization
-    $inputRegex = @(
+Update-In-File-With-Retry `
+    -FilePath "$directory\InternalChatCompletionStreamResponseDelta.Serialization.cs" `
+    -SearchPatternLines @(
         "return new InternalChatCompletionStreamResponseDelta\("
         "    audio,"
         "    functionCall,"
@@ -83,8 +52,8 @@ function Edit-InternalChatCompletionStreamResponseDeltaSerialization {
         "    role,"
         "    content,"
         "    additionalBinaryDataProperties\);"
-    )
-    $outputString = @(
+    ) `
+    -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalChatCompletionStreamResponseDelta("
         "    audio,"
@@ -94,120 +63,85 @@ function Edit-InternalChatCompletionStreamResponseDeltaSerialization {
         "    role,"
         "    content ?? new ChatMessageContent(),"
         "    additionalBinaryDataProperties);"
-    )
-    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
-}
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence
 
-function Edit-ChatMessageSerialization {
-    $filename = "ChatMessage.Serialization.cs"
-
-    # content serialization
-    $inputRegex = @(
+Update-In-File-With-Retry `
+    -FilePath "$directory\ChatMessage.Serialization.cs" `
+    -SearchPatternLines @(
         "if \(true && Optional\.IsDefined\(Content\) && _additionalBinaryDataProperties\?\.ContainsKey\(`"content`"\) != true\)"
-    )
-    $outputString = @(
+    ) `
+    -ReplacePatternLines @(
         "// CUSTOM: Check inner collection is defined."
         "if (true && Optional.IsDefined(Content) && Content.IsInnerCollectionDefined() && _additionalBinaryDataProperties?.ContainsKey(`"content`") != true)"
-    )
-    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence
 
-    # content deserialization
-    # no-op
-}
-
-function Edit-FunctionChatMessageSerialization {
-    $filename = "FunctionChatMessage.Serialization.cs"
-
-    # content serialization
-    # no-op
-
-    # content deserialization
-    $inputRegex = @(
+Update-In-File-With-Retry `
+    -FilePath "$directory\FunctionChatMessage.Serialization.cs" `
+    -SearchPatternLines @(
         "return new FunctionChatMessage\(content, role, additionalBinaryDataProperties, functionName\);"
-    )
-    $outputString = @(
+    ) `
+    -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new FunctionChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, functionName);"
-    )
-    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
-}
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence
 
-function Edit-SystemChatMessageSerialization {
-    $filename = "SystemChatMessage.Serialization.cs"
-
-    # content serialization
-    # no-op
-
-    # content deserialization
-    $inputRegex = @(
+Update-In-File-With-Retry `
+    -FilePath "$directory\SystemChatMessage.Serialization.cs" `
+    -SearchPatternLines @(
         "return new SystemChatMessage\(content, role, additionalBinaryDataProperties, participantName\);"
-    )
-    $outputString = @(
+    ) `
+    -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new SystemChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, participantName);"
-    )
-    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
-}
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence
 
-function Edit-ToolChatMessageSerialization {
-    $filename = "ToolChatMessage.Serialization.cs"
-
-    # content serialization
-    # no-op
-
-    # content deserialization
-    $inputRegex = @(
+Update-In-File-With-Retry `
+    -FilePath "$directory\ToolChatMessage.Serialization.cs" `
+    -SearchPatternLines @(
         "return new ToolChatMessage\(content, role, additionalBinaryDataProperties, toolCallId\);"
-    )
-    $outputString = @(
+    ) `
+    -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new ToolChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, toolCallId);"
-    )
-    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
-}
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence
 
-function Edit-UserChatMessageSerialization {
-    $filename = "UserChatMessage.Serialization.cs"
-
-    # content serialization
-    # no-op
-
-    # content deserialization
-    $inputRegex = @(
+Update-In-File-With-Retry `
+    -FilePath "$directory\UserChatMessage.Serialization.cs" `
+    -SearchPatternLines @(
         "return new UserChatMessage\(content, role, additionalBinaryDataProperties, participantName\);"
-    )
-    $outputString = @(
+    ) `
+    -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new UserChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, participantName);"
-    )
-    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
-}
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence
 
-function Edit-InternalUnknownChatMessageSerialization {
-    $filename = "InternalUnknownChatMessage.Serialization.cs"
-
-    # content serialization
-    # no-op
-
-    # content deserialization
-    $inputRegex = @(
+Update-In-File-With-Retry `
+    -FilePath "$directory\InternalUnknownChatMessage.Serialization.cs" `
+    -SearchPatternLines @(
         "return new InternalUnknownChatMessage\(content, role, additionalBinaryDataProperties\);"
-    )
-    $outputString = @(
+    ) `
+    -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalUnknownChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties);"
-    )
-    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
-}
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence
 
-function Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization {
-    $filename = "InternalFineTuneChatCompletionRequestAssistantMessage.Serialization.cs"
-
-    # content serialization
-    # no-op
-
-    # content deserialization
-    $inputRegex = @(
+Update-In-File-With-Retry `
+    -FilePath "$directory\InternalFineTuneChatCompletionRequestAssistantMessage.Serialization.cs" `
+    -SearchPatternLines @(
         "return new InternalFineTuneChatCompletionRequestAssistantMessage\("
         "    content,"
         "    role,"
@@ -217,8 +151,8 @@ function Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
         "    functionCall,"
         "    audio\);"
-    )
-    $outputString = @(
+    ) `
+    -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalFineTuneChatCompletionRequestAssistantMessage("
         "    content ?? new ChatMessageContent(),"
@@ -229,16 +163,6 @@ function Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
         "    functionCall,"
         "    audio);"
-    )
-    Edit-Serialization -Filename $filename -InputRegex $inputRegex -OutputString $outputString -OutputIndentation 12
-}
-
-Edit-InternalChatCompletionResponseMessageSerialization
-Edit-InternalChatCompletionStreamResponseDeltaSerialization
-Edit-ChatMessageSerialization
-Edit-FunctionChatMessageSerialization
-Edit-SystemChatMessageSerialization
-Edit-ToolChatMessageSerialization
-Edit-UserChatMessageSerialization
-Edit-InternalUnknownChatMessageSerialization
-Edit-InternalFineTuneChatCompletionRequestAssistantMessageSerialization
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence

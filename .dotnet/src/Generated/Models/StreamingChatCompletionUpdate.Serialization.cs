@@ -44,7 +44,7 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object.ToString());
+                writer.WriteStringValue(Object.ToString());
             }
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
@@ -81,7 +81,7 @@ namespace OpenAI.Chat
             if (Optional.IsDefined(Usage) && _additionalBinaryDataProperties?.ContainsKey("usage") != true)
             {
                 writer.WritePropertyName("usage"u8);
-                writer.WriteObjectValue<ChatTokenUsage>(Usage, options);
+                writer.WriteObjectValue(Usage, options);
             }
             if (true && _additionalBinaryDataProperties != null)
             {

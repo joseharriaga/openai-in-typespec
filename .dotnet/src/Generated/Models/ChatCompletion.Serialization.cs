@@ -54,7 +54,7 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object.ToString());
+                writer.WriteStringValue(Object.ToString());
             }
             if (Optional.IsDefined(ServiceTier) && _additionalBinaryDataProperties?.ContainsKey("service_tier") != true)
             {

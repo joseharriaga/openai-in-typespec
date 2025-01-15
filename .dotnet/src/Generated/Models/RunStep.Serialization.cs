@@ -159,7 +159,7 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object.ToString());
+                writer.WriteStringValue(Object.ToString());
             }
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
@@ -169,7 +169,7 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("step_details") != true)
             {
                 writer.WritePropertyName("step_details"u8);
-                writer.WriteObjectValue<RunStepDetails>(Details, options);
+                writer.WriteObjectValue(Details, options);
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -225,7 +225,7 @@ namespace OpenAI.Assistants
             IReadOnlyDictionary<string, string> metadata = default;
             RunStepTokenUsage usage = default;
             InternalRunStepObjectObject @object = default;
-            Assistants.RunStepKind kind = default;
+            RunStepKind kind = default;
             RunStepDetails details = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())

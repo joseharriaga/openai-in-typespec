@@ -36,12 +36,12 @@ namespace OpenAI.RealtimeConversation
             if (Optional.IsDefined(PrefixPaddingMs) && _additionalBinaryDataProperties?.ContainsKey("prefix_padding_ms") != true)
             {
                 writer.WritePropertyName("prefix_padding_ms"u8);
-                this.SerializePrefixPaddingMs(writer, options);
+                SerializePrefixPaddingMs(writer, options);
             }
             if (Optional.IsDefined(SilenceDurationMs) && _additionalBinaryDataProperties?.ContainsKey("silence_duration_ms") != true)
             {
                 writer.WritePropertyName("silence_duration_ms"u8);
-                this.SerializeSilenceDurationMs(writer, options);
+                SerializeSilenceDurationMs(writer, options);
             }
         }
 
@@ -64,7 +64,7 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            RealtimeConversation.ConversationTurnDetectionKind kind = default;
+            ConversationTurnDetectionKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             float? threshold = default;
             TimeSpan? prefixPaddingMs = default;

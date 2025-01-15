@@ -44,7 +44,7 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteObjectValue<object>(this.Object, options);
+                writer.WriteObjectValue<object>(Object, options);
             }
             if (true && _additionalBinaryDataProperties != null)
             {

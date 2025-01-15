@@ -14,12 +14,15 @@ namespace OpenAI.LegacyCompletions
     internal partial class LegacyCompletionClient
     {
         private readonly Uri _endpoint;
-        private const string AuthorizationHeader = "Authorization";
-        private readonly ApiKeyCredential _keyCredential;
-        private const string AuthorizationApiKeyPrefix = "Bearer";
 
         protected LegacyCompletionClient()
         {
+        }
+
+        internal LegacyCompletionClient(ClientPipeline pipeline, Uri endpoint)
+        {
+            _endpoint = endpoint;
+            Pipeline = pipeline;
         }
 
         public ClientPipeline Pipeline { get; }

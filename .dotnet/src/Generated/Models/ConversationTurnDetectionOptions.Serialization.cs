@@ -67,7 +67,7 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationTurnDetectionOptions)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return ConversationTurnDetectionOptions.DeserializeConversationTurnDetectionOptions(document.RootElement, options);
+            return DeserializeConversationTurnDetectionOptions(document.RootElement, options);
         }
 
         BinaryData IPersistableModel<ConversationTurnDetectionOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
@@ -94,7 +94,7 @@ namespace OpenAI.RealtimeConversation
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return ConversationTurnDetectionOptions.DeserializeConversationTurnDetectionOptions(document.RootElement, options);
+                        return DeserializeConversationTurnDetectionOptions(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(ConversationTurnDetectionOptions)} does not support reading '{options.Format}' format.");
@@ -116,7 +116,7 @@ namespace OpenAI.RealtimeConversation
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return ConversationTurnDetectionOptions.DeserializeConversationTurnDetectionOptions(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return DeserializeConversationTurnDetectionOptions(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -98,7 +98,7 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            Chat.ChatFinishReason finishReason = default;
+            ChatFinishReason finishReason = default;
             int index = default;
             InternalChatCompletionResponseMessage message = default;
             InternalCreateChatCompletionResponseChoiceLogprobs logprobs = default;

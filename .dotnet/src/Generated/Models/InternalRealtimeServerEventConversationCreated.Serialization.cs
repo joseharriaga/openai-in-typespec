@@ -59,7 +59,7 @@ namespace OpenAI.RealtimeConversation
                 return null;
             }
             string eventId = default;
-            RealtimeConversation.ConversationUpdateKind kind = default;
+            ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             InternalRealtimeServerEventConversationCreatedConversation conversation = default;
             foreach (var prop in element.EnumerateObject())

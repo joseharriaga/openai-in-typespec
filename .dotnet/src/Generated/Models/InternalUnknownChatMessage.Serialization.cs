@@ -45,7 +45,7 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            Chat.ChatMessageRole role = default;
+            ChatMessageRole role = default;
             ChatMessageContent content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())

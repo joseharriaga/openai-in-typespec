@@ -67,7 +67,7 @@ namespace OpenAI.VectorStores
                 if (ExpirationPolicy != null)
                 {
                     writer.WritePropertyName("expires_after"u8);
-                    writer.WriteObjectValue<VectorStoreExpirationPolicy>(ExpirationPolicy, options);
+                    writer.WriteObjectValue(ExpirationPolicy, options);
                 }
                 else
                 {

@@ -29,7 +29,7 @@ namespace OpenAI.Chat
             if (true && Optional.IsDefined(Content) && Content.IsInnerCollectionDefined() && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
-                this.SerializeContentValue(writer, options);
+                SerializeContentValue(writer, options);
             }
             if (true && _additionalBinaryDataProperties != null)
             {

@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("text") != true)
             {
                 writer.WritePropertyName("text"u8);
-                writer.WriteObjectValue<InternalMessageContentTextObjectText>(_text, options);
+                writer.WriteObjectValue(_text, options);
             }
         }
 

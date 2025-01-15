@@ -39,7 +39,7 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("tools") != true)
             {
                 writer.WritePropertyName("tools"u8);
-                this.SerializeTools(writer, options);
+                SerializeTools(writer, options);
             }
             if (true && _additionalBinaryDataProperties != null)
             {

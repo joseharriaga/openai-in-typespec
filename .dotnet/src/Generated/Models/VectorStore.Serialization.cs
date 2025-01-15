@@ -111,12 +111,12 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object.ToString());
+                writer.WriteStringValue(Object.ToString());
             }
             if (Optional.IsDefined(ExpirationPolicy) && _additionalBinaryDataProperties?.ContainsKey("expires_after") != true)
             {
                 writer.WritePropertyName("expires_after"u8);
-                writer.WriteObjectValue<VectorStoreExpirationPolicy>(ExpirationPolicy, options);
+                writer.WriteObjectValue(ExpirationPolicy, options);
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -163,7 +163,7 @@ namespace OpenAI.VectorStores
             string name = default;
             int usageBytes = default;
             VectorStoreFileCounts fileCounts = default;
-            VectorStores.VectorStoreStatus status = default;
+            VectorStoreStatus status = default;
             DateTimeOffset? expiresAt = default;
             DateTimeOffset? lastActiveAt = default;
             IReadOnlyDictionary<string, string> metadata = default;

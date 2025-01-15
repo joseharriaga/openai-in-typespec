@@ -72,7 +72,7 @@ namespace OpenAI.RealtimeConversation
                 throw new FormatException($"The model {nameof(ConversationUpdate)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return ConversationUpdate.DeserializeConversationUpdate(document.RootElement, options);
+            return DeserializeConversationUpdate(document.RootElement, options);
         }
 
         BinaryData IPersistableModel<ConversationUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
@@ -99,7 +99,7 @@ namespace OpenAI.RealtimeConversation
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return ConversationUpdate.DeserializeConversationUpdate(document.RootElement, options);
+                        return DeserializeConversationUpdate(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(ConversationUpdate)} does not support reading '{options.Format}' format.");
@@ -121,7 +121,7 @@ namespace OpenAI.RealtimeConversation
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return ConversationUpdate.DeserializeConversationUpdate(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return DeserializeConversationUpdate(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

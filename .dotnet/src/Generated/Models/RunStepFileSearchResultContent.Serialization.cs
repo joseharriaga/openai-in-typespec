@@ -78,7 +78,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             string text = default;
-            Assistants.RunStepFileSearchResultContentKind kind = default;
+            RunStepFileSearchResultContentKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {

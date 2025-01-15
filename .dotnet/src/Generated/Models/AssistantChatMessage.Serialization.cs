@@ -53,7 +53,7 @@ namespace OpenAI.Chat
                 if (FunctionCall != null)
                 {
                     writer.WritePropertyName("function_call"u8);
-                    writer.WriteObjectValue<ChatFunctionCall>(FunctionCall, options);
+                    writer.WriteObjectValue(FunctionCall, options);
                 }
                 else
                 {
@@ -81,7 +81,7 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            Chat.ChatMessageRole role = default;
+            ChatMessageRole role = default;
             ChatMessageContent content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string refusal = default;

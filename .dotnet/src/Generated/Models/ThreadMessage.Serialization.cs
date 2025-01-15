@@ -147,7 +147,7 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object.ToString());
+                writer.WriteStringValue(Object.ToString());
             }
             if (_additionalBinaryDataProperties?.ContainsKey("role") != true)
             {
@@ -223,7 +223,7 @@ namespace OpenAI.Assistants
             string runId = default;
             IReadOnlyDictionary<string, string> metadata = default;
             InternalMessageObjectObject @object = default;
-            Assistants.MessageRole role = default;
+            MessageRole role = default;
             IReadOnlyList<MessageCreationAttachment> attachments = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())

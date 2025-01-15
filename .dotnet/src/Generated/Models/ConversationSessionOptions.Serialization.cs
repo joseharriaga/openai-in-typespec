@@ -67,7 +67,7 @@ namespace OpenAI.RealtimeConversation
                 if (TurnDetectionOptions != null)
                 {
                     writer.WritePropertyName("turn_detection"u8);
-                    writer.WriteObjectValue<ConversationTurnDetectionOptions>(TurnDetectionOptions, options);
+                    writer.WriteObjectValue(TurnDetectionOptions, options);
                 }
                 else
                 {
@@ -79,7 +79,7 @@ namespace OpenAI.RealtimeConversation
                 if (InputTranscriptionOptions != null)
                 {
                     writer.WritePropertyName("input_audio_transcription"u8);
-                    writer.WriteObjectValue<ConversationInputTranscriptionOptions>(InputTranscriptionOptions, options);
+                    writer.WriteObjectValue(InputTranscriptionOptions, options);
                 }
                 else
                 {

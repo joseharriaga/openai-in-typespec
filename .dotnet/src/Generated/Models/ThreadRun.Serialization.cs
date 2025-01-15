@@ -222,14 +222,14 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object.ToString());
+                writer.WriteStringValue(Object.ToString());
             }
             if (_additionalBinaryDataProperties?.ContainsKey("response_format") != true)
             {
                 if (ResponseFormat != null)
                 {
                     writer.WritePropertyName("response_format"u8);
-                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
+                    writer.WriteObjectValue(ResponseFormat, options);
                 }
                 else
                 {
@@ -294,7 +294,7 @@ namespace OpenAI.Assistants
                 if (_internalRequiredAction != null)
                 {
                     writer.WritePropertyName("required_action"u8);
-                    writer.WriteObjectValue<InternalRunRequiredAction>(_internalRequiredAction, options);
+                    writer.WriteObjectValue(_internalRequiredAction, options);
                 }
                 else
                 {

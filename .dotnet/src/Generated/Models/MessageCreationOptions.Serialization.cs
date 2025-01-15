@@ -75,7 +75,7 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
-                this.SerializeContent(writer, options);
+                SerializeContent(writer, options);
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -119,7 +119,7 @@ namespace OpenAI.Assistants
             }
             IList<MessageCreationAttachment> attachments = default;
             IDictionary<string, string> metadata = default;
-            Assistants.MessageRole role = default;
+            MessageRole role = default;
             IList<MessageContent> content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())

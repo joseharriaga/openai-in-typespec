@@ -93,7 +93,7 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("messages") != true)
             {
                 writer.WritePropertyName("messages"u8);
-                this.SerializeMessagesValue(writer, options);
+                SerializeMessagesValue(writer, options);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
@@ -129,7 +129,7 @@ namespace OpenAI.Chat
                 if (StreamOptions != null)
                 {
                     writer.WritePropertyName("stream_options"u8);
-                    writer.WriteObjectValue<InternalChatCompletionStreamOptions>(StreamOptions, options);
+                    writer.WriteObjectValue(StreamOptions, options);
                 }
                 else
                 {
@@ -165,7 +165,7 @@ namespace OpenAI.Chat
                 if (StopSequences != null)
                 {
                     writer.WritePropertyName("stop"u8);
-                    this.SerializeStopSequencesValue(writer, options);
+                    SerializeStopSequencesValue(writer, options);
                 }
                 else
                 {
@@ -177,7 +177,7 @@ namespace OpenAI.Chat
                 if (LogitBiases != null)
                 {
                     writer.WritePropertyName("logit_bias"u8);
-                    this.SerializeLogitBiasesValue(writer, options);
+                    SerializeLogitBiasesValue(writer, options);
                 }
                 else
                 {
@@ -187,12 +187,12 @@ namespace OpenAI.Chat
             if (Optional.IsDefined(ToolChoice) && _additionalBinaryDataProperties?.ContainsKey("tool_choice") != true)
             {
                 writer.WritePropertyName("tool_choice"u8);
-                writer.WriteObjectValue<ChatToolChoice>(ToolChoice, options);
+                writer.WriteObjectValue(ToolChoice, options);
             }
             if (Optional.IsDefined(FunctionChoice) && _additionalBinaryDataProperties?.ContainsKey("function_call") != true)
             {
                 writer.WritePropertyName("function_call"u8);
-                writer.WriteObjectValue<ChatFunctionChoice>(FunctionChoice, options);
+                writer.WriteObjectValue(FunctionChoice, options);
             }
             if (Optional.IsDefined(AllowParallelToolCalls) && _additionalBinaryDataProperties?.ContainsKey("parallel_tool_calls") != true)
             {

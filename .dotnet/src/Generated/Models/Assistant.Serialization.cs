@@ -142,14 +142,14 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object.ToString());
+                writer.WriteStringValue(Object.ToString());
             }
             if (Optional.IsDefined(ResponseFormat) && _additionalBinaryDataProperties?.ContainsKey("response_format") != true)
             {
                 if (ResponseFormat != null)
                 {
                     writer.WritePropertyName("response_format"u8);
-                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
+                    writer.WriteObjectValue(ResponseFormat, options);
                 }
                 else
                 {

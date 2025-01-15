@@ -199,7 +199,7 @@ namespace OpenAI.Assistants
                 if (ResponseFormat != null)
                 {
                     writer.WritePropertyName("response_format"u8);
-                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
+                    writer.WriteObjectValue(ResponseFormat, options);
                 }
                 else
                 {
@@ -211,7 +211,7 @@ namespace OpenAI.Assistants
                 if (ToolChoice != null)
                 {
                     writer.WritePropertyName("tool_choice"u8);
-                    writer.WriteObjectValue<ToolConstraint>(ToolChoice, options);
+                    writer.WriteObjectValue(ToolChoice, options);
                 }
                 else
                 {

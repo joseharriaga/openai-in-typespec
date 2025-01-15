@@ -65,7 +65,7 @@ namespace OpenAI.Chat
                 if (Content != null)
                 {
                     writer.WritePropertyName("content"u8);
-                    this.SerializeContentValue(writer, options);
+                    SerializeContentValue(writer, options);
                 }
                 else
                 {
@@ -115,7 +115,7 @@ namespace OpenAI.Chat
             StreamingChatFunctionCallUpdate functionCall = default;
             IReadOnlyList<StreamingChatToolCallUpdate> toolCalls = default;
             string refusal = default;
-            Chat.ChatMessageRole? role = default;
+            ChatMessageRole? role = default;
             ChatMessageContent content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())

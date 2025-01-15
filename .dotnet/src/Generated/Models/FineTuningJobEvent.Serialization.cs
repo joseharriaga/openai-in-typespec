@@ -98,7 +98,7 @@ namespace OpenAI.FineTuning
             }
             string id = default;
             DateTimeOffset createdAt = default;
-            FineTuning.FineTuningJobEventLevel level = default;
+            FineTuningJobEventLevel level = default;
             string message = default;
             InternalFineTuningJobEventObject @object = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();

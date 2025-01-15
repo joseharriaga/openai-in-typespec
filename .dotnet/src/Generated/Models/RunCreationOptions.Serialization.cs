@@ -49,7 +49,7 @@ namespace OpenAI.Assistants
                 if (ResponseFormat != null)
                 {
                     writer.WritePropertyName("response_format"u8);
-                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
+                    writer.WriteObjectValue(ResponseFormat, options);
                 }
                 else
                 {
@@ -207,7 +207,7 @@ namespace OpenAI.Assistants
                 if (TruncationStrategy != null)
                 {
                     writer.WritePropertyName("truncation_strategy"u8);
-                    writer.WriteObjectValue<RunTruncationStrategy>(TruncationStrategy, options);
+                    writer.WriteObjectValue(TruncationStrategy, options);
                 }
                 else
                 {
@@ -219,7 +219,7 @@ namespace OpenAI.Assistants
                 if (ToolConstraint != null)
                 {
                     writer.WritePropertyName("tool_choice"u8);
-                    this.SerializeToolConstraint(writer, options);
+                    SerializeToolConstraint(writer, options);
                 }
                 else
                 {

@@ -130,7 +130,7 @@ namespace OpenAI.Assistants
                 if (ResponseFormat != null)
                 {
                     writer.WritePropertyName("response_format"u8);
-                    writer.WriteObjectValue<AssistantResponseFormat>(ResponseFormat, options);
+                    writer.WriteObjectValue(ResponseFormat, options);
                 }
                 else
                 {

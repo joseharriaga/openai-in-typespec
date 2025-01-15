@@ -35,7 +35,7 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("message_creation") != true)
             {
                 writer.WritePropertyName("message_creation"u8);
-                writer.WriteObjectValue<InternalRunStepDetailsMessageCreationObjectMessageCreation>(_messageCreation, options);
+                writer.WriteObjectValue(_messageCreation, options);
             }
         }
 

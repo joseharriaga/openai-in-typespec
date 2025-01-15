@@ -40,7 +40,7 @@ namespace OpenAI.Assistants
             if (Optional.IsDefined(RankingOptions) && _additionalBinaryDataProperties?.ContainsKey("ranking_options") != true)
             {
                 writer.WritePropertyName("ranking_options"u8);
-                writer.WriteObjectValue<FileSearchRankingOptions>(RankingOptions, options);
+                writer.WriteObjectValue(RankingOptions, options);
             }
             if (true && _additionalBinaryDataProperties != null)
             {

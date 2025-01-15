@@ -107,8 +107,7 @@ function Run-TopLevelNamespaceCheck {
         "PageCollectionHelpers.cs",
         "PageEnumerator.cs",
         "PageResultEnumerator.cs",
-        "SemaphoreSlimExtensions.cs",
-        "SourceGenerationContext.cs"
+        "SemaphoreSlimExtensions.cs"
     )
 
     $failures = @()

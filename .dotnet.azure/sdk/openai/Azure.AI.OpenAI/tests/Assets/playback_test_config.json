@@ -24,6 +24,11 @@
     "key": "Sanitized",
     "deployment": "gpt-4o-0806"
   },
+  "chat_o1": {
+    "endpoint": "https://Sanitized.openai.azure.com/",
+    "key": "Sanitized",
+    "deployment": "o1"
+  },
   "chat_with_async_filter": {
     "endpoint": "https://Sanitized.openai.azure.com/",
     "key": "Sanitized",

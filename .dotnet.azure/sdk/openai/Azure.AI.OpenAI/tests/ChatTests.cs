@@ -725,6 +725,17 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
     #region Tests for interim o1 model support regarding new max_completion_tokens
 
+    [RecordedTest]
+    public async Task ChatWithO1Works()
+    {
+        IConfiguration testConfig = TestConfig.GetConfig("chat_o1")!;
+
+        ChatClient client = GetTestClient(testConfig);
+
+        ChatCompletion completion = await client.CompleteChatAsync([ChatMessage.CreateUserMessage("Hello, world!")]);
+        Assert.That(completion, Is.Not.Null);
+    }
+
     #endregion
     #region Helper methods
 

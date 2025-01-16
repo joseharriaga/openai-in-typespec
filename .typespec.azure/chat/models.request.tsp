@@ -9,12 +9,18 @@ using TypeSpec.Versioning;
 
 namespace AzureOpenAI;
 
+@withoutOmittedProperties("model")
+@withoutOmittedProperties("service_tier")
+model CreateChatCompletionRequestCommonBase
+  is OpenAI.CreateChatCompletionRequest;
+
 /**
  * The extended request model for chat completions against the Azure OpenAI service.
  * This adds the ability to provide data sources for the On Your Data feature.
  */
-model AzureCreateChatCompletionRequest
-  extends OpenAI.CreateChatCompletionRequest {
+model AzureCreateChatCompletionRequest {
+  ...CreateChatCompletionRequestCommonBase;
+
   /**
    * The data sources to use for the On Your Data feature, exclusive to Azure OpenAI.
    */

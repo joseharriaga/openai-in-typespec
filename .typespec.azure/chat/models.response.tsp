@@ -3,12 +3,32 @@ import "../common";
 
 namespace AzureOpenAI;
 
+@withoutOmittedProperties("completion_tokens_details")
+@withoutOmittedProperties("prompt_tokens_details")
+model CompletionUsageCommonBase is OpenAI.CompletionUsage;
+
+model AzureCompletionUsage {
+  ...CompletionUsageCommonBase;
+  completion_tokens_details: {
+    reasoning_tokens: int32;
+  };
+  prompt_tokens_details: {
+    cached_tokens: int32;
+  };
+}
+
+@withoutOmittedProperties("usage")
+model CreateChatCompletionResponseCommonBase
+  is OpenAI.CreateChatCompletionResponse;
+
 /**
  * The extended top-level chat completion response model for the Azure OpenAI service.
  * This model adds Responsible AI content filter annotations for prompt input.
  */
-model AzureCreateChatCompletionResponse
-  extends OpenAI.CreateChatCompletionResponse {
+model AzureCreateChatCompletionResponse {
+  ...CreateChatCompletionResponseCommonBase;
+  usage: AzureCompletionUsage;
+
   /**
    * The Responsible AI content filter annotations associated with prompt inputs into chat completions.
    */

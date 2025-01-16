@@ -11,13 +11,14 @@ using OpenAI;
 
 namespace AzureOpenAI;
 
-@route("/chat")
+@route("{deployment_id}/chat")
 interface AzureChat {
   @route("completions")
   @post
   @operationId("createChatCompletion")
   @tag("Chat")
   createChatCompletion(
-    ...AzureCreateChatCompletionRequest,
+    @path deployment_id: string,
+    @body request: AzureCreateChatCompletionRequest,
   ): AzureCreateChatCompletionResponse | AzureOpenAIChatErrorResponse;
 }

@@ -61,7 +61,7 @@ internal partial class AzureOpenAIFile : OpenAIFile
     internal AzureOpenAIFile(string id, int? bytes, DateTimeOffset createdAt, string filename, string purpose, AzureOpenAIFileStatus azureStatus)
         : base(id, createdAt, filename, purpose.ToFilePurpose(), bytes, azureStatus.ToFileStatus())
     {
-        _object = InternalListFilesResponseObject.List.ToString();
+        _object = "file";
         _purpose = purpose;
         _azureStatus = azureStatus;
     }

@@ -105,6 +105,17 @@ public partial class ChatMessage
     public static SystemChatMessage CreateSystemMessage(params ChatMessageContentPart[] contentParts) => new(contentParts);
     #endregion
 
+    #region DeveloperChatMessage
+    /// <inheritdoc cref="DeveloperChatMessage(string)"/>
+    public static DeveloperChatMessage CreateDeveloperMessage(string content) => new(content);
+
+    /// <inheritdoc cref="DeveloperChatMessage(IEnumerable{ChatMessageContentPart})"/>
+    public static DeveloperChatMessage CreateDeveloperMessage(IEnumerable<ChatMessageContentPart> contentParts) => new(contentParts);
+
+    /// <inheritdoc cref="DeveloperChatMessage(ChatMessageContentPart[])"/>
+    public static DeveloperChatMessage CreateDeveloperMessage(params ChatMessageContentPart[] contentParts) => new(contentParts);
+    #endregion
+
     #region UserChatMessage
     /// <inheritdoc cref="UserChatMessage(string)"/>
     public static UserChatMessage CreateUserMessage(string content) => new(content);

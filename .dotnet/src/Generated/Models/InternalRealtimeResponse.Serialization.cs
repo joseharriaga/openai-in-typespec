@@ -13,10 +13,6 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponse : IJsonModel<InternalRealtimeResponse>
     {
-        internal InternalRealtimeResponse()
-        {
-        }
-
         void IJsonModel<InternalRealtimeResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -31,39 +27,55 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(InternalRealtimeResponse)} does not support writing '{format}' format.");
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
-            {
-                writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(Object.ToString());
-            }
-            if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
+            if (Optional.IsDefined(Id) && _additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
                 writer.WritePropertyName("id"u8);
                 writer.WriteStringValue(Id);
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("status") != true)
+            if (Optional.IsDefined(Object) && _additionalBinaryDataProperties?.ContainsKey("object") != true)
+            {
+                writer.WritePropertyName("object"u8);
+                writer.WriteStringValue(Object.Value.ToString());
+            }
+            if (Optional.IsDefined(Status) && _additionalBinaryDataProperties?.ContainsKey("status") != true)
             {
                 writer.WritePropertyName("status"u8);
-                writer.WriteStringValue(Status.ToString());
+                writer.WriteStringValue(Status.Value.ToString());
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("status_details") != true)
+            if (Optional.IsDefined(StatusDetails) && _additionalBinaryDataProperties?.ContainsKey("status_details") != true)
             {
-                if (StatusDetails != null)
+                writer.WritePropertyName("status_details"u8);
+                writer.WriteObjectValue(StatusDetails, options);
+            }
+            if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
+            {
+                if (Metadata != null)
                 {
-                    writer.WritePropertyName("status_details"u8);
-                    writer.WriteObjectValue(StatusDetails, options);
+                    writer.WritePropertyName("metadata"u8);
+                    writer.WriteStartObject();
+                    foreach (var item in Metadata)
+                    {
+                        writer.WritePropertyName(item.Key);
+                        if (item.Value == null)
+                        {
+                            writer.WriteNullValue();
+                            continue;
+                        }
+                        writer.WriteStringValue(item.Value);
+                    }
+                    writer.WriteEndObject();
                 }
                 else
                 {
-                    writer.WriteNull("statusDetails"u8);
+                    writer.WriteNull("metadata"u8);
                 }
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("usage") != true)
+            if (Optional.IsDefined(Usage) && _additionalBinaryDataProperties?.ContainsKey("usage") != true)
             {
                 writer.WritePropertyName("usage"u8);
                 writer.WriteObjectValue(Usage, options);
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("output") != true)
+            if (Optional.IsCollectionDefined(Output) && _additionalBinaryDataProperties?.ContainsKey("output") != true)
             {
                 writer.WritePropertyName("output"u8);
                 writer.WriteStartArray();
@@ -113,27 +125,36 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            InternalRealtimeResponseObject @object = default;
             string id = default;
-            ConversationStatus status = default;
+            InternalRealtimeResponseObject? @object = default;
+            ConversationStatus? status = default;
             ConversationStatusDetails statusDetails = default;
+            IDictionary<string, string> metadata = default;
             ConversationTokenUsage usage = default;
             IReadOnlyList<ConversationItem> output = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
-                if (prop.NameEquals("object"u8))
-                {
-                    @object = new InternalRealtimeResponseObject(prop.Value.GetString());
-                    continue;
-                }
                 if (prop.NameEquals("id"u8))
                 {
                     id = prop.Value.GetString();
                     continue;
                 }
+                if (prop.NameEquals("object"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    @object = new InternalRealtimeResponseObject(prop.Value.GetString());
+                    continue;
+                }
                 if (prop.NameEquals("status"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     status = new ConversationStatus(prop.Value.GetString());
                     continue;
                 }
@@ -141,19 +162,47 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        statusDetails = null;
                         continue;
                     }
                     statusDetails = ConversationStatusDetails.DeserializeConversationStatusDetails(prop.Value, options);
                     continue;
                 }
+                if (prop.NameEquals("metadata"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    Dictionary<string, string> dictionary = new Dictionary<string, string>();
+                    foreach (var prop0 in prop.Value.EnumerateObject())
+                    {
+                        if (prop0.Value.ValueKind == JsonValueKind.Null)
+                        {
+                            dictionary.Add(prop0.Name, null);
+                        }
+                        else
+                        {
+                            dictionary.Add(prop0.Name, prop0.Value.GetString());
+                        }
+                    }
+                    metadata = dictionary;
+                    continue;
+                }
                 if (prop.NameEquals("usage"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     usage = ConversationTokenUsage.DeserializeConversationTokenUsage(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("output"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     List<ConversationItem> array = new List<ConversationItem>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
@@ -168,12 +217,13 @@ namespace OpenAI.RealtimeConversation
                 }
             }
             return new InternalRealtimeResponse(
-                @object,
                 id,
+                @object,
                 status,
                 statusDetails,
+                metadata ?? new ChangeTrackingDictionary<string, string>(),
                 usage,
-                output,
+                output ?? new ChangeTrackingList<ConversationItem>(),
                 additionalBinaryDataProperties);
         }
 

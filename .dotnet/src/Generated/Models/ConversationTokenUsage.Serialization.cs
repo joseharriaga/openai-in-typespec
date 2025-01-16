@@ -13,10 +13,6 @@ namespace OpenAI.RealtimeConversation
 {
     public partial class ConversationTokenUsage : IJsonModel<ConversationTokenUsage>
     {
-        internal ConversationTokenUsage()
-        {
-        }
-
         void IJsonModel<ConversationTokenUsage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -31,27 +27,27 @@ namespace OpenAI.RealtimeConversation
             {
                 throw new FormatException($"The model {nameof(ConversationTokenUsage)} does not support writing '{format}' format.");
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("total_tokens") != true)
+            if (Optional.IsDefined(TotalTokens) && _additionalBinaryDataProperties?.ContainsKey("total_tokens") != true)
             {
                 writer.WritePropertyName("total_tokens"u8);
-                writer.WriteNumberValue(TotalTokens);
+                writer.WriteNumberValue(TotalTokens.Value);
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("input_tokens") != true)
+            if (Optional.IsDefined(InputTokens) && _additionalBinaryDataProperties?.ContainsKey("input_tokens") != true)
             {
                 writer.WritePropertyName("input_tokens"u8);
-                writer.WriteNumberValue(InputTokens);
+                writer.WriteNumberValue(InputTokens.Value);
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("output_tokens") != true)
+            if (Optional.IsDefined(OutputTokens) && _additionalBinaryDataProperties?.ContainsKey("output_tokens") != true)
             {
                 writer.WritePropertyName("output_tokens"u8);
-                writer.WriteNumberValue(OutputTokens);
+                writer.WriteNumberValue(OutputTokens.Value);
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("input_token_details") != true)
+            if (Optional.IsDefined(InputTokenDetails) && _additionalBinaryDataProperties?.ContainsKey("input_token_details") != true)
             {
                 writer.WritePropertyName("input_token_details"u8);
                 writer.WriteObjectValue(InputTokenDetails, options);
             }
-            if (_additionalBinaryDataProperties?.ContainsKey("output_token_details") != true)
+            if (Optional.IsDefined(OutputTokenDetails) && _additionalBinaryDataProperties?.ContainsKey("output_token_details") != true)
             {
                 writer.WritePropertyName("output_token_details"u8);
                 writer.WriteObjectValue(OutputTokenDetails, options);
@@ -96,9 +92,9 @@ namespace OpenAI.RealtimeConversation
             {
                 return null;
             }
-            int totalTokens = default;
-            int inputTokens = default;
-            int outputTokens = default;
+            int? totalTokens = default;
+            int? inputTokens = default;
+            int? outputTokens = default;
             ConversationInputTokenUsageDetails inputTokenDetails = default;
             ConversationOutputTokenUsageDetails outputTokenDetails = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
@@ -106,26 +102,46 @@ namespace OpenAI.RealtimeConversation
             {
                 if (prop.NameEquals("total_tokens"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     totalTokens = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("input_tokens"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     inputTokens = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("output_tokens"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     outputTokens = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("input_token_details"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     inputTokenDetails = ConversationInputTokenUsageDetails.DeserializeConversationInputTokenUsageDetails(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("output_token_details"u8))
                 {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
                     outputTokenDetails = ConversationOutputTokenUsageDetails.DeserializeConversationOutputTokenUsageDetails(prop.Value, options);
                     continue;
                 }

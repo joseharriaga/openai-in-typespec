@@ -872,4 +872,57 @@ public class ChatTests : SyncAsyncTestBase
         Assert.That(completion.Usage.OutputTokenDetails?.ReasoningTokenCount, Is.GreaterThan(0));
         Assert.That(completion.Usage.OutputTokenDetails?.ReasoningTokenCount, Is.LessThan(completion.Usage.OutputTokenCount));
     }
+
+    [Test]
+    public async Task PredictedOutputsWork()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
+
+        ChatCompletionOptions options = new()
+        {
+            PredictedContent =
+            [
+                ChatMessageContentPart.CreateTextPart("""
+                {
+                  "feature_name": "test_feature",
+                  "enabled": true
+                }
+                """.ReplaceLineEndings("\n")),
+            ],
+        };
+
+        ChatMessage message = ChatMessage.CreateUserMessage("""
+            Modify the following input to enable the feature. Only respond with the JSON and include no other text.
+
+            {
+              "feature_name": "test_feature",
+              "enabled": false
+            }
+            """.ReplaceLineEndings("\n"));
+
+        ChatCompletion completion = await client.CompleteChatAsync([message], options);
+
+        Assert.That(completion.Usage.OutputTokenDetails.PredictionAcceptedTokenCount, Is.GreaterThan(0));
+    }
+
+    [Test]
+    public async Task O1DeveloperMessagesWork()
+    {
+        List<ChatMessage> messages =
+        [
+            ChatMessage.CreateDeveloperMessage("When asked questions about naval topics, you always talk like a pirate."),
+            ChatMessage.CreateUserMessage("What's the best route to sail from San Francisco to New York?")
+        ];
+
+        ChatCompletionOptions options = new()
+        {
+            ReasoningEffort = ChatReasoningEffort.Low,
+        };
+
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "o1");
+        ChatCompletion completion = await client.CompleteChatAsync(messages, options);
+
+        List<string> expectedPossibles = ["arr", "matey", "hearty", "avast"];
+        Assert.That(expectedPossibles.Any(expected => completion.Content[0].Text.ToLower().Contains(expected)));
+    }
 }

@@ -34,6 +34,7 @@ model CreateRunRequest {
   `model`?:
     | string
     | "gpt-4o"
+    | "gpt-4o-2024-11-20"
     | "gpt-4o-2024-08-06"
     | "gpt-4o-2024-05-13"
     | "gpt-4o-mini"
@@ -132,6 +133,7 @@ model CreateThreadAndRunRequest {
   `model`?:
     | string
     | "gpt-4o"
+    | "gpt-4o-2024-11-20"
     | "gpt-4o-2024-08-06"
     | "gpt-4o-2024-05-13"
     | "gpt-4o-mini"
@@ -293,10 +295,13 @@ model RunStepDetailsToolCallsObject extends RunStepObjectStepDetails {
 /** Details of the Code Interpreter tool call the run step was involved in. */
 model RunStepDetailsToolCallsCodeObject
   extends RunStepDetailsToolCallsObjectToolCallsObject {
+  /** The ID of the tool call. */
+  id: string;
+
   @doc("""
     The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
     """)
-  type: RunStepDetailsToolCallKind.code_interpreter;
+  type: "code_interpreter";
 
   /** The Code Interpreter tool call definition. */
   code_interpreter: {
@@ -343,10 +348,13 @@ model RunStepDetailsToolCallsCodeOutputImageObject
 // Tool customization: apply custom, common base type to union items
 model RunStepDetailsToolCallsFileSearchObject
   extends RunStepDetailsToolCallsObjectToolCallsObject {
+  /** The ID of the tool call object. */
+  id: string;
+
   @doc("""
     The type of tool call. This is always going to be `file_search` for this type of tool call.
     """)
-  type: RunStepDetailsToolCallKind.file_search;
+  type: "file_search";
 
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
@@ -388,7 +396,7 @@ model RunStepDetailsToolCallsFileSearchResultObject {
   /** The content of the result that was found. The content is only included if requested via the include query parameter. */
   content?: {
     /** The type of the content. */
-    type: "text";
+    type?: "text";
 
     /** The text content of the file. */
     text?: string;
@@ -398,10 +406,13 @@ model RunStepDetailsToolCallsFileSearchResultObject {
 // Tool customization: apply custom, common base type to union items
 model RunStepDetailsToolCallsFunctionObject
   extends RunStepDetailsToolCallsObjectToolCallsObject {
+  /** The ID of the tool call object. */
+  id: string;
+
   @doc("""
     The type of tool call. This is always going to be `function` for this type of tool call.
     """)
-  type: RunStepDetailsToolCallKind.function;
+  type: "function";
 
   /** The definition of the function that was called. */
   function: {
@@ -813,13 +824,7 @@ model RunStepDeltaStepDetailsToolCallsFileSearchObject
 
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
-  file_search: {
-    ranking_options?: RunStepDetailsToolCallsFileSearchRankingOptionsObject;
-
-    /** The results of the file search. */
-    @visibility("read")
-    results?: RunStepDetailsToolCallsFileSearchResultObject[];
-  };
+  file_search: Record<unknown>;
 }
 
 // Tool customization: apply custom, common base type to union items

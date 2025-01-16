@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
@@ -12,33 +12,33 @@ namespace OpenAI.RealtimeConversation
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalRealtimeResponse(string id, ConversationStatus status, ConversationStatusDetails statusDetails, ConversationTokenUsage usage, IEnumerable<ConversationItem> output)
+        internal InternalRealtimeResponse()
         {
-            Id = id;
-            Status = status;
-            StatusDetails = statusDetails;
-            Usage = usage;
-            Output = output.ToList();
+            Metadata = new ChangeTrackingDictionary<string, string>();
+            Output = new ChangeTrackingList<ConversationItem>();
         }
 
-        internal InternalRealtimeResponse(InternalRealtimeResponseObject @object, string id, ConversationStatus status, ConversationStatusDetails statusDetails, ConversationTokenUsage usage, IReadOnlyList<ConversationItem> output, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRealtimeResponse(string id, InternalRealtimeResponseObject? @object, ConversationStatus? status, ConversationStatusDetails statusDetails, IDictionary<string, string> metadata, ConversationTokenUsage usage, IReadOnlyList<ConversationItem> output, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Object = @object;
             Id = id;
+            Object = @object;
             Status = status;
             StatusDetails = statusDetails;
+            Metadata = metadata;
             Usage = usage;
             Output = output;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public InternalRealtimeResponseObject Object { get; } = "realtime.response";
-
         public string Id { get; }
 
-        public ConversationStatus Status { get; }
+        public InternalRealtimeResponseObject? Object { get; }
+
+        public ConversationStatus? Status { get; }
 
         public ConversationStatusDetails StatusDetails { get; }
+
+        public IDictionary<string, string> Metadata { get; }
 
         public ConversationTokenUsage Usage { get; }
 

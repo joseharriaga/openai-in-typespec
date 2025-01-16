@@ -11,16 +11,11 @@ namespace OpenAI.RealtimeConversation
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ConversationTokenUsage(int totalTokens, int inputTokens, int outputTokens, ConversationInputTokenUsageDetails inputTokenDetails, ConversationOutputTokenUsageDetails outputTokenDetails)
+        internal ConversationTokenUsage()
         {
-            TotalTokens = totalTokens;
-            InputTokens = inputTokens;
-            OutputTokens = outputTokens;
-            InputTokenDetails = inputTokenDetails;
-            OutputTokenDetails = outputTokenDetails;
         }
 
-        internal ConversationTokenUsage(int totalTokens, int inputTokens, int outputTokens, ConversationInputTokenUsageDetails inputTokenDetails, ConversationOutputTokenUsageDetails outputTokenDetails, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ConversationTokenUsage(int? totalTokens, int? inputTokens, int? outputTokens, ConversationInputTokenUsageDetails inputTokenDetails, ConversationOutputTokenUsageDetails outputTokenDetails, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             TotalTokens = totalTokens;
             InputTokens = inputTokens;
@@ -30,11 +25,11 @@ namespace OpenAI.RealtimeConversation
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public int TotalTokens { get; }
+        public int? TotalTokens { get; }
 
-        public int InputTokens { get; }
+        public int? InputTokens { get; }
 
-        public int OutputTokens { get; }
+        public int? OutputTokens { get; }
 
         public ConversationInputTokenUsageDetails InputTokenDetails { get; }
 

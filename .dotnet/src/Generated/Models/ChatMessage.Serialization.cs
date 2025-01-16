@@ -77,6 +77,8 @@ namespace OpenAI.Chat
                 {
                     case "system":
                         return SystemChatMessage.DeserializeSystemChatMessage(element, options);
+                    case "developer":
+                        return DeveloperChatMessage.DeserializeDeveloperChatMessage(element, options);
                     case "user":
                         return UserChatMessage.DeserializeUserChatMessage(element, options);
                     case "assistant":

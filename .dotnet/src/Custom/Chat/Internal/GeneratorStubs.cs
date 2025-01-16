@@ -105,3 +105,8 @@ internal readonly partial struct InternalChatCompletionRequestMessageContentPart
 [CodeGenModel("ChatCompletionMessageAudioChunk")]
 internal partial class InternalChatCompletionMessageAudioChunk { }
 
+[CodeGenModel("PredictionContent")]
+internal partial class InternalPredictionContent { }
+
+[CodeGenModel("PredictionContentType")]
+internal readonly partial struct InternalPredictionContentType { }

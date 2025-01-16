@@ -116,9 +116,14 @@ public static partial class OpenAIChatModelFactory
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatOutputTokenUsageDetails"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.ChatOutputTokenusageDetails"/> instance for mocking. </returns>
-    public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default, int audioTokenCount = default)
+    public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = default, int audioTokenCount = default, int predictionAcceptedTokenCount = default, int predictionRejectedTokenCount = 0)
     {
-        return new ChatOutputTokenUsageDetails(reasoningTokenCount, audioTokenCount, additionalBinaryDataProperties: null);
+        return new ChatOutputTokenUsageDetails(
+            audioTokenCount: audioTokenCount,
+            reasoningTokenCount: reasoningTokenCount,
+            predictionAcceptedTokenCount: predictionAcceptedTokenCount,
+            predictionRejectedTokenCount: predictionRejectedTokenCount,
+            additionalBinaryDataProperties: null);
     }
 
     public static ChatResponseAudio ChatResponseAudio(BinaryData data, string id = null, string transcript = null, DateTimeOffset expiresAt = default)

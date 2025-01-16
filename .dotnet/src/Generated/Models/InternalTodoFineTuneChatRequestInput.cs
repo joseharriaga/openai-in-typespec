@@ -9,18 +9,18 @@ using OpenAI.Chat;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class InternalFinetuneChatRequestInput
+    internal partial class InternalTodoFineTuneChatRequestInput
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public InternalFinetuneChatRequestInput()
+        public InternalTodoFineTuneChatRequestInput()
         {
             Messages = new ChangeTrackingList<BinaryData>();
             Tools = new ChangeTrackingList<ChatTool>();
             Functions = new ChangeTrackingList<ChatFunction>();
         }
 
-        internal InternalFinetuneChatRequestInput(IList<BinaryData> messages, IList<ChatTool> tools, bool? parallelToolCalls, IList<ChatFunction> functions, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalTodoFineTuneChatRequestInput(IList<BinaryData> messages, IList<ChatTool> tools, bool? parallelToolCalls, IList<ChatFunction> functions, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Messages = messages;
             Tools = tools;

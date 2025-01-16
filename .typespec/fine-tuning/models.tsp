@@ -23,7 +23,7 @@ model FineTuningJobIntegrations is FineTuningIntegration[];
 model CreateFineTuningJobRequest {
   /**
    * The name of the model to fine-tune. You can select one of the
-   * [supported models](/docs/guides/fine-tuning/which-models-can-be-fine-tuned).
+   * [supported models](/docs/guides/fine-tuning#which-models-can-be-fine-tuned).
    */
   @extension("x-oaiTypeLabel", "string")
   `model`:
@@ -40,15 +40,36 @@ model CreateFineTuningJobRequest {
     
     Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose `fine-tune`.
     
-    The contents of the file should differ depending on if the model uses the [chat](/docs/api-reference/fine-tuning/chat-input) or [completions](/docs/api-reference/fine-tuning/completions-input) format.
+    The contents of the file should differ depending on if the model uses the [chat](/docs/api-reference/fine-tuning/chat-input), [completions](/docs/api-reference/fine-tuning/completions-input) format, or if the fine-tuning method uses the [preference](/docs/api-reference/fine-tuning/preference-input) format.
     
     See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
     """)
   training_file: string;
 
-  // Tool customization: reflect observed wire truth (learning_rate_multiplier, n_epochs) for hyperparameters in ft responses
-  /** The hyperparameters used for the fine-tuning job. */
-  hyperparameters?: CreateFineTuningJobRequestHyperparameters;
+  #deprecated "This field is marked as deprecated."
+  @doc("""
+    The hyperparameters used for the fine-tuning job.
+    This value is now deprecated in favor of `method`, and should be passed in under the `method` parameter.
+    """)
+  hyperparameters?: {
+    /**
+     * Number of examples in each batch. A larger batch size means that model parameters
+     * are updated less frequently, but with lower variance.
+     */
+    batch_size?: "auto" | int32 = "auto";
+
+    /**
+     * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
+     * overfitting.
+     */
+    learning_rate_multiplier?: "auto" | float32 = "auto";
+
+    /**
+     * The number of epochs to train the model for. An epoch refers to one full cycle
+     * through the training dataset.
+     */
+    n_epochs?: "auto" | int32 = "auto";
+  };
 
   @doc("""
     A string of up to 64 characters that will be added to your fine-tuned model name.
@@ -84,6 +105,8 @@ model CreateFineTuningJobRequest {
   @minValue(0)
   @maxValue(2147483647)
   seed?: int32 | null;
+
+  method?: FineTuneMethod;
 }
 
 model ListPaginatedFineTuningJobsResponse {
@@ -147,9 +170,28 @@ model FineTuningJob {
   @encode("unixTimestamp", int32)
   finished_at: utcDateTime | null;
 
-  // Tool customization: reflect observed wire truth (learning_rate_multiplier, n_epochs) for hyperparameters in ft responses
-  /** The hyperparameters used for the fine-tuning job. See the [fine-tuning guide](/docs/guides/fine-tuning) for more details. */
-  hyperparameters: FineTuningJobHyperparameters;
+  @doc("""
+    The hyperparameters used for the fine-tuning job. This value will only be returned when running `supervised` jobs.
+    """)
+  hyperparameters: {
+    /**
+     * Number of examples in each batch. A larger batch size means that model parameters
+     * are updated less frequently, but with lower variance.
+     */
+    batch_size?: "auto" | int32 = "auto";
+
+    /**
+     * Scaling factor for the learning rate. A smaller learning rate may be useful to avoid
+     * overfitting.
+     */
+    learning_rate_multiplier?: "auto" | float32 = "auto";
+
+    /**
+     * The number of epochs to train the model for. An epoch refers to one full cycle
+     * through the training dataset.
+     */
+    n_epochs?: "auto" | int32 = "auto";
+  };
 
   /** The base model that is being fine-tuned. */
   `model`: string;
@@ -193,6 +235,8 @@ model FineTuningJob {
   /** The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value will be null if the fine-tuning job is not running. */
   @encode("unixTimestamp", int32)
   estimated_finish?: utcDateTime | null;
+
+  method?: FineTuneMethod;
 }
 
 // Tool customization: Convert to instantiation of discriminated type
@@ -228,15 +272,28 @@ model FineTuningIntegrationWandb extends FineTuningIntegration {
 
 /** Fine-tuning job event object */
 model FineTuningJobEvent {
+  /** The object type, which is always "fine_tuning.job.event". */
+  object: "fine_tuning.job.event";
+
+  /** The object identifier. */
   id: string;
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
+  /** The Unix timestamp (in seconds) for when the fine-tuning job was created. */
   @encode("unixTimestamp", int32)
   created_at: utcDateTime;
 
+  /** The log level of the event. */
   level: "info" | "warn" | "error";
+
+  /** The message of the event. */
   message: string;
-  object: "fine_tuning.job.event";
+
+  /** The type of event. */
+  type?: "message" | "metrics";
+
+  /** The data associated with the event. */
+  data?: unknown;
 }
 
 @doc("""
@@ -275,8 +332,11 @@ model FineTuningJobCheckpoint {
   object: "fine_tuning.job.checkpoint";
 }
 
-/** The per-line training example of a fine-tuning input file for chat models */
-model FinetuneChatRequestInput {
+model FineTuneChatCompletionRequestAssistantMessage
+  extends ChatCompletionRequestAssistantMessage {}
+
+/** The per-line training example of a fine-tuning input file for chat models using the supervised method. */
+model FineTuneChatRequestInput {
   @minItems(1)
   @extension("x-oaiExpandable", true)
   messages?: (
@@ -299,7 +359,7 @@ model FinetuneChatRequestInput {
 }
 
 /** The per-line training example of a fine-tuning input file for completions models */
-model FinetuneCompletionRequestInput {
+model FineTuneCompletionRequestInput {
   /** The input prompt for this training example. */
   prompt?: string;
 
@@ -307,5 +367,75 @@ model FinetuneCompletionRequestInput {
   completion?: string;
 }
 
-model FineTuneChatCompletionRequestAssistantMessage
-  extends ChatCompletionRequestAssistantMessage {}
+/** Configuration for the DPO fine-tuning method. */
+model FineTuneDPOMethod {
+  /** The hyperparameters used for the fine-tuning job. */
+  hyperparameters?: {
+    /** The beta value for the DPO method. A higher beta value will increase the weight of the penalty between the policy and reference model. */
+    beta?: "auto" | float32 = "auto";
+
+    /** Number of examples in each batch. A larger batch size means that model parameters are updated less frequently, but with lower variance. */
+    batch_size?: "auto" | int32 = "auto";
+
+    /** Scaling factor for the learning rate. A smaller learning rate may be useful to avoid overfitting. */
+    learning_rate_multiplier?: "auto" | float32 = "auto";
+
+    /** The number of epochs to train the model for. An epoch refers to one full cycle through the training dataset. */
+    n_epochs?: "auto" | int32 = "auto";
+  };
+}
+
+/** The method used for fine-tuning. */
+model FineTuneMethod {
+  @doc("""
+    The type of method. Is either `supervised` or `dpo`.
+    """)
+  type?: "supervised" | "dpo";
+
+  supervised?: FineTuneSupervisedMethod;
+  dpo?: FineTuneDPOMethod;
+}
+
+/** The per-line training example of a fine-tuning input file for chat models using the dpo method. */
+model FineTunePreferenceRequestInput {
+  input?: {
+    @minItems(1)
+    @extension("x-oaiExpandable", true)
+    messages?: (
+      | ChatCompletionRequestSystemMessage
+      | ChatCompletionRequestUserMessage
+      | FineTuneChatCompletionRequestAssistantMessage
+      | ChatCompletionRequestToolMessage
+      | ChatCompletionRequestFunctionMessage)[];
+
+    /** A list of tools the model may generate JSON inputs for. */
+    tools?: ChatCompletionTool[];
+
+    parallel_tool_calls?: ParallelToolCalls = true;
+  };
+
+  /** The preferred completion message for the output. */
+  @maxItems(1)
+  @extension("x-oaiExpandable", true)
+  preferred_completion?: ChatCompletionRequestAssistantMessage[];
+
+  /** The non-preferred completion message for the output. */
+  @maxItems(1)
+  @extension("x-oaiExpandable", true)
+  non_preferred_completion?: ChatCompletionRequestAssistantMessage[];
+}
+
+/** Configuration for the supervised fine-tuning method. */
+model FineTuneSupervisedMethod {
+  /** The hyperparameters used for the fine-tuning job. */
+  hyperparameters?: {
+    /** Number of examples in each batch. A larger batch size means that model parameters are updated less frequently, but with lower variance. */
+    batch_size?: "auto" | int32 = "auto";
+
+    /** Scaling factor for the learning rate. A smaller learning rate may be useful to avoid overfitting. */
+    learning_rate_multiplier?: "auto" | float32 = "auto";
+
+    /** The number of epochs to train the model for. An epoch refers to one full cycle through the training dataset. */
+    n_epochs?: "auto" | int32 = "auto";
+  };
+}

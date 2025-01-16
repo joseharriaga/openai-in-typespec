@@ -8,8 +8,15 @@ namespace OpenAI;
 
 model RealtimeRequestSession {
   ...RealtimeSessionBase;
-  modalities?: RealtimeModalities;
+  modalities?: RealtimeModality[];
   instructions?: string;
+  `model`?:
+    | string
+    | "gpt-4o-realtime-preview"
+    | "gpt-4o-realtime-preview-2024-10-01"
+    | "gpt-4o-realtime-preview-2024-12-17"
+    | "gpt-4o-mini-realtime-preview"
+    | "gpt-4o-mini-realtime-preview-2024-12-17";
   voice?: RealtimeVoice;
   input_audio_format?: RealtimeAudioFormat;
   output_audio_format?: RealtimeAudioFormat;
@@ -26,7 +33,7 @@ model RealtimeResponseSession {
   object: "realtime.session";
   id: string;
   `model`: string;
-  modalities: RealtimeModalities;
+  modalities: RealtimeModality[];
   instructions: string;
   voice: RealtimeVoice;
   input_audio_format: RealtimeAudioFormat;
@@ -39,65 +46,16 @@ model RealtimeResponseSession {
   max_response_output_tokens: int32 | "inf" | null;
 }
 
-model RealtimeResponseOptions {
-  ...RealtimeResponseBase;
-
-  /** The modalities for the response. */
-  modalities?: RealtimeModalities;
-
-  /** Instructions for the model. */
-  instructions?: string;
-
-  @doc("""
-    The voice the model uses to respond - one of `alloy`, `echo`, or `shimmer`.
-    """)
-  voice?: RealtimeVoice;
-
-  /** The format of output audio. */
-  output_audio_format?: RealtimeAudioFormat;
-
-  // Tool customization: apply enriched tool definition hierarchy
-  /** Tools (functions) available to the model. */
-  tools?: RealtimeTool[];
-
-  /** How the model chooses tools. */
-  tool_choice?: RealtimeToolChoice;
-
-  /** Sampling temperature. */
-  temperature?: float32;
-
-  /** Maximum number of output tokens for a single assistant response, inclusive of tool calls. Provide an integer between 1 and 4096 to limit output tokens, or "inf" for the maximum available tokens for a given model. Defaults to "inf". */
-  max_output_tokens?: int32 | "inf";
-}
-
-model RealtimeResponse {
-  ...RealtimeResponseBase;
-  object: "realtime.response";
-  id: string;
-  status: RealtimeResponseStatus = RealtimeResponseStatus.in_progress;
-  status_details: RealtimeResponseStatusDetails | null;
-  output: RealtimeConversationResponseItem[];
-  usage: {
-    total_tokens: int32;
-    input_tokens: int32;
-    output_tokens: int32;
-    input_token_details: {
-      cached_tokens: int32;
-      text_tokens: int32;
-      audio_tokens: int32;
-    };
-    output_token_details: {
-      text_tokens: int32;
-      audio_tokens: int32;
-    };
-  };
-}
-
 union RealtimeVoice {
   string,
   alloy: "alloy",
-  shimmer: "shimmer",
+  ash: "ash",
+  ballad: "ballad",
+  coral: "coral",
   echo: "echo",
+  sage: "sage",
+  shimmer: "shimmer",
+  verse: "verse",
 }
 
 union RealtimeAudioFormat {
@@ -116,7 +74,11 @@ model RealtimeAudioInputTranscriptionSettings {
   `model`?: RealtimeAudioInputTranscriptionModel = RealtimeAudioInputTranscriptionModel.whisper_1;
 }
 
-alias RealtimeModalities = ("text" | "audio")[];
+union RealtimeModality {
+  string,
+  text: "text",
+  audio: "audio",
+}
 
 union RealtimeTurnDetectionType {
   string,
@@ -144,20 +106,6 @@ model RealtimeServerVadTurnDetection extends RealtimeTurnDetection {
 
   // @encode("milliseconds", int32)
   silence_duration_ms?: duration; // = 200,s
-}
-
-union RealtimeResponseStatus {
-  string,
-  in_progress: "in_progress",
-  completed: "completed",
-  cancelled: "cancelled",
-  incomplete: "incomplete",
-  failed: "failed",
-}
-
-@discriminator("type")
-model RealtimeResponseStatusDetails {
-  type: RealtimeResponseStatus;
 }
 
 model RealtimeServerEventRateLimitsUpdatedRateLimitsItem {

@@ -85,6 +85,18 @@ public partial class AssistantChatMessage : ChatMessage
     }
 
     /// <summary>
+    /// Creates a new instance of <see cref="AssistantChatMessage"/> that represents a prior response from the model
+    /// that included audio with a correlation ID.
+    /// </summary>
+    /// <param name="responseAudioReference"> The <c>audio</c> reference with an <c>id</c>, produced by the model. </param>    
+    public AssistantChatMessage(ChatResponseAudioReference responseAudioReference)
+    {
+        Argument.AssertNotNull(responseAudioReference, nameof(responseAudioReference));
+
+        ResponseAudioReference = responseAudioReference;
+    }
+
+    /// <summary>
     /// Creates a new instance of <see cref="AssistantChatMessage"/> from a <see cref="ChatCompletion"/> with
     /// an <c>assistant</c> role response.
     /// </summary>
@@ -110,6 +122,10 @@ public partial class AssistantChatMessage : ChatMessage
 
         Refusal = chatCompletion.Refusal;
         FunctionCall = chatCompletion.FunctionCall;
+        if (chatCompletion.ResponseAudio is not null)
+        {
+            ResponseAudioReference = new(chatCompletion.ResponseAudio.Id);
+        }
         foreach (ChatToolCall toolCall in chatCompletion.ToolCalls ?? [])
         {
             ToolCalls.Add(toolCall);
@@ -134,5 +150,5 @@ public partial class AssistantChatMessage : ChatMessage
 
     // CUSTOM: Made internal for reprojected representation within the content collection.
     [CodeGenMember("Audio")]
-    internal InternalChatCompletionRequestAssistantMessageAudio Audio { get; set; }
+    public ChatResponseAudioReference ResponseAudioReference { get; set; }
 }

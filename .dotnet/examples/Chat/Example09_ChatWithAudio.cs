@@ -20,7 +20,7 @@ public partial class ChatExamples
         BinaryData audioData = BinaryData.FromBytes(audioFileRawBytes);
         List<ChatMessage> messages =
             [
-                new UserChatMessage(ChatMessageContentPart.CreateAudioPart(audioData, ChatInputAudioFormat.Wav)),
+                new UserChatMessage(ChatMessageContentPart.CreateInputAudioPart(audioData, ChatInputAudioFormat.Wav)),
             ];
 
         // Output audio is requested by configuring AudioOptions on ChatCompletionOptions
@@ -33,20 +33,16 @@ public partial class ChatExamples
 
         void PrintAudioContent()
         {
-            foreach (ChatMessageContentPart contentPart in completion.Content)
+            if (completion.ResponseAudio is ChatResponseAudio responseAudio)
             {
-                if (contentPart.AudioCorrelationId is not null)
+                Console.WriteLine($"Response audio transcript: {responseAudio.Transcript}");
+                string outputFilePath = $"{responseAudio.Id}.mp3";
+                using (FileStream outputFileStream = File.OpenWrite(outputFilePath))
                 {
-                    Console.WriteLine($"Response audio transcript: {contentPart.AudioTranscript}");
-
-                    string outputFilePath = $"{contentPart.AudioCorrelationId}.mp3";
-                    using (FileStream outputFileStream = File.OpenWrite(outputFilePath))
-                    {
-                        outputFileStream.Write(contentPart.AudioBytes);
-                    }
-                    Console.WriteLine($"Response audio written to file: {outputFilePath}");
-                    Console.WriteLine($"Valid on followup requests until: {contentPart.AudioExpiresAt}");
+                    outputFileStream.Write(responseAudio.Data);
                 }
+                Console.WriteLine($"Response audio written to file: {outputFilePath}");
+                Console.WriteLine($"Valid on followup requests until: {responseAudio.ExpiresAt}");
             }
         }
 

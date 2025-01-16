@@ -373,12 +373,12 @@ public class ChatTests : SyncAsyncTestBase
 
         string helloWorldAudioPath = Path.Join("Assets", "audio_hello_world.mp3");
         BinaryData helloWorldAudioBytes = BinaryData.FromBytes(File.ReadAllBytes(helloWorldAudioPath));
-        ChatMessageContentPart helloWorldAudioContentPart = ChatMessageContentPart.CreateAudioPart(
+        ChatMessageContentPart helloWorldAudioContentPart = ChatMessageContentPart.CreateInputAudioPart(
             helloWorldAudioBytes,
             ChatInputAudioFormat.Mp3);
-        string whatsTheWeatherAudioPath = Path.Join("Assets", "whats_the_weather_pcm16_24khz_mono.wav");
+        string whatsTheWeatherAudioPath = Path.Join("Assets", "realtime_whats_the_weather_pcm16_24khz_mono.wav");
         BinaryData whatsTheWeatherAudioBytes = BinaryData.FromBytes(File.ReadAllBytes(whatsTheWeatherAudioPath));
-        ChatMessageContentPart whatsTheWeatherAudioContentPart = ChatMessageContentPart.CreateAudioPart(
+        ChatMessageContentPart whatsTheWeatherAudioContentPart = ChatMessageContentPart.CreateInputAudioPart(
             whatsTheWeatherAudioBytes,
             ChatInputAudioFormat.Wav);
 
@@ -391,40 +391,42 @@ public class ChatTests : SyncAsyncTestBase
 
         ChatCompletion completion = await client.CompleteChatAsync(messages, options);
         Assert.That(completion, Is.Not.Null);
-        Assert.That(completion.Content, Is.Not.Null);
-        Assert.That(completion.Content[0].Kind, Is.EqualTo(ChatMessageContentPartKind.Audio));
-        Assert.That(completion.Content[0].AudioCorrelationId, Is.Not.Null.And.Not.Empty);
-        Assert.That(completion.Content[0].AudioBytes, Is.Not.Null);
-        Assert.That(completion.Content[0].AudioTranscript, Is.Not.Null.And.Not.Empty);
+        Assert.That(completion.Content, Has.Count.EqualTo(0));
+
+        ChatResponseAudio responseAudio = completion.ResponseAudio;
+        Assert.That(responseAudio, Is.Not.Null);
+        Assert.That(responseAudio.Id, Is.Not.Null.And.Not.Empty);
+        Assert.That(responseAudio.Data, Is.Not.Null);
+        Assert.That(responseAudio.Transcript, Is.Not.Null.And.Not.Empty);
 
         AssistantChatMessage audioHistoryMessage = ChatMessage.CreateAssistantMessage(completion);
         Assert.That(audioHistoryMessage, Is.InstanceOf<AssistantChatMessage>());
-        Assert.That(audioHistoryMessage.Content, Is.Not.Null.And.Not.Empty);
-        Assert.That(audioHistoryMessage.Content[0].Kind, Is.EqualTo(ChatMessageContentPartKind.Audio));
-        Assert.That(audioHistoryMessage.Content[0].AudioCorrelationId, Is.EqualTo(completion.Content[0].AudioCorrelationId));
-        Assert.That(audioHistoryMessage.Content[0].AudioBytes, Is.Null);
+        Assert.That(audioHistoryMessage.Content, Has.Count.EqualTo(0));
+
+        Assert.That(audioHistoryMessage.ResponseAudioReference?.Id, Is.EqualTo(completion.ResponseAudio.Id));
         messages.Add(audioHistoryMessage);
 
         messages.Add(
             new UserChatMessage(
                 [
                     "Please answer the following spoken question:",
-                    ChatMessageContentPart.CreateAudioPart(whatsTheWeatherAudioBytes, ChatInputAudioFormat.Wav),
+                    ChatMessageContentPart.CreateInputAudioPart(whatsTheWeatherAudioBytes, ChatInputAudioFormat.Wav),
                 ]));
 
         string streamedCorrelationId = null;
         using MemoryStream responseAudioStream = new();
         await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(messages, options))
         {
-            Assert.That(update.ContentUpdate, Is.Not.Null);
-            if (update.ContentUpdate.Count > 0)
+            Assert.That(update.ContentUpdate, Has.Count.EqualTo(0));
+            ChatResponseAudio responseAudioUpdate = update.ResponseAudio;
+            if (responseAudioUpdate is not null)
             {
-                if (!string.IsNullOrEmpty(update.ContentUpdate[0].AudioCorrelationId))
+                if (responseAudioUpdate.Id is not null)
                 {
-                    Assert.That(streamedCorrelationId, Is.Null.Or.EqualTo(update.ContentUpdate[0].AudioCorrelationId));
-                    streamedCorrelationId = update.ContentUpdate[0].AudioCorrelationId;
+                    Assert.That(streamedCorrelationId, Is.Null.Or.EqualTo(responseAudioUpdate.Id));
+                    streamedCorrelationId = responseAudioUpdate.Id;
                 }
-                responseAudioStream.Write(update.ContentUpdate[0].AudioBytes);
+                responseAudioStream.Write(responseAudioUpdate.Data);
             }
         }
         Assert.That(streamedCorrelationId, Is.Not.Null.And.Not.Empty);

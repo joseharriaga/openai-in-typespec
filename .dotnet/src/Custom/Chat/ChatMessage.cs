@@ -81,14 +81,7 @@ public partial class ChatMessage
         {
             foreach (ChatMessageContentPart contentPart in contentParts)
             {
-                if (contentPart.Kind == ChatMessageContentPartKind.Audio && role == ChatMessageRole.Assistant)
-                {
-                    Content.Add(new ChatMessageContentPart(ChatMessageContentPartKind.Audio, audioReference: new(contentPart.AudioCorrelationId)));
-                }
-                else
-                {
-                    Content.Add(contentPart);
-                }
+                Content.Add(contentPart);
             }
         }
     }
@@ -141,6 +134,10 @@ public partial class ChatMessage
 
     /// <inheritdoc cref="AssistantChatMessage(ChatCompletion)"/>
     public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion) => new(chatCompletion);
+
+    /// <inheritdoc cref="AssistantChatMessage(ChatResponseAudioReference)"/>
+    public static AssistantChatMessage CreateAssistantMessage(ChatResponseAudioReference audioReference) => new(audioReference);
+
     #endregion
 
     #region ToolChatMessage

@@ -950,7 +950,7 @@ namespace OpenAI
             return new UserChatMessage(content, Chat.ChatMessageRole.User, additionalBinaryDataProperties: null, participantName);
         }
 
-        public static AssistantChatMessage AssistantChatMessage(ChatMessageContent content = default, string refusal = default, string participantName = default, IEnumerable<ChatToolCall> toolCalls = default, ChatFunctionCall functionCall = default, InternalChatCompletionRequestAssistantMessageAudio audio = default)
+        public static AssistantChatMessage AssistantChatMessage(ChatMessageContent content = default, string refusal = default, string participantName = default, IEnumerable<ChatToolCall> toolCalls = default, ChatFunctionCall functionCall = default, ChatResponseAudioReference responseAudioReference = default)
         {
             toolCalls ??= new ChangeTrackingList<ChatToolCall>();
 
@@ -962,7 +962,13 @@ namespace OpenAI
                 participantName,
                 toolCalls?.ToList(),
                 functionCall,
-                audio);
+                responseAudioReference);
+        }
+
+        public static ChatResponseAudioReference ChatResponseAudioReference(string id = default)
+        {
+
+            return new ChatResponseAudioReference(id, additionalBinaryDataProperties: null);
         }
 
         public static ChatToolCall ChatToolCall(string id = default, InternalChatCompletionMessageToolCallFunction function = default, Chat.ChatToolCallKind kind = default)
@@ -1027,6 +1033,12 @@ namespace OpenAI
                 choices?.ToList(),
                 createdAt,
                 additionalBinaryDataProperties: null);
+        }
+
+        public static ChatResponseAudio ChatResponseAudio(string id = default, DateTimeOffset expiresAt = default, BinaryData data = default, string transcript = default)
+        {
+
+            return new ChatResponseAudio(id, expiresAt, data, transcript, additionalBinaryDataProperties: null);
         }
 
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = default, float logProbability = default, ReadOnlyMemory<byte>? utf8Bytes = default, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = default)
@@ -1235,7 +1247,7 @@ namespace OpenAI
             return new ChatMessageContent(additionalBinaryDataProperties: null);
         }
 
-        public static ChatMessageContentPart ChatMessageContentPart(Chat.ChatMessageContentPartKind kind = default, string text = default, InternalChatCompletionRequestMessageContentPartImageImageUrl imageUri = default, string refusal = default, InternalChatCompletionRequestMessageContentPartAudioInputAudio inputAudio = default, InternalChatCompletionResponseMessageAudio outputAudio = default, InternalChatCompletionMessageAudioChunk responseAudioUpdate = default, InternalChatCompletionRequestAssistantMessageAudio audioReference = default)
+        public static ChatMessageContentPart ChatMessageContentPart(Chat.ChatMessageContentPartKind kind = default, string text = default, InternalChatCompletionRequestMessageContentPartImageImageUrl imageUri = default, string refusal = default, InternalChatCompletionRequestMessageContentPartAudioInputAudio inputAudio = default)
         {
 
             return new ChatMessageContentPart(
@@ -1244,9 +1256,6 @@ namespace OpenAI
                 imageUri,
                 refusal,
                 inputAudio,
-                outputAudio,
-                responseAudioUpdate,
-                audioReference,
                 serializedAdditionalRawData: null);
         }
 

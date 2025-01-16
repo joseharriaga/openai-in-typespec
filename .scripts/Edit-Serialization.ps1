@@ -45,23 +45,23 @@ Update-In-File-With-Retry `
     -FilePath "$directory\InternalChatCompletionStreamResponseDelta.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalChatCompletionStreamResponseDelta\("
-        "    audio,"
         "    functionCall,"
         "    toolCalls \?\? new ChangeTrackingList<StreamingChatToolCallUpdate>\(\),"
         "    refusal,"
         "    role,"
         "    content,"
+        "    audio,"
         "    additionalBinaryDataProperties\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalChatCompletionStreamResponseDelta("
-        "    audio,"
         "    functionCall,"
         "    toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(),"
         "    refusal,"
         "    role,"
         "    content ?? new ChatMessageContent(),"
+        "    audio,"
         "    additionalBinaryDataProperties);"
     ) `
     -OutputIndentation 12 `
@@ -75,6 +75,34 @@ Update-In-File-With-Retry `
     -ReplacePatternLines @(
         "// CUSTOM: Check inner collection is defined."
         "if (true && Optional.IsDefined(Content) && Content.IsInnerCollectionDefined() && _additionalBinaryDataProperties?.ContainsKey(`"content`") != true)"
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence
+
+Update-In-File-With-Retry `
+    -FilePath "$directory\AssistantChatMessage.Serialization.cs" `
+    -SearchPatternLines @(
+        "return new AssistantChatMessage\("
+        "    content,"
+        "    role,"
+        "    additionalBinaryDataProperties,"
+        "    refusal,"
+        "    participantName,"
+        "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
+        "    functionCall,"
+        "    responseAudioReference\);"
+    ) `
+    -ReplacePatternLines @(
+        "// CUSTOM: Initialize Content collection property."
+        "return new AssistantChatMessage("
+        "    content ?? new ChatMessageContent(),"
+        "    role,"
+        "    additionalBinaryDataProperties,"
+        "    refusal,"
+        "    participantName,"
+        "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
+        "    functionCall,"
+        "    responseAudioReference);"
     ) `
     -OutputIndentation 12 `
     -RequirePresence
@@ -150,7 +178,7 @@ Update-In-File-With-Retry `
         "    participantName,"
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
         "    functionCall,"
-        "    audio\);"
+        "    responseAudioReference\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
@@ -162,7 +190,7 @@ Update-In-File-With-Retry `
         "    participantName,"
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
         "    functionCall,"
-        "    audio);"
+        "    responseAudioReference);"
     ) `
     -OutputIndentation 12 `
     -RequirePresence

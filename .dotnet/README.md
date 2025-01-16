@@ -389,28 +389,23 @@ ChatCompletion completion = client.CompleteChat(messages, options);
 
 void PrintAudioContent()
 {
-    foreach (ChatMessageContentPart contentPart in completion.Content)
+    if (completion.ResponseAudio is ChatResponseAudio responseAudio)
     {
-        if (contentPart.AudioCorrelationId is not null)
+        Console.WriteLine($"Response audio transcript: {responseAudio.Transcript}");
+        string outputFilePath = $"{responseAudio.Id}.mp3";
+        using (FileStream outputFileStream = File.OpenWrite(outputFilePath))
         {
-            Console.WriteLine($"Response audio transcript: {contentPart.AudioTranscript}");
-
-            string outputFilePath = $"{contentPart.AudioCorrelationId}.mp3";
-            using (FileStream outputFileStream = File.OpenWrite(outputFilePath))
-            {
-                outputFileStream.Write(contentPart.AudioBytes);
-            }
-            Console.WriteLine($"Response audio written to file: {outputFilePath}");
-            Console.WriteLine($"Valid on followup requests until: {contentPart.AudioExpiresAt}");
+            outputFileStream.Write(responseAudio.Data);
         }
+        Console.WriteLine($"Response audio written to file: {outputFilePath}");
+        Console.WriteLine($"Valid on followup requests until: {responseAudio.ExpiresAt}");
     }
 }
 
 PrintAudioContent();
 
-// To refer to past audio output, create an assistant message from the earlier ChatCompletion, use the earlier
-// response content part, or use ChatMessageContentPart.CreateAudioPart(string) to manually instantiate a part.
-
+// To refer to past audio output, create an assistant message from the earlier ChatCompletion or instantiate a
+// ChatResponseAudioReference(string) from the .Id of the completion's .ResponseAudio property.
 messages.Add(new AssistantChatMessage(completion));
 messages.Add("Can you say that like a pirate?");
 

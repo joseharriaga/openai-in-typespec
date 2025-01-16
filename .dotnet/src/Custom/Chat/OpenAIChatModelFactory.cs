@@ -23,26 +23,17 @@ public static partial class OpenAIChatModelFactory
         string model = null,
         string systemFingerprint = null,
         ChatTokenUsage usage = null,
-        BinaryData audioBytes = null,
-        string audioCorrelationId = null,
-        string audioTranscript = null,
-        DateTimeOffset? audioExpiresAt = null)
+        ChatResponseAudio responseAudio = null)
     {
         content ??= new ChatMessageContent();
         toolCalls ??= new List<ChatToolCall>();
         contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
-        InternalChatCompletionResponseMessageAudio audio = null;
-        if (audioCorrelationId is not null || audioExpiresAt is not null || audioBytes is not null || audioTranscript is not null)
-        {
-            audio = new(audioCorrelationId, audioExpiresAt ?? default, audioBytes, audioTranscript);
-        }
-
         InternalChatCompletionResponseMessage message = new InternalChatCompletionResponseMessage(
             refusal,
             toolCalls.ToList(),
-            audio,
+            responseAudio,
             role,
             content,
             functionCall,
@@ -73,6 +64,7 @@ public static partial class OpenAIChatModelFactory
             createdAt,
             additionalBinaryDataProperties: null);
     }
+
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.ChatTokenLogProbabilityDetails"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.ChatTokenLogProbabilityDetails"/> instance for mocking. </returns>
@@ -129,6 +121,16 @@ public static partial class OpenAIChatModelFactory
         return new ChatOutputTokenUsageDetails(reasoningTokenCount, audioTokenCount, additionalBinaryDataProperties: null);
     }
 
+    public static ChatResponseAudio ChatResponseAudio(BinaryData data, string id = null, string transcript = null, DateTimeOffset expiresAt = default)
+    {
+        return new ChatResponseAudio(
+            id,
+            expiresAt,
+            data,
+            transcript,
+            additionalBinaryDataProperties: null);
+    }
+
     /// <summary> Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatCompletionUpdate"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Chat.StreamingChatCompletionUpdate"/> instance for mocking. </returns>
     public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(
@@ -145,29 +147,20 @@ public static partial class OpenAIChatModelFactory
         string model = null,
         string systemFingerprint = null,
         ChatTokenUsage usage = null,
-        string audioCorrelationId = null,
-        string audioTranscript = null,
-        BinaryData audioBytes = null,
-        DateTimeOffset? audioExpiresAt = null)
+        ChatResponseAudio responseAudio = null)
     {
         contentUpdate ??= new ChatMessageContent();
         toolCallUpdates ??= new List<StreamingChatToolCallUpdate>();
         contentTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
-        InternalChatCompletionMessageAudioChunk audio = null;
-        if (audioCorrelationId is not null || audioTranscript is not null || audioBytes is not null || audioExpiresAt is not null)
-        {
-            audio = new(audioCorrelationId, audioTranscript, audioBytes, audioExpiresAt, additionalBinaryDataProperties: null);
-        }
-
         InternalChatCompletionStreamResponseDelta delta = new InternalChatCompletionStreamResponseDelta(
-            audio,
             functionCallUpdate,
             toolCallUpdates.ToList(),
             refusalUpdate,
             role,
             contentUpdate,
+            responseAudio,
             additionalBinaryDataProperties: null);
 
         InternalCreateChatCompletionStreamResponseChoiceLogprobs logprobs = new InternalCreateChatCompletionStreamResponseChoiceLogprobs(

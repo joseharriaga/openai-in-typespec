@@ -19,6 +19,10 @@ namespace OpenAI.Chat;
 ///             Call <see cref="CreateRefusalPart(string)"/> to create a <see cref="ChatMessageContentPart"/> that
 ///             encapsulates a refusal coming from the model.
 ///         </item>
+///         <item>
+///             Call <see cref="CreateInputAudioPart(BinaryData, ChatInputAudioFormat)"/> to create a content part
+///             encapsulating input audio for user role messages.
+///         </item>
 ///     </list>
 /// </summary>
 [CodeGenModel("ChatMessageContentPart")]
@@ -29,9 +33,6 @@ public partial class ChatMessageContentPart
     private readonly string _text;
     private readonly InternalChatCompletionRequestMessageContentPartImageImageUrl _imageUri;
     private readonly InternalChatCompletionRequestMessageContentPartAudioInputAudio _inputAudio;
-    private readonly InternalChatCompletionResponseMessageAudio _outputAudio;
-    private readonly InternalChatCompletionMessageAudioChunk _responseAudioUpdate;
-    private readonly InternalChatCompletionRequestAssistantMessageAudio _audioReference;
     private readonly string _refusal;
 
     // CUSTOM: Made internal.
@@ -46,9 +47,6 @@ public partial class ChatMessageContentPart
         InternalChatCompletionRequestMessageContentPartImageImageUrl imageUri = default,
         string refusal = default,
         InternalChatCompletionRequestMessageContentPartAudioInputAudio inputAudio = default,
-        InternalChatCompletionResponseMessageAudio outputAudio = default,
-        InternalChatCompletionMessageAudioChunk responseAudioUpdate = default,
-        InternalChatCompletionRequestAssistantMessageAudio audioReference = default,
         IDictionary<string, BinaryData> serializedAdditionalRawData = default)
     {
         _kind = kind;
@@ -56,9 +54,6 @@ public partial class ChatMessageContentPart
         _imageUri = imageUri;
         _refusal = refusal;
         _inputAudio = inputAudio;
-        _outputAudio = outputAudio;
-        _responseAudioUpdate = responseAudioUpdate;
-        _audioReference = audioReference;
         _additionalBinaryDataProperties = serializedAdditionalRawData;
     }
 
@@ -90,12 +85,9 @@ public partial class ChatMessageContentPart
     /// </summary>
     /// <remarks>
     /// Present when <see cref="Kind"/> is <see cref="ChatMessageContentPartKind.Audio"/> and the content part
-    /// represents user role audio input or response audio content from the model.
-    /// <para>
-    /// When streaming, this value represents the latest incremental audio update.
-    /// </para>
+    /// represents user role audio input.
     /// </remarks>
-    public BinaryData AudioBytes => _inputAudio?.Data ?? _outputAudio?.Data ?? _responseAudioUpdate?.Data;
+    public BinaryData AudioBytes => _inputAudio?.Data;
 
     /// <summary>
     /// The encoding format that the audio data provided in <see cref="AudioBytes"/> should be interpreted with.
@@ -105,37 +97,6 @@ public partial class ChatMessageContentPart
     /// represents user role audio input.
     /// </remarks>
     public ChatInputAudioFormat? AudioInputFormat => _inputAudio?.Format;
-
-    /// <summary>
-    /// The unique identifier, as provided with model-generated response audio, that may be supplied as assistant
-    /// conversation history.
-    /// </summary>
-    /// <remarks>
-    /// Present when <see cref="Kind"/> is <see cref="ChatMessageContentPartKind.Audio"/> and the content part
-    /// represents response audio from the service or assistant role historical audio input.
-    /// </remarks>
-    public string AudioCorrelationId => _audioReference?.Id ?? _outputAudio?.Id ?? _responseAudioUpdate?.Id;
-
-    /// <summary>
-    /// The timestamp after which the audio associated with <see cref="AudioCorrelationId"/> is no longer available.
-    /// </summary>
-    /// <remarks>
-    /// Present when <see cref="Kind"/> is <see cref="ChatMessageContentPartKind.Audio"/> and the content part
-    /// represents response audio from the service.
-    /// </remarks>
-    public DateTimeOffset? AudioExpiresAt => _outputAudio?.ExpiresAt ?? _responseAudioUpdate?.ExpiresAt;
-
-    /// <summary>
-    /// The transcript that approximates the content of the audio provided by <see cref="AudioBytes"/>.
-    /// </summary>
-    /// <remarks>
-    /// Present when <see cref="Kind"/> is <see cref="ChatMessageContentPartKind.Audio"/> and the content part
-    /// represents response audio from the service.
-    /// <para>
-    /// When streaming, this value represents the latest transcript update.
-    /// </para>
-    /// </remarks>
-    public string AudioTranscript => _outputAudio?.Transcript ?? _responseAudioUpdate?.Transcript;
 
     // CUSTOM: Spread.
     /// <summary>
@@ -210,33 +171,17 @@ public partial class ChatMessageContentPart
     /// <summary> Creates a new <see cref="ChatMessageContentPart"/> that encapsulates user role input audio in a known format. </summary>
     /// <remarks>
     /// Binary audio content parts may only be used with <see cref="UserChatMessage"/> instances to represent user audio input. When referring to
-    /// past audio output from the model, use <see cref="CreateAudioPart(string)"/> instead.
+    /// past audio output from the model, use <see cref="ChatResponseAudioReference(string)"/> instead.
     /// </remarks>
     /// <param name="audioBytes"> The audio data. </param>
     /// <param name="audioFormat"> The format of the audio data. </param>
-    public static ChatMessageContentPart CreateAudioPart(BinaryData audioBytes, ChatInputAudioFormat audioFormat)
+    public static ChatMessageContentPart CreateInputAudioPart(BinaryData audioBytes, ChatInputAudioFormat audioFormat)
     {
         Argument.AssertNotNull(audioBytes, nameof(audioBytes));
 
         return new ChatMessageContentPart(
             kind: ChatMessageContentPartKind.Audio,
             inputAudio: new(audioBytes, audioFormat));
-    }
-
-    /// <summary> Creates a new <see cref="ChatMessageContentPart"/> that encapsulates an ID-based reference to earlier response audio provided by the model. </summary>
-    /// <remarks>
-    /// Reference-based audio content parts are used with <see cref="AssistantChatMessage"/> instances to represent historical audio output from the model. When providing
-    /// user audio input, use <see cref="CreateAudioPart(BinaryData, ChatInputAudioFormat)"/> instead.
-    /// </remarks>
-    /// <param name="audioCorrelationId"> The unique identifier associated with the audio. </param>
-    /// <exception cref="ArgumentNullException"> <paramref name="audioCorrelationId"/> is null. </exception>
-    public static ChatMessageContentPart CreateAudioPart(string audioCorrelationId)
-    {
-        Argument.AssertNotNull(audioCorrelationId, nameof(audioCorrelationId));
-
-        return new(
-            kind: ChatMessageContentPartKind.Audio,
-            audioReference: new InternalChatCompletionRequestAssistantMessageAudio(audioCorrelationId, null));
     }
 
     /// <summary>
@@ -246,22 +191,4 @@ public partial class ChatMessageContentPart
     /// </summary>
     /// <param name="text"> The text encapsulated by this <see cref="ChatMessageContentPart"/>. </param>
     public static implicit operator ChatMessageContentPart(string text) => CreateTextPart(text);
-
-    /// <summary>
-    /// Gets a value indicating whether this content part is contrived, in which case it does not represent a valid
-    /// member of a JSON content array within a REST body.
-    /// </summary>
-    internal bool IsContrived
-    {
-        get
-        {
-            // Audio content parts representing ID-based references or response audio are synthesized from dedicated
-            // "audio" JSON properties.
-            if (_kind == ChatMessageContentPartKind.Audio && _inputAudio is null)
-            {
-                return true;
-            }
-            return false;
-        }
-    }
 }

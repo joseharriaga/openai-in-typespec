@@ -129,7 +129,7 @@ namespace OpenAI.Chat
             }
             string refusal = default;
             IReadOnlyList<ChatToolCall> toolCalls = default;
-            InternalChatCompletionResponseMessageAudio audio = default;
+            ChatResponseAudio audio = default;
             Chat.ChatMessageRole role = default;
             ChatMessageContent content = default;
             ChatFunctionCall functionCall = default;
@@ -167,7 +167,7 @@ namespace OpenAI.Chat
                         audio = null;
                         continue;
                     }
-                    audio = InternalChatCompletionResponseMessageAudio.DeserializeInternalChatCompletionResponseMessageAudio(prop.Value, options);
+                    audio = ChatResponseAudio.DeserializeChatResponseAudio(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("role"u8))

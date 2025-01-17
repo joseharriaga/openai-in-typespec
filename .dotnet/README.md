@@ -414,8 +414,12 @@ completion = client.CompleteChat(messages, options);
 PrintAudioContent();
 ```
 
-Streaming is virtually identical: items in `StreamingChatCompletionUpdate.ContentUpdate` will provide incremental chunks of data via
-`AudioBytes` and `AudioTranscript`.
+Streaming is highly parallel: `StreamingChatCompletionUpdate` instances can include a `ResponseAudioUpdate` that may
+contain any of:
+
+- The `Id` of the streamed audio content, which can be referenced by subsequent `AssistantChatMessage` instances via `ChatAudioReference` once the streaming response is complete; this may appear across multiple `StreamingChatCompletionUpdate` instances but will always be the same value when present
+- The `ExpiresAt` value that describes when the `Id` will no longer be valid for use with `ChatAudioReference` in subsequent requests; this typically appears once and only once, in the final `StreamingResponseAudioUpdate`
+- Incremental `TranscriptUpdate` and/or `DataUpdate` values, which can incrementally consumed and, when concatenated, form the complete audio transcript and audio output for the overall response; many of these typically appear
 
 ## How to generate text embeddings
 

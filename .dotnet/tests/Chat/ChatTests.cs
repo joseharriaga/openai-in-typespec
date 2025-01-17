@@ -430,7 +430,7 @@ public class ChatTests : SyncAsyncTestBase
                 if (responseAudioUpdate.Id is not null)
                 {
                     Assert.That(streamedCorrelationId, Is.Null.Or.EqualTo(streamedCorrelationId));
-                    streamedCorrelationId = responseAudioUpdate.Id;
+                    streamedCorrelationId ??= responseAudioUpdate.Id;
                 }
                 if (responseAudioUpdate.ExpiresAt.HasValue)
                 {

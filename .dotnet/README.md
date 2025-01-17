@@ -376,7 +376,7 @@ byte[] audioFileRawBytes = File.ReadAllBytes(audioFilePath);
 BinaryData audioData = BinaryData.FromBytes(audioFileRawBytes);
 List<ChatMessage> messages =
     [
-        new UserChatMessage(ChatMessageContentPart.CreateAudioPart(audioData, ChatInputAudioFormat.Wav)),
+        new UserChatMessage(ChatMessageContentPart.CreateInputAudioPart(audioData, ChatInputAudioFormat.Wav)),
     ];
 
 // Output audio is requested by configuring AudioOptions on ChatCompletionOptions
@@ -395,7 +395,7 @@ void PrintAudioContent()
         string outputFilePath = $"{outputAudio.Id}.mp3";
         using (FileStream outputFileStream = File.OpenWrite(outputFilePath))
         {
-            outputFileStream.Write(outputAudio.Data);
+            outputFileStream.Write(outputAudio.AudioBytes);
         }
         Console.WriteLine($"Response audio written to file: {outputFilePath}");
         Console.WriteLine($"Valid on followup requests until: {outputAudio.ExpiresAt}");
@@ -419,7 +419,7 @@ contain any of:
 
 - The `Id` of the streamed audio content, which can be referenced by subsequent `AssistantChatMessage` instances via `ChatAudioReference` once the streaming response is complete; this may appear across multiple `StreamingChatCompletionUpdate` instances but will always be the same value when present
 - The `ExpiresAt` value that describes when the `Id` will no longer be valid for use with `ChatAudioReference` in subsequent requests; this typically appears once and only once, in the final `StreamingOutputAudioUpdate`
-- Incremental `TranscriptUpdate` and/or `DataUpdate` values, which can incrementally consumed and, when concatenated, form the complete audio transcript and audio output for the overall response; many of these typically appear
+- Incremental `TranscriptUpdate` and/or `AudioBytesUpdate` values, which can incrementally consumed and, when concatenated, form the complete audio transcript and audio output for the overall response; many of these typically appear
 
 ## How to generate text embeddings
 

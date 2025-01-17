@@ -121,13 +121,13 @@ public static partial class OpenAIChatModelFactory
         return new ChatOutputTokenUsageDetails(reasoningTokenCount, audioTokenCount, additionalBinaryDataProperties: null);
     }
 
-    public static ChatOutputAudio ChatOutputAudio(BinaryData data, string id = null, string transcript = null, DateTimeOffset expiresAt = default)
+    public static ChatOutputAudio ChatOutputAudio(BinaryData audioBytes, string id = null, string transcript = null, DateTimeOffset expiresAt = default)
     {
         return new ChatOutputAudio(
             id,
             expiresAt,
-            data,
             transcript,
+            audioBytes,
             additionalBinaryDataProperties: null);
     }
 
@@ -212,13 +212,13 @@ public static partial class OpenAIChatModelFactory
         string id = null,
         DateTimeOffset? expiresAt = null,
         string transcriptUpdate = null,
-        BinaryData dataUpdate = null)
+        BinaryData audioBytesUpdate = null)
     {
         return new StreamingChatOutputAudioUpdate(
             id,
             expiresAt,
             transcriptUpdate,
-            dataUpdate,
+            audioBytesUpdate,
             additionalBinaryDataProperties: null);
     }
 

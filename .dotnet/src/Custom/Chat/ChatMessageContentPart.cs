@@ -87,16 +87,16 @@ public partial class ChatMessageContentPart
     /// Present when <see cref="Kind"/> is <see cref="ChatMessageContentPartKind.InputAudio"/>. The content part
     /// represents user role audio input.
     /// </remarks>
-    public BinaryData AudioBytes => _inputAudio?.Data;
+    public BinaryData InputAudioBytes => _inputAudio?.Data;
 
     /// <summary>
-    /// The encoding format that the audio data provided in <see cref="AudioBytes"/> should be interpreted with.
+    /// The encoding format that the audio data provided in <see cref="InputAudioBytes"/> should be interpreted with.
     /// </summary>
     /// <remarks>
     /// Present when <see cref="Kind"/> is <see cref="ChatMessageContentPartKind.InputAudio"/>. The content part
     /// represents user role audio input.
     /// </remarks>
-    public ChatInputAudioFormat? AudioInputFormat => _inputAudio?.Format;
+    public ChatInputAudioFormat? InputAudioFormat => _inputAudio?.Format;
 
     // CUSTOM: Spread.
     /// <summary>

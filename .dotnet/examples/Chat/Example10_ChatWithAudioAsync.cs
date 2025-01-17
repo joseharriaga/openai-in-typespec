@@ -40,7 +40,7 @@ public partial class ChatExamples
                 string outputFilePath = $"{outputAudio.Id}.mp3";
                 using (FileStream outputFileStream = File.OpenWrite(outputFilePath))
                 {
-                    await outputFileStream.WriteAsync(outputAudio.Data);
+                    await outputFileStream.WriteAsync(outputAudio.AudioBytes);
                 }
                 Console.WriteLine($"Response audio written to file: {outputFilePath}");
                 Console.WriteLine($"Valid on followup requests until: {outputAudio.ExpiresAt}");

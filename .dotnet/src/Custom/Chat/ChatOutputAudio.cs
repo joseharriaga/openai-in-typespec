@@ -10,5 +10,7 @@ namespace OpenAI.Chat;
 [CodeGenModel("ChatCompletionResponseMessageAudio")]
 public partial class ChatOutputAudio
 {
-
+    // CUSTOM: Renamed.
+    [CodeGenMember("Data")]
+    public BinaryData AudioBytes { get; }
 }

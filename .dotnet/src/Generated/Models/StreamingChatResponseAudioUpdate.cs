@@ -7,28 +7,24 @@ using System.Collections.Generic;
 
 namespace OpenAI.Chat
 {
-    internal partial class InternalChatCompletionMessageAudioChunk
+    public partial class StreamingChatResponseAudioUpdate
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalChatCompletionMessageAudioChunk()
+        internal StreamingChatResponseAudioUpdate()
         {
         }
 
-        internal InternalChatCompletionMessageAudioChunk(string id, string transcript, BinaryData data, DateTimeOffset? expiresAt, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal StreamingChatResponseAudioUpdate(string id, DateTimeOffset? expiresAt, string transcriptUpdate, BinaryData dataUpdate, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Transcript = transcript;
-            Data = data;
             ExpiresAt = expiresAt;
+            TranscriptUpdate = transcriptUpdate;
+            DataUpdate = dataUpdate;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public string Id { get; }
-
-        public string Transcript { get; }
-
-        public BinaryData Data { get; }
 
         public DateTimeOffset? ExpiresAt { get; }
 

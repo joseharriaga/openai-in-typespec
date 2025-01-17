@@ -27,6 +27,11 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(InternalChatCompletionStreamResponseDelta)} does not support writing '{format}' format.");
             }
+            if (Optional.IsDefined(Audio) && _additionalBinaryDataProperties?.ContainsKey("audio") != true)
+            {
+                writer.WritePropertyName("audio"u8);
+                writer.WriteObjectValue(Audio, options);
+            }
             if (Optional.IsDefined(FunctionCall) && _additionalBinaryDataProperties?.ContainsKey("function_call") != true)
             {
                 writer.WritePropertyName("function_call"u8);
@@ -72,11 +77,6 @@ namespace OpenAI.Chat
                     writer.WriteNull("content"u8);
                 }
             }
-            if (Optional.IsDefined(Audio) && _additionalBinaryDataProperties?.ContainsKey("audio") != true)
-            {
-                writer.WritePropertyName("audio"u8);
-                writer.WriteObjectValue<ChatResponseAudio>(Audio, options);
-            }
             if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
@@ -117,15 +117,24 @@ namespace OpenAI.Chat
             {
                 return null;
             }
+            StreamingChatResponseAudioUpdate audio = default;
             StreamingChatFunctionCallUpdate functionCall = default;
             IReadOnlyList<StreamingChatToolCallUpdate> toolCalls = default;
             string refusal = default;
             Chat.ChatMessageRole? role = default;
             ChatMessageContent content = default;
-            ChatResponseAudio audio = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("audio"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    audio = StreamingChatResponseAudioUpdate.DeserializeStreamingChatResponseAudioUpdate(prop.Value, options);
+                    continue;
+                }
                 if (prop.NameEquals("function_call"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -173,15 +182,6 @@ namespace OpenAI.Chat
                     DeserializeContentValue(prop, ref content);
                     continue;
                 }
-                if (prop.NameEquals("audio"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    audio = ChatResponseAudio.DeserializeChatResponseAudio(prop.Value, options);
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -189,12 +189,12 @@ namespace OpenAI.Chat
             }
             // CUSTOM: Initialize Content collection property.
             return new InternalChatCompletionStreamResponseDelta(
+                audio,
                 functionCall,
                 toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(),
                 refusal,
                 role,
                 content ?? new ChatMessageContent(),
-                audio,
                 additionalBinaryDataProperties);
         }
 

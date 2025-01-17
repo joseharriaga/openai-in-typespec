@@ -110,5 +110,5 @@ public partial class StreamingChatCompletionUpdate
     [Obsolete($"This property is obsolete. Please use {nameof(ToolCallUpdates)} instead.")]
     public StreamingChatFunctionCallUpdate FunctionCallUpdate => InternalChoiceDelta?.FunctionCall;
 
-    public ChatResponseAudio ResponseAudio => InternalChoiceDelta?.Audio;
+    public StreamingChatResponseAudioUpdate ResponseAudioUpdate => InternalChoiceDelta?.Audio;
 }

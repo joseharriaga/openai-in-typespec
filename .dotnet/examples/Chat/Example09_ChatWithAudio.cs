@@ -15,7 +15,7 @@ public partial class ChatExamples
         ChatClient client = new("gpt-4o-audio-preview", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
         // Input audio is provided to a request by adding an audio content part to a user message
-        string audioFilePath = Path.Combine("Assets", "whats_the_weather_pcm16_24khz_mono.wav");
+        string audioFilePath = Path.Combine("Assets", "realtime_whats_the_weather_pcm16_24khz_mono.wav");
         byte[] audioFileRawBytes = File.ReadAllBytes(audioFilePath);
         BinaryData audioData = BinaryData.FromBytes(audioFileRawBytes);
         List<ChatMessage> messages =

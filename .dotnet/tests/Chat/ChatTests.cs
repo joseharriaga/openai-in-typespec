@@ -414,22 +414,36 @@ public class ChatTests : SyncAsyncTestBase
                 ]));
 
         string streamedCorrelationId = null;
+        DateTimeOffset? streamedExpiresAt = null;
+        StringBuilder streamedTranscriptBuilder = new();
         using MemoryStream responseAudioStream = new();
         await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(messages, options))
         {
             Assert.That(update.ContentUpdate, Has.Count.EqualTo(0));
-            ChatResponseAudio responseAudioUpdate = update.ResponseAudio;
+            StreamingChatResponseAudioUpdate responseAudioUpdate = update.ResponseAudioUpdate;
+
             if (responseAudioUpdate is not null)
             {
+                string serializedResponseAudioUpdate = ModelReaderWriter.Write(responseAudioUpdate).ToString();
+                Assert.That(serializedResponseAudioUpdate, Is.Not.Null.And.Not.Empty);
+
                 if (responseAudioUpdate.Id is not null)
                 {
-                    Assert.That(streamedCorrelationId, Is.Null.Or.EqualTo(responseAudioUpdate.Id));
+                    Assert.That(streamedCorrelationId, Is.Null.Or.EqualTo(streamedCorrelationId));
                     streamedCorrelationId = responseAudioUpdate.Id;
                 }
-                responseAudioStream.Write(responseAudioUpdate.Data);
+                if (responseAudioUpdate.ExpiresAt.HasValue)
+                {
+                    Assert.That(streamedExpiresAt.HasValue, Is.False);
+                    streamedExpiresAt = responseAudioUpdate.ExpiresAt;
+                }
+                streamedTranscriptBuilder.Append(responseAudioUpdate.TranscriptUpdate);
+                responseAudioStream.Write(responseAudioUpdate.DataUpdate);
             }
         }
         Assert.That(streamedCorrelationId, Is.Not.Null.And.Not.Empty);
+        Assert.That(streamedExpiresAt.HasValue, Is.True);
+        Assert.That(streamedTranscriptBuilder.ToString(), Is.Not.Null.And.Not.Empty);
         Assert.That(responseAudioStream.Length, Is.GreaterThan(9000));
     }
 

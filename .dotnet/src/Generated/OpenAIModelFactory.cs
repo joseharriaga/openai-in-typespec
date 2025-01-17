@@ -1259,6 +1259,12 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
+        public static StreamingChatResponseAudioUpdate StreamingChatResponseAudioUpdate(string id = default, DateTimeOffset? expiresAt = default, string transcriptUpdate = default, BinaryData dataUpdate = default)
+        {
+
+            return new StreamingChatResponseAudioUpdate(id, expiresAt, transcriptUpdate, dataUpdate, additionalBinaryDataProperties: null);
+        }
+
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = default, BinaryData functionArgumentsUpdate = default)
         {
 

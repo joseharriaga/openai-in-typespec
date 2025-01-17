@@ -147,7 +147,7 @@ public static partial class OpenAIChatModelFactory
         string model = null,
         string systemFingerprint = null,
         ChatTokenUsage usage = null,
-        ChatResponseAudio responseAudio = null)
+        StreamingChatResponseAudioUpdate responseAudioUpdate = null)
     {
         contentUpdate ??= new ChatMessageContent();
         toolCallUpdates ??= new List<StreamingChatToolCallUpdate>();
@@ -155,12 +155,12 @@ public static partial class OpenAIChatModelFactory
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
         InternalChatCompletionStreamResponseDelta delta = new InternalChatCompletionStreamResponseDelta(
+            responseAudioUpdate,
             functionCallUpdate,
             toolCallUpdates.ToList(),
             refusalUpdate,
             role,
             contentUpdate,
-            responseAudio,
             additionalBinaryDataProperties: null);
 
         InternalCreateChatCompletionStreamResponseChoiceLogprobs logprobs = new InternalCreateChatCompletionStreamResponseChoiceLogprobs(
@@ -197,6 +197,28 @@ public static partial class OpenAIChatModelFactory
         return new StreamingChatFunctionCallUpdate(
             functionName,
             functionArgumentsUpdate,
+            additionalBinaryDataProperties: null);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatResponseAudioUpdate"/>.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="expiresAt"></param>
+    /// <param name="transcriptUpdate"></param>
+    /// <param name="dataUpdate"></param>
+    /// <returns></returns>
+    public static StreamingChatResponseAudioUpdate StreamingChatResponseAudioUpdate(
+        string id = null,
+        DateTimeOffset? expiresAt = null,
+        string transcriptUpdate = null,
+        BinaryData dataUpdate = null)
+    {
+        return new StreamingChatResponseAudioUpdate(
+            id,
+            expiresAt,
+            transcriptUpdate,
+            dataUpdate,
             additionalBinaryDataProperties: null);
     }
 

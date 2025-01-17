@@ -45,23 +45,23 @@ Update-In-File-With-Retry `
     -FilePath "$directory\InternalChatCompletionStreamResponseDelta.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalChatCompletionStreamResponseDelta\("
+        "    audio,"
         "    functionCall,"
         "    toolCalls \?\? new ChangeTrackingList<StreamingChatToolCallUpdate>\(\),"
         "    refusal,"
         "    role,"
         "    content,"
-        "    audio,"
         "    additionalBinaryDataProperties\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalChatCompletionStreamResponseDelta("
+        "    audio,"
         "    functionCall,"
         "    toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(),"
         "    refusal,"
         "    role,"
         "    content ?? new ChatMessageContent(),"
-        "    audio,"
         "    additionalBinaryDataProperties);"
     ) `
     -OutputIndentation 12 `

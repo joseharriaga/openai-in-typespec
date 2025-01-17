@@ -8,18 +8,18 @@ using OpenAI;
 
 namespace OpenAI.Chat
 {
-    public partial class ChatResponseAudioReference
+    public partial class ChatOutputAudioReference
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public ChatResponseAudioReference(string id)
+        public ChatOutputAudioReference(string id)
         {
             Argument.AssertNotNull(id, nameof(id));
 
             Id = id;
         }
 
-        internal ChatResponseAudioReference(string id, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatOutputAudioReference(string id, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;

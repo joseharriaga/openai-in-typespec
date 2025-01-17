@@ -34,7 +34,7 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("voice") != true)
             {
                 writer.WritePropertyName("voice"u8);
-                writer.WriteStringValue(ResponseVoice.ToString());
+                writer.WriteStringValue(OutputAudioVoice.ToString());
             }
             if (_additionalBinaryDataProperties?.ContainsKey("format") != true)
             {
@@ -81,14 +81,14 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            ChatResponseVoice responseVoice = default;
+            ChatOutputAudioVoice outputAudioVoice = default;
             ChatOutputAudioFormat outputAudioFormat = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("voice"u8))
                 {
-                    responseVoice = new ChatResponseVoice(prop.Value.GetString());
+                    outputAudioVoice = new ChatOutputAudioVoice(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("format"u8))
@@ -101,7 +101,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ChatAudioOptions(responseVoice, outputAudioFormat, additionalBinaryDataProperties);
+            return new ChatAudioOptions(outputAudioVoice, outputAudioFormat, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ChatAudioOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

@@ -117,7 +117,7 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            StreamingChatResponseAudioUpdate audio = default;
+            StreamingChatOutputAudioUpdate audio = default;
             StreamingChatFunctionCallUpdate functionCall = default;
             IReadOnlyList<StreamingChatToolCallUpdate> toolCalls = default;
             string refusal = default;
@@ -132,7 +132,7 @@ namespace OpenAI.Chat
                     {
                         continue;
                     }
-                    audio = StreamingChatResponseAudioUpdate.DeserializeStreamingChatResponseAudioUpdate(prop.Value, options);
+                    audio = StreamingChatOutputAudioUpdate.DeserializeStreamingChatOutputAudioUpdate(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("function_call"u8))

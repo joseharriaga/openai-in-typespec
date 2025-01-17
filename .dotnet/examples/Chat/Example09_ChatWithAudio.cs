@@ -26,23 +26,23 @@ public partial class ChatExamples
         // Output audio is requested by configuring AudioOptions on ChatCompletionOptions
         ChatCompletionOptions options = new()
         {
-            AudioOptions = new(ChatResponseVoice.Alloy, ChatOutputAudioFormat.Mp3),
+            AudioOptions = new(ChatOutputAudioVoice.Alloy, ChatOutputAudioFormat.Mp3),
         };
 
         ChatCompletion completion = client.CompleteChat(messages, options);
 
         void PrintAudioContent()
         {
-            if (completion.ResponseAudio is ChatResponseAudio responseAudio)
+            if (completion.OutputAudio is ChatOutputAudio outputAudio)
             {
-                Console.WriteLine($"Response audio transcript: {responseAudio.Transcript}");
-                string outputFilePath = $"{responseAudio.Id}.mp3";
+                Console.WriteLine($"Response audio transcript: {outputAudio.Transcript}");
+                string outputFilePath = $"{outputAudio.Id}.mp3";
                 using (FileStream outputFileStream = File.OpenWrite(outputFilePath))
                 {
-                    outputFileStream.Write(responseAudio.Data);
+                    outputFileStream.Write(outputAudio.Data);
                 }
                 Console.WriteLine($"Response audio written to file: {outputFilePath}");
-                Console.WriteLine($"Valid on followup requests until: {responseAudio.ExpiresAt}");
+                Console.WriteLine($"Valid on followup requests until: {outputAudio.ExpiresAt}");
             }
         }
 

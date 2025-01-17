@@ -102,3 +102,8 @@ internal readonly partial struct InternalCreateChatCompletionRequestModality { }
 [CodeGenModel("ChatCompletionRequestMessageContentPartAudioType")]
 internal readonly partial struct InternalChatCompletionRequestMessageContentPartAudioType { }
 
+[CodeGenModel("ChatCompletionRequestMessageContentPartAudio")]
+internal partial class InternalChatCompletionRequestMessageContentPartAudio { }
+
+[CodeGenModel("ChatCompletionRequestMessageContentPartAudioInputAudio")]
+internal partial class InternalChatCompletionRequestMessageContentPartAudioInputAudio { }

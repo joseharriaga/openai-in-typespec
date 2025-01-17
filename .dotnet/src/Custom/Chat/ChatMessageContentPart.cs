@@ -84,7 +84,7 @@ public partial class ChatMessageContentPart
     /// The encoded binary audio payload associated with the content part.
     /// </summary>
     /// <remarks>
-    /// Present when <see cref="Kind"/> is <see cref="ChatMessageContentPartKind.Audio"/> and the content part
+    /// Present when <see cref="Kind"/> is <see cref="ChatMessageContentPartKind.InputAudio"/>. The content part
     /// represents user role audio input.
     /// </remarks>
     public BinaryData AudioBytes => _inputAudio?.Data;
@@ -93,7 +93,7 @@ public partial class ChatMessageContentPart
     /// The encoding format that the audio data provided in <see cref="AudioBytes"/> should be interpreted with.
     /// </summary>
     /// <remarks>
-    /// Present when <see cref="Kind"/> is <see cref="ChatMessageContentPartKind.Audio"/> and the content part
+    /// Present when <see cref="Kind"/> is <see cref="ChatMessageContentPartKind.InputAudio"/>. The content part
     /// represents user role audio input.
     /// </remarks>
     public ChatInputAudioFormat? AudioInputFormat => _inputAudio?.Format;
@@ -171,7 +171,7 @@ public partial class ChatMessageContentPart
     /// <summary> Creates a new <see cref="ChatMessageContentPart"/> that encapsulates user role input audio in a known format. </summary>
     /// <remarks>
     /// Binary audio content parts may only be used with <see cref="UserChatMessage"/> instances to represent user audio input. When referring to
-    /// past audio output from the model, use <see cref="ChatResponseAudioReference(string)"/> instead.
+    /// past audio output from the model, use <see cref="ChatOutputAudioReference(string)"/> instead.
     /// </remarks>
     /// <param name="audioBytes"> The audio data. </param>
     /// <param name="audioFormat"> The format of the audio data. </param>
@@ -180,7 +180,7 @@ public partial class ChatMessageContentPart
         Argument.AssertNotNull(audioBytes, nameof(audioBytes));
 
         return new ChatMessageContentPart(
-            kind: ChatMessageContentPartKind.Audio,
+            kind: ChatMessageContentPartKind.InputAudio,
             inputAudio: new(audioBytes, audioFormat));
     }
 

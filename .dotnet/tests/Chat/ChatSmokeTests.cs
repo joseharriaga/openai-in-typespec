@@ -555,13 +555,13 @@ public class ChatSmokeTests : SyncAsyncTestBase
             }
             """u8.ToArray()));
         Assert.That(message.Content, Has.Count.EqualTo(0));
-        Assert.That(message.ResponseAudioReference, Is.Not.Null);
-        Assert.That(message.ResponseAudioReference.Id, Is.EqualTo("audio_correlated_id_1234"));
+        Assert.That(message.OutputAudioReference, Is.Not.Null);
+        Assert.That(message.OutputAudioReference.Id, Is.EqualTo("audio_correlated_id_1234"));
         string serializedMessage = ModelReaderWriter.Write(message).ToString();
         Assert.That(serializedMessage, Does.Contain(@"""audio"":{""id"":""audio_correlated_id_1234""}"));
 
         AssistantChatMessage ordinaryTextAssistantMessage = new(["This was a message from the assistant"]);
-        ordinaryTextAssistantMessage.ResponseAudioReference = new("extra-audio-id");
+        ordinaryTextAssistantMessage.OutputAudioReference = new("extra-audio-id");
         BinaryData serializedLateAudioMessage = ModelReaderWriter.Write(ordinaryTextAssistantMessage);
         Assert.That(serializedLateAudioMessage.ToString(), Does.Contain("was a message"));
         Assert.That(serializedLateAudioMessage.ToString(), Does.Contain("extra-audio-id"));
@@ -613,13 +613,13 @@ public class ChatSmokeTests : SyncAsyncTestBase
         ChatCompletion audioCompletion = ModelReaderWriter.Read<ChatCompletion>(rawAudioResponse);
         Assert.That(audioCompletion, Is.Not.Null);
         Assert.That(audioCompletion.Content, Has.Count.EqualTo(0));
-        Assert.That(audioCompletion.ResponseAudio, Is.Not.Null);
-        Assert.That(audioCompletion.ResponseAudio.Id, Is.EqualTo("audio_6725224ac62481908ab55dc283289d87"));
-        Assert.That(audioCompletion.ResponseAudio.Data, Is.Not.Null);
-        Assert.That(audioCompletion.ResponseAudio.Transcript, Is.Not.Null.And.Not.Empty);
+        Assert.That(audioCompletion.OutputAudio, Is.Not.Null);
+        Assert.That(audioCompletion.OutputAudio.Id, Is.EqualTo("audio_6725224ac62481908ab55dc283289d87"));
+        Assert.That(audioCompletion.OutputAudio.Data, Is.Not.Null);
+        Assert.That(audioCompletion.OutputAudio.Transcript, Is.Not.Null.And.Not.Empty);
         
         AssistantChatMessage audioHistoryMessage = new(audioCompletion);
-        Assert.That(audioHistoryMessage.ResponseAudioReference?.Id, Is.EqualTo(audioCompletion.ResponseAudio.Id));
+        Assert.That(audioHistoryMessage.OutputAudioReference?.Id, Is.EqualTo(audioCompletion.OutputAudio.Id));
     }
 
     [Test]

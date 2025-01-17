@@ -11,5 +11,5 @@ public enum ChatMessageContentPartKind
 
     Image,
 
-    Audio,
+    InputAudio,
 }

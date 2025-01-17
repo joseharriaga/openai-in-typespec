@@ -6,7 +6,7 @@ using System;
 /// Represents an audio update in a streaming chat response.
 /// </summary>
 [CodeGenModel("ChatCompletionMessageAudioChunk")]
-public partial class StreamingChatResponseAudioUpdate
+public partial class StreamingChatOutputAudioUpdate
 {
     // CUSTOM: Renamed for clarity of incremental data availability while streaming.
     /// <summary>

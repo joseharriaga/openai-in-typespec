@@ -33,7 +33,7 @@ public partial class ChatMessageContentPart : IJsonModel<ChatMessageContentPart>
             writer.WritePropertyName("image_url"u8);
             writer.WriteObjectValue(instance._imageUri, options);
         }
-        else if (instance._kind == ChatMessageContentPartKind.Audio)
+        else if (instance._kind == ChatMessageContentPartKind.InputAudio)
         {
             writer.WritePropertyName("input_audio"u8);
             writer.WriteObjectValue(instance._inputAudio, options);

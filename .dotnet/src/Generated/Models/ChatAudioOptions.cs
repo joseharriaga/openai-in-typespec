@@ -11,15 +11,15 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public ChatAudioOptions(ChatResponseVoice responseVoice, ChatOutputAudioFormat outputAudioFormat)
+        public ChatAudioOptions(ChatOutputAudioVoice outputAudioVoice, ChatOutputAudioFormat outputAudioFormat)
         {
-            ResponseVoice = responseVoice;
+            OutputAudioVoice = outputAudioVoice;
             OutputAudioFormat = outputAudioFormat;
         }
 
-        internal ChatAudioOptions(ChatResponseVoice responseVoice, ChatOutputAudioFormat outputAudioFormat, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatAudioOptions(ChatOutputAudioVoice outputAudioVoice, ChatOutputAudioFormat outputAudioFormat, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            ResponseVoice = responseVoice;
+            OutputAudioVoice = outputAudioVoice;
             OutputAudioFormat = outputAudioFormat;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }

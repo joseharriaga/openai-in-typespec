@@ -386,24 +386,24 @@ public class ChatTests : SyncAsyncTestBase
 
         ChatCompletionOptions options = new()
         {
-            AudioOptions = new(ChatResponseVoice.Alloy, ChatOutputAudioFormat.Pcm16)
+            AudioOptions = new(ChatOutputAudioVoice.Alloy, ChatOutputAudioFormat.Pcm16)
         };
 
         ChatCompletion completion = await client.CompleteChatAsync(messages, options);
         Assert.That(completion, Is.Not.Null);
         Assert.That(completion.Content, Has.Count.EqualTo(0));
 
-        ChatResponseAudio responseAudio = completion.ResponseAudio;
-        Assert.That(responseAudio, Is.Not.Null);
-        Assert.That(responseAudio.Id, Is.Not.Null.And.Not.Empty);
-        Assert.That(responseAudio.Data, Is.Not.Null);
-        Assert.That(responseAudio.Transcript, Is.Not.Null.And.Not.Empty);
+        ChatOutputAudio outputAudio = completion.OutputAudio;
+        Assert.That(outputAudio, Is.Not.Null);
+        Assert.That(outputAudio.Id, Is.Not.Null.And.Not.Empty);
+        Assert.That(outputAudio.Data, Is.Not.Null);
+        Assert.That(outputAudio.Transcript, Is.Not.Null.And.Not.Empty);
 
         AssistantChatMessage audioHistoryMessage = ChatMessage.CreateAssistantMessage(completion);
         Assert.That(audioHistoryMessage, Is.InstanceOf<AssistantChatMessage>());
         Assert.That(audioHistoryMessage.Content, Has.Count.EqualTo(0));
 
-        Assert.That(audioHistoryMessage.ResponseAudioReference?.Id, Is.EqualTo(completion.ResponseAudio.Id));
+        Assert.That(audioHistoryMessage.OutputAudioReference?.Id, Is.EqualTo(completion.OutputAudio.Id));
         messages.Add(audioHistoryMessage);
 
         messages.Add(
@@ -416,35 +416,35 @@ public class ChatTests : SyncAsyncTestBase
         string streamedCorrelationId = null;
         DateTimeOffset? streamedExpiresAt = null;
         StringBuilder streamedTranscriptBuilder = new();
-        using MemoryStream responseAudioStream = new();
+        using MemoryStream outputAudioStream = new();
         await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(messages, options))
         {
             Assert.That(update.ContentUpdate, Has.Count.EqualTo(0));
-            StreamingChatResponseAudioUpdate responseAudioUpdate = update.ResponseAudioUpdate;
+            StreamingChatOutputAudioUpdate outputAudioUpdate = update.OutputAudioUpdate;
 
-            if (responseAudioUpdate is not null)
+            if (outputAudioUpdate is not null)
             {
-                string serializedResponseAudioUpdate = ModelReaderWriter.Write(responseAudioUpdate).ToString();
-                Assert.That(serializedResponseAudioUpdate, Is.Not.Null.And.Not.Empty);
+                string serializedOutputAudioUpdate = ModelReaderWriter.Write(outputAudioUpdate).ToString();
+                Assert.That(serializedOutputAudioUpdate, Is.Not.Null.And.Not.Empty);
 
-                if (responseAudioUpdate.Id is not null)
+                if (outputAudioUpdate.Id is not null)
                 {
                     Assert.That(streamedCorrelationId, Is.Null.Or.EqualTo(streamedCorrelationId));
-                    streamedCorrelationId ??= responseAudioUpdate.Id;
+                    streamedCorrelationId ??= outputAudioUpdate.Id;
                 }
-                if (responseAudioUpdate.ExpiresAt.HasValue)
+                if (outputAudioUpdate.ExpiresAt.HasValue)
                 {
                     Assert.That(streamedExpiresAt.HasValue, Is.False);
-                    streamedExpiresAt = responseAudioUpdate.ExpiresAt;
+                    streamedExpiresAt = outputAudioUpdate.ExpiresAt;
                 }
-                streamedTranscriptBuilder.Append(responseAudioUpdate.TranscriptUpdate);
-                responseAudioStream.Write(responseAudioUpdate.DataUpdate);
+                streamedTranscriptBuilder.Append(outputAudioUpdate.TranscriptUpdate);
+                outputAudioStream.Write(outputAudioUpdate.DataUpdate);
             }
         }
         Assert.That(streamedCorrelationId, Is.Not.Null.And.Not.Empty);
         Assert.That(streamedExpiresAt.HasValue, Is.True);
         Assert.That(streamedTranscriptBuilder.ToString(), Is.Not.Null.And.Not.Empty);
-        Assert.That(responseAudioStream.Length, Is.GreaterThan(9000));
+        Assert.That(outputAudioStream.Length, Is.GreaterThan(9000));
     }
 
     [Test]

@@ -23,7 +23,7 @@ public static partial class OpenAIChatModelFactory
         string model = null,
         string systemFingerprint = null,
         ChatTokenUsage usage = null,
-        ChatResponseAudio responseAudio = null)
+        ChatOutputAudio outputAudio = null)
     {
         content ??= new ChatMessageContent();
         toolCalls ??= new List<ChatToolCall>();
@@ -33,7 +33,7 @@ public static partial class OpenAIChatModelFactory
         InternalChatCompletionResponseMessage message = new InternalChatCompletionResponseMessage(
             refusal,
             toolCalls.ToList(),
-            responseAudio,
+            outputAudio,
             role,
             content,
             functionCall,
@@ -121,9 +121,9 @@ public static partial class OpenAIChatModelFactory
         return new ChatOutputTokenUsageDetails(reasoningTokenCount, audioTokenCount, additionalBinaryDataProperties: null);
     }
 
-    public static ChatResponseAudio ChatResponseAudio(BinaryData data, string id = null, string transcript = null, DateTimeOffset expiresAt = default)
+    public static ChatOutputAudio ChatOutputAudio(BinaryData data, string id = null, string transcript = null, DateTimeOffset expiresAt = default)
     {
-        return new ChatResponseAudio(
+        return new ChatOutputAudio(
             id,
             expiresAt,
             data,
@@ -147,7 +147,7 @@ public static partial class OpenAIChatModelFactory
         string model = null,
         string systemFingerprint = null,
         ChatTokenUsage usage = null,
-        StreamingChatResponseAudioUpdate responseAudioUpdate = null)
+        StreamingChatOutputAudioUpdate outputAudioUpdate = null)
     {
         contentUpdate ??= new ChatMessageContent();
         toolCallUpdates ??= new List<StreamingChatToolCallUpdate>();
@@ -155,7 +155,7 @@ public static partial class OpenAIChatModelFactory
         refusalTokenLogProbabilities ??= new List<ChatTokenLogProbabilityDetails>();
 
         InternalChatCompletionStreamResponseDelta delta = new InternalChatCompletionStreamResponseDelta(
-            responseAudioUpdate,
+            outputAudioUpdate,
             functionCallUpdate,
             toolCallUpdates.ToList(),
             refusalUpdate,
@@ -201,20 +201,20 @@ public static partial class OpenAIChatModelFactory
     }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatResponseAudioUpdate"/>.
+    /// Initializes a new instance of <see cref="OpenAI.Chat.StreamingChatOutputAudioUpdate"/>.
     /// </summary>
     /// <param name="id"></param>
     /// <param name="expiresAt"></param>
     /// <param name="transcriptUpdate"></param>
     /// <param name="dataUpdate"></param>
     /// <returns></returns>
-    public static StreamingChatResponseAudioUpdate StreamingChatResponseAudioUpdate(
+    public static StreamingChatOutputAudioUpdate StreamingChatOutputAudioUpdate(
         string id = null,
         DateTimeOffset? expiresAt = null,
         string transcriptUpdate = null,
         BinaryData dataUpdate = null)
     {
-        return new StreamingChatResponseAudioUpdate(
+        return new StreamingChatOutputAudioUpdate(
             id,
             expiresAt,
             transcriptUpdate,

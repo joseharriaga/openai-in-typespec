@@ -11,9 +11,9 @@ using OpenAI;
 
 namespace OpenAI.Chat
 {
-    public partial class StreamingChatResponseAudioUpdate : IJsonModel<StreamingChatResponseAudioUpdate>
+    public partial class StreamingChatOutputAudioUpdate : IJsonModel<StreamingChatOutputAudioUpdate>
     {
-        void IJsonModel<StreamingChatResponseAudioUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+        void IJsonModel<StreamingChatOutputAudioUpdate>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
             JsonModelWriteCore(writer, options);
@@ -22,10 +22,10 @@ namespace OpenAI.Chat
 
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatResponseAudioUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatOutputAudioUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(StreamingChatResponseAudioUpdate)} does not support writing '{format}' format.");
+                throw new FormatException($"The model {nameof(StreamingChatOutputAudioUpdate)} does not support writing '{format}' format.");
             }
             if (Optional.IsDefined(Id) && _additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
@@ -68,20 +68,20 @@ namespace OpenAI.Chat
             }
         }
 
-        StreamingChatResponseAudioUpdate IJsonModel<StreamingChatResponseAudioUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+        StreamingChatOutputAudioUpdate IJsonModel<StreamingChatOutputAudioUpdate>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
 
-        protected virtual StreamingChatResponseAudioUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        protected virtual StreamingChatOutputAudioUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatResponseAudioUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatOutputAudioUpdate>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
-                throw new FormatException($"The model {nameof(StreamingChatResponseAudioUpdate)} does not support reading '{format}' format.");
+                throw new FormatException($"The model {nameof(StreamingChatOutputAudioUpdate)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return DeserializeStreamingChatResponseAudioUpdate(document.RootElement, options);
+            return DeserializeStreamingChatOutputAudioUpdate(document.RootElement, options);
         }
 
-        internal static StreamingChatResponseAudioUpdate DeserializeStreamingChatResponseAudioUpdate(JsonElement element, ModelReaderWriterOptions options)
+        internal static StreamingChatOutputAudioUpdate DeserializeStreamingChatOutputAudioUpdate(JsonElement element, ModelReaderWriterOptions options)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -127,56 +127,56 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new StreamingChatResponseAudioUpdate(id, expiresAt, transcriptUpdate, dataUpdate, additionalBinaryDataProperties);
+            return new StreamingChatOutputAudioUpdate(id, expiresAt, transcriptUpdate, dataUpdate, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<StreamingChatResponseAudioUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
+        BinaryData IPersistableModel<StreamingChatOutputAudioUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
         protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatResponseAudioUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatOutputAudioUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
                     return ModelReaderWriter.Write(this, options);
                 default:
-                    throw new FormatException($"The model {nameof(StreamingChatResponseAudioUpdate)} does not support writing '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(StreamingChatOutputAudioUpdate)} does not support writing '{options.Format}' format.");
             }
         }
 
-        StreamingChatResponseAudioUpdate IPersistableModel<StreamingChatResponseAudioUpdate>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
+        StreamingChatOutputAudioUpdate IPersistableModel<StreamingChatOutputAudioUpdate>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
-        protected virtual StreamingChatResponseAudioUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        protected virtual StreamingChatOutputAudioUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
         {
-            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatResponseAudioUpdate>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<StreamingChatOutputAudioUpdate>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return DeserializeStreamingChatResponseAudioUpdate(document.RootElement, options);
+                        return DeserializeStreamingChatOutputAudioUpdate(document.RootElement, options);
                     }
                 default:
-                    throw new FormatException($"The model {nameof(StreamingChatResponseAudioUpdate)} does not support reading '{options.Format}' format.");
+                    throw new FormatException($"The model {nameof(StreamingChatOutputAudioUpdate)} does not support reading '{options.Format}' format.");
             }
         }
 
-        string IPersistableModel<StreamingChatResponseAudioUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
+        string IPersistableModel<StreamingChatOutputAudioUpdate>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        public static implicit operator BinaryContent(StreamingChatResponseAudioUpdate streamingChatResponseAudioUpdate)
+        public static implicit operator BinaryContent(StreamingChatOutputAudioUpdate streamingChatOutputAudioUpdate)
         {
-            if (streamingChatResponseAudioUpdate == null)
+            if (streamingChatOutputAudioUpdate == null)
             {
                 return null;
             }
-            return BinaryContent.Create(streamingChatResponseAudioUpdate, ModelSerializationExtensions.WireOptions);
+            return BinaryContent.Create(streamingChatOutputAudioUpdate, ModelSerializationExtensions.WireOptions);
         }
 
-        public static explicit operator StreamingChatResponseAudioUpdate(ClientResult result)
+        public static explicit operator StreamingChatOutputAudioUpdate(ClientResult result)
         {
             using PipelineResponse response = result.GetRawResponse();
             using JsonDocument document = JsonDocument.Parse(response.Content);
-            return DeserializeStreamingChatResponseAudioUpdate(document.RootElement, ModelSerializationExtensions.WireOptions);
+            return DeserializeStreamingChatOutputAudioUpdate(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

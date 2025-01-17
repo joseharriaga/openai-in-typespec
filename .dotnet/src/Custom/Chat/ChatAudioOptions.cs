@@ -18,7 +18,7 @@ public partial class ChatAudioOptions
     /// Gets or sets the voice model that the response should use to synthesize audio.
     /// </summary>
     [CodeGenMember("Voice")]
-    public ChatResponseVoice ResponseVoice { get; set; }
+    public ChatOutputAudioVoice OutputAudioVoice { get; set; }
 
     /// <summary>
     /// Specifies the output format desired for synthesized audio.

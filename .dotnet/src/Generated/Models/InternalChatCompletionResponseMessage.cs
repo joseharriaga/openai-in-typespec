@@ -19,7 +19,7 @@ namespace OpenAI.Chat
             Content = content;
         }
 
-        internal InternalChatCompletionResponseMessage(string refusal, IReadOnlyList<ChatToolCall> toolCalls, ChatResponseAudio audio, Chat.ChatMessageRole role, ChatMessageContent content, ChatFunctionCall functionCall, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalChatCompletionResponseMessage(string refusal, IReadOnlyList<ChatToolCall> toolCalls, ChatOutputAudio audio, Chat.ChatMessageRole role, ChatMessageContent content, ChatFunctionCall functionCall, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Refusal = refusal;
             ToolCalls = toolCalls;
@@ -34,7 +34,7 @@ namespace OpenAI.Chat
 
         public IReadOnlyList<ChatToolCall> ToolCalls { get; }
 
-        public ChatResponseAudio Audio { get; }
+        public ChatOutputAudio Audio { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

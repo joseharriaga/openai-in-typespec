@@ -206,7 +206,7 @@ public static partial class OpenAIChatModelFactory
     /// <param name="id"></param>
     /// <param name="expiresAt"></param>
     /// <param name="transcriptUpdate"></param>
-    /// <param name="dataUpdate"></param>
+    /// <param name="audioBytesUpdate"></param>
     /// <returns></returns>
     public static StreamingChatOutputAudioUpdate StreamingChatOutputAudioUpdate(
         string id = null,

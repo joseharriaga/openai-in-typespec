@@ -181,6 +181,12 @@ public partial class ChatCompletionOptions
     [CodeGenMember("Modalities")]
     private IList<InternalCreateChatCompletionRequestModality> _internalModalities = new ChangeTrackingList<InternalCreateChatCompletionRequestModality>();
 
+    public ChatContentModalities ContentModalities
+    {
+        get => ChatContentModalitiesExtensions.FromInternalModalities(_internalModalities);
+        set => _internalModalities = value.ToInternalModalities();
+    }
+
     // CUSTOM: supplemented with custom setter to internally enable audio output via modalities.
     [CodeGenMember("Audio")]
     private ChatAudioOptions _audioOptions;

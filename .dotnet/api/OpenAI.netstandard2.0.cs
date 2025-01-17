@@ -1197,6 +1197,7 @@ namespace OpenAI.Chat {
     public class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>, IPersistableModel<ChatCompletionOptions> {
         public bool? AllowParallelToolCalls { get; set; }
         public ChatAudioOptions AudioOptions { get; set; }
+        public ChatContentModalities ContentModalities { get; set; }
         public string EndUserId { get; set; }
         public float? FrequencyPenalty { get; set; }
         [Obsolete("This property is obsolete. Please use ToolChoice instead.")]
@@ -1219,6 +1220,11 @@ namespace OpenAI.Chat {
         public float? TopP { get; set; }
         public static explicit operator ChatCompletionOptions(ClientResult result);
         public static implicit operator BinaryContent(ChatCompletionOptions chatCompletionOptions);
+    }
+    [Flags]
+    public enum ChatContentModalities {
+        Text = 1,
+        Audio = 2
     }
     public enum ChatFinishReason {
         Stop = 0,
@@ -1490,7 +1496,7 @@ namespace OpenAI.Chat {
         public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string completionId = null, ChatMessageContent contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null, StreamingChatOutputAudioUpdate outputAudioUpdate = null);
         [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = null, BinaryData functionArgumentsUpdate = null);
-        public static StreamingChatOutputAudioUpdate StreamingChatOutputAudioUpdate(string id = null, DateTimeOffset? expiresAt = null, string transcriptUpdate = null, BinaryData dataUpdate = null);
+        public static StreamingChatOutputAudioUpdate StreamingChatOutputAudioUpdate(string id = null, DateTimeOffset? expiresAt = null, string transcriptUpdate = null, BinaryData audioBytesUpdate = null);
         public static StreamingChatToolCallUpdate StreamingChatToolCallUpdate(int index = 0, string toolCallId = null, ChatToolCallKind kind = ChatToolCallKind.Function, string functionName = null, BinaryData functionArgumentsUpdate = null);
     }
     public class StreamingChatCompletionUpdate : IJsonModel<StreamingChatCompletionUpdate>, IPersistableModel<StreamingChatCompletionUpdate> {

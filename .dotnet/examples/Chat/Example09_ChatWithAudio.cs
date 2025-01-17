@@ -26,6 +26,7 @@ public partial class ChatExamples
         // Output audio is requested by configuring AudioOptions on ChatCompletionOptions
         ChatCompletionOptions options = new()
         {
+            ContentModalities = ChatContentModalities.Text | ChatContentModalities.Audio,
             AudioOptions = new(ChatOutputAudioVoice.Alloy, ChatOutputAudioFormat.Mp3),
         };
 

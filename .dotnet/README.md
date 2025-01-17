@@ -382,30 +382,30 @@ List<ChatMessage> messages =
 // Output audio is requested by configuring AudioOptions on ChatCompletionOptions
 ChatCompletionOptions options = new()
 {
-    AudioOptions = new(ChatResponseVoice.Alloy, ChatOutputAudioFormat.Mp3),
+    AudioOptions = new(ChatOutputAudioVoice.Alloy, ChatOutputAudioFormat.Mp3),
 };
 
 ChatCompletion completion = client.CompleteChat(messages, options);
 
 void PrintAudioContent()
 {
-    if (completion.ResponseAudio is ChatResponseAudio responseAudio)
+    if (completion.OutputAudio is ChatOutputAudio outputAudio)
     {
-        Console.WriteLine($"Response audio transcript: {responseAudio.Transcript}");
-        string outputFilePath = $"{responseAudio.Id}.mp3";
+        Console.WriteLine($"Response audio transcript: {outputAudio.Transcript}");
+        string outputFilePath = $"{outputAudio.Id}.mp3";
         using (FileStream outputFileStream = File.OpenWrite(outputFilePath))
         {
-            outputFileStream.Write(responseAudio.Data);
+            outputFileStream.Write(outputAudio.Data);
         }
         Console.WriteLine($"Response audio written to file: {outputFilePath}");
-        Console.WriteLine($"Valid on followup requests until: {responseAudio.ExpiresAt}");
+        Console.WriteLine($"Valid on followup requests until: {outputAudio.ExpiresAt}");
     }
 }
 
 PrintAudioContent();
 
 // To refer to past audio output, create an assistant message from the earlier ChatCompletion or instantiate a
-// ChatResponseAudioReference(string) from the .Id of the completion's .ResponseAudio property.
+// ChatOutputAudioReference(string) from the .Id of the completion's .OutputAudio property.
 messages.Add(new AssistantChatMessage(completion));
 messages.Add("Can you say that like a pirate?");
 
@@ -414,8 +414,12 @@ completion = client.CompleteChat(messages, options);
 PrintAudioContent();
 ```
 
-Streaming is virtually identical: items in `StreamingChatCompletionUpdate.ContentUpdate` will provide incremental chunks of data via
-`AudioBytes` and `AudioTranscript`.
+Streaming is highly parallel: `StreamingChatCompletionUpdate` instances can include a `OutputAudioUpdate` that may
+contain any of:
+
+- The `Id` of the streamed audio content, which can be referenced by subsequent `AssistantChatMessage` instances via `ChatAudioReference` once the streaming response is complete; this may appear across multiple `StreamingChatCompletionUpdate` instances but will always be the same value when present
+- The `ExpiresAt` value that describes when the `Id` will no longer be valid for use with `ChatAudioReference` in subsequent requests; this typically appears once and only once, in the final `StreamingOutputAudioUpdate`
+- Incremental `TranscriptUpdate` and/or `DataUpdate` values, which can incrementally consumed and, when concatenated, form the complete audio transcript and audio output for the overall response; many of these typically appear
 
 ## How to generate text embeddings
 

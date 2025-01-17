@@ -7,11 +7,11 @@ using System.Collections.Generic;
 
 namespace OpenAI.Chat
 {
-    public partial class ChatResponseAudio
+    public partial class ChatOutputAudio
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatResponseAudio(string id, DateTimeOffset expiresAt, BinaryData data, string transcript)
+        internal ChatOutputAudio(string id, DateTimeOffset expiresAt, BinaryData data, string transcript)
         {
             Id = id;
             ExpiresAt = expiresAt;
@@ -19,7 +19,7 @@ namespace OpenAI.Chat
             Transcript = transcript;
         }
 
-        internal ChatResponseAudio(string id, DateTimeOffset expiresAt, BinaryData data, string transcript, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatOutputAudio(string id, DateTimeOffset expiresAt, BinaryData data, string transcript, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             ExpiresAt = expiresAt;

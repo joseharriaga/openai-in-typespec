@@ -4,28 +4,29 @@
 
 using System;
 using System.Collections.Generic;
-using OpenAI;
 
 namespace OpenAI.Chat
 {
-    public partial class ChatResponseAudioReference
+    public partial class StreamingChatOutputAudioUpdate
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public ChatResponseAudioReference(string id)
+        internal StreamingChatOutputAudioUpdate()
         {
-            Argument.AssertNotNull(id, nameof(id));
-
-            Id = id;
         }
 
-        internal ChatResponseAudioReference(string id, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal StreamingChatOutputAudioUpdate(string id, DateTimeOffset? expiresAt, string transcriptUpdate, BinaryData dataUpdate, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
+            ExpiresAt = expiresAt;
+            TranscriptUpdate = transcriptUpdate;
+            DataUpdate = dataUpdate;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public string Id { get; }
+
+        public DateTimeOffset? ExpiresAt { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

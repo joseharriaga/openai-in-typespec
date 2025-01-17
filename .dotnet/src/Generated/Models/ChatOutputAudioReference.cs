@@ -4,33 +4,28 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
-    internal partial class InternalChatCompletionMessageAudioChunk
+    public partial class ChatOutputAudioReference
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalChatCompletionMessageAudioChunk()
+        public ChatOutputAudioReference(string id)
         {
+            Argument.AssertNotNull(id, nameof(id));
+
+            Id = id;
         }
 
-        internal InternalChatCompletionMessageAudioChunk(string id, string transcript, BinaryData data, DateTimeOffset? expiresAt, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatOutputAudioReference(string id, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
-            Transcript = transcript;
-            Data = data;
-            ExpiresAt = expiresAt;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         public string Id { get; }
-
-        public string Transcript { get; }
-
-        public BinaryData Data { get; }
-
-        public DateTimeOffset? ExpiresAt { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

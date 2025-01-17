@@ -987,7 +987,7 @@ namespace OpenAI
             return new UserChatMessage(content, Chat.ChatMessageRole.User, additionalBinaryDataProperties: null, participantName);
         }
 
-        public static AssistantChatMessage AssistantChatMessage(ChatMessageContent content = default, string refusal = default, string participantName = default, IEnumerable<ChatToolCall> toolCalls = default, ChatFunctionCall functionCall = default, ChatResponseAudioReference responseAudioReference = default)
+        public static AssistantChatMessage AssistantChatMessage(ChatMessageContent content = default, string refusal = default, string participantName = default, IEnumerable<ChatToolCall> toolCalls = default, ChatFunctionCall functionCall = default, ChatOutputAudioReference outputAudioReference = default)
         {
             toolCalls ??= new ChangeTrackingList<ChatToolCall>();
 
@@ -999,13 +999,13 @@ namespace OpenAI
                 participantName,
                 toolCalls?.ToList(),
                 functionCall,
-                responseAudioReference);
+                outputAudioReference);
         }
 
-        public static ChatResponseAudioReference ChatResponseAudioReference(string id = default)
+        public static ChatOutputAudioReference ChatOutputAudioReference(string id = default)
         {
 
-            return new ChatResponseAudioReference(id, additionalBinaryDataProperties: null);
+            return new ChatOutputAudioReference(id, additionalBinaryDataProperties: null);
         }
 
         public static ChatToolCall ChatToolCall(string id = default, InternalChatCompletionMessageToolCallFunction function = default, Chat.ChatToolCallKind kind = default)
@@ -1032,10 +1032,10 @@ namespace OpenAI
             return new FunctionChatMessage(content, Chat.ChatMessageRole.Function, additionalBinaryDataProperties: null, functionName);
         }
 
-        public static ChatAudioOptions ChatAudioOptions(ChatResponseVoice responseVoice = default, ChatOutputAudioFormat outputAudioFormat = default)
+        public static ChatAudioOptions ChatAudioOptions(ChatOutputAudioVoice outputAudioVoice = default, ChatOutputAudioFormat outputAudioFormat = default)
         {
 
-            return new ChatAudioOptions(responseVoice, outputAudioFormat, additionalBinaryDataProperties: null);
+            return new ChatAudioOptions(outputAudioVoice, outputAudioFormat, additionalBinaryDataProperties: null);
         }
 
         public static ChatResponseFormat ChatResponseFormat(string @type = default)
@@ -1072,10 +1072,10 @@ namespace OpenAI
                 additionalBinaryDataProperties: null);
         }
 
-        public static ChatResponseAudio ChatResponseAudio(string id = default, DateTimeOffset expiresAt = default, BinaryData data = default, string transcript = default)
+        public static ChatOutputAudio ChatOutputAudio(string id = default, DateTimeOffset expiresAt = default, BinaryData data = default, string transcript = default)
         {
 
-            return new ChatResponseAudio(id, expiresAt, data, transcript, additionalBinaryDataProperties: null);
+            return new ChatOutputAudio(id, expiresAt, data, transcript, additionalBinaryDataProperties: null);
         }
 
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = default, float logProbability = default, ReadOnlyMemory<byte>? utf8Bytes = default, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = default)
@@ -1294,6 +1294,12 @@ namespace OpenAI
                 refusal,
                 inputAudio,
                 serializedAdditionalRawData: null);
+        }
+
+        public static StreamingChatOutputAudioUpdate StreamingChatOutputAudioUpdate(string id = default, DateTimeOffset? expiresAt = default, string transcriptUpdate = default, BinaryData dataUpdate = default)
+        {
+
+            return new StreamingChatOutputAudioUpdate(id, expiresAt, transcriptUpdate, dataUpdate, additionalBinaryDataProperties: null);
         }
 
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = default, BinaryData functionArgumentsUpdate = default)

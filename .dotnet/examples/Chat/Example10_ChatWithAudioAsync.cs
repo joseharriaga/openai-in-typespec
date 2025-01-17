@@ -16,7 +16,7 @@ public partial class ChatExamples
         ChatClient client = new("gpt-4o-audio-preview", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
         // Input audio is provided to a request by adding an audio content part to a user message
-        string audioFilePath = Path.Combine("Assets", "whats_the_weather_pcm16_24khz_mono.wav");
+        string audioFilePath = Path.Combine("Assets", "realtime_whats_the_weather_pcm16_24khz_mono.wav");
         byte[] audioFileRawBytes = await File.ReadAllBytesAsync(audioFilePath);
         BinaryData audioData = BinaryData.FromBytes(audioFileRawBytes);
         List<ChatMessage> messages =
@@ -27,23 +27,23 @@ public partial class ChatExamples
         // Output audio is requested by configuring AudioOptions on ChatCompletionOptions
         ChatCompletionOptions options = new()
         {
-            AudioOptions = new(ChatResponseVoice.Alloy, ChatOutputAudioFormat.Mp3),
+            AudioOptions = new(ChatOutputAudioVoice.Alloy, ChatOutputAudioFormat.Mp3),
         };
 
         ChatCompletion completion = await client.CompleteChatAsync(messages, options);
 
         async Task PrintAudioContentAsync()
         {
-            if (completion.ResponseAudio is ChatResponseAudio responseAudio)
+            if (completion.OutputAudio is ChatOutputAudio outputAudio)
             {
-                Console.WriteLine($"Response audio transcript: {responseAudio.Transcript}");
-                string outputFilePath = $"{responseAudio.Id}.mp3";
+                Console.WriteLine($"Response audio transcript: {outputAudio.Transcript}");
+                string outputFilePath = $"{outputAudio.Id}.mp3";
                 using (FileStream outputFileStream = File.OpenWrite(outputFilePath))
                 {
-                    await outputFileStream.WriteAsync(responseAudio.Data);
+                    await outputFileStream.WriteAsync(outputAudio.Data);
                 }
                 Console.WriteLine($"Response audio written to file: {outputFilePath}");
-                Console.WriteLine($"Valid on followup requests until: {responseAudio.ExpiresAt}");
+                Console.WriteLine($"Valid on followup requests until: {outputAudio.ExpiresAt}");
             }
         }
 

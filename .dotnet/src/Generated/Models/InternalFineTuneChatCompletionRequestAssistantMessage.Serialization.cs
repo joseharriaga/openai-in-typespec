@@ -57,7 +57,7 @@ namespace OpenAI.FineTuning
             string participantName = default;
             IList<ChatToolCall> toolCalls = default;
             ChatFunctionCall functionCall = default;
-            ChatResponseAudioReference responseAudioReference = default;
+            ChatOutputAudioReference outputAudioReference = default;
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("content"u8))
@@ -113,10 +113,10 @@ namespace OpenAI.FineTuning
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
-                        responseAudioReference = null;
+                        outputAudioReference = null;
                         continue;
                     }
-                    responseAudioReference = ChatResponseAudioReference.DeserializeChatResponseAudioReference(prop.Value, options);
+                    outputAudioReference = ChatOutputAudioReference.DeserializeChatOutputAudioReference(prop.Value, options);
                     continue;
                 }
                 if (true)
@@ -133,7 +133,7 @@ namespace OpenAI.FineTuning
                 participantName,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
                 functionCall,
-                responseAudioReference);
+                outputAudioReference);
         }
 
         BinaryData IPersistableModel<InternalFineTuneChatCompletionRequestAssistantMessage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

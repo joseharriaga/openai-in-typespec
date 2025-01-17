@@ -45,23 +45,23 @@ Update-In-File-With-Retry `
     -FilePath "$directory\InternalChatCompletionStreamResponseDelta.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalChatCompletionStreamResponseDelta\("
+        "    audio,"
         "    functionCall,"
         "    toolCalls \?\? new ChangeTrackingList<StreamingChatToolCallUpdate>\(\),"
         "    refusal,"
         "    role,"
         "    content,"
-        "    audio,"
         "    additionalBinaryDataProperties\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalChatCompletionStreamResponseDelta("
+        "    audio,"
         "    functionCall,"
         "    toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(),"
         "    refusal,"
         "    role,"
         "    content ?? new ChatMessageContent(),"
-        "    audio,"
         "    additionalBinaryDataProperties);"
     ) `
     -OutputIndentation 12 `
@@ -90,7 +90,7 @@ Update-In-File-With-Retry `
         "    participantName,"
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
         "    functionCall,"
-        "    responseAudioReference\);"
+        "    outputAudioReference\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
@@ -102,7 +102,7 @@ Update-In-File-With-Retry `
         "    participantName,"
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
         "    functionCall,"
-        "    responseAudioReference);"
+        "    outputAudioReference);"
     ) `
     -OutputIndentation 12 `
     -RequirePresence
@@ -178,7 +178,7 @@ Update-In-File-With-Retry `
         "    participantName,"
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
         "    functionCall,"
-        "    responseAudioReference\);"
+        "    outputAudioReference\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
@@ -190,7 +190,7 @@ Update-In-File-With-Retry `
         "    participantName,"
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
         "    functionCall,"
-        "    responseAudioReference);"
+        "    outputAudioReference);"
     ) `
     -OutputIndentation 12 `
     -RequirePresence

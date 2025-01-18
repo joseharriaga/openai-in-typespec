@@ -23,10 +23,11 @@ public partial class ChatExamples
                 new UserChatMessage(ChatMessageContentPart.CreateInputAudioPart(audioData, ChatInputAudioFormat.Wav)),
             ];
 
-        // Output audio is requested by configuring AudioOptions on ChatCompletionOptions
+        // Output audio is requested by configuring ChatCompletionOptions to include the appropriate
+        // ResponseModalities values and corresponding AudioOptions.
         ChatCompletionOptions options = new()
         {
-            ContentModalities = ChatContentModalities.Text | ChatContentModalities.Audio,
+            ResponseModalities = ChatResponseModalities.Text | ChatResponseModalities.Audio,
             AudioOptions = new(ChatOutputAudioVoice.Alloy, ChatOutputAudioFormat.Mp3),
         };
 

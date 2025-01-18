@@ -181,10 +181,18 @@ public partial class ChatCompletionOptions
     [CodeGenMember("Modalities")]
     private IList<InternalCreateChatCompletionRequestModality> _internalModalities = new ChangeTrackingList<InternalCreateChatCompletionRequestModality>();
 
-    public ChatContentModalities ContentModalities
+    /// <summary>
+    /// Specifies the content types that the model should generate in its responses.
+    /// </summary>
+    /// <remarks>
+    /// Most models can generate text and the default <c>["text"]</c> value, from <c><see cref="ChatResponseModalities.Text"/></c>, requests this.
+    /// Some models like <c>gpt-4o-audio-preview</c> can also generate audio, and this can be requested by combining <c>["text","audio"]</c> via
+    /// the flags <c><see cref="ChatResponseModalities.Text"/> | <see cref="ChatResponseModalities.Audio"/></c>.
+    /// </remarks>
+    public ChatResponseModalities? ResponseModalities
     {
         get => ChatContentModalitiesExtensions.FromInternalModalities(_internalModalities);
-        set => _internalModalities = value.ToInternalModalities();
+        set => _internalModalities = value?.ToInternalModalities();
     }
 
     // CUSTOM: supplemented with custom setter to internally enable audio output via modalities.

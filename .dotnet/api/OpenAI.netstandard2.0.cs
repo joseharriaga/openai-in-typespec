@@ -1197,7 +1197,6 @@ namespace OpenAI.Chat {
     public class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>, IPersistableModel<ChatCompletionOptions> {
         public bool? AllowParallelToolCalls { get; set; }
         public ChatAudioOptions AudioOptions { get; set; }
-        public ChatContentModalities ContentModalities { get; set; }
         public string EndUserId { get; set; }
         public float? FrequencyPenalty { get; set; }
         [Obsolete("This property is obsolete. Please use ToolChoice instead.")]
@@ -1210,6 +1209,7 @@ namespace OpenAI.Chat {
         public IDictionary<string, string> Metadata { get; }
         public float? PresencePenalty { get; set; }
         public ChatResponseFormat ResponseFormat { get; set; }
+        public ChatResponseModalities? ResponseModalities { get; set; }
         public long? Seed { get; set; }
         public IList<string> StopSequences { get; }
         public bool? StoredOutputEnabled { get; set; }
@@ -1220,11 +1220,6 @@ namespace OpenAI.Chat {
         public float? TopP { get; set; }
         public static explicit operator ChatCompletionOptions(ClientResult result);
         public static implicit operator BinaryContent(ChatCompletionOptions chatCompletionOptions);
-    }
-    [Flags]
-    public enum ChatContentModalities {
-        Text = 1,
-        Audio = 2
     }
     public enum ChatFinishReason {
         Stop = 0,
@@ -1335,7 +1330,7 @@ namespace OpenAI.Chat {
         public string Text { get; }
         public static ChatMessageContentPart CreateImagePart(BinaryData imageBytes, string imageBytesMediaType, ChatImageDetailLevel? imageDetailLevel = null);
         public static ChatMessageContentPart CreateImagePart(Uri imageUri, ChatImageDetailLevel? imageDetailLevel = null);
-        public static ChatMessageContentPart CreateInputAudioPart(BinaryData audioBytes, ChatInputAudioFormat audioFormat);
+        public static ChatMessageContentPart CreateInputAudioPart(BinaryData inputAudioBytes, ChatInputAudioFormat inputAudioFormat);
         public static ChatMessageContentPart CreateRefusalPart(string refusal);
         public static ChatMessageContentPart CreateTextPart(string text);
         public static explicit operator ChatMessageContentPart(ClientResult result);
@@ -1416,6 +1411,11 @@ namespace OpenAI.Chat {
         public static ChatResponseFormat CreateTextFormat();
         public static explicit operator ChatResponseFormat(ClientResult result);
         public static implicit operator BinaryContent(ChatResponseFormat chatResponseFormat);
+    }
+    [Flags]
+    public enum ChatResponseModalities {
+        Text = 1,
+        Audio = 2
     }
     public class ChatTokenLogProbabilityDetails : IJsonModel<ChatTokenLogProbabilityDetails>, IPersistableModel<ChatTokenLogProbabilityDetails> {
         public float LogProbability { get; }

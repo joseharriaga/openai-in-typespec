@@ -5,7 +5,7 @@
 ### Features added
 
 - Chat completion now supports audio input and output!
-  - To configure a chat completion to request audio output using the `gpt-4o-audio-preview` model, use `ChatContentModalities.Text | ChatContentModalities.Audio` as the value for `ChatCompletionOptions.ContentModalities` and create a `ChatAudioOptions` instance for `ChatCompletionOptions.AudioOptions`.
+  - To configure a chat completion to request audio output using the `gpt-4o-audio-preview` model, use `ChatResponseModalities.Text | ChatResponseModalities.Audio` as the value for `ChatCompletionOptions.ResponseModalities` and create a `ChatAudioOptions` instance for `ChatCompletionOptions.AudioOptions`.
   - Input chat audio is provided to `UserChatMessage` instances using `ChatContentPart.CreateInputAudioPart()`
   - Output chat audio is provided on the `OutputAudio` property of `ChatCompletion`
   - References to prior assistant audio are provided via `OutputAudioReference` instances on the `AudioReference` property of `AssistantChatMessage`; `AssistantChatMessage(chatCompletion)` will automatically handle this, too

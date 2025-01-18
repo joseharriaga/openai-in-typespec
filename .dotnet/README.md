@@ -371,7 +371,7 @@ This example demonstrates:
 ChatClient client = new("gpt-4o-audio-preview", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
 // Input audio is provided to a request by adding an audio content part to a user message
-string audioFilePath = Path.Combine("Assets", "whats_the_weather_pcm16_24khz_mono.wav");
+string audioFilePath = Path.Combine("Assets", "realtime_whats_the_weather_pcm16_24khz_mono.wav");
 byte[] audioFileRawBytes = File.ReadAllBytes(audioFilePath);
 BinaryData audioData = BinaryData.FromBytes(audioFileRawBytes);
 List<ChatMessage> messages =
@@ -379,10 +379,11 @@ List<ChatMessage> messages =
         new UserChatMessage(ChatMessageContentPart.CreateInputAudioPart(audioData, ChatInputAudioFormat.Wav)),
     ];
 
-// Output audio is requested by configuring AudioOptions on ChatCompletionOptions
+// Output audio is requested by configuring ChatCompletionOptions to include the appropriate
+// ResponseModalities values and corresponding AudioOptions.
 ChatCompletionOptions options = new()
 {
-    ContentModalities = ChatContentModalities.Text | ChatContentModalities.Audio,
+    ResponseModalities = ChatResponseModalities.Text | ChatResponseModalities.Audio,
     AudioOptions = new(ChatOutputAudioVoice.Alloy, ChatOutputAudioFormat.Mp3),
 };
 
@@ -405,8 +406,9 @@ void PrintAudioContent()
 
 PrintAudioContent();
 
-// To refer to past audio output, create an assistant message from the earlier ChatCompletion or instantiate a
-// ChatOutputAudioReference(string) from the .Id of the completion's .OutputAudio property.
+// To refer to past audio output, create an assistant message from the earlier ChatCompletion, use the earlier
+// response content part, or use ChatMessageContentPart.CreateAudioPart(string) to manually instantiate a part.
+
 messages.Add(new AssistantChatMessage(completion));
 messages.Add("Can you say that like a pirate?");
 

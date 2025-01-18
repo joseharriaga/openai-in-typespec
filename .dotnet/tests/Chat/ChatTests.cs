@@ -386,7 +386,7 @@ public class ChatTests : SyncAsyncTestBase
 
         ChatCompletionOptions options = new()
         {
-            ContentModalities = ChatContentModalities.Text | ChatContentModalities.Audio,
+            ResponseModalities = ChatResponseModalities.Text | ChatResponseModalities.Audio,
             AudioOptions = new(ChatOutputAudioVoice.Alloy, ChatOutputAudioFormat.Pcm16)
         };
 

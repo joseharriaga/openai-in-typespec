@@ -173,15 +173,15 @@ public partial class ChatMessageContentPart
     /// Binary audio content parts may only be used with <see cref="UserChatMessage"/> instances to represent user audio input. When referring to
     /// past audio output from the model, use <see cref="ChatOutputAudioReference(string)"/> instead.
     /// </remarks>
-    /// <param name="audioBytes"> The audio data. </param>
-    /// <param name="audioFormat"> The format of the audio data. </param>
-    public static ChatMessageContentPart CreateInputAudioPart(BinaryData audioBytes, ChatInputAudioFormat audioFormat)
+    /// <param name="inputAudioBytes"> The audio data. </param>
+    /// <param name="inputAudioFormat"> The format of the audio data. </param>
+    public static ChatMessageContentPart CreateInputAudioPart(BinaryData inputAudioBytes, ChatInputAudioFormat inputAudioFormat)
     {
-        Argument.AssertNotNull(audioBytes, nameof(audioBytes));
+        Argument.AssertNotNull(inputAudioBytes, nameof(inputAudioBytes));
 
         return new ChatMessageContentPart(
             kind: ChatMessageContentPartKind.InputAudio,
-            inputAudio: new(audioBytes, audioFormat));
+            inputAudio: new(inputAudioBytes, inputAudioFormat));
     }
 
     /// <summary>

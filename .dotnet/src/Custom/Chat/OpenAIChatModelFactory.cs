@@ -126,13 +126,13 @@ public static partial class OpenAIChatModelFactory
             additionalBinaryDataProperties: null);
     }
 
-    public static ChatOutputAudio ChatOutputAudio(BinaryData data, string id = null, string transcript = null, DateTimeOffset expiresAt = default)
+    public static ChatOutputAudio ChatOutputAudio(BinaryData audioBytes, string id = null, string transcript = null, DateTimeOffset expiresAt = default)
     {
         return new ChatOutputAudio(
             id,
             expiresAt,
-            data,
             transcript,
+            audioBytes,
             additionalBinaryDataProperties: null);
     }
 
@@ -211,19 +211,19 @@ public static partial class OpenAIChatModelFactory
     /// <param name="id"></param>
     /// <param name="expiresAt"></param>
     /// <param name="transcriptUpdate"></param>
-    /// <param name="dataUpdate"></param>
+    /// <param name="audioBytesUpdate"></param>
     /// <returns></returns>
     public static StreamingChatOutputAudioUpdate StreamingChatOutputAudioUpdate(
         string id = null,
         DateTimeOffset? expiresAt = null,
         string transcriptUpdate = null,
-        BinaryData dataUpdate = null)
+        BinaryData audioBytesUpdate = null)
     {
         return new StreamingChatOutputAudioUpdate(
             id,
             expiresAt,
             transcriptUpdate,
-            dataUpdate,
+            audioBytesUpdate,
             additionalBinaryDataProperties: null);
     }
 

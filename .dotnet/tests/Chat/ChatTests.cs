@@ -386,6 +386,7 @@ public class ChatTests : SyncAsyncTestBase
 
         ChatCompletionOptions options = new()
         {
+            ResponseModalities = ChatResponseModalities.Text | ChatResponseModalities.Audio,
             AudioOptions = new(ChatOutputAudioVoice.Alloy, ChatOutputAudioFormat.Pcm16)
         };
 
@@ -396,7 +397,7 @@ public class ChatTests : SyncAsyncTestBase
         ChatOutputAudio outputAudio = completion.OutputAudio;
         Assert.That(outputAudio, Is.Not.Null);
         Assert.That(outputAudio.Id, Is.Not.Null.And.Not.Empty);
-        Assert.That(outputAudio.Data, Is.Not.Null);
+        Assert.That(outputAudio.AudioBytes, Is.Not.Null);
         Assert.That(outputAudio.Transcript, Is.Not.Null.And.Not.Empty);
 
         AssistantChatMessage audioHistoryMessage = ChatMessage.CreateAssistantMessage(completion);
@@ -438,7 +439,7 @@ public class ChatTests : SyncAsyncTestBase
                     streamedExpiresAt = outputAudioUpdate.ExpiresAt;
                 }
                 streamedTranscriptBuilder.Append(outputAudioUpdate.TranscriptUpdate);
-                outputAudioStream.Write(outputAudioUpdate.DataUpdate);
+                outputAudioStream.Write(outputAudioUpdate.AudioBytesUpdate);
             }
         }
         Assert.That(streamedCorrelationId, Is.Not.Null.And.Not.Empty);

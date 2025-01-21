@@ -544,7 +544,7 @@ public class ChatSmokeTests : SyncAsyncTestBase
         BinaryData serializedInputAudioContentPart = ModelReaderWriter.Write(inputAudioContentPart);
         Assert.That(serializedInputAudioContentPart.ToString(), Does.Contain(@"""format"":""mp3"""));
         ChatMessageContentPart deserializedInputAudioContentPart = ModelReaderWriter.Read<ChatMessageContentPart>(serializedInputAudioContentPart);
-        Assert.That(deserializedInputAudioContentPart.AudioBytes.ToArray()[1], Is.EqualTo(0x2));
+        Assert.That(deserializedInputAudioContentPart.InputAudioBytes.ToArray()[1], Is.EqualTo(0x2));
 
         AssistantChatMessage message = ModelReaderWriter.Read<AssistantChatMessage>(BinaryData.FromBytes("""
             {
@@ -615,7 +615,7 @@ public class ChatSmokeTests : SyncAsyncTestBase
         Assert.That(audioCompletion.Content, Has.Count.EqualTo(0));
         Assert.That(audioCompletion.OutputAudio, Is.Not.Null);
         Assert.That(audioCompletion.OutputAudio.Id, Is.EqualTo("audio_6725224ac62481908ab55dc283289d87"));
-        Assert.That(audioCompletion.OutputAudio.Data, Is.Not.Null);
+        Assert.That(audioCompletion.OutputAudio.AudioBytes, Is.Not.Null);
         Assert.That(audioCompletion.OutputAudio.Transcript, Is.Not.Null.And.Not.Empty);
         
         AssistantChatMessage audioHistoryMessage = new(audioCompletion);

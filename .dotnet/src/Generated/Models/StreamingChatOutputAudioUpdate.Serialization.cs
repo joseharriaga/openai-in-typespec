@@ -42,10 +42,10 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("transcript"u8);
                 writer.WriteStringValue(TranscriptUpdate);
             }
-            if (Optional.IsDefined(DataUpdate) && _additionalBinaryDataProperties?.ContainsKey("data") != true)
+            if (Optional.IsDefined(AudioBytesUpdate) && _additionalBinaryDataProperties?.ContainsKey("data") != true)
             {
                 writer.WritePropertyName("data"u8);
-                writer.WriteBase64StringValue(DataUpdate.ToArray(), "D");
+                writer.WriteBase64StringValue(AudioBytesUpdate.ToArray(), "D");
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -90,7 +90,7 @@ namespace OpenAI.Chat
             string id = default;
             DateTimeOffset? expiresAt = default;
             string transcriptUpdate = default;
-            BinaryData dataUpdate = default;
+            BinaryData audioBytesUpdate = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -119,7 +119,7 @@ namespace OpenAI.Chat
                     {
                         continue;
                     }
-                    dataUpdate = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
+                    audioBytesUpdate = BinaryData.FromBytes(prop.Value.GetBytesFromBase64("D"));
                     continue;
                 }
                 if (true)
@@ -127,7 +127,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new StreamingChatOutputAudioUpdate(id, expiresAt, transcriptUpdate, dataUpdate, additionalBinaryDataProperties);
+            return new StreamingChatOutputAudioUpdate(id, expiresAt, transcriptUpdate, audioBytesUpdate, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<StreamingChatOutputAudioUpdate>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

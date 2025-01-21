@@ -1072,10 +1072,10 @@ namespace OpenAI
                 additionalBinaryDataProperties: null);
         }
 
-        public static ChatOutputAudio ChatOutputAudio(string id = default, DateTimeOffset expiresAt = default, BinaryData data = default, string transcript = default)
+        public static ChatOutputAudio ChatOutputAudio(string id = default, DateTimeOffset expiresAt = default, string transcript = default, BinaryData audioBytes = default)
         {
 
-            return new ChatOutputAudio(id, expiresAt, data, transcript, additionalBinaryDataProperties: null);
+            return new ChatOutputAudio(id, expiresAt, transcript, audioBytes, additionalBinaryDataProperties: null);
         }
 
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = default, float logProbability = default, ReadOnlyMemory<byte>? utf8Bytes = default, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = default)
@@ -1296,10 +1296,10 @@ namespace OpenAI
                 serializedAdditionalRawData: null);
         }
 
-        public static StreamingChatOutputAudioUpdate StreamingChatOutputAudioUpdate(string id = default, DateTimeOffset? expiresAt = default, string transcriptUpdate = default, BinaryData dataUpdate = default)
+        public static StreamingChatOutputAudioUpdate StreamingChatOutputAudioUpdate(string id = default, DateTimeOffset? expiresAt = default, string transcriptUpdate = default, BinaryData audioBytesUpdate = default)
         {
 
-            return new StreamingChatOutputAudioUpdate(id, expiresAt, transcriptUpdate, dataUpdate, additionalBinaryDataProperties: null);
+            return new StreamingChatOutputAudioUpdate(id, expiresAt, transcriptUpdate, audioBytesUpdate, additionalBinaryDataProperties: null);
         }
 
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = default, BinaryData functionArgumentsUpdate = default)

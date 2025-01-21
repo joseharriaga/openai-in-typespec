@@ -23,9 +23,11 @@ public partial class ChatExamples
                 new UserChatMessage(ChatMessageContentPart.CreateInputAudioPart(audioData, ChatInputAudioFormat.Wav)),
             ];
 
-        // Output audio is requested by configuring AudioOptions on ChatCompletionOptions
+        // Output audio is requested by configuring ChatCompletionOptions to include the appropriate
+        // ResponseModalities values and corresponding AudioOptions.
         ChatCompletionOptions options = new()
         {
+            ResponseModalities = ChatResponseModalities.Text | ChatResponseModalities.Audio,
             AudioOptions = new(ChatOutputAudioVoice.Alloy, ChatOutputAudioFormat.Mp3),
         };
 
@@ -39,7 +41,7 @@ public partial class ChatExamples
                 string outputFilePath = $"{outputAudio.Id}.mp3";
                 using (FileStream outputFileStream = File.OpenWrite(outputFilePath))
                 {
-                    outputFileStream.Write(outputAudio.Data);
+                    outputFileStream.Write(outputAudio.AudioBytes);
                 }
                 Console.WriteLine($"Response audio written to file: {outputFilePath}");
                 Console.WriteLine($"Valid on followup requests until: {outputAudio.ExpiresAt}");

@@ -14,15 +14,17 @@ namespace OpenAI.Chat;
 [CodeGenModel("CreateChatCompletionRequestAudio")]
 public partial class ChatAudioOptions
 {
+    // CUSTOM: Renamed.
     /// <summary>
     /// Gets or sets the voice model that the response should use to synthesize audio.
     /// </summary>
     [CodeGenMember("Voice")]
-    public ChatOutputAudioVoice OutputAudioVoice { get; set; }
+    public ChatOutputAudioVoice OutputAudioVoice { get; }
 
+    // CUSTOM: Renamed.
     /// <summary>
     /// Specifies the output format desired for synthesized audio.
     /// </summary>
     [CodeGenMember("Format")]
-    public ChatOutputAudioFormat OutputAudioFormat { get; set; }
+    public ChatOutputAudioFormat OutputAudioFormat { get; }
 }

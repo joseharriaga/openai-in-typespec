@@ -371,17 +371,19 @@ This example demonstrates:
 ChatClient client = new("gpt-4o-audio-preview", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
 // Input audio is provided to a request by adding an audio content part to a user message
-string audioFilePath = Path.Combine("Assets", "whats_the_weather_pcm16_24khz_mono.wav");
+string audioFilePath = Path.Combine("Assets", "realtime_whats_the_weather_pcm16_24khz_mono.wav");
 byte[] audioFileRawBytes = File.ReadAllBytes(audioFilePath);
 BinaryData audioData = BinaryData.FromBytes(audioFileRawBytes);
 List<ChatMessage> messages =
     [
-        new UserChatMessage(ChatMessageContentPart.CreateAudioPart(audioData, ChatInputAudioFormat.Wav)),
+        new UserChatMessage(ChatMessageContentPart.CreateInputAudioPart(audioData, ChatInputAudioFormat.Wav)),
     ];
 
-// Output audio is requested by configuring AudioOptions on ChatCompletionOptions
+// Output audio is requested by configuring ChatCompletionOptions to include the appropriate
+// ResponseModalities values and corresponding AudioOptions.
 ChatCompletionOptions options = new()
 {
+    ResponseModalities = ChatResponseModalities.Text | ChatResponseModalities.Audio,
     AudioOptions = new(ChatOutputAudioVoice.Alloy, ChatOutputAudioFormat.Mp3),
 };
 
@@ -395,7 +397,7 @@ void PrintAudioContent()
         string outputFilePath = $"{outputAudio.Id}.mp3";
         using (FileStream outputFileStream = File.OpenWrite(outputFilePath))
         {
-            outputFileStream.Write(outputAudio.Data);
+            outputFileStream.Write(outputAudio.AudioBytes);
         }
         Console.WriteLine($"Response audio written to file: {outputFilePath}");
         Console.WriteLine($"Valid on followup requests until: {outputAudio.ExpiresAt}");
@@ -404,8 +406,9 @@ void PrintAudioContent()
 
 PrintAudioContent();
 
-// To refer to past audio output, create an assistant message from the earlier ChatCompletion or instantiate a
-// ChatOutputAudioReference(string) from the .Id of the completion's .OutputAudio property.
+// To refer to past audio output, create an assistant message from the earlier ChatCompletion, use the earlier
+// response content part, or use ChatMessageContentPart.CreateAudioPart(string) to manually instantiate a part.
+
 messages.Add(new AssistantChatMessage(completion));
 messages.Add("Can you say that like a pirate?");
 
@@ -419,7 +422,7 @@ contain any of:
 
 - The `Id` of the streamed audio content, which can be referenced by subsequent `AssistantChatMessage` instances via `ChatAudioReference` once the streaming response is complete; this may appear across multiple `StreamingChatCompletionUpdate` instances but will always be the same value when present
 - The `ExpiresAt` value that describes when the `Id` will no longer be valid for use with `ChatAudioReference` in subsequent requests; this typically appears once and only once, in the final `StreamingOutputAudioUpdate`
-- Incremental `TranscriptUpdate` and/or `DataUpdate` values, which can incrementally consumed and, when concatenated, form the complete audio transcript and audio output for the overall response; many of these typically appear
+- Incremental `TranscriptUpdate` and/or `AudioBytesUpdate` values, which can incrementally consumed and, when concatenated, form the complete audio transcript and audio output for the overall response; many of these typically appear
 
 ## How to generate text embeddings
 

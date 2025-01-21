@@ -37,7 +37,7 @@ public class ConversationTests : ConversationTestFixtureBase
         };
 
         await session.ConfigureSessionAsync(sessionOptions, CancellationToken);
-        ConversationSessionOptions responseOverrideOptions = new()
+        ConversationResponseOptions responseOverrideOptions = new()
         {
             ContentModalities = ConversationContentModalities.Text,
         };
@@ -385,6 +385,79 @@ public class ConversationTests : ConversationTestFixtureBase
                 break;
             }
         }
+    }
+
+    [Test]
+    public async Task CanUseManualVadTurnDetection()
+    {
+        RealtimeConversationClient client = GetTestClient();
+        using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
+
+        await session.ConfigureSessionAsync(
+            new()
+            {
+                InputTranscriptionOptions = new ConversationInputTranscriptionOptions()
+                {
+                    Model = "whisper-1",
+                },
+                TurnDetectionOptions = ConversationTurnDetectionOptions.CreateServerVoiceActivityTurnDetectionOptions(
+                    enableAutomaticResponseCreation: false),
+            },
+            CancellationToken);
+
+        const string folderName = "Assets";
+        const string fileName = "whats_the_weather_pcm16_24khz_mono.wav";
+#if NET6_0_OR_GREATER
+        using Stream audioStream = File.OpenRead(Path.Join(folderName, fileName));
+#else
+        using Stream audioStream = File.OpenRead($"{folderName}\\{fileName}");
+#endif
+        await session.SendInputAudioAsync(audioStream, CancellationToken);
+
+        bool gotInputTranscriptionCompleted = false;
+        bool responseExpected = false;
+        bool gotResponseStarted = false;
+        bool gotResponseFinished = false;
+
+        await foreach (ConversationUpdate update in session.ReceiveUpdatesAsync(CancellationToken))
+        {
+            if (update is ConversationErrorUpdate errorUpdate)
+            {
+                Assert.Fail($"Error received: {ModelReaderWriter.Write(errorUpdate)}");
+            }
+
+            if (update is ConversationInputTranscriptionFinishedUpdate inputTranscriptionFinishedUpdate)
+            {
+                Assert.That(gotInputTranscriptionCompleted, Is.False);
+                Assert.That(inputTranscriptionFinishedUpdate.Transcript, Is.Not.Null.And.Not.Empty);
+                gotInputTranscriptionCompleted = true;
+                await Task.Delay(TimeSpan.FromMilliseconds(500), CancellationToken);
+                await session.StartResponseAsync(CancellationToken);
+                responseExpected = true;
+            }
+
+            if (update is ConversationResponseStartedUpdate responseStartedUpdate)
+            {
+                Assert.That(responseExpected, Is.True);
+                Assert.That(gotInputTranscriptionCompleted, Is.True);
+                Assert.That(gotResponseFinished, Is.False);
+                gotResponseStarted = true;
+            }
+
+            if (update is ConversationResponseFinishedUpdate responseFinishedUpdate)
+            {
+                Assert.That(responseExpected, Is.True);
+                Assert.That(gotInputTranscriptionCompleted, Is.True);
+                Assert.That(gotResponseStarted, Is.True);
+                Assert.That(gotResponseFinished, Is.False);
+                gotResponseFinished = true;
+                break;
+            }
+        }
+
+        Assert.IsTrue(gotInputTranscriptionCompleted);
+        Assert.IsTrue(gotResponseStarted);
+        Assert.IsTrue(gotResponseFinished);
     }
 
     [Test]

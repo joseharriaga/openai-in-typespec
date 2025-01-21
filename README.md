@@ -5,9 +5,9 @@ https://dev.azure.com/project-argos/Sorento/_wiki/wikis/Sorento.wiki/3021/Genera
 
 Snapshot: https://project-argos@dev.azure.com/project-argos/Sorento/_git/export-api
 ```
-commit 2b12183ef3a0ddd81b3b4f51c201479183b34788 (HEAD -> main, origin/main)
+commit 41af04dc4767cfd11ca4fbc7edf2e5a67a564440 (HEAD -> main, origin/main)
 Author: Git-Mirror-Tool Synchronizer <git-sync-vm-umi@microsoft.com>
-Date:   Mon Jan 6 22:44:48 2025 +0000
+Date:   Mon Jan 13 22:49:02 2025 +0000
 ```
 
 Ingestion tool: https://project-argos@dev.azure.com/project-argos/Sorento/_git/sdk

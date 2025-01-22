@@ -59,6 +59,7 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
             ServiceVersion.V2024_09_01_Preview => "2024-09-01-preview",
             ServiceVersion.V2024_10_01_Preview => "2024-10-01-preview",
             ServiceVersion.V2024_12_01_Preview => "2024-12-01-preview",
+            ServiceVersion.V2025_01_01_Preview => "2025-01-01-preview",
 #endif
             ServiceVersion.V2024_06_01 => "2024-06-01",
             ServiceVersion.V2024_10_21 => "2024-10-21",
@@ -79,6 +80,7 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
         V2024_10_21 = 4,
 #if !AZURE_OPENAI_GA
         V2024_12_01_Preview = 5,
+        V2025_01_01_Preview = 6,
 #endif
     }
 
@@ -111,7 +113,7 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
     }
 
 #if !AZURE_OPENAI_GA
-    private const ServiceVersion LatestVersion = ServiceVersion.V2024_12_01_Preview;
+    private const ServiceVersion LatestVersion = ServiceVersion.V2025_01_01_Preview;
 #else
     private const ServiceVersion LatestVersion = ServiceVersion.V2024_10_21;
 #endif

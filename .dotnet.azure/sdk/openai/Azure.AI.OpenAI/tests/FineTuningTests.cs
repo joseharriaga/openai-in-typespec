@@ -41,9 +41,17 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     public void CanCreateClient() => Assert.That(GetTestClient(), Is.InstanceOf<FineTuningClient>());
 
     [RecordedTest]
-    public async Task JobsFineTuning()
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
+    public async Task JobsFineTuning(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        FineTuningClient client = GetTestClient();
+        FineTuningClient client = GetTestClient(GetTestClientOptions(version));
 
         int count = 25;
 
@@ -63,10 +71,18 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
-    public async Task CheckpointsFineTuning()
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
+    public async Task CheckpointsFineTuning(AzureOpenAIClientOptions.ServiceVersion? version)
     {
+        FineTuningClient client = GetTestClient(GetTestClientOptions(version));
         string fineTunedModel = GetFineTunedModel();
-        FineTuningClient client = GetTestClient();
 
         // Check if the model exists by searching all jobs
         FineTuningJob job = await EnumerateJobsAsync(client)
@@ -100,10 +116,18 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
-    public async Task EventsFineTuning()
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
+    public async Task EventsFineTuning(AzureOpenAIClientOptions.ServiceVersion? version)
     {
+        FineTuningClient client = GetTestClient(GetTestClientOptions(version));
         string fineTunedModel = GetFineTunedModel();
-        FineTuningClient client = GetTestClient();
 
         // Check if the model exists by searching all jobs
         FineTuningJob job = await EnumerateJobsAsync(client)
@@ -138,11 +162,19 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
-    public async Task CreateAndCancelFineTuning()
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
+    public async Task CreateAndCancelFineTuning(AzureOpenAIClientOptions.ServiceVersion? version)
     {
+        FineTuningClient client = GetTestClient(GetTestClientOptions(version));
         var fineTuningFile = Assets.FineTuning;
 
-        FineTuningClient client = GetTestClient();
         OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(client);
 
         OpenAIFile uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
@@ -200,11 +232,18 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
-    public async Task CreateAndDeleteFineTuning()
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
+    public async Task CreateAndDeleteFineTuning(AzureOpenAIClientOptions.ServiceVersion? version)
     {
+        FineTuningClient client = GetTestClient(GetTestClientOptions(version));
         var fineTuningFile = Assets.FineTuning;
-
-        FineTuningClient client = GetTestClient();
         OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(client);
         OpenAIFile uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, fineTuningFile.RelativePath);
 
@@ -237,12 +276,20 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
         Assert.True(deleted, "Failed to delete fine tuning model: {0}", job.FineTunedModel);
     }
 
-    [RecordedTest]//AutomaticRecord = false)]
+    [RecordedTest]
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
     [Category("LongRunning")] // CAUTION: This test can take around 10 to 15 *minutes* in live mode to run
-    public async Task DeployAndChatWithModel()
+    public async Task DeployAndChatWithModel(AzureOpenAIClientOptions.ServiceVersion? version)
     {
+        FineTuningClient client = GetTestClient(GetTestClientOptions(version));
         string fineTunedModel = GetFineTunedModel();
-        FineTuningClient client = GetTestClient();
 
         AzureDeploymentClient deploymentClient = GetTestClientFrom<AzureDeploymentClient>(client);
         string? deploymentName = null;
@@ -315,6 +362,17 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     #region helper methods
+
+    private TestClientOptions GetTestClientOptions(AzureOpenAIClientOptions.ServiceVersion? version)
+    {
+#if !AZURE_OPENAI_GA
+        if (version != AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)
+        {
+            Assert.Inconclusive("fine tuning is not yet fully supported after 2024-10-01-preview");
+        }
+#endif
+        return version is null ? new TestClientOptions() : new TestClientOptions(version.Value);
+    }
 
     private string GetFineTunedModel()
     {

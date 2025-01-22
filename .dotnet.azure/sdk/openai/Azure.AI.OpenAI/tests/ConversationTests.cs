@@ -23,9 +23,13 @@ public class ConversationTests : ConversationTestFixtureBase
 
 #if !AZURE_OPENAI_GA
     [Test]
-    public async Task CanConfigureSession()
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    [TestCase(null)]
+    public async Task CanConfigureSession(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        RealtimeConversationClient client = GetTestClient();
+        RealtimeConversationClient client = GetTestClient(GetTestClientOptions(version));
         using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
 
         ConversationSessionOptions sessionOptions = new()
@@ -91,9 +95,13 @@ public class ConversationTests : ConversationTestFixtureBase
     }
 
     [Test]
-    public async Task TextOnlyWorks()
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    [TestCase(null)]
+    public async Task TextOnlyWorks(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        RealtimeConversationClient client = GetTestClient();
+        RealtimeConversationClient client = GetTestClient(GetTestClientOptions(version));
         using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
         await session.AddItemAsync(
             ConversationItem.CreateUserMessage(["Hello, world!"]),
@@ -166,9 +174,13 @@ public class ConversationTests : ConversationTestFixtureBase
     }
 
     [Test]
-    public async Task ItemManipulationWorks()
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    [TestCase(null)]
+    public async Task ItemManipulationWorks(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        RealtimeConversationClient client = GetTestClient();
+        RealtimeConversationClient client = GetTestClient(GetTestClientOptions(version));
         using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
 
         await session.ConfigureSessionAsync(
@@ -241,9 +253,13 @@ public class ConversationTests : ConversationTestFixtureBase
     }
 
     [Test]
-    public async Task AudioWithToolsWorks()
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    [TestCase(null)]
+    public async Task AudioWithToolsWorks(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        RealtimeConversationClient client = GetTestClient();
+        RealtimeConversationClient client = GetTestClient(GetTestClientOptions(version));
         using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
 
         ConversationFunctionTool getWeatherTool = new()
@@ -339,9 +355,13 @@ public class ConversationTests : ConversationTestFixtureBase
     }
 
     [Test]
-    public async Task CanDisableVoiceActivityDetection()
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    [TestCase(null)]
+    public async Task CanDisableVoiceActivityDetection(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        RealtimeConversationClient client = GetTestClient();
+        RealtimeConversationClient client = GetTestClient(GetTestClientOptions(version));
         using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
 
         await session.ConfigureSessionAsync(
@@ -388,9 +408,13 @@ public class ConversationTests : ConversationTestFixtureBase
     }
 
     [Test]
-    public async Task BadCommandProvidesError()
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    [TestCase(null)]
+    public async Task BadCommandProvidesError(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        RealtimeConversationClient client = GetTestClient();
+        RealtimeConversationClient client = GetTestClient(GetTestClientOptions(version));
         using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
 
         await session.SendCommandAsync(

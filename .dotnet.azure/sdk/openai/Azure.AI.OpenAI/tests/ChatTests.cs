@@ -673,12 +673,22 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
     }
 
     [RecordedTest]
-    public async Task AsyncContentFilterWorksStreaming()
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
+    public async Task AsyncContentFilterWorksStreaming(AzureOpenAIClientOptions.ServiceVersion? version)
     {
         // Precondition: the target deployment is configured with an async content filter that includes a
         // custom blocklist that will filter variations of the word 'banana.'
 
-        ChatClient client = GetTestClient(TestConfig.GetConfig("chat_with_async_filter"));
+        ChatClient client = GetTestClient(
+            TestConfig.GetConfig("chat_with_async_filter"),
+            GetTestClientOptions(version));
 
         StringBuilder contentBuilder = new();
 
@@ -738,6 +748,11 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
     #endregion
     #region Helper methods
+
+    private TestClientOptions GetTestClientOptions(AzureOpenAIClientOptions.ServiceVersion? version)
+    {
+        return version is null ? new TestClientOptions() : new TestClientOptions(version.Value);
+    }
 
     private void ValidateUpdate(StreamingChatCompletionUpdate update, StringBuilder builder, ref bool foundPromptFilter, ref bool foundResponseFilter, ref ChatTokenUsage? usage)
     {

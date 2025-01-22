@@ -40,17 +40,28 @@ public class ConversationTestFixtureBase
         }
     }
 
-    public RealtimeConversationClient GetTestClient() => GetTestClient(DefaultConfiguration);
-    public RealtimeConversationClient GetTestClient(string configurationName) => GetTestClient(TestConfig.GetConfig(configurationName));
-    public RealtimeConversationClient GetTestClient(IConfiguration testConfig)
+    public TestClientOptions GetTestClientOptions(AzureOpenAIClientOptions.ServiceVersion? version)
     {
+        if (version != AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)
+        {
+            Assert.Inconclusive("/realtime not yet supported outside of 2024-10-01-preview");
+        }
+        return version is null ? new TestClientOptions() : new TestClientOptions(version.Value);
+    }
+
+    public RealtimeConversationClient GetTestClient(TestClientOptions clientOptions = null) => GetTestClient(DefaultConfiguration, clientOptions);
+    public RealtimeConversationClient GetTestClient(string configurationName, TestClientOptions clientOptions = null) => GetTestClient(TestConfig.GetConfig(configurationName), clientOptions);
+    public RealtimeConversationClient GetTestClient(IConfiguration testConfig, TestClientOptions clientOptions = null)
+    {
+        clientOptions ??= new();
+
         Uri endpoint = testConfig.Endpoint;
         ApiKeyCredential key = new(testConfig.Key);
         string deployment = testConfig.Deployment;
 
         Console.WriteLine($"--- Connecting to endpoint: {endpoint.AbsoluteUri}");
 
-        AzureOpenAIClient topLevelClient = new(endpoint, key);
+        AzureOpenAIClient topLevelClient = new(endpoint, key, clientOptions);
         RealtimeConversationClient client = topLevelClient.GetRealtimeConversationClient(testConfig.Deployment);
 
         client.OnSendingCommand += (_, data) => PrintMessageData(data, "> ");

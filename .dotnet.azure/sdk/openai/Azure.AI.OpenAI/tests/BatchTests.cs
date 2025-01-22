@@ -31,10 +31,6 @@ public class BatchTests : AoaiTestBase<BatchClient>
 {
     public BatchTests(bool isAsync) : base(isAsync)
     {
-        if (new AzureOpenAIClientOptions().Version == "2024-12-01-preview")
-        {
-            Assert.Inconclusive("2024-12-01-preview not currently supported for files, fine-tuning, and related routes");
-        }
     }
 
     [Test]
@@ -42,9 +38,17 @@ public class BatchTests : AoaiTestBase<BatchClient>
     public void CanCreateClient() => Assert.That(GetTestClient(), Is.InstanceOf<BatchClient>());
 
     [RecordedTest]
-    public async Task CanUploadFileForBatch()
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
+    public async Task CanUploadFileForBatch(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        BatchClient batchClient = GetTestClient();
+        BatchClient batchClient = GetTestClient(GetTestClientOptions(version));
         OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(batchClient);
 
         OpenAIFile newFile = await fileClient.UploadFileAsync(
@@ -70,10 +74,18 @@ public class BatchTests : AoaiTestBase<BatchClient>
     }
 
     [RecordedTest]
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
     [Category("LongRunning")] // observed live runtime up to 5 minutes
-    public async Task CanCancelBatch()
+    public async Task CanCancelBatch(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        BatchClient batchClient = GetTestClient();
+        BatchClient batchClient = GetTestClient(GetTestClientOptions(version));
         OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(batchClient);
         string deploymentName = TestConfig.GetConfig<BatchClient>()!.Deployment!;
 
@@ -118,10 +130,18 @@ public class BatchTests : AoaiTestBase<BatchClient>
     }
 
     [RecordedTest]
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
     [Category("LongRunning")] // observed live runtime typically varies from 6 - 15 minutes
-    public async Task SimpleBatchCompletionsTest()
+    public async Task SimpleBatchCompletionsTest(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        BatchClient batchClient = GetTestClient();
+        BatchClient batchClient = GetTestClient(GetTestClientOptions(version));
         OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(batchClient);
         string deploymentName = TestConfig.GetConfig<BatchClient>()!.Deployment!;
 
@@ -211,6 +231,17 @@ public class BatchTests : AoaiTestBase<BatchClient>
             Assert.That(batchCompletion.Content[0].Kind, Is.EqualTo(ChatMessageContentPartKind.Text));
             Assert.That(batchCompletion.Content[0].Text, Is.Not.Null.Or.Empty);
         }
+    }
+
+    private TestClientOptions GetTestClientOptions(AzureOpenAIClientOptions.ServiceVersion? version)
+    {
+#if !AZURE_OPENAI_GA
+        if (version != AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)
+        {
+            Assert.Inconclusive("/batches not yet fully supported after 2024-10-01-preview");
+        }
+#endif
+        return version is null ? new TestClientOptions() : new TestClientOptions(version.Value);
     }
 
     private List<T> GetVerifiedBatchOutputsOf<T>(

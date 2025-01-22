@@ -9,6 +9,7 @@ Update-In-File-With-Retry `
         "return new InternalChatCompletionResponseMessage\("
         "    refusal,"
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
+        "    audio,"
         "    role,"
         "    content,"
         "    functionCall,"
@@ -19,6 +20,7 @@ Update-In-File-With-Retry `
         "return new InternalChatCompletionResponseMessage("
         "    refusal,"
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
+        "    audio,"
         "    role,"
         "    content ?? new ChatMessageContent(),"
         "    functionCall,"
@@ -43,6 +45,7 @@ Update-In-File-With-Retry `
     -FilePath "$directory\InternalChatCompletionStreamResponseDelta.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalChatCompletionStreamResponseDelta\("
+        "    audio,"
         "    functionCall,"
         "    toolCalls \?\? new ChangeTrackingList<StreamingChatToolCallUpdate>\(\),"
         "    refusal,"
@@ -53,6 +56,7 @@ Update-In-File-With-Retry `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalChatCompletionStreamResponseDelta("
+        "    audio,"
         "    functionCall,"
         "    toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(),"
         "    refusal,"
@@ -79,24 +83,26 @@ Update-In-File-With-Retry `
     -FilePath "$directory\AssistantChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new AssistantChatMessage\("
-        "    role,"
         "    content,"
+        "    role,"
         "    additionalBinaryDataProperties,"
         "    refusal,"
         "    participantName,"
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
-        "    functionCall\);"
+        "    functionCall,"
+        "    outputAudioReference\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new AssistantChatMessage("
-        "    role,"
         "    content ?? new ChatMessageContent(),"
+        "    role,"
         "    additionalBinaryDataProperties,"
         "    refusal,"
         "    participantName,"
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
-        "    functionCall);"
+        "    functionCall,"
+        "    outputAudioReference);"
     ) `
     -OutputIndentation 12 `
     -RequirePresence
@@ -104,11 +110,11 @@ Update-In-File-With-Retry `
 Update-In-File-With-Retry `
     -FilePath "$directory\FunctionChatMessage.Serialization.cs" `
     -SearchPatternLines @(
-        "return new FunctionChatMessage\(role, content, additionalBinaryDataProperties, functionName\);"
+        "return new FunctionChatMessage\(content, role, additionalBinaryDataProperties, functionName\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
-        "return new FunctionChatMessage(role, content ?? new ChatMessageContent(), additionalBinaryDataProperties, functionName);"
+        "return new FunctionChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, functionName);"
     ) `
     -OutputIndentation 12 `
     -RequirePresence
@@ -116,11 +122,11 @@ Update-In-File-With-Retry `
 Update-In-File-With-Retry `
     -FilePath "$directory\SystemChatMessage.Serialization.cs" `
     -SearchPatternLines @(
-        "return new SystemChatMessage\(role, content, additionalBinaryDataProperties, participantName\);"
+        "return new SystemChatMessage\(content, role, additionalBinaryDataProperties, participantName\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
-        "return new SystemChatMessage(role, content ?? new ChatMessageContent(), additionalBinaryDataProperties, participantName);"
+        "return new SystemChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, participantName);"
     ) `
     -OutputIndentation 12 `
     -RequirePresence
@@ -128,11 +134,11 @@ Update-In-File-With-Retry `
 Update-In-File-With-Retry `
     -FilePath "$directory\ToolChatMessage.Serialization.cs" `
     -SearchPatternLines @(
-        "return new ToolChatMessage\(role, content, additionalBinaryDataProperties, toolCallId\);"
+        "return new ToolChatMessage\(content, role, additionalBinaryDataProperties, toolCallId\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
-        "return new ToolChatMessage(role, content ?? new ChatMessageContent(), additionalBinaryDataProperties, toolCallId);"
+        "return new ToolChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, toolCallId);"
     ) `
     -OutputIndentation 12 `
     -RequirePresence
@@ -140,11 +146,11 @@ Update-In-File-With-Retry `
 Update-In-File-With-Retry `
     -FilePath "$directory\UserChatMessage.Serialization.cs" `
     -SearchPatternLines @(
-        "return new UserChatMessage\(role, content, additionalBinaryDataProperties, participantName\);"
+        "return new UserChatMessage\(content, role, additionalBinaryDataProperties, participantName\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
-        "return new UserChatMessage(role, content ?? new ChatMessageContent(), additionalBinaryDataProperties, participantName);"
+        "return new UserChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, participantName);"
     ) `
     -OutputIndentation 12 `
     -RequirePresence
@@ -152,11 +158,11 @@ Update-In-File-With-Retry `
 Update-In-File-With-Retry `
     -FilePath "$directory\InternalUnknownChatMessage.Serialization.cs" `
     -SearchPatternLines @(
-        "return new InternalUnknownChatMessage\(role, content, additionalBinaryDataProperties\);"
+        "return new InternalUnknownChatMessage\(content, role, additionalBinaryDataProperties\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
-        "return new InternalUnknownChatMessage(role, content ?? new ChatMessageContent(), additionalBinaryDataProperties);"
+        "return new InternalUnknownChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties);"
     ) `
     -OutputIndentation 12 `
     -RequirePresence
@@ -165,24 +171,26 @@ Update-In-File-With-Retry `
     -FilePath "$directory\InternalFineTuneChatCompletionRequestAssistantMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalFineTuneChatCompletionRequestAssistantMessage\("
-        "    role,"
         "    content,"
+        "    role,"
         "    additionalBinaryDataProperties,"
         "    refusal,"
         "    participantName,"
         "    toolCalls \?\? new ChangeTrackingList<ChatToolCall>\(\),"
-        "    functionCall\);"
+        "    functionCall,"
+        "    outputAudioReference\);"
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Initialize Content collection property."
         "return new InternalFineTuneChatCompletionRequestAssistantMessage("
-        "    role,"
         "    content ?? new ChatMessageContent(),"
+        "    role,"
         "    additionalBinaryDataProperties,"
         "    refusal,"
         "    participantName,"
         "    toolCalls ?? new ChangeTrackingList<ChatToolCall>(),"
-        "    functionCall);"
+        "    functionCall,"
+        "    outputAudioReference);"
     ) `
     -OutputIndentation 12 `
     -RequirePresence

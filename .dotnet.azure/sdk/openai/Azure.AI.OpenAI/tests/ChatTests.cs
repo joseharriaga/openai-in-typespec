@@ -733,8 +733,6 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
     #endregion
 
-    #region Tests for interim o1 model support regarding new max_completion_tokens
-
     [RecordedTest]
     public async Task ChatWithO1Works()
     {
@@ -746,7 +744,44 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(completion, Is.Not.Null);
     }
 
-    #endregion
+#if NET
+    [RecordedTest]
+    [Ignore("Pending model deployment availability with prediction support")]
+    public async Task PredictedOutputsWork()
+    {
+        IConfiguration tipConfig = TestConfig.GetConfig("tip")!;
+
+        AzureOpenAIClient azureOpenAIClient = GetTestTopLevelClient(tipConfig);
+        ChatClient client = azureOpenAIClient.GetChatClient("gpt-4o");
+
+        ChatCompletionOptions options = new()
+        {
+            PredictedContent =
+            [
+                ChatMessageContentPart.CreateTextPart("""
+                {
+                  "feature_name": "test_feature",
+                  "enabled": true
+                }
+                """.ReplaceLineEndings("\n")),
+            ],
+        };
+
+        ChatMessage message = ChatMessage.CreateUserMessage("""
+            Modify the following input to enable the feature. Only respond with the JSON and include no other text.
+
+            {
+              "feature_name": "test_feature",
+              "enabled": false
+            }
+            """.ReplaceLineEndings("\n"));
+
+        ChatCompletion completion = await client.CompleteChatAsync([message], options);
+
+        Assert.That(completion.Usage.OutputTokenDetails.PredictionAcceptedTokenCount, Is.GreaterThan(0));
+    }
+#endif
+
     #region Helper methods
 
     private TestClientOptions GetTestClientOptions(AzureOpenAIClientOptions.ServiceVersion? version)

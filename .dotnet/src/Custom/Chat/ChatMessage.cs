@@ -56,6 +56,11 @@ namespace OpenAI.Chat;
 [CodeGenSerialization(nameof(Content), SerializationValueHook = nameof(SerializeContentValue), DeserializationValueHook = nameof(DeserializeContentValue))]
 public partial class ChatMessage
 {
+    /// <summary>
+    /// The content associated with the message. The interpretation of this content will vary depending on the message type.
+    /// </summary>
+    public ChatMessageContent Content { get; } = new ChatMessageContent();
+
     // CUSTOM: Changed type from string to ChatMessageRole.
     [CodeGenMember("Role")]
     internal ChatMessageRole Role { get; set; }
@@ -89,11 +94,6 @@ public partial class ChatMessage
         }
     }
 
-    /// <summary>
-    /// The content associated with the message. The interpretation of this content will vary depending on the message type.
-    /// </summary>
-    public ChatMessageContent Content { get; } = new ChatMessageContent();
-
     #region SystemChatMessage
     /// <inheritdoc cref="SystemChatMessage(string)"/>
     public static SystemChatMessage CreateSystemMessage(string content) => new(content);
@@ -103,6 +103,17 @@ public partial class ChatMessage
 
     /// <inheritdoc cref="SystemChatMessage(ChatMessageContentPart[])"/>
     public static SystemChatMessage CreateSystemMessage(params ChatMessageContentPart[] contentParts) => new(contentParts);
+    #endregion
+
+    #region DeveloperChatMessage
+    /// <inheritdoc cref="DeveloperChatMessage(string)"/>
+    public static DeveloperChatMessage CreateDeveloperMessage(string content) => new(content);
+
+    /// <inheritdoc cref="DeveloperChatMessage(IEnumerable{ChatMessageContentPart})"/>
+    public static DeveloperChatMessage CreateDeveloperMessage(IEnumerable<ChatMessageContentPart> contentParts) => new(contentParts);
+
+    /// <inheritdoc cref="DeveloperChatMessage(ChatMessageContentPart[])"/>
+    public static DeveloperChatMessage CreateDeveloperMessage(params ChatMessageContentPart[] contentParts) => new(contentParts);
     #endregion
 
     #region UserChatMessage
@@ -134,6 +145,10 @@ public partial class ChatMessage
 
     /// <inheritdoc cref="AssistantChatMessage(ChatCompletion)"/>
     public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion) => new(chatCompletion);
+
+    /// <inheritdoc cref="AssistantChatMessage(ChatOutputAudioReference)"/>
+    public static AssistantChatMessage CreateAssistantMessage(ChatOutputAudioReference outputAudioReference) => new(outputAudioReference);
+
     #endregion
 
     #region ToolChatMessage

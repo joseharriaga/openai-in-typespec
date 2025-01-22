@@ -12,6 +12,7 @@ namespace OpenAI.Chat;
 [CodeGenSerialization(nameof(Messages), SerializationValueHook = nameof(SerializeMessagesValue))]
 [CodeGenSerialization(nameof(StopSequences), SerializationValueHook = nameof(SerializeStopSequencesValue), DeserializationValueHook = nameof(DeserializeStopSequencesValue))]
 [CodeGenSerialization(nameof(LogitBiases), SerializationValueHook = nameof(SerializeLogitBiasesValue), DeserializationValueHook = nameof(DeserializeLogitBiasesValue))]
+[CodeGenSerialization(nameof(PredictedContent), SerializationValueHook = nameof(SerializePredictedContentValue), DeserializationValueHook = nameof(DeserializePredictedContentValue))]
 public partial class ChatCompletionOptions
 {
     // CUSTOM:
@@ -176,4 +177,48 @@ public partial class ChatCompletionOptions
     /// </summary>
     [CodeGenMember("Store")]
     public bool? StoredOutputEnabled { get; set; }
+
+    /// <summary>
+    /// (o1 and newer reasoning models only) Constrains effort on reasoning for reasoning models.
+    /// Currently supported values are <see cref="ChatReasoningEffort.Low"/>, <see cref="ChatReasoningEffort.Medium"/>, and <see cref="ChatReasoningEffort.High"/>.
+    /// Reducing reasoning effort can result in faster responses and fewer tokens used on reasoning in a response.
+    /// </summary>
+    public ChatReasoningEffort? ReasoningEffort { get; set; }
+
+    // CUSTOM: Made internal for automatic enablement via audio options.
+    [CodeGenMember("Modalities")]
+    private IList<InternalCreateChatCompletionRequestModality> _internalModalities = new ChangeTrackingList<InternalCreateChatCompletionRequestModality>();
+
+    /// <summary>
+    /// Specifies the content types that the model should generate in its responses.
+    /// </summary>
+    /// <remarks>
+    /// Most models can generate text and the default <c>["text"]</c> value, from <c><see cref="ChatResponseModalities.Text"/></c>, requests this.
+    /// Some models like <c>gpt-4o-audio-preview</c> can also generate audio, and this can be requested by combining <c>["text","audio"]</c> via
+    /// the flags <c><see cref="ChatResponseModalities.Text"/> | <see cref="ChatResponseModalities.Audio"/></c>.
+    /// </remarks>
+    public ChatResponseModalities ResponseModalities
+    {
+        get => ChatResponseModalitiesExtensions.FromInternalModalities(_internalModalities);
+        set => _internalModalities = value.ToInternalModalities();
+    }
+
+    // CUSTOM: supplemented with custom setter to internally enable audio output via modalities.
+    [CodeGenMember("Audio")]
+    private ChatAudioOptions _audioOptions;
+
+    public ChatAudioOptions AudioOptions
+    {
+        get => _audioOptions;
+        set
+        {
+            _audioOptions = value;
+            _internalModalities = value is null
+                ? new ChangeTrackingList<InternalCreateChatCompletionRequestModality>()
+                : [InternalCreateChatCompletionRequestModality.Text, InternalCreateChatCompletionRequestModality.Audio];
+        }
+    }
+
+    [CodeGenMember("Prediction")]
+    public ChatMessageContent PredictedContent { get; set; }
 }

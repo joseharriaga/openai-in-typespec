@@ -11,7 +11,7 @@ using TypeSpec.OpenAPI;
 namespace OpenAI;
 
 @doc("""
-  Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4 Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+  Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
   
   Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
   
@@ -28,11 +28,12 @@ union AssistantsApiResponseFormatOption {
 }
 
 model CreateAssistantRequest {
-  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
+  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models) for descriptions of them. */
   @extension("x-oaiTypeLabel", "string")
   `model`:
     | string
     | "gpt-4o"
+    | "gpt-4o-2024-11-20"
     | "gpt-4o-2024-08-06"
     | "gpt-4o-2024-05-13"
     | "gpt-4o-mini"
@@ -115,7 +116,7 @@ model CreateAssistantRequest {
 }
 
 model ModifyAssistantRequest {
-  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
+  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models) for descriptions of them. */
   `model`?: string;
 
   /** The name of the assistant. The maximum length is 256 characters. */
@@ -212,7 +213,7 @@ model AssistantToolsFileSearch extends AssistantToolDefinition {
     @doc("""
       The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
       
-      Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
+      Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
       """)
     @minValue(1)
     @maxValue(50)
@@ -225,7 +226,7 @@ model AssistantToolsFileSearch extends AssistantToolDefinition {
 @doc("""
   The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
   
-  See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
+  See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
   """)
 model FileSearchRankingOptions {
   @doc("""
@@ -281,7 +282,7 @@ model AssistantObject {
   @maxLength(512)
   description: string | null;
 
-  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
+  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models) for descriptions of them. */
   `model`: string;
 
   /** The system instructions that the assistant uses. The maximum length is 256,000 characters. */

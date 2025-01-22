@@ -9,6 +9,30 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
+model AdminApiKey {
+  object?: string;
+  id?: string;
+  name?: string;
+  redacted_value?: string;
+  value?: string;
+
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
+  @encode("unixTimestamp", int64)
+  created_at?: utcDateTime;
+
+  owner?: {
+    type?: string;
+    id?: string;
+    name?: string;
+
+    // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
+    @encode("unixTimestamp", int64)
+    created_at?: utcDateTime;
+
+    role?: string;
+  };
+}
+
 model CreateUploadRequest {
   /** The name of the file to upload. */
   filename: string;
@@ -76,7 +100,6 @@ model Upload {
   /** The object type, which is always "upload". */
   object?: "upload";
 
-  /** The ready File object after the Upload is completed. */
   file?: OpenAIFile | null;
 }
 

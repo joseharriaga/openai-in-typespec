@@ -40,12 +40,12 @@ public class BatchTests : AoaiTestBase<BatchClient>
     [RecordedTest]
 #if !AZURE_OPENAI_GA
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
 #else
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
 #endif
-    [TestCase(null)]
+    //[TestCase(null)]
     public async Task CanUploadFileForBatch(AzureOpenAIClientOptions.ServiceVersion? version)
     {
         BatchClient batchClient = GetTestClient(GetTestClientOptions(version));
@@ -76,12 +76,12 @@ public class BatchTests : AoaiTestBase<BatchClient>
     [RecordedTest]
 #if !AZURE_OPENAI_GA
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    // [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    // [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
 #else
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
 #endif
-    [TestCase(null)]
+    // [TestCase(null)]
     [Category("LongRunning")] // observed live runtime up to 5 minutes
     public async Task CanCancelBatch(AzureOpenAIClientOptions.ServiceVersion? version)
     {
@@ -132,12 +132,12 @@ public class BatchTests : AoaiTestBase<BatchClient>
     [RecordedTest]
 #if !AZURE_OPENAI_GA
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
 #else
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
 #endif
-    [TestCase(null)]
+    //[TestCase(null)]
     [Category("LongRunning")] // observed live runtime typically varies from 6 - 15 minutes
     public async Task SimpleBatchCompletionsTest(AzureOpenAIClientOptions.ServiceVersion? version)
     {

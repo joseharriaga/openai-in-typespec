@@ -95,4 +95,41 @@ public partial class ChatCompletionOptions
             logitBias = dictionary;
         }
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void SerializePredictedContentValue(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
+        if (PredictedContent is not null)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("type"u8);
+            writer.WriteStringValue(InternalPredictionContentType.Content.ToString());
+            writer.WritePropertyName("content"u8);
+            writer.WriteObjectValue(PredictedContent, options);
+            writer.WriteEndObject();
+        }
+        else
+        {
+            writer.WriteNullValue();
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void DeserializePredictedContentValue(JsonProperty property, ref ChatMessageContent predictedContent)
+    {
+        if (property.Value.ValueKind == JsonValueKind.Null)
+        {
+            predictedContent = null;
+        }
+        else
+        {
+            foreach (JsonProperty predictionProperty in property.Value.EnumerateObject())
+            {
+                if (predictionProperty.NameEquals("content"u8))
+                {
+                    ChatMessage.DeserializeContentValue(predictionProperty, ref predictedContent);
+                }
+            }
+        }
+    }
 }

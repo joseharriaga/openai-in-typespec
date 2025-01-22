@@ -20,8 +20,11 @@ model CreateFileRequest {
 }
 
 model ListFilesResponse {
+  object: string;
   data: OpenAIFile[];
-  object: "list";
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
 }
 
 model DeleteFileResponse {

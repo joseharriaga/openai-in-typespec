@@ -16,6 +16,10 @@ namespace OpenAI.Chat;
 public enum ChatResponseModalities : int
 {
     /// <summary>
+    /// The value which specifies that the model should produce its default set of output content modalities.
+    /// </summary>
+    Default = 0,
+    /// <summary>
     /// The flag that, if included, specifies that the model should generate text content in its response.
     /// </summary>
     Text = 1 << 0,

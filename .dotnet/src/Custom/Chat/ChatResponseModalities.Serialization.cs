@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 namespace OpenAI.Chat;
 
-internal static partial class ChatContentModalitiesExtensions
+internal static partial class ChatResponseModalitiesExtensions
 {
     internal static IList<InternalCreateChatCompletionRequestModality> ToInternalModalities(this ChatResponseModalities modalities)
     {
-        List<InternalCreateChatCompletionRequestModality> internalModalities = [];
+        ChangeTrackingList<InternalCreateChatCompletionRequestModality> internalModalities = new();
         if (modalities.HasFlag(ChatResponseModalities.Text))
         {
             internalModalities.Add(InternalCreateChatCompletionRequestModality.Text);

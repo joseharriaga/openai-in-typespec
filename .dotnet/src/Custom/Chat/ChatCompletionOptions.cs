@@ -189,10 +189,10 @@ public partial class ChatCompletionOptions
     /// Some models like <c>gpt-4o-audio-preview</c> can also generate audio, and this can be requested by combining <c>["text","audio"]</c> via
     /// the flags <c><see cref="ChatResponseModalities.Text"/> | <see cref="ChatResponseModalities.Audio"/></c>.
     /// </remarks>
-    public ChatResponseModalities? ResponseModalities
+    public ChatResponseModalities ResponseModalities
     {
-        get => ChatContentModalitiesExtensions.FromInternalModalities(_internalModalities);
-        set => _internalModalities = value?.ToInternalModalities();
+        get => ChatResponseModalitiesExtensions.FromInternalModalities(_internalModalities);
+        set => _internalModalities = value.ToInternalModalities();
     }
 
     // CUSTOM: supplemented with custom setter to internally enable audio output via modalities.

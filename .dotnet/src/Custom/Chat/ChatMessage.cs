@@ -136,7 +136,7 @@ public partial class ChatMessage
     public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion) => new(chatCompletion);
 
     /// <inheritdoc cref="AssistantChatMessage(ChatOutputAudioReference)"/>
-    public static AssistantChatMessage CreateAssistantMessage(ChatOutputAudioReference audioReference) => new(audioReference);
+    public static AssistantChatMessage CreateAssistantMessage(ChatOutputAudioReference outputAudioReference) => new(outputAudioReference);
 
     #endregion
 

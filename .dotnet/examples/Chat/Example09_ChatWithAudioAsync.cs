@@ -10,7 +10,7 @@ namespace OpenAI.Examples;
 public partial class ChatExamples
 {
     [Test]
-    public async Task Example10_ChatWithAudioAsync()
+    public async Task Example09_ChatWithAudioAsync()
     {
         // Chat audio input and output is only supported on specific models, beginning with gpt-4o-audio-preview
         ChatClient client = new("gpt-4o-audio-preview", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));

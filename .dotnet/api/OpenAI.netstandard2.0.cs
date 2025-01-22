@@ -1214,7 +1214,7 @@ namespace OpenAI.Chat {
         public float? PresencePenalty { get; set; }
         public ChatReasoningEffort? ReasoningEffort { get; set; }
         public ChatResponseFormat ResponseFormat { get; set; }
-        public ChatResponseModalities? ResponseModalities { get; set; }
+        public ChatResponseModalities ResponseModalities { get; set; }
         public long? Seed { get; set; }
         public IList<string> StopSequences { get; }
         public bool? StoredOutputEnabled { get; set; }
@@ -1298,7 +1298,7 @@ namespace OpenAI.Chat {
         public static AssistantChatMessage CreateAssistantMessage(ChatCompletion chatCompletion);
         public static AssistantChatMessage CreateAssistantMessage(ChatFunctionCall functionCall);
         public static AssistantChatMessage CreateAssistantMessage(params ChatMessageContentPart[] contentParts);
-        public static AssistantChatMessage CreateAssistantMessage(ChatOutputAudioReference audioReference);
+        public static AssistantChatMessage CreateAssistantMessage(ChatOutputAudioReference outputAudioReference);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls);
         public static AssistantChatMessage CreateAssistantMessage(string content);
@@ -1442,6 +1442,7 @@ namespace OpenAI.Chat {
     }
     [Flags]
     public enum ChatResponseModalities {
+        Default = 0,
         Text = 1,
         Audio = 2
     }
@@ -2081,6 +2082,7 @@ namespace OpenAI.RealtimeConversation {
     }
     [Flags]
     public enum ConversationContentModalities {
+        Default = 0,
         Text = 1,
         Audio = 2
     }

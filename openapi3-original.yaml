@@ -21220,7 +21220,7 @@ components:
                   }
               ]
           }
-    RealtimeServerEventResponseAudioDelta:
+    RealtimeServerEventOutputAudioDelta:
       type: object
       description: Returned when the model-generated audio is updated.
       properties:
@@ -21268,7 +21268,7 @@ components:
               "content_index": 0,
               "delta": "Base64EncodedAudioDelta"
           }
-    RealtimeServerEventResponseAudioDone:
+    RealtimeServerEventOutputAudioDone:
       type: object
       description: >
         Returned when the model-generated audio is done. Also emitted when a
@@ -21315,7 +21315,7 @@ components:
               "output_index": 0,
               "content_index": 0
           }
-    RealtimeServerEventResponseAudioTranscriptDelta:
+    RealtimeServerEventOutputAudioTranscriptDelta:
       type: object
       description: >
         Returned when the model-generated transcription of audio output is
@@ -21365,7 +21365,7 @@ components:
               "content_index": 0,
               "delta": "Hello, how can I a"
           }
-    RealtimeServerEventResponseAudioTranscriptDone:
+    RealtimeServerEventOutputAudioTranscriptDone:
       type: object
       description: |
         Returned when the model-generated transcription of audio output is done
@@ -26146,16 +26146,16 @@ x-oaiMeta:
           key: RealtimeServerEventResponseTextDone
           path: <auto>
         - type: object
-          key: RealtimeServerEventResponseAudioTranscriptDelta
+          key: RealtimeServerEventOutputAudioTranscriptDelta
           path: <auto>
         - type: object
-          key: RealtimeServerEventResponseAudioTranscriptDone
+          key: RealtimeServerEventOutputAudioTranscriptDone
           path: <auto>
         - type: object
-          key: RealtimeServerEventResponseAudioDelta
+          key: RealtimeServerEventOutputAudioDelta
           path: <auto>
         - type: object
-          key: RealtimeServerEventResponseAudioDone
+          key: RealtimeServerEventOutputAudioDone
           path: <auto>
         - type: object
           key: RealtimeServerEventResponseFunctionCallArgumentsDelta

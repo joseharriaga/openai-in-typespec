@@ -38,7 +38,7 @@
   <Choose>
     <When Condition="'$(IsClientLibrary)' == 'true'">
       <PropertyGroup>
-        <RequiredTargetFrameworks>netstandard2.0</RequiredTargetFrameworks>
+        <RequiredTargetFrameworks>net8.0;netstandard2.0</RequiredTargetFrameworks>
         <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
         <CodeAnalysisRuleSet>$(RepoEngPath)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
       </PropertyGroup>

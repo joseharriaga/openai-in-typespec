@@ -620,6 +620,30 @@ public class ChatSmokeTests : SyncAsyncTestBase
         
         AssistantChatMessage audioHistoryMessage = new(audioCompletion);
         Assert.That(audioHistoryMessage.OutputAudioReference?.Id, Is.EqualTo(audioCompletion.OutputAudio.Id));
+
+        foreach (KeyValuePair<ChatResponseModalities, (bool, bool, bool)> modalitiesValueToKeyTextAndAudioPresenceItem
+            in new List<KeyValuePair<ChatResponseModalities, (bool, bool, bool)>>()
+            {
+                new(ChatResponseModalities.Default, (false, false, false)),
+                new(ChatResponseModalities.Default | ChatResponseModalities.Text, (true, true, false)),
+                new(ChatResponseModalities.Default | ChatResponseModalities.Audio, (true, false, true)),
+                new(ChatResponseModalities.Default | ChatResponseModalities.Text | ChatResponseModalities.Audio, (true, true, true)),
+                new(ChatResponseModalities.Text, (true, true, false)),
+                new(ChatResponseModalities.Audio, (true, false, true)),
+                new(ChatResponseModalities.Text | ChatResponseModalities.Audio, (true, true, true)),
+            })
+        {
+            ChatResponseModalities modalitiesValue = modalitiesValueToKeyTextAndAudioPresenceItem.Key;
+            (bool keyExpected, bool textExpected, bool audioExpected) = modalitiesValueToKeyTextAndAudioPresenceItem.Value;
+            ChatCompletionOptions testOptions = new()
+            {
+                ResponseModalities = modalitiesValue,
+            };
+            string serializedOptions = ModelReaderWriter.Write(testOptions).ToString().ToLower();
+            Assert.That(serializedOptions.Contains("modalities"), Is.EqualTo(keyExpected));
+            Assert.That(serializedOptions.Contains("text"), Is.EqualTo(textExpected));
+            Assert.That(serializedOptions.Contains("audio"), Is.EqualTo(audioExpected));
+        }
     }
 
     [Test]

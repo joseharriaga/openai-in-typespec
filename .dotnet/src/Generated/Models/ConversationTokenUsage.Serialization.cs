@@ -32,16 +32,6 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("total_tokens"u8);
                 writer.WriteNumberValue(TotalTokens.Value);
             }
-            if (Optional.IsDefined(InputTokens) && _additionalBinaryDataProperties?.ContainsKey("input_tokens") != true)
-            {
-                writer.WritePropertyName("input_tokens"u8);
-                writer.WriteNumberValue(InputTokens.Value);
-            }
-            if (Optional.IsDefined(OutputTokens) && _additionalBinaryDataProperties?.ContainsKey("output_tokens") != true)
-            {
-                writer.WritePropertyName("output_tokens"u8);
-                writer.WriteNumberValue(OutputTokens.Value);
-            }
             if (Optional.IsDefined(InputTokenDetails) && _additionalBinaryDataProperties?.ContainsKey("input_token_details") != true)
             {
                 writer.WritePropertyName("input_token_details"u8);
@@ -51,6 +41,16 @@ namespace OpenAI.RealtimeConversation
             {
                 writer.WritePropertyName("output_token_details"u8);
                 writer.WriteObjectValue(OutputTokenDetails, options);
+            }
+            if (_additionalBinaryDataProperties?.ContainsKey("input_tokens") != true)
+            {
+                writer.WritePropertyName("input_tokens"u8);
+                writer.WriteNumberValue(InputTokenCount);
+            }
+            if (_additionalBinaryDataProperties?.ContainsKey("output_tokens") != true)
+            {
+                writer.WritePropertyName("output_tokens"u8);
+                writer.WriteNumberValue(OutputTokenCount);
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -93,10 +93,10 @@ namespace OpenAI.RealtimeConversation
                 return null;
             }
             int? totalTokens = default;
-            int? inputTokens = default;
-            int? outputTokens = default;
             ConversationInputTokenUsageDetails inputTokenDetails = default;
             ConversationOutputTokenUsageDetails outputTokenDetails = default;
+            int inputTokenCount = default;
+            int outputTokenCount = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -107,24 +107,6 @@ namespace OpenAI.RealtimeConversation
                         continue;
                     }
                     totalTokens = prop.Value.GetInt32();
-                    continue;
-                }
-                if (prop.NameEquals("input_tokens"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    inputTokens = prop.Value.GetInt32();
-                    continue;
-                }
-                if (prop.NameEquals("output_tokens"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    outputTokens = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("input_token_details"u8))
@@ -145,6 +127,24 @@ namespace OpenAI.RealtimeConversation
                     outputTokenDetails = ConversationOutputTokenUsageDetails.DeserializeConversationOutputTokenUsageDetails(prop.Value, options);
                     continue;
                 }
+                if (prop.NameEquals("input_tokens"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    inputTokenCount = prop.Value.GetInt32();
+                    continue;
+                }
+                if (prop.NameEquals("output_tokens"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    outputTokenCount = prop.Value.GetInt32();
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -152,10 +152,10 @@ namespace OpenAI.RealtimeConversation
             }
             return new ConversationTokenUsage(
                 totalTokens,
-                inputTokens,
-                outputTokens,
                 inputTokenDetails,
                 outputTokenDetails,
+                inputTokenCount,
+                outputTokenCount,
                 additionalBinaryDataProperties);
         }
 

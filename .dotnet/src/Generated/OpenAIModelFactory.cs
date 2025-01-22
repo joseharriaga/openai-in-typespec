@@ -606,15 +606,15 @@ namespace OpenAI
             return new ConversationStatusDetails(statusKind, incompleteReason, error, additionalBinaryDataProperties: null);
         }
 
-        public static ConversationTokenUsage ConversationTokenUsage(int? totalTokens = default, int? inputTokens = default, int? outputTokens = default, ConversationInputTokenUsageDetails inputTokenDetails = default, ConversationOutputTokenUsageDetails outputTokenDetails = default)
+        public static ConversationTokenUsage ConversationTokenUsage(int? totalTokens = default, ConversationInputTokenUsageDetails inputTokenDetails = default, ConversationOutputTokenUsageDetails outputTokenDetails = default, int inputTokenCount = default, int outputTokenCount = default)
         {
 
             return new ConversationTokenUsage(
                 totalTokens,
-                inputTokens,
-                outputTokens,
                 inputTokenDetails,
                 outputTokenDetails,
+                inputTokenCount,
+                outputTokenCount,
                 additionalBinaryDataProperties: null);
         }
 

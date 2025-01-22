@@ -2558,10 +2558,10 @@ namespace OpenAI.RealtimeConversation {
         public static implicit operator BinaryContent(ConversationStatusDetails conversationStatusDetails);
     }
     public class ConversationTokenUsage : IJsonModel<ConversationTokenUsage>, IPersistableModel<ConversationTokenUsage> {
+        public int InputTokenCount { get; }
         public ConversationInputTokenUsageDetails InputTokenDetails { get; }
-        public int? InputTokens { get; }
+        public int OutputTokenCount { get; }
         public ConversationOutputTokenUsageDetails OutputTokenDetails { get; }
-        public int? OutputTokens { get; }
         public int? TotalTokens { get; }
         public static explicit operator ConversationTokenUsage(ClientResult result);
         public static implicit operator BinaryContent(ConversationTokenUsage conversationTokenUsage);

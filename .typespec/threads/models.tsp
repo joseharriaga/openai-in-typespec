@@ -10,6 +10,10 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
+/**
+ * Options to create a new thread. If no thread is provided when running a
+ * request, an empty thread will be created.
+ */
 model CreateThreadRequest {
   /** A list of [messages](/docs/api-reference/messages) to start the thread with. */
   messages?: CreateMessageRequest[];

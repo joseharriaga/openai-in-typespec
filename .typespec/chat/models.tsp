@@ -222,19 +222,15 @@ model CreateChatCompletionRequest {
     If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
     Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
     """)
-  @minValue(-9223372036854776000)
-  @maxValue(9223372036854776000)
   seed?: int64 | null;
 
-  @doc("""
-    Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
-      - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted.
-      - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
-      - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
-      - When not set, the default behavior is 'auto'.
-    
-      When this parameter is set, the response body will include the `service_tier` utilized.
-    """)
+  /**
+   * Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
+   *   - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted.
+   *   - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
+   *   - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
+   *   - When not set, the default behavior is 'auto'.
+   */
   service_tier?: "auto" | "default" | null = "auto";
 
   /** Up to 4 sequences where the API will stop generating further tokens. */
@@ -356,9 +352,7 @@ model CreateChatCompletionResponse {
   /** The model used for the chat completion. */
   `model`: string;
 
-  @doc("""
-    The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
-    """)
+  /** The service tier used for processing the request. */
   service_tier?: "scale" | "default" | null;
 
   @doc("""
@@ -920,9 +914,7 @@ model CreateChatCompletionStreamResponse {
   /** The model to generate the completion. */
   `model`: string;
 
-  @doc("""
-    The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
-    """)
+  /** The service tier used for processing the request. */
   service_tier?: "scale" | "default" | null;
 
   @doc("""

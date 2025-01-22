@@ -125,7 +125,6 @@ model CreateThreadAndRunRequest {
   /** The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. */
   assistant_id: string;
 
-  /** If no thread is provided, an empty thread will be created. */
   thread?: CreateThreadRequest;
 
   /** The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. */

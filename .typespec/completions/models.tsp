@@ -94,8 +94,6 @@ model CreateCompletionRequest {
     
     Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
     """)
-  @minValue(-9223372036854776000)
-  @maxValue(9223372036854776000)
   seed?: int64 | null;
 
   /** Up to 4 sequences where the API will stop generating further tokens. The returned text will not contain the stop sequence. */

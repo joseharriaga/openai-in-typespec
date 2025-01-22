@@ -224,12 +224,13 @@ model RealtimeClientEventConversationItemCreate extends RealtimeClientEvent {
     """)
   type: RealtimeClientEventType.conversation_item_create;
 
-  /**
-   * The ID of the preceding item after which the new item will be inserted.
-   * If not set, the new item will be appended to the end of the conversation.
-   * If set, it allows an item to be inserted mid-conversation. If the ID
-   * cannot be found, an error will be returned and the item will not be added.
-   */
+  @doc("""
+    The ID of the preceding item after which the new item will be inserted. 
+    If not set, the new item will be appended to the end of the conversation.
+    If set to `root`, the new item will be added to the beginning of the conversation.
+    If set to an existing ID, it allows an item to be inserted mid-conversation. If the
+    ID cannot be found, an error will be returned and the item will not be added.
+    """)
   previous_item_id?: string;
 
   // Tool customization: apply enriched item definition hierarchy
@@ -1128,7 +1129,7 @@ model RealtimeSessionCreateRequest {
   modalities?: RealtimeModality[];
 
   /** The Realtime model used for this session. */
-  `model`:
+  `model`?:
     | "gpt-4o-realtime-preview"
     | "gpt-4o-realtime-preview-2024-10-01"
     | "gpt-4o-realtime-preview-2024-12-17"
@@ -1163,12 +1164,15 @@ model RealtimeSessionCreateRequest {
   // Tool customization: use extracted and reusable audio format definition
   @doc("""
     The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+    For `pcm16`, input audio must be 16-bit PCM at a 24kHz sample rate, 
+    single channel (mono), and little-endian byte order.
     """)
   input_audio_format?: RealtimeAudioFormat;
 
   // Tool customization: use extracted and reusable audio format definition
   @doc("""
     The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+    For `pcm16`, output audio is sampled at a rate of 24kHz.
     """)
   output_audio_format?: RealtimeAudioFormat;
 

@@ -5108,8 +5108,6 @@ components:
           type: integer
           format: int64
           nullable: true
-          minimum: -9223372036854776000
-          maximum: 9223372036854776000
           description: |-
             This feature is in Beta.
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
@@ -5122,12 +5120,10 @@ components:
           nullable: true
           description: |-
             Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
-              - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted.
-              - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
-              - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
-              - When not set, the default behavior is 'auto'.
-
-              When this parameter is set, the response body will include the `service_tier` utilized.
+            - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted.
+            - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
+            - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
+            - When not set, the default behavior is 'auto'.
           default: auto
         stop:
           anyOf:
@@ -5299,7 +5295,7 @@ components:
             - scale
             - default
           nullable: true
-          description: The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
+          description: The service tier used for processing the request.
         system_fingerprint:
           type: string
           description: |-
@@ -5393,7 +5389,7 @@ components:
             - scale
             - default
           nullable: true
-          description: The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
+          description: The service tier used for processing the request.
         system_fingerprint:
           type: string
           description: |-
@@ -5556,8 +5552,6 @@ components:
           type: integer
           format: int64
           nullable: true
-          minimum: -9223372036854776000
-          maximum: 9223372036854776000
           description: |-
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
 
@@ -6730,9 +6724,7 @@ components:
           type: string
           description: The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run.
         thread:
-          allOf:
-            - $ref: '#/components/schemas/CreateThreadRequest'
-          description: If no thread is provided, an empty thread will be created.
+          $ref: '#/components/schemas/CreateThreadRequest'
         model:
           anyOf:
             - type: string
@@ -6887,6 +6879,9 @@ components:
           nullable: true
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long.
           x-oaiTypeLabel: map
+      description: |-
+        Options to create a new thread. If no thread is provided when running a
+        request, an empty thread will be created.
     CreateThreadRequestToolResourcesFileSearchBase:
       type: object
     CreateThreadRequestToolResourcesFileSearchVectorStoreCreationHelpers:
@@ -9753,10 +9748,11 @@ components:
         previous_item_id:
           type: string
           description: |-
-            The ID of the preceding item after which the new item will be inserted.
+            The ID of the preceding item after which the new item will be inserted. 
             If not set, the new item will be appended to the end of the conversation.
-            If set, it allows an item to be inserted mid-conversation. If the ID
-            cannot be found, an error will be returned and the item will not be added.
+            If set to `root`, the new item will be added to the beginning of the conversation.
+            If set to an existing ID, it allows an item to be inserted mid-conversation. If the
+            ID cannot be found, an error will be returned and the item will not be added.
         item:
           $ref: '#/components/schemas/RealtimeConversationRequestItem'
       allOf:
@@ -11657,8 +11653,6 @@ components:
       description: Realtime session object configuration.
     RealtimeSessionCreateRequest:
       type: object
-      required:
-        - model
       properties:
         modalities:
           type: array
@@ -11702,11 +11696,16 @@ components:
         input_audio_format:
           allOf:
             - $ref: '#/components/schemas/RealtimeAudioFormat'
-          description: The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+          description: |-
+            The format of input audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+            For `pcm16`, input audio must be 16-bit PCM at a 24kHz sample rate, 
+            single channel (mono), and little-endian byte order.
         output_audio_format:
           allOf:
             - $ref: '#/components/schemas/RealtimeAudioFormat'
-          description: The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+          description: |-
+            The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+            For `pcm16`, output audio is sampled at a rate of 24kHz.
         input_audio_transcription:
           type: object
           properties:
@@ -13372,7 +13371,6 @@ components:
           allOf:
             - $ref: '#/components/schemas/OpenAIFile'
           nullable: true
-          description: The ready File object after the Upload is completed.
       description: The Upload object can accept byte chunks in the form of Parts.
     UploadPart:
       type: object

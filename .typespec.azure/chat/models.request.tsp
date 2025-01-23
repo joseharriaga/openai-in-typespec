@@ -14,6 +14,8 @@ namespace AzureOpenAI;
 model CreateChatCompletionRequestCommonBase
   is OpenAI.CreateChatCompletionRequest;
 
+// Ingested changes from OpenAI for 2025-01-01-preview
+
 @@added(CreateChatCompletionRequestCommonBase.modalities,
   AzureOpenAIServiceApiVersion.v2025_01_01_preview
 );
@@ -23,6 +25,8 @@ model CreateChatCompletionRequestCommonBase
 @@added(CreateChatCompletionRequestCommonBase.audio,
   AzureOpenAIServiceApiVersion.v2025_01_01_preview
 );
+
+// Ingested changes from OpenAI for 2024-12-01-preview
 
 @@added(CreateChatCompletionRequestCommonBase.store,
   AzureOpenAIServiceApiVersion.v2024_12_01_preview
@@ -36,6 +40,42 @@ model CreateChatCompletionRequestCommonBase
 @@added(OpenAI.ChatCompletionRequestDeveloperMessage,
   AzureOpenAIServiceApiVersion.v2024_12_01_preview
 );
+
+// Ingested changes from OpenAI for 2024-10-01-preview
+
+@@added(OpenAI.CompletionUsage.prompt_tokens_details,
+  AzureOpenAIServiceApiVersion.v2024_10_01_preview
+);
+
+// Ingested changes from OpenAI for 2024-09-01-preview
+
+@@added(CreateChatCompletionRequestCommonBase.stream_options,
+  AzureOpenAIServiceApiVersion.v2024_09_01_preview
+);
+@@added(CreateChatCompletionRequestCommonBase.max_completion_tokens,
+  AzureOpenAIServiceApiVersion.v2024_09_01_preview
+);
+@@added(CreateChatCompletionRequestCommonBase.parallel_tool_calls,
+  AzureOpenAIServiceApiVersion.v2024_09_01_preview
+);
+@@added(OpenAI.CompletionUsage.completion_tokens_details,
+  AzureOpenAIServiceApiVersion.v2024_09_01_preview
+);
+
+// Ingested changes from OpenAI for 2024-08-01-preview
+
+@@typeChangedFrom(OpenAI.ChatCompletionRequestSystemMessage.content,
+  AzureOpenAIServiceApiVersion.v2024_08_01_preview,
+  string
+);
+@@typeChangedFrom(OpenAI.ChatCompletionRequestAssistantMessage.content,
+  AzureOpenAIServiceApiVersion.v2024_08_01_preview,
+  string
+);
+
+// Ingested changes from OpenAI for 2024-07-01-preview
+
+// @@added(OpenAI.ChatCompletionToolChoiceOption.required, AzureOpenAIServiceApiVersion.v2024_07_01_preview);
 
 /**
  * The extended request model for chat completions against the Azure OpenAI service.

@@ -20,5 +20,5 @@ interface AzureChat {
   createChatCompletion(
     @path deployment_id: string,
     @body request: AzureCreateChatCompletionRequest,
-  ): AzureCreateChatCompletionResponse | AzureOpenAIChatErrorResponse;
+  ): AzureCreateChatCompletionResponse | AzureChatCompletionStreamResponseDelta[] | AzureOpenAIChatErrorResponse;
 }

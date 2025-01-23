@@ -14,6 +14,29 @@ namespace AzureOpenAI;
 model CreateChatCompletionRequestCommonBase
   is OpenAI.CreateChatCompletionRequest;
 
+@@added(CreateChatCompletionRequestCommonBase.modalities,
+  AzureOpenAIServiceApiVersion.v2025_01_01_preview
+);
+@@added(CreateChatCompletionRequestCommonBase.prediction,
+  AzureOpenAIServiceApiVersion.v2025_01_01_preview
+);
+@@added(CreateChatCompletionRequestCommonBase.audio,
+  AzureOpenAIServiceApiVersion.v2025_01_01_preview
+);
+
+@@added(CreateChatCompletionRequestCommonBase.store,
+  AzureOpenAIServiceApiVersion.v2024_12_01_preview
+);
+@@added(CreateChatCompletionRequestCommonBase.metadata,
+  AzureOpenAIServiceApiVersion.v2024_12_01_preview
+);
+@@added(CreateChatCompletionRequestCommonBase.reasoning_effort,
+  AzureOpenAIServiceApiVersion.v2024_12_01_preview
+);
+@@added(OpenAI.ChatCompletionRequestDeveloperMessage,
+  AzureOpenAIServiceApiVersion.v2024_12_01_preview
+);
+
 /**
  * The extended request model for chat completions against the Azure OpenAI service.
  * This adds the ability to provide data sources for the On Your Data feature.

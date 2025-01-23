@@ -82,6 +82,9 @@ paths:
               schema:
                 anyOf:
                   - $ref: '#/components/schemas/AzureCreateChatCompletionResponse'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/AzureChatCompletionStreamResponseDelta'
                   - $ref: '#/components/schemas/AzureOpenAIChatErrorResponse'
       tags:
         - Chat
@@ -506,21 +509,6 @@ components:
               format: int32
           required:
             - cached_tokens
-    AzureContentFilterBlocklistIdResult:
-      type: object
-      required:
-        - id
-        - filtered
-      properties:
-        id:
-          type: string
-          description: The ID of the custom blocklist associated with the filtered status.
-        filtered:
-          type: boolean
-          description: Whether the associated blocklist resulted in the content being filtered.
-      description: |-
-        A content filter result item that associates an existing custom blocklist ID with a value indicating whether or not
-        the corresponding blocklist resulted in content being filtered.
     AzureContentFilterBlocklistResult:
       type: object
       required:
@@ -545,21 +533,6 @@ components:
               - id
           description: The pairs of individual blocklist IDs and whether they resulted in a filtering action.
       description: A collection of true/false filtering results for configured custom blocklists.
-    AzureContentFilterCompletionTextSpan:
-      type: object
-      required:
-        - completion_start_offset
-        - completion_end_offset
-      properties:
-        completion_start_offset:
-          type: integer
-          format: int32
-          description: Offset of the UTF32 code point which begins the span.
-        completion_end_offset:
-          type: integer
-          format: int32
-          description: Offset of the first UTF32 code point which is excluded from the span. This field is always equal to completion_start_offset for empty spans. This field is always larger than completion_start_offset for non-empty spans.
-      description: A representation of a span of completion text as used by Azure OpenAI content filter results.
     AzureContentFilterDetectionResult:
       type: object
       required:
@@ -632,90 +605,6 @@ components:
             A content filter category that describes language related to physical actions intended to purposely hurt, injure,
             damage one's body or kill oneself.
       description: A content filter result for an image generation operation's output response content.
-    AzureContentFilterResultForChoice:
-      type: object
-      properties:
-        sexual:
-          allOf:
-            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
-          description: |-
-            A content filter category for language related to anatomical organs and genitals, romantic relationships, acts
-            portrayed in erotic or affectionate terms, pregnancy, physical sexual acts, including those portrayed as an
-            assault or a forced sexual violent act against one's will, prostitution, pornography, and abuse.
-        hate:
-          allOf:
-            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
-          description: |-
-            A content filter category that can refer to any content that attacks or uses pejorative or discriminatory
-            language with reference to a person or identity group based on certain differentiating attributes of these groups
-            including but not limited to race, ethnicity, nationality, gender identity and expression, sexual orientation,
-            religion, immigration status, ability status, personal appearance, and body size.
-        violence:
-          allOf:
-            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
-          description: |-
-            A content filter category for language related to physical actions intended to hurt, injure, damage, or kill
-            someone or something; describes weapons, guns and related entities, such as manufactures, associations,
-            legislation, and so on.
-        self_harm:
-          allOf:
-            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
-          description: |-
-            A content filter category that describes language related to physical actions intended to purposely hurt, injure,
-            damage one's body or kill oneself.
-        profanity:
-          allOf:
-            - $ref: '#/components/schemas/AzureContentFilterDetectionResult'
-          description: |-
-            A detection result that identifies whether crude, vulgar, or otherwise objection language is present in the
-            content.
-        custom_blocklists:
-          allOf:
-            - $ref: '#/components/schemas/AzureContentFilterBlocklistResult'
-          description: A collection of binary filtering outcomes for configured custom blocklists.
-        error:
-          type: object
-          properties:
-            code:
-              type: integer
-              format: int32
-              description: A distinct, machine-readable code associated with the error.
-            message:
-              type: string
-              description: A human-readable message associated with the error.
-          required:
-            - code
-            - message
-          description: If present, details about an error that prevented content filtering from completing its evaluation.
-        protected_material_text:
-          allOf:
-            - $ref: '#/components/schemas/AzureContentFilterDetectionResult'
-          description: A detection result that describes a match against text protected under copyright or other status.
-        protected_material_code:
-          type: object
-          properties:
-            filtered:
-              type: boolean
-              description: Whether the content detection resulted in a content filtering action.
-            detected:
-              type: boolean
-              description: Whether the labeled content category was detected in the content.
-            citation:
-              type: object
-              properties:
-                license:
-                  type: string
-                  description: The name or identifier of the license associated with the detection.
-                URL:
-                  type: string
-                  format: uri
-                  description: The URL associated with the license.
-              description: If available, the citation details describing the associated license and its location.
-          required:
-            - filtered
-            - detected
-          description: A detection result that describes a match against licensed code or other protected source material.
-      description: A content filter result for a single response item produced by a generative AI system.
     AzureContentFilterResultForPrompt:
       type: object
       properties:
@@ -926,22 +815,11 @@ components:
           items:
             $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessage'
           minItems: 1
-          description: A list of messages comprising the conversation so far. Depending on the [model](/docs/models) you use, different message types (modalities) are supported, like [text](/docs/guides/text-generation), [images](/docs/guides/vision), and audio.
-        store:
-          type: boolean
-          nullable: true
           description: |-
-            Whether or not to store the output of this chat completion request
-            for use in our [model distillation](/docs/guides/distillation) or [evals](/docs/guides/evals) products.
-          default: false
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-          nullable: true
-          description: |-
-            Developer-defined tags and values used for filtering completions
-            in the [dashboard](https://platform.openai.com/chat-completions).
+            A list of messages comprising the conversation so far. Depending on the
+            [model](/docs/models) you use, different message types (modalities) are
+            supported, like [text](/docs/guides/text-generation),
+            [images](/docs/guides/vision), and [audio](/docs/guides/audio).
         frequency_penalty:
           type: number
           format: float
@@ -949,9 +827,9 @@ components:
           minimum: -2
           maximum: 2
           description: |-
-            Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
-
-            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+            Number between -2.0 and 2.0. Positive values penalize new tokens based on
+            their existing frequency in the text so far, decreasing the model's
+            likelihood to repeat the same line verbatim.
           default: 0
         logit_bias:
           type: object
@@ -962,13 +840,21 @@ components:
           description: |-
             Modify the likelihood of specified tokens appearing in the completion.
 
-            Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an associated bias value from -100 to 100. Mathematically, the bias is added to the logits generated by the model prior to sampling. The exact effect will vary per model, but values between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100 should result in a ban or exclusive selection of the relevant token.
+            Accepts a JSON object that maps tokens (specified by their token ID in the
+            tokenizer) to an associated bias value from -100 to 100. Mathematically,
+            the bias is added to the logits generated by the model prior to sampling.
+            The exact effect will vary per model, but values between -1 and 1 should
+            decrease or increase likelihood of selection; values like -100 or 100
+            should result in a ban or exclusive selection of the relevant token.
           x-oaiTypeLabel: map
           default: null
         logprobs:
           type: boolean
           nullable: true
-          description: Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`.
+          description: |-
+            Whether to return log probabilities of the output tokens or not. If true,
+            returns the log probabilities of each output token returned in the
+            `content` of `message`.
           default: false
         top_logprobs:
           type: integer
@@ -976,15 +862,21 @@ components:
           nullable: true
           minimum: 0
           maximum: 20
-          description: An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used.
+          description: |-
+            An integer between 0 and 20 specifying the number of most likely tokens to
+            return at each token position, each with an associated log probability.
+            `logprobs` must be set to `true` if this parameter is used.
         max_tokens:
           type: integer
           format: int32
           nullable: true
           description: |-
-            The maximum number of [tokens](/tokenizer) that can be generated in the chat completion. This value can be used to control [costs](https://openai.com/api/pricing/) for text generated via API.
+            The maximum number of [tokens](/tokenizer) that can be generated in the
+            chat completion. This value can be used to control
+            [costs](https://openai.com/api/pricing/) for text generated via API.
 
-            This value is now deprecated in favor of `max_completion_tokens`, and is not compatible with [o1 series models](/docs/guides/reasoning).
+            This value is now deprecated in favor of `max_completion_tokens`, and is
+            not compatible with [o1 series models](/docs/guides/reasoning).
           deprecated: true
         max_completion_tokens:
           type: integer
@@ -1006,28 +898,36 @@ components:
           minimum: -2
           maximum: 2
           description: |-
-            Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
-
-            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+            Number between -2.0 and 2.0. Positive values penalize new tokens based on
+            whether they appear in the text so far, increasing the model's likelihood
+            to talk about new topics.
           default: 0
         response_format:
           allOf:
             - $ref: '#/components/schemas/OpenAI.ChatResponseFormat'
           description: |-
-            An object specifying the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4o mini](/docs/models/gpt-4o-mini), [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
+            An object specifying the format that the model must output.
 
-            Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+            Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+            Structured Outputs which ensures the model will match your supplied JSON
+            schema. Learn more in the [Structured Outputs
+            guide](/docs/guides/structured-outputs).
 
-            Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
+            Setting to `{ "type": "json_object" }` enables JSON mode, which ensures
+            the message the model generates is valid JSON.
 
-            **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+            **Important:** when using JSON mode, you **must** also instruct the model
+            to produce JSON yourself via a system or user message. Without this, the
+            model may generate an unending stream of whitespace until the generation
+            reaches the token limit, resulting in a long-running and seemingly "stuck"
+            request. Also note that the message content may be partially cut off if
+            `finish_reason="length"`, which indicates the generation exceeded
+            `max_tokens` or the conversation exceeded the max context length.
           x-oaiExpandable: true
         seed:
           type: integer
           format: int64
           nullable: true
-          minimum: -9223372036854776000
-          maximum: 9223372036854776000
           description: |-
             This feature is in Beta.
             If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
@@ -1060,7 +960,6 @@ components:
           maximum: 2
           description: |-
             What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
-
             We generally recommend altering this or `top_p` but not both.
           default: 1
         top_p:
@@ -1070,7 +969,10 @@ components:
           minimum: 0
           maximum: 1
           description: |-
-            An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+            An alternative to sampling with temperature, called nucleus sampling,
+            where the model considers the results of the tokens with top_p probability
+            mass. So 0.1 means only the tokens comprising the top 10% probability mass
+            are considered.
 
             We generally recommend altering this or `temperature` but not both.
           default: 1
@@ -1086,7 +988,7 @@ components:
           default: true
         user:
           type: string
-          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids).
         function_call:
           anyOf:
             - type: string
@@ -1098,11 +1000,18 @@ components:
             Deprecated in favor of `tool_choice`.
 
             Controls which (if any) function is called by the model.
-            `none` means the model will not call a function and instead generates a message.
-            `auto` means the model can pick between generating a message or calling a function.
-            Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
 
-            `none` is the default when no functions are present. `auto` is the default if functions are present.
+            `none` means the model will not call a function and instead generates a
+            message.
+
+            `auto` means the model can pick between generating a message or calling a
+            function.
+
+            Specifying a particular function via `{"name": "my_function"}` forces the
+            model to call that function.
+
+            `none` is the default when no functions are present. `auto` is the default
+            if functions are present.
           deprecated: true
           x-oaiExpandable: true
         functions:
@@ -1202,7 +1111,7 @@ components:
             - scale
             - default
           nullable: true
-          description: The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
+          description: The service tier used for processing the request.
         system_fingerprint:
           type: string
           description: |-
@@ -1324,73 +1233,6 @@ components:
         error:
           $ref: '#/components/schemas/AzureOpenAIDalleError'
       description: A structured representation of an error an Azure OpenAI request.
-    AzureOpenAIFile:
-      type: object
-      required:
-        - id
-        - bytes
-        - created_at
-        - filename
-        - object
-        - purpose
-        - status
-      properties:
-        id:
-          type: string
-          description: The file identifier, which can be referenced in the API endpoints.
-        bytes:
-          type: integer
-          format: int32
-          nullable: true
-          description: The size of the file, in bytes.
-        created_at:
-          type: integer
-          format: unixtime
-          description: The Unix timestamp (in seconds) for when the file was created.
-        filename:
-          type: string
-          description: The name of the file.
-        object:
-          type: string
-          enum:
-            - file
-          description: The object type, which is always `file`.
-        purpose:
-          type: string
-          enum:
-            - assistants
-            - assistants_output
-            - batch
-            - batch_output
-            - fine-tune
-            - fine-tune-results
-            - vision
-          description: The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results` and `vision`.
-        status_details:
-          type: string
-          description: Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
-          deprecated: true
-        status:
-          type: string
-          enum:
-            - uploaded
-            - pending
-            - running
-            - processed
-            - error
-            - deleting
-            - deleted
-    AzureOpenAIServiceApiVersion:
-      type: string
-      enum:
-        - 2024-06-01
-        - 2024-08-01-preview
-        - 2024-09-01-preview
-        - 2024-10-01-preview
-        - 2024-10-21
-        - 2024-12-01-preview
-        - 2025-01-01-preview
-      description: Known service API versions for Azure OpenAI.
     AzureSearchChatDataSource:
       type: object
       required:
@@ -1528,321 +1370,11 @@ components:
       items:
         $ref: '#/components/schemas/OpenAI.ChatCompletionMessageToolCall'
       description: The tool calls generated by the model, such as function calls.
-    ChatCompletionTokenLogprobBytesItem:
+    ChatCompletionTokenLogprobBytes:
       type: array
       items:
         type: integer
         format: int32
-    CompletionUsageCommonBase:
-      type: object
-      required:
-        - completion_tokens
-        - prompt_tokens
-        - total_tokens
-      properties:
-        completion_tokens:
-          type: integer
-          format: int32
-          description: Number of tokens in the generated completion.
-        prompt_tokens:
-          type: integer
-          format: int32
-          description: Number of tokens in the prompt.
-        total_tokens:
-          type: integer
-          format: int32
-          description: Total number of tokens used in the request (prompt + completion).
-      description: Usage statistics for the completion request.
-    CreateChatCompletionRequestCommonBase:
-      type: object
-      required:
-        - messages
-      properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessage'
-          minItems: 1
-          description: A list of messages comprising the conversation so far. Depending on the [model](/docs/models) you use, different message types (modalities) are supported, like [text](/docs/guides/text-generation), [images](/docs/guides/vision), and audio.
-        store:
-          type: boolean
-          nullable: true
-          description: |-
-            Whether or not to store the output of this chat completion request
-            for use in our [model distillation](/docs/guides/distillation) or [evals](/docs/guides/evals) products.
-          default: false
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-          nullable: true
-          description: |-
-            Developer-defined tags and values used for filtering completions
-            in the [dashboard](https://platform.openai.com/chat-completions).
-        frequency_penalty:
-          type: number
-          format: float
-          nullable: true
-          minimum: -2
-          maximum: 2
-          description: |-
-            Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
-
-            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
-          default: 0
-        logit_bias:
-          type: object
-          additionalProperties:
-            type: integer
-            format: int32
-          nullable: true
-          description: |-
-            Modify the likelihood of specified tokens appearing in the completion.
-
-            Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an associated bias value from -100 to 100. Mathematically, the bias is added to the logits generated by the model prior to sampling. The exact effect will vary per model, but values between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100 should result in a ban or exclusive selection of the relevant token.
-          x-oaiTypeLabel: map
-          default: null
-        logprobs:
-          type: boolean
-          nullable: true
-          description: Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`.
-          default: false
-        top_logprobs:
-          type: integer
-          format: int32
-          nullable: true
-          minimum: 0
-          maximum: 20
-          description: An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used.
-        max_tokens:
-          type: integer
-          format: int32
-          nullable: true
-          description: |-
-            The maximum number of [tokens](/tokenizer) that can be generated in the chat completion. This value can be used to control [costs](https://openai.com/api/pricing/) for text generated via API.
-
-            This value is now deprecated in favor of `max_completion_tokens`, and is not compatible with [o1 series models](/docs/guides/reasoning).
-          deprecated: true
-        max_completion_tokens:
-          type: integer
-          format: int32
-          nullable: true
-          description: An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and [reasoning tokens](/docs/guides/reasoning).
-        n:
-          type: integer
-          format: int32
-          nullable: true
-          minimum: 1
-          maximum: 128
-          description: How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs.
-          default: 1
-        presence_penalty:
-          type: number
-          format: float
-          nullable: true
-          minimum: -2
-          maximum: 2
-          description: |-
-            Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
-
-            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
-          default: 0
-        response_format:
-          allOf:
-            - $ref: '#/components/schemas/OpenAI.ChatResponseFormat'
-          description: |-
-            An object specifying the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4o mini](/docs/models/gpt-4o-mini), [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
-
-            Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
-
-            Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
-
-            **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-          x-oaiExpandable: true
-        seed:
-          type: integer
-          format: int64
-          nullable: true
-          minimum: -9223372036854776000
-          maximum: 9223372036854776000
-          description: |-
-            This feature is in Beta.
-            If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
-            Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
-        stop:
-          anyOf:
-            - type: string
-            - type: array
-              items:
-                type: string
-          nullable: true
-          description: Up to 4 sequences where the API will stop generating further tokens.
-          default: null
-        stream:
-          type: boolean
-          nullable: true
-          description: 'If set, partial message deltas will be sent, like in ChatGPT. Tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format) as they become available, with the stream terminated by a `data: [DONE]` message. [Example Python code](https://cookbook.openai.com/examples/how_to_stream_completions).'
-          default: false
-        stream_options:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/OpenAI.ChatCompletionStreamOptions'
-          nullable: true
-          default: null
-        temperature:
-          type: number
-          format: float
-          nullable: true
-          minimum: 0
-          maximum: 2
-          description: |-
-            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
-
-            We generally recommend altering this or `top_p` but not both.
-          default: 1
-        top_p:
-          type: number
-          format: float
-          nullable: true
-          minimum: 0
-          maximum: 1
-          description: |-
-            An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
-
-            We generally recommend altering this or `temperature` but not both.
-          default: 1
-        tools:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpenAI.ChatCompletionTool'
-          description: A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. A max of 128 functions are supported.
-        tool_choice:
-          $ref: '#/components/schemas/OpenAI.ChatCompletionToolChoiceOption'
-        parallel_tool_calls:
-          type: boolean
-          default: true
-        user:
-          type: string
-          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
-        function_call:
-          anyOf:
-            - type: string
-              enum:
-                - none
-                - auto
-            - $ref: '#/components/schemas/OpenAI.ChatCompletionFunctionCallOption'
-          description: |-
-            Deprecated in favor of `tool_choice`.
-
-            Controls which (if any) function is called by the model.
-            `none` means the model will not call a function and instead generates a message.
-            `auto` means the model can pick between generating a message or calling a function.
-            Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
-
-            `none` is the default when no functions are present. `auto` is the default if functions are present.
-          deprecated: true
-          x-oaiExpandable: true
-        functions:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpenAI.ChatCompletionFunctions'
-          minItems: 1
-          maxItems: 128
-          description: |-
-            Deprecated in favor of `tools`.
-
-            A list of functions the model may generate JSON inputs for.
-          deprecated: true
-    CreateChatCompletionResponseCommonBase:
-      type: object
-      required:
-        - id
-        - choices
-        - created
-        - model
-        - object
-      properties:
-        id:
-          type: string
-          description: A unique identifier for the chat completion.
-        choices:
-          type: array
-          items:
-            type: object
-            properties:
-              finish_reason:
-                type: string
-                enum:
-                  - stop
-                  - length
-                  - tool_calls
-                  - content_filter
-                  - function_call
-                description: |-
-                  The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-                  `length` if the maximum number of tokens specified in the request was reached,
-                  `content_filter` if content was omitted due to a flag from our content filters,
-                  `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-              index:
-                type: integer
-                format: int32
-                description: The index of the choice in the list of choices.
-              message:
-                $ref: '#/components/schemas/OpenAI.ChatCompletionResponseMessage'
-              logprobs:
-                type: object
-                properties:
-                  content:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/OpenAI.ChatCompletionTokenLogprob'
-                    nullable: true
-                    description: A list of message content tokens with log probability information.
-                    readOnly: true
-                  refusal:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/OpenAI.ChatCompletionTokenLogprob'
-                    nullable: true
-                    description: A list of message refusal tokens with log probability information.
-                    readOnly: true
-                required:
-                  - content
-                  - refusal
-                nullable: true
-                description: Log probability information for the choice.
-            required:
-              - finish_reason
-              - index
-              - message
-              - logprobs
-          description: A list of chat completion choices. Can be more than one if `n` is greater than 1.
-        created:
-          type: integer
-          format: unixtime
-          description: The Unix timestamp (in seconds) of when the chat completion was created.
-        model:
-          type: string
-          description: The model used for the chat completion.
-        service_tier:
-          type: string
-          enum:
-            - scale
-            - default
-          nullable: true
-          description: The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
-        system_fingerprint:
-          type: string
-          description: |-
-            This fingerprint represents the backend configuration that the model runs with.
-
-            Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
-        object:
-          type: string
-          enum:
-            - chat.completion
-          description: The object type, which is always `chat.completion`.
-      description: Represents a chat completion response returned by model, based on the provided input.
     CreateMessageRequestAttachments:
       type: array
       items:
@@ -2142,7 +1674,7 @@ components:
               description: |-
                 The maximum number of results the file search tool should output. The default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number should be between 1 and 50 inclusive.
 
-                Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
+                Note that the file search tool may output fewer than `max_num_results` results. See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
             ranking_options:
               $ref: '#/components/schemas/OpenAI.FileSearchRankingOptions'
           description: Overrides for the file search tool.
@@ -2196,6 +1728,19 @@ components:
         parameters:
           $ref: '#/components/schemas/OpenAI.FunctionParameters'
       deprecated: true
+    OpenAI.ChatCompletionMessageAudioChunk:
+      type: object
+      properties:
+        id:
+          type: string
+        transcript:
+          type: string
+        data:
+          type: string
+          format: base64
+        expires_at:
+          type: integer
+          format: unixtime
     OpenAI.ChatCompletionMessageToolCall:
       type: object
       required:
@@ -2295,6 +1840,19 @@ components:
         name:
           type: string
           description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
+        audio:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Unique identifier for a previous audio response from the model.
+          required:
+            - id
+          nullable: true
+          description: |-
+            Data about a previous audio response from the model.
+            [Learn more](/docs/guides/audio).
+          x-oaiExpandable: true
         tool_calls:
           $ref: '#/components/schemas/ChatCompletionMessageToolCallsItem'
         function_call:
@@ -2312,6 +1870,7 @@ components:
           deprecated: true
       allOf:
         - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessage'
+      description: Messages sent by the model in response to user messages.
     OpenAI.ChatCompletionRequestAssistantMessageContentPart:
       anyOf:
         - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessageContentPartText'
@@ -2356,6 +1915,34 @@ components:
           tool: '#/components/schemas/OpenAI.ChatCompletionRequestToolMessage'
           function: '#/components/schemas/OpenAI.ChatCompletionRequestFunctionMessage'
       x-oaiExpandable: true
+    OpenAI.ChatCompletionRequestMessageContentPartAudio:
+      type: object
+      required:
+        - type
+        - input_audio
+      properties:
+        type:
+          type: string
+          enum:
+            - input_audio
+          description: The type of the content part. Always `input_audio`.
+        input_audio:
+          type: object
+          properties:
+            data:
+              type: string
+              format: base64
+              description: Base64 encoded audio data.
+            format:
+              type: string
+              enum:
+                - wav
+                - mp3
+              description: The format of the encoded audio data. Currently supports "wav" and "mp3".
+          required:
+            - data
+            - format
+      description: Learn about [audio inputs](/docs/guides/audio).
     OpenAI.ChatCompletionRequestMessageContentPartImage:
       type: object
       required:
@@ -2380,10 +1967,11 @@ components:
                 - auto
                 - low
                 - high
-              description: Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
+              description: Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision#low-or-high-fidelity-image-understanding).
               default: auto
           required:
             - url
+      description: Learn about [image inputs](/docs/guides/vision).
     OpenAI.ChatCompletionRequestMessageContentPartRefusal:
       type: object
       required:
@@ -2412,6 +2000,7 @@ components:
         text:
           type: string
           description: The text content.
+      description: Learn about [text inputs](/docs/guides/text-generation).
     OpenAI.ChatCompletionRequestSystemMessage:
       type: object
       required:
@@ -2435,6 +2024,10 @@ components:
           description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
       allOf:
         - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessage'
+      description: |-
+        Developer-provided instructions that the model should follow, regardless of
+        messages sent by the user. With o1 models and newer, use `developer` messages
+        for this purpose instead.
     OpenAI.ChatCompletionRequestSystemMessageContentPart:
       type: object
       allOf:
@@ -2493,10 +2086,14 @@ components:
           description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
       allOf:
         - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessage'
+      description: |-
+        Messages sent by an end user, containing prompts or additional context
+        information.
     OpenAI.ChatCompletionRequestUserMessageContentPart:
       anyOf:
         - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessageContentPartText'
         - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessageContentPartImage'
+        - $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessageContentPartAudio'
       x-oaiExpandable: true
     OpenAI.ChatCompletionResponseMessage:
       type: object
@@ -2532,6 +2129,38 @@ components:
             - arguments
           description: Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.
           deprecated: true
+        audio:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Unique identifier for this audio response.
+            expires_at:
+              type: integer
+              format: unixtime
+              description: |-
+                The Unix timestamp (in seconds) for when this audio response will
+                no longer be accessible on the server for use in multi-turn
+                conversations.
+            data:
+              type: string
+              format: base64
+              description: |-
+                Base64 encoded audio bytes generated by the model, in the format
+                specified in the request.
+            transcript:
+              type: string
+              description: Transcript of the audio generated by the model.
+          required:
+            - id
+            - expires_at
+            - data
+            - transcript
+          nullable: true
+          description: |-
+            If the audio output modality is requested, this object contains data
+            about the audio response from the model. [Learn more](/docs/guides/audio).
+          x-oaiExpandable: true
       description: A chat completion message generated by the model.
     OpenAI.ChatCompletionStreamOptions:
       type: object
@@ -2543,6 +2172,10 @@ components:
     OpenAI.ChatCompletionStreamResponseDelta:
       type: object
       properties:
+        audio:
+          allOf:
+            - $ref: '#/components/schemas/OpenAI.ChatCompletionMessageAudioChunk'
+          description: Response audio associated with the streaming chat delta payload.
         content:
           type: string
           nullable: true
@@ -2591,7 +2224,7 @@ components:
         bytes:
           type: object
           allOf:
-            - $ref: '#/components/schemas/ChatCompletionTokenLogprobBytesItem'
+            - $ref: '#/components/schemas/ChatCompletionTokenLogprobBytes'
           nullable: true
           description: A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
         top_logprobs:
@@ -2779,7 +2412,7 @@ components:
           default: vivid
         user:
           type: string
-          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids).
     OpenAI.CreateMessageRequest:
       type: object
       required:
@@ -2858,7 +2491,7 @@ components:
       description: |-
         The ranking options for the file search. If not specified, the file search tool will use the `auto` ranker and a score_threshold of 0.
 
-        See the [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings) for more information.
+        See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.
     OpenAI.FunctionObject:
       type: object
       required:
@@ -3228,52 +2861,6 @@ components:
       type: object
       additionalProperties: {}
       description: The schema for the response format, described as a JSON Schema object.
-    OpenAIFileWithOmittedProperties:
-      type: object
-      required:
-        - id
-        - bytes
-        - created_at
-        - filename
-        - object
-        - purpose
-      properties:
-        id:
-          type: string
-          description: The file identifier, which can be referenced in the API endpoints.
-        bytes:
-          type: integer
-          format: int32
-          nullable: true
-          description: The size of the file, in bytes.
-        created_at:
-          type: integer
-          format: unixtime
-          description: The Unix timestamp (in seconds) for when the file was created.
-        filename:
-          type: string
-          description: The name of the file.
-        object:
-          type: string
-          enum:
-            - file
-          description: The object type, which is always `file`.
-        purpose:
-          type: string
-          enum:
-            - assistants
-            - assistants_output
-            - batch
-            - batch_output
-            - fine-tune
-            - fine-tune-results
-            - vision
-          description: The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results` and `vision`.
-        status_details:
-          type: string
-          description: Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
-          deprecated: true
-      description: The `File` object represents a document that has been uploaded to OpenAI.
     PineconeChatDataSource:
       type: object
       required:

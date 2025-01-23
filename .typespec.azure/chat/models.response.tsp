@@ -1,7 +1,23 @@
+import "@typespec/versioning";
+
 import "../../.typespec/chat/models.tsp";
 import "../common";
 
+using TypeSpec.Versioning;
+
 namespace AzureOpenAI;
+
+// Ingested changes from OpenAI for 2024-09-01-preview
+
+@@added(OpenAI.CompletionUsage.completion_tokens_details,
+  AzureOpenAIServiceApiVersion.v2024_09_01_preview
+);
+
+// Ingested changes from OpenAI for 2024-08-01-preview
+
+@@added(OpenAI.ChatResponseFormatJsonSchema,
+  AzureOpenAIServiceApiVersion.v2024_08_01_preview
+);
 
 /**
  * The extended top-level chat completion response model for the Azure OpenAI service.

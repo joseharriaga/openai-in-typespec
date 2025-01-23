@@ -203,13 +203,13 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          username_and_password: '#/components/schemas/AzureChatDataSourceUsernameAndPasswordAuthenticationOptions'
           connection_string: '#/components/schemas/AzureChatDataSourceConnectionStringAuthenticationOptions'
+          system_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
+          user_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
           key_and_key_id: '#/components/schemas/AzureChatDataSourceKeyAndKeyIdAuthenticationOptions'
           encoded_api_key: '#/components/schemas/AzureChatDataSourceEncodedApiKeyAuthenticationOptions'
           access_token: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
-          system_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
-          user_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
+          username_and_password: '#/components/schemas/AzureChatDataSourceUsernameAndPasswordAuthenticationOptions'
     AzureChatDataSourceConnectionStringAuthenticationOptions:
       type: object
       required:
@@ -287,9 +287,8 @@ components:
             https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/embeddings.
             The api-version query parameter is not allowed.
         authentication:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
-            - $ref: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
           description: |-
             The authentication mechanism to use with the endpoint-based vectorization source.
             Endpoint authentication supports API key and access token mechanisms.
@@ -404,6 +403,7 @@ components:
       discriminator:
         propertyName: type
         mapping:
+          endpoint: '#/components/schemas/AzureChatDataSourceEndpointVectorizationSource'
           deployment_name: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
           model_id: '#/components/schemas/AzureChatDataSourceModelIdVectorizationSource'
           integrated: '#/components/schemas/AzureChatDataSourceIntegratedVectorizationSource'
@@ -1281,7 +1281,6 @@ components:
                 - $ref: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
                 - $ref: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
                 - $ref: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
-                - $ref: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
               description: The authentication mechanism to use with Azure Search.
             fields_mapping:
               type: object
@@ -1330,10 +1329,8 @@ components:
               type: string
               description: A filter to apply to the search.
             embedding_dependency:
-              anyOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceEndpointVectorizationSource'
-                - $ref: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
-                - $ref: '#/components/schemas/AzureChatDataSourceIntegratedVectorizationSource'
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
               description: |-
                 The vectorization source to use with Azure Search.
                 Supported sources for Azure Search include endpoint, deployment name, and integrated.

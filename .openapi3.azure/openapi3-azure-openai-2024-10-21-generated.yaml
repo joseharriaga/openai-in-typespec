@@ -157,28 +157,11 @@ components:
         mapping:
           azure_search: '#/components/schemas/AzureSearchChatDataSource'
           azure_cosmos_db: '#/components/schemas/AzureCosmosDBChatDataSource'
-          elasticsearch: '#/components/schemas/ElasticsearchChatDataSource'
-          pinecone: '#/components/schemas/PineconeChatDataSource'
-          mongo_db: '#/components/schemas/MongoDBChatDataSource'
       description: |-
         A representation of configuration data for a single Azure OpenAI chat data source.
         This will be used by a chat completions request that should use Azure OpenAI chat extensions to augment the
         response behavior.
         The use of this configuration is compatible only with Azure OpenAI.
-    AzureChatDataSourceAccessTokenAuthenticationOptions:
-      type: object
-      required:
-        - type
-        - access_token
-      properties:
-        type:
-          type: string
-          enum:
-            - access_token
-        access_token:
-          type: string
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
     AzureChatDataSourceApiKeyAuthenticationOptions:
       type: object
       required:
@@ -203,11 +186,7 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          username_and_password: '#/components/schemas/AzureChatDataSourceUsernameAndPasswordAuthenticationOptions'
           connection_string: '#/components/schemas/AzureChatDataSourceConnectionStringAuthenticationOptions'
-          key_and_key_id: '#/components/schemas/AzureChatDataSourceKeyAndKeyIdAuthenticationOptions'
-          encoded_api_key: '#/components/schemas/AzureChatDataSourceEncodedApiKeyAuthenticationOptions'
-          access_token: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
           system_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
           user_assigned_managed_identity: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
     AzureChatDataSourceConnectionStringAuthenticationOptions:
@@ -252,20 +231,6 @@ components:
         Represents a vectorization source that makes internal service calls against an Azure OpenAI embedding model
         deployment. In contrast with the endpoint-based vectorization source, a deployment-name-based vectorization source
         must be part of the same Azure OpenAI resource but can be used even in private networks.
-    AzureChatDataSourceEncodedApiKeyAuthenticationOptions:
-      type: object
-      required:
-        - type
-        - encoded_api_key
-      properties:
-        type:
-          type: string
-          enum:
-            - encoded_api_key
-        encoded_api_key:
-          type: string
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
     AzureChatDataSourceEndpointVectorizationSource:
       type: object
       required:
@@ -287,9 +252,8 @@ components:
             https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/embeddings.
             The api-version query parameter is not allowed.
         authentication:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
-            - $ref: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
           description: |-
             The authentication mechanism to use with the endpoint-based vectorization source.
             Endpoint authentication supports API key and access token mechanisms.
@@ -302,55 +266,6 @@ components:
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
       description: Represents a vectorization source that makes public service calls against an Azure OpenAI embedding model deployment.
-    AzureChatDataSourceIntegratedVectorizationSource:
-      type: object
-      required:
-        - type
-      properties:
-        type:
-          type: string
-          enum:
-            - integrated
-          description: The type identifier, always 'integrated' for this vectorization source type.
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
-      description: Represents an integrated vectorization source as defined within the supporting search resource.
-    AzureChatDataSourceKeyAndKeyIdAuthenticationOptions:
-      type: object
-      required:
-        - type
-        - key
-        - key_id
-      properties:
-        type:
-          type: string
-          enum:
-            - key_and_key_id
-        key:
-          type: string
-        key_id:
-          type: string
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
-    AzureChatDataSourceModelIdVectorizationSource:
-      type: object
-      required:
-        - type
-        - model_id
-      properties:
-        type:
-          type: string
-          enum:
-            - model_id
-          description: The type identifier, always 'model_id' for this vectorization source type.
-        model_id:
-          type: string
-          description: The embedding model build ID to use for vectorization.
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
-      description: |-
-        Represents a vectorization source that makes service calls based on a search service model ID.
-        This source type is currently only supported by Elasticsearch.
     AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions:
       type: object
       required:
@@ -376,23 +291,6 @@ components:
           type: string
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
-    AzureChatDataSourceUsernameAndPasswordAuthenticationOptions:
-      type: object
-      required:
-        - type
-        - username
-        - password
-      properties:
-        type:
-          type: string
-          enum:
-            - username_and_password
-        username:
-          type: string
-        password:
-          type: string
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSourceAuthenticationOptions'
     AzureChatDataSourceVectorizationSource:
       type: object
       required:
@@ -404,9 +302,8 @@ components:
       discriminator:
         propertyName: type
         mapping:
+          endpoint: '#/components/schemas/AzureChatDataSourceEndpointVectorizationSource'
           deployment_name: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
-          model_id: '#/components/schemas/AzureChatDataSourceModelIdVectorizationSource'
-          integrated: '#/components/schemas/AzureChatDataSourceIntegratedVectorizationSource'
       description: A representation of a data vectorization source usable as an embedding resource with a data source.
     AzureChatMessageContext:
       type: object
@@ -1281,7 +1178,6 @@ components:
                 - $ref: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
                 - $ref: '#/components/schemas/AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions'
                 - $ref: '#/components/schemas/AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions'
-                - $ref: '#/components/schemas/AzureChatDataSourceAccessTokenAuthenticationOptions'
               description: The authentication mechanism to use with Azure Search.
             fields_mapping:
               type: object
@@ -1330,10 +1226,8 @@ components:
               type: string
               description: A filter to apply to the search.
             embedding_dependency:
-              anyOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceEndpointVectorizationSource'
-                - $ref: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
-                - $ref: '#/components/schemas/AzureChatDataSourceIntegratedVectorizationSource'
+              allOf:
+                - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
               description: |-
                 The vectorization source to use with Azure Search.
                 Supported sources for Azure Search include endpoint, deployment name, and integrated.
@@ -1374,104 +1268,6 @@ components:
         required:
           - file_id
           - tools
-    ElasticsearchChatDataSource:
-      type: object
-      required:
-        - type
-        - parameters
-      properties:
-        type:
-          type: string
-          enum:
-            - elasticsearch
-          description: The discriminated type identifier, which is always 'elasticsearch'.
-        parameters:
-          type: object
-          properties:
-            top_n_documents:
-              type: integer
-              format: int32
-              description: The configured number of documents to feature in the query.
-            in_scope:
-              type: boolean
-              description: Whether queries should be restricted to use of the indexed data.
-            strictness:
-              type: integer
-              format: int32
-              minimum: 1
-              maximum: 5
-              description: |-
-                The configured strictness of the search relevance filtering.
-                Higher strictness will increase precision but lower recall of the answer.
-            max_search_queries:
-              type: integer
-              format: int32
-              description: |-
-                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-                By default, the system will make an automatic determination.
-            allow_partial_result:
-              type: boolean
-              description: |-
-                If set to true, the system will allow partial search results to be used and the request will fail if all
-                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-              default: false
-            include_contexts:
-              type: array
-              items:
-                type: string
-                enum:
-                  - citations
-                  - intent
-                  - all_retrieved_documents
-              maxItems: 3
-              description: |-
-                The output context properties to include on the response.
-                By default, citations and intent will be requested.
-              default:
-                - citations
-                - intent
-            endpoint:
-              type: string
-              format: uri
-            index_name:
-              type: string
-            authentication:
-              anyOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceKeyAndKeyIdAuthenticationOptions'
-                - $ref: '#/components/schemas/AzureChatDataSourceEncodedApiKeyAuthenticationOptions'
-            fields_mapping:
-              type: object
-              properties:
-                title_field:
-                  type: string
-                url_field:
-                  type: string
-                filepath_field:
-                  type: string
-                content_fields:
-                  type: array
-                  items:
-                    type: string
-                content_fields_separator:
-                  type: string
-                vector_fields:
-                  type: array
-                  items:
-                    type: string
-            query_type:
-              type: string
-              enum:
-                - simple
-                - vector
-            embedding_dependency:
-              $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
-          required:
-            - endpoint
-            - index_name
-            - authentication
-          description: The parameter information to control the use of the Elasticsearch data source.
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSource'
     MessageObjectAttachments:
       type: array
       items:
@@ -1488,127 +1284,6 @@ components:
                 - $ref: '#/components/schemas/OpenAI.AssistantToolsFileSearchTypeOnly'
             description: The tools to add this file to.
             x-oaiExpandable: true
-    MongoDBChatDataSource:
-      type: object
-      required:
-        - type
-        - parameters
-      properties:
-        type:
-          type: string
-          enum:
-            - mongo_db
-          description: The discriminated type identifier, which is always 'mongo_db'.
-        parameters:
-          type: object
-          properties:
-            top_n_documents:
-              type: integer
-              format: int32
-              description: The configured number of documents to feature in the query.
-            in_scope:
-              type: boolean
-              description: Whether queries should be restricted to use of the indexed data.
-            strictness:
-              type: integer
-              format: int32
-              minimum: 1
-              maximum: 5
-              description: |-
-                The configured strictness of the search relevance filtering.
-                Higher strictness will increase precision but lower recall of the answer.
-            max_search_queries:
-              type: integer
-              format: int32
-              description: |-
-                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-                By default, the system will make an automatic determination.
-            allow_partial_result:
-              type: boolean
-              description: |-
-                If set to true, the system will allow partial search results to be used and the request will fail if all
-                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-              default: false
-            include_contexts:
-              type: array
-              items:
-                type: string
-                enum:
-                  - citations
-                  - intent
-                  - all_retrieved_documents
-              maxItems: 3
-              description: |-
-                The output context properties to include on the response.
-                By default, citations and intent will be requested.
-              default:
-                - citations
-                - intent
-            endpoint:
-              type: string
-              description: The name of the MongoDB cluster endpoint.
-            database_name:
-              type: string
-              description: The name of the MongoDB database.
-            collection_name:
-              type: string
-              description: The name of the MongoDB collection.
-            app_name:
-              type: string
-              description: The name of the MongoDB application.
-            index_name:
-              type: string
-              description: The name of the MongoDB index.
-            authentication:
-              allOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceUsernameAndPasswordAuthenticationOptions'
-              description: |-
-                The authentication mechanism to use with Pinecone.
-                Supported authentication mechanisms for Pinecone include: username and password.
-            embedding_dependency:
-              anyOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceEndpointVectorizationSource'
-                - $ref: '#/components/schemas/AzureChatDataSourceDeploymentNameVectorizationSource'
-              description: |-
-                The vectorization source to use as an embedding dependency for the MongoDB data source.
-                Supported vectorization sources for MongoDB include: endpoint, deployment name.
-            fields_mapping:
-              type: object
-              properties:
-                content_fields:
-                  type: array
-                  items:
-                    type: string
-                vector_fields:
-                  type: array
-                  items:
-                    type: string
-                title_field:
-                  type: string
-                url_field:
-                  type: string
-                filepath_field:
-                  type: string
-                content_fields_separator:
-                  type: string
-              required:
-                - content_fields
-                - vector_fields
-              description: |-
-                Field mappings to apply to data used by the MongoDB data source.
-                Note that content and vector field mappings are required for MongoDB.
-          required:
-            - endpoint
-            - database_name
-            - collection_name
-            - app_name
-            - index_name
-            - authentication
-            - embedding_dependency
-            - fields_mapping
-          description: The parameter information to control the use of the MongoDB data source.
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSource'
     OpenAI.AssistantToolDefinition:
       type: object
       required:
@@ -2863,109 +2538,6 @@ components:
       type: object
       additionalProperties: {}
       description: The schema for the response format, described as a JSON Schema object.
-    PineconeChatDataSource:
-      type: object
-      required:
-        - type
-        - parameters
-      properties:
-        type:
-          type: string
-          enum:
-            - pinecone
-          description: The discriminated type identifier, which is always 'pinecone'.
-        parameters:
-          type: object
-          properties:
-            top_n_documents:
-              type: integer
-              format: int32
-              description: The configured number of documents to feature in the query.
-            in_scope:
-              type: boolean
-              description: Whether queries should be restricted to use of the indexed data.
-            strictness:
-              type: integer
-              format: int32
-              minimum: 1
-              maximum: 5
-              description: |-
-                The configured strictness of the search relevance filtering.
-                Higher strictness will increase precision but lower recall of the answer.
-            max_search_queries:
-              type: integer
-              format: int32
-              description: |-
-                The maximum number of rewritten queries that should be sent to the search provider for a single user message.
-                By default, the system will make an automatic determination.
-            allow_partial_result:
-              type: boolean
-              description: |-
-                If set to true, the system will allow partial search results to be used and the request will fail if all
-                partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
-              default: false
-            include_contexts:
-              type: array
-              items:
-                type: string
-                enum:
-                  - citations
-                  - intent
-                  - all_retrieved_documents
-              maxItems: 3
-              description: |-
-                The output context properties to include on the response.
-                By default, citations and intent will be requested.
-              default:
-                - citations
-                - intent
-            environment:
-              type: string
-              description: The environment name to use with Pinecone.
-            index_name:
-              type: string
-              description: The name of the Pinecone database index to use.
-            authentication:
-              allOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceApiKeyAuthenticationOptions'
-              description: |-
-                The authentication mechanism to use with Pinecone.
-                Supported authentication mechanisms for Pinecone include: API key.
-            embedding_dependency:
-              allOf:
-                - $ref: '#/components/schemas/AzureChatDataSourceVectorizationSource'
-              description: |-
-                The vectorization source to use as an embedding dependency for the Pinecone data source.
-                Supported vectorization sources for Pinecone include: deployment name.
-            fields_mapping:
-              type: object
-              properties:
-                content_fields:
-                  type: array
-                  items:
-                    type: string
-                title_field:
-                  type: string
-                url_field:
-                  type: string
-                filepath_field:
-                  type: string
-                content_fields_separator:
-                  type: string
-              required:
-                - content_fields
-              description: |-
-                Field mappings to apply to data used by the Pinecone data source.
-                Note that content field mappings are required for Pinecone.
-          required:
-            - environment
-            - index_name
-            - authentication
-            - embedding_dependency
-            - fields_mapping
-          description: The parameter information to control the use of the Pinecone data source.
-      allOf:
-        - $ref: '#/components/schemas/AzureChatDataSource'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

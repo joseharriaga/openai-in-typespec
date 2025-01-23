@@ -1,0 +1,21 @@
+using System;
+using NUnit.Framework;
+
+
+using OpenAI.Models;
+
+namespace OpenAI.Docs.ApiReference;
+public partial class RetrieveModelApiReference {
+
+    [Test]
+    public void RetrieveModel()
+    {
+		OpenAIModelClient client = new(
+		    Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+		);
+		
+		var model = client.GetModel("babbage-002");
+		Console.WriteLine(model.Value.Id);
+
+	}
+}

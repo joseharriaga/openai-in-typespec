@@ -17,11 +17,10 @@ namespace Azure.AI.OpenAI.Tests;
 
 public partial class ChatTests
 {
-
     [RecordedTest]
     public async Task ChatAudioWorks()
     {
-        ChatClient client = GetTestClient("chat_audio_tip");
+        ChatClient client = GetTestClient("chat_audio");
 
         // Part 1a: exercise non-streaming request for text & audio via a user message with (input) audio content
 

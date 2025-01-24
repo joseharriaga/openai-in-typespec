@@ -42,10 +42,6 @@ public class ConversationTestFixtureBase
 
     public TestClientOptions GetTestClientOptions(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        if (version != AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)
-        {
-            Assert.Inconclusive("/realtime not yet supported outside of 2024-10-01-preview");
-        }
         return version is null ? new TestClientOptions() : new TestClientOptions(version.Value);
     }
 

@@ -24,6 +24,11 @@
     "key": "Sanitized",
     "deployment": "gpt-4o-0806"
   },
+  "chat_audio": {
+    "endpoint": "https://Sanitized.openai.azure.com/",
+    "key": "Sanitized",
+    "deployment": "gpt-4o-audio-preview"
+  },
   "chat_audio_tip": {
     "endpoint": "https://Sanitized.openai.azure.com/",
     "key": "Sanitized",

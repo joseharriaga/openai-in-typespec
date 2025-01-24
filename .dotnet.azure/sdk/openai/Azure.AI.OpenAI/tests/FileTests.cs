@@ -26,7 +26,7 @@ public class FileTests : AoaiTestBase<OpenAIFileClient>
 #else
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
 #endif
-    //[TestCase(null)]
+    [TestCase(null)]
     public async Task CanUploadAndDeleteFiles(AzureOpenAIClientOptions.ServiceVersion? version)
     {
         OpenAIFileClient client = GetTestClient(GetTestClientOptions(version));
@@ -48,7 +48,7 @@ public class FileTests : AoaiTestBase<OpenAIFileClient>
 #else
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
 #endif
-    //[TestCase(null)]
+    [TestCase(null)]
     public async Task CanListFiles(AzureOpenAIClientOptions.ServiceVersion? version)
     {
         OpenAIFileClient client = GetTestClient(GetTestClientOptions(version));
@@ -58,12 +58,6 @@ public class FileTests : AoaiTestBase<OpenAIFileClient>
 
     private static TestClientOptions GetTestClientOptions(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-#if !AZURE_OPENAI_GA
-        if (version != AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)
-        {
-            Assert.Inconclusive("full /files support not yet available after 2024-10-01-preview");
-        }
-#endif
         return version is null ? new TestClientOptions() : new TestClientOptions(version.Value);
     }
 }

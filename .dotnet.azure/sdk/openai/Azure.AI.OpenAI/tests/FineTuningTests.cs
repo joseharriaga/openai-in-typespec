@@ -29,10 +29,6 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
 {
     public FineTuningTests(bool isAsync) : base(isAsync)
     {
-        if (new AzureOpenAIClientOptions().Version == "2024-12-01-preview")
-        {
-            Assert.Inconclusive("2024-12-01-preview not currently supported for files, fine-tuning, and related routes");
-        }
     }
 
 #if !AZURE_OPENAI_GA

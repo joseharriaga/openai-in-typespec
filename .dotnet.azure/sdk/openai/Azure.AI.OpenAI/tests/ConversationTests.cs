@@ -18,14 +18,13 @@ namespace Azure.AI.OpenAI.Tests;
 [TestFixture(false)]
 public class ConversationTests : ConversationTestFixtureBase
 {
-
     public ConversationTests(bool isAsync) : base(isAsync) { }
 
 #if !AZURE_OPENAI_GA
     [Test]
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
     [TestCase(null)]
     public async Task CanConfigureSession(AzureOpenAIClientOptions.ServiceVersion? version)
     {
@@ -98,7 +97,7 @@ public class ConversationTests : ConversationTestFixtureBase
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
     //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
     //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
-    //[TestCase(null)]
+    [TestCase(null)]
     public async Task TextOnlyWorks(AzureOpenAIClientOptions.ServiceVersion? version)
     {
         RealtimeConversationClient client = GetTestClient(GetTestClientOptions(version));
@@ -178,8 +177,8 @@ public class ConversationTests : ConversationTestFixtureBase
 
     [Test]
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
     [TestCase(null)]
     public async Task ItemManipulationWorks(AzureOpenAIClientOptions.ServiceVersion? version)
     {
@@ -257,8 +256,8 @@ public class ConversationTests : ConversationTestFixtureBase
 
     [Test]
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
     [TestCase(null)]
     public async Task AudioWithToolsWorks(AzureOpenAIClientOptions.ServiceVersion? version)
     {
@@ -359,8 +358,8 @@ public class ConversationTests : ConversationTestFixtureBase
 
     [Test]
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
     [TestCase(null)]
     public async Task CanDisableVoiceActivityDetection(AzureOpenAIClientOptions.ServiceVersion? version)
     {
@@ -414,7 +413,7 @@ public class ConversationTests : ConversationTestFixtureBase
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
     //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
     //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
-    //[TestCase(null)]
+    [TestCase(null)]
     public async Task CanUseManualVadTurnDetection(AzureOpenAIClientOptions.ServiceVersion? version)
     {
         RealtimeConversationClient client = GetTestClient(GetTestClientOptions(version));
@@ -489,8 +488,8 @@ public class ConversationTests : ConversationTestFixtureBase
 
     [Test]
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
-    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
     [TestCase(null)]
     public async Task BadCommandProvidesError(AzureOpenAIClientOptions.ServiceVersion? version)
     {

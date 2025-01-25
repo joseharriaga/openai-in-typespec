@@ -997,7 +997,8 @@ components:
         tool_choice:
           $ref: '#/components/schemas/OpenAI.ChatCompletionToolChoiceOption'
         parallel_tool_calls:
-          type: boolean
+          allOf:
+            - $ref: '#/components/schemas/OpenAI.ParallelToolCalls'
           default: true
         user:
           type: string
@@ -2935,6 +2936,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/OpenAI.MessageContent'
       description: The text content that is part of a message.
+    OpenAI.ParallelToolCalls:
+      type: boolean
+      description: Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
     OpenAI.ResponseFormatJsonSchemaSchema:
       type: object
       additionalProperties: {}

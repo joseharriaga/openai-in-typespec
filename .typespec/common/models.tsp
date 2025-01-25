@@ -87,7 +87,7 @@ model ResponseFormatJsonSchema extends OmniTypedResponseFormat {
 }
 
 /** Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use. */
-alias ParallelToolCalls = boolean;
+scalar ParallelToolCalls extends boolean;
 
 /** Usage statistics for the completion request. */
 model CompletionUsage {

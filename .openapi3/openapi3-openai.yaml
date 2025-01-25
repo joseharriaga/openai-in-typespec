@@ -5177,7 +5177,8 @@ components:
         tool_choice:
           $ref: '#/components/schemas/ChatCompletionToolChoiceOption'
         parallel_tool_calls:
-          type: boolean
+          allOf:
+            - $ref: '#/components/schemas/ParallelToolCalls'
           default: true
         user:
           type: string
@@ -6648,7 +6649,8 @@ components:
             - $ref: '#/components/schemas/AssistantsApiToolChoiceOption'
           nullable: true
         parallel_tool_calls:
-          type: boolean
+          allOf:
+            - $ref: '#/components/schemas/ParallelToolCalls'
           default: true
         response_format:
           allOf:
@@ -6836,7 +6838,8 @@ components:
             - $ref: '#/components/schemas/AssistantsApiToolChoiceOption'
           nullable: true
         parallel_tool_calls:
-          type: boolean
+          allOf:
+            - $ref: '#/components/schemas/ParallelToolCalls'
           default: true
         response_format:
           allOf:
@@ -7397,7 +7400,8 @@ components:
             $ref: '#/components/schemas/ChatCompletionTool'
           description: A list of tools the model may generate JSON inputs for.
         parallel_tool_calls:
-          type: boolean
+          allOf:
+            - $ref: '#/components/schemas/ParallelToolCalls'
           default: true
         functions:
           type: array
@@ -7499,7 +7503,8 @@ components:
                 $ref: '#/components/schemas/ChatCompletionTool'
               description: A list of tools the model may generate JSON inputs for.
             parallel_tool_calls:
-              type: boolean
+              allOf:
+                - $ref: '#/components/schemas/ParallelToolCalls'
               default: true
         preferred_completion:
           type: array
@@ -9190,6 +9195,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/FileChunkingStrategyResponseParam'
       description: This is returned when the chunking strategy is unknown. Typically, this is because the file was indexed before the `chunking_strategy` concept was introduced in the API.
+    ParallelToolCalls:
+      type: boolean
+      description: Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
     PredictionContent:
       type: object
       required:
@@ -12290,7 +12298,8 @@ components:
             - $ref: '#/components/schemas/AssistantsApiToolChoiceOption'
           nullable: true
         parallel_tool_calls:
-          type: boolean
+          allOf:
+            - $ref: '#/components/schemas/ParallelToolCalls'
           default: true
         response_format:
           allOf:

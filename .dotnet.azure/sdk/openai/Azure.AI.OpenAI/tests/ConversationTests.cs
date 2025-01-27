@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-using OpenAI;
-using OpenAI.RealtimeConversation;
+﻿using OpenAI.RealtimeConversation;
 using System;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
@@ -20,7 +18,24 @@ public class ConversationTests : ConversationTestFixtureBase
 {
     public ConversationTests(bool isAsync) : base(isAsync) { }
 
-#if !AZURE_OPENAI_GA
+#if AZURE_OPENAI_GA
+    [Test]
+    [Category("Smoke")]
+    public void VersionNotSupportedThrows()
+    {
+        Assert.Throws<InvalidOperationException>(() => GetTestClient());
+    }
+#elif !NET
+    [Test]
+    public void ThrowsOnOldNetFramework()
+    {
+        _ = Assert.ThrowsAsync<PlatformNotSupportedException>(async () =>
+        {
+            RealtimeConversationClient client = GetTestClient();
+            using RealtimeConversationSession session = await client.StartConversationSessionAsync(CancellationToken);
+        });
+    }
+#else
     [Test]
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
     //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
@@ -519,12 +534,5 @@ public class ConversationTests : ConversationTestFixtureBase
 
         Assert.That(gotErrorUpdate, Is.True);
     }
-#else
-    [Test]
-    [Category("Smoke")]
-    public void VersionNotSupportedThrows()
-    {
-        Assert.Throws<InvalidOperationException>(() => GetTestClient());
-    }
-#endif
+#endif // "else" to AZURE_OPENAI_GA, !NET
 }

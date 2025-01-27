@@ -8,6 +8,10 @@ New features include:
 
 - To be filled
 
+### Breaking Changes
+
+- **Batch**: files uploaded for batch operations (`UploadFile` with `FileUploadPurpose.Batch`) will now report a `status` of `processed`, matching expected behavior against OpenAI's `/v1` endpoint. This is a change from past behavior where such files would initially report `pending` and a later `processed`, `error`, or other status depending on operation progress. Batch input validation is instead consistently performed from the batch client.
+
 ## 2.1.0 (2024-12-05)
 
 This GA library release aligns functionality with the latest `2024-10-21` stable service API label.

@@ -43,8 +43,8 @@ public class FileTests : AoaiTestBase<OpenAIFileClient>
     [RecordedTest]
 #if !AZURE_OPENAI_GA
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
-    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
-    //[TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
 #else
     [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
 #endif

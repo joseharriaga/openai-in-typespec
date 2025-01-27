@@ -122,7 +122,8 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
             ServiceVersion defaultVersion = client switch
             {
 #if !AZURE_OPENAI_GA
-                AzureFileClient _ => ServiceVersion.V2024_10_01_Preview,
+                // Realtime (preview only) is currently *only* supported on 2024-10-01-preview; override default
+                // version selection for optimal out-of-the-box support if it's not explicitly specified.
                 AzureRealtimeConversationClient _ => ServiceVersion.V2024_10_01_Preview,
 #endif
 #if !AZURE_OPENAI_GA

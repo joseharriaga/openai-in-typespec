@@ -65,16 +65,6 @@ public enum ChatMessageRole
     System,
 
     /// <summary>
-    /// The <c>developer</c> role, which provides instructions to the model that guide the behavior of future
-    /// <c>assistant</c> messages
-    /// </summary>
-    /// <remarks>
-    /// <c>developer</c> replaces <c>system</c> when using o1 and newer models.
-    /// </remarks>
-    [CodeGenMember("Developer")]
-    Developer,
-
-    /// <summary>
     /// The <c>user</c> role that provides input from the caller as a prompt for model responses.
     /// </summary>
     [CodeGenMember("User")]
@@ -107,4 +97,14 @@ public enum ChatMessageRole
     /// </remarks>
     [CodeGenMember("Function")]
     Function,
+
+    /// <summary>
+    /// The <c>developer</c> role, which provides instructions to the model that guide the behavior of future
+    /// <c>assistant</c> messages
+    /// </summary>
+    /// <remarks>
+    /// <c>developer</c> replaces <c>system</c> when using o1 and newer models.
+    /// </remarks>
+    [CodeGenMember("Developer")]
+    Developer,
 }

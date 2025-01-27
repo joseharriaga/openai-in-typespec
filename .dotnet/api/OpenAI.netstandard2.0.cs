@@ -1353,11 +1353,11 @@ namespace OpenAI.Chat {
     }
     public enum ChatMessageRole {
         System = 0,
-        Developer = 1,
-        User = 2,
-        Assistant = 3,
-        Tool = 4,
-        Function = 5
+        User = 1,
+        Assistant = 2,
+        Tool = 3,
+        Function = 4,
+        Developer = 5
     }
     public class ChatOutputAudio : IJsonModel<ChatOutputAudio>, IPersistableModel<ChatOutputAudio> {
         public BinaryData AudioBytes { get; }

@@ -746,13 +746,9 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
 #if NET
     [RecordedTest]
-    [Ignore("Pending model deployment availability with prediction support")]
     public async Task PredictedOutputsWork()
     {
-        IConfiguration tipConfig = TestConfig.GetConfig("tip")!;
-
-        AzureOpenAIClient azureOpenAIClient = GetTestTopLevelClient(tipConfig);
-        ChatClient client = azureOpenAIClient.GetChatClient("gpt-4o");
+        ChatClient client = GetTestClient();
 
         ChatCompletionOptions options = new()
         {
@@ -768,7 +764,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         };
 
         ChatMessage message = ChatMessage.CreateUserMessage("""
-            Modify the following input to enable the feature. Only respond with the JSON and include no other text.
+            Modify the following input to enable the feature. Only respond with the JSON and include no other text. Do not enclose in markdown backticks or any other syntax; just provide the JSON object.
 
             {
               "feature_name": "test_feature",

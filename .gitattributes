@@ -1,2 +1,3 @@
 *.cs text=auto
 *.tsp text=auto
+*.yaml text=auto

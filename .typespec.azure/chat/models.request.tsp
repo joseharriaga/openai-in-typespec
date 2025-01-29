@@ -1,7 +1,7 @@
 import "@typespec/versioning";
 
 import "../../.typespec/chat/models.tsp";
-import "../main.tsp";
+// import "../main.tsp";
 import "./models.oyd.auth.tsp";
 import "./models.oyd.vectorization.tsp";
 

@@ -1,9 +1,10 @@
 emit:
   - "@typespec/openapi3"
-  - "@open-ai/plugin"
+  # - "@open-ai/plugin"
 options:
   "@typespec/openapi3":
-    output-file: "{project-root}/../.openapi3/openapi3-openai.yaml"
+    # {project-root} seems to be the path of where the tspconfig.yaml file is located
+    output-file: "{project-root}/../../.openapi3/openapi3-openai.yaml"
   "@typespec/http-client-csharp":
     emitter-output-dir: "{project-root}/../.dotnet"
     unreferenced-types-handling: keepAll

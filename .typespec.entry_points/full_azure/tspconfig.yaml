@@ -1,9 +1,10 @@
 emit:
   - "@typespec/openapi3"
-  - "@azure-tools/typespec-csharp"
+  # - "@azure-tools/typespec-csharp"
 options:
   "@typespec/openapi3":
-    output-file: "{project-root}/../.openapi3.azure/openapi3-azure-openai-{version}-generated.yaml"
+    # {project-root} seems to be the path of where the tspconfig.yaml file is located
+    output-file: "{project-root}/../../.openapi3.azure/openapi3-azure-openai-{version}-generated.yaml"
   "@azure-tools/typespec-csharp":
     namespace: "Azure.AI.OpenAI"
     emitter-output-dir: "{project-root}/../.dotnet.azure/sdk/openai/Azure.AI.OpenAI/src"

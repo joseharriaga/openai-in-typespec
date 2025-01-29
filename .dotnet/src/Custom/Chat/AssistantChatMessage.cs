@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenAI.Chat;
 
@@ -84,6 +85,18 @@ public partial class AssistantChatMessage : ChatMessage
     }
 
     /// <summary>
+    /// Creates a new instance of <see cref="AssistantChatMessage"/> that represents a prior response from the model
+    /// that included audio with a correlation ID.
+    /// </summary>
+    /// <param name="outputAudioReference"> The <c>audio</c> reference with an <c>id</c>, produced by the model. </param>    
+    public AssistantChatMessage(ChatOutputAudioReference outputAudioReference)
+    {
+        Argument.AssertNotNull(outputAudioReference, nameof(outputAudioReference));
+
+        OutputAudioReference = outputAudioReference;
+    }
+
+    /// <summary>
     /// Creates a new instance of <see cref="AssistantChatMessage"/> from a <see cref="ChatCompletion"/> with
     /// an <c>assistant</c> role response.
     /// </summary>
@@ -109,6 +122,10 @@ public partial class AssistantChatMessage : ChatMessage
 
         Refusal = chatCompletion.Refusal;
         FunctionCall = chatCompletion.FunctionCall;
+        if (chatCompletion.OutputAudio is not null)
+        {
+            OutputAudioReference = new(chatCompletion.OutputAudio.Id);
+        }
         foreach (ChatToolCall toolCall in chatCompletion.ToolCalls ?? [])
         {
             ToolCalls.Add(toolCall);
@@ -129,4 +146,8 @@ public partial class AssistantChatMessage : ChatMessage
 
     [Obsolete($"This property is obsolete. Please use {nameof(ToolCalls)} instead.")]
     public ChatFunctionCall FunctionCall { get; set; }
+
+    // CUSTOM: Renamed.
+    [CodeGenMember("Audio")]
+    public ChatOutputAudioReference OutputAudioReference { get; set; }
 }

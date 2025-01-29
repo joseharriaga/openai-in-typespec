@@ -77,7 +77,7 @@ internal partial class AzureOpenAIFileCollection : IJsonModel<AzureOpenAIFileCol
 
     string IPersistableModel<AzureOpenAIFileCollection>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-    internal static new AzureOpenAIFileCollection FromResponse(PipelineResponse response)
+    internal static AzureOpenAIFileCollection FromResponse(PipelineResponse response)
     {
         using var document = JsonDocument.Parse(response.Content);
         return DeserializeAzureOpenAIFileCollection(document.RootElement);

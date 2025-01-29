@@ -99,8 +99,13 @@ $content = $content -creplace ".*Diagnostics.DebuggerStepThrough.*\n", ""
 # Remove internal APIs.
 $content = $content -creplace "  * internal.*`n", ""
 
+# Remove IJsonModel/IPersistableModel interface method entries.
+$content = $content -creplace "        .*(IJsonModel|IPersistableModel).*`n", ""
+$content = $content -creplace "        protected virtual .* (Json|Persistable)Model(Create|Write)Core.*`n", ""
+
 # Other cosmetic simplifications.
 $content = $content -creplace "partial class", "class"
+$content = $content -creplace ".*private.*dummy.*`n", ""
 $content = $content -creplace " { throw null; }", ";"
 $content = $content -creplace " { }", ";"
 

@@ -74,9 +74,10 @@ function Prune-Generated-Files {
   }
 }
 
-Push-Location $repoRoot/.typespec.azure
+Push-Location $repoRoot
 try {
   Invoke { npm ci }
+  Set-Location $repoRoot/.typespec.azure
   Invoke { npm exec --no -- tsp format **/*tsp }
   Invoke { npm exec --no -- tsp compile . }
   Prune-Generated-Files

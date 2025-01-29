@@ -9,13 +9,9 @@ namespace OpenAI.Chat
 {
     public partial class ToolChatMessage : ChatMessage
     {
-        internal ToolChatMessage(ChatMessageRole role, ChatMessageContent content, IDictionary<string, BinaryData> serializedAdditionalRawData, string toolCallId) : base(role, content, serializedAdditionalRawData)
+        internal ToolChatMessage(ChatMessageContent content, Chat.ChatMessageRole role, IDictionary<string, BinaryData> additionalBinaryDataProperties, string toolCallId) : base(content, role, additionalBinaryDataProperties)
         {
             ToolCallId = toolCallId;
-        }
-
-        internal ToolChatMessage()
-        {
         }
 
         public string ToolCallId { get; }

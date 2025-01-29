@@ -19,7 +19,8 @@ function Run-ModelsSubnamespaceCheck {
         "OpenAIModelClient.Protocol.cs",
         "OpenAIModelCollection.cs",
         "OpenAIModelCollection.Serialization.cs",
-        "OpenAIModelsModelFactory.cs"
+        "OpenAIModelsModelFactory.cs",
+        "OpenAIModelClient.RestClient.cs"
     )
 
     $failures = @()
@@ -85,8 +86,11 @@ function Run-TopLevelNamespaceCheck {
         "InternalFunctionDefinition.cs",
         "InternalFunctionDefinition.Serialization.cs",
         "ModelSerializationExtensions.cs",
+        "OpenAIClient.RestClient.cs",
         "Optional.cs",
+        "PipelineRequestHeadersExtensions.cs",
         "TelemetryDetails.cs",
+        "TypeFormatters.cs",
         "Utf8JsonBinaryContent.cs",
 
         # Utilities
@@ -99,7 +103,7 @@ function Run-TopLevelNamespaceCheck {
         "CodeGenTypeAttribute.cs",
         "CustomSerializationHelpers.cs",
         "GenericActionPipelinePolicy.cs",
-        "MultipartFormDataBinaryContent.cs",
+        "MultiPartFormDataBinaryContent.cs",
         "PageCollectionHelpers.cs",
         "PageEnumerator.cs",
         "PageResultEnumerator.cs",

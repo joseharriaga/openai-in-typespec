@@ -8,7 +8,7 @@ namespace Azure.AI.OpenAI.Files;
 [Experimental("AOAI001")]
 internal partial class AzureOpenAIFileCollection : OpenAIFileCollection
 {
-    internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
+    internal new IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         = new ChangeTrackingDictionary<string, BinaryData>();
 
     internal InternalListFilesResponseObject Object { get; }

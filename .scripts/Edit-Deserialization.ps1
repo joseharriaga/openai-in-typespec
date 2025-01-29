@@ -1,3 +1,5 @@
+. $PSScriptRoot\Helpers.ps1
+
 $repoRoot = Join-Path $PSScriptRoot .. -Resolve
 $generatedModelFolder = Join-Path $repoRoot .dotnet\src\Generated\Models
 
@@ -9,11 +11,10 @@ foreach ($file in $files) {
     $statusText = "{0:D3}/{1:D3} : Processing codegen fixup for response deserialization..." -f $editedFilesCount, $files.Count
     $percentComplete = [math]::Round(($editedFilesCount / $files.Count) * 100)
     Write-Progress -Activity "Editing" -Status $statusText -PercentComplete $percentComplete
-    $content = Get-Content -Path $file.FullName
-    $updatedContent = $content -replace "options.Format != `"W`"", "true"
-    if ($content -ne $updatedContent) {
-        Set-Content -Path $file.FullName -Value $updatedContent
-    }
+    Update-In-File-With-Retry `
+        -FilePath $file.FullName `
+        -SearchPattern "options.Format != `"W`"" `
+        -ReplacePattern "true"
     $editedFilesCount++
 }
 

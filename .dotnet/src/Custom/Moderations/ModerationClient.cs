@@ -2,7 +2,9 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,20 +17,14 @@ namespace OpenAI.Moderations;
 /// <summary> The service client for OpenAI moderation operations. </summary>
 [CodeGenClient("Moderations")]
 [CodeGenSuppress("ModerationClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateModerationAsync", typeof(ModerationOptions))]
-[CodeGenSuppress("CreateModeration", typeof(ModerationOptions))]
+[CodeGenSuppress("CreateModerationAsync", typeof(ModerationOptions), typeof(CancellationToken))]
+[CodeGenSuppress("CreateModeration", typeof(ModerationOptions), typeof(CancellationToken))]
 public partial class ModerationClient
 {
     private readonly string _model;
 
-    // CUSTOM: Remove virtual keyword.
-    /// <summary>
-    /// The HTTP pipeline for sending and receiving REST requests and responses.
-    /// </summary>
-    public ClientPipeline Pipeline => _pipeline;
-
     // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="ModerationClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ModerationClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> or <paramref name="apiKey"/> is null. </exception>
@@ -41,7 +37,7 @@ public partial class ModerationClient
     // - Added `model` parameter.
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="ModerationClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ModerationClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> or <paramref name="credential"/> is null. </exception>
@@ -54,7 +50,7 @@ public partial class ModerationClient
     // - Added `model` parameter.
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="ModerationClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ModerationClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
@@ -67,7 +63,7 @@ public partial class ModerationClient
         options ??= new OpenAIClientOptions();
 
         _model = model;
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -76,7 +72,7 @@ public partial class ModerationClient
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
     // - Made protected.
-    /// <summary> Initializes a new instance of <see cref="ModerationClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="ModerationClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline to send and receive REST requests and responses. </param>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="options"> The options to configure the client. </param>
@@ -89,7 +85,7 @@ public partial class ModerationClient
         options ??= new OpenAIClientOptions();
 
         _model = model;
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -103,11 +99,11 @@ public partial class ModerationClient
         Argument.AssertNotNullOrEmpty(input, nameof(input));
 
         ModerationOptions options = new();
-        CreateModerationOptions(BinaryData.FromObjectAsJson(input), ref options);
+        CreateModerationOptions(input, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = await ClassifyTextAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(ModerationResultCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((ModerationResultCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Classifies if the text input is potentially harmful across several categories. </summary>
@@ -120,11 +116,11 @@ public partial class ModerationClient
         Argument.AssertNotNullOrEmpty(input, nameof(input));
 
         ModerationOptions options = new();
-        CreateModerationOptions(BinaryData.FromObjectAsJson(input), ref options);
+        CreateModerationOptions(input, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = ClassifyText(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(ModerationResultCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((ModerationResultCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     /// <summary> Classifies if the text inputs are potentially harmful across several categories. </summary>
@@ -137,11 +133,11 @@ public partial class ModerationClient
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
         ModerationOptions options = new();
-        CreateModerationOptions(BinaryData.FromObjectAsJson(inputs), ref options);
+        CreateModerationOptions(inputs, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = await ClassifyTextAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(ModerationResultCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((ModerationResultCollection)result, result.GetRawResponse());
     }
 
     /// <summary> Classifies if the text inputs are potentially harmful across several categories. </summary>
@@ -154,16 +150,41 @@ public partial class ModerationClient
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
         ModerationOptions options = new();
-        CreateModerationOptions(BinaryData.FromObjectAsJson(inputs), ref options);
+        CreateModerationOptions(inputs, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = ClassifyText(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(ModerationResultCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((ModerationResultCollection)result, result.GetRawResponse());
     }
 
-    private void CreateModerationOptions(BinaryData input, ref ModerationOptions options)
+    private void CreateModerationOptions(string input, ref ModerationOptions options)
     {
-        options.Input = input;
+        using MemoryStream stream = new();
+        using Utf8JsonWriter writer = new(stream);
+
+        writer.WriteStringValue(input);
+        writer.Flush();
+
+        options.Input = BinaryData.FromBytes(stream.ToArray());
+        options.Model = _model;
+    }
+
+    private void CreateModerationOptions(IEnumerable<string> inputs, ref ModerationOptions options)
+    {
+        using MemoryStream stream = new();
+        using Utf8JsonWriter writer = new(stream);
+
+        writer.WriteStartArray();
+
+        foreach (string input in inputs)
+        {
+            writer.WriteStringValue(input);
+        }
+
+        writer.WriteEndArray();
+        writer.Flush();
+
+        options.Input = BinaryData.FromBytes(stream.ToArray());
         options.Model = _model;
     }
 }

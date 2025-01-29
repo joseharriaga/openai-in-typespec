@@ -5,6 +5,7 @@ import "./custom/tools.tsp";
 namespace OpenAI;
 
 model RealtimeRequestSession {
+  ...RealtimeSessionBase;
   modalities?: RealtimeModalities;
   instructions?: string;
   voice?: RealtimeVoice;
@@ -15,34 +16,11 @@ model RealtimeRequestSession {
   tools?: RealtimeTool[];
   tool_choice?: RealtimeToolChoice;
   temperature?: float32;
-
-  // Note: spec errata for 'max_output_tokens'
   max_response_output_tokens?: int32 | "inf";
 }
 
-model RealtimeResponse {
-  object: "realtime.response";
-  id: string;
-  status: RealtimeResponseStatus = RealtimeResponseStatus.in_progress;
-  status_details: RealtimeResponseStatusDetails | null;
-  output: RealtimeResponseItem[];
-  usage: {
-    total_tokens: int32;
-    input_tokens: int32;
-    output_tokens: int32;
-    input_token_details: {
-      cached_tokens: int32;
-      text_tokens: int32;
-      audio_tokens: int32;
-    };
-    output_token_details: {
-      text_tokens: int32;
-      audio_tokens: int32;
-    };
-  };
-}
-
 model RealtimeResponseSession {
+  ...RealtimeSessionBase;
   object: "realtime.session";
   id: string;
   `model`: string;
@@ -57,6 +35,60 @@ model RealtimeResponseSession {
   tool_choice: RealtimeToolChoice;
   temperature: float32;
   max_response_output_tokens: int32 | "inf" | null;
+}
+
+model RealtimeResponseOptions {
+  ...RealtimeResponseBase;
+
+  /** The modalities for the response. */
+  modalities?: RealtimeModalities;
+
+  /** Instructions for the model. */
+  instructions?: string;
+
+  @doc("""
+    The voice the model uses to respond - one of `alloy`, `echo`, or `shimmer`.
+    """)
+  voice?: RealtimeVoice;
+
+  /** The format of output audio. */
+  output_audio_format?: RealtimeAudioFormat;
+
+  // Tool customization: apply enriched tool definition hierarchy
+  /** Tools (functions) available to the model. */
+  tools?: RealtimeTool[];
+
+  /** How the model chooses tools. */
+  tool_choice?: RealtimeToolChoice;
+
+  /** Sampling temperature. */
+  temperature?: float32;
+
+  /** Maximum number of output tokens for a single assistant response, inclusive of tool calls. Provide an integer between 1 and 4096 to limit output tokens, or "inf" for the maximum available tokens for a given model. Defaults to "inf". */
+  max_output_tokens?: int32 | "inf";
+}
+
+model RealtimeResponse {
+  ...RealtimeResponseBase;
+  object: "realtime.response";
+  id: string;
+  status: RealtimeResponseStatus = RealtimeResponseStatus.in_progress;
+  status_details: RealtimeResponseStatusDetails | null;
+  output: RealtimeConversationResponseItem[];
+  usage: {
+    total_tokens: int32;
+    input_tokens: int32;
+    output_tokens: int32;
+    input_token_details: {
+      cached_tokens: int32;
+      text_tokens: int32;
+      audio_tokens: int32;
+    };
+    output_token_details: {
+      text_tokens: int32;
+      audio_tokens: int32;
+    };
+  };
 }
 
 union RealtimeVoice {

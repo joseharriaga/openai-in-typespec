@@ -2,7 +2,9 @@ using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,20 +17,14 @@ namespace OpenAI.Embeddings;
 /// <summary> The service client for OpenAI embedding operations. </summary>
 [CodeGenClient("Embeddings")]
 [CodeGenSuppress("EmbeddingClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
-[CodeGenSuppress("CreateEmbeddingAsync", typeof(EmbeddingGenerationOptions))]
-[CodeGenSuppress("CreateEmbedding", typeof(EmbeddingGenerationOptions))]
+[CodeGenSuppress("CreateEmbeddingAsync", typeof(EmbeddingGenerationOptions), typeof(CancellationToken))]
+[CodeGenSuppress("CreateEmbedding", typeof(EmbeddingGenerationOptions), typeof(CancellationToken))]
 public partial class EmbeddingClient
 {
     private readonly string _model;
 
-    // CUSTOM: Remove virtual keyword.
-    /// <summary>
-    /// The HTTP pipeline for sending and receiving REST requests and responses.
-    /// </summary>
-    public ClientPipeline Pipeline => _pipeline;
-
     // CUSTOM: Added as a convenience.
-    /// <summary> Initializes a new instance of <see cref="EmbeddingClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="EmbeddingClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="apiKey"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> or <paramref name="apiKey"/> is null. </exception>
@@ -41,7 +37,7 @@ public partial class EmbeddingClient
     // - Added `model` parameter.
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="EmbeddingClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="EmbeddingClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="model"/> or <paramref name="credential"/> is null. </exception>
@@ -54,7 +50,7 @@ public partial class EmbeddingClient
     // - Added `model` parameter.
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
-    /// <summary> Initializes a new instance of <see cref="EmbeddingClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="EmbeddingClient"/>. </summary>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="credential"> The API key to authenticate with the service. </param>
     /// <param name="options"> The options to configure the client. </param>
@@ -67,7 +63,7 @@ public partial class EmbeddingClient
         options ??= new OpenAIClientOptions();
 
         _model = model;
-        _pipeline = OpenAIClient.CreatePipeline(credential, options);
+        Pipeline = OpenAIClient.CreatePipeline(credential, options);
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -76,7 +72,7 @@ public partial class EmbeddingClient
     // - Used a custom pipeline.
     // - Demoted the endpoint parameter to be a property in the options class.
     // - Made protected.
-    /// <summary> Initializes a new instance of <see cref="EmbeddingClient">. </summary>
+    /// <summary> Initializes a new instance of <see cref="EmbeddingClient"/>. </summary>
     /// <param name="pipeline"> The HTTP pipeline to send and receive REST requests and responses. </param>
     /// <param name="model"> The name of the model to use in requests sent to the service. To learn more about the available models, see <see href="https://platform.openai.com/docs/models"/>. </param>
     /// <param name="options"> The options to configure the client. </param>
@@ -89,7 +85,7 @@ public partial class EmbeddingClient
         options ??= new OpenAIClientOptions();
 
         _model = model;
-        _pipeline = pipeline;
+        Pipeline = pipeline;
         _endpoint = OpenAIClient.GetEndpoint(options);
     }
 
@@ -105,11 +101,11 @@ public partial class EmbeddingClient
         Argument.AssertNotNullOrEmpty(input, nameof(input));
 
         options ??= new();
-        CreateEmbeddingGenerationOptions(BinaryData.FromObjectAsJson(input), ref options);
+        CreateEmbeddingGenerationOptions(input, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = await GenerateEmbeddingsAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(OpenAIEmbeddingCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((OpenAIEmbeddingCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     // CUSTOM: Added to simplify generating a single embedding from a string input.
@@ -124,11 +120,11 @@ public partial class EmbeddingClient
         Argument.AssertNotNullOrEmpty(input, nameof(input));
 
         options ??= new();
-        CreateEmbeddingGenerationOptions(BinaryData.FromObjectAsJson(input), ref options);
+        CreateEmbeddingGenerationOptions(input, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = GenerateEmbeddings(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(OpenAIEmbeddingCollection.FromResponse(result.GetRawResponse()).FirstOrDefault(), result.GetRawResponse());
+        return ClientResult.FromValue(((OpenAIEmbeddingCollection)result).FirstOrDefault(), result.GetRawResponse());
     }
 
     // CUSTOM: Added to simplify passing the input as a collection of strings instead of BinaryData.
@@ -143,11 +139,11 @@ public partial class EmbeddingClient
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
         options ??= new();
-        CreateEmbeddingGenerationOptions(BinaryData.FromObjectAsJson(inputs), ref options);
+        CreateEmbeddingGenerationOptions(inputs, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = await GenerateEmbeddingsAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(OpenAIEmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIEmbeddingCollection)result, result.GetRawResponse());
 
     }
 
@@ -163,16 +159,16 @@ public partial class EmbeddingClient
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
         options ??= new();
-        CreateEmbeddingGenerationOptions(BinaryData.FromObjectAsJson(inputs), ref options);
+        CreateEmbeddingGenerationOptions(inputs, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = GenerateEmbeddings(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(OpenAIEmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIEmbeddingCollection)result, result.GetRawResponse());
     }
 
     // CUSTOM: Added to simplify passing the input as a collection of ReadOnlyMemory tokens instead of BinaryData.
-    /// <summary> Generates embeddings representing the text inputs. </summary>
-    /// <param name="inputs"> The text inputs to generate embeddings for. </param>
+    /// <summary> Generates embeddings representing the tokenized text inputs. </summary>
+    /// <param name="inputs"> The tokenized text inputs to generate embeddings for. </param>
     /// <param name="options"> The options to configure the embedding generation. </param>
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputs"/> is null. </exception>
@@ -182,16 +178,16 @@ public partial class EmbeddingClient
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
         options ??= new();
-        CreateEmbeddingGenerationOptions(BinaryData.FromObjectAsJson(inputs), ref options);
+        CreateEmbeddingGenerationOptions(inputs, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = await GenerateEmbeddingsAsync(content, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
-        return ClientResult.FromValue(OpenAIEmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIEmbeddingCollection)result, result.GetRawResponse());
     }
 
     // CUSTOM: Added to simplify passing the input as a collection of ReadOnlyMemory of tokens instead of BinaryData.
-    /// <summary> Generates embeddings representing the text inputs. </summary>
-    /// <param name="inputs"> The text inputs to generate embeddings for. </param>
+    /// <summary> Generates embeddings representing the tokenized text inputs. </summary>
+    /// <param name="inputs"> The tokenized text inputs to generate embeddings for. </param>
     /// <param name="options"> The options to configure the embedding generation. </param>
     /// <param name="cancellationToken"> A token that can be used to cancel this method call. </param>
     /// <exception cref="ArgumentNullException"> <paramref name="inputs"/> is null. </exception>
@@ -201,16 +197,69 @@ public partial class EmbeddingClient
         Argument.AssertNotNullOrEmpty(inputs, nameof(inputs));
 
         options ??= new();
-        CreateEmbeddingGenerationOptions(BinaryData.FromObjectAsJson(inputs), ref options);
+        CreateEmbeddingGenerationOptions(inputs, ref options);
 
-        using BinaryContent content = options.ToBinaryContent();
+        using BinaryContent content = options;
         ClientResult result = GenerateEmbeddings(content, cancellationToken.ToRequestOptions());
-        return ClientResult.FromValue(OpenAIEmbeddingCollection.FromResponse(result.GetRawResponse()), result.GetRawResponse());
+        return ClientResult.FromValue((OpenAIEmbeddingCollection)result, result.GetRawResponse());
     }
 
-    private void CreateEmbeddingGenerationOptions(BinaryData input, ref EmbeddingGenerationOptions options)
+    private void CreateEmbeddingGenerationOptions(string input, ref EmbeddingGenerationOptions options)
     {
-        options.Input = input;
+        using MemoryStream stream = new();
+        using Utf8JsonWriter writer = new(stream);
+
+        writer.WriteStringValue(input);
+        writer.Flush();
+
+        options.Input = BinaryData.FromBytes(stream.ToArray());
+        options.Model = _model;
+        options.EncodingFormat = InternalCreateEmbeddingRequestEncodingFormat.Base64;
+    }
+
+    private void CreateEmbeddingGenerationOptions(IEnumerable<string> inputs, ref EmbeddingGenerationOptions options)
+    {
+        using MemoryStream stream = new();
+        using Utf8JsonWriter writer = new(stream);
+
+        writer.WriteStartArray();
+
+        foreach (string input in inputs)
+        {
+            writer.WriteStringValue(input);
+        }
+
+        writer.WriteEndArray();
+        writer.Flush();
+
+        options.Input = BinaryData.FromBytes(stream.ToArray());
+        options.Model = _model;
+        options.EncodingFormat = InternalCreateEmbeddingRequestEncodingFormat.Base64;
+    }
+
+    private void CreateEmbeddingGenerationOptions(IEnumerable<ReadOnlyMemory<int>> inputs, ref EmbeddingGenerationOptions options)
+    {
+        using MemoryStream stream = new();
+        using Utf8JsonWriter writer = new(stream);
+
+        writer.WriteStartArray();
+
+        foreach (ReadOnlyMemory<int> input in inputs)
+        {
+            writer.WriteStartArray();
+
+            foreach (int tokenId in input.ToArray())
+            {
+                writer.WriteNumberValue(tokenId);
+            }
+
+            writer.WriteEndArray();
+        }
+
+        writer.WriteEndArray();
+        writer.Flush();
+
+        options.Input = BinaryData.FromBytes(stream.ToArray());
         options.Model = _model;
         options.EncodingFormat = InternalCreateEmbeddingRequestEncodingFormat.Base64;
     }

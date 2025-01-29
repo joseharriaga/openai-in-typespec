@@ -95,3 +95,15 @@ internal partial class InternalCreateChatCompletionStreamResponseUsage { }
 
 [CodeGenModel("FunctionParameters")]
 internal partial class InternalFunctionParameters { }
+
+[CodeGenModel("CreateChatCompletionRequestModality")]
+internal readonly partial struct InternalCreateChatCompletionRequestModality { }
+
+[CodeGenModel("ChatCompletionRequestMessageContentPartAudioType")]
+internal readonly partial struct InternalChatCompletionRequestMessageContentPartAudioType { }
+
+[CodeGenModel("ChatCompletionRequestMessageContentPartAudio")]
+internal partial class InternalChatCompletionRequestMessageContentPartAudio { }
+
+[CodeGenModel("ChatCompletionRequestMessageContentPartAudioInputAudio")]
+internal partial class InternalChatCompletionRequestMessageContentPartAudioInputAudio { }

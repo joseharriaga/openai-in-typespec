@@ -19,12 +19,26 @@ namespace AzureOpenAI;
   AzureOpenAIServiceApiVersion.v2024_08_01_preview
 );
 
+model AzureCreateChatCompletionResponseChoice {
+  ...OpenAI.CreateChatCompletionResponseChoice;
+
+  /**
+   * The Responsible AI content filter annotations associated with the choice.
+   */
+  content_filter_results: AzureContentFilterResultForChoice;
+}
+
+@withoutOmittedProperties("choices")
+model CreateChatCompletionResponseCommonBase
+  is OpenAI.CreateChatCompletionResponse;
+
 /**
  * The extended top-level chat completion response model for the Azure OpenAI service.
  * This model adds Responsible AI content filter annotations for prompt input.
  */
 model AzureCreateChatCompletionResponse {
-  ...OpenAI.CreateChatCompletionResponse;
+  ...CreateChatCompletionResponseCommonBase;
+  choices: AzureCreateChatCompletionResponseChoice[];
 
   /**
    * The Responsible AI content filter annotations associated with prompt inputs into chat completions.

@@ -121,7 +121,7 @@ namespace Azure.AI.OpenAI
             ContentFilterSeverityResult selfHarm = default;
             ContentFilterDetectionResult profanity = default;
             ContentFilterBlocklistResult customBlocklists = default;
-            InternalAzureContentFilterResultForPromptContentFilterResultsError error = default;
+            InternalAzureContentFilterResultForChoiceError error = default;
             ContentFilterDetectionResult jailbreak = default;
             ContentFilterDetectionResult indirectAttack = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
@@ -188,7 +188,7 @@ namespace Azure.AI.OpenAI
                     {
                         continue;
                     }
-                    error = InternalAzureContentFilterResultForPromptContentFilterResultsError.DeserializeInternalAzureContentFilterResultForPromptContentFilterResultsError(property.Value, options);
+                    error = InternalAzureContentFilterResultForChoiceError.DeserializeInternalAzureContentFilterResultForChoiceError(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("jailbreak"u8))

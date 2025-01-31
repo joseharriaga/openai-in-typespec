@@ -62,7 +62,7 @@ namespace Azure.AI.OpenAI
             if (SerializedAdditionalRawData?.ContainsKey("error") != true && Optional.IsDefined(Error))
             {
                 writer.WritePropertyName("error"u8);
-                writer.WriteObjectValue<InternalAzureContentFilterResultForPromptContentFilterResultsError>(Error, options);
+                writer.WriteObjectValue<InternalAzureContentFilterResultForChoiceError>(Error, options);
             }
             if (SerializedAdditionalRawData?.ContainsKey("protected_material_text") != true && Optional.IsDefined(ProtectedMaterialText))
             {
@@ -126,7 +126,7 @@ namespace Azure.AI.OpenAI
             ContentFilterSeverityResult selfHarm = default;
             ContentFilterDetectionResult profanity = default;
             ContentFilterBlocklistResult customBlocklists = default;
-            InternalAzureContentFilterResultForPromptContentFilterResultsError error = default;
+            InternalAzureContentFilterResultForChoiceError error = default;
             ContentFilterDetectionResult protectedMaterialText = default;
             ContentFilterProtectedMaterialResult protectedMaterialCode = default;
             ContentFilterTextSpanResult ungroundedMaterial = default;
@@ -194,7 +194,7 @@ namespace Azure.AI.OpenAI
                     {
                         continue;
                     }
-                    error = InternalAzureContentFilterResultForPromptContentFilterResultsError.DeserializeInternalAzureContentFilterResultForPromptContentFilterResultsError(property.Value, options);
+                    error = InternalAzureContentFilterResultForChoiceError.DeserializeInternalAzureContentFilterResultForChoiceError(property.Value, options);
                     continue;
                 }
                 if (property.NameEquals("protected_material_text"u8))

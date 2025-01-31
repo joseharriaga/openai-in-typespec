@@ -10,27 +10,25 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-// Tool generated type. Extracts CreateMessageRequest.attachments
-model CreateMessageRequestAttachments
-  is {
-    /** The ID of the file to attach to the message. */
-    file_id: string;
+// Tool generated type. Extracts from CreateMessageRequest.attachments
+alias CreateMessageRequestAttachment = {
+  /** The ID of the file to attach to the message. */
+  file_id: string;
 
-    /** The tools to add this file to. */
-    @extension("x-oaiExpandable", true)
-    tools: (AssistantToolsCode | AssistantToolsFileSearchTypeOnly)[];
-  }[];
+  /** The tools to add this file to. */
+  @extension("x-oaiExpandable", true)
+  tools: (AssistantToolsCode | AssistantToolsFileSearchTypeOnly)[];
+};
 
-// Tool generated type. Extracts MessageObject.attachments
-model MessageObjectAttachments
-  is {
-    /** The ID of the file to attach to the message. */
-    file_id?: string;
+// Tool generated type. Extracts from MessageObject.attachments
+alias MessageObjectAttachment = {
+  /** The ID of the file to attach to the message. */
+  file_id?: string;
 
-    /** The tools to add this file to. */
-    @extension("x-oaiExpandable", true)
-    tools?: (AssistantToolsCode | AssistantToolsFileSearchTypeOnly)[];
-  }[];
+  /** The tools to add this file to. */
+  @extension("x-oaiExpandable", true)
+  tools?: (AssistantToolsCode | AssistantToolsFileSearchTypeOnly)[];
+};
 
 model CreateMessageRequest {
   @doc("""
@@ -45,7 +43,7 @@ model CreateMessageRequest {
   content: MessageContent[];
 
   /** A list of files attached to the message, and the tools they should be added to. */
-  attachments?: CreateMessageRequestAttachments | null;
+  attachments?: CreateMessageRequestAttachment[] | null;
 
   // Tool customization: specialize known metadata string maps
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
@@ -139,7 +137,7 @@ model MessageObject {
   run_id: string | null;
 
   /** A list of files attached to the message, and the tools they were added to. */
-  attachments: MessageObjectAttachments | null;
+  attachments: MessageObjectAttachment[] | null;
 
   // Tool customization: specialize known metadata string maps
   /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */

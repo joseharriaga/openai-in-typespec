@@ -36,7 +36,7 @@ internal readonly partial struct InternalChatCompletionResponseMessageRole { }
 [CodeGenModel("ChatCompletionStreamOptions")]
 internal partial class InternalChatCompletionStreamOptions { }
 
-[CodeGenModel("ChatCompletionStreamResponseDeltaRole")]
+[CodeGenModel("ChatCompletionStreamResponseDeltaRole2")]
 internal readonly partial struct InternalChatCompletionStreamResponseDeltaRole { }
 
 [CodeGenModel("CreateChatCompletionFunctionResponse")]

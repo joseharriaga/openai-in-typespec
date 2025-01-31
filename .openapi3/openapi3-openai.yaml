@@ -4451,9 +4451,10 @@ components:
           format: float
           description: The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
         bytes:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/ChatCompletionTokenLogprobBytesItem'
+          type: array
+          items:
+            type: integer
+            format: int32
           nullable: true
           description: A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
         top_logprobs:
@@ -4480,11 +4481,6 @@ components:
               - logprob
               - bytes
           description: List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned.
-    ChatCompletionTokenLogprobBytesItem:
-      type: array
-      items:
-        type: integer
-        format: int32
     ChatCompletionTool:
       type: object
       required:
@@ -5895,9 +5891,9 @@ components:
 
             See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
         integrations:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/CreateFineTuningJobRequestIntegrations'
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateFineTuningJobRequestIntegration'
           nullable: true
           description: A list of integrations to enable for your fine-tuning job.
         seed:
@@ -5934,10 +5930,6 @@ components:
         propertyName: type
         mapping:
           wandb: '#/components/schemas/CreateFineTuningJobRequestWandbIntegration'
-    CreateFineTuningJobRequestIntegrations:
-      type: array
-      items:
-        $ref: '#/components/schemas/CreateFineTuningJobRequestIntegration'
     CreateFineTuningJobRequestWandbIntegration:
       type: object
       required:
@@ -6151,9 +6143,24 @@ components:
             $ref: '#/components/schemas/MessageContent'
           x-oaiExpandable: true
         attachments:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/CreateMessageRequestAttachmentsItem'
+          type: array
+          items:
+            type: object
+            properties:
+              file_id:
+                type: string
+                description: The ID of the file to attach to the message.
+              tools:
+                type: array
+                items:
+                  anyOf:
+                    - $ref: '#/components/schemas/AssistantToolsCode'
+                    - $ref: '#/components/schemas/AssistantToolsFileSearchTypeOnly'
+                description: The tools to add this file to.
+                x-oaiExpandable: true
+            required:
+              - file_id
+              - tools
           nullable: true
           description: A list of files attached to the message, and the tools they should be added to.
         metadata:
@@ -6163,25 +6170,6 @@ components:
           nullable: true
           description: Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long.
           x-oaiTypeLabel: map
-    CreateMessageRequestAttachmentsItem:
-      type: array
-      items:
-        type: object
-        properties:
-          file_id:
-            type: string
-            description: The ID of the file to attach to the message.
-          tools:
-            type: array
-            items:
-              anyOf:
-                - $ref: '#/components/schemas/AssistantToolsCode'
-                - $ref: '#/components/schemas/AssistantToolsFileSearchTypeOnly'
-            description: The tools to add this file to.
-            x-oaiExpandable: true
-        required:
-          - file_id
-          - tools
     CreateModerationRequest:
       type: object
       required:
@@ -6586,17 +6574,18 @@ components:
           nullable: true
           description: Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions.
         additional_messages:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/CreateRunRequestAdditional_messages'
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateMessageRequest'
           nullable: true
           description: Adds additional messages to the thread before creating the run.
         tools:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/CreateRunRequestTools'
+          type: array
+          items:
+            $ref: '#/components/schemas/AssistantToolDefinition'
           nullable: true
           description: Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
+          x-oaiExpandable: true
         metadata:
           type: object
           additionalProperties:
@@ -6656,16 +6645,6 @@ components:
           allOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
-    CreateRunRequestAdditional_messages:
-      type: array
-      items:
-        $ref: '#/components/schemas/CreateMessageRequest'
-    CreateRunRequestTools:
-      type: array
-      items:
-        $ref: '#/components/schemas/AssistantToolDefinition'
-      maxItems: 20
-      x-oaiExpandable: true
     CreateSpeechRequest:
       type: object
       required:
@@ -6764,9 +6743,9 @@ components:
           nullable: true
           description: Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis.
         tools:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/CreateThreadAndRunRequestTools'
+          type: array
+          items:
+            $ref: '#/components/schemas/AssistantToolDefinition'
           nullable: true
           description: Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.
         tool_resources:
@@ -6845,11 +6824,6 @@ components:
           allOf:
             - $ref: '#/components/schemas/AssistantsApiResponseFormatOption'
           nullable: true
-    CreateThreadAndRunRequestTools:
-      type: array
-      items:
-        $ref: '#/components/schemas/AssistantToolDefinition'
-      maxItems: 20
     CreateThreadRequest:
       type: object
       properties:
@@ -7743,11 +7717,12 @@ components:
           nullable: true
           description: The file ID used for validation. You can retrieve the validation results with the [Files API](/docs/api-reference/files/retrieve-contents).
         integrations:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/FineTuningJobIntegrationsItem'
+          type: array
+          items:
+            $ref: '#/components/schemas/FineTuningIntegration'
           nullable: true
           description: A list of integrations to enable for this fine-tuning job.
+          x-oaiExpandable: true
         seed:
           type: integer
           format: int32
@@ -7871,12 +7846,6 @@ components:
       type: string
       enum:
         - auto
-    FineTuningJobIntegrationsItem:
-      type: array
-      items:
-        $ref: '#/components/schemas/FineTuningIntegration'
-      maxItems: 5
-      x-oaiExpandable: true
     FunctionObject:
       type: object
       required:
@@ -8914,9 +8883,21 @@ components:
           nullable: true
           description: The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.
         attachments:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/MessageObjectAttachmentsItem'
+          type: array
+          items:
+            type: object
+            properties:
+              file_id:
+                type: string
+                description: The ID of the file to attach to the message.
+              tools:
+                type: array
+                items:
+                  anyOf:
+                    - $ref: '#/components/schemas/AssistantToolsCode'
+                    - $ref: '#/components/schemas/AssistantToolsFileSearchTypeOnly'
+                description: The tools to add this file to.
+                x-oaiExpandable: true
           nullable: true
           description: A list of files attached to the message, and the tools they were added to.
         metadata:
@@ -8928,22 +8909,6 @@ components:
           x-oaiTypeLabel: map
           readOnly: true
       description: Represents a message within a [thread](/docs/api-reference/threads).
-    MessageObjectAttachmentsItem:
-      type: array
-      items:
-        type: object
-        properties:
-          file_id:
-            type: string
-            description: The ID of the file to attach to the message.
-          tools:
-            type: array
-            items:
-              anyOf:
-                - $ref: '#/components/schemas/AssistantToolsCode'
-                - $ref: '#/components/schemas/AssistantToolsFileSearchTypeOnly'
-            description: The tools to add this file to.
-            x-oaiExpandable: true
     MessageRequestContentTextObject:
       type: object
       required:

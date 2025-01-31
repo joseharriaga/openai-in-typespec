@@ -586,6 +586,90 @@ components:
             A content filter category that describes language related to physical actions intended to purposely hurt, injure,
             damage one's body or kill oneself.
       description: A content filter result for an image generation operation's output response content.
+    AzureContentFilterResultForChoice:
+      type: object
+      properties:
+        sexual:
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          description: |-
+            A content filter category for language related to anatomical organs and genitals, romantic relationships, acts
+            portrayed in erotic or affectionate terms, pregnancy, physical sexual acts, including those portrayed as an
+            assault or a forced sexual violent act against one's will, prostitution, pornography, and abuse.
+        hate:
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          description: |-
+            A content filter category that can refer to any content that attacks or uses pejorative or discriminatory
+            language with reference to a person or identity group based on certain differentiating attributes of these groups
+            including but not limited to race, ethnicity, nationality, gender identity and expression, sexual orientation,
+            religion, immigration status, ability status, personal appearance, and body size.
+        violence:
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          description: |-
+            A content filter category for language related to physical actions intended to hurt, injure, damage, or kill
+            someone or something; describes weapons, guns and related entities, such as manufactures, associations,
+            legislation, and so on.
+        self_harm:
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterSeverityResult'
+          description: |-
+            A content filter category that describes language related to physical actions intended to purposely hurt, injure,
+            damage one's body or kill oneself.
+        profanity:
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+          description: |-
+            A detection result that identifies whether crude, vulgar, or otherwise objection language is present in the
+            content.
+        custom_blocklists:
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterBlocklistResult'
+          description: A collection of binary filtering outcomes for configured custom blocklists.
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              format: int32
+              description: A distinct, machine-readable code associated with the error.
+            message:
+              type: string
+              description: A human-readable message associated with the error.
+          required:
+            - code
+            - message
+          description: If present, details about an error that prevented content filtering from completing its evaluation.
+        protected_material_text:
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterDetectionResult'
+          description: A detection result that describes a match against text protected under copyright or other status.
+        protected_material_code:
+          type: object
+          properties:
+            filtered:
+              type: boolean
+              description: Whether the content detection resulted in a content filtering action.
+            detected:
+              type: boolean
+              description: Whether the labeled content category was detected in the content.
+            citation:
+              type: object
+              properties:
+                license:
+                  type: string
+                  description: The name or identifier of the license associated with the detection.
+                URL:
+                  type: string
+                  format: uri
+                  description: The URL associated with the license.
+              description: If available, the citation details describing the associated license and its location.
+          required:
+            - filtered
+            - detected
+          description: A detection result that describes a match against licensed code or other protected source material.
+      description: A content filter result for a single response item produced by a generative AI system.
     AzureContentFilterResultForPrompt:
       type: object
       properties:
@@ -1004,66 +1088,14 @@ components:
       type: object
       required:
         - id
-        - choices
         - created
         - model
         - object
+        - choices
       properties:
         id:
           type: string
           description: A unique identifier for the chat completion.
-        choices:
-          type: array
-          items:
-            type: object
-            properties:
-              finish_reason:
-                type: string
-                enum:
-                  - stop
-                  - length
-                  - tool_calls
-                  - content_filter
-                  - function_call
-                description: |-
-                  The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-                  `length` if the maximum number of tokens specified in the request was reached,
-                  `content_filter` if content was omitted due to a flag from our content filters,
-                  `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-              index:
-                type: integer
-                format: int32
-                description: The index of the choice in the list of choices.
-              message:
-                $ref: '#/components/schemas/OpenAI.ChatCompletionResponseMessage'
-              logprobs:
-                type: object
-                properties:
-                  content:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/OpenAI.ChatCompletionTokenLogprob'
-                    nullable: true
-                    description: A list of message content tokens with log probability information.
-                    readOnly: true
-                  refusal:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/OpenAI.ChatCompletionTokenLogprob'
-                    nullable: true
-                    description: A list of message refusal tokens with log probability information.
-                    readOnly: true
-                required:
-                  - content
-                  - refusal
-                nullable: true
-                description: Log probability information for the choice.
-            required:
-              - finish_reason
-              - index
-              - message
-              - logprobs
-          description: A list of chat completion choices. Can be more than one if `n` is greater than 1.
         created:
           type: integer
           format: unixtime
@@ -1091,6 +1123,10 @@ components:
           description: The object type, which is always `chat.completion`.
         usage:
           $ref: '#/components/schemas/OpenAI.CompletionUsage'
+        choices:
+          type: array
+          items:
+            $ref: '#/components/schemas/AzureCreateChatCompletionResponseChoice'
         prompt_filter_results:
           type: array
           items:
@@ -1111,6 +1147,60 @@ components:
       description: |-
         The extended top-level chat completion response model for the Azure OpenAI service.
         This model adds Responsible AI content filter annotations for prompt input.
+    AzureCreateChatCompletionResponseChoice:
+      type: object
+      required:
+        - finish_reason
+        - index
+        - message
+        - logprobs
+        - content_filter_results
+      properties:
+        finish_reason:
+          type: string
+          enum:
+            - stop
+            - length
+            - tool_calls
+            - content_filter
+            - function_call
+          description: |-
+            The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+            `length` if the maximum number of tokens specified in the request was reached,
+            `content_filter` if content was omitted due to a flag from our content filters,
+            `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+        index:
+          type: integer
+          format: int32
+          description: The index of the choice in the list of choices.
+        message:
+          $ref: '#/components/schemas/OpenAI.ChatCompletionResponseMessage'
+        logprobs:
+          type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/OpenAI.ChatCompletionTokenLogprob'
+              nullable: true
+              description: A list of message content tokens with log probability information.
+              readOnly: true
+            refusal:
+              type: array
+              items:
+                $ref: '#/components/schemas/OpenAI.ChatCompletionTokenLogprob'
+              nullable: true
+              description: A list of message refusal tokens with log probability information.
+              readOnly: true
+          required:
+            - content
+            - refusal
+          nullable: true
+          description: Log probability information for the choice.
+        content_filter_results:
+          allOf:
+            - $ref: '#/components/schemas/AzureContentFilterResultForChoice'
+          description: The Responsible AI content filter annotations associated with the choice.
     AzureImage:
       type: object
       required:
@@ -1333,30 +1423,6 @@ components:
       items:
         $ref: '#/components/schemas/OpenAI.ChatCompletionMessageToolCall'
       description: The tool calls generated by the model, such as function calls.
-    ChatCompletionTokenLogprobBytes:
-      type: array
-      items:
-        type: integer
-        format: int32
-    CreateMessageRequestAttachments:
-      type: array
-      items:
-        type: object
-        properties:
-          file_id:
-            type: string
-            description: The ID of the file to attach to the message.
-          tools:
-            type: array
-            items:
-              anyOf:
-                - $ref: '#/components/schemas/OpenAI.AssistantToolsCode'
-                - $ref: '#/components/schemas/OpenAI.AssistantToolsFileSearchTypeOnly'
-            description: The tools to add this file to.
-            x-oaiExpandable: true
-        required:
-          - file_id
-          - tools
     ElasticsearchChatDataSource:
       type: object
       required:
@@ -1455,22 +1521,6 @@ components:
           description: The parameter information to control the use of the Elasticsearch data source.
       allOf:
         - $ref: '#/components/schemas/AzureChatDataSource'
-    MessageObjectAttachments:
-      type: array
-      items:
-        type: object
-        properties:
-          file_id:
-            type: string
-            description: The ID of the file to attach to the message.
-          tools:
-            type: array
-            items:
-              anyOf:
-                - $ref: '#/components/schemas/OpenAI.AssistantToolsCode'
-                - $ref: '#/components/schemas/OpenAI.AssistantToolsFileSearchTypeOnly'
-            description: The tools to add this file to.
-            x-oaiExpandable: true
     MongoDBChatDataSource:
       type: object
       required:
@@ -2141,9 +2191,10 @@ components:
           format: float
           description: The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
         bytes:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/ChatCompletionTokenLogprobBytes'
+          type: array
+          items:
+            type: integer
+            format: int32
           nullable: true
           description: A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
         top_logprobs:
@@ -2373,9 +2424,24 @@ components:
             $ref: '#/components/schemas/OpenAI.MessageContent'
           x-oaiExpandable: true
         attachments:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/CreateMessageRequestAttachments'
+          type: array
+          items:
+            type: object
+            properties:
+              file_id:
+                type: string
+                description: The ID of the file to attach to the message.
+              tools:
+                type: array
+                items:
+                  anyOf:
+                    - $ref: '#/components/schemas/OpenAI.AssistantToolsCode'
+                    - $ref: '#/components/schemas/OpenAI.AssistantToolsFileSearchTypeOnly'
+                description: The tools to add this file to.
+                x-oaiExpandable: true
+            required:
+              - file_id
+              - tools
           nullable: true
           description: A list of files attached to the message, and the tools they should be added to.
         metadata:
@@ -2765,9 +2831,21 @@ components:
           nullable: true
           description: The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.
         attachments:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/MessageObjectAttachments'
+          type: array
+          items:
+            type: object
+            properties:
+              file_id:
+                type: string
+                description: The ID of the file to attach to the message.
+              tools:
+                type: array
+                items:
+                  anyOf:
+                    - $ref: '#/components/schemas/OpenAI.AssistantToolsCode'
+                    - $ref: '#/components/schemas/OpenAI.AssistantToolsFileSearchTypeOnly'
+                description: The tools to add this file to.
+                x-oaiExpandable: true
           nullable: true
           description: A list of files attached to the message, and the tools they were added to.
         metadata:

@@ -11,15 +11,6 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-// Tool generated type. Extracts CreateFineTuningJobRequest.integrations
-model CreateFineTuningJobRequestIntegrations
-  is CreateFineTuningJobRequestIntegration[];
-
-// Tool generated type. Extracts FineTuningJob.integrations
-@maxItems(5)
-@extension("x-oaiExpandable", true)
-model FineTuningJobIntegrations is FineTuningIntegration[];
-
 model CreateFineTuningJobRequest {
   /**
    * The name of the model to fine-tune. You can select one of the
@@ -96,7 +87,7 @@ model CreateFineTuningJobRequest {
 
   // Tool customization: establish a discriminated type basis
   /** A list of integrations to enable for your fine-tuning job. */
-  integrations?: CreateFineTuningJobRequestIntegrations | null;
+  integrations?: CreateFineTuningJobRequestIntegration[] | null;
 
   /**
    * The seed controls the reproducibility of the job. Passing in the same seed and job parameters should produce the same results, but may differ in rare cases.
@@ -226,7 +217,9 @@ model FineTuningJob {
   validation_file: string | null;
 
   /** A list of integrations to enable for this fine-tuning job. */
-  integrations?: FineTuningJobIntegrations | null;
+  // !no_nullable! @maxItems(5)
+  @extension("x-oaiExpandable", true)
+  integrations?: FineTuningIntegration[] | null;
 
   /** The seed used for the fine-tuning job. */
   seed: int32;

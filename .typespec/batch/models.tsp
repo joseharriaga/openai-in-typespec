@@ -7,6 +7,21 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
+// Tool generated type. Extracts from Batch.errors.data
+alias BatchErrorsData = {
+  /** An error code identifying the error type. */
+  code?: string;
+
+  /** A human-readable message providing more details about the error. */
+  message?: string;
+
+  /** The name of the parameter that caused the error, if applicable. */
+  param?: string | null;
+
+  /** The line number of the input file where the error occurred, if applicable. */
+  line?: int32 | null;
+};
+
 model Batch {
   id: string;
 
@@ -25,19 +40,7 @@ model Batch {
       """)
     object?: "list";
 
-    data?: {
-      /** An error code identifying the error type. */
-      code?: string;
-
-      /** A human-readable message providing more details about the error. */
-      message?: string;
-
-      /** The name of the parameter that caused the error, if applicable. */
-      param?: string | null;
-
-      /** The line number of the input file where the error occurred, if applicable. */
-      line?: int32 | null;
-    }[];
+    data?: BatchErrorsData[];
   };
 
   /** The ID of the input file for the batch. */

@@ -1,9 +1,11 @@
-using System;
 using NUnit.Framework;
 
+#region usings
+using System;
 
 using OpenAI;
 using OpenAI.Images;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateImageVariationApiReference {

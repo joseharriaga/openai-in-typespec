@@ -1,11 +1,12 @@
-using System;
 using NUnit.Framework;
-
-
-using System.ClientModel.Primitives;
 using System.Text.Json;
 
-// DO NOT INCLUDE IN DOCS ABOVE THIS POINT
+#region usings
+using System;
+using System.ClientModel.Primitives;
+
+using OpenAI.FineTuning;
+#endregion
 
 using OpenAI.FineTuning;
 

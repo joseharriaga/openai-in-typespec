@@ -1,9 +1,12 @@
-using System;
 using NUnit.Framework;
 
+#region usings
+using System;
+using System.ClientModel;
 
 using OpenAI;
-using System.ClientModel;
+#endregion
+
 
 namespace OpenAI.Docs.ApiReference;
 public partial class OrgsAndProjectsApiReference {

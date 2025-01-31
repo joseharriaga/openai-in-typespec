@@ -1,13 +1,12 @@
-using System;
 using NUnit.Framework;
-
-
 using System.Text.Json;
 
-// DO NOT INCLUDE IN DOCS ABOVE THIS POINT
+#region usings
+using System;
+using System.ClientModel.Primitives;
 
 using OpenAI.Batch;
-using System.ClientModel.Primitives;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class CancelBatchApiReference {

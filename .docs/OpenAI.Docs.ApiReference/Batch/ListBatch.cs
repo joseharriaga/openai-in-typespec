@@ -16,7 +16,7 @@ public partial class ListBatchApiReference {
     public void ListBatch()
     {
 		BatchClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
-		var result = client.GetBatches(null, null, new RequestOptions {});
+		CollectionResult result = client.GetBatches(null, null, new RequestOptions {});
 		
 		// DO NOT INCLUDE IN DOCS FROM THIS POINT ONWARDS
 		

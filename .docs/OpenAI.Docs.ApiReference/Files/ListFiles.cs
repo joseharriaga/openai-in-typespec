@@ -1,8 +1,11 @@
-using System;
 using NUnit.Framework;
 
+#region usings
+using System;
 
 using OpenAI;
+using OpenAI.Files;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class ListFilesApiReference {

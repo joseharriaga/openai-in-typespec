@@ -1,13 +1,12 @@
-using System;
 using NUnit.Framework;
-
-
-using System.ClientModel.Primitives;
 using System.Text.Json;
-#pragma warning disable OPENAI001
-// DO NOT INCLUDE IN DOCS ABOVE THIS POINT
+
+#region usings
+using System;
+using System.ClientModel.Primitives;
 
 using OpenAI.FineTuning;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class ListFineTunningJobsApiReference {

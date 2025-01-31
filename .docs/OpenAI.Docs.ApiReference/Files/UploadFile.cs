@@ -1,10 +1,12 @@
-using System;
 using NUnit.Framework;
 
-
+#region usings
+using System;
 using System.IO;
+
 using OpenAI;
 using OpenAI.Files;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class UploadFileApiReference {

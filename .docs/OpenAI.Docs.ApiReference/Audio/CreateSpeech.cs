@@ -1,8 +1,11 @@
-using System;
 using NUnit.Framework;
 
+#region usings
+using System;
 using System.IO;
+
 using OpenAI.Audio;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateSpeechApiReference {

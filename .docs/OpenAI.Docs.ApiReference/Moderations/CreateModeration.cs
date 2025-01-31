@@ -1,8 +1,10 @@
-using System;
 using NUnit.Framework;
 
+#region usings
+using System;
 
 using OpenAI.Moderations;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateModerationApiReference {

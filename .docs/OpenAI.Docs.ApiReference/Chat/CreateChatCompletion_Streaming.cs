@@ -1,8 +1,11 @@
-using System;
 using NUnit.Framework;
 
+#region usings
+using System;
+using System.ClientModel;
 
 using OpenAI.Chat;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateChatCompletion_StreamingApiReference {
@@ -15,7 +18,8 @@ public partial class CreateChatCompletion_StreamingApiReference {
 		    Environment.GetEnvironmentVariable("OPENAI_API_KEY")
 		);
 		
-		var updates = client.CompleteChatStreamingAsync(new ChatMessage[] {
+		AsyncCollectionResult<StreamingChatCompletionUpdate> updates = 
+			client.CompleteChatStreamingAsync(new ChatMessage[] {
 		        new SystemChatMessage("You are a helpful assistant."),
 		        new UserChatMessage("Hello!")
 		    });

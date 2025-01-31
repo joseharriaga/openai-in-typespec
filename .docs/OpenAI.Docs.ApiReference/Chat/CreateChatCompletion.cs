@@ -1,22 +1,11 @@
-using System;
 using NUnit.Framework;
 
-
-//using OpenAI.Chat;
-
-//ChatClient client = new(
-//    model: "gpt-4o",
-//    Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-//);
-
-//ChatCompletion completion = client.CompleteChat(new List<ChatMessage> {
-//    new SystemChatMessage("You are a helpful assistant."),
-//    new UserChatMessage("Hello!")
-//});
-
-//Console.WriteLine($"[ASSISTANT]: {completion}");
+#region usings
+using System;
+using System.ClientModel;
 
 using OpenAI.Chat;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateChatCompletionApiReference {
@@ -24,19 +13,23 @@ public partial class CreateChatCompletionApiReference {
     [Test]
     public void CreateChatCompletion()
     {
-		ChatClient client = new(
+        #region
+
+        //using OpenAI.Chat;
+
+        ChatClient client = new(
 		    model: "gpt-4o",
 		    Environment.GetEnvironmentVariable("OPENAI_API_KEY")
 		);
-		
-		ChatCompletion completion = client.CompleteChat(new ChatMessage[] {
-		    new SystemChatMessage("Say this is a test.")
-		}, new ChatCompletionOptions() 
-		{
-		    MaxOutputTokenCount = 7,
-		    Temperature = 0
-		});
+
+		ChatCompletion completion = client.CompleteChat(
+			[
+				new SystemChatMessage("You are a helpful assistant."),
+				new UserChatMessage("Hello!")
+			]
+		);
 		
 		Console.WriteLine($"[ASSISTANT]: {completion}");
-	}
+        #endregion
+    }
 }

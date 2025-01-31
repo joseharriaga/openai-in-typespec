@@ -1,12 +1,12 @@
-using System;
+#pragma warning disable OPENAI001
 using NUnit.Framework;
 
-
-// Assistants is a beta API and subject to change.
-// Acknowledge its experimental status by suppressing the matching warning.
-#pragma warning disable OPENAI001
+#region usings
+using System;
 using System.ClientModel;
+
 using OpenAI.Assistants;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateThreadAndRunApiReference {

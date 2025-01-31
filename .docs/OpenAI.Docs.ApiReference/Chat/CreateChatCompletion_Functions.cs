@@ -1,8 +1,10 @@
-using System;
 using NUnit.Framework;
 
+#region usings
+using System;
 
 using OpenAI.Chat;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateChatCompletion_FunctionsApiReference {
@@ -39,10 +41,11 @@ public partial class CreateChatCompletion_FunctionsApiReference {
 		
 		ChatClient client = new(
 		    model: "gpt-4o",
-		    Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+		    apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
 		);
 		
-		ChatMessage[] messages = [
+		ChatMessage[] messages = 
+		[
 		    new UserChatMessage("What's the weather like today?"),
 		];
 		

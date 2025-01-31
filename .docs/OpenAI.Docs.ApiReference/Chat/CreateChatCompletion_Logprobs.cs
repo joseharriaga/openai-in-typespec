@@ -1,8 +1,10 @@
-using System;
 using NUnit.Framework;
 
+#region usings
+using System;
 
 using OpenAI.Chat;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateChatCompletion_LogprobsApiReference {

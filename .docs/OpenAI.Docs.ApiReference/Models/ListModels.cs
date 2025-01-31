@@ -1,8 +1,10 @@
-using System;
 using NUnit.Framework;
 
+#region usings
+using System;
 
 using OpenAI.Models;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class ListModelsApiReference {

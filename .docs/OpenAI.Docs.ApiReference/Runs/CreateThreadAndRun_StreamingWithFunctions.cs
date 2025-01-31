@@ -1,12 +1,13 @@
-using System;
+#pragma warning disable OPENAI001
 using NUnit.Framework;
 
-
-#pragma warning disable OPENAI001
-using OpenAI.Assistants;
+#region usings
+using System;
 using System.ClientModel;
 
+using OpenAI.Assistants;
 using OpenAI.Chat;
+#endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateThreadAndRun_StreamingWithFunctionsApiReference {

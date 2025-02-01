@@ -99,7 +99,7 @@ public partial class ChatCompletionOptions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void SerializePredictedContentValue(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        if (PredictedContent is not null)
+        if (PredictedContent is not null && PredictedContent.IsInnerCollectionDefined())
         {
             writer.WriteStartObject();
             writer.WritePropertyName("type"u8);

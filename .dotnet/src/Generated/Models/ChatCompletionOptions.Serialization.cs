@@ -278,12 +278,13 @@ namespace OpenAI.Chat
                     writer.WriteNull("store"u8);
                 }
             }
-            if (Optional.IsDefined(ReasoningEffort) && _additionalBinaryDataProperties?.ContainsKey("reasoning_effort") != true)
+            if (Optional.IsDefined(ReasoningEffortLevel) && _additionalBinaryDataProperties?.ContainsKey("reasoning_effort") != true)
             {
                 writer.WritePropertyName("reasoning_effort"u8);
-                writer.WriteStringValue(ReasoningEffort.Value.ToString());
+                writer.WriteStringValue(ReasoningEffortLevel.Value.ToString());
             }
-            if (Optional.IsDefined(PredictedContent) && _additionalBinaryDataProperties?.ContainsKey("prediction") != true)
+            // CUSTOM: Check inner collection is defined.
+            if (Optional.IsDefined(PredictedContent) && PredictedContent.IsInnerCollectionDefined() && _additionalBinaryDataProperties?.ContainsKey("prediction") != true)
             {
                 if (PredictedContent != null)
                 {
@@ -401,7 +402,7 @@ namespace OpenAI.Chat
             IList<ChatFunction> functions = default;
             IDictionary<string, string> metadata = default;
             bool? storedOutputEnabled = default;
-            ChatReasoningEffort? reasoningEffort = default;
+            ChatReasoningEffortLevel? reasoningEffortLevel = default;
             ChatMessageContent predictedContent = default;
             InternalCreateChatCompletionRequestServiceTier? serviceTier = default;
             IList<InternalCreateChatCompletionRequestModality> internalModalities = default;
@@ -660,7 +661,7 @@ namespace OpenAI.Chat
                     {
                         continue;
                     }
-                    reasoningEffort = new ChatReasoningEffort(prop.Value.GetString());
+                    reasoningEffortLevel = new ChatReasoningEffortLevel(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("prediction"u8))
@@ -733,7 +734,7 @@ namespace OpenAI.Chat
                 functions ?? new ChangeTrackingList<ChatFunction>(),
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
                 storedOutputEnabled,
-                reasoningEffort,
+                reasoningEffortLevel,
                 predictedContent,
                 serviceTier,
                 internalModalities,

@@ -906,4 +906,14 @@ public class ChatSmokeTests : SyncAsyncTestBase
         Assert.That(observedEndpoint, Is.Not.Null);
         Assert.That(observedEndpoint.AbsoluteUri, Does.Contain("my.custom.com/expected/test/endpoint"));
     }
+
+    [Test]
+    public void CanUseCollections()
+    {
+        ChatCompletionOptions options = new();
+        Assert.That(options.Tools.Count, Is.EqualTo(0));
+        Assert.That(options.Metadata.Count, Is.EqualTo(0));
+        Assert.That(options.PredictedContent.Count, Is.EqualTo(0));
+        Assert.That(options.StopSequences.Count, Is.EqualTo(0));
+    }
 }

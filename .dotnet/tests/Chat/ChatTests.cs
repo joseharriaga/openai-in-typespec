@@ -867,13 +867,15 @@ public class ChatTests : SyncAsyncTestBase
     [Test]
     public async Task ReasoningTokensWork()
     {
-        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "o1-mini");
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "o3-mini");
 
         UserChatMessage message = new("Using a comprehensive evaluation of popular media in the 1970s and 1980s, what were the most common sci-fi themes?");
         ChatCompletionOptions options = new()
         {
-            MaxOutputTokenCount = 2148
+            MaxOutputTokenCount = 2148,
+            ReasoningEffortLevel = ChatReasoningEffortLevel.Low,
         };
+        Assert.That(ModelReaderWriter.Write(options).ToString(), Does.Contain(@"""reasoning_effort"":""low"""));
         ClientResult<ChatCompletion> completionResult = IsAsync
             ? await client.CompleteChatAsync([message], options)
             : client.CompleteChat([message], options);
@@ -917,11 +919,11 @@ public class ChatTests : SyncAsyncTestBase
 
         ChatCompletion completion = await client.CompleteChatAsync([message], options);
 
-        Assert.That(completion.Usage.OutputTokenDetails.PredictionAcceptedTokenCount, Is.GreaterThan(0));
+        Assert.That(completion.Usage.OutputTokenDetails.AcceptedPredictionTokenCount, Is.GreaterThan(0));
     }
 
     [Test]
-    public async Task O1DeveloperMessagesWork()
+    public async Task O3miniDeveloperMessagesWork()
     {
         List<ChatMessage> messages =
         [
@@ -931,13 +933,34 @@ public class ChatTests : SyncAsyncTestBase
 
         ChatCompletionOptions options = new()
         {
-            ReasoningEffort = ChatReasoningEffort.Low,
+            ReasoningEffortLevel = ChatReasoningEffortLevel.Low,
         };
 
-        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "o1");
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "o3-mini");
         ChatCompletion completion = await client.CompleteChatAsync(messages, options);
 
         List<string> expectedPossibles = ["arr", "matey", "hearty", "avast"];
         Assert.That(expectedPossibles.Any(expected => completion.Content[0].Text.ToLower().Contains(expected)));
     }
+
+    [Test]
+    public async Task ChatMetadata()
+    {
+        ChatClient client = GetTestClient();
+
+        ChatCompletionOptions options = new()
+        {
+            StoredOutputEnabled = true,
+            Metadata =
+            {
+                ["my_metadata_key"] = "my_metadata_value",
+            },
+        };
+
+        ChatCompletion completion = await client.CompleteChatAsync(
+            ["Hello, world!"],
+            options);
+    }
+
+    private static ChatClient GetTestClient(string overrideModel = null) => GetTestClient<ChatClient>(TestScenario.Chat, overrideModel);
 }

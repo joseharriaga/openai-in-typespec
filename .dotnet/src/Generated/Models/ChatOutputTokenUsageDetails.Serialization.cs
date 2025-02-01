@@ -40,12 +40,12 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("accepted_prediction_tokens") != true)
             {
                 writer.WritePropertyName("accepted_prediction_tokens"u8);
-                writer.WriteNumberValue(PredictionAcceptedTokenCount);
+                writer.WriteNumberValue(AcceptedPredictionTokenCount);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("rejected_prediction_tokens") != true)
             {
                 writer.WritePropertyName("rejected_prediction_tokens"u8);
-                writer.WriteNumberValue(PredictionRejectedTokenCount);
+                writer.WriteNumberValue(RejectedPredictionTokenCount);
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -89,8 +89,8 @@ namespace OpenAI.Chat
             }
             int reasoningTokenCount = default;
             int audioTokenCount = default;
-            int predictionAcceptedTokenCount = default;
-            int predictionRejectedTokenCount = default;
+            int acceptedPredictionTokenCount = default;
+            int rejectedPredictionTokenCount = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -118,7 +118,7 @@ namespace OpenAI.Chat
                     {
                         continue;
                     }
-                    predictionAcceptedTokenCount = prop.Value.GetInt32();
+                    acceptedPredictionTokenCount = prop.Value.GetInt32();
                     continue;
                 }
                 if (prop.NameEquals("rejected_prediction_tokens"u8))
@@ -127,7 +127,7 @@ namespace OpenAI.Chat
                     {
                         continue;
                     }
-                    predictionRejectedTokenCount = prop.Value.GetInt32();
+                    rejectedPredictionTokenCount = prop.Value.GetInt32();
                     continue;
                 }
                 if (true)
@@ -135,7 +135,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new ChatOutputTokenUsageDetails(reasoningTokenCount, audioTokenCount, predictionAcceptedTokenCount, predictionRejectedTokenCount, additionalBinaryDataProperties);
+            return new ChatOutputTokenUsageDetails(reasoningTokenCount, audioTokenCount, acceptedPredictionTokenCount, rejectedPredictionTokenCount, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<ChatOutputTokenUsageDetails>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

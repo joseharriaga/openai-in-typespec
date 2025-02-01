@@ -194,3 +194,15 @@ Update-In-File-With-Retry `
     ) `
     -OutputIndentation 12 `
     -RequirePresence
+
+Update-In-File-With-Retry `
+    -FilePath "$directory\ChatCompletionOptions.Serialization.cs" `
+    -SearchPatternLines @(
+        "if \(Optional\.IsDefined\(PredictedContent\) && _additionalBinaryDataProperties\?\.ContainsKey\(`"prediction`"\) != true\)"
+    ) `
+    -ReplacePatternLines @(
+        "// CUSTOM: Check inner collection is defined."
+        "if (Optional.IsDefined(PredictedContent) && PredictedContent.IsInnerCollectionDefined() && _additionalBinaryDataProperties?.ContainsKey(`"prediction`") != true)"
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence

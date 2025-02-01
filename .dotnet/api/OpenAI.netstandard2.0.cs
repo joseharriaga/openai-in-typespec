@@ -1212,7 +1212,7 @@ namespace OpenAI.Chat {
         public IDictionary<string, string> Metadata { get; }
         public ChatMessageContent PredictedContent { get; set; }
         public float? PresencePenalty { get; set; }
-        public ChatReasoningEffort? ReasoningEffort { get; set; }
+        public ChatReasoningEffortLevel? ReasoningEffortLevel { get; set; }
         public ChatResponseFormat ResponseFormat { get; set; }
         public ChatResponseModalities ResponseModalities { get; set; }
         public long? Seed { get; set; }
@@ -1411,26 +1411,26 @@ namespace OpenAI.Chat {
         public override readonly string ToString();
     }
     public class ChatOutputTokenUsageDetails : IJsonModel<ChatOutputTokenUsageDetails>, IPersistableModel<ChatOutputTokenUsageDetails> {
+        public int AcceptedPredictionTokenCount { get; }
         public int AudioTokenCount { get; }
-        public int PredictionAcceptedTokenCount { get; }
-        public int PredictionRejectedTokenCount { get; }
         public int ReasoningTokenCount { get; }
+        public int RejectedPredictionTokenCount { get; }
         public static explicit operator ChatOutputTokenUsageDetails(ClientResult result);
         public static implicit operator BinaryContent(ChatOutputTokenUsageDetails chatOutputTokenUsageDetails);
     }
-    public readonly partial struct ChatReasoningEffort : IEquatable<ChatReasoningEffort> {
-        public ChatReasoningEffort(string value);
-        public static ChatReasoningEffort High { get; }
-        public static ChatReasoningEffort Low { get; }
-        public static ChatReasoningEffort Medium { get; }
-        public readonly bool Equals(ChatReasoningEffort other);
+    public readonly partial struct ChatReasoningEffortLevel : IEquatable<ChatReasoningEffortLevel> {
+        public ChatReasoningEffortLevel(string value);
+        public static ChatReasoningEffortLevel High { get; }
+        public static ChatReasoningEffortLevel Low { get; }
+        public static ChatReasoningEffortLevel Medium { get; }
+        public readonly bool Equals(ChatReasoningEffortLevel other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly int GetHashCode();
-        public static bool operator ==(ChatReasoningEffort left, ChatReasoningEffort right);
-        public static implicit operator ChatReasoningEffort(string value);
-        public static bool operator !=(ChatReasoningEffort left, ChatReasoningEffort right);
+        public static bool operator ==(ChatReasoningEffortLevel left, ChatReasoningEffortLevel right);
+        public static implicit operator ChatReasoningEffortLevel(string value);
+        public static bool operator !=(ChatReasoningEffortLevel left, ChatReasoningEffortLevel right);
         public override readonly string ToString();
     }
     public class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
@@ -1778,7 +1778,7 @@ namespace OpenAI.Files {
     }
     public static class OpenAIFilesModelFactory {
         public static FileDeletionResult FileDeletionResult(string fileId = null, bool deleted = false);
-        public static OpenAIFileCollection OpenAIFileCollection(IEnumerable<OpenAIFile> items = null, string firstId = null, string lastId = null, bool hasMore = false);
+        public static OpenAIFileCollection OpenAIFileCollection(IEnumerable<OpenAIFile> items = null);
         public static OpenAIFile OpenAIFileInfo(string id = null, int? sizeInBytes = null, DateTimeOffset createdAt = default, string filename = null, FilePurpose purpose = FilePurpose.Assistants, FileStatus status = FileStatus.Uploaded, string statusDetails = null);
     }
 }
@@ -2551,7 +2551,7 @@ namespace OpenAI.RealtimeConversation {
     }
     public class ConversationStatusDetails : IJsonModel<ConversationStatusDetails>, IPersistableModel<ConversationStatusDetails> {
         public string ErrorCode { get; }
-        public string ErrorType { get; }
+        public string ErrorKind { get; }
         public ConversationIncompleteReason? IncompleteReason { get; }
         public ConversationStatus StatusKind { get; }
         public static explicit operator ConversationStatusDetails(ClientResult result);
@@ -2562,7 +2562,7 @@ namespace OpenAI.RealtimeConversation {
         public ConversationInputTokenUsageDetails InputTokenDetails { get; }
         public int OutputTokenCount { get; }
         public ConversationOutputTokenUsageDetails OutputTokenDetails { get; }
-        public int? TotalTokens { get; }
+        public int TotalTokenCount { get; }
         public static explicit operator ConversationTokenUsage(ClientResult result);
         public static implicit operator BinaryContent(ConversationTokenUsage conversationTokenUsage);
     }

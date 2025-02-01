@@ -137,6 +137,9 @@ public class ConversationTests : ConversationTestFixtureBase
             if (update is ConversationResponseFinishedUpdate responseFinishedUpdate)
             {
                 Assert.That(responseFinishedUpdate.CreatedItems, Has.Count.GreaterThan(0));
+                Assert.That(responseFinishedUpdate.Usage?.TotalTokenCount, Is.GreaterThan(0));
+                Assert.That(responseFinishedUpdate.Usage.InputTokenCount, Is.GreaterThan(0));
+                Assert.That(responseFinishedUpdate.Usage.OutputTokenCount, Is.GreaterThan(0));
                 gotResponseDone = true;
                 break;
             }

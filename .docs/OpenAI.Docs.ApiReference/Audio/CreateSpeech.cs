@@ -13,9 +13,11 @@ public partial class CreateSpeechApiReference {
     [Test]
     public void CreateSpeech()
     {
-		AudioClient client = new(
+        #region logic
+
+        AudioClient client = new(
 		    model: "tts-1", 
-		    Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+		    apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
 		);
 		
 		var response = client.GenerateSpeech(
@@ -24,9 +26,11 @@ public partial class CreateSpeechApiReference {
 		);
 		
 		string filePath = Path.Combine("speech.mp3");
-		using (var fileWriter = new BinaryWriter(File.Open(filePath, FileMode.Create))) {
+		using (var fileWriter = new BinaryWriter(File.Open(filePath, FileMode.Create))) 
+		{
 		    fileWriter.Write(response.Value);
 		}
 
-	}
+        #endregion
+    }
 }

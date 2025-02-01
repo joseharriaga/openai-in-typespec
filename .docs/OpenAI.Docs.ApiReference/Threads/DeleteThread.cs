@@ -14,9 +14,15 @@ public partial class DeleteThreadApiReference {
     [Test]
     public void DeleteThread()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		
-		var thread = assistantClient.DeleteThread("thread_abc123");
+        #region logic
+
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult<ThreadDeletionResult> thread = client.DeleteThread("thread_abc123");
 		Console.WriteLine(thread.Value);
-	}
+
+        #endregion
+    }
 }

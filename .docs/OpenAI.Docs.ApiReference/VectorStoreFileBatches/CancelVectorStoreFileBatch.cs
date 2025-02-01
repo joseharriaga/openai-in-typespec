@@ -14,8 +14,15 @@ public partial class CancelVectorStoreFileBatchApiReference {
     [Test]
     public void CancelVectorStoreFileBatch()
     {
-		VectorStoreClient client = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var result = client.CancelBatchFileJob("vs_abc123", "vsfb_abc123");
+        #region logic
+
+        VectorStoreClient client = new (
+			apiKey:Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+		);
+
+		ClientResult<VectorStoreBatchFileJob> result = client.CancelBatchFileJob("vs_abc123", "vsfb_abc123");
 		Console.WriteLine(result.Value);
-	}
+        
+        #endregion
+    }
 }

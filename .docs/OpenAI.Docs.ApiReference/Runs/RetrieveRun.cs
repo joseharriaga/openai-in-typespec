@@ -14,9 +14,15 @@ public partial class RetrieveRunApiReference {
     [Test]
     public void RetrieveRun()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		
-		var run = assistantClient.GetRun("thread_abc123", "run_abc123");
+        #region logic
+
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult<ThreadRun> run = client.GetRun("thread_abc123", "run_abc123");
 		Console.WriteLine(run.Value.Id);
-	}
+
+        #endregion
+    }
 }

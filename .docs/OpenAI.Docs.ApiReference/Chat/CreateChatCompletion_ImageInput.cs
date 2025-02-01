@@ -13,7 +13,8 @@ public partial class CreateChatCompletion_ImageInputApiReference {
     [Test]
     public void CreateChatCompletion_ImageInput()
     {
-        #region code
+        #region logic
+
         ChatClient client = new(
 		    model: "gpt-4o",
 		    apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
@@ -36,6 +37,7 @@ public partial class CreateChatCompletion_ImageInputApiReference {
 		ChatCompletion completion = client.CompleteChat(messages, options);
 		
 		Console.WriteLine($"[ASSISTANT]: {completion}");
+
         #endregion
     }
 }

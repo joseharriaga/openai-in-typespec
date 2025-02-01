@@ -14,11 +14,22 @@ public partial class CreateMessageApiReference {
     [Test]
     public void CreateMessage()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
+        #region logic
+
+        AssistantClient assistantClient = new (
+			apiKey:Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+		);
 		
-		var message = assistantClient.CreateMessage("thread_abc123", MessageRole.User, [
+		ClientResult<ThreadMessage> message = assistantClient.CreateMessage(
+			"thread_abc123", 
+			MessageRole.User, 
+			[
 		        MessageContent.FromText("How does AI work? Explain it in simple terms.")
-		    ]);
+		    ]
+		);
+
 		Console.WriteLine(message.Value.Id);
-	}
+        
+		#endregion
+    }
 }

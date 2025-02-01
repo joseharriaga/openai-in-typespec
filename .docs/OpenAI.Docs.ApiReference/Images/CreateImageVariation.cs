@@ -3,7 +3,6 @@ using NUnit.Framework;
 #region usings
 using System;
 
-using OpenAI;
 using OpenAI.Images;
 #endregion
 
@@ -13,15 +12,23 @@ public partial class CreateImageVariationApiReference {
     [Test]
     public void CreateImageVariation()
     {
-		OpenAIClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
-		
-		var image = client.GetImageClient("dall-e-2").GenerateImageVariation(
+        #region logic
+
+        ImageClient client = new(
+            model: "dall-e-2",
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        var image = client.GenerateImageVariation(
 		    "otter.png",
-		    new () { 
+		    new ImageVariationOptions () 
+            { 
 		        Size = GeneratedImageSize.W1024xH1024 
 		    }
 		);
 		
 		Console.WriteLine(image.Value.ImageUri);
-	}
+        
+        #endregion
+    }
 }

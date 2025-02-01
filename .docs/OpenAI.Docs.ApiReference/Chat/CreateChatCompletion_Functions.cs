@@ -12,7 +12,9 @@ public partial class CreateChatCompletion_FunctionsApiReference {
     [Test]
     public void CreateChatCompletion_Functions()
     {
-		ChatTool getCurrentLocationTool = ChatTool.CreateFunctionTool(
+        #region logic
+
+        ChatTool getCurrentLocationTool = ChatTool.CreateFunctionTool(
 		    functionName: nameof(GetCurrentLocation),
 		    functionDescription: "Get the user's current location"
 		);
@@ -51,13 +53,17 @@ public partial class CreateChatCompletion_FunctionsApiReference {
 		
 		ChatCompletionOptions options = new()
 		{
-		    Tools = { getCurrentLocationTool, getCurrentWeatherTool },
+		    Tools = 
+			{ 
+				getCurrentLocationTool, 
+				getCurrentWeatherTool 
+			}
 		};
 		
 		ChatCompletion chatCompletion = client.CompleteChat(messages, options);
-		
-		// DO NOT INCLUDE IN DOCS FROM THIS POINT ONWARDS
-		
+
+		#endregion
+
 		string GetCurrentLocation()
 		{
 		    // Call the location API here.

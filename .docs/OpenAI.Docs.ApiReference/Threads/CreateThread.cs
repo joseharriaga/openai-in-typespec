@@ -14,15 +14,22 @@ public partial class CreateThreadApiReference {
     [Test]
     public void CreateThread()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		
-		var thread = assistantClient.CreateThread(new ThreadCreationOptions()
+        #region logic
+
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult<AssistantThread> thread = client.CreateThread(new ThreadCreationOptions()
 		{
-		    InitialMessages = {
+		    InitialMessages = 
+            {
 		        "Hello, what is AI?",
 		        "How does AI work? Explain it in simple terms."
 		    }
 		});
 		Console.WriteLine(thread.Value.Id);
-	}
+
+        #endregion
+    }
 }

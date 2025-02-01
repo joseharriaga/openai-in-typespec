@@ -12,12 +12,16 @@ public partial class CreateEmbeddingsApiReference {
     [Test]
     public void CreateEmbeddings()
     {
+		#region logic
+
 		EmbeddingClient client = new(
 		    model: "text-embedding-3-small", 
-		    Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+		    apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
 		);
 		
 		string description = "The quick brown fox jumped over the lazy dog";
 		client.GenerateEmbedding(description);
+		
+		#endregion
 	}
 }

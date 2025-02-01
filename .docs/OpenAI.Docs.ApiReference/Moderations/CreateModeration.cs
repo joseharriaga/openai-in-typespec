@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 
 using OpenAI.Moderations;
+using System.ClientModel;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
@@ -12,11 +13,15 @@ public partial class CreateModerationApiReference {
     [Test]
     public void CreateModeration()
     {
-		ModerationClient client = new (
+        #region logic
+
+        ModerationClient client = new (
             model: "gpt-4o",
             Environment.GetEnvironmentVariable("OPENAI_API_KEY")
 		);
 		
-		var moderation = client.ClassifyText("I want to kill them.");
-	}
+		ClientResult<ModerationResult> moderation = client.ClassifyText("I want to kill them.");
+
+        #endregion
+    }
 }

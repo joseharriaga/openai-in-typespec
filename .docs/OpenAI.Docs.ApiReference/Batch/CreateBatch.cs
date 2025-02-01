@@ -14,9 +14,11 @@ public partial class CreateBatchApiReference {
     [Test]
     public void CreateBatch()
     {
-		BatchClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+        #region logic
+
+        BatchClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 		
-		var content = BinaryContent.Create(
+		BinaryContent content = BinaryContent.Create(
 		    BinaryData.FromObjectAsJson(new
 		    {
 		        input_file_id = "file-abc123",
@@ -26,10 +28,10 @@ public partial class CreateBatchApiReference {
 		);
 		
 		var result = client.CreateBatch(content, false);
-		
-		// DO NOT INCLUDE IN DOCS FROM THIS POINT ONWARDS
-		
-		BinaryData output = result.GetRawResponse().Content;
+        
+		#endregion
+
+        BinaryData output = result.GetRawResponse().Content;
 		using JsonDocument outputAsJson = JsonDocument.Parse(output);
 		Console.WriteLine(outputAsJson.RootElement.ToString());
 

@@ -14,8 +14,16 @@ public partial class CreateVectorStoreFileApiReference {
     [Test]
     public void CreateVectorStoreFile()
     {
-		VectorStoreClient client = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var file = client.AddFileToVectorStore("vs_abc123", "file-abc123", true);
-		Console.WriteLine(file.Value.FileId);
-	}
+        #region logic
+
+        VectorStoreClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        AddFileToVectorStoreOperation file = client.AddFileToVectorStore("vs_abc123", "file-abc123", true);
+		
+        Console.WriteLine(file.Value.FileId);
+
+        #endregion
+    }
 }

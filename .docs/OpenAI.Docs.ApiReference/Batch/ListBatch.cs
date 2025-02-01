@@ -15,11 +15,13 @@ public partial class ListBatchApiReference {
     [Test]
     public void ListBatch()
     {
+        #region logic
+        
 		BatchClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 		CollectionResult result = client.GetBatches(null, null, new RequestOptions {});
 		
-		// DO NOT INCLUDE IN DOCS FROM THIS POINT ONWARDS
-		
+		#endregion
+
 		//BinaryData output = result.GetRawResponse().Content;
 		//using JsonDocument outputAsJson = JsonDocument.Parse(output);
 		//Console.WriteLine(outputAsJson.RootElement.ToString());

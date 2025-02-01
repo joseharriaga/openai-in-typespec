@@ -14,13 +14,25 @@ public partial class SubmitToolOutputsApiReference {
     [Test]
     public void SubmitToolOutputs()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var streamingUpdates = assistantClient.SubmitToolOutputsToRunStreaming("thread_123", "run_123", [
-		    new ToolOutput("call_001", "70 degrees and sunny.")
-		]);
+        #region logic
+
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        CollectionResult<StreamingUpdate> streamingUpdates = client.SubmitToolOutputsToRunStreaming(
+            "thread_123", 
+            "run_123", 
+            [
+		        new ToolOutput("call_001", "70 degrees and sunny.")
+		    ]
+        );
 		
-		foreach (var streamingUpdate in streamingUpdates) {
+		foreach (var streamingUpdate in streamingUpdates) 
+        {
 		    Console.WriteLine(streamingUpdate.UpdateKind);
 		}
-	}
+
+        #endregion
+    }
 }

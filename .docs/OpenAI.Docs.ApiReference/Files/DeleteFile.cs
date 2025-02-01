@@ -2,8 +2,8 @@ using NUnit.Framework;
 
 #region usings
 using System;
+using System.ClientModel;
 
-using OpenAI;
 using OpenAI.Files;
 #endregion
 
@@ -13,8 +13,11 @@ public partial class DeleteFileApiReference {
     [Test]
     public void DeleteFile()
     {
-		OpenAIClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
-		
-		var fileContents = client.GetOpenAIFileClient().DeleteFile("file-abc123");
-	}
+        #region logic
+
+        OpenAIFileClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+		ClientResult fileContents = client.DeleteFile("file-abc123");
+
+        #endregion
+    }
 }

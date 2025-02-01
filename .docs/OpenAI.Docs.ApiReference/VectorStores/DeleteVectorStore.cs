@@ -14,8 +14,15 @@ public partial class DeleteVectorStoreApiReference {
     [Test]
     public void DeleteVectorStore()
     {
-		VectorStoreClient client = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var result = client.DeleteVectorStore("vs_abc123");
+        #region logic
+
+        VectorStoreClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult<VectorStoreDeletionResult> result = client.DeleteVectorStore("vs_abc123");
 		Console.WriteLine(result.Value);
-	}
+
+        #endregion
+    }
 }

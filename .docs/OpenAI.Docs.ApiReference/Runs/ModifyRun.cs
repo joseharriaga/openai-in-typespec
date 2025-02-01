@@ -15,20 +15,32 @@ public partial class ModifyRunApiReference {
     [Test]
     public void ModifyRun()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		
-		var content = BinaryContent.Create(
+        #region logic
+
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        BinaryContent content = BinaryContent.Create(
 		    BinaryData.FromObjectAsJson(new
 		    {
 		        metadata = new Dictionary<string, string>
 		        {
-		            { "modified", "true" },
-		            { "user", "abc123" }
+		            { 
+						"modified", 
+						"true" 
+					},
+		            { 
+						"user", 
+						"abc123" 
+					}
 		        }
 		    })
 		);
 		
-		var run = assistantClient.ModifyRun("thread_abc123", "run_abc123", content);
+		var run = client.ModifyRun("thread_abc123", "run_abc123", content);
 		Console.WriteLine(run);
-	}
+
+        #endregion
+    }
 }

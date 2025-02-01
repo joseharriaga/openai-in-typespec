@@ -13,22 +13,30 @@ public partial class CreateChatCompletion_StreamingApiReference {
     [Test]
     public async void CreateChatCompletion_Streaming()
     {
-		ChatClient client = new(
+        #region logic
+
+        ChatClient client = new(
 		    model: "gpt-4o",
-		    Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+		    apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
 		);
 		
 		AsyncCollectionResult<StreamingChatCompletionUpdate> updates = 
-			client.CompleteChatStreamingAsync(new ChatMessage[] {
-		        new SystemChatMessage("You are a helpful assistant."),
-		        new UserChatMessage("Hello!")
-		    });
+			client.CompleteChatStreamingAsync(
+				[
+					new SystemChatMessage("You are a helpful assistant."),
+					new UserChatMessage("Hello!")
+				]
+			);
 		
 		Console.WriteLine($"[ASSISTANT]:");
-		await foreach (StreamingChatCompletionUpdate update in updates) {
-		    foreach (ChatMessageContentPart updatePart in update.ContentUpdate) {
+		await foreach (StreamingChatCompletionUpdate update in updates) 
+		{
+		    foreach (ChatMessageContentPart updatePart in update.ContentUpdate) 
+			{
 		        Console.Write(updatePart.Text);
 		    }
 		}
-	}
+
+        #endregion
+    }
 }

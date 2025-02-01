@@ -14,8 +14,16 @@ public partial class RetrieveVectorStoreFilesApiReference {
     [Test]
     public void RetrieveVectorStoreFiles()
     {
-		VectorStoreClient client = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var file = client.GetFileAssociation("vs_abc123", "file-abc123");
-		Console.WriteLine(file);
-	}
+        #region logic
+
+        VectorStoreClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult file = client.GetFileAssociation("vs_abc123", "file-abc123");
+		
+        Console.WriteLine(file);
+
+        #endregion
+    }
 }

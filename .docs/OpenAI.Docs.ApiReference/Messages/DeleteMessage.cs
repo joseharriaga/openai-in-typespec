@@ -14,8 +14,15 @@ public partial class DeleteMessageApiReference {
     [Test]
     public void DeleteMessage()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var message = assistantClient.DeleteMessage("thread_abc123", "msg_abc123");
+        #region logic
+        
+        AssistantClient assistantClient = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult<MessageDeletionResult> message = assistantClient.DeleteMessage("thread_abc123", "msg_abc123");
 		Console.WriteLine(message.Value);
-	}
+        
+        #endregion
+    }
 }

@@ -14,13 +14,27 @@ public partial class CreateThreadAndRunApiReference {
     [Test]
     public void CreateThreadAndRun()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		
-		var run = assistantClient.CreateThreadAndRun("asst_abc123", new ThreadCreationOptions() {
-		    InitialMessages = {
-		        "Explain deep learning to a 5 year old."
-		    }
-		});
+        #region logic
+
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ThreadCreationOptions options = new()
+        {
+            InitialMessages =
+            {
+                "Explain deep learning to a 5 year old."
+            }
+        };
+
+        var run = client.CreateThreadAndRun(
+            "asst_abc123",
+            options
+        );
+
 		Console.WriteLine(run.Value.Id);
-	}
+
+        #endregion
+    }
 }

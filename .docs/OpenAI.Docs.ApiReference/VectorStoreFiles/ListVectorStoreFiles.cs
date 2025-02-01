@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 #region usings
 using System;
-using System.ClientModel;
+using System.ClientModel.Primitives;
 
 using OpenAI.VectorStores;
 #endregion
@@ -14,8 +14,16 @@ public partial class ListVectorStoreFilesApiReference {
     [Test]
     public void ListVectorStoreFiles()
     {
-		VectorStoreClient client = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var files = client.GetFileAssociations("vs_abc123");
-		Console.WriteLine(files);
-	}
+        #region logic
+
+        VectorStoreClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        CollectionResult files = client.GetFileAssociations("vs_abc123");
+		
+        Console.WriteLine(files);
+
+        #endregion
+    }
 }

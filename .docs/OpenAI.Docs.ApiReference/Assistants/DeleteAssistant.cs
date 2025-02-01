@@ -3,7 +3,6 @@ using NUnit.Framework;
 
 #region usings
 using System;
-using System.ClientModel;
 
 using OpenAI.Assistants;
 #endregion
@@ -14,8 +13,13 @@ public partial class DeleteAssistantApiReference {
     [Test]
     public void DeleteAssistant()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var response = assistantClient.DeleteAssistant("asst_abc123");
+        #region logic
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        var response = client.DeleteAssistant("asst_abc123");
 		Console.WriteLine(response.Value);
-	}
+        #endregion
+    }
 }

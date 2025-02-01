@@ -14,9 +14,15 @@ public partial class RetrieveThreadApiReference {
     [Test]
     public void RetrieveThread()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		
-		var thread = assistantClient.GetThread("thread_abc123");
+        #region logic
+
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult<AssistantThread> thread = client.GetThread("thread_abc123");
 		Console.WriteLine(thread.Value.Id);
-	}
+
+        #endregion
+    }
 }

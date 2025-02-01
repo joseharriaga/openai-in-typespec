@@ -14,8 +14,15 @@ public partial class ListVectorStoresApiReference {
     [Test]
     public void ListVectorStores()
     {
-		VectorStoreClient client = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var stores = client.GetVectorStores();
+        #region logic
+
+        VectorStoreClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        CollectionResult<VectorStore> stores = client.GetVectorStores();
 		Console.WriteLine(stores);
-	}
+
+        #endregion
+    }
 }

@@ -14,8 +14,12 @@ public partial class ModifyAssistantApiReference {
     [Test]
     public void ModifyAssistant()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var response = assistantClient.ModifyAssistant(
+        #region logic
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult<Assistant> response = client.ModifyAssistant(
 		    "asst_abc123",
 		    new AssistantModificationOptions()
 		    {
@@ -23,7 +27,10 @@ public partial class ModifyAssistantApiReference {
 		        Name = "HR Helper",
 		        Model = "gpt-4o",
 		        DefaultTools = { new FileSearchToolDefinition() }
-		    });
+		    }
+		);
+
 		Console.WriteLine(response.Value.Id);
+		#endregion
 	}
 }

@@ -14,9 +14,13 @@ public partial class CreateFineTunningJob_ValidationFileApiReference {
     [Test]
     public void CreateFineTunningJob_ValidationFile()
     {
-		FineTuningClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+        #region logic
+
+        FineTuningClient client = new(
+			apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+		);
 		
-		var content = BinaryContent.Create(
+		BinaryContent content = BinaryContent.Create(
 		    BinaryData.FromObjectAsJson(new
 		    {
 		        training_file = "file-abc123",
@@ -25,11 +29,11 @@ public partial class CreateFineTunningJob_ValidationFileApiReference {
 		    })
 		);
 		
-		var result = client.CreateFineTuningJob(content, false);
-		
-		// DO NOT INCLUDE IN DOCS FROM THIS POINT ONWARDS
-		
-		BinaryData output = result.GetRawResponse().Content;
+		FineTuningJobOperation result = client.CreateFineTuningJob(content, false);
+
+        #endregion
+
+        BinaryData output = result.GetRawResponse().Content;
 		using JsonDocument outputAsJson = JsonDocument.Parse(output);
 		Console.WriteLine(outputAsJson.RootElement.ToString());
 	}

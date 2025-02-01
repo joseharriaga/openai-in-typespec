@@ -13,8 +13,9 @@ public partial class RetrieveFileContentApiReference {
     [Test]
     public void RetrieveFileContent()
     {
-		OpenAIClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
-		
+        #region logic
+        OpenAIClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 		var fileContents = client.GetOpenAIFileClient().DownloadFile("file-abc123");
-	}
+        #endregion
+    }
 }

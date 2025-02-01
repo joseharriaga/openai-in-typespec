@@ -2,7 +2,6 @@ using NUnit.Framework;
 
 #region usings
 using System;
-using System.ClientModel;
 
 using OpenAI.Chat;
 #endregion
@@ -15,11 +14,9 @@ public partial class CreateChatCompletionApiReference {
     {
         #region
 
-        //using OpenAI.Chat;
-
         ChatClient client = new(
 		    model: "gpt-4o",
-		    Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+		    apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
 		);
 
 		ChatCompletion completion = client.CompleteChat(

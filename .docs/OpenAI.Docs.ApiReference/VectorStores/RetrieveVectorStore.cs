@@ -14,8 +14,16 @@ public partial class RetrieveVectorStoreApiReference {
     [Test]
     public void RetrieveVectorStore()
     {
-		VectorStoreClient client = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var store = client.GetVectorStore("vs_abc123");
-		Console.WriteLine(store.Value.Id);
-	}
+        #region logic
+
+        VectorStoreClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult<VectorStore> store = client.GetVectorStore("vs_abc123");
+		
+        Console.WriteLine(store.Value.Id);
+
+        #endregion
+    }
 }

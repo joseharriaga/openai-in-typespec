@@ -14,11 +14,22 @@ public partial class ModifyVectorStoreApiReference {
     [Test]
     public void ModifyVectorStore()
     {
-		VectorStoreClient client = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var store = client.ModifyVectorStore("vs_abc123", new VectorStoreModificationOptions()
-		{
-		    Name = "Support FAQ"
-		});
+        #region logic
+
+        VectorStoreClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult<VectorStore> store = client.ModifyVectorStore(
+            "vs_abc123", 
+            new VectorStoreModificationOptions()
+		    {
+		        Name = "Support FAQ"
+		    }
+        );
+
 		Console.WriteLine(store.Value.Id);
-	}
+
+        #endregion
+    }
 }

@@ -14,8 +14,13 @@ public partial class RetrieveAssistantApiReference {
     [Test]
     public void RetrieveAssistant()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		var response = assistantClient.GetAssistant("asst_abc123");
+        #region logic
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult<Assistant> response = client.GetAssistant("asst_abc123");
 		Console.WriteLine(response.Value.Id);
-	}
+        #endregion
+    }
 }

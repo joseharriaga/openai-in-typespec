@@ -14,9 +14,15 @@ public partial class CancelRunApiReference {
     [Test]
     public void CancelRun()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		
-		var result = assistantClient.CancelRun("thread_abc123", "run_abc123");
+        #region logic
+
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult<ThreadRun> result = client.CancelRun("thread_abc123", "run_abc123");
 		Console.WriteLine(result.Value);
-	}
+
+        #endregion
+    }
 }

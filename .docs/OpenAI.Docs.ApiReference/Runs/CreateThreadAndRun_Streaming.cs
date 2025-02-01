@@ -14,22 +14,34 @@ public partial class CreateThreadAndRun_StreamingApiReference {
     [Test]
     public void CreateThreadAndRun_Streaming()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
+        #region logic
+
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ThreadCreationOptions options = new()
+        {
+            InitialMessages =
+            {
+                "Hello"
+            }
+        };
+
+        var streamingUpdates = client.CreateThreadAndRunStreaming("asst_abc123", options);
 		
-		var streamingUpdates = assistantClient.CreateThreadAndRunStreaming("asst_abc123", new ThreadCreationOptions()
-		{
-		    InitialMessages = {
-		        "Hello"
-		    }
-		});
-		
-		foreach (StreamingUpdate streamingUpdate in streamingUpdates) {
-		    if (streamingUpdate.UpdateKind == StreamingUpdateReason.RunCreated) {
+		foreach (StreamingUpdate streamingUpdate in streamingUpdates) 
+        {
+		    if (streamingUpdate.UpdateKind == StreamingUpdateReason.RunCreated) 
+            {
 		        Console.WriteLine($"--- Run started! ---");
 		    }
-		    if (streamingUpdate is MessageContentUpdate contentUpdate) {
+		    if (streamingUpdate is MessageContentUpdate contentUpdate) 
+            {
 		        Console.Write(contentUpdate.Text);
 		    }
 		}
-	}
+
+        #endregion
+    }
 }

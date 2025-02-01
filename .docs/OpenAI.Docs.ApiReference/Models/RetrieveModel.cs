@@ -2,6 +2,7 @@ using NUnit.Framework;
 
 #region usings
 using System;
+using System.ClientModel;
 
 using OpenAI.Models;
 #endregion
@@ -16,7 +17,7 @@ public partial class RetrieveModelApiReference {
 		    Environment.GetEnvironmentVariable("OPENAI_API_KEY")
 		);
 		
-		var model = client.GetModel("babbage-002");
+		ClientResult<OpenAIModel> model = client.GetModel("babbage-002");
 		Console.WriteLine(model.Value.Id);
 
 	}

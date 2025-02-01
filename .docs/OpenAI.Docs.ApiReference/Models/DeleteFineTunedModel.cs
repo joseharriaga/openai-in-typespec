@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 
 using OpenAI.Models;
+using System.ClientModel;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
@@ -16,7 +17,7 @@ public partial class DeleteFineTunedModelApiReference {
 		    Environment.GetEnvironmentVariable("OPENAI_API_KEY")
 		);
 		
-		var success = client.DeleteModel("ft:gpt-4o-mini:acemeco:suffix:abc123");
+		ClientResult success = client.DeleteModel("ft:gpt-4o-mini:acemeco:suffix:abc123");
 		Console.WriteLine(success);
 
 	}

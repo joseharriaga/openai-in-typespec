@@ -14,9 +14,15 @@ public partial class ListRunsApiReference {
     [Test]
     public void ListRuns()
     {
-		AssistantClient assistantClient = new (new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
-		
-		var runs = assistantClient.GetRuns("thread_abc123");
+        #region logic
+
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        CollectionResult<ThreadRun> runs = client.GetRuns("thread_abc123");
 		Console.WriteLine(runs);
-	}
+
+        #endregion
+    }
 }

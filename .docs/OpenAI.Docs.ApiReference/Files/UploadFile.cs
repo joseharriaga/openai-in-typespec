@@ -16,16 +16,11 @@ public partial class UploadFileApiReference {
     {
         #region logic
 
-        OpenAIClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
-		
-		string filePath = "C:\\Users\\angelpe\\source\\github\\openai-dotnet-samples\\platform.openai.com\\UploadFile\\monthly_sales.json";
-		BinaryData file = BinaryData.FromBytes(File.ReadAllBytes(filePath));
-		
-		Console.WriteLine(Path.GetFileName(filePath));
-		
-		OpenAIFile fileInfo = client.GetOpenAIFileClient().UploadFile(
-		    filePath,
-		    FileUploadPurpose.Assistants);
+        OpenAIFileClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+	
+		OpenAIFile fileInfo = client.UploadFile("monthly_sales.json", FileUploadPurpose.Assistants);
 		
 		Console.WriteLine(fileInfo);
 		

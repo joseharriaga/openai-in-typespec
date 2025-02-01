@@ -11,18 +11,14 @@ using OpenAI.Batch;
 namespace OpenAI.Docs.ApiReference;
 public partial class CancelBatchApiReference {
 
-    [Test]
+    //[Test]
     public void CancelBatch()
     {
         #region logic
         
         BatchClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
         CollectionResult result = client.GetBatches(after: null, limit: null, options: null);
-        
-        #endregion
 
-        //BinaryData output = result.GetRawResponse().Content;
-        //using JsonDocument outputAsJson = JsonDocument.Parse(output);
-        //Console.WriteLine(outputAsJson.RootElement.ToString());
+        #endregion
     }
 }

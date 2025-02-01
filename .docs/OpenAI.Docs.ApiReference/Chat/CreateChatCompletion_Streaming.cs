@@ -5,13 +5,14 @@ using System;
 using System.ClientModel;
 
 using OpenAI.Chat;
+using System.Threading.Tasks;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateChatCompletion_StreamingApiReference {
 
     [Test]
-    public async void CreateChatCompletion_Streaming()
+    public async Task CreateChatCompletion_Streaming()
     {
         #region logic
 

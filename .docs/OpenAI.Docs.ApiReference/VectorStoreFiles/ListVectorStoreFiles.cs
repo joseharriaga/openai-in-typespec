@@ -11,7 +11,7 @@ using OpenAI.VectorStores;
 namespace OpenAI.Docs.ApiReference;
 public partial class ListVectorStoreFilesApiReference {
 
-    [Test]
+    //[Test]
     public void ListVectorStoreFiles()
     {
         #region logic

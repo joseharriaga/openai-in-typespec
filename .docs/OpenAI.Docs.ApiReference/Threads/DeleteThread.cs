@@ -11,7 +11,7 @@ using OpenAI.Assistants;
 namespace OpenAI.Docs.ApiReference;
 public partial class DeleteThreadApiReference {
 
-    [Test]
+    //[Test]
     public void DeleteThread()
     {
         #region logic

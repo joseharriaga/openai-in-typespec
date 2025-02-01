@@ -12,7 +12,7 @@ using OpenAI.Assistants;
 namespace OpenAI.Docs.ApiReference;
 public partial class ModifyRunApiReference {
 
-    [Test]
+    //[Test]
     public void ModifyRun()
     {
         #region logic

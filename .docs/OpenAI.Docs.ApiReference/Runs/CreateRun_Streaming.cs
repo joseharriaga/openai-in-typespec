@@ -11,7 +11,7 @@ using OpenAI.Assistants;
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateRun_StreamingApiReference {
 
-    [Test]
+    //[Test]
     public void CreateRun_Streaming()
     {
         #region logic

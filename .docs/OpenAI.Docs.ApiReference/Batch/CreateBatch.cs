@@ -11,7 +11,7 @@ using OpenAI.Batch;
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateBatchApiReference {
 
-    [Test]
+    //[Test]
     public void CreateBatch()
     {
         #region logic

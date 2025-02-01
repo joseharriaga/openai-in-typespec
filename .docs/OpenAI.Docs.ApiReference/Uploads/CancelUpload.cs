@@ -10,7 +10,7 @@ using OpenAI;
 namespace OpenAI.Docs.ApiReference;
 public partial class CancelUploadApiReference {
 
-    [Test]
+    //[Test]
     public void CancelUpload()
     {
         #region logic

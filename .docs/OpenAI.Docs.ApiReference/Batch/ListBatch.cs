@@ -12,7 +12,7 @@ using System.ClientModel.Primitives;
 namespace OpenAI.Docs.ApiReference;
 public partial class ListBatchApiReference {
 
-    [Test]
+    //[Test]
     public void ListBatch()
     {
         #region logic

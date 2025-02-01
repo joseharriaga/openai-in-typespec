@@ -16,8 +16,8 @@ public partial class CreateModerationApiReference {
         #region logic
 
         ModerationClient client = new (
-            model: "gpt-4o",
-            Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+            model: "omni-moderation-latest",
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
 		);
 		
 		ClientResult<ModerationResult> moderation = client.ClassifyText("I want to kill them.");

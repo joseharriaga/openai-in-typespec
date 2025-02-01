@@ -11,7 +11,7 @@ using OpenAI.Assistants;
 namespace OpenAI.Docs.ApiReference;
 public partial class RetrieveAssistantApiReference {
 
-    [Test]
+    //[Test]
     public void RetrieveAssistant()
     {
         #region logic

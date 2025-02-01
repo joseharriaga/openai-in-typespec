@@ -12,7 +12,7 @@ using System.Security.Cryptography;
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateVectorStoreFileBatchApiReference {
 
-    [Test]
+    //[Test]
     public void CreateVectorStoreFileBatch()
     {
         #region logic

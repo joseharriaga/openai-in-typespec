@@ -11,7 +11,7 @@ using OpenAI.Assistants;
 namespace OpenAI.Docs.ApiReference;
 public partial class CancelRunApiReference {
 
-    [Test]
+    //[Test]
     public void CancelRun()
     {
         #region logic

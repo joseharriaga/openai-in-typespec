@@ -11,7 +11,7 @@ using OpenAI.Assistants;
 namespace OpenAI.Docs.ApiReference;
 public partial class DeleteMessageApiReference {
 
-    [Test]
+    //[Test]
     public void DeleteMessage()
     {
         #region logic

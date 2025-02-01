@@ -2,8 +2,8 @@ using NUnit.Framework;
 
 #region usings
 using System;
+using System.ClientModel;
 
-using OpenAI;
 using OpenAI.Files;
 #endregion
 
@@ -14,10 +14,12 @@ public partial class ListFilesApiReference {
     public void ListFiles()
     {
         #region logic
-        
-        OpenAIClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 
-        var files = client.GetOpenAIFileClient().GetFiles();
+        OpenAIFileClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        ClientResult<OpenAIFileCollection> files = client.GetFiles();
 		foreach (var file in files.Value) 
         {
 		    Console.WriteLine($"{file.Filename} ({file.Id})");

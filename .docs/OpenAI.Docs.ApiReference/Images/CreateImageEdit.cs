@@ -20,9 +20,9 @@ public partial class CreateImageEditApiReference {
         );
 
         var image = client.GenerateImageEdit(
-		    "otter.png", 
+		    @"otter.png", 
 		    "A cute baby sea otter wearing a beret",
-		    "mask.png"
+		    @"mask.png"
 		);
 		
 		Console.WriteLine(image.Value.ImageUri);

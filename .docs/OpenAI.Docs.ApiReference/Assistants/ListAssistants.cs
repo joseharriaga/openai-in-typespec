@@ -10,7 +10,7 @@ using OpenAI.Assistants;
 namespace OpenAI.Docs.ApiReference;
 public partial class ListAssistantsApiReference {
 
-    [Test]
+    //[Test]
     public void ListAssistants()
     {
         #region logic

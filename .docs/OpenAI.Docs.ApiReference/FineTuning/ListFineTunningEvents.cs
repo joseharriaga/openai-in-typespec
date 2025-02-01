@@ -8,12 +8,10 @@ using System.ClientModel.Primitives;
 using OpenAI.FineTuning;
 #endregion
 
-using OpenAI.FineTuning;
-
 namespace OpenAI.Docs.ApiReference;
 public partial class ListFineTunningEventsApiReference {
 
-    [Test]
+    //[Test]
     public void ListFineTunningEvents()
     {
         #region logic

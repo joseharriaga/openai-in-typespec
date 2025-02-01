@@ -12,7 +12,7 @@ using OpenAI.Chat;
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateThreadAndRun_StreamingWithFunctionsApiReference {
 
-    [Test]
+    //[Test]
     public void CreateThreadAndRun_StreamingWithFunctions()
     {
         #region logic

@@ -13,11 +13,21 @@ public partial class DeleteFileApiReference {
     [Test]
     public void DeleteFile()
     {
-        #region logic
+        try 
+        {
+            #region logic
 
-        OpenAIFileClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
-		ClientResult fileContents = client.DeleteFile("file-abc123");
+            OpenAIFileClient client = new(
+                apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+            );
 
-        #endregion
+            ClientResult result = client.DeleteFile("file-abc123");
+
+            #endregion
+        } 
+        catch (ClientResultException ex) 
+        {
+            Assert.IsTrue(ex.Message == "HTTP 404 (invalid_request_error: )\r\nParameter: id\r\n\r\nNo such File object: file-abc123");
+        }
     }
 }

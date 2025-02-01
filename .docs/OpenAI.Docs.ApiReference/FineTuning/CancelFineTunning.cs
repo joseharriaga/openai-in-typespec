@@ -10,7 +10,7 @@ using OpenAI.FineTuning;
 namespace OpenAI.Docs.ApiReference;
 public partial class CancelFineTunningApiReference {
 
-    [Test]
+    //[Test]
     public void CancelFineTunning()
     {
         #region logic

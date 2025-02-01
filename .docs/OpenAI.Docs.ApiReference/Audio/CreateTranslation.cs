@@ -26,8 +26,5 @@ public partial class CreateTranslationApiReference {
 		Console.WriteLine($"{translation.Text}");
 
         #endregion
-
-        Console.Read();
-
 	}
 }

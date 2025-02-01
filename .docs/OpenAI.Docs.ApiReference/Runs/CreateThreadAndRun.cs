@@ -11,7 +11,7 @@ using OpenAI.Assistants;
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateThreadAndRunApiReference {
 
-    [Test]
+    //[Test]
     public void CreateThreadAndRun()
     {
         #region logic

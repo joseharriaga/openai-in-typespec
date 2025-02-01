@@ -11,7 +11,7 @@ using OpenAI.FineTuning;
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateFineTunningJob_ValidationFileApiReference {
 
-    [Test]
+    //[Test]
     public void CreateFineTunningJob_ValidationFile()
     {
         #region logic

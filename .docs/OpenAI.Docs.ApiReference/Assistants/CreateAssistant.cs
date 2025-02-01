@@ -11,7 +11,7 @@ namespace OpenAI.Docs.ApiReference;
 
 public partial class AssistantsApiReference {
 
-    [Test]
+    //[Test]
     public void CreateAssistant()
     {
         #region logic

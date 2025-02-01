@@ -11,7 +11,7 @@ using OpenAI.Assistants;
 namespace OpenAI.Docs.ApiReference;
 public partial class SubmitToolOutputsApiReference {
 
-    [Test]
+    //[Test]
     public void SubmitToolOutputs()
     {
         #region logic

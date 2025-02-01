@@ -33,7 +33,5 @@ public partial class CreateTranscriptionApiReference {
 		Console.WriteLine($"{transcription.Text}");
 
         #endregion
-
-        Console.Read();
 	}
 }

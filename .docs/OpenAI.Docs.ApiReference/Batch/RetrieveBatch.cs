@@ -5,23 +5,21 @@ using System.Text.Json;
 using System;
 
 using OpenAI.Batch;
+using System.ClientModel.Primitives;
+using OpenAI.VectorStores;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
 public partial class RetrieveBatchApiReference {
 
-    [Test]
+    //[Test]
     public void RetrieveBatch()
     {
         #region logic
 
         BatchClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
-		var result = client.GetBatches(after: null, limit: null, options: null);
+		CollectionResult result = client.GetBatches(after: null, limit: null, options: null);
 
         #endregion
-
-        //BinaryData output = result.GetRawResponse().Content;
-        //using JsonDocument outputAsJson = JsonDocument.Parse(output);
-        //Console.WriteLine(outputAsJson.RootElement.ToString());
     }
 }

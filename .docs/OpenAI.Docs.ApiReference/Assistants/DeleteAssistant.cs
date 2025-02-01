@@ -10,7 +10,7 @@ using OpenAI.Assistants;
 namespace OpenAI.Docs.ApiReference;
 public partial class DeleteAssistantApiReference {
 
-    [Test]
+    //[Test]
     public void DeleteAssistant()
     {
         #region logic

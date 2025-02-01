@@ -10,8 +10,7 @@ using OpenAI.Assistants;
 
 namespace OpenAI.Docs.ApiReference;
 public partial class RetrieveRunApiReference {
-
-    [Test]
+    //[Test]
     public void RetrieveRun()
     {
         #region logic

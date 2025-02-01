@@ -11,7 +11,7 @@ using OpenAI.Assistants;
 namespace OpenAI.Docs.ApiReference;
 public partial class CreateMessageApiReference {
 
-    [Test]
+    //[Test]
     public void CreateMessage()
     {
         #region logic

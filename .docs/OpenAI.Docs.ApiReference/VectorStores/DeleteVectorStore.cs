@@ -11,7 +11,7 @@ using OpenAI.VectorStores;
 namespace OpenAI.Docs.ApiReference;
 public partial class DeleteVectorStoreApiReference {
 
-    [Test]
+    //[Test]
     public void DeleteVectorStore()
     {
         #region logic

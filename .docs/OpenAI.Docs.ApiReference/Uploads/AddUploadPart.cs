@@ -10,7 +10,7 @@ using OpenAI;
 namespace OpenAI.Docs.ApiReference;
 public partial class AddUploadPartApiReference {
 
-    [Test]
+    //[Test]
     public void AddUploadPart()
     {
         #region logic

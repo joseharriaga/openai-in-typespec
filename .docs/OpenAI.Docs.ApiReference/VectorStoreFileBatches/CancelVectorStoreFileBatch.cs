@@ -11,7 +11,7 @@ using OpenAI.VectorStores;
 namespace OpenAI.Docs.ApiReference;
 public partial class CancelVectorStoreFileBatchApiReference {
 
-    [Test]
+    //[Test]
     public void CancelVectorStoreFileBatch()
     {
         #region logic

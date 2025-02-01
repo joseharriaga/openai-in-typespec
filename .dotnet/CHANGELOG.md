@@ -14,7 +14,11 @@
 - For `o1` and later models with reasoning capabilities:
   - The new `DeveloperChatMessage`, which replaces `SystemChatMessage`, can be used to provide instructions to the model
   - `ChatCompletionOptions` can specify a `ReasoningEffort` property to adjust the level of token consumption the model will attempt to apply
-  
+
+### `[Experimental]` Breaking changes
+
+- The `IDictionary<string, string> Metadata` property in several request options types in the Assistants and RealtimeConversation areas have had their setters removed, aligning them with other request use of collections. The dictionaries remain writeable and use both initializer syntax and range copies to produce the same effect.
+
 ## 2.1.0 (2024-12-04)
 
 ### Features added

@@ -20,7 +20,7 @@ namespace OpenAI.RealtimeConversation
             _internalModalities = new ChangeTrackingList<InternalRealtimeRequestSessionModality>();
         }
 
-        internal ConversationResponseOptions(string instructions, ConversationVoice? voice, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, IDictionary<string, string> metadata, ResponseConversationSelection? conversationSelection, IList<ConversationItem> overrideItems, IList<InternalRealtimeRequestSessionModality> internalModalities, BinaryData internalToolChoice, BinaryData maxResponseOutputTokens, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ConversationResponseOptions(string instructions, ConversationVoice? voice, ConversationAudioFormat? outputAudioFormat, IList<ConversationTool> tools, float? temperature, IDictionary<string, string> metadata, ResponseConversationSelection? conversationSelection, RealtimeConversation.ConversationMaxTokensChoice maxOutputTokens, IList<ConversationItem> overrideItems, IList<InternalRealtimeRequestSessionModality> internalModalities, BinaryData internalToolChoice, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Instructions = instructions;
             Voice = voice;
@@ -29,10 +29,10 @@ namespace OpenAI.RealtimeConversation
             Temperature = temperature;
             Metadata = metadata;
             ConversationSelection = conversationSelection;
+            MaxOutputTokens = maxOutputTokens;
             OverrideItems = overrideItems;
             _internalModalities = internalModalities;
             _internalToolChoice = internalToolChoice;
-            _maxResponseOutputTokens = maxResponseOutputTokens;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
@@ -46,7 +46,7 @@ namespace OpenAI.RealtimeConversation
 
         public float? Temperature { get; set; }
 
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

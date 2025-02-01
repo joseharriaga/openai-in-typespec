@@ -13,6 +13,10 @@ namespace OpenAI.RealtimeConversation
 {
     internal partial class InternalRealtimeResponse : IJsonModel<InternalRealtimeResponse>
     {
+        internal InternalRealtimeResponse()
+        {
+        }
+
         void IJsonModel<InternalRealtimeResponse>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -47,9 +51,9 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("status_details"u8);
                 writer.WriteObjectValue(StatusDetails, options);
             }
-            if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
-                if (Metadata != null)
+                if (Metadata != null && Optional.IsCollectionDefined(Metadata))
                 {
                     writer.WritePropertyName("metadata"u8);
                     writer.WriteStartObject();
@@ -75,6 +79,28 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("usage"u8);
                 writer.WriteObjectValue(Usage, options);
             }
+            if (Optional.IsDefined(ConversationId) && _additionalBinaryDataProperties?.ContainsKey("conversation_id") != true)
+            {
+                writer.WritePropertyName("conversation_id"u8);
+                writer.WriteStringValue(ConversationId);
+            }
+            if (Optional.IsDefined(Temperature) && _additionalBinaryDataProperties?.ContainsKey("temperature") != true)
+            {
+                writer.WritePropertyName("temperature"u8);
+                writer.WriteNumberValue(Temperature.Value);
+            }
+            if (Optional.IsDefined(MaxOutputTokens) && _additionalBinaryDataProperties?.ContainsKey("max_output_tokens") != true)
+            {
+                writer.WritePropertyName("max_output_tokens"u8);
+#if NET6_0_OR_GREATER
+                writer.WriteRawValue(MaxOutputTokens);
+#else
+                using (JsonDocument document = JsonDocument.Parse(MaxOutputTokens))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
+            }
             if (Optional.IsCollectionDefined(Output) && _additionalBinaryDataProperties?.ContainsKey("output") != true)
             {
                 writer.WritePropertyName("output"u8);
@@ -84,6 +110,26 @@ namespace OpenAI.RealtimeConversation
                     writer.WriteObjectValue(item, options);
                 }
                 writer.WriteEndArray();
+            }
+            if (Optional.IsCollectionDefined(Modalities) && _additionalBinaryDataProperties?.ContainsKey("modalities") != true)
+            {
+                writer.WritePropertyName("modalities"u8);
+                writer.WriteStartArray();
+                foreach (InternalRealtimeResponseModality item in Modalities)
+                {
+                    writer.WriteStringValue(item.ToString());
+                }
+                writer.WriteEndArray();
+            }
+            if (Optional.IsDefined(Voice) && _additionalBinaryDataProperties?.ContainsKey("voice") != true)
+            {
+                writer.WritePropertyName("voice"u8);
+                writer.WriteStringValue(Voice.Value.ToString());
+            }
+            if (Optional.IsDefined(OutputAudioFormat) && _additionalBinaryDataProperties?.ContainsKey("output_audio_format") != true)
+            {
+                writer.WritePropertyName("output_audio_format"u8);
+                writer.WriteStringValue(OutputAudioFormat.Value.ToString());
             }
             if (true && _additionalBinaryDataProperties != null)
             {
@@ -131,7 +177,13 @@ namespace OpenAI.RealtimeConversation
             ConversationStatusDetails statusDetails = default;
             IDictionary<string, string> metadata = default;
             ConversationTokenUsage usage = default;
+            string conversationId = default;
+            float? temperature = default;
+            BinaryData maxOutputTokens = default;
             IReadOnlyList<ConversationItem> output = default;
+            IReadOnlyList<InternalRealtimeResponseModality> modalities = default;
+            ConversationVoice? voice = default;
+            ConversationAudioFormat? outputAudioFormat = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -171,6 +223,7 @@ namespace OpenAI.RealtimeConversation
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
+                        metadata = new ChangeTrackingDictionary<string, string>();
                         continue;
                     }
                     Dictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -197,6 +250,29 @@ namespace OpenAI.RealtimeConversation
                     usage = ConversationTokenUsage.DeserializeConversationTokenUsage(prop.Value, options);
                     continue;
                 }
+                if (prop.NameEquals("conversation_id"u8))
+                {
+                    conversationId = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("temperature"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    temperature = prop.Value.GetSingle();
+                    continue;
+                }
+                if (prop.NameEquals("max_output_tokens"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    maxOutputTokens = BinaryData.FromString(prop.Value.GetRawText());
+                    continue;
+                }
                 if (prop.NameEquals("output"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -211,6 +287,38 @@ namespace OpenAI.RealtimeConversation
                     output = array;
                     continue;
                 }
+                if (prop.NameEquals("modalities"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<InternalRealtimeResponseModality> array = new List<InternalRealtimeResponseModality>();
+                    foreach (var item in prop.Value.EnumerateArray())
+                    {
+                        array.Add(new InternalRealtimeResponseModality(item.GetString()));
+                    }
+                    modalities = array;
+                    continue;
+                }
+                if (prop.NameEquals("voice"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    voice = new ConversationVoice(prop.Value.GetString());
+                    continue;
+                }
+                if (prop.NameEquals("output_audio_format"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    outputAudioFormat = new ConversationAudioFormat(prop.Value.GetString());
+                    continue;
+                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -221,9 +329,15 @@ namespace OpenAI.RealtimeConversation
                 @object,
                 status,
                 statusDetails,
-                metadata ?? new ChangeTrackingDictionary<string, string>(),
+                metadata,
                 usage,
+                conversationId,
+                temperature,
+                maxOutputTokens,
                 output ?? new ChangeTrackingList<ConversationItem>(),
+                modalities ?? new ChangeTrackingList<InternalRealtimeResponseModality>(),
+                voice,
+                outputAudioFormat,
                 additionalBinaryDataProperties);
         }
 

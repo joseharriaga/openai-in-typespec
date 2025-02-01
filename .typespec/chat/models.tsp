@@ -10,8 +10,103 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-// Tool generated type. Extracts ChatCompletionTokenLogprob.bytes
-model ChatCompletionTokenLogprobBytes is int32[];
+// Tool generated type. Extracts from CreateChatCompletionResponse.choices
+alias CreateChatCompletionResponseChoice = {
+  @doc("""
+    The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+    `length` if the maximum number of tokens specified in the request was reached,
+    `content_filter` if content was omitted due to a flag from our content filters,
+    `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+    """)
+  finish_reason:
+    | "stop"
+    | "length"
+    | "tool_calls"
+    | "content_filter"
+    | "function_call";
+
+  /** The index of the choice in the list of choices. */
+  index: int32;
+
+  message: ChatCompletionResponseMessage;
+
+  /** Log probability information for the choice. */
+  logprobs: {
+    // Tool customization: Apply read-only visibility via annotation
+    /** A list of message content tokens with log probability information. */
+    @visibility("read")
+    content: ChatCompletionTokenLogprob[] | null;
+
+    // Tool customization: Apply read-only visibility via annotation
+    /** A list of message refusal tokens with log probability information. */
+    @visibility("read")
+    refusal: ChatCompletionTokenLogprob[] | null;
+  } | null;
+};
+
+// Tool generated type. Extracts from CreateChatCompletionFunctionResponse.choices
+alias CreateChatCompletionFunctionResponseChoice = {
+  @doc("""
+    The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
+    """)
+  finish_reason: "stop" | "length" | "function_call" | "content_filter";
+
+  /** The index of the choice in the list of choices. */
+  index: int32;
+
+  message: ChatCompletionResponseMessage;
+};
+
+// Tool generated type. Extracts from ChatCompletionTokenLogprob.top_logprobs
+alias ChatCompletionTokenLogprobTopLogprob = {
+  /** The token. */
+  token: string;
+
+  @doc("""
+    The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
+    """)
+  logprob: float32;
+
+  @doc("""
+    A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
+    """)
+  bytes: int32[] | null;
+};
+
+// Tool generated type. Extracts from CreateChatCompletionStreamResponse.choices
+alias CreateChatCompletionStreamResponseChoice = {
+  delta: ChatCompletionStreamResponseDelta;
+
+  /** Log probability information for the choice. */
+  logprobs?: {
+    // Tool customization: Apply read-only visibility via annotation
+    /** A list of message content tokens with log probability information. */
+    @visibility("read")
+    content: ChatCompletionTokenLogprob[] | null;
+
+    // Tool customization: Apply read-only visibility via annotation
+    /** A list of message refusal tokens with log probability information. */
+    @visibility("read")
+    refusal: ChatCompletionTokenLogprob[] | null;
+  } | null;
+
+  @doc("""
+    The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+    `length` if the maximum number of tokens specified in the request was reached,
+    `content_filter` if content was omitted due to a flag from our content filters,
+    `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+    """)
+  finish_reason:
+    | "stop"
+    | "length"
+    | "tool_calls"
+    | "content_filter"
+    | "function_call"
+    | null;
+
+  /** The index of the choice in the list of choices. */
+  index: int32;
+};
 
 model CreateChatCompletionRequest {
   /**
@@ -27,6 +122,8 @@ model CreateChatCompletionRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`:
     | string
+    | "o3-mini"
+    | "o3-mini-2025-01-31"
     | "o1"
     | "o1-2024-12-17"
     | "o1-preview"
@@ -83,11 +180,7 @@ model CreateChatCompletionRequest {
     """)
   reasoning_effort?: "low" | "medium" | "high" = "medium";
 
-  /**
-   * Developer-defined tags and values used for filtering completions
-   * in the [dashboard](https://platform.openai.com/chat-completions).
-   */
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on
@@ -227,8 +320,8 @@ model CreateChatCompletionRequest {
   /**
    * Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
    *   - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted.
-   *   - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
-   *   - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
+   *   - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarantee.
+   *   - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarantee.
    *   - When not set, the default behavior is 'auto'.
    */
   service_tier?: "auto" | "default" | null = "auto";
@@ -309,40 +402,10 @@ model CreateChatCompletionResponse {
   /** A unique identifier for the chat completion. */
   id: string;
 
-  // Tool customization: Apply read-only visibility to inner logprobs types
   @doc("""
     A list of chat completion choices. Can be more than one if `n` is greater than 1.
     """)
-  choices: {
-    @doc("""
-      The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-      `length` if the maximum number of tokens specified in the request was reached,
-      `content_filter` if content was omitted due to a flag from our content filters,
-      `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-      """)
-    finish_reason:
-      | "stop"
-      | "length"
-      | "tool_calls"
-      | "content_filter"
-      | "function_call";
-
-    /** The index of the choice in the list of choices. */
-    index: int32;
-
-    message: ChatCompletionResponseMessage;
-
-    /** Log probability information for the choice. */
-    logprobs: {
-      /** A list of message content tokens with log probability information. */
-      @visibility("read")
-      content: ChatCompletionTokenLogprob[] | null;
-
-      /** A list of message refusal tokens with log probability information. */
-      @visibility("read")
-      refusal: ChatCompletionTokenLogprob[] | null;
-    } | null;
-  }[];
+  choices: CreateChatCompletionResponseChoice[];
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the chat completion was created. */
@@ -675,17 +738,7 @@ model CreateChatCompletionFunctionResponse {
   @doc("""
     A list of chat completion choices. Can be more than one if `n` is greater than 1.
     """)
-  choices: {
-    @doc("""
-      The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
-      """)
-    finish_reason: "stop" | "length" | "function_call" | "content_filter";
-
-    /** The index of the choice in the list of choices. */
-    index: int32;
-
-    message: ChatCompletionResponseMessage;
-  }[];
+  choices: CreateChatCompletionFunctionResponseChoice[];
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the chat completion was created. */
@@ -776,25 +829,12 @@ model ChatCompletionTokenLogprob {
   @doc("""
     A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
     """)
-  bytes: ChatCompletionTokenLogprobBytes | null;
+  bytes: int32[] | null;
 
   @doc("""
     List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned.
     """)
-  top_logprobs: {
-    /** The token. */
-    token: string;
-
-    @doc("""
-      The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
-      """)
-    logprob: float32;
-
-    @doc("""
-      A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
-      """)
-    bytes: int32[] | null;
-  }[];
+  top_logprobs: ChatCompletionTokenLogprobTopLogprob[];
 }
 
 @doc("""
@@ -813,7 +853,7 @@ model ChatCompletionFunctions {
   /** The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. */
   name: string;
 
-  parameters?: FunctionParameters;
+  ...FunctionParametersCommon;
 }
 
 // Tool customization: Add a missing "audio" to the chat streaming delta definition
@@ -869,42 +909,11 @@ model CreateChatCompletionStreamResponse {
   /** A unique identifier for the chat completion. Each chunk has the same ID. */
   id: string;
 
-  // Tool customization: Apply read-only visibility to inner logprobs types
   @doc("""
     A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
     last chunk if you set `stream_options: {"include_usage": true}`.
     """)
-  choices: {
-    delta: ChatCompletionStreamResponseDelta;
-
-    /** Log probability information for the choice. */
-    logprobs?: {
-      /** A list of message content tokens with log probability information. */
-      @visibility("read")
-      content: ChatCompletionTokenLogprob[] | null;
-
-      /** A list of message refusal tokens with log probability information. */
-      @visibility("read")
-      refusal: ChatCompletionTokenLogprob[] | null;
-    } | null;
-
-    @doc("""
-      The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-      `length` if the maximum number of tokens specified in the request was reached,
-      `content_filter` if content was omitted due to a flag from our content filters,
-      `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-      """)
-    finish_reason:
-      | "stop"
-      | "length"
-      | "tool_calls"
-      | "content_filter"
-      | "function_call"
-      | null;
-
-    /** The index of the choice in the list of choices. */
-    index: int32;
-  }[];
+  choices: CreateChatCompletionStreamResponseChoice[];
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. */

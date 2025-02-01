@@ -224,7 +224,7 @@ namespace OpenAI.Assistants {
     public class AssistantCreationOptions : IJsonModel<AssistantCreationOptions>, IPersistableModel<AssistantCreationOptions> {
         public string Description { get; set; }
         public string Instructions { get; set; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public string Name { get; set; }
         public float? NucleusSamplingFactor { get; set; }
         public AssistantResponseFormat ResponseFormat { get; set; }
@@ -244,7 +244,7 @@ namespace OpenAI.Assistants {
         public IList<ToolDefinition> DefaultTools { get; }
         public string Description { get; set; }
         public string Instructions { get; set; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public string Model { get; set; }
         public string Name { get; set; }
         public float? NucleusSamplingFactor { get; set; }
@@ -406,7 +406,7 @@ namespace OpenAI.Assistants {
     }
     public class MessageCreationOptions : IJsonModel<MessageCreationOptions>, IPersistableModel<MessageCreationOptions> {
         public IList<MessageCreationAttachment> Attachments { get; set; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public static explicit operator MessageCreationOptions(ClientResult result);
         public static implicit operator BinaryContent(MessageCreationOptions messageCreationOptions);
     }
@@ -444,7 +444,7 @@ namespace OpenAI.Assistants {
         High = 2
     }
     public class MessageModificationOptions : IJsonModel<MessageModificationOptions>, IPersistableModel<MessageModificationOptions> {
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public static explicit operator MessageModificationOptions(ClientResult result);
         public static implicit operator BinaryContent(MessageModificationOptions messageModificationOptions);
     }
@@ -559,7 +559,7 @@ namespace OpenAI.Assistants {
         public override readonly string ToString();
     }
     public class RunModificationOptions : IJsonModel<RunModificationOptions>, IPersistableModel<RunModificationOptions> {
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public static explicit operator RunModificationOptions(ClientResult result);
         public static implicit operator BinaryContent(RunModificationOptions runModificationOptions);
     }
@@ -809,7 +809,7 @@ namespace OpenAI.Assistants {
     }
     public class ThreadCreationOptions : IJsonModel<ThreadCreationOptions>, IPersistableModel<ThreadCreationOptions> {
         public IList<ThreadInitializationMessage> InitialMessages { get; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public ToolResources ToolResources { get; set; }
         public static explicit operator ThreadCreationOptions(ClientResult result);
         public static implicit operator BinaryContent(ThreadCreationOptions threadCreationOptions);
@@ -842,7 +842,7 @@ namespace OpenAI.Assistants {
         public static implicit operator BinaryContent(ThreadMessage threadMessage);
     }
     public class ThreadModificationOptions : IJsonModel<ThreadModificationOptions>, IPersistableModel<ThreadModificationOptions> {
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public ToolResources ToolResources { get; set; }
         public static explicit operator ThreadModificationOptions(ClientResult result);
         public static implicit operator BinaryContent(ThreadModificationOptions threadModificationOptions);
@@ -2453,7 +2453,7 @@ namespace OpenAI.RealtimeConversation {
         public ResponseConversationSelection? ConversationSelection { get; set; }
         public string Instructions { get; set; }
         public ConversationMaxTokensChoice MaxOutputTokens { get; set; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public ConversationAudioFormat? OutputAudioFormat { get; set; }
         public IList<ConversationItem> OverrideItems { get; }
         public float? Temperature { get; set; }
@@ -2983,7 +2983,7 @@ namespace OpenAI.VectorStores {
         public FileChunkingStrategy ChunkingStrategy { get; set; }
         public VectorStoreExpirationPolicy ExpirationPolicy { get; set; }
         public IList<string> FileIds { get; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public string Name { get; set; }
         public static explicit operator VectorStoreCreationOptions(ClientResult result);
         public static implicit operator BinaryContent(VectorStoreCreationOptions vectorStoreCreationOptions);
@@ -3093,7 +3093,7 @@ namespace OpenAI.VectorStores {
     }
     public class VectorStoreModificationOptions : IJsonModel<VectorStoreModificationOptions>, IPersistableModel<VectorStoreModificationOptions> {
         public VectorStoreExpirationPolicy ExpirationPolicy { get; set; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public string Name { get; set; }
         public static explicit operator VectorStoreModificationOptions(ClientResult result);
         public static implicit operator BinaryContent(VectorStoreModificationOptions vectorStoreModificationOptions);

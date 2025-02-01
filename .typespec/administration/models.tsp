@@ -7,6 +7,24 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
+// Tool generated type. Extracts from Invite.projects
+alias InviteProject = {
+  /** Project's public ID */
+  id?: string;
+
+  /** Project membership role */
+  role?: "member" | "owner";
+};
+
+// Tool generated type. Extracts from InviteRequest.projects
+alias InviteRequestProject = {
+  /** Project's public ID */
+  id: string;
+
+  /** Project membership role */
+  role: "member" | "owner";
+};
+
 /** The service account that performed the audit logged action. */
 model AuditLogActorServiceAccount {
   /** The service account id. */
@@ -460,13 +478,7 @@ model Invite {
   accepted_at?: utcDateTime;
 
   /** The projects that were granted membership upon acceptance of the invite. */
-  projects?: {
-    /** Project's public ID */
-    id?: string;
-
-    /** Project membership role */
-    role?: "member" | "owner";
-  }[];
+  projects?: InviteProject[];
 }
 
 model InviteListResponse {
@@ -503,13 +515,7 @@ model InviteRequest {
   role: "reader" | "owner";
 
   /** An array of projects to which membership is granted at the same time the org invite is accepted. If omitted, the user will be invited to the default project for compatibility with legacy behavior. */
-  projects?: {
-    /** Project's public ID */
-    id: string;
-
-    /** Project membership role */
-    role: "member" | "owner";
-  }[];
+  projects?: InviteRequestProject[];
 }
 
 model InviteDeleteResponse {

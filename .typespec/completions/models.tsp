@@ -9,6 +9,25 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
+// Tool generated type. Extracts from CreateCompletionResponse.choices
+alias CreateCompletionResponseChoice = {
+  @doc("""
+    The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+    `length` if the maximum number of tokens specified in the request was reached,
+    or `content_filter` if content was omitted due to a flag from our content filters.
+    """)
+  finish_reason: "stop" | "length" | "content_filter";
+
+  index: int32;
+  logprobs: {
+    text_offset?: int32[];
+    token_logprobs?: float32[];
+    tokens?: string[];
+    top_logprobs?: Record<float32>[];
+  } | null;
+  text: string;
+};
+
 model CreateCompletionRequest {
   /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models) for descriptions of them. */
   @extension("x-oaiTypeLabel", "string")
@@ -141,23 +160,7 @@ model CreateCompletionResponse {
   id: string;
 
   /** The list of completion choices the model generated for the input prompt. */
-  choices: {
-    @doc("""
-      The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-      `length` if the maximum number of tokens specified in the request was reached,
-      or `content_filter` if content was omitted due to a flag from our content filters.
-      """)
-    finish_reason: "stop" | "length" | "content_filter";
-
-    index: int32;
-    logprobs: {
-      text_offset?: int32[];
-      token_logprobs?: float32[];
-      tokens?: string[];
-      top_logprobs?: Record<float32>[];
-    } | null;
-    text: string;
-  }[];
+  choices: CreateCompletionResponseChoice[];
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the completion was created. */

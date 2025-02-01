@@ -3,9 +3,26 @@
  * Edits made directly to this file will be lost.
  */
 
+import "../common";
+
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
+
+// Tool generated type. Extracts from Batch.errors.data
+alias BatchErrorsData = {
+  /** An error code identifying the error type. */
+  code?: string;
+
+  /** A human-readable message providing more details about the error. */
+  message?: string;
+
+  /** The name of the parameter that caused the error, if applicable. */
+  param?: string | null;
+
+  /** The line number of the input file where the error occurred, if applicable. */
+  line?: int32 | null;
+};
 
 model Batch {
   id: string;
@@ -25,19 +42,7 @@ model Batch {
       """)
     object?: "list";
 
-    data?: {
-      /** An error code identifying the error type. */
-      code?: string;
-
-      /** A human-readable message providing more details about the error. */
-      message?: string;
-
-      /** The name of the parameter that caused the error, if applicable. */
-      param?: string | null;
-
-      /** The line number of the input file where the error occurred, if applicable. */
-      line?: int32 | null;
-    }[];
+    data?: BatchErrorsData[];
   };
 
   /** The ID of the input file for the batch. */
@@ -120,10 +125,7 @@ model Batch {
     failed: int32;
   };
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForResponse;
 }
 
 /** The per-line object of the batch input file */

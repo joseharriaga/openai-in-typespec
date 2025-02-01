@@ -13,17 +13,25 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-// Tool generated type. Extracts CreateRunRequest.additional_messages
-model CreateRunRequestAdditional_messages is CreateMessageRequest[];
+// Tool generated type. Extracts from SubmitToolOutputsRunRequest.tool_outputs
+alias SubmitToolOutputsRunRequestToolOutput = {
+  @doc("""
+    The ID of the tool call in the `required_action` object within the run object the output is being submitted for.
+    """)
+  tool_call_id?: string;
 
-// Tool generated type. Extracts CreateRunRequest.tools
-@maxItems(20)
-@extension("x-oaiExpandable", true)
-model CreateRunRequestTools is AssistantToolDefinition[];
+  /** The output of the tool call to be submitted to continue the run. */
+  output?: string;
+};
 
-// Tool generated type. Extracts CreateThreadAndRunRequest.tools
-@maxItems(20)
-model CreateThreadAndRunRequestTools is AssistantToolDefinition[];
+// Tool generated type. Extracts from RunStepDetailsToolCallsFileSearchResultObject.content
+alias RunStepDetailsToolCallsFileSearchResultObjectContent = {
+  /** The type of the content. */
+  type?: "text";
+
+  /** The text content of the file. */
+  text?: string;
+};
 
 model CreateRunRequest {
   /** The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. */
@@ -66,16 +74,15 @@ model CreateRunRequest {
   additional_instructions?: string | null;
 
   /** Adds additional messages to the thread before creating the run. */
-  additional_messages?: CreateRunRequestAdditional_messages | null;
+  additional_messages?: CreateMessageRequest[] | null;
 
   // Tool customization: use common model base for tool definitions
   /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
-  tools?: CreateRunRequestTools | null;
+  // !no_nullable! @maxItems(20)
+  @extension("x-oaiExpandable", true)
+  tools?: AssistantToolDefinition[] | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 
   /** What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. */
   @minValue(0)
@@ -115,10 +122,7 @@ model CreateRunRequest {
 }
 
 model ModifyRunRequest {
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 }
 
 model CreateThreadAndRunRequest {
@@ -162,7 +166,8 @@ model CreateThreadAndRunRequest {
 
   // Tool customization: use common model base for tool definitions
   /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
-  tools?: CreateThreadAndRunRequestTools | null;
+  // !no_nullable! @maxItems(20)
+  tools?: AssistantToolDefinition[] | null;
 
   @doc("""
     A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
@@ -180,10 +185,7 @@ model CreateThreadAndRunRequest {
     file_search?: ToolResourcesFileSearchIdsOnly;
   } | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 
   /** What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. */
   @minValue(0)
@@ -224,15 +226,7 @@ model CreateThreadAndRunRequest {
 
 model SubmitToolOutputsRunRequest {
   /** A list of tools for which the outputs are being submitted. */
-  tool_outputs: {
-    @doc("""
-      The ID of the tool call in the `required_action` object within the run object the output is being submitted for.
-      """)
-    tool_call_id?: string;
-
-    /** The output of the tool call to be submitted to continue the run. */
-    output?: string;
-  }[];
+  tool_outputs: SubmitToolOutputsRunRequestToolOutput[];
 
   @doc("""
     If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
@@ -393,13 +387,7 @@ model RunStepDetailsToolCallsFileSearchResultObject {
   score: float32;
 
   /** The content of the result that was found. The content is only included if requested via the include query parameter. */
-  content?: {
-    /** The type of the content. */
-    type?: "text";
-
-    /** The text content of the file. */
-    text?: string;
-  }[];
+  content?: RunStepDetailsToolCallsFileSearchResultObjectContent[];
 }
 
 // Tool customization: apply custom, common base type to union items
@@ -567,11 +555,7 @@ model RunObject {
   @extension("x-oaiExpandable", true)
   tools: AssistantToolDefinition[] = #[];
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata: Record<string> | null;
-
+  ...MetadataPropertyForResponse;
   usage: RunCompletionUsage | null;
 
   /** The sampling temperature used for this run. If not set, defaults to 1. */
@@ -666,11 +650,7 @@ model RunStepObject {
   @encode("unixTimestamp", int32)
   completed_at: utcDateTime | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata: Record<string> | null;
-
+  ...MetadataPropertyForResponse;
   usage: RunStepCompletionUsage | null;
 }
 

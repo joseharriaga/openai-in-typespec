@@ -476,7 +476,7 @@ namespace OpenAI
             return new UnknownRealtimeContentPart(new ConversationContentPartKind(kind), additionalBinaryDataProperties: null);
         }
 
-        public static ConversationResponseOptions ConversationResponseOptions(string instructions = default, ConversationVoice? voice = default, ConversationAudioFormat? outputAudioFormat = default, IEnumerable<ConversationTool> tools = default, float? temperature = default, IDictionary<string, string> metadata = default, ResponseConversationSelection? conversationSelection = default, IEnumerable<ConversationItem> overrideItems = default, IEnumerable<InternalRealtimeRequestSessionModality> internalModalities = default, BinaryData internalToolChoice = default, BinaryData maxResponseOutputTokens = default)
+        public static ConversationResponseOptions ConversationResponseOptions(string instructions = default, ConversationVoice? voice = default, ConversationAudioFormat? outputAudioFormat = default, IEnumerable<ConversationTool> tools = default, float? temperature = default, IDictionary<string, string> metadata = default, ResponseConversationSelection? conversationSelection = default, RealtimeConversation.ConversationMaxTokensChoice maxOutputTokens = default, IEnumerable<ConversationItem> overrideItems = default, IEnumerable<InternalRealtimeRequestSessionModality> internalModalities = default, BinaryData internalToolChoice = default)
         {
             tools ??= new ChangeTrackingList<ConversationTool>();
             metadata ??= new ChangeTrackingDictionary<string, string>();
@@ -491,10 +491,10 @@ namespace OpenAI
                 temperature,
                 metadata,
                 conversationSelection,
+                maxOutputTokens,
                 overrideItems?.ToList(),
                 internalModalities?.ToList(),
                 internalToolChoice,
-                maxResponseOutputTokens,
                 additionalBinaryDataProperties: null);
         }
 

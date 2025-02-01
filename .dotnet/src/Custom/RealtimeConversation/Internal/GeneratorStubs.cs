@@ -24,11 +24,14 @@ namespace OpenAI.RealtimeConversation;
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseAudioContentPart")] internal partial class InternalRealtimeResponseAudioContentPart { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseFunctionCallItem")] internal partial class InternalRealtimeResponseFunctionCallItem { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseFunctionCallOutputItem")] internal partial class InternalRealtimeResponseFunctionCallOutputItem { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseModality")] internal readonly partial struct InternalRealtimeResponseModality { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseObject")] internal readonly partial struct InternalRealtimeResponseObject { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseOutputAudioFormat")] internal readonly partial struct InternalRealtimeResponseOutputAudioFormat { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseSessionObject")] internal readonly partial struct InternalRealtimeResponseSessionObject { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatusDetailsError")] internal partial class InternalRealtimeResponseStatusDetailsError { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseStatusDetailsType")] internal readonly partial struct InternalRealtimeResponseStatusDetailsType { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeResponseTextContentPart")] internal partial class InternalRealtimeResponseTextContentPart { }
+[Experimental("OPENAI002")][CodeGenModel("RealtimeResponseVoice")] internal readonly partial struct InternalRealtimeResponseVoice { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventConversationCreated")] internal partial class InternalRealtimeServerEventConversationCreated { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventConversationCreatedConversation")] internal partial class InternalRealtimeServerEventConversationCreatedConversation { }
 [Experimental("OPENAI002")][CodeGenModel("RealtimeServerEventConversationItemInputAudioTranscriptionFailedError")] internal partial class InternalRealtimeServerEventConversationItemInputAudioTranscriptionFailedError { }

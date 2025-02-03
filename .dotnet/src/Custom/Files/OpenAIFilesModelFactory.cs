@@ -36,14 +36,12 @@ public static partial class OpenAIFilesModelFactory
 
     /// <summary> Initializes a new instance of <see cref="OpenAI.Files.OpenAIFileCollection"/>. </summary>
     /// <returns> A new <see cref="OpenAI.Files.OpenAIFileCollection"/> instance for mocking. </returns>
-    public static OpenAIFileCollection OpenAIFileCollection(IEnumerable<OpenAIFile> items = null, string firstId = default, string lastId = default, bool hasMore = default)
+    public static OpenAIFileCollection OpenAIFileCollection(IEnumerable<OpenAIFile> items = null)
     {
-        items ??= new List<OpenAIFile>();
-
         return new OpenAIFileCollection(
-            items.ToList(),
-            firstId,
-            lastId,
-            hasMore);
+            items?.ToList() ?? [],
+            firstId: null,
+            lastId : null,
+            hasMore: false);
     }
 }

@@ -5,16 +5,16 @@ https://dev.azure.com/project-argos/Sorento/_wiki/wikis/Sorento.wiki/3021/Genera
 
 Snapshot: $M
 ```
-commit 9ca412840f1554cc23857a6a2aa1e66c231a8b40 (HEAD -> master, origin/master)
+commit 3852712e812b9b16ab67bf4f390345a19f98aabd (HEAD -> master, origin/master)
 Author: root <root@root.k8s.local>
-Date:   Wed Jan 22 19:03:08 2025 +0000
+Date:   Fri Jan 31 21:29:23 2025 +0000
 ```
 
 Ingestion tool: https://project-argos@dev.azure.com/project-argos/Sorento/_git/sdk
 ```
-commit 895db04b811623599de66b00ea625edee392a1e0 (HEAD -> user/travisw/migrate-spec-ingestion-tool, origin/user/travisw/migrate-spec-ingestion-tool)
+commit 8b8856f854f166b9dbb80f60bf2d9f5ca8830f2f (HEAD -> user/travisw/migrate-spec-ingestion-tool, origin/user/travisw/migrate-spec-ingestion-tool)
 Author: Travis Wilson <travisw@microsoft.com>
-Date:   Thu Jan 30 18:48:34 2025 -0800
+Date:   Fri Jan 31 16:47:07 2025 -0800
 ```
 
 There are some deltas:

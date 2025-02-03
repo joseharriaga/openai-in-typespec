@@ -774,7 +774,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
         ChatCompletion completion = await client.CompleteChatAsync([message], options);
 
-        Assert.That(completion.Usage.OutputTokenDetails.PredictionAcceptedTokenCount, Is.GreaterThan(0));
+        Assert.That(completion.Usage.OutputTokenDetails.AcceptedPredictionTokenCount, Is.GreaterThan(0));
     }
 #endif
 

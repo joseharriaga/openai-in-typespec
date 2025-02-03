@@ -121,8 +121,8 @@ public static partial class OpenAIChatModelFactory
         return new ChatOutputTokenUsageDetails(
             audioTokenCount: audioTokenCount,
             reasoningTokenCount: reasoningTokenCount,
-            predictionAcceptedTokenCount: predictionAcceptedTokenCount,
-            predictionRejectedTokenCount: predictionRejectedTokenCount,
+            acceptedPredictionTokenCount: predictionAcceptedTokenCount,
+            rejectedPredictionTokenCount: predictionRejectedTokenCount,
             additionalBinaryDataProperties: null);
     }
 

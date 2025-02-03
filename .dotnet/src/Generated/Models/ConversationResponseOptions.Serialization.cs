@@ -59,31 +59,29 @@ namespace OpenAI.RealtimeConversation
             }
             if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
-                if (Metadata != null)
+                writer.WritePropertyName("metadata"u8);
+                writer.WriteStartObject();
+                foreach (var item in Metadata)
                 {
-                    writer.WritePropertyName("metadata"u8);
-                    writer.WriteStartObject();
-                    foreach (var item in Metadata)
+                    writer.WritePropertyName(item.Key);
+                    if (item.Value == null)
                     {
-                        writer.WritePropertyName(item.Key);
-                        if (item.Value == null)
-                        {
-                            writer.WriteNullValue();
-                            continue;
-                        }
-                        writer.WriteStringValue(item.Value);
+                        writer.WriteNullValue();
+                        continue;
                     }
-                    writer.WriteEndObject();
+                    writer.WriteStringValue(item.Value);
                 }
-                else
-                {
-                    writer.WriteNull("metadata"u8);
-                }
+                writer.WriteEndObject();
             }
             if (Optional.IsDefined(ConversationSelection) && _additionalBinaryDataProperties?.ContainsKey("conversation") != true)
             {
                 writer.WritePropertyName("conversation"u8);
                 writer.WriteStringValue(ConversationSelection.Value.ToString());
+            }
+            if (Optional.IsDefined(MaxOutputTokens) && _additionalBinaryDataProperties?.ContainsKey("max_output_tokens") != true)
+            {
+                writer.WritePropertyName("max_output_tokens"u8);
+                writer.WriteObjectValue<RealtimeConversation.ConversationMaxTokensChoice>(MaxOutputTokens, options);
             }
             if (Optional.IsCollectionDefined(OverrideItems) && _additionalBinaryDataProperties?.ContainsKey("input") != true)
             {
@@ -112,18 +110,6 @@ namespace OpenAI.RealtimeConversation
                 writer.WriteRawValue(_internalToolChoice);
 #else
                 using (JsonDocument document = JsonDocument.Parse(_internalToolChoice))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
-            }
-            if (Optional.IsDefined(_maxResponseOutputTokens) && _additionalBinaryDataProperties?.ContainsKey("max_response_output_tokens") != true)
-            {
-                writer.WritePropertyName("max_response_output_tokens"u8);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(_maxResponseOutputTokens);
-#else
-                using (JsonDocument document = JsonDocument.Parse(_maxResponseOutputTokens))
                 {
                     JsonSerializer.Serialize(writer, document.RootElement);
                 }
@@ -176,10 +162,10 @@ namespace OpenAI.RealtimeConversation
             float? temperature = default;
             IDictionary<string, string> metadata = default;
             ResponseConversationSelection? conversationSelection = default;
+            RealtimeConversation.ConversationMaxTokensChoice maxOutputTokens = default;
             IList<ConversationItem> overrideItems = default;
             IList<InternalRealtimeRequestSessionModality> internalModalities = default;
             BinaryData internalToolChoice = default;
-            BinaryData maxResponseOutputTokens = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -259,6 +245,15 @@ namespace OpenAI.RealtimeConversation
                     conversationSelection = new ResponseConversationSelection(prop.Value.GetString());
                     continue;
                 }
+                if (prop.NameEquals("max_output_tokens"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    maxOutputTokens = RealtimeConversation.ConversationMaxTokensChoice.DeserializeConversationMaxTokensChoice(prop.Value, options);
+                    continue;
+                }
                 if (prop.NameEquals("input"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
@@ -296,15 +291,6 @@ namespace OpenAI.RealtimeConversation
                     internalToolChoice = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (prop.NameEquals("max_response_output_tokens"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    maxResponseOutputTokens = BinaryData.FromString(prop.Value.GetRawText());
-                    continue;
-                }
                 if (true)
                 {
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -318,10 +304,10 @@ namespace OpenAI.RealtimeConversation
                 temperature,
                 metadata ?? new ChangeTrackingDictionary<string, string>(),
                 conversationSelection,
+                maxOutputTokens,
                 overrideItems ?? new ChangeTrackingList<ConversationItem>(),
                 internalModalities,
                 internalToolChoice,
-                maxResponseOutputTokens,
                 additionalBinaryDataProperties);
         }
 

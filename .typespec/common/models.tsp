@@ -22,12 +22,20 @@ model ErrorResponse {
   error: Error;
 }
 
+// Tool customization: Wrap for reuse
 @doc("""
   The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format. 
   
   Omitting `parameters` defines a function with an empty parameter list.
   """)
-model FunctionParameters is Record<unknown>;
+model FunctionParametersCommon {
+  /**
+   * The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.
+   *
+   * Omitting `parameters` defines a function with an empty parameter list.
+   */
+  parameters?: unknown;
+}
 
 model FunctionObject {
   /** A description of what the function does, used by the model to choose when and how to call the function. */
@@ -36,12 +44,46 @@ model FunctionObject {
   /** The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. */
   name: string;
 
-  parameters?: FunctionParameters;
+  ...FunctionParametersCommon;
 
   @doc("""
     Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](docs/guides/function-calling).
     """)
   strict?: boolean | null = false;
+}
+
+// Tool customization: Wrap for reuse
+/**
+ * Set of 16 key-value pairs that can be attached to an object. This can be
+ * useful for storing additional information about the object in a structured
+ * format, and querying for objects via API or the dashboard.
+ *
+ * Keys are strings with a maximum length of 64 characters. Values are strings
+ * with a maximum length of 512 characters.
+ */
+model MetadataPropertyForRequest {
+  /**
+   * Set of 16 key-value pairs that can be attached to an object. This can be
+   * useful for storing additional information about the object in a structured
+   * format, and querying for objects via API or the dashboard.
+   *
+   * Keys are strings with a maximum length of 64 characters. Values are strings
+   * with a maximum length of 512 characters.
+   */
+  @extension("x-oaiTypeLabel", "map")
+  metadata?: Record<string>;
+}
+model MetadataPropertyForResponse {
+  /**
+   * Set of 16 key-value pairs that can be attached to an object. This can be
+   * useful for storing additional information about the object in a structured
+   * format, and querying for objects via API or the dashboard.
+   *
+   * Keys are strings with a maximum length of 64 characters. Values are strings
+   * with a maximum length of 512 characters.
+   */
+  @extension("x-oaiTypeLabel", "map")
+  metadata: Record<string> | null;
 }
 
 // Tool customization: establish a common, discriminated union

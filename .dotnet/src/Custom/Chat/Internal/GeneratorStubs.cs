@@ -93,9 +93,6 @@ internal readonly partial struct InternalCreateChatCompletionStreamResponseServi
 [CodeGenModel("CreateChatCompletionStreamResponseUsage")]
 internal partial class InternalCreateChatCompletionStreamResponseUsage { }
 
-[CodeGenModel("FunctionParameters")]
-internal partial class InternalFunctionParameters { }
-
 [CodeGenModel("CreateChatCompletionRequestModality")]
 internal readonly partial struct InternalCreateChatCompletionRequestModality { }
 

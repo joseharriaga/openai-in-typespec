@@ -13,4 +13,8 @@ public partial class ConversationTokenUsage
     // CUSTOM: Renamed, nullability removed
     [CodeGenMember("OutputTokens")]
     public int OutputTokenCount { get; }
+
+    // CUSTOM: Renamed, nullability removed
+    [CodeGenMember("TotalTokens")]
+    public int TotalTokenCount { get; }
 }

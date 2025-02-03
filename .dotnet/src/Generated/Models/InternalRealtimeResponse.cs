@@ -12,13 +12,14 @@ namespace OpenAI.RealtimeConversation
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalRealtimeResponse()
+        internal InternalRealtimeResponse(IDictionary<string, string> metadata)
         {
-            Metadata = new ChangeTrackingDictionary<string, string>();
+            Metadata = metadata;
             Output = new ChangeTrackingList<ConversationItem>();
+            Modalities = new ChangeTrackingList<InternalRealtimeResponseModality>();
         }
 
-        internal InternalRealtimeResponse(string id, InternalRealtimeResponseObject? @object, ConversationStatus? status, ConversationStatusDetails statusDetails, IDictionary<string, string> metadata, ConversationTokenUsage usage, IReadOnlyList<ConversationItem> output, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalRealtimeResponse(string id, InternalRealtimeResponseObject? @object, ConversationStatus? status, ConversationStatusDetails statusDetails, IDictionary<string, string> metadata, ConversationTokenUsage usage, string conversationId, float? temperature, BinaryData maxOutputTokens, IReadOnlyList<ConversationItem> output, IReadOnlyList<InternalRealtimeResponseModality> modalities, ConversationVoice? voice, ConversationAudioFormat? outputAudioFormat, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             Object = @object;
@@ -26,7 +27,13 @@ namespace OpenAI.RealtimeConversation
             StatusDetails = statusDetails;
             Metadata = metadata;
             Usage = usage;
+            ConversationId = conversationId;
+            Temperature = temperature;
+            MaxOutputTokens = maxOutputTokens;
             Output = output;
+            Modalities = modalities;
+            Voice = voice;
+            OutputAudioFormat = outputAudioFormat;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
@@ -41,6 +48,12 @@ namespace OpenAI.RealtimeConversation
         public IDictionary<string, string> Metadata { get; }
 
         public ConversationTokenUsage Usage { get; }
+
+        public string ConversationId { get; }
+
+        public float? Temperature { get; }
+
+        public BinaryData MaxOutputTokens { get; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

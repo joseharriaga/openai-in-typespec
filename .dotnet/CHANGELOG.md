@@ -11,10 +11,14 @@
   - References to prior assistant audio are provided via `OutputAudioReference` instances on the `AudioReference` property of `AssistantChatMessage`; `AssistantChatMessage(chatCompletion)` will automatically handle this, too
   - For more information, see the example in the README
 - Predicted output can be used with chat completion: the new `PredictedContent` property on `ChatCompletionOptions` can be populated with `ChatMessageContentPart` instances to substantially accelerate some varieties of requests.
-- For `o1` and later models with reasoning capabilities:
+- For `o3-mini`, `o1`, and later models with reasoning capabilities:
   - The new `DeveloperChatMessage`, which replaces `SystemChatMessage`, can be used to provide instructions to the model
-  - `ChatCompletionOptions` can specify a `ReasoningEffort` property to adjust the level of token consumption the model will attempt to apply
-  
+  - `ChatCompletionOptions` can specify a `ReasoningEffortLevel` property to adjust the level of token consumption the model will attempt to apply
+
+### `[Experimental]` Breaking changes
+
+- The `IDictionary<string, string> Metadata` property in several request options types in the Assistants and RealtimeConversation areas have had their setters removed, aligning them with other request use of collections. The dictionaries remain writeable and use both initializer syntax and range copies to produce the same effect.
+
 ## 2.1.0 (2024-12-04)
 
 ### Features added

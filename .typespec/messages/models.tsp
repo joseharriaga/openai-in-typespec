@@ -4,6 +4,7 @@
  */
 
 import "../assistants";
+import "../common";
 import "./custom.tsp";
 
 using TypeSpec.OpenAPI;
@@ -45,17 +46,11 @@ model CreateMessageRequest {
   /** A list of files attached to the message, and the tools they should be added to. */
   attachments?: CreateMessageRequestAttachment[] | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 }
 
 model ModifyMessageRequest {
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 }
 
 model ListMessagesResponse {
@@ -139,10 +134,7 @@ model MessageObject {
   /** A list of files attached to the message, and the tools they were added to. */
   attachments: MessageObjectAttachment[] | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata: Record<string> | null;
+  ...MetadataPropertyForResponse;
 }
 
 // Tool customization: apply a common model base for all assistants message content items

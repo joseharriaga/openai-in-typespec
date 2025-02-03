@@ -122,6 +122,8 @@ model CreateChatCompletionRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`:
     | string
+    | "o3-mini"
+    | "o3-mini-2025-01-31"
     | "o1"
     | "o1-2024-12-17"
     | "o1-preview"
@@ -178,11 +180,7 @@ model CreateChatCompletionRequest {
     """)
   reasoning_effort?: "low" | "medium" | "high" = "medium";
 
-  /**
-   * Developer-defined tags and values used for filtering completions
-   * in the [dashboard](https://platform.openai.com/chat-completions).
-   */
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on
@@ -322,8 +320,8 @@ model CreateChatCompletionRequest {
   /**
    * Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
    *   - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted.
-   *   - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
-   *   - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
+   *   - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarantee.
+   *   - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarantee.
    *   - When not set, the default behavior is 'auto'.
    */
   service_tier?: "auto" | "default" | null = "auto";
@@ -855,7 +853,7 @@ model ChatCompletionFunctions {
   /** The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. */
   name: string;
 
-  parameters?: FunctionParameters;
+  ...FunctionParametersCommon;
 }
 
 // Tool customization: Add a missing "audio" to the chat streaming delta definition

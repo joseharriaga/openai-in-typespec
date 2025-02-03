@@ -14,7 +14,7 @@ public partial class ConversationStatusDetails
     [CodeGenMember("Reason")]
     public ConversationIncompleteReason? IncompleteReason { get; }
 
-    public string ErrorType => Error?.Type ?? string.Empty;
+    public string ErrorKind => Error?.Type ?? string.Empty;
 
     public string ErrorCode => Error?.Code ?? string.Empty;
 

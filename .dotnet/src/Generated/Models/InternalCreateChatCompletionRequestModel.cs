@@ -11,6 +11,8 @@ namespace OpenAI.Chat
     internal readonly partial struct InternalCreateChatCompletionRequestModel : IEquatable<InternalCreateChatCompletionRequestModel>
     {
         private readonly string _value;
+        private const string O3MiniValue = "o3-mini";
+        private const string O3Mini20250131Value = "o3-mini-2025-01-31";
         private const string O1Value = "o1";
         private const string O120241217Value = "o1-2024-12-17";
         private const string O1PreviewValue = "o1-preview";
@@ -55,6 +57,10 @@ namespace OpenAI.Chat
 
             _value = value;
         }
+
+        public static InternalCreateChatCompletionRequestModel O3Mini { get; } = new InternalCreateChatCompletionRequestModel(O3MiniValue);
+
+        public static InternalCreateChatCompletionRequestModel O3Mini20250131 { get; } = new InternalCreateChatCompletionRequestModel(O3Mini20250131Value);
 
         public static InternalCreateChatCompletionRequestModel O1 { get; } = new InternalCreateChatCompletionRequestModel(O1Value);
 

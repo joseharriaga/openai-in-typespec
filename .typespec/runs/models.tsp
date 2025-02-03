@@ -82,10 +82,7 @@ model CreateRunRequest {
   @extension("x-oaiExpandable", true)
   tools?: AssistantToolDefinition[] | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 
   /** What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. */
   @minValue(0)
@@ -125,10 +122,7 @@ model CreateRunRequest {
 }
 
 model ModifyRunRequest {
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 }
 
 model CreateThreadAndRunRequest {
@@ -191,10 +185,7 @@ model CreateThreadAndRunRequest {
     file_search?: ToolResourcesFileSearchIdsOnly;
   } | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 
   /** What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. */
   @minValue(0)
@@ -564,11 +555,7 @@ model RunObject {
   @extension("x-oaiExpandable", true)
   tools: AssistantToolDefinition[] = #[];
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata: Record<string> | null;
-
+  ...MetadataPropertyForResponse;
   usage: RunCompletionUsage | null;
 
   /** The sampling temperature used for this run. If not set, defaults to 1. */
@@ -663,11 +650,7 @@ model RunStepObject {
   @encode("unixTimestamp", int32)
   completed_at: utcDateTime | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata: Record<string> | null;
-
+  ...MetadataPropertyForResponse;
   usage: RunStepCompletionUsage | null;
 }
 

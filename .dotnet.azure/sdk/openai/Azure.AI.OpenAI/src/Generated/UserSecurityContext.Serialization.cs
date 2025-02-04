@@ -44,10 +44,10 @@ namespace Azure.AI.OpenAI
                 writer.WritePropertyName("end_user_tenant_id"u8);
                 writer.WriteStringValue(EndUserTenantId);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("source_ip") != true && Optional.IsDefined(SourceIp))
+            if (SerializedAdditionalRawData?.ContainsKey("source_ip") != true && Optional.IsDefined(SourceIP))
             {
                 writer.WritePropertyName("source_ip"u8);
-                writer.WriteStringValue(SourceIp);
+                writer.WriteStringValue(SourceIP);
             }
             if (SerializedAdditionalRawData != null)
             {

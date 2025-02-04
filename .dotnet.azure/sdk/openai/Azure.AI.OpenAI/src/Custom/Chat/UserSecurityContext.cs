@@ -19,5 +19,6 @@ public partial class UserSecurityContext
     /// <summary> The Microsoft 365 tenant ID the end user belongs to. It's required when the generative AI application is multitenant. </summary>
     public string EndUserTenantId { get; set; }
     /// <summary> Captures the original client's IP address. </summary>
-    public string SourceIp { get; set; }
+    [CodeGenMember("SourceIp")]
+    public string SourceIP { get; set; }
 }

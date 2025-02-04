@@ -1035,7 +1035,7 @@ components:
         prediction:
           type: object
           allOf:
-            - $ref: '#/components/schemas/OpenAI.PredictionContent'
+            - $ref: '#/components/schemas/OpenAI.ChatOutputPrediction'
           nullable: true
           description: |-
             Configuration for a [Predicted Output](/docs/guides/predicted-outputs),
@@ -2462,6 +2462,51 @@ components:
 
         `none` is the default when no tools are present. `auto` is the default if tools are present.
       x-oaiExpandable: true
+    OpenAI.ChatOutputPrediction:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          anyOf:
+            - type: string
+            - type: string
+              enum:
+                - content
+      discriminator:
+        propertyName: type
+        mapping:
+          content: '#/components/schemas/OpenAI.ChatOutputPredictionContent'
+      description: Base representation of predicted output from a model.
+    OpenAI.ChatOutputPredictionContent:
+      type: object
+      required:
+        - type
+        - content
+      properties:
+        type:
+          type: string
+          enum:
+            - content
+          description: |-
+            The type of the predicted content you want to provide. This type is
+            currently always `content`.
+        content:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessageContentPartText'
+          description: |-
+            The content that should be matched when generating a model response.
+            If generated tokens would match this content, the entire model response
+            can be returned much more quickly.
+          x-oaiExpandable: true
+      allOf:
+        - $ref: '#/components/schemas/OpenAI.ChatOutputPrediction'
+      description: |-
+        Static predicted output content, such as the content of a text file that is
+        being regenerated.
     OpenAI.ChatResponseFormat:
       type: object
       required:
@@ -3134,33 +3179,6 @@ components:
     OpenAI.ParallelToolCalls:
       type: boolean
       description: Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
-    OpenAI.PredictionContent:
-      type: object
-      required:
-        - type
-        - content
-      properties:
-        type:
-          type: string
-          enum:
-            - content
-          description: |-
-            The type of the predicted content you want to provide. This type is
-            currently always `content`.
-        content:
-          anyOf:
-            - type: string
-            - type: array
-              items:
-                $ref: '#/components/schemas/OpenAI.ChatCompletionRequestMessageContentPartText'
-          description: |-
-            The content that should be matched when generating a model response.
-            If generated tokens would match this content, the entire model response
-            can be returned much more quickly.
-          x-oaiExpandable: true
-      description: |-
-        Static predicted output content, such as the content of a text file that is
-        being regenerated.
     OpenAI.ResponseFormatJsonSchemaSchema:
       type: object
       additionalProperties: {}

@@ -10,7 +10,7 @@
   - Output chat audio is provided on the `OutputAudio` property of `ChatCompletion`
   - References to prior assistant audio are provided via `OutputAudioReference` instances on the `AudioReference` property of `AssistantChatMessage`; `AssistantChatMessage(chatCompletion)` will automatically handle this, too
   - For more information, see the example in the README
-- Predicted output can be used with chat completion: the new `PredictedContent` property on `ChatCompletionOptions` can be populated with `ChatMessageContentPart` instances to substantially accelerate some varieties of requests.
+- Predicted output can be used with chat completion: the new `OutputPrediction` property on `ChatCompletionOptions` can be populated with `ChatMessageContentPart` instances via `ChatOutputPrediction.CreateStaticContentPrediction()` to substantially accelerate some varieties of requests.
 - For `o3-mini`, `o1`, and later models with reasoning capabilities:
   - The new `DeveloperChatMessage`, which replaces `SystemChatMessage`, can be used to provide instructions to the model
   - `ChatCompletionOptions` can specify a `ReasoningEffortLevel` property to adjust the level of token consumption the model will attempt to apply

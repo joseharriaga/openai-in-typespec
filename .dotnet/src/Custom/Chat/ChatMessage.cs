@@ -53,7 +53,6 @@ namespace OpenAI.Chat;
 /// </list>
 /// </remarks>
 [CodeGenModel("ChatCompletionRequestMessage")]
-[CodeGenSerialization(nameof(Content), SerializationValueHook = nameof(SerializeContentValue), DeserializationValueHook = nameof(DeserializeContentValue))]
 public partial class ChatMessage
 {
     /// <summary>

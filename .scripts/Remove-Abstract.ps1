@@ -7,7 +7,9 @@ $targetFilenames = (
     "ChatMessage.cs",
     "ChatMessage.Serialization.cs",
     "ChatResponseFormat.cs",
-    "ChatResponseFormat.Serialization.cs"
+    "ChatResponseFormat.Serialization.cs",
+    "ChatOutputPrediction.cs",
+    "ChatOutputPrediction.Serialization.cs"
 )
 
 foreach ($targetFilename in $targetFilenames) {

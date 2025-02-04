@@ -913,7 +913,6 @@ public class ChatSmokeTests : SyncAsyncTestBase
         ChatCompletionOptions options = new();
         Assert.That(options.Tools.Count, Is.EqualTo(0));
         Assert.That(options.Metadata.Count, Is.EqualTo(0));
-        Assert.That(options.PredictedContent.Count, Is.EqualTo(0));
         Assert.That(options.StopSequences.Count, Is.EqualTo(0));
     }
 }

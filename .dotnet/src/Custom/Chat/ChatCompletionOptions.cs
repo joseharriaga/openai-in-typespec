@@ -12,7 +12,6 @@ namespace OpenAI.Chat;
 [CodeGenSerialization(nameof(Messages), SerializationValueHook = nameof(SerializeMessagesValue))]
 [CodeGenSerialization(nameof(StopSequences), SerializationValueHook = nameof(SerializeStopSequencesValue), DeserializationValueHook = nameof(DeserializeStopSequencesValue))]
 [CodeGenSerialization(nameof(LogitBiases), SerializationValueHook = nameof(SerializeLogitBiasesValue), DeserializationValueHook = nameof(DeserializeLogitBiasesValue))]
-[CodeGenSerialization(nameof(PredictedContent), SerializationValueHook = nameof(SerializePredictedContentValue), DeserializationValueHook = nameof(DeserializePredictedContentValue))]
 public partial class ChatCompletionOptions
 {
     // CUSTOM:
@@ -221,6 +220,7 @@ public partial class ChatCompletionOptions
         }
     }
 
+    // CUSTOM: rename.
     [CodeGenMember("Prediction")]
-    public ChatMessageContent PredictedContent { get; set; } = new();
+    public ChatOutputPrediction OutputPrediction { get; set; }
 }

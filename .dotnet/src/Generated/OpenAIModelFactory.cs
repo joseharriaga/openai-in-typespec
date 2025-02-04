@@ -919,7 +919,7 @@ namespace OpenAI
             return new ChatInputTokenUsageDetails(audioTokenCount, cachedTokenCount, additionalBinaryDataProperties: null);
         }
 
-        public static ChatCompletionOptions ChatCompletionOptions(float? frequencyPenalty = default, float? presencePenalty = default, ChatResponseFormat responseFormat = default, float? temperature = default, float? topP = default, IEnumerable<ChatTool> tools = default, IEnumerable<ChatMessage> messages = default, InternalCreateChatCompletionRequestModel model = default, int? n = default, bool? stream = default, InternalChatCompletionStreamOptions streamOptions = default, bool? includeLogProbabilities = default, int? topLogProbabilityCount = default, IEnumerable<string> stopSequences = default, IDictionary<int, int> logitBiases = default, ChatToolChoice toolChoice = default, ChatFunctionChoice functionChoice = default, bool? allowParallelToolCalls = default, string endUserId = default, long? seed = default, int? deprecatedMaxTokens = default, int? maxOutputTokenCount = default, IEnumerable<ChatFunction> functions = default, IDictionary<string, string> metadata = default, bool? storedOutputEnabled = default, ChatReasoningEffortLevel? reasoningEffortLevel = default, ChatMessageContent predictedContent = default, InternalCreateChatCompletionRequestServiceTier? serviceTier = default, IEnumerable<InternalCreateChatCompletionRequestModality> internalModalities = default, ChatAudioOptions audioOptions = default)
+        public static ChatCompletionOptions ChatCompletionOptions(float? frequencyPenalty = default, float? presencePenalty = default, ChatResponseFormat responseFormat = default, float? temperature = default, float? topP = default, IEnumerable<ChatTool> tools = default, IEnumerable<ChatMessage> messages = default, InternalCreateChatCompletionRequestModel model = default, int? n = default, bool? stream = default, InternalChatCompletionStreamOptions streamOptions = default, bool? includeLogProbabilities = default, int? topLogProbabilityCount = default, IEnumerable<string> stopSequences = default, IDictionary<int, int> logitBiases = default, ChatToolChoice toolChoice = default, ChatFunctionChoice functionChoice = default, bool? allowParallelToolCalls = default, string endUserId = default, long? seed = default, int? deprecatedMaxTokens = default, int? maxOutputTokenCount = default, IEnumerable<ChatFunction> functions = default, IDictionary<string, string> metadata = default, bool? storedOutputEnabled = default, ChatReasoningEffortLevel? reasoningEffortLevel = default, ChatOutputPrediction outputPrediction = default, InternalCreateChatCompletionRequestServiceTier? serviceTier = default, IEnumerable<InternalCreateChatCompletionRequestModality> internalModalities = default, ChatAudioOptions audioOptions = default)
         {
             tools ??= new ChangeTrackingList<ChatTool>();
             messages ??= new ChangeTrackingList<ChatMessage>();
@@ -956,7 +956,7 @@ namespace OpenAI
                 metadata,
                 storedOutputEnabled,
                 reasoningEffortLevel,
-                predictedContent,
+                outputPrediction,
                 serviceTier,
                 internalModalities?.ToList(),
                 audioOptions,
@@ -1030,6 +1030,12 @@ namespace OpenAI
         {
 
             return new FunctionChatMessage(content, Chat.ChatMessageRole.Function, additionalBinaryDataProperties: null, functionName);
+        }
+
+        public static ChatOutputPrediction ChatOutputPrediction(string kind = default)
+        {
+
+            return new InternalUnknownChatOutputPrediction(new ChatOutputPredictionKind(kind), additionalBinaryDataProperties: null);
         }
 
         public static ChatAudioOptions ChatAudioOptions(ChatOutputAudioVoice outputAudioVoice = default, ChatOutputAudioFormat outputAudioFormat = default)

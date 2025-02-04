@@ -105,8 +105,5 @@ internal partial class InternalChatCompletionRequestMessageContentPartAudio { }
 [CodeGenModel("ChatCompletionRequestMessageContentPartAudioInputAudio")]
 internal partial class InternalChatCompletionRequestMessageContentPartAudioInputAudio { }
 
-[CodeGenModel("PredictionContent")]
-internal partial class InternalPredictionContent { }
-
-[CodeGenModel("PredictionContentType")]
-internal readonly partial struct InternalPredictionContentType { }
+[CodeGenModel("UnknownChatOutputPrediction")]
+internal partial class InternalUnknownChatOutputPrediction { }

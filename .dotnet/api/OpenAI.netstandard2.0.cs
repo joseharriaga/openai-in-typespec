@@ -1210,7 +1210,7 @@ namespace OpenAI.Chat {
         public IDictionary<int, int> LogitBiases { get; }
         public int? MaxOutputTokenCount { get; set; }
         public IDictionary<string, string> Metadata { get; }
-        public ChatMessageContent PredictedContent { get; set; }
+        public ChatOutputPrediction OutputPrediction { get; set; }
         public float? PresencePenalty { get; set; }
         public ChatReasoningEffortLevel? ReasoningEffortLevel { get; set; }
         public ChatResponseFormat ResponseFormat { get; set; }
@@ -1408,6 +1408,26 @@ namespace OpenAI.Chat {
         public static bool operator ==(ChatOutputAudioVoice left, ChatOutputAudioVoice right);
         public static implicit operator ChatOutputAudioVoice(string value);
         public static bool operator !=(ChatOutputAudioVoice left, ChatOutputAudioVoice right);
+        public override readonly string ToString();
+    }
+    public class ChatOutputPrediction : IJsonModel<ChatOutputPrediction>, IPersistableModel<ChatOutputPrediction> {
+        public ChatOutputPredictionKind Kind { get; }
+        public static ChatOutputPrediction CreateStaticContentPrediction(IEnumerable<ChatMessageContentPart> contentParts);
+        public static ChatOutputPrediction CreateStaticContentPrediction(string content);
+        public static explicit operator ChatOutputPrediction(ClientResult result);
+        public static implicit operator BinaryContent(ChatOutputPrediction chatOutputPrediction);
+    }
+    public readonly partial struct ChatOutputPredictionKind : IEquatable<ChatOutputPredictionKind> {
+        public ChatOutputPredictionKind(string value);
+        public static ChatOutputPredictionKind StaticContent { get; }
+        public readonly bool Equals(ChatOutputPredictionKind other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ChatOutputPredictionKind left, ChatOutputPredictionKind right);
+        public static implicit operator ChatOutputPredictionKind(string value);
+        public static bool operator !=(ChatOutputPredictionKind left, ChatOutputPredictionKind right);
         public override readonly string ToString();
     }
     public class ChatOutputTokenUsageDetails : IJsonModel<ChatOutputTokenUsageDetails>, IPersistableModel<ChatOutputTokenUsageDetails> {

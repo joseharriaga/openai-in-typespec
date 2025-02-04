@@ -7,7 +7,8 @@ using System.Text.Json;
 namespace OpenAI.Chat;
 
 [CodeGenSuppress("global::System.ClientModel.Primitives.IJsonModel<OpenAI.Chat.ChatMessage>.Write", typeof(Utf8JsonWriter), typeof(ModelReaderWriterOptions))]
-public partial class ChatMessage : IJsonModel<ChatMessage>
+[CodeGenSerialization(nameof(Content), SerializationValueHook = nameof(SerializeContentValue), DeserializationValueHook = nameof(DeserializeContentValue))]
+public partial class ChatMessage
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void SerializeContentValue(Utf8JsonWriter writer, ModelReaderWriterOptions options = null)
@@ -18,25 +19,7 @@ public partial class ChatMessage : IJsonModel<ChatMessage>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static void DeserializeContentValue(JsonProperty property, ref ChatMessageContent content, ModelReaderWriterOptions options = null)
     {
-        if (property.Value.ValueKind == JsonValueKind.Null)
-        {
-            return;
-        }
-        else if (property.Value.ValueKind == JsonValueKind.String)
-        {
-            content = new ChatMessageContent(property.Value.GetString());
-        }
-        else if (property.Value.ValueKind == JsonValueKind.Array)
-        {
-            IList<ChatMessageContentPart> parts = [];
-
-            foreach (var item in property.Value.EnumerateArray())
-            {
-                parts.Add(ChatMessageContentPart.DeserializeChatMessageContentPart(item, options));
-            }
-
-            content = new ChatMessageContent(parts);
-        }
+        content = ChatMessageContent.DeserializeChatMessageContent(property.Value, options);
     }
 
     void IJsonModel<ChatMessage>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)

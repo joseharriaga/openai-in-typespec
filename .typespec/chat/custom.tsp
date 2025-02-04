@@ -22,6 +22,14 @@ model ChatResponseFormatJsonSchema extends ChatResponseFormat {
   ...ResponseFormatJsonSchema;
 }
 
+/**
+ * Base representation of predicted output from a model.
+ */
+@discriminator("type")
+model ChatOutputPrediction {
+  type: string | "content";
+}
+
 model ChatCompletionFunctionChoice {}
 
 model ChatCompletionToolChoice {}

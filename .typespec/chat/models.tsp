@@ -243,6 +243,7 @@ model CreateChatCompletionRequest {
 
   modalities?: ChatCompletionModalities | null;
 
+  // Tool customization: Apply an implied base discriminated type to 'prediction'
   /**
    * Configuration for a [Predicted Output](/docs/guides/predicted-outputs),
    * which can greatly improve response times when large parts of the model
@@ -250,7 +251,7 @@ model CreateChatCompletionRequest {
    * regenerating a file with only minor changes to most of the content.
    */
   @extension("x-oaiExpandable", true)
-  prediction?: PredictionContent | null;
+  prediction?: ChatOutputPrediction | null;
 
   @doc("""
     Parameters for audio output. Required when audio output is requested with
@@ -956,11 +957,12 @@ model CreateChatCompletionStreamResponse {
 /** Represents a streamed chunk of a chat completion response returned by model, based on the provided input. */
 alias CreateChatCompletionImageResponse = unknown;
 
+// Tool customization: Apply an implied base discriminated type to 'prediction'
 /**
  * Static predicted output content, such as the content of a text file that is
  * being regenerated.
  */
-model PredictionContent {
+model ChatOutputPredictionContent extends ChatOutputPrediction {
   @doc("""
     The type of the predicted content you want to provide. This type is
     currently always `content`.

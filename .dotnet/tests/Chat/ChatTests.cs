@@ -895,21 +895,43 @@ public class ChatTests : SyncAsyncTestBase
     {
         ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
 
-        ChatCompletionOptions options = new()
-        {
-            PredictedContent =
+        foreach (ChatOutputPrediction predictionVariant in new List<ChatOutputPrediction>(
             [
-                ChatMessageContentPart.CreateTextPart("""
-                {
-                  "feature_name": "test_feature",
-                  "enabled": true
-                }
-                """.ReplaceLineEndings("\n")),
-            ],
-        };
+                // Plain string
+                ChatOutputPrediction.CreateStaticContentPrediction("""
+                    {
+                      "feature_name": "test_feature",
+                      "enabled": true
+                    }
+                    """.ReplaceLineEndings("\n")),
+                // One content part
+                ChatOutputPrediction.CreateStaticContentPrediction(
+                [
+                    ChatMessageContentPart.CreateTextPart("""
+                    {
+                      "feature_name": "test_feature",
+                      "enabled": true
+                    }
+                    """.ReplaceLineEndings("\n")),
+                ]),
+                // Several content parts
+                ChatOutputPrediction.CreateStaticContentPrediction(
+                    [
+                        "{\n",
+                        "  \"feature_name\": \"test_feature\",\n",
+                        "  \"enabled\": true\n",
+                        "}",
+                    ]),
+            ]))
+        {
+            ChatCompletionOptions options = new()
+            {
+                OutputPrediction = predictionVariant,
+            };
+            Assert.That(options.OutputPrediction.Kind, Is.EqualTo(ChatOutputPredictionKind.StaticContent));
 
-        ChatMessage message = ChatMessage.CreateUserMessage("""
-            Modify the following input to enable the feature. Only respond with the JSON and include no other text.
+            ChatMessage message = ChatMessage.CreateUserMessage("""
+            Modify the following input to enable the feature. Only respond with the JSON and include no other text. Do not enclose in markdown backticks or any other additional annotations.
 
             {
               "feature_name": "test_feature",
@@ -917,9 +939,10 @@ public class ChatTests : SyncAsyncTestBase
             }
             """.ReplaceLineEndings("\n"));
 
-        ChatCompletion completion = await client.CompleteChatAsync([message], options);
+            ChatCompletion completion = await client.CompleteChatAsync([message], options);
 
-        Assert.That(completion.Usage.OutputTokenDetails.AcceptedPredictionTokenCount, Is.GreaterThan(0));
+            Assert.That(completion.Usage.OutputTokenDetails.AcceptedPredictionTokenCount, Is.GreaterThan(0));
+        }
     }
 
     [Test]

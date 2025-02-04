@@ -14,12 +14,10 @@ namespace OpenAI.Assistants
             CodeInterpreter = codeInterpreter;
         }
 
-        internal InternalRunStepDetailsToolCallsCodeObject(Assistants.RunStepToolCallKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties, string id, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter) : base(id, kind, additionalBinaryDataProperties)
+        internal InternalRunStepDetailsToolCallsCodeObject(string id, Assistants.RunStepToolCallKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties, InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter codeInterpreter) : base(id, kind, additionalBinaryDataProperties)
         {
             CodeInterpreter = codeInterpreter;
         }
-
-        public new string Id => _id ?? default;
 
         public InternalRunStepDetailsToolCallsCodeObjectCodeInterpreter CodeInterpreter { get; }
     }

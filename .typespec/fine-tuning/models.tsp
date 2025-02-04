@@ -217,7 +217,7 @@ model FineTuningJob {
   validation_file: string | null;
 
   /** A list of integrations to enable for this fine-tuning job. */
-  // !no_nullable! @maxItems(5)
+  // Tool note: can't automatically apply to nullable: @maxItems(5)
   @extension("x-oaiExpandable", true)
   integrations?: FineTuningIntegration[] | null;
 

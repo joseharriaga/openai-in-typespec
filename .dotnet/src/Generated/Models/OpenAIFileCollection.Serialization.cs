@@ -22,7 +22,7 @@ namespace OpenAI.Files
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object);
+                writer.WriteStringValue(this.Object.ToString());
             }
             if (_additionalBinaryDataProperties?.ContainsKey("first_id") != true)
             {

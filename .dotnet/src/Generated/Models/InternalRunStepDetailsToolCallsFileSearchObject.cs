@@ -14,12 +14,10 @@ namespace OpenAI.Assistants
             FileSearch = fileSearch;
         }
 
-        internal InternalRunStepDetailsToolCallsFileSearchObject(Assistants.RunStepToolCallKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties, string id, InternalRunStepDetailsToolCallsFileSearchObjectFileSearch fileSearch) : base(id, kind, additionalBinaryDataProperties)
+        internal InternalRunStepDetailsToolCallsFileSearchObject(string id, Assistants.RunStepToolCallKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties, InternalRunStepDetailsToolCallsFileSearchObjectFileSearch fileSearch) : base(id, kind, additionalBinaryDataProperties)
         {
             FileSearch = fileSearch;
         }
-
-        public new string Id => _id ?? default;
 
         public InternalRunStepDetailsToolCallsFileSearchObjectFileSearch FileSearch { get; }
     }

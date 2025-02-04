@@ -7,13 +7,13 @@ namespace OpenAI.Files;
 [CodeGenModel("ListFilesResponse")]
 [CodeGenSuppress("Data")]
 [CodeGenSuppress(nameof(OpenAIFileCollection))]
-[CodeGenSuppress(nameof(OpenAIFileCollection), typeof(string), typeof(string), typeof(string), typeof(bool))]
-[CodeGenSuppress(nameof(OpenAIFileCollection), typeof(string), typeof(string), typeof(string), typeof(bool), typeof(IDictionary<string, BinaryData>))]
+[CodeGenSuppress(nameof(OpenAIFileCollection), typeof(string), typeof(string), typeof(bool))]
+[CodeGenSuppress(nameof(OpenAIFileCollection), typeof(InternalListFilesResponseObject), typeof(string), typeof(string), typeof(bool), typeof(IDictionary<string, BinaryData>))]
 public partial class OpenAIFileCollection : ReadOnlyCollection<OpenAIFile>
 {
     // CUSTOM: Made private. This property does not add value in the context of a strongly-typed class.
-    /// <summary> Gets the object. </summary>
-    private string Object { get; }
+    [CodeGenMember("Object")]    
+    private InternalListFilesResponseObject Object { get; } = InternalListFilesResponseObject.List;
     
     // CUSTOM: Internalizing pending stanardized pagination representation for the list operation.
     [CodeGenMember("FirstId")]
@@ -31,7 +31,6 @@ public partial class OpenAIFileCollection : ReadOnlyCollection<OpenAIFile>
     internal OpenAIFileCollection(IEnumerable<OpenAIFile> data, string firstId, string lastId, bool hasMore)
         : base([.. data])
     {
-        Object = "list";
         Argument.AssertNotNull(data, nameof(data));
         FirstId = firstId;
         LastId = lastId;

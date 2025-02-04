@@ -2972,6 +2972,21 @@ components:
               format: unixtime
             role:
               type: string
+    ApiKeyList:
+      type: object
+      properties:
+        object:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminApiKey'
+        has_more:
+          type: boolean
+        first_id:
+          type: string
+        last_id:
+          type: string
     AssistantObject:
       type: object
       required:
@@ -8234,6 +8249,8 @@ components:
       properties:
         object:
           type: string
+          enum:
+            - list
         data:
           type: array
           items:
@@ -12699,7 +12716,15 @@ components:
           description: The type of tool call. This is always going to be `file_search` for this type of tool call.
         file_search:
           type: object
-          additionalProperties: {}
+          properties:
+            ranking_options:
+              $ref: '#/components/schemas/RunStepDetailsToolCallsFileSearchRankingOptionsObject'
+            results:
+              type: array
+              items:
+                $ref: '#/components/schemas/RunStepDetailsToolCallsFileSearchResultObject'
+              description: The results of the file search.
+              readOnly: true
           description: For now, this is always going to be an empty object.
           x-oaiTypeLabel: map
       allOf:
@@ -12794,7 +12819,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/RunStepObjectStepDetails'
       description: Details of the message creation by the run step.
-    RunStepDetailsToolCallKind:
+    RunStepDetailsToolCallType:
       anyOf:
         - type: string
         - type: string
@@ -12805,13 +12830,9 @@ components:
     RunStepDetailsToolCallsCodeObject:
       type: object
       required:
-        - id
         - type
         - code_interpreter
       properties:
-        id:
-          type: string
-          description: The ID of the tool call.
         type:
           type: string
           enum:
@@ -12892,13 +12913,9 @@ components:
     RunStepDetailsToolCallsFileSearchObject:
       type: object
       required:
-        - id
         - type
         - file_search
       properties:
-        id:
-          type: string
-          description: The ID of the tool call object.
         type:
           type: string
           enum:
@@ -12969,6 +12986,9 @@ components:
               text:
                 type: string
                 description: The text content of the file.
+            required:
+              - type
+              - text
           description: The content of the result that was found. The content is only included if requested via the include query parameter.
           readOnly: true
       description: A result instance of the file search.
@@ -12976,13 +12996,9 @@ components:
     RunStepDetailsToolCallsFunctionObject:
       type: object
       required:
-        - id
         - type
         - function
       properties:
-        id:
-          type: string
-          description: The ID of the tool call object.
         type:
           type: string
           enum:
@@ -13036,7 +13052,7 @@ components:
       properties:
         type:
           allOf:
-            - $ref: '#/components/schemas/RunStepDetailsToolCallKind'
+            - $ref: '#/components/schemas/RunStepDetailsToolCallType'
           description: The discriminated type identifier for the details object.
         id:
           type: string

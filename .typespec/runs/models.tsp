@@ -26,11 +26,13 @@ alias SubmitToolOutputsRunRequestToolOutput = {
 
 // Tool generated type. Extracts from RunStepDetailsToolCallsFileSearchResultObject.content
 alias RunStepDetailsToolCallsFileSearchResultObjectContent = {
+  // Tool customization: address source spec inaccuracy of optionality
   /** The type of the content. */
-  type?: "text";
+  type: "text";
 
+  // Tool customization: address source spec inaccuracy of optionality
   /** The text content of the file. */
-  text?: string;
+  text: string;
 };
 
 model CreateRunRequest {
@@ -78,7 +80,7 @@ model CreateRunRequest {
 
   // Tool customization: use common model base for tool definitions
   /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
-  // !no_nullable! @maxItems(20)
+  // Tool note: can't automatically apply to nullable: @maxItems(20)
   @extension("x-oaiExpandable", true)
   tools?: AssistantToolDefinition[] | null;
 
@@ -166,7 +168,7 @@ model CreateThreadAndRunRequest {
 
   // Tool customization: use common model base for tool definitions
   /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
-  // !no_nullable! @maxItems(20)
+  // Tool note: can't automatically apply to nullable: @maxItems(20)
   tools?: AssistantToolDefinition[] | null;
 
   @doc("""
@@ -284,17 +286,15 @@ model RunStepDetailsToolCallsObject extends RunStepObjectStepDetails {
   tool_calls: RunStepDetailsToolCallsObjectToolCallsObject[];
 }
 
-// Tool customization: apply custom, common base type to union items
+// Tool customization: Remove parent-relocated 'id' from discriminated type instance
 /** Details of the Code Interpreter tool call the run step was involved in. */
 model RunStepDetailsToolCallsCodeObject
   extends RunStepDetailsToolCallsObjectToolCallsObject {
-  /** The ID of the tool call. */
-  id: string;
-
+  // Tool customization: apply named discriminator enumeration instead of anonymous string
   @doc("""
     The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
     """)
-  type: "code_interpreter";
+  type: RunStepDetailsToolCallType.code_interpreter;
 
   /** The Code Interpreter tool call definition. */
   code_interpreter: {
@@ -338,16 +338,14 @@ model RunStepDetailsToolCallsCodeOutputImageObject
   };
 }
 
-// Tool customization: apply custom, common base type to union items
+// Tool customization: Remove parent-relocated 'id' from discriminated type instance
 model RunStepDetailsToolCallsFileSearchObject
   extends RunStepDetailsToolCallsObjectToolCallsObject {
-  /** The ID of the tool call object. */
-  id: string;
-
+  // Tool customization: apply named discriminator enumeration instead of anonymous string
   @doc("""
     The type of tool call. This is always going to be `file_search` for this type of tool call.
     """)
-  type: "file_search";
+  type: RunStepDetailsToolCallType.file_search;
 
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
@@ -390,16 +388,14 @@ model RunStepDetailsToolCallsFileSearchResultObject {
   content?: RunStepDetailsToolCallsFileSearchResultObjectContent[];
 }
 
-// Tool customization: apply custom, common base type to union items
+// Tool customization: Remove parent-relocated 'id' from discriminated type instance
 model RunStepDetailsToolCallsFunctionObject
   extends RunStepDetailsToolCallsObjectToolCallsObject {
-  /** The ID of the tool call object. */
-  id: string;
-
+  // Tool customization: apply named discriminator enumeration instead of anonymous string
   @doc("""
     The type of tool call. This is always going to be `function` for this type of tool call.
     """)
-  type: "function";
+  type: RunStepDetailsToolCallType.function;
 
   /** The definition of the function that was called. */
   function: {
@@ -801,9 +797,16 @@ model RunStepDeltaStepDetailsToolCallsFileSearchObject
     """)
   type: "file_search";
 
+  // Tool customization: add missing and shared file_search definition for streaming
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
-  file_search: Record<unknown>;
+  file_search: {
+    ranking_options?: RunStepDetailsToolCallsFileSearchRankingOptionsObject;
+
+    /** The results of the file search. */
+    @visibility("read")
+    results?: RunStepDetailsToolCallsFileSearchResultObject[];
+  };
 }
 
 // Tool customization: apply custom, common base type to union items

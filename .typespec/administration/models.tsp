@@ -25,6 +25,38 @@ alias InviteRequestProject = {
   role: "member" | "owner";
 };
 
+model AdminApiKey {
+  object?: string;
+  id?: string;
+  name?: string;
+  redacted_value?: string;
+  value?: string;
+
+  // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
+  @encode("unixTimestamp", int64)
+  created_at?: utcDateTime;
+
+  owner?: {
+    type?: string;
+    id?: string;
+    name?: string;
+
+    // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
+    @encode("unixTimestamp", int64)
+    created_at?: utcDateTime;
+
+    role?: string;
+  };
+}
+
+model ApiKeyList {
+  object?: string;
+  data?: AdminApiKey[];
+  has_more?: boolean;
+  first_id?: string;
+  last_id?: string;
+}
+
 /** The service account that performed the audit logged action. */
 model AuditLogActorServiceAccount {
   /** The service account id. */

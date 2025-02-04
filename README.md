@@ -12,9 +12,9 @@ Date:   Fri Jan 31 21:29:23 2025 +0000
 
 Ingestion tool: https://project-argos@dev.azure.com/project-argos/Sorento/_git/sdk
 ```
-commit 4e2e95153f2e504245a014ec1f27229d39f0529f (HEAD -> user/travisw/migrate-spec-ingestion-tool, origin/user/travisw/migrate-spec-ingestion-tool)
+commit 5493c9222e4ca5d015822629d4f4235544036daa (HEAD -> user/travisw/migrate-spec-ingestion-tool, origin/user/travisw/migrate-spec-ingestion-tool)
 Author: Travis Wilson <travisw@microsoft.com>
-Date:   Mon Feb 3 18:29:01 2025 -0800
+Date:   Tue Feb 4 14:24:59 2025 -0800
 ```
 
 There are some deltas:

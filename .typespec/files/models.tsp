@@ -20,7 +20,9 @@ model CreateFileRequest {
 }
 
 model ListFilesResponse {
-  object: string;
+  // Tool customization: apply the strict 'list' object value instead of open 'string'
+  object: "list";
+
   data: OpenAIFile[];
   first_id: string;
   last_id: string;

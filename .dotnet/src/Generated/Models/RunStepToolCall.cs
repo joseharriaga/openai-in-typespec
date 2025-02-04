@@ -10,7 +10,6 @@ namespace OpenAI.Assistants
     public abstract partial class RunStepToolCall
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
-        private protected string _id;
 
         private protected RunStepToolCall(string id, Assistants.RunStepToolCallKind kind)
         {

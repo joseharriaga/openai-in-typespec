@@ -14,12 +14,10 @@ namespace OpenAI.Assistants
             Function = function;
         }
 
-        internal InternalRunStepDetailsToolCallsFunctionObject(Assistants.RunStepToolCallKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties, string id, InternalRunStepDetailsToolCallsFunctionObjectFunction function) : base(id, kind, additionalBinaryDataProperties)
+        internal InternalRunStepDetailsToolCallsFunctionObject(string id, Assistants.RunStepToolCallKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties, InternalRunStepDetailsToolCallsFunctionObjectFunction function) : base(id, kind, additionalBinaryDataProperties)
         {
             Function = function;
         }
-
-        public new string Id => _id ?? default;
 
         public InternalRunStepDetailsToolCallsFunctionObjectFunction Function { get; }
     }

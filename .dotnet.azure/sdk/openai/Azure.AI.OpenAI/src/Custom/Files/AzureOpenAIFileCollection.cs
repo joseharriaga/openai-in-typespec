@@ -11,7 +11,7 @@ internal partial class AzureOpenAIFileCollection : OpenAIFileCollection
     internal new IDictionary<string, BinaryData> SerializedAdditionalRawData { get; }
         = new ChangeTrackingDictionary<string, BinaryData>();
 
-    internal string Object { get; }
+    internal string Object { get; } = "list";
 
     internal AzureOpenAIFileCollection()
         : this(

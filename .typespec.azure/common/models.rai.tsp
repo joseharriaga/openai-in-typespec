@@ -1,5 +1,5 @@
 import "@typespec/versioning";
-import "../main.tsp";
+// import "../main.tsp";
 
 using TypeSpec.Versioning;
 

@@ -1,5 +1,5 @@
 import "@typespec/versioning";
-import "../main.tsp";
+// import "../main.tsp";
 import "../../.typespec/files/models.tsp";
 
 using TypeSpec.OpenAPI;

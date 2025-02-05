@@ -1,0 +1,10 @@
+options:  
+  "@azure-tools/typespec-java":
+    package-dir: "azure-ai-openai-realtime"
+    namespace: "com.azure.ai.openai.realtime"
+    partial-update: true
+    enable-sync-stack: true
+    generate-tests: false
+    generate-samples: false
+    custom-types-subpackage: "implementation.models"
+    flavor: azure

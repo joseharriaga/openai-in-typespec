@@ -3,12 +3,12 @@ import "@typespec/openapi3";
 import "@typespec/openapi";
 import "@typespec/versioning";
 
-import "./assistants";
-import "./chat";
-import "./files";
-import "./images";
-import "./runs";
-import "./messages";
+import "../../.typespec.azure/assistants";
+import "../../.typespec.azure/chat";
+import "../../.typespec.azure/files";
+import "../../.typespec.azure/images";
+import "../../.typespec.azure/runs";
+import "../../.typespec.azure/messages";
 
 using TypeSpec.Http;
 using TypeSpec.Versioning;

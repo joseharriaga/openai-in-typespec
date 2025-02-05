@@ -1,7 +1,5 @@
 import "./content_parts.tsp";
 
-using TypeSpec.OpenAPI;
-
 namespace OpenAI;
 
 @discriminator("type")

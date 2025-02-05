@@ -26,14 +26,7 @@ public partial class FunctionChatMessage : IJsonModel<FunctionChatMessage>
         if (Optional.IsDefined(Content) && Content.IsInnerCollectionDefined())
         {
             writer.WritePropertyName("content"u8);
-            if (Content.Count > 0 && Content[0].Text != null)
-            {
-                writer.WriteStringValue(Content[0].Text);
-            }
-            else
-            {
-                writer.WriteNullValue();
-            }
+            Content.WriteTo(writer, options);
         }
 
         writer.WriteSerializedAdditionalRawData(_additionalBinaryDataProperties, options);

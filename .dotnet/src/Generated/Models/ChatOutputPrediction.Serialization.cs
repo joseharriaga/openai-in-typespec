@@ -34,7 +34,7 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Kind.ToString());
+                writer.WriteStringValue(Type.ToString());
             }
             if (true && _additionalBinaryDataProperties != null)
             {

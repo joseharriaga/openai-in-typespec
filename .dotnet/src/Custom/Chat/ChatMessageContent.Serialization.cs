@@ -11,6 +11,7 @@ public partial class ChatMessageContent
 {
     internal void WriteTo(Utf8JsonWriter writer, ModelReaderWriterOptions options = null)
     {
+        options ??= new("W");
         if (Count == 0)
         {
             writer.WriteNullValue();
@@ -32,6 +33,7 @@ public partial class ChatMessageContent
 
     internal static ChatMessageContent DeserializeChatMessageContent(JsonElement element, ModelReaderWriterOptions options = null)
     {
+        options ??= new("W");
         if (element.ValueKind == JsonValueKind.String)
         {
             return new(element.GetString());

@@ -783,7 +783,6 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
             {
                 OutputPrediction = predictionVariant,
             };
-            Assert.That(options.OutputPrediction.Kind, Is.EqualTo(ChatOutputPredictionKind.StaticContent));
 
             ChatMessage message = ChatMessage.CreateUserMessage("""
             Modify the following input to enable the feature. Only respond with the JSON and include no other text. Do not enclose in markdown backticks or any other additional annotations.

@@ -9,8 +9,9 @@ using OpenAI.VectorStores;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class RetrieveVectorStoreFilesApiReference {
 
+public partial class VectorStoreFileDocs
+{
     //[Test]
     public void RetrieveVectorStoreFiles()
     {
@@ -21,7 +22,7 @@ public partial class RetrieveVectorStoreFilesApiReference {
         );
 
         ClientResult file = client.GetFileAssociation("vs_abc123", "file-abc123");
-		
+
         Console.WriteLine(file);
 
         #endregion

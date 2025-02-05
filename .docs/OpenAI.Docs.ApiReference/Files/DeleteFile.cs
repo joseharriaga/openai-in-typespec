@@ -8,12 +8,13 @@ using OpenAI.Files;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class DeleteFileApiReference {
 
+public partial class FileDocs
+{
     [Test]
     public void DeleteFile()
     {
-        try 
+        try
         {
             #region logic
 
@@ -24,8 +25,8 @@ public partial class DeleteFileApiReference {
             ClientResult result = client.DeleteFile("file-abc123");
 
             #endregion
-        } 
-        catch (ClientResultException ex) 
+        }
+        catch (ClientResultException ex)
         {
             Assert.IsTrue(ex.Message == "HTTP 404 (invalid_request_error: )\r\nParameter: id\r\n\r\nNo such File object: file-abc123");
         }

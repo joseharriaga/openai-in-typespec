@@ -9,8 +9,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class DeleteThreadApiReference {
 
+public partial class ThreadDocs
+{
     //[Test]
     public void DeleteThread()
     {
@@ -21,7 +22,7 @@ public partial class DeleteThreadApiReference {
         );
 
         ClientResult<ThreadDeletionResult> thread = client.DeleteThread("thread_abc123");
-		Console.WriteLine(thread.Value);
+        Console.WriteLine(thread.Value);
 
         #endregion
     }

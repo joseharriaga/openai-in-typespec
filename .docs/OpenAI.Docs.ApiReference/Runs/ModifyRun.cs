@@ -10,8 +10,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class ModifyRunApiReference {
 
+public partial class RunDocs
+{
     //[Test]
     public void ModifyRun()
     {
@@ -22,24 +23,24 @@ public partial class ModifyRunApiReference {
         );
 
         BinaryContent content = BinaryContent.Create(
-		    BinaryData.FromObjectAsJson(new
-		    {
-		        metadata = new Dictionary<string, string>
-		        {
-		            { 
-						"modified", 
-						"true" 
-					},
-		            { 
-						"user", 
-						"abc123" 
-					}
-		        }
-		    })
-		);
-		
-		var run = client.ModifyRun("thread_abc123", "run_abc123", content);
-		Console.WriteLine(run);
+            BinaryData.FromObjectAsJson(new
+            {
+                metadata = new Dictionary<string, string>
+                {
+                    {
+                        "modified",
+                        "true"
+                    },
+                    {
+                        "user",
+                        "abc123"
+                    }
+                }
+            })
+        );
+
+        var run = client.ModifyRun("thread_abc123", "run_abc123", content);
+        Console.WriteLine(run);
 
         #endregion
     }

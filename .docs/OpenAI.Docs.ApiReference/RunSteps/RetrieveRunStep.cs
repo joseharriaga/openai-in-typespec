@@ -9,8 +9,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class RetrieveRunStepApiReference {
 
+public partial class RunStepDocs
+{
     //[Test]
     public void RetrieveRunStep()
     {
@@ -21,7 +22,7 @@ public partial class RetrieveRunStepApiReference {
         );
 
         ClientResult<RunStep> runStep = client.GetRunStep("thread_abc123", "run_abc123", "step_abc123");
-		Console.WriteLine(runStep.Value.Id);
+        Console.WriteLine(runStep.Value.Id);
 
         #endregion
     }

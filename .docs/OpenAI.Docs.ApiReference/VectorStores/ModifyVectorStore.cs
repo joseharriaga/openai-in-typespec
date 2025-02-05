@@ -9,8 +9,9 @@ using OpenAI.VectorStores;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class ModifyVectorStoreApiReference {
 
+public partial class VectorStoreDocs
+{
     //[Test]
     public void ModifyVectorStore()
     {
@@ -21,14 +22,14 @@ public partial class ModifyVectorStoreApiReference {
         );
 
         ClientResult<VectorStore> store = client.ModifyVectorStore(
-            "vs_abc123", 
+            "vs_abc123",
             new VectorStoreModificationOptions()
-		    {
-		        Name = "Support FAQ"
-		    }
+            {
+                Name = "Support FAQ"
+            }
         );
 
-		Console.WriteLine(store.Value.Id);
+        Console.WriteLine(store.Value.Id);
 
         #endregion
     }

@@ -8,8 +8,9 @@ using OpenAI;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CancelUploadApiReference {
 
+public partial class UploadDocs
+{
     //[Test]
     public void CancelUpload()
     {

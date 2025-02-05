@@ -26,6 +26,9 @@
 	  <Content Include="otter.png">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
+	  <Content Include="audio.mp3">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	  <Content Include="speech.mp3">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>

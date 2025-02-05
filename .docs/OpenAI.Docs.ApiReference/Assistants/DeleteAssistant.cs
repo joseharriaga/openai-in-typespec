@@ -8,8 +8,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class DeleteAssistantApiReference {
 
+public partial class AssistantDocs
+{
     //[Test]
     public void DeleteAssistant()
     {
@@ -19,7 +20,7 @@ public partial class DeleteAssistantApiReference {
         );
 
         var response = client.DeleteAssistant("asst_abc123");
-		Console.WriteLine(response.Value);
+        Console.WriteLine(response.Value);
         #endregion
     }
 }

@@ -8,8 +8,9 @@ using OpenAI.Files;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class ListFilesApiReference {
 
+public partial class FileDocs
+{
     [Test]
     public void ListFiles()
     {
@@ -20,10 +21,10 @@ public partial class ListFilesApiReference {
         );
 
         ClientResult<OpenAIFileCollection> files = client.GetFiles();
-		foreach (var file in files.Value) 
+        foreach (var file in files.Value)
         {
-		    Console.WriteLine($"{file.Filename} ({file.Id})");
-		}
+            Console.WriteLine($"{file.Filename} ({file.Id})");
+        }
 
         #endregion
     }

@@ -9,8 +9,8 @@ using OpenAI.Assistants;
 
 namespace OpenAI.Docs.ApiReference;
 
-public partial class AssistantsApiReference {
-
+public partial class AssistantDocs
+{
     //[Test]
     public void CreateAssistant()
     {
@@ -23,17 +23,16 @@ public partial class AssistantsApiReference {
         Assistant assistant = client.CreateAssistant(
             model: "gpt-4o",
             new AssistantCreationOptions()
-            {   
+            {
                 Name = "Math Tutor",
                 Instructions = "You are a personal math tutor. When asked a question, write and run .NET code to answer the question.",
-                Tools = 
-                { 
-                    new CodeInterpreterToolDefinition() 
+                Tools =
+                {
+                    new CodeInterpreterToolDefinition()
                 }
             }
         );
 
         #endregion
     }
-
 }

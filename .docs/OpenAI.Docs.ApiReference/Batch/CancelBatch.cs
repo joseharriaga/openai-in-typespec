@@ -9,13 +9,14 @@ using OpenAI.Batch;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CancelBatchApiReference {
 
+public partial class BatchDocs
+{
     //[Test]
     public void CancelBatch()
     {
         #region logic
-        
+
         BatchClient client = new(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
         CollectionResult result = client.GetBatches(after: null, limit: null, options: null);
 

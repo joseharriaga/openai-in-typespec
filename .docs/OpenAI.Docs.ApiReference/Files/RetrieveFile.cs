@@ -8,12 +8,14 @@ using OpenAI.Files;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class RetrieveFileApiReference {
 
+public partial class FileDocs
+{
     [Test]
     public void RetrieveFile()
     {
-        try {
+        try
+        {
             #region logic
 
             OpenAIFileClient client = new(
@@ -21,10 +23,12 @@ public partial class RetrieveFileApiReference {
             );
 
             ClientResult<OpenAIFile> file = client.GetFile("file-abc123");
-		    Console.WriteLine($"{file.Value.Filename} ({file.Value.Id})");
+            Console.WriteLine($"{file.Value.Filename} ({file.Value.Id})");
 
             #endregion
-        } catch (ClientResultException ex) {
+        }
+        catch (ClientResultException ex)
+        {
             Assert.IsTrue(ex.Message == "HTTP 404 (invalid_request_error: )\r\nParameter: id\r\n\r\nNo such File object: file-abc123");
         }
     }

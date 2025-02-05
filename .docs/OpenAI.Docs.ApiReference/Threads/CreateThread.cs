@@ -9,8 +9,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CreateThreadApiReference {
 
+public partial class ThreadDocs
+{
     //[Test]
     public void CreateThread()
     {
@@ -21,14 +22,14 @@ public partial class CreateThreadApiReference {
         );
 
         ClientResult<AssistantThread> thread = client.CreateThread(new ThreadCreationOptions()
-		{
-		    InitialMessages = 
+        {
+            InitialMessages =
             {
-		        "Hello, what is AI?",
-		        "How does AI work? Explain it in simple terms."
-		    }
-		});
-		Console.WriteLine(thread.Value.Id);
+                "Hello, what is AI?",
+                "How does AI work? Explain it in simple terms."
+            }
+        });
+        Console.WriteLine(thread.Value.Id);
 
         #endregion
     }

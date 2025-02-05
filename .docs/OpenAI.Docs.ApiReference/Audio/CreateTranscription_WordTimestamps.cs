@@ -1,4 +1,4 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 #region usings
 using System;
@@ -11,7 +11,7 @@ namespace OpenAI.Docs.ApiReference;
 public partial class AudioDocs
 {
     [Test]
-    public void CreateTranscription()
+    public void CreateTranscription_WordTimestamps()
     {
         #region logic
 
@@ -22,7 +22,13 @@ public partial class AudioDocs
             apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
         );
 
-        AudioTranscription transcription = client.TranscribeAudio(audioFilePath);
+        AudioTranscriptionOptions options = new()
+        {
+            ResponseFormat = AudioTranscriptionFormat.Verbose,
+            TimestampGranularities = AudioTimestampGranularities.Word,
+        };
+
+        AudioTranscription transcription = client.TranscribeAudio(audioFilePath, options);
 
         Console.WriteLine($"{transcription.Text}");
 

@@ -10,8 +10,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class ModifyThreadApiReference {
 
+public partial class ThreadDocs
+{
     //[Test]
     public void ModifyThread()
     {
@@ -21,22 +22,22 @@ public partial class ModifyThreadApiReference {
             apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
         );
 
-        var thread = client.ModifyThread("thread_abc123", new ThreadModificationOptions() 
-		{
-		    Metadata = new Dictionary<string, string>
-		    {
-		        { 
-					"modified", 
-					"true" 
-				},
-		        { 
-					"user", 
-					"abc123" 
-				}
-		    }
-		});
-		Console.WriteLine(thread.Value.Id);
+        var thread = client.ModifyThread("thread_abc123", new ThreadModificationOptions()
+        {
+            Metadata = new Dictionary<string, string>
+            {
+                {
+                    "modified",
+                    "true"
+                },
+                {
+                    "user",
+                    "abc123"
+                }
+            }
+        });
+        Console.WriteLine(thread.Value.Id);
 
-		#endregion
-	}
+        #endregion
+    }
 }

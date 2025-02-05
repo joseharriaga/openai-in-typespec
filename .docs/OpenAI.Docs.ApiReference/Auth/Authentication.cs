@@ -5,7 +5,8 @@ using System;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class AuthenticationApiReference 
+
+public partial class AuthDocs
 {
     //[Test]
     public void Authentication()

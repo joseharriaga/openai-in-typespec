@@ -9,8 +9,8 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class ListMessagesApiReference {
-
+public partial class MessageDocs
+{
     //[Test]
     public void ListMessages()
     {
@@ -21,7 +21,7 @@ public partial class ListMessagesApiReference {
         );
 
         CollectionResult<ThreadMessage> messages = assistantClient.GetMessages("thread_abc123");
-		Console.WriteLine(messages);
+        Console.WriteLine(messages);
 
         #endregion
     }

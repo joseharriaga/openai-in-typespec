@@ -9,8 +9,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class ListRunsApiReference {
 
+public partial class RunDocs
+{
     //[Test]
     public void ListRuns()
     {
@@ -21,7 +22,7 @@ public partial class ListRunsApiReference {
         );
 
         CollectionResult<ThreadRun> runs = client.GetRuns("thread_abc123");
-		Console.WriteLine(runs);
+        Console.WriteLine(runs);
 
         #endregion
     }

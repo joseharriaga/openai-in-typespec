@@ -7,8 +7,9 @@ using OpenAI.Images;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CreateImageApiReference {
 
+public partial class ImageDocs
+{
     [Test]
     public void CreateImage()
     {
@@ -17,11 +18,12 @@ public partial class CreateImageApiReference {
         ImageClient client = new(
             model: "dall-e-3",
             apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-		);
-		
-		var image = client.GenerateImage("A cute little sea otter.");
-		Console.WriteLine(image.Value.ImageUri);
-        
+        );
+
+        GeneratedImage image = client.GenerateImage(prompt: "A cute baby sea otter.");
+
+        Console.WriteLine(image.ImageUri);
+
         #endregion
     }
 }

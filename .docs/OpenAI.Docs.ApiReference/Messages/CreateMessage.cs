@@ -9,27 +9,28 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CreateMessageApiReference {
 
+public partial class MessageDocs
+{
     //[Test]
     public void CreateMessage()
     {
         #region logic
 
-        AssistantClient assistantClient = new (
-			apiKey:Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-		);
-		
-		ClientResult<ThreadMessage> message = assistantClient.CreateMessage(
-			"thread_abc123", 
-			MessageRole.User, 
-			[
-		        MessageContent.FromText("How does AI work? Explain it in simple terms.")
-		    ]
-		);
+        AssistantClient assistantClient = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
 
-		Console.WriteLine(message.Value.Id);
-        
-		#endregion
+        ClientResult<ThreadMessage> message = assistantClient.CreateMessage(
+            "thread_abc123",
+            MessageRole.User,
+            [
+                MessageContent.FromText("How does AI work? Explain it in simple terms.")
+            ]
+        );
+
+        Console.WriteLine(message.Value.Id);
+
+        #endregion
     }
 }

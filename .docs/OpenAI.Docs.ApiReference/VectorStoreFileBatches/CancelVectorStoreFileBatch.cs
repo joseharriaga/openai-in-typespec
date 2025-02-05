@@ -9,20 +9,21 @@ using OpenAI.VectorStores;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CancelVectorStoreFileBatchApiReference {
 
+public partial class VectorStoreFileBatchDocs
+{
     //[Test]
     public void CancelVectorStoreFileBatch()
     {
         #region logic
 
-        VectorStoreClient client = new (
-			apiKey:Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-		);
+        VectorStoreClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
 
-		ClientResult<VectorStoreBatchFileJob> result = client.CancelBatchFileJob("vs_abc123", "vsfb_abc123");
-		Console.WriteLine(result.Value);
-        
+        ClientResult<VectorStoreBatchFileJob> result = client.CancelBatchFileJob("vs_abc123", "vsfb_abc123");
+        Console.WriteLine(result.Value);
+
         #endregion
     }
 }

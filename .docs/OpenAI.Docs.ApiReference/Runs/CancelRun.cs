@@ -9,8 +9,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CancelRunApiReference {
 
+public partial class RunDocs
+{
     //[Test]
     public void CancelRun()
     {
@@ -21,7 +22,7 @@ public partial class CancelRunApiReference {
         );
 
         ClientResult<ThreadRun> result = client.CancelRun("thread_abc123", "run_abc123");
-		Console.WriteLine(result.Value);
+        Console.WriteLine(result.Value);
 
         #endregion
     }

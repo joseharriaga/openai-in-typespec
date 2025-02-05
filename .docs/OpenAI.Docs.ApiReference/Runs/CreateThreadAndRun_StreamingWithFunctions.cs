@@ -10,17 +10,18 @@ using OpenAI.Chat;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CreateThreadAndRun_StreamingWithFunctionsApiReference {
 
+public partial class RunDocs
+{
     //[Test]
     public void CreateThreadAndRun_StreamingWithFunctions()
     {
         #region logic
 
         ChatTool getCurrentWeatherTool = ChatTool.CreateFunctionTool(
-		    functionName: nameof(GetCurrentWeather),
-		    functionDescription: "Get the current weather in a given location",
-		    functionParameters: BinaryData.FromString("""
+            functionName: nameof(GetCurrentWeather),
+            functionDescription: "Get the current weather in a given location",
+            functionParameters: BinaryData.FromString("""
 		        {
 		            "type": "object",
 		            "properties": {
@@ -37,7 +38,7 @@ public partial class CreateThreadAndRun_StreamingWithFunctionsApiReference {
 		            "required": [ "location" ]
 		        }
 		        """)
-		);
+        );
 
         AssistantClient assistantClient = new(
             apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
@@ -57,16 +58,16 @@ public partial class CreateThreadAndRun_StreamingWithFunctionsApiReference {
         #endregion
 
         string GetCurrentLocation()
-		{
-		    // Call the location API here.
-		    return "San Francisco";
-		}
-		
-		string GetCurrentWeather(string location, string unit = "celsius")
-		{
-		    // Call the weather API here.
-		    return $"31 {unit}";
-		}
+        {
+            // Call the location API here.
+            return "San Francisco";
+        }
+
+        string GetCurrentWeather(string location, string unit = "celsius")
+        {
+            // Call the weather API here.
+            return $"31 {unit}";
+        }
 
         // Uncomment to test that it works
         //ChatClient client = new(

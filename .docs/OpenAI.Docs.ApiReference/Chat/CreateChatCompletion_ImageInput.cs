@@ -8,24 +8,20 @@ using OpenAI.Chat;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CreateChatCompletion_ImageInputApiReference {
 
+public partial class ChatDocs
+{
     [Test]
     public void CreateChatCompletion_ImageInput()
     {
         #region logic
 
         ChatClient client = new(
-		    model: "gpt-4o",
-		    apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-		);
+            model: "gpt-4o",
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
 
-		ChatCompletionOptions options = new() 
-        { 
-            MaxOutputTokenCount = 300 
-        };
-
-        List<ChatMessage> messages = 
+        List<ChatMessage> messages =
         [
             new UserChatMessage(
             [
@@ -34,9 +30,9 @@ public partial class CreateChatCompletion_ImageInputApiReference {
             ])
         ];
 
-		ChatCompletion completion = client.CompleteChat(messages, options);
-		
-		Console.WriteLine($"[ASSISTANT]: {completion}");
+        ChatCompletion completion = client.CompleteChat(messages);
+
+        Console.WriteLine(completion.Content[0].Text);
 
         #endregion
     }

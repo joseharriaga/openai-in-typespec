@@ -9,8 +9,9 @@ using OpenAI.VectorStores;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CreateVectorStoreApiReference {
 
+public partial class VectorStoreDocs
+{
     //[Test]
     public void CreateVectorStore()
     {

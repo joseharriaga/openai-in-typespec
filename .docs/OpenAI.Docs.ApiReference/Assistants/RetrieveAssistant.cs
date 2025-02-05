@@ -9,8 +9,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class RetrieveAssistantApiReference {
 
+public partial class AssistantDocs
+{
     //[Test]
     public void RetrieveAssistant()
     {
@@ -20,7 +21,7 @@ public partial class RetrieveAssistantApiReference {
         );
 
         ClientResult<Assistant> response = client.GetAssistant("asst_abc123");
-		Console.WriteLine(response.Value.Id);
+        Console.WriteLine(response.Value.Id);
         #endregion
     }
 }

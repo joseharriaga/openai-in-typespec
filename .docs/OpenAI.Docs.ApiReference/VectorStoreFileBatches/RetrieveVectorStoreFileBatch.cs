@@ -9,8 +9,9 @@ using OpenAI.VectorStores;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class RetrieveVectorStoreFileBatchApiReference {
 
+public partial class VectorStoreFileBatchDocs
+{
     //[Test]
     public void RetrieveVectorStoreFileBatch()
     {
@@ -21,7 +22,7 @@ public partial class RetrieveVectorStoreFileBatchApiReference {
         );
 
         ClientResult<VectorStoreBatchFileJob> batch = client.GetBatchFileJob("vs_abc123", "vsfb_abc123");
-		
+
         Console.WriteLine(batch.Value.BatchId);
 
         #endregion

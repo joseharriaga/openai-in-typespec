@@ -7,8 +7,9 @@ using OpenAI.Images;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CreateImageVariationApiReference {
 
+public partial class ImageDocs
+{
     [Test]
     public void CreateImageVariation()
     {
@@ -19,16 +20,10 @@ public partial class CreateImageVariationApiReference {
             apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
         );
 
-        var image = client.GenerateImageVariation(
-		    "otter.png",
-		    new ImageVariationOptions () 
-            { 
-		        Size = GeneratedImageSize.W1024xH1024 
-		    }
-		);
-		
-		Console.WriteLine(image.Value.ImageUri);
-        
+        GeneratedImage image = client.GenerateImageVariation(imageFilePath: "otter.png");
+
+        Console.WriteLine(image.ImageUri);
+
         #endregion
     }
 }

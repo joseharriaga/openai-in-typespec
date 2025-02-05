@@ -9,8 +9,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class SubmitToolOutputsApiReference {
 
+public partial class RunDocs
+{
     //[Test]
     public void SubmitToolOutputs()
     {
@@ -21,17 +22,17 @@ public partial class SubmitToolOutputsApiReference {
         );
 
         CollectionResult<StreamingUpdate> streamingUpdates = client.SubmitToolOutputsToRunStreaming(
-            "thread_123", 
-            "run_123", 
+            "thread_123",
+            "run_123",
             [
-		        new ToolOutput("call_001", "70 degrees and sunny.")
-		    ]
+                new ToolOutput("call_001", "70 degrees and sunny.")
+            ]
         );
-		
-		foreach (var streamingUpdate in streamingUpdates) 
+
+        foreach (var streamingUpdate in streamingUpdates)
         {
-		    Console.WriteLine(streamingUpdate.UpdateKind);
-		}
+            Console.WriteLine(streamingUpdate.UpdateKind);
+        }
 
         #endregion
     }

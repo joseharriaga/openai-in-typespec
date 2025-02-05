@@ -10,18 +10,19 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class ModifyMessageApiReference {
 
+public partial class MessageDocs
+{
     //[Test]
     public void ModifyMessage()
     {
         #region logic
 
         AssistantClient assistantClient = new(
-			apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-		);
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
 
-        MessageModificationOptions options = new ()
+        MessageModificationOptions options = new()
         {
             Metadata = new Dictionary<string, string>
                 {
@@ -37,13 +38,13 @@ public partial class ModifyMessageApiReference {
         };
 
         ClientResult<ThreadMessage> message = assistantClient.ModifyMessage(
-			"thread_abc123", 
-			"msg_abc12",
-		    options
-		);
+            "thread_abc123",
+            "msg_abc12",
+            options
+        );
 
-		Console.WriteLine(message.Value.Id);
+        Console.WriteLine(message.Value.Id);
 
-		#endregion
-	}
+        #endregion
+    }
 }

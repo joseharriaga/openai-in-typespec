@@ -8,28 +8,26 @@ using OpenAI.Audio;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CreateSpeechApiReference {
 
+public partial class AudioDocs
+{
     [Test]
     public void CreateSpeech()
     {
         #region logic
 
         AudioClient client = new(
-		    model: "tts-1", 
-		    apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-		);
-		
-		var response = client.GenerateSpeech(
-		    "The quick brown fox jumped over the lazy dog.", 
-		    GeneratedSpeechVoice.Alloy
-		);
-		
-		string filePath = Path.Combine("speech.mp3");
-		using (var fileWriter = new BinaryWriter(File.Open(filePath, FileMode.Create))) 
-		{
-		    fileWriter.Write(response.Value);
-		}
+            model: "tts-1",
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        BinaryData speech = client.GenerateSpeech(
+            text: "The quick brown fox jumped over the lazy dog.",
+            voice: GeneratedSpeechVoice.Alloy
+        );
+
+        using FileStream stream = File.OpenWrite("speech.mp3");
+        speech.ToStream().CopyTo(stream);
 
         #endregion
     }

@@ -8,8 +8,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class ListAssistantsApiReference {
 
+public partial class AssistantDocs
+{
     //[Test]
     public void ListAssistants()
     {
@@ -18,12 +19,13 @@ public partial class ListAssistantsApiReference {
             apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
         );
 
-        client.GetAssistants(new AssistantCollectionOptions()
-		    {
-		        Order = AssistantCollectionOrder.Descending,
-		        PageSizeLimit = 20
-		    }
-        );
+        AssistantCollectionOptions options = new()
+        {
+            Order = AssistantCollectionOrder.Descending,
+            PageSizeLimit = 20
+        };
+
+        client.GetAssistants(options);
         #endregion
     }
 }

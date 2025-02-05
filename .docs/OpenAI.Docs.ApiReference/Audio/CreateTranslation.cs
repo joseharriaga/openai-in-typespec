@@ -2,29 +2,30 @@ using NUnit.Framework;
 
 #region usings
 using System;
-using System.IO;
 
 using OpenAI.Audio;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CreateTranslationApiReference {
 
+public partial class AudioDocs
+{
     [Test]
     public void CreateTranslation()
     {
         #region logic
-        
-		AudioClient client = new(
-		    model: "whisper-1",
-		    apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-		);
-		
-		string filePath = Path.Combine("speech.mp3");
-		AudioTranslation translation = client.TranslateAudio(filePath);
-		
-		Console.WriteLine($"{translation.Text}");
+
+        string audioFilePath = "audio.mp3";
+
+        AudioClient client = new(
+            model: "whisper-1",
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
+
+        AudioTranslation translation = client.TranslateAudio(audioFilePath);
+
+        Console.WriteLine($"{translation.Text}");
 
         #endregion
-	}
+    }
 }

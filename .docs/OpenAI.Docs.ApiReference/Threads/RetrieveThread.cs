@@ -9,8 +9,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class RetrieveThreadApiReference {
 
+public partial class ThreadDocs
+{
     //[Test]
     public void RetrieveThread()
     {
@@ -21,7 +22,7 @@ public partial class RetrieveThreadApiReference {
         );
 
         ClientResult<AssistantThread> thread = client.GetThread("thread_abc123");
-		Console.WriteLine(thread.Value.Id);
+        Console.WriteLine(thread.Value.Id);
 
         #endregion
     }

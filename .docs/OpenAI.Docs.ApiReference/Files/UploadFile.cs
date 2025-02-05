@@ -9,8 +9,9 @@ using OpenAI.Files;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class UploadFileApiReference {
 
+public partial class FileDocs
+{
     [Test]
     public void UploadFile()
     {
@@ -19,11 +20,11 @@ public partial class UploadFileApiReference {
         OpenAIFileClient client = new(
             apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
         );
-	
-		OpenAIFile fileInfo = client.UploadFile("monthly_sales.json", FileUploadPurpose.Assistants);
-		
-		Console.WriteLine(fileInfo);
-		
-		#endregion
-	}
+
+        OpenAIFile fileInfo = client.UploadFile("monthly_sales.json", FileUploadPurpose.Assistants);
+
+        Console.WriteLine(fileInfo);
+
+        #endregion
+    }
 }

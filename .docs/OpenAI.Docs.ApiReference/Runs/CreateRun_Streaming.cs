@@ -9,8 +9,9 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CreateRun_StreamingApiReference {
 
+public partial class RunDocs
+{
     //[Test]
     public void CreateRun_Streaming()
     {
@@ -21,19 +22,19 @@ public partial class CreateRun_StreamingApiReference {
         );
 
         CollectionResult<StreamingUpdate> streamingUpdates = client.CreateRunStreaming("thread_abc123", "asst_abc123");
-		
-		foreach (StreamingUpdate streamingUpdate in streamingUpdates) 
-		{
-		    if (streamingUpdate.UpdateKind == StreamingUpdateReason.RunCreated) 
-			{
-		        Console.WriteLine($"--- Run started! ---");
-		    }
-		    if (streamingUpdate is MessageContentUpdate contentUpdate) 
-			{
-		        Console.Write(contentUpdate.Text);
-		    }
-		}
 
-		#endregion
-	}
+        foreach (StreamingUpdate streamingUpdate in streamingUpdates)
+        {
+            if (streamingUpdate.UpdateKind == StreamingUpdateReason.RunCreated)
+            {
+                Console.WriteLine($"--- Run started! ---");
+            }
+            if (streamingUpdate is MessageContentUpdate contentUpdate)
+            {
+                Console.Write(contentUpdate.Text);
+            }
+        }
+
+        #endregion
+    }
 }

@@ -9,8 +9,9 @@ using OpenAI.VectorStores;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class DeleteVectorStoreApiReference {
 
+public partial class VectorStoreDocs
+{
     //[Test]
     public void DeleteVectorStore()
     {
@@ -21,7 +22,7 @@ public partial class DeleteVectorStoreApiReference {
         );
 
         ClientResult<VectorStoreDeletionResult> result = client.DeleteVectorStore("vs_abc123");
-		Console.WriteLine(result.Value);
+        Console.WriteLine(result.Value);
 
         #endregion
     }

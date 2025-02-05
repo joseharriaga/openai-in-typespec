@@ -10,8 +10,9 @@ using System.Security.Cryptography;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CreateVectorStoreFileBatchApiReference {
 
+public partial class VectorStoreFileBatchDocs
+{
     //[Test]
     public void CreateVectorStoreFileBatch()
     {
@@ -22,15 +23,15 @@ public partial class CreateVectorStoreFileBatchApiReference {
         );
 
         CreateBatchFileJobOperation batch = client.CreateBatchFileJob(
-            "vs_abc123", 
+            "vs_abc123",
             [
-                "file-abc123", 
+                "file-abc123",
                 "file-abc456"
-            ], 
+            ],
             true
         );
 
-		Console.WriteLine(batch.Value.BatchId);
+        Console.WriteLine(batch.Value.BatchId);
 
         #endregion
     }

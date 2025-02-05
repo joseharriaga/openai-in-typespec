@@ -9,21 +9,22 @@ using OpenAI.Assistants;
 #endregion
 
 namespace OpenAI.Docs.ApiReference;
-public partial class CreateRun_StreamingWithFunctionsApiReference
+
+public partial class RunDocs
 {
     //[Test]
     public void CreateRun_StreamingWithFunctions()
-	{
-		#region logic
+    {
+        #region logic
 
-		AssistantClient client = new(
-			apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-		);
+        AssistantClient client = new(
+            apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+        );
 
-		var getCurrentWeatherTool = ToolDefinition.CreateFunction(
-			name: nameof(GetCurrentWeather),
-			description: "Get the current weather in a given location",
-			parameters: BinaryData.FromString("""
+        var getCurrentWeatherTool = ToolDefinition.CreateFunction(
+            name: nameof(GetCurrentWeather),
+            description: "Get the current weather in a given location",
+            parameters: BinaryData.FromString("""
 		        {
 		            "type": "object",
 		            "properties": {
@@ -40,32 +41,34 @@ public partial class CreateRun_StreamingWithFunctionsApiReference
 		            "required": [ "location" ]
 		        }
 		        """)
-		);
+        );
 
-		var options = new RunCreationOptions()
-		{
-			ToolsOverride =
-			{
-				getCurrentWeatherTool
-			}
-		};
+        var options = new RunCreationOptions()
+        {
+            ToolsOverride =
+            {
+                getCurrentWeatherTool
+            }
+        };
 
         var streamingUpdates = client.CreateRunStreaming(
-			"thread_abc123",
-			"asst_abc123",
-			options
-		);
+            "thread_abc123",
+            "asst_abc123",
+            options
+        );
 
-		foreach (StreamingUpdate streamingUpdate in streamingUpdates) {
-			if (streamingUpdate is MessageContentUpdate contentUpdate) {
-				Console.Write(contentUpdate.Text);
-			}
-		}
+        foreach (StreamingUpdate streamingUpdate in streamingUpdates)
+        {
+            if (streamingUpdate is MessageContentUpdate contentUpdate)
+            {
+                Console.Write(contentUpdate.Text);
+            }
+        }
 
-		string GetCurrentWeather(string location, string unit = "celsius")
-		{
-			return $"31 {unit}";
-		}
+        string GetCurrentWeather(string location, string unit = "celsius")
+        {
+            return $"31 {unit}";
+        }
 
         #endregion
     }

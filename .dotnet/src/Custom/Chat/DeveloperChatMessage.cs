@@ -14,18 +14,18 @@ public partial class DeveloperChatMessage : ChatMessage
 {
     /// <summary>
     /// Creates a new instance of <see cref="DeveloperChatMessage"/> using a collection of content items.
-    /// For <c>system</c> messages, these can only be of type <c>text</c>.
+    /// For <c>developer</c> messages, these can only be of type <c>text</c>.
     /// </summary>
     /// <param name="contentParts">
     ///     The collection of content items associated with the message.
     /// </param>
     public DeveloperChatMessage(IEnumerable<ChatMessageContentPart> contentParts)
-        : base(ChatMessageRole.System, contentParts)
+        : base(ChatMessageRole.Developer, contentParts)
     { }
 
     /// <summary>
     /// Creates a new instance of <see cref="DeveloperChatMessage"/> using a collection of content items.
-    /// For <c>system</c> messages, these can only be of type <c>text</c>.
+    /// For <c>developer</c> messages, these can only be of type <c>text</c>.
     /// </summary>
     /// <param name="contentParts">
     ///     The collection of content items associated with the message.

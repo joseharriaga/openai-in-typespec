@@ -59,14 +59,14 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            ChatOutputPredictionKind kind = default;
+            InternalChatOutputPredictionKind @type = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             ChatMessageContent content = default;
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))
                 {
-                    kind = new ChatOutputPredictionKind(prop.Value.GetString());
+                    @type = new InternalChatOutputPredictionKind(prop.Value.GetString());
                     continue;
                 }
                 if (prop.NameEquals("content"u8))
@@ -79,7 +79,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            return new InternalChatOutputPredictionContent(kind, additionalBinaryDataProperties, content);
+            return new InternalChatOutputPredictionContent(@type, additionalBinaryDataProperties, content);
         }
 
         BinaryData IPersistableModel<InternalChatOutputPredictionContent>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

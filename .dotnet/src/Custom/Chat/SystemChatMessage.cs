@@ -6,7 +6,7 @@ namespace OpenAI.Chat;
 /// Represents a chat message of the <c>system</c> role as supplied to a chat completion request. A system message is
 /// generally supplied as the first message to a chat completion request and guides the model's behavior across future
 /// <c>assistant</c> role response messages. These messages may help control behavior, style, tone, and
-/// restrictions for a model-based assistant.
+/// restrictions for a model-based assistant. Developer messages replace system messages for o1 models and newer.
 /// </summary>
 [CodeGenModel("ChatCompletionRequestSystemMessage")]
 [CodeGenSuppress("SystemChatMessage", typeof(ChatMessageContent))]

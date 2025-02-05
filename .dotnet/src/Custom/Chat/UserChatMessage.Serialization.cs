@@ -22,19 +22,7 @@ public partial class UserChatMessage : IJsonModel<UserChatMessage>
         if (Optional.IsDefined(Content) && Content.IsInnerCollectionDefined())
         {
             writer.WritePropertyName("content"u8);
-            if (Content.Count == 1 && Content[0].Text != null)
-            {
-                writer.WriteStringValue(Content[0].Text);
-            }
-            else
-            {
-                writer.WriteStartArray();
-                foreach (ChatMessageContentPart part in Content)
-                {
-                    writer.WriteObjectValue(part, options);
-                }
-                writer.WriteEndArray();
-            }
+            Content.WriteTo(writer, options);
         }
 
         writer.WriteOptionalProperty("name"u8, ParticipantName, options);

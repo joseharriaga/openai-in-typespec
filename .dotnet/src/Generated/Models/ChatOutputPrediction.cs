@@ -11,16 +11,18 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        private protected ChatOutputPrediction(ChatOutputPredictionKind kind)
+        private protected ChatOutputPrediction(InternalChatOutputPredictionKind @type)
         {
-            Kind = kind;
+            Type = @type;
         }
 
-        internal ChatOutputPrediction(ChatOutputPredictionKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatOutputPrediction(InternalChatOutputPredictionKind @type, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Kind = kind;
+            Type = @type;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
+
+        internal InternalChatOutputPredictionKind Type { get; set; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

@@ -1411,24 +1411,10 @@ namespace OpenAI.Chat {
         public override readonly string ToString();
     }
     public class ChatOutputPrediction : IJsonModel<ChatOutputPrediction>, IPersistableModel<ChatOutputPrediction> {
-        public ChatOutputPredictionKind Kind { get; }
         public static ChatOutputPrediction CreateStaticContentPrediction(IEnumerable<ChatMessageContentPart> contentParts);
         public static ChatOutputPrediction CreateStaticContentPrediction(string content);
         public static explicit operator ChatOutputPrediction(ClientResult result);
         public static implicit operator BinaryContent(ChatOutputPrediction chatOutputPrediction);
-    }
-    public readonly partial struct ChatOutputPredictionKind : IEquatable<ChatOutputPredictionKind> {
-        public ChatOutputPredictionKind(string value);
-        public static ChatOutputPredictionKind StaticContent { get; }
-        public readonly bool Equals(ChatOutputPredictionKind other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(ChatOutputPredictionKind left, ChatOutputPredictionKind right);
-        public static implicit operator ChatOutputPredictionKind(string value);
-        public static bool operator !=(ChatOutputPredictionKind left, ChatOutputPredictionKind right);
-        public override readonly string ToString();
     }
     public class ChatOutputTokenUsageDetails : IJsonModel<ChatOutputTokenUsageDetails>, IPersistableModel<ChatOutputTokenUsageDetails> {
         public int AcceptedPredictionTokenCount { get; }
@@ -1550,7 +1536,7 @@ namespace OpenAI.Chat {
         public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, ChatMessageContent content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null, ChatOutputAudio outputAudio = null);
         public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int audioTokenCount = 0, int cachedTokenCount = 0);
         public static ChatOutputAudio ChatOutputAudio(BinaryData audioBytes, string id = null, string transcript = null, DateTimeOffset expiresAt = default);
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0, int audioTokenCount = 0, int predictionAcceptedTokenCount = 0, int predictionRejectedTokenCount = 0);
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0, int audioTokenCount = 0, int acceptedPredictionTokenCount = 0, int rejectedPredictionTokenCount = 0);
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
         public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null, ChatInputTokenUsageDetails inputTokenDetails = null);

@@ -21,23 +21,8 @@ public partial class AssistantChatMessage : IJsonModel<AssistantChatMessage>
         // Content is optional, can be a single string or a collection of ChatMessageContentPart.
         if (Optional.IsDefined(Content) && Content.IsInnerCollectionDefined())
         {
-            if (Content.Count > 0)
-            {
-                writer.WritePropertyName("content"u8);
-                if (Content.Count == 1 && Content[0].Text != null)
-                {
-                    writer.WriteStringValue(Content[0].Text);
-                }
-                else
-                {
-                    writer.WriteStartArray();
-                    foreach (ChatMessageContentPart part in Content)
-                    {
-                        writer.WriteObjectValue(part, options);
-                    }
-                    writer.WriteEndArray();
-                }
-            }
+            writer.WritePropertyName("content"u8);
+            Content.WriteTo(writer, options);
         }
 
         writer.WriteOptionalProperty("refusal"u8, Refusal, options);

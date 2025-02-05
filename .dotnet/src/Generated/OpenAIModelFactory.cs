@@ -1032,10 +1032,10 @@ namespace OpenAI
             return new FunctionChatMessage(content, Chat.ChatMessageRole.Function, additionalBinaryDataProperties: null, functionName);
         }
 
-        public static ChatOutputPrediction ChatOutputPrediction(string kind = default)
+        public static ChatOutputPrediction ChatOutputPrediction(string @type = default)
         {
 
-            return new InternalUnknownChatOutputPrediction(new ChatOutputPredictionKind(kind), additionalBinaryDataProperties: null);
+            return new InternalUnknownChatOutputPrediction(new InternalChatOutputPredictionKind(@type), additionalBinaryDataProperties: null);
         }
 
         public static ChatAudioOptions ChatAudioOptions(ChatOutputAudioVoice outputAudioVoice = default, ChatOutputAudioFormat outputAudioFormat = default)

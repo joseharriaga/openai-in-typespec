@@ -41,10 +41,6 @@ namespace Azure.AI.OpenAI
         /// </para>
         /// </summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        /// <summary> Initializes a new instance of <see cref="UserSecurityContext"/>. </summary>
-        internal UserSecurityContext()
-        {
-        }
 
         /// <summary> Initializes a new instance of <see cref="UserSecurityContext"/>. </summary>
         /// <param name="applicationName"> The name of the application. Sensitive personal information should not be included in this field. </param>

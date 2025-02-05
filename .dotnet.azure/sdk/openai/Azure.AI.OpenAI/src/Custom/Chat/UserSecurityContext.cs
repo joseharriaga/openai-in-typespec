@@ -21,4 +21,7 @@ public partial class UserSecurityContext
     /// <summary> Captures the original client's IP address. </summary>
     [CodeGenMember("SourceIp")]
     public string SourceIP { get; set; }
+
+    public UserSecurityContext()
+    { }
 }

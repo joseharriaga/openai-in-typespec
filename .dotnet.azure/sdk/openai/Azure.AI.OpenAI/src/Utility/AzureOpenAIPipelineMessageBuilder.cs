@@ -28,14 +28,13 @@ internal class AzureOpenAIPipelineMessageBuilder
     /// </summary>
     /// <param name="pipeline"></param>
     /// <param name="endpoint"></param>
-    /// <param name="apiVersion"></param>
     /// <param name="deploymentName"></param>
-    public AzureOpenAIPipelineMessageBuilder(ClientPipeline pipeline, Uri endpoint, string apiVersion, string deploymentName = null)
+    /// 
+    public AzureOpenAIPipelineMessageBuilder(ClientPipeline pipeline, Uri endpoint, string deploymentName = null)
     {
         _pipeline = pipeline;
         _endpoint = endpoint;
         _deploymentName = deploymentName;
-        _queryStringParameters.Add(new KeyValuePair<string, string>("api-version", apiVersion));
     }
 
     public AzureOpenAIPipelineMessageBuilder WithPath(params string[] pathComponents)
@@ -139,8 +138,8 @@ internal class AzureOpenAIPipelineMessageBuilder
         ClientUriBuilder uriBuilder = new();
         uriBuilder.Reset(_endpoint);
 
-        bool hasTrailingSlash = _endpoint.AbsoluteUri.EndsWith("/");
-        uriBuilder.AppendPath($"{(hasTrailingSlash ? "" : "/")}openai", escape: false);
+        //bool hasTrailingSlash = _endpoint.AbsoluteUri.EndsWith("/");
+        //uriBuilder.AppendPath($"{(hasTrailingSlash ? "" : "/")}openai", escape: false);
 
         if (!string.IsNullOrEmpty(_deploymentName))
         {

@@ -14,6 +14,14 @@ global using OpenAI.Models;
 global using OpenAI.Moderations;
 global using OpenAI.VectorStores;
 
+#if !AZURE_OPENAI_GA
+global using OpenAI.RealtimeConversation;
+using Azure.AI.OpenAI.Assistants;
+using Azure.AI.OpenAI.FineTuning;
+using Azure.AI.OpenAI.RealtimeConversation;
+using Azure.AI.OpenAI.VectorStores;
+#endif
+
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.ComponentModel;
@@ -25,14 +33,8 @@ using Azure.AI.OpenAI.Embeddings;
 using Azure.AI.OpenAI.Files;
 using Azure.AI.OpenAI.Images;
 using Azure.Core;
+using System.Web;
 
-#if !AZURE_OPENAI_GA
-global using OpenAI.RealtimeConversation;
-using Azure.AI.OpenAI.Assistants;
-using Azure.AI.OpenAI.FineTuning;
-using Azure.AI.OpenAI.RealtimeConversation;
-using Azure.AI.OpenAI.VectorStores;
-#endif
 
 #pragma warning disable AZC0007
 
@@ -50,6 +52,19 @@ public partial class AzureOpenAIClient : OpenAIClient
     private readonly AzureOpenAIClientOptions _options;
     private readonly ApiKeyCredential _keyCredential;
     private readonly TokenCredential _tokenCredential;
+
+    internal static Uri AddVersion(Uri endpoint, string apiVersion)
+    {
+        var uriBuilder = new UriBuilder(endpoint);
+
+        uriBuilder.Path = uriBuilder.Path.TrimEnd('/') + "/openai/";
+
+        var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+        query["api-version"] = apiVersion;
+        uriBuilder.Query = query.ToString();
+
+        return uriBuilder.Uri;
+    }
 
     /// <summary>
     /// Creates a new instance of <see cref="AzureOpenAIClient"/> that will connect to a specified Azure OpenAI
@@ -131,13 +146,13 @@ public partial class AzureOpenAIClient : OpenAIClient
     /// <param name="endpoint"> The endpoint to use. </param>
     /// <param name="options"> The additional client options to use. </param>
     protected AzureOpenAIClient(ClientPipeline pipeline, Uri endpoint, AzureOpenAIClientOptions options)
-        : base(pipeline, new OpenAIClientOptions() { Endpoint = endpoint })
+        : base(pipeline, new OpenAIClientOptions() { Endpoint = AddVersion(endpoint, options.Version) })
     {
         Argument.AssertNotNull(pipeline, nameof(pipeline));
         Argument.AssertNotNull(endpoint, nameof(endpoint));
         options ??= new();
 
-        _endpoint = endpoint;
+        _endpoint = AddVersion(endpoint, options.Version);
         _options = options;
     }
 
@@ -212,7 +227,7 @@ public partial class AzureOpenAIClient : OpenAIClient
     [Experimental("OPENAI001")]
     public override FineTuningClient GetFineTuningClient()
 #if !AZURE_OPENAI_GA
-        => new AzureFineTuningClient(Pipeline, _endpoint, _options);
+        => new AzureFineTuningClient(Pipeline, _endpoint);
 #else
         => throw new InvalidOperationException($"Fine-tuning is not yet supported in the GA version of the library. Please use a preview version.");
 #endif

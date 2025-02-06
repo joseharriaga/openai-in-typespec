@@ -108,6 +108,7 @@ public partial class AzureOpenAIClientOptions : ClientPipelineOptions
 
 #if !AZURE_OPENAI_GA
     private const ServiceVersion LatestVersion = ServiceVersion.V2024_10_01_Preview;
+    //private const ServiceVersion LatestVersion = ServiceVersion.V2024_10_21;
 #else
     private const ServiceVersion LatestVersion = ServiceVersion.V2024_10_21;
 #endif

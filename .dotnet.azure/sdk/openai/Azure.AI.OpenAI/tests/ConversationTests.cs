@@ -143,14 +143,16 @@ public class ConversationTests : ConversationTestFixtureBase
 
             if (update is ConversationRateLimitsUpdate rateLimitsUpdate)
             {
-                Assert.That(rateLimitsUpdate.AllDetails, Has.Count.EqualTo(2));
-                Assert.That(rateLimitsUpdate.TokenDetails, Is.Not.Null);
-                Assert.That(rateLimitsUpdate.TokenDetails.Name, Is.EqualTo("tokens"));
-                Assert.That(rateLimitsUpdate.TokenDetails.MaximumCount, Is.GreaterThan(0));
-                Assert.That(rateLimitsUpdate.TokenDetails.RemainingCount, Is.GreaterThan(0));
-                Assert.That(rateLimitsUpdate.TokenDetails.RemainingCount, Is.LessThan(rateLimitsUpdate.TokenDetails.MaximumCount));
-                Assert.That(rateLimitsUpdate.TokenDetails.TimeUntilReset, Is.GreaterThan(TimeSpan.Zero));
-                Assert.That(rateLimitsUpdate.RequestDetails, Is.Not.Null);
+                // Errata (2025-01-22): no rate limit items being reported
+                // {"type":"rate_limits.updated","event_id":"event_AscnhKHfFTapqAeiQfE60","rate_limits":[]}
+                //Assert.That(rateLimitsUpdate.AllDetails, Has.Count.EqualTo(2), "Expected 2 details, got: " + String.Join(",", rateLimitsUpdate.AllDetails));
+                //Assert.That(rateLimitsUpdate.TokenDetails, Is.Not.Null);
+                //Assert.That(rateLimitsUpdate.TokenDetails.Name, Is.EqualTo("tokens"));
+                //Assert.That(rateLimitsUpdate.TokenDetails.MaximumCount, Is.GreaterThan(0));
+                //Assert.That(rateLimitsUpdate.TokenDetails.RemainingCount, Is.GreaterThan(0));
+                //Assert.That(rateLimitsUpdate.TokenDetails.RemainingCount, Is.LessThan(rateLimitsUpdate.TokenDetails.MaximumCount));
+                //Assert.That(rateLimitsUpdate.TokenDetails.TimeUntilReset, Is.GreaterThan(TimeSpan.Zero));
+                //Assert.That(rateLimitsUpdate.RequestDetails, Is.Not.Null);
                 gotRateLimits = true;
             }
         }

@@ -73,7 +73,7 @@ internal static class TestHelpers
 #pragma warning disable OPENAI002
             TestScenario.RealtimeConversation => new RealtimeConversationClient(overrideModel ?? "gpt-4o-realtime-preview-2024-10-01", credential, options),
 #pragma warning restore
-            _ => throw new NotImplementedException(),
+            _ => throw new NotImplementedException($"GetTestClient does not know how to handle template for {scenario}"),
         };
         return (T)clientObject;
     }

@@ -3,8 +3,8 @@
 
 #if !AZURE_OPENAI_GA
 
-using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.FineTuning;
 
@@ -14,29 +14,24 @@ namespace Azure.AI.OpenAI.FineTuning;
 /// <remarks>
 /// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
 /// </remarks>
+[Experimental("OPENAI001")]
 internal partial class AzureFineTuningClient : FineTuningClient
 {
-    private readonly Uri _endpoint;
-    private readonly string _apiVersion;
-
-    internal AzureFineTuningClient(ClientPipeline pipeline, Uri endpoint, AzureOpenAIClientOptions options)
+    [Experimental("OPENAI001")]
+    internal AzureFineTuningClient(ClientPipeline pipeline, Uri endpoint)
         : base(pipeline, new OpenAIClientOptions() { Endpoint = endpoint })
-    {
-        Argument.AssertNotNull(pipeline, nameof(pipeline));
-        Argument.AssertNotNull(endpoint, nameof(endpoint));
-        options ??= new();
+    { }
 
-        _endpoint = endpoint;
-        _apiVersion = options.Version;
-    }
-
+    [Experimental("OPENAI001")]
     protected AzureFineTuningClient()
     { }
 
-    internal override FineTuningJobOperation CreateCreateJobOperation(string jobId, string status, PipelineResponse response)
+    [Experimental("OPENAI001")]
+    internal override FineTuningJob CreateJobFromResponse(PipelineResponse response)
     {
-        return new AzureFineTuningJobOperation(Pipeline, _endpoint, jobId, status, response, _apiVersion);
+        return new AzureFineTuningJob(Pipeline, _endpoint, response);
     }
+
 }
 
 #endif

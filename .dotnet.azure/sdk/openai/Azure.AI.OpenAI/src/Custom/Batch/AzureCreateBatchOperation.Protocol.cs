@@ -36,7 +36,7 @@ internal partial class AzureCreateBatchOperation : CreateBatchOperation
     }
 
     internal override PipelineMessage CreateRetrieveBatchRequest(string batchId, RequestOptions? options)
-        => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, _apiVersion, null)
+        => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, null)
             .WithMethod("GET")
             .WithPath("batches", batchId)
             .WithAccept("application/json")
@@ -44,7 +44,7 @@ internal partial class AzureCreateBatchOperation : CreateBatchOperation
             .Build();
 
     internal override PipelineMessage CreateCancelBatchRequest(string batchId, RequestOptions? options)
-        => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, _apiVersion, null)
+        => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, null)
             .WithMethod("POST")
             .WithPath("batches", batchId, "cancel")
             .WithAccept("application/json")

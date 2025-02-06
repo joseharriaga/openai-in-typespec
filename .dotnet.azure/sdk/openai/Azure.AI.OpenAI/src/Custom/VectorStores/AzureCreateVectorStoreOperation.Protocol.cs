@@ -15,7 +15,7 @@ namespace Azure.AI.OpenAI.VectorStores;
 internal partial class AzureCreateVectorStoreOperation
 {
     internal override PipelineMessage CreateGetVectorStoreRequest(string vectorStoreId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint)
             .WithMethod("GET")
             .WithPath("vector_stores", vectorStoreId)
             .WithAccept("application/json")

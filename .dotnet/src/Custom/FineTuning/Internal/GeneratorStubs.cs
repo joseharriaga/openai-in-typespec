@@ -9,17 +9,8 @@ namespace OpenAI.FineTuning;
 [CodeGenModel("FineTuneChatCompletionRequestAssistantMessage")]
 internal partial class InternalFineTuneChatCompletionRequestAssistantMessage { }
 
-[CodeGenModel("FinetuneChatRequestInput")]
-internal partial class InternalFinetuneChatRequestInput { }
-
-[CodeGenModel("FinetuneCompletionRequestInput")]
-internal partial class InternalFinetuneCompletionRequestInput { }
-
 [CodeGenModel("FineTuningIntegration")]
 internal partial class InternalFineTuningIntegration { }
-
-[CodeGenModel("FineTuningIntegrationType")]
-internal readonly partial struct InternalFineTuningIntegrationType { }
 
 [CodeGenModel("FineTuningIntegrationWandb")]
 internal partial class InternalFineTuningIntegrationWandb { }
@@ -31,14 +22,16 @@ internal partial class InternalCreateFineTuningJobRequestWandbIntegrationWandb
     public string Project { get; set; }
 }
 
+[CodeGenModel("CreateFineTuningJobRequestModel")]
+internal readonly partial struct CreateFineTuningJobRequestModel { }
+
 [CodeGenModel("FineTuningJobObject")]
 internal readonly partial struct InternalFineTuningJobObject { }
 
-[CodeGenModel("FineTuningJobCheckpoint")]
-internal partial class InternalFineTuningJobCheckpoint { }
+[CodeGenModel("FineTuningJobEventObject")]
 
-[CodeGenModel("FineTuningJobCheckpointMetrics")]
-internal partial class InternalFineTuningJobCheckpointMetrics { }
+public readonly partial struct FineTuningJobEventObject { }
+
 
 [CodeGenModel("FineTuningJobCheckpointObject")]
 internal readonly partial struct InternalFineTuningJobCheckpointObject { }
@@ -61,78 +54,32 @@ internal readonly partial struct InternalListPaginatedFineTuningJobsResponseObje
 [CodeGenModel("FineTuningIntegrationWandbWandb")]
 internal partial class FineTuningIntegrationWandbWandb { }
 
-[CodeGenModel("FineTuningJobHyperparametersBatchSizeChoiceEnum")]
-internal readonly partial struct FineTuningJobHyperparametersBatchSizeChoiceEnum { }
-
-[CodeGenModel("FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum")]
-internal readonly partial struct FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum { }
-
-[CodeGenModel("FineTuningJobHyperparametersNEpochsChoiceEnum")]
-internal readonly partial struct FineTuningJobHyperparametersNEpochsChoiceEnum { }
-
 [CodeGenModel("UnknownCreateFineTuningJobRequestIntegration")]
 internal partial class UnknownCreateFineTuningJobRequestIntegration { }
 
 [CodeGenModel("UnknownFineTuningIntegration")]
 internal partial class UnknownFineTuningIntegration { }
 
-[CodeGenModel("FineTuningJobEventObject")]
-internal readonly partial struct InternalFineTuningJobEventObject { }
-
 [CodeGenModel("ListFineTuningJobEventsResponseObject")]
 internal readonly partial struct InternalListFineTuningJobEventsResponseObject { }
 
-[CodeGenModel("CreateFineTuningJobRequestModel")]
-internal readonly partial struct InternalCreateFineTuningJobRequestModel { }
-
-// Future public types follow
-
-[CodeGenModel("CreateFineTuningJobRequestIntegration")]
-internal partial class FineTuningIntegration { }
-
-[CodeGenModel("FineTuningJob")]
-internal partial class FineTuningJob { }
-
-[CodeGenModel("FineTuningJobError")]
-internal partial class FineTuningJobError { }
-
-[CodeGenModel("FineTuningJobEvent")]
-internal partial class FineTuningJobEvent { }
-
 [CodeGenModel("FineTuningJobEventLevel")]
-internal enum FineTuningJobEventLevel
-{
-    Info,
-    Warn,
-    Error
-}
+internal enum FineTuningJobEventLevel {Info, Warn, Error}
 
-[CodeGenModel("FineTuningJobHyperparameters")]
-[StructLayout(LayoutKind.Auto)]
-internal readonly partial struct FineTuningJobHyperparameters
-{
-    public BinaryData NEpochs { get; }
-    public BinaryData BatchSize { get; }
-    public BinaryData LearningRateMultiplier { get; }
-}
+[CodeGenModel("FineTuningJobEventLevelExtensions")]
+internal partial class FineTuningJobEventLevelExtensions { }
 
-[CodeGenModel("FineTuningJobStatus")]
-internal readonly partial struct FineTuningJobStatus { }
+[CodeGenModel("FineTuneMethodType")]
+internal readonly partial struct InternalFineTuneMethodType { }
 
-[CodeGenModel("CreateFineTuningJobRequest")]
-internal partial class FineTuningOptions { }
+[CodeGenModel("FineTuneSupervisedMethod")]
+internal partial class InternalFineTuningJobRequestMethodSupervised { }
 
-[CodeGenModel("CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum")]
-internal readonly partial struct HyperparameterBatchSize { }
+[CodeGenModel("FineTuneSupervisedMethodHyperparameters")]
+internal partial class InternalFineTuneSupervisedMethodHyperparameters { }
 
-[CodeGenModel("CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum")]
-internal readonly partial struct HyperparameterCycleCount { }
+[CodeGenModel("FineTuneDPOMethod")]
+internal partial class InternalFineTuningJobRequestMethodDpo { }
 
-[CodeGenModel("CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum")]
-internal readonly partial struct HyperparameterLearningRate { }
-
-[CodeGenModel("CreateFineTuningJobRequestHyperparameters")]
-internal partial class HyperparameterOptions { }
-
-[CodeGenModel("CreateFineTuningJobRequestWandbIntegration")]
-internal partial class WeightsAndBiasesIntegration { }
+[CodeGenModel("FineTuneDPOMethodHyperparameters")]
+internal partial class InternalFineTuningJobRequestMethodDpoDpoHyperparameters { }

@@ -26,7 +26,7 @@ internal partial class AzureEmbeddingClient : EmbeddingClient
     }
 
     private PipelineMessage CreateEmbeddingPipelineMessage(BinaryContent content, RequestOptions options = null)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _deploymentName)
             .WithMethod("POST")
             .WithPath("embeddings")
             .WithContent(content, "application/json")

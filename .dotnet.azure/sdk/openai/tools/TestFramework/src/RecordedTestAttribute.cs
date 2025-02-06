@@ -7,6 +7,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal;
 using OpenAI.TestFramework.Recording;
+using System.Text.RegularExpressions;
 
 namespace OpenAI.TestFramework;
 
@@ -121,7 +122,10 @@ public class RecordedTestAttribute : TestAttribute, IRepeatTest
 
             // 2. Check if the failure message indicates a recording playback exception. This sadly requires us to check test failure
             //    messages which can be a little fragile but there does not seem to be a way to get the exception directly
-            if (result.Message?.Contains(exceptionName) == true)
+            if (result.Message?.Contains(exceptionName) == true
+                || result.Message?.Contains("ClientResultException : NotFound: Recording file path") == true
+                || Regex.IsMatch(result.Message ?? string.Empty,
+                                 "ClientResultException : 500: The process cannot access the file '.*breadcrumb' because it is being used by another process."))
             {
                 return true;
             }

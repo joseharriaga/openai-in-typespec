@@ -152,7 +152,6 @@ internal class TestConfig
                 prevWasUpper = false;
             }
         }
-
         return builder.ToString();
     }
 

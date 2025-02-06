@@ -591,7 +591,7 @@ internal partial class AzureAssistantClient : AssistantClient
         => NewJsonGetBuilder(options).WithPath("threads", threadId, "runs", runId, "steps", stepId).Build();
 
     private AzureOpenAIPipelineMessageBuilder NewBuilder(RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint)
             .WithAssistantsHeader()
             .WithOptions(options);
 

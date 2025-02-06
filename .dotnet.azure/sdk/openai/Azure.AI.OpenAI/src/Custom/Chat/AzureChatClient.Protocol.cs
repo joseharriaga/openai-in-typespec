@@ -30,7 +30,7 @@ internal partial class AzureChatClient : ChatClient
         BinaryContent content,
         RequestOptions options = null,
         bool? bufferResponse = true)
-            => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+            => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _deploymentName)
                 .WithPath("chat", "completions")
                 .WithMethod("POST")
                 .WithContent(content, "application/json")

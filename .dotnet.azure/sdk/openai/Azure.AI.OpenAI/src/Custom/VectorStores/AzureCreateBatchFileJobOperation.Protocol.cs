@@ -10,7 +10,7 @@ namespace Azure.AI.OpenAI.VectorStores;
 internal partial class AzureCreateBatchFileJobOperation
 {
     internal override PipelineMessage CreateGetVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint)
             .WithMethod("GET")
             .WithPath("vector_stores", vectorStoreId, "file_batches", batchId)
             .WithAccept("application/json")
@@ -18,7 +18,7 @@ internal partial class AzureCreateBatchFileJobOperation
             .Build();
 
     internal override PipelineMessage CreateCancelVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(_pipeline, _endpoint)
             .WithMethod("POST")
             .WithPath("vector_stores", vectorStoreId, "file_batches", batchId, "cancel")
             .WithAccept("application/json")

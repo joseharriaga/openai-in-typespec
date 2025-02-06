@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Azure.AI.OpenAI.FineTuning;
 using Azure.AI.OpenAI.Tests.Models;
 using Azure.AI.OpenAI.Tests.Utils;
 using Azure.AI.OpenAI.Tests.Utils.Config;
@@ -33,6 +34,7 @@ using TokenCredential = Azure.Core.TokenCredential;
 
 namespace Azure.AI.OpenAI.Tests;
 
+// [Parallelizable]
 public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : class
 {
     private const string AZURE_URI_SANITIZER_PATTERN = @"(?<=/(subscriptions|resourceGroups|accounts)/)([^/]+?)(?=(/|$))";
@@ -193,8 +195,9 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
     /// test configuration.</param>
     /// <param name="keyCredential">(Optional) The key credential to use instead of the one from the configuration.</param>
     /// <returns>The test client instance.</returns>
-    public virtual TClient GetTestClient(TestClientOptions? options = null, TokenCredential? tokenCredential = null, ApiKeyCredential? keyCredential = null)
-        => GetTestClient(TestConfig.GetConfig<TClient>(), options, tokenCredential, keyCredential);
+    /// <param name="unwrapped"></param>
+    public virtual TClient GetTestClient(TestClientOptions? options = null, TokenCredential? tokenCredential = null, ApiKeyCredential? keyCredential = null, bool unwrapped = false)
+        => GetTestClient(TestConfig.GetConfig<TClient>(), options, tokenCredential, keyCredential, unwrapped);
 
     /// <summary>
     /// Gets the properly instrumented client to use for testing. This have proper support for automatic sync/async method testing,
@@ -206,8 +209,8 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
     /// test configuration.</param>
     /// <param name="keyCredential">(Optional) The key credential to use instead of the one from the configuration.</param>
     /// <returns>The test client instance.</returns>
-    public virtual TClient GetTestClient(string configName, TestClientOptions? options = null, TokenCredential? tokenCredential = null, ApiKeyCredential? keyCredential = null)
-        => GetTestClient(TestConfig.GetConfig(configName), options, tokenCredential, keyCredential);
+    public virtual TClient GetTestClient(string configName, TestClientOptions? options = null, TokenCredential? tokenCredential = null, ApiKeyCredential? keyCredential = null, bool unwrapped = false)
+        => GetTestClient(TestConfig.GetConfig(configName), options, tokenCredential, keyCredential, unwrapped);
 
     /// <summary>
     /// Gets a different type of client using the same configuration as the specified client.
@@ -360,10 +363,10 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
     /// test configuration.</param>
     /// <param name="keyCredential">(Optional) The key credential to use instead of the one from the configuration.</param>
     /// <returns>The test client instance.</returns>
-    protected virtual TClient GetTestClient(IConfiguration? config, TestClientOptions? options = null, TokenCredential? tokenCredential = null, ApiKeyCredential? keyCredential = null)
+    protected virtual TClient GetTestClient(IConfiguration? config, TestClientOptions? options = null, TokenCredential? tokenCredential = null, ApiKeyCredential? keyCredential = null, bool unwrapped = false)
     {
         AzureOpenAIClient topLevelClient = GetTestTopLevelClient(config, options, tokenCredential, keyCredential);
-        return GetTestClient<TClient>(topLevelClient, config!);
+        return GetTestClient<TClient>(topLevelClient, config!, unwrapped: unwrapped);
     }
 
     /// <summary>
@@ -375,7 +378,7 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
     /// <param name="config">The configuration to use to get the deployment information (if needed).</param>
     /// <returns>The instrumented client instance to use.</returns>
     /// <exception cref="NotImplementedException">Support for the type of client being requested has not been implemented yet.</exception>
-    protected virtual TExplicitClient GetTestClient<TExplicitClient>(AzureOpenAIClient topLevelClient, IConfiguration config, string? deploymentName = null)
+    protected virtual TExplicitClient GetTestClient<TExplicitClient>(AzureOpenAIClient topLevelClient, IConfiguration config, string? deploymentName = null, bool unwrapped = false)
     {
         Func<string> getDeployment = () => deploymentName ?? config?.Deployment ?? throw CreateKeyNotFoundEx("deployment");
         object clientObject;
@@ -419,6 +422,11 @@ public class AoaiTestBase<TClient> : RecordedClientTestBase where TClient : clas
             default:
                 throw new NotImplementedException($"Test client helpers not yet implemented for {typeof(TExplicitClient)}");
         };
+
+        if (unwrapped)
+        {
+            return (TExplicitClient)clientObject;
+        }
 
         object instrumented = WrapClient(
             typeof(TExplicitClient),

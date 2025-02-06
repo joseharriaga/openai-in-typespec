@@ -70,7 +70,7 @@ internal partial class AzureAudioClient : AudioClient
 #endif
 
     private PipelineMessage CreateTranscribeAudioRequestMessage(BinaryContent content, string contentType, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _deploymentName)
             .WithMethod("POST")
             .WithPath("audio", "transcriptions")
             .WithContent(content, contentType)
@@ -79,7 +79,7 @@ internal partial class AzureAudioClient : AudioClient
             .Build();
 
     private PipelineMessage CreateTranslateAudioRequestMessage(BinaryContent content, string contentType, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _deploymentName)
             .WithMethod("POST")
             .WithPath("audio", "translations")
             .WithContent(content, contentType)
@@ -88,7 +88,7 @@ internal partial class AzureAudioClient : AudioClient
             .Build();
 
     private PipelineMessage CreateGenerateSpeechFromTextRequestMessage(BinaryContent content, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion, _deploymentName)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _deploymentName)
             .WithMethod("POST")
             .WithPath("audio", "speech")
             .WithContent(content, "application/json")

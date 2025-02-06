@@ -151,7 +151,7 @@ internal partial class AzureFileClient : OpenAIFileClient
     }
 
     private PipelineMessage CreateDeleteRequestMessage(string fileId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint)
             .WithMethod("DELETE")
             .WithPath("files", fileId)
             .WithAccept("application/json")
@@ -159,7 +159,7 @@ internal partial class AzureFileClient : OpenAIFileClient
             .Build();
 
     private PipelineMessage CreateDownloadContentRequestMessage(string fileId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint)
             .WithMethod("GET")
             .WithPath("files", fileId, "content")
             .WithAccept("application/json")
@@ -167,7 +167,7 @@ internal partial class AzureFileClient : OpenAIFileClient
             .Build();
 
     private PipelineMessage CreateGetFileRequestMessage(string fileId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint)
             .WithMethod("GET")
             .WithPath("files", fileId)
             .WithAccept("application/json")
@@ -175,7 +175,7 @@ internal partial class AzureFileClient : OpenAIFileClient
             .Build();
 
     private PipelineMessage CreateGetFilesRequestMessage(string purpose, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint)
             .WithMethod("GET")
             .WithPath("files")
             .WithAccept("application/json")
@@ -184,7 +184,7 @@ internal partial class AzureFileClient : OpenAIFileClient
             .Build();
 
     private PipelineMessage CreateUploadRequestMessage(BinaryContent content, string contentType, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint)
             .WithMethod("POST")
             .WithPath("files")
             .WithContent(content, contentType)
@@ -193,7 +193,7 @@ internal partial class AzureFileClient : OpenAIFileClient
             .Build();
 
     private PipelineMessage CreateCreateUploadRequestMessage(BinaryContent content, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint)
             .WithMethod("POST")
             .WithPath("uploads")
             .WithContent(content, "application/json")
@@ -202,7 +202,7 @@ internal partial class AzureFileClient : OpenAIFileClient
             .Build();
 
     internal PipelineMessage CreateAddUploadPartRequestMessage(string uploadId, BinaryContent content, string contentType, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint)
             .WithMethod("POST")
             .WithPath($"uploads/{uploadId}/parts")
             .WithContent(content, contentType)
@@ -211,7 +211,7 @@ internal partial class AzureFileClient : OpenAIFileClient
             .Build();
 
     internal PipelineMessage CreateCompleteUploadRequestMessage(string uploadId, BinaryContent content, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint)
             .WithMethod("POST")
             .WithPath($"uploads/{uploadId}/complete")
             .WithContent(content, "application/json")
@@ -220,7 +220,7 @@ internal partial class AzureFileClient : OpenAIFileClient
             .Build();
 
     internal PipelineMessage CreateCancelUploadRequest(string uploadId, RequestOptions options)
-        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint)
             .WithMethod("POST")
             .WithPath($"uploads/{uploadId}/cancel")
             .WithAccept("application/json")

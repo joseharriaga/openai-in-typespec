@@ -30,4 +30,21 @@ public partial class ChatMessage
 
     internal virtual void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         => throw new InvalidOperationException($"The {nameof(WriteCore)} method should be invoked on an overriding type derived from {nameof(ChatMessage)}.");
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal void WriteRoleProperty(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
+        writer.WritePropertyName("role"u8);
+        writer.WriteStringValue(Role.ToSerialString());
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal void WriteContentProperty(Utf8JsonWriter writer, ModelReaderWriterOptions options)
+    {
+        if (Optional.IsDefined(Content) && Content.IsInnerCollectionDefined())
+        {
+            writer.WritePropertyName("content"u8);
+            Content.WriteTo(writer, options);
+        }
+    }
 }

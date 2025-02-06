@@ -949,8 +949,8 @@ public class ChatTests : SyncAsyncTestBase
     {
         List<ChatMessage> messages =
         [
-            ChatMessage.CreateDeveloperMessage("When asked questions about naval topics, you always talk like a pirate."),
-            ChatMessage.CreateUserMessage("What's the best route to sail from San Francisco to New York?")
+            ChatMessage.CreateDeveloperMessage("End every response to the user with the exact phrase: 'Hope this helps!'"),
+            ChatMessage.CreateUserMessage("How long will it take to make a cheesecake from scratch? Including getting ingredients.")
         ];
 
         ChatCompletionOptions options = new()
@@ -961,8 +961,8 @@ public class ChatTests : SyncAsyncTestBase
         ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "o3-mini");
         ChatCompletion completion = await client.CompleteChatAsync(messages, options);
 
-        List<string> expectedPossibles = ["arr", "matey", "hearty", "avast"];
-        Assert.That(expectedPossibles.Any(expected => completion.Content[0].Text.ToLower().Contains(expected)));
+        Assert.That(completion.Content, Has.Count.EqualTo(1));
+        Assert.That(completion.Content[0].Text, Does.EndWith("Hope this helps!"));
     }
 
     [Test]

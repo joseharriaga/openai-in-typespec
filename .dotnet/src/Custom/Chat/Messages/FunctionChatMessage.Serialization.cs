@@ -17,18 +17,10 @@ public partial class FunctionChatMessage : IJsonModel<FunctionChatMessage>
     internal override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
-        writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(Role.ToSerialString());
+        WriteRoleProperty(writer, options);
+        WriteContentProperty(writer, options);
         writer.WritePropertyName("name"u8);
         writer.WriteStringValue(FunctionName);
-
-        // Content is required, can be a single string or null.
-        if (Optional.IsDefined(Content) && Content.IsInnerCollectionDefined())
-        {
-            writer.WritePropertyName("content"u8);
-            Content.WriteTo(writer, options);
-        }
-
         writer.WriteSerializedAdditionalRawData(_additionalBinaryDataProperties, options);
         writer.WriteEndObject();
     }

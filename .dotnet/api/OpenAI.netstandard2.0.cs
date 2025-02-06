@@ -1411,8 +1411,8 @@ namespace OpenAI.Chat {
         public override readonly string ToString();
     }
     public class ChatOutputPrediction : IJsonModel<ChatOutputPrediction>, IPersistableModel<ChatOutputPrediction> {
-        public static ChatOutputPrediction CreateStaticContentPrediction(IEnumerable<ChatMessageContentPart> contentParts);
-        public static ChatOutputPrediction CreateStaticContentPrediction(string content);
+        public static ChatOutputPrediction CreateStaticContentPrediction(IEnumerable<ChatMessageContentPart> staticContentParts);
+        public static ChatOutputPrediction CreateStaticContentPrediction(string staticContent);
         public static explicit operator ChatOutputPrediction(ClientResult result);
         public static implicit operator BinaryContent(ChatOutputPrediction chatOutputPrediction);
     }

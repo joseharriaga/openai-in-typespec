@@ -16,16 +16,8 @@ public partial class SystemChatMessage : IJsonModel<SystemChatMessage>
     internal override void WriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
         writer.WriteStartObject();
-        writer.WritePropertyName("role"u8);
-        writer.WriteStringValue(Role.ToSerialString());
-
-        // Content is required, can be a single string or a collection of ChatMessageContentPart.
-        if (Optional.IsDefined(Content) && Content.IsInnerCollectionDefined())
-        {
-            writer.WritePropertyName("content"u8);
-            Content.WriteTo(writer, options);
-        }
-
+        WriteRoleProperty(writer, options);
+        WriteContentProperty(writer, options);
         writer.WriteOptionalProperty("name"u8, ParticipantName, options);
         writer.WriteSerializedAdditionalRawData(_additionalBinaryDataProperties, options);
         writer.WriteEndObject();

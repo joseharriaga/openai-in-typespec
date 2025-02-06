@@ -11,7 +11,6 @@ public partial class ChatMessageContent
 {
     internal void WriteTo(Utf8JsonWriter writer, ModelReaderWriterOptions options = null)
     {
-        options ??= new("W");
         if (Count == 0)
         {
             writer.WriteNullValue();

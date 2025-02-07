@@ -30,6 +30,13 @@ public partial class FunctionChatMessage : ChatMessage
         Argument.AssertNotNull(functionName, nameof(functionName));
 
         FunctionName = functionName;
+
+        // FunctionChatMessage treats content as *required* but explicitly *nullable*. If null content was provided,
+        // enforce manifestation of the (nullable) content collection via .Clear().
+        if (!Content.IsInnerCollectionDefined())
+        {
+            Content.Clear();
+        }
     }
 
     // CUSTOM: Renamed.

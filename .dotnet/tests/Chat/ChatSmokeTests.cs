@@ -829,6 +829,25 @@ public class ChatSmokeTests : SyncAsyncTestBase
         }
     }
 
+    [Test]
+    public void AssistantAndFunctionMessagesHandleNoContentCorrectly()
+    {
+        // AssistantChatMessage and FunctionChatMessage can both exist without content, but follow different rules:
+        //   - AssistantChatMessage treats content as optional, as valid assistant message variants (e.g. for tool calls)
+        //   - FunctionChatMessage meanwhile treats content as required and nullable.
+        // This test validates that no-content assistant messages just don't serialize content, while no-content
+        // function messages serialize content with an explicit null value.
+
+        ChatToolCall fakeToolCall = ChatToolCall.CreateFunctionToolCall("call_abcd1234", "function_name", functionArguments: BinaryData.FromString("{}"));
+        AssistantChatMessage assistantChatMessage = new([fakeToolCall]);
+        string serializedAssistantChatMessage = ModelReaderWriter.Write(assistantChatMessage).ToString();
+        Assert.That(serializedAssistantChatMessage, Does.Not.Contain("content"));
+
+        FunctionChatMessage functionChatMessage = new("function_name", null);
+        string serializedFunctionChatMessage = ModelReaderWriter.Write(functionChatMessage).ToString();
+        Assert.That(serializedFunctionChatMessage, Does.Contain(@"""content"":null"));
+    }
+
 #pragma warning disable CS0618
     [Test]
     public void SerializeMessagesWithNullProperties()

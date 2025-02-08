@@ -1,4 +1,5 @@
 using OpenAI.Files;
+using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -17,10 +18,10 @@ namespace OpenAI.VectorStores;
 [CodeGenSuppress("VectorStoreClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateVectorStoreAsync", typeof(VectorStoreCreationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateVectorStore", typeof(VectorStoreCreationOptions), typeof(CancellationToken))]
-[CodeGenSuppress("ListVectorStoresAsync", typeof(int?), typeof(VectorStoreCollectionOrder?), typeof(string), typeof(string), typeof(CancellationToken))]
-[CodeGenSuppress("ListVectorStores", typeof(int?), typeof(VectorStoreCollectionOrder?), typeof(string), typeof(string), typeof(CancellationToken))]
-[CodeGenSuppress("ListVectorStoreFilesAsync", typeof(string), typeof(int?), typeof(VectorStoreFileAssociationCollectionOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?), typeof(CancellationToken))]
-[CodeGenSuppress("ListVectorStoreFiles", typeof(string), typeof(int?), typeof(VectorStoreFileAssociationCollectionOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?), typeof(CancellationToken))]
+[CodeGenSuppress("ListVectorStoresAsync", typeof(int?), typeof(OpenAIPageOrder?), typeof(string), typeof(string), typeof(CancellationToken))]
+[CodeGenSuppress("ListVectorStores", typeof(int?), typeof(OpenAIPageOrder?), typeof(string), typeof(string), typeof(CancellationToken))]
+[CodeGenSuppress("ListVectorStoreFilesAsync", typeof(string), typeof(int?), typeof(OpenAIPageOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?), typeof(CancellationToken))]
+[CodeGenSuppress("ListVectorStoreFiles", typeof(string), typeof(int?), typeof(OpenAIPageOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?), typeof(CancellationToken))]
 [CodeGenSuppress("CreateVectorStoreFileAsync", typeof(string), typeof(InternalCreateVectorStoreFileRequest), typeof(CancellationToken))]
 [CodeGenSuppress("CreateVectorStoreFile", typeof(string), typeof(InternalCreateVectorStoreFileRequest), typeof(CancellationToken))]
 [CodeGenSuppress("GetVectorStoreFileAsync", typeof(string), typeof(string), typeof(CancellationToken))]
@@ -33,8 +34,8 @@ namespace OpenAI.VectorStores;
 [CodeGenSuppress("GetVectorStoreFileBatch", typeof(string), typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("CancelVectorStoreFileBatchAsync", typeof(string), typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("CancelVectorStoreFileBatch", typeof(string), typeof(string), typeof(CancellationToken))]
-[CodeGenSuppress("ListFilesInVectorStoreBatchAsync", typeof(string), typeof(string), typeof(int?), typeof(InternalListFilesInVectorStoreBatchRequestOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?), typeof(CancellationToken))]
-[CodeGenSuppress("ListFilesInVectorStoreBatch", typeof(string), typeof(string), typeof(int?), typeof(InternalListFilesInVectorStoreBatchRequestOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?), typeof(CancellationToken))]
+[CodeGenSuppress("ListFilesInVectorStoreBatchAsync", typeof(string), typeof(string), typeof(int?), typeof(OpenAIPageOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?), typeof(CancellationToken))]
+[CodeGenSuppress("ListFilesInVectorStoreBatch", typeof(string), typeof(string), typeof(int?), typeof(OpenAIPageOrder?), typeof(string), typeof(string), typeof(VectorStoreFileStatusFilter?), typeof(CancellationToken))]
 public partial class VectorStoreClient
 {
     // CUSTOM: Added as a convenience.
@@ -89,17 +90,17 @@ public partial class VectorStoreClient
 
     internal virtual CreateVectorStoreOperation CreateCreateVectorStoreOperation(ClientResult<VectorStore> result)
     {
-        return new CreateVectorStoreOperation(Pipeline, _endpoint, result);
+        return new CreateVectorStoreOperation(this, _endpoint, result);
     }
 
     internal virtual AddFileToVectorStoreOperation CreateAddFileToVectorStoreOperation(ClientResult<VectorStoreFileAssociation> result)
     {
-        return new AddFileToVectorStoreOperation(Pipeline, _endpoint, result);
+        return new AddFileToVectorStoreOperation(this, _endpoint, result);
     }
 
     internal virtual CreateBatchFileJobOperation CreateBatchFileJobOperation(ClientResult<VectorStoreBatchFileJob> result)
     {
-        return new CreateBatchFileJobOperation(Pipeline, _endpoint, result);
+        return new CreateBatchFileJobOperation(this, _endpoint, result);
     }
 
     /// <summary> Creates a vector store. </summary>
@@ -237,7 +238,7 @@ public partial class VectorStoreClient
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A collection of <see cref="VectorStore"/>. </returns>
     public virtual AsyncCollectionResult<VectorStore> GetVectorStoresAsync(
-        VectorStoreCollectionOptions options = default,
+        OpenAIPageOptions options = default,
         CancellationToken cancellationToken = default)
     {
         return GetVectorStoresAsync(options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
@@ -268,7 +269,7 @@ public partial class VectorStoreClient
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A collection of <see cref="VectorStore"/>. </returns>
     public virtual CollectionResult<VectorStore> GetVectorStores(
-        VectorStoreCollectionOptions options = default,
+        OpenAIPageOptions options = default,
         CancellationToken cancellationToken = default)
     {
         return GetVectorStores(options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions())
@@ -344,16 +345,18 @@ public partial class VectorStoreClient
     /// The ID of the vector store to enumerate the file associations of.
     /// </param>
     /// <param name="options"> Options describing the collection to return. </param>
+    /// <param name="fileStatusFilter"> A <see cref="VectorStoreFileStatusFilter"/> to match retrieved items to. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
     public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         string vectorStoreId,
-        VectorStoreFileAssociationCollectionOptions options = default,
+        OpenAIPageOptions options = default,
+        VectorStoreFileStatusFilter? fileStatusFilter = default,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
-        return GetFileAssociationsAsync(vectorStoreId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
+        return GetFileAssociationsAsync(vectorStoreId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, fileStatusFilter?.ToString(), cancellationToken.ToRequestOptions())
             as AsyncCollectionResult<VectorStoreFileAssociation>;
     }
 
@@ -382,16 +385,18 @@ public partial class VectorStoreClient
     /// The ID of the vector store to enumerate the file associations of.
     /// </param>
     /// <param name="options"> Options describing the collection to return. </param>
+    /// <param name="fileStatusFilter"> A <see cref="VectorStoreFileStatusFilter"/> to match retrieved items to. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
     public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(
         string vectorStoreId,
-        VectorStoreFileAssociationCollectionOptions options = default,
+        OpenAIPageOptions options = default,
+        VectorStoreFileStatusFilter? fileStatusFilter = default,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
 
-        return GetFileAssociations(vectorStoreId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
+        return GetFileAssociations(vectorStoreId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, fileStatusFilter?.ToString(), cancellationToken.ToRequestOptions())
             as CollectionResult<VectorStoreFileAssociation>;
     }
 
@@ -559,18 +564,20 @@ public partial class VectorStoreClient
     /// The ID of the batch file job that was previously scheduled.
     /// </param>
     /// <param name="options"> Options describing the collection to return. </param>
+    /// <param name="fileStatusFilter"> A <see cref="VectorStoreFileStatusFilter"/> to match retrieved items to. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
     public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(
         string vectorStoreId,
         string batchJobId,
-        VectorStoreFileAssociationCollectionOptions options = default,
+        OpenAIPageOptions options = default,
+        VectorStoreFileStatusFilter? fileStatusFilter = null,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
 
-        return GetFileAssociationsAsync(vectorStoreId, batchJobId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
+        return GetFileAssociationsAsync(vectorStoreId, batchJobId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, fileStatusFilter?.ToString(), cancellationToken.ToRequestOptions())
             as AsyncCollectionResult<VectorStoreFileAssociation>;
     }
 
@@ -625,18 +632,20 @@ public partial class VectorStoreClient
     /// The ID of the batch file job that was previously scheduled.
     /// </param>
     /// <param name="options"> Options describing the collection to return. </param>
+    /// <param name="fileStatusFilter"> A <see cref="VectorStoreFileStatusFilter"/> to match retrieved items to. </param>
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A collection of <see cref="VectorStoreFileAssociation"/>. </returns>
     public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(
         string vectorStoreId,
         string batchJobId,
-        VectorStoreFileAssociationCollectionOptions options = default,
+        OpenAIPageOptions options = default,
+        VectorStoreFileStatusFilter? fileStatusFilter = default,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(vectorStoreId, nameof(vectorStoreId));
         Argument.AssertNotNullOrEmpty(batchJobId, nameof(batchJobId));
 
-        return GetFileAssociations(vectorStoreId, batchJobId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, options?.Filter?.ToString(), cancellationToken.ToRequestOptions())
+        return GetFileAssociations(vectorStoreId, batchJobId, options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, fileStatusFilter?.ToString(), cancellationToken.ToRequestOptions())
             as CollectionResult<VectorStoreFileAssociation>;
     }
 

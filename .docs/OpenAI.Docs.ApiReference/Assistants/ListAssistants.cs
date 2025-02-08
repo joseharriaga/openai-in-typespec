@@ -19,9 +19,9 @@ public partial class AssistantDocs
             apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
         );
 
-        AssistantCollectionOptions options = new()
+        OpenAIPageOptions options = new()
         {
-            Order = AssistantCollectionOrder.Descending,
+            Order = OpenAIPageOrder.Descending,
             PageSizeLimit = 20
         };
 

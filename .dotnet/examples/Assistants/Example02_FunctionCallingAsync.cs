@@ -151,7 +151,7 @@ public partial class AssistantExamples
         if (run.Status == RunStatus.Completed)
         {
             AsyncCollectionResult<ThreadMessage> messages
-                = client.GetMessagesAsync(run.ThreadId, new MessageCollectionOptions() { Order = MessageCollectionOrder.Ascending });
+                = client.GetMessagesAsync(run.ThreadId, new OpenAIPageOptions() { Order = OpenAIPageOrder.Ascending });
 
             await foreach (ThreadMessage message in messages)
             {

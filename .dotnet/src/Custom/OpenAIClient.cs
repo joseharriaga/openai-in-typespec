@@ -65,11 +65,9 @@ namespace OpenAI;
 public partial class OpenAIClient
 {
     private const string OpenAIV1Endpoint = "https://api.openai.com/v1";
-    private const string OpenAIBetaHeaderValue = "assistants=v2";
 
     private static class KnownHeaderNames
     {
-        public const string OpenAIBeta = "OpenAI-Beta";
         public const string OpenAIOrganization = "OpenAI-Organization";
         public const string OpenAIProject = "OpenAI-Project";
         public const string UserAgent = "User-Agent";
@@ -261,7 +259,6 @@ public partial class OpenAIClient
         return ClientPipeline.Create(
             options,
             perCallPolicies: [
-                CreateAddBetaFeatureHeaderPolicy(),
                 CreateAddCustomHeadersPolicy(options),
             ],
             perTryPolicies: [
@@ -274,17 +271,6 @@ public partial class OpenAIClient
     internal static Uri GetEndpoint(OpenAIClientOptions options = null)
     {
         return options?.Endpoint ?? new(OpenAIV1Endpoint);
-    }
-
-    private static PipelinePolicy CreateAddBetaFeatureHeaderPolicy()
-    {
-        return new GenericActionPipelinePolicy((message) =>
-        {
-            if (message?.Request?.Headers?.TryGetValue(KnownHeaderNames.OpenAIBeta, out string _) == false)
-            {
-                message.Request.Headers.Set(KnownHeaderNames.OpenAIBeta, OpenAIBetaHeaderValue);
-            }
-        });
     }
 
     private static PipelinePolicy CreateAddCustomHeadersPolicy(OpenAIClientOptions options = null)

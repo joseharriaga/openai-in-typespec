@@ -1,6 +1,12 @@
 # Release History
 
-## 2.2.0-beta.1 (Unreleased)
+## 2.2.0-beta.2 (Unreleased)
+
+### `[Experimental]` Breaking changes
+
+- A number of collection-specific options classes and order enumerations have been consolidated into a shared `OpenAIPageOptions` and `OpenAIPageOrder`. `VectorStoreClient`'s `GetFileAssociations` method now features `fileStatusFilter` as an optional method parameter rather than within a collection-specific options type.
+
+## 2.2.0-beta.1 (2025-02-07)
 
 ### Features added
 

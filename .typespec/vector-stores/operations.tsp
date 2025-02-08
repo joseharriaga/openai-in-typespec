@@ -17,33 +17,9 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Returns a list of vector-stores.")
   listVectorStores(
-    @header accept: "application/json",
-
-    /**
-     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-     * default is 20.
-     */
-    @query limit?: int32 = 20,
-
-    /**
-     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-     * for descending order.
-     */
-    @query order?: "asc" | "desc" = "desc",
-
-    /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     */
-    @query after?: string,
-
-    /**
-     * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-     */
-    @query before?: string,
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
+    ...CommonPageQueryParameters,
   ): ListVectorStoresResponse | ErrorResponse;
 
   @post
@@ -51,7 +27,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Creates a vector store.")
   createVectorStore(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
     @body requestBody: CreateVectorStoreRequest,
   ): VectorStoreObject | ErrorResponse;
 
@@ -61,7 +38,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Retrieves a vector store.")
   getVectorStore(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the vector store to retrieve. */
     @path vector_store_id: string,
@@ -73,7 +51,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Modifies a vector store.")
   modifyVectorStore(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the vector store to modify. */
     @path vector_store_id: string,
@@ -87,7 +66,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Delete a vector store.")
   deleteVectorStore(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the vector store to delete. */
     @path vector_store_id: string,
@@ -99,41 +79,13 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Returns a list of vector store files.")
   listVectorStoreFiles(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the vector store that the files belong to. */
     @path vector_store_id: string,
 
-    /**
-     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-     * default is 20.
-     */
-    @query limit?: int32 = 20,
-
-    /**
-     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-     * for descending order.
-     */
-    @query order?: "asc" | "desc" = "desc",
-
-    /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     */
-    @query after?: string,
-
-    /**
-     * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-     */
-    @query before?: string,
-
-    /**
-     * Filter by file status. One of `in_progress`, `completed`, `failed`, `cancelled`.
-     */
-    @query filter?: ListVectorStoreFilesFilter,
+    ...VectorStoreFilesPageQueryParameters,
   ): ListVectorStoreFilesResponse | ErrorResponse;
 
   @route("{vector_store_id}/files")
@@ -142,7 +94,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Create a vector store file by attaching a [File](/docs/api-reference/files) to a [vector store](/docs/api-reference/vector-stores/object).")
   createVectorStoreFile(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the vector store for which to create a File. */
     @path vector_store_id: string,
@@ -156,7 +109,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Retrieves a vector store file.")
   getVectorStoreFile(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the vector store that the file belongs to. */
     @path vector_store_id: string,
@@ -171,7 +125,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Delete a vector store file. This will remove the file from the vector store but the file itself will not be deleted. To delete the file, use the [delete file](/docs/api-reference/files/delete) endpoint.")
   deleteVectorStoreFile(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the vector store that the file belongs to. */
     @path vector_store_id: string,
@@ -186,7 +141,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Create a vector store file batch.")
   createVectorStoreFileBatch(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the vector store for which to create a file batch. */
     @path vector_store_id: string,
@@ -200,7 +156,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Retrieves a vector store file batch.")
   getVectorStoreFileBatch(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the vector store that the file batch belongs to. */
     @path vector_store_id: string,
@@ -215,7 +172,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible.")
   cancelVectorStoreFileBatch(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the vector store that the file batch belongs to. */
     @path vector_store_id: string,
@@ -230,7 +188,8 @@ interface VectorStores {
   @tag("Vector Stores")
   @summary("Returns a list of vector store files in a batch.")
   listFilesInVectorStoreBatch(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the vector store that the file batch belongs to. */
     @path vector_store_id: string,
@@ -238,35 +197,18 @@ interface VectorStores {
     /** The ID of the file batch that the files belong to. */
     @path batch_id: string,
 
-    /**
-     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-     * default is 20.
-     */
-    @query limit?: int32 = 20,
-
-    /**
-     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-     * for descending order.
-     */
-    @query order?: "asc" | "desc" = "desc",
-
-    /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     */
-    @query after?: string,
-
-    /**
-     * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-     */
-    @query before?: string,
-
-    /**
-     * Filter by file status. One of `in_progress`, `completed`, `failed`, `cancelled`.
-     */
-    @query filter?: ListVectorStoreFilesFilter,
+    ...VectorStoreFilesPageQueryParameters,
   ): ListVectorStoreFilesResponse | ErrorResponse;
 }
+
+alias VectorStoreFilesPageQueryParameters = {
+  ...PageLimitQueryParameter;
+  ...PageOrderQueryParameter;
+  ...PageAfterQueryParameter;
+  ...PageBeforeQueryParameter;
+
+  /**
+   * Filter by file status. One of `in_progress`, `completed`, `failed`, `cancelled`.
+   */
+  @query filter?: ListVectorStoreFilesFilter;
+};

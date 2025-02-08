@@ -16,7 +16,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return new AzureAsyncCollectionResult<VectorStore, VectorStoreCollectionPageToken>(
             Pipeline,
             options,
-            continuation => CreateGetVectorStoresRequest(limit, order, continuation?.After ?? after, before, options),
+            continuation => CreateListVectorStoresRequest(limit, order, continuation?.After ?? after, before, options),
             page => VectorStoreCollectionPageToken.FromResponse(page, limit, order, before),
             page => ModelReaderWriter.Read<InternalListVectorStoresResponse>(page.GetRawResponse().Content).Data,
             options?.CancellationToken ?? default);
@@ -27,7 +27,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return new AzureCollectionResult<VectorStore, VectorStoreCollectionPageToken>(
             Pipeline,
             options,
-            continuation => CreateGetVectorStoresRequest(limit, order, continuation?.After ?? after, before, options),
+            continuation => CreateListVectorStoresRequest(limit, order, continuation?.After ?? after, before, options),
             page => VectorStoreCollectionPageToken.FromResponse(page, limit, order, before),
             page => ModelReaderWriter.Read<InternalListVectorStoresResponse>(page.GetRawResponse().Content).Data);
     }
@@ -89,7 +89,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return new AzureAsyncCollectionResult<VectorStoreFileAssociation, VectorStoreFileCollectionPageToken>(
             Pipeline,
             options,
-            continuation => CreateGetVectorStoreFilesRequest(vectorStoreId, limit, order, continuation?.After ?? after, before, filter, options),
+            continuation => CreateListVectorStoreFilesRequest(vectorStoreId, limit, order, continuation?.After ?? after, before, filter, options),
             page => VectorStoreFileCollectionPageToken.FromResponse(page, vectorStoreId, limit, order, before, filter),
             page => ModelReaderWriter.Read<InternalListVectorStoreFilesResponse>(page.GetRawResponse().Content).Data,
             options?.CancellationToken ?? default);
@@ -102,7 +102,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         return new AzureCollectionResult<VectorStoreFileAssociation, VectorStoreFileCollectionPageToken>(
             Pipeline,
             options,
-            continuation => CreateGetVectorStoreFilesRequest(vectorStoreId, limit, order, continuation?.After ?? after, before, filter, options),
+            continuation => CreateListVectorStoreFilesRequest(vectorStoreId, limit, order, continuation?.After ?? after, before, filter, options),
             page => VectorStoreFileCollectionPageToken.FromResponse(page, vectorStoreId, limit, order, before, filter),
             page => ModelReaderWriter.Read<InternalListVectorStoreFilesResponse>(page.GetRawResponse().Content).Data);
     }
@@ -116,7 +116,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
         var result = ClientResult.FromResponse(response);
 
-        AzureAddFileToVectorStoreOperation operation = new(Pipeline, _endpoint, ClientResult.FromValue((VectorStoreFileAssociation)result, response), _apiVersion);
+        AddFileToVectorStoreOperation operation = new(this, _endpoint, ClientResult.FromValue((VectorStoreFileAssociation)result, response));
         return await operation.WaitUntilAsync(waitUntilCompleted, options).ConfigureAwait(false);
     }
 
@@ -129,7 +129,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         PipelineResponse response = Pipeline.ProcessMessage(message, options);
         var result = ClientResult.FromResponse(response);
 
-        AzureAddFileToVectorStoreOperation operation = new(Pipeline, _endpoint, ClientResult.FromValue((VectorStoreFileAssociation)result, response), _apiVersion);
+        AddFileToVectorStoreOperation operation = new(this, _endpoint, ClientResult.FromValue((VectorStoreFileAssociation)result, response));
         return operation.WaitUntil(waitUntilCompleted, options);
     }
 
@@ -164,7 +164,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         PipelineResponse response = await Pipeline.ProcessMessageAsync(message, options).ConfigureAwait(false);
         var result = ClientResult.FromResponse(response);
 
-        AzureCreateBatchFileJobOperation operation = new(Pipeline, _endpoint, ClientResult.FromValue((VectorStoreBatchFileJob)result, response), _apiVersion);
+        CreateBatchFileJobOperation operation = new(this, _endpoint, ClientResult.FromValue((VectorStoreBatchFileJob)result, response));
         return await operation.WaitUntilAsync(waitUntilCompleted, options).ConfigureAwait(false);
     }
 
@@ -181,11 +181,11 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
         PipelineResponse response = Pipeline.ProcessMessage(message, options);
         var result = ClientResult.FromResponse(response);
 
-        AzureCreateBatchFileJobOperation operation = new(Pipeline, _endpoint, ClientResult.FromValue((VectorStoreBatchFileJob)result, response), _apiVersion);
+        CreateBatchFileJobOperation operation = new(this, _endpoint, ClientResult.FromValue((VectorStoreBatchFileJob)result, response));
         return operation.WaitUntil(waitUntilCompleted, options);
     }
 
-    internal override PipelineMessage CreateGetVectorStoresRequest(int? limit, string order, string after, string before, RequestOptions options)
+    internal override PipelineMessage CreateListVectorStoresRequest(int? limit, string order, string after, string before, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithAssistantsHeader()
             .WithOptions(options)
@@ -220,7 +220,7 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
             .WithOptions(options)
             .Build();
 
-    internal override PipelineMessage CreateGetVectorStoreFilesRequest(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    internal override PipelineMessage CreateListVectorStoreFilesRequest(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithAssistantsHeader()
             .WithOptions(options)
@@ -282,7 +282,15 @@ internal partial class AzureVectorStoreClient : VectorStoreClient
             .WithOptions(options)
             .Build();
 
-    internal override PipelineMessage CreateGetFilesInVectorStoreBatchesRequest(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
+    internal override PipelineMessage CreateCancelVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions options)
+        => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
+            .WithMethod("POST")
+            .WithPath("vector_stores", vectorStoreId, "file_batches", batchId, "cancel")
+            .WithAccept("application/json")
+            .WithOptions(options)
+            .Build();
+
+    internal override PipelineMessage CreateListFilesInVectorStoreBatchRequest(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
         => new AzureOpenAIPipelineMessageBuilder(Pipeline, _endpoint, _apiVersion)
             .WithAssistantsHeader()
             .WithOptions(options)

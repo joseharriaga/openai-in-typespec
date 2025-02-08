@@ -136,7 +136,7 @@ public partial class AssistantExamples
         if (run.Status == RunStatus.Completed)
         {
             CollectionResult<ThreadMessage> messages
-                = client.GetMessages(run.ThreadId, new MessageCollectionOptions() { Order = MessageCollectionOrder.Ascending });
+                = client.GetMessages(run.ThreadId, new OpenAIPageOptions() { Order = OpenAIPageOrder.Ascending });
             foreach (ThreadMessage message in messages)
             {
                 Console.WriteLine($"[{message.Role.ToString().ToUpper()}]: ");
@@ -171,9 +171,9 @@ public partial class AssistantExamples
             CollectionResult<RunStep> runSteps = client.GetRunSteps(
                 run.ThreadId,
                 run.Id,
-                new RunStepCollectionOptions()
+                new OpenAIPageOptions()
                 {
-                    Order = RunStepCollectionOrder.Ascending
+                    Order = OpenAIPageOrder.Ascending
                 });
             foreach (RunStep step in runSteps)
             {

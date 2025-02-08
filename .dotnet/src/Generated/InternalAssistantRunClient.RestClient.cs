@@ -15,7 +15,8 @@ namespace OpenAI.Assistants
 
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 = PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 
-        internal PipelineMessage CreateCreateThreadAndRunRequest(BinaryContent content, RequestOptions options)
+        // CUSTOM: Make message creation method virtual.
+        internal virtual PipelineMessage CreateCreateThreadAndRunRequest(BinaryContent content, string accept, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -25,14 +26,16 @@ namespace OpenAI.Assistants
             uri.Reset(_endpoint);
             uri.AppendPath("/threads/runs", false);
             request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("Accept", accept);
+            request.Headers.Set("OpenAI-Beta", "assistants=v2");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
+        // CUSTOM: Make message creation method virtual.
+        internal virtual PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, string accept, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -48,14 +51,16 @@ namespace OpenAI.Assistants
                 uri.AppendQueryDelimited("include[]", include, ",", null, true);
             }
             request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("Accept", accept);
+            request.Headers.Set("OpenAI-Beta", "assistants=v2");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateListRunsRequest(string threadId, int? limit, string order, string after, string before, RequestOptions options)
+        // CUSTOM: Make message creation method virtual.
+        internal virtual PipelineMessage CreateListRunsRequest(string threadId, int? limit, string order, string after, string before, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -84,11 +89,13 @@ namespace OpenAI.Assistants
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("OpenAI-Beta", "assistants=v2");
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateGetRunRequest(string threadId, string runId, RequestOptions options)
+        // CUSTOM: Make message creation method virtual.
+        internal virtual PipelineMessage CreateGetRunRequest(string threadId, string runId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -102,11 +109,13 @@ namespace OpenAI.Assistants
             uri.AppendPath(runId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("OpenAI-Beta", "assistants=v2");
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateModifyRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
+        // CUSTOM: Make message creation method virtual.
+        internal virtual PipelineMessage CreateModifyRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -120,13 +129,15 @@ namespace OpenAI.Assistants
             uri.AppendPath(runId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("OpenAI-Beta", "assistants=v2");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateCancelRunRequest(string threadId, string runId, RequestOptions options)
+        // CUSTOM: Make message creation method virtual.
+        internal virtual PipelineMessage CreateCancelRunRequest(string threadId, string runId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -141,11 +152,13 @@ namespace OpenAI.Assistants
             uri.AppendPath("/cancel", false);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("OpenAI-Beta", "assistants=v2");
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateSubmitToolOutputsToRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
+        // CUSTOM: Make message creation method virtual.
+        internal virtual PipelineMessage CreateSubmitToolOutputsToRunRequest(string threadId, string runId, BinaryContent content, string accept, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -159,14 +172,16 @@ namespace OpenAI.Assistants
             uri.AppendPath(runId, true);
             uri.AppendPath("/submit_tool_outputs", false);
             request.Uri = uri.ToUri();
-            request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("Accept", accept);
+            request.Headers.Set("OpenAI-Beta", "assistants=v2");
             request.Headers.Set("Content-Type", "application/json");
             request.Content = content;
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateListRunStepsRequest(string threadId, string runId, int? limit, string order, string after, string before, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
+        // CUSTOM: Make message creation method virtual.
+        internal virtual PipelineMessage CreateListRunStepsRequest(string threadId, string runId, int? limit, string order, string after, string before, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -201,11 +216,13 @@ namespace OpenAI.Assistants
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("OpenAI-Beta", "assistants=v2");
             message.Apply(options);
             return message;
         }
 
-        internal PipelineMessage CreateGetRunStepRequest(string threadId, string runId, string stepId, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
+        // CUSTOM: Make message creation method virtual.
+        internal virtual PipelineMessage CreateGetRunStepRequest(string threadId, string runId, string stepId, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
             message.ResponseClassifier = PipelineMessageClassifier200;
@@ -225,6 +242,7 @@ namespace OpenAI.Assistants
             }
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("OpenAI-Beta", "assistants=v2");
             message.Apply(options);
             return message;
         }

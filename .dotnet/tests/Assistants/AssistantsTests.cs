@@ -286,10 +286,10 @@ public class AssistantsTests : SyncAsyncTestBase
             ? await client.CreateThreadAsync(options)
             : client.CreateThread(options);
         Validate(thread);
-        MessageCollectionOptions collectionOptions = new MessageCollectionOptions() { Order = MessageCollectionOrder.Ascending };
+        OpenAIPageOptions pageOptions = new() { Order = OpenAIPageOrder.Ascending };
         List<ThreadMessage> messages = IsAsync
-            ? await client.GetMessagesAsync(thread.Id, collectionOptions).ToListAsync()
-            : client.GetMessages(thread.Id, collectionOptions).ToList();
+            ? await client.GetMessagesAsync(thread.Id, pageOptions).ToListAsync()
+            : client.GetMessages(thread.Id, pageOptions).ToList();
         Assert.That(messages.Count, Is.EqualTo(2));
         Assert.That(messages[0].Role, Is.EqualTo(MessageRole.User));
         Assert.That(messages[0].Content?.Count, Is.EqualTo(1));
@@ -553,7 +553,7 @@ public class AssistantsTests : SyncAsyncTestBase
         }
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        List<ThreadMessage> messages = client.GetMessages(run.ThreadId, new MessageCollectionOptions() { Order = MessageCollectionOrder.Descending }).ToList();
+        List<ThreadMessage> messages = client.GetMessages(run.ThreadId, new OpenAIPageOptions() { Order = OpenAIPageOrder.Descending }).ToList();
         Assert.That(messages.Count, Is.GreaterThan(1));
         Assert.That(messages[0].Role, Is.EqualTo(MessageRole.Assistant));
         Assert.That(messages[0].Content?[0], Is.Not.Null);
@@ -910,7 +910,7 @@ public class AssistantsTests : SyncAsyncTestBase
         } while (run?.Status.IsTerminal == false);
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        CollectionResult<ThreadMessage> messages = client.GetMessages(thread.Id, new() { Order = MessageCollectionOrder.Descending });
+        CollectionResult<ThreadMessage> messages = client.GetMessages(thread.Id, new() { Order = OpenAIPageOrder.Descending });
         int messageCount = 0;
         bool hasCake = false;
         foreach (ThreadMessage message in messages)
@@ -1198,7 +1198,7 @@ public class AssistantsTests : SyncAsyncTestBase
 
         // Page through collection
         int count = 0;
-        AsyncCollectionResult<Assistant> assistants = client.GetAssistantsAsync(new AssistantCollectionOptions() { Order = AssistantCollectionOrder.Descending });
+        AsyncCollectionResult<Assistant> assistants = client.GetAssistantsAsync(new OpenAIPageOptions() { Order = OpenAIPageOrder.Descending });
 
         int lastIdSeen = int.MaxValue;
 
@@ -1243,7 +1243,7 @@ public class AssistantsTests : SyncAsyncTestBase
 
         // Page through collection
         int count = 0;
-        CollectionResult<Assistant> assistants = client.GetAssistants(new AssistantCollectionOptions() { Order = AssistantCollectionOrder.Descending });
+        CollectionResult<Assistant> assistants = client.GetAssistants(new OpenAIPageOptions() { Order = OpenAIPageOrder.Descending });
 
         int lastIdSeen = int.MaxValue;
 
@@ -1291,9 +1291,9 @@ public class AssistantsTests : SyncAsyncTestBase
         int count = 0;
         int pageCount = 0;
         AsyncCollectionResult<Assistant> assistants = client.GetAssistantsAsync(
-            new AssistantCollectionOptions()
+            new OpenAIPageOptions()
             {
-                Order = AssistantCollectionOrder.Descending,
+                Order = OpenAIPageOrder.Descending,
                 PageSizeLimit = TestPageSizeLimit
             });
 
@@ -1349,9 +1349,9 @@ public class AssistantsTests : SyncAsyncTestBase
         int count = 0;
         int pageCount = 0;
         CollectionResult<Assistant> assistants = client.GetAssistants(
-            new AssistantCollectionOptions()
+            new OpenAIPageOptions()
             {
-                Order = AssistantCollectionOrder.Descending,
+                Order = OpenAIPageOrder.Descending,
                 PageSizeLimit = TestPageSizeLimit
             });
 
@@ -1414,9 +1414,9 @@ public class AssistantsTests : SyncAsyncTestBase
         }
 
         AsyncCollectionResult<Assistant> assistants = client.GetAssistantsAsync(
-            new AssistantCollectionOptions()
+            new OpenAIPageOptions()
             {
-                Order = AssistantCollectionOrder.Descending,
+                Order = OpenAIPageOrder.Descending,
                 PageSizeLimit = TestPageSizeLimit
             });
 
@@ -1482,9 +1482,9 @@ public class AssistantsTests : SyncAsyncTestBase
         }
 
         CollectionResult<Assistant> assistants = client.GetAssistants(
-            new AssistantCollectionOptions()
+            new OpenAIPageOptions()
             {
-                Order = AssistantCollectionOrder.Descending,
+                Order = OpenAIPageOrder.Descending,
                 PageSizeLimit = TestPageSizeLimit
             });
 
@@ -1554,9 +1554,9 @@ public class AssistantsTests : SyncAsyncTestBase
         }
 
         AsyncCollectionResult<Assistant> assistants = client.GetAssistantsAsync(
-            new AssistantCollectionOptions()
+            new OpenAIPageOptions()
             {
-                Order = AssistantCollectionOrder.Descending,
+                Order = OpenAIPageOrder.Descending,
                 PageSizeLimit = TestPageSizeLimit
             });
 
@@ -1633,9 +1633,9 @@ public class AssistantsTests : SyncAsyncTestBase
         }
 
         CollectionResult<Assistant> assistants = client.GetAssistants(
-            new AssistantCollectionOptions()
+            new OpenAIPageOptions()
             {
-                Order = AssistantCollectionOrder.Descending,
+                Order = OpenAIPageOrder.Descending,
                 PageSizeLimit = TestPageSizeLimit
             });
 

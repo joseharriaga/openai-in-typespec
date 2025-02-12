@@ -251,9 +251,22 @@ public partial class ChatClient
     {
         options.Messages = messages.ToList();
         options.Model = _model;
-        options.Stream = stream
-            ? true
-            : null;
-        options.StreamOptions = stream ? options.StreamOptions : null;
+        if (stream)
+        {
+            options.Stream = true;
+            options.StreamOptions = IncludeUsageStreamOptions;
+        }
+        else
+        {
+            options.Stream = null;
+            options.StreamOptions = null;
+        }
     }
+
+    private static InternalChatCompletionStreamOptions s_includeUsageStreamOptions;
+    private static InternalChatCompletionStreamOptions IncludeUsageStreamOptions
+        => s_includeUsageStreamOptions ??= new InternalChatCompletionStreamOptions()
+        {
+            IncludeUsage = true,
+        };
 }

@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI.Chat;
 using Azure.AI.OpenAI.Tests.Utils.Config;
@@ -742,6 +743,102 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
         ChatCompletion completion = await client.CompleteChatAsync([ChatMessage.CreateUserMessage("Hello, world!")]);
         Assert.That(completion, Is.Not.Null);
+    }
+
+    [Test]
+    [Category("Smoke")]
+    public async Task StreamOptionsResetAppropriately()
+    {
+        using MockHttpMessageHandler pipeline = new(MockHttpMessageHandler.ReturnEmptyJson);
+
+        Uri endpoint = new Uri("https://www.bing.com/");
+        string apiKey = "not-a-real-one";
+        string model = "ignore";
+
+        AzureOpenAIClient topLevel = new(
+            endpoint,
+            new ApiKeyCredential(apiKey),
+            new AzureOpenAIClientOptions()
+            {
+                Transport = pipeline.Transport
+            });
+
+        ChatClient client = topLevel.GetChatClient(model);
+
+        AutoResetEvent newRequestEvent = new(false);
+        string? latestSerializedRequest = null;
+        pipeline.OnRequest += (sender, request) =>
+        {
+            latestSerializedRequest = request.Content.ToString();
+            newRequestEvent.Set();
+        };
+        ChatCompletionOptions options = new();
+
+        string serializedOriginalOptions = ModelReaderWriter.Write(options).ToString();
+        void AssertSerializedOptionsUnchanged() => Assert.That(ModelReaderWriter.Write(options).ToString(), Is.EqualTo(serializedOriginalOptions));
+
+        // When not streaming, stream_options should not be present in the request
+
+        _ = await client.CompleteChatAsync(["Hello, mock"], options);
+        newRequestEvent.WaitOne();
+        Assert.That(latestSerializedRequest, Does.Not.Contain("stream_options"));
+        AssertSerializedOptionsUnchanged();
+
+        // When streaming, stream_options should now be present
+
+        await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(["Hello, mock"], options))
+        { }
+        newRequestEvent.WaitOne();
+        Assert.That(latestSerializedRequest, Does.Contain("stream_options"));
+        AssertSerializedOptionsUnchanged();
+
+        // Going back to non-streaming, stream_options should again not be present
+
+        _ = await client.CompleteChatAsync(["Hello, mock"], options);
+        newRequestEvent.WaitOne();
+        Assert.That(latestSerializedRequest, Does.Not.Contain("stream_options"));
+        AssertSerializedOptionsUnchanged();
+
+        // When data_sources are provided, stream_options should specially be omitted even when streaming
+
+        AzureSearchChatDataSource source = new()
+        {
+            Endpoint = new Uri("https://some-search-resource.azure.com"),
+            Authentication = DataSourceAuthentication.FromApiKey("test-api-key"),
+            IndexName = "index-name-here",
+            FieldMappings = new()
+            {
+                ContentFieldNames = { "hello" },
+                TitleFieldName = "hi",
+            },
+            AllowPartialResults = true,
+            QueryType = DataSourceQueryType.Simple,
+            OutputContexts = DataSourceOutputContexts.AllRetrievedDocuments | DataSourceOutputContexts.Citations,
+            VectorizationSource = DataSourceVectorizer.FromEndpoint(
+                new Uri("https://my-embedding.com"),
+                DataSourceAuthentication.FromApiKey("embedding-api-key")),
+            };
+        options.AddDataSource(source);
+        serializedOriginalOptions = ModelReaderWriter.Write(options).ToString();
+
+        await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(["Hello, mock"], options))
+        { }
+        newRequestEvent.WaitOne();
+        Assert.That(latestSerializedRequest, Does.Not.Contain("stream_options"));
+        AssertSerializedOptionsUnchanged();
+
+        // And the non-presence should of course also be true for non-streaming
+
+        _ = await client.CompleteChatAsync(["Hello, mock"], options);
+        newRequestEvent.WaitOne();
+        Assert.That(latestSerializedRequest, Does.Not.Contain("stream_options"));
+        AssertSerializedOptionsUnchanged();
+
+        // Finally, with no/default options, streaming should have stream_options
+        await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(["Hello, mock"]))
+        { }
+        newRequestEvent.WaitOne();
+        Assert.That(latestSerializedRequest, Does.Contain("stream_options"));
     }
 
 #if NET

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace OpenAI.Chat;
 
@@ -227,6 +228,10 @@ public partial class ChatCompletionOptions : ICloneable
     {
         ChatCompletionOptions clonedOptions = (ChatCompletionOptions)MemberwiseClone();
         // As needed, any deeper copying can be performed here
+        if (SerializedAdditionalRawData?.Count > 0)
+        {
+            clonedOptions.SerializedAdditionalRawData = SerializedAdditionalRawData.ToDictionary(pair => pair.Key, pair => pair.Value);
+        }
         return clonedOptions;
     }
 }

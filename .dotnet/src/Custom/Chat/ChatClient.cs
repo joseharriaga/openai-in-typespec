@@ -103,8 +103,7 @@ public partial class ChatClient
     {
         Argument.AssertNotNullOrEmpty(messages, nameof(messages));
 
-        options ??= new();
-        CreateChatCompletionOptions(messages, ref options);
+        options = CreatePerCallOptions(options, messages);
         using OpenTelemetryScope scope = _telemetry.StartChatScope(options);
 
         try
@@ -133,8 +132,7 @@ public partial class ChatClient
     {
         Argument.AssertNotNullOrEmpty(messages, nameof(messages));
 
-        options ??= new();
-        CreateChatCompletionOptions(messages, ref options);
+        options = CreatePerCallOptions(options, messages, stream: true);
         using OpenTelemetryScope scope = _telemetry.StartChatScope(options);
 
         try
@@ -184,8 +182,8 @@ public partial class ChatClient
     {
         Argument.AssertNotNull(messages, nameof(messages));
 
-        options ??= new();
-        CreateChatCompletionOptions(messages, ref options, stream: true);
+        options = CreatePerCallOptions(options, messages, stream: true);
+        using OpenTelemetryScope scope = _telemetry.StartChatScope(options);
 
         using BinaryContent content = options;
 
@@ -211,8 +209,8 @@ public partial class ChatClient
     {
         Argument.AssertNotNull(messages, nameof(messages));
 
-        options ??= new();
-        CreateChatCompletionOptions(messages, ref options, stream: true);
+        options = CreatePerCallOptions(options, messages);
+        using OpenTelemetryScope scope = _telemetry.StartChatScope(options);
 
         using BinaryContent content = options;
         ClientResult sendRequest() => CompleteChat(content, cancellationToken.ToRequestOptions(streaming: true));
@@ -247,20 +245,17 @@ public partial class ChatClient
     public virtual CollectionResult<StreamingChatCompletionUpdate> CompleteChatStreaming(params ChatMessage[] messages)
         => CompleteChatStreaming(messages, default(ChatCompletionOptions));
 
-    private void CreateChatCompletionOptions(IEnumerable<ChatMessage> messages, ref ChatCompletionOptions options, bool stream = false)
+    private ChatCompletionOptions CreatePerCallOptions(ChatCompletionOptions userOptions, IEnumerable<ChatMessage> messages, bool stream = false)
     {
-        options.Messages = messages.ToList();
-        options.Model = _model;
+        ChatCompletionOptions copiedOptions = (ChatCompletionOptions)(userOptions as ICloneable).Clone();
+        copiedOptions.Messages = messages.ToList();
+        copiedOptions.Model = _model;
         if (stream)
         {
-            options.Stream = true;
-            options.StreamOptions = IncludeUsageStreamOptions;
+            copiedOptions.Stream = true;
+            copiedOptions.StreamOptions = IncludeUsageStreamOptions;
         }
-        else
-        {
-            options.Stream = null;
-            options.StreamOptions = null;
-        }
+        return copiedOptions;
     }
 
     private static InternalChatCompletionStreamOptions s_includeUsageStreamOptions;

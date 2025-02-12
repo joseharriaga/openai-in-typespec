@@ -1197,7 +1197,7 @@ namespace OpenAI.Chat {
         public static explicit operator ChatCompletion(ClientResult result);
         public static implicit operator BinaryContent(ChatCompletion chatCompletion);
     }
-    public class ChatCompletionOptions : IJsonModel<ChatCompletionOptions>, IPersistableModel<ChatCompletionOptions> {
+    public class ChatCompletionOptions : ICloneable, IJsonModel<ChatCompletionOptions>, IPersistableModel<ChatCompletionOptions> {
         public bool? AllowParallelToolCalls { get; set; }
         public ChatAudioOptions AudioOptions { get; set; }
         public string EndUserId { get; set; }
@@ -1225,6 +1225,7 @@ namespace OpenAI.Chat {
         public float? TopP { get; set; }
         public static explicit operator ChatCompletionOptions(ClientResult result);
         public static implicit operator BinaryContent(ChatCompletionOptions chatCompletionOptions);
+        object ICloneable.Clone();
     }
     public enum ChatFinishReason {
         Stop = 0,

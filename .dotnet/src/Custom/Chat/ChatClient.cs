@@ -245,7 +245,7 @@ public partial class ChatClient
     public virtual CollectionResult<StreamingChatCompletionUpdate> CompleteChatStreaming(params ChatMessage[] messages)
         => CompleteChatStreaming(messages, default(ChatCompletionOptions));
 
-    private ChatCompletionOptions CreatePerCallOptions(ChatCompletionOptions userOptions, IEnumerable<ChatMessage> messages, bool stream = false)
+    internal virtual ChatCompletionOptions CreatePerCallOptions(ChatCompletionOptions userOptions, IEnumerable<ChatMessage> messages, bool stream = false)
     {
         ChatCompletionOptions copiedOptions = userOptions is null
             ? new()

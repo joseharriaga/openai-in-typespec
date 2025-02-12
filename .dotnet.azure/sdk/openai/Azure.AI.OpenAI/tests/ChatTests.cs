@@ -33,35 +33,22 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
     [Category("Smoke")]
     public async Task DefaultUserAgentStringWorks()
     {
-        using MockHttpMessageHandler pipeline = new(MockHttpMessageHandler.ReturnEmptyJson);
-
-        Uri endpoint = new Uri("https://www.bing.com/");
-        string apiKey = "not-a-real-one";
-        string model = "ignore";
-
-        AzureOpenAIClient topLevel = new(
-            endpoint,
-            new ApiKeyCredential(apiKey),
-            new AzureOpenAIClientOptions()
-            {
-                Transport = pipeline.Transport
-            });
-
-        ChatClient client = WrapClient(topLevel.GetChatClient(model));
+        using MockHttpMessageHandler messageHandler = new(MockHttpMessageHandler.ReturnEmptyJson);
+        ChatClient client = GetMockChatClient(messageHandler);
 
         await client.CompleteChatAsync([new UserChatMessage("Hello")]);
 
-        Assert.That(pipeline.Requests, Is.Not.Empty);
+        Assert.That(messageHandler.Requests, Is.Not.Empty);
 
-        var request = pipeline.Requests[0];
+        var request = messageHandler.Requests[0];
         Assert.That(request.Method, Is.EqualTo(HttpMethod.Post));
-        Assert.That(request.Uri?.GetLeftPart(UriPartial.Authority), Is.EqualTo(endpoint.GetLeftPart(UriPartial.Authority)));
-        Assert.That(request.Headers.GetValueOrDefault("api-key")?.FirstOrDefault(), Is.EqualTo(apiKey));
+        Assert.That(request.Uri?.GetLeftPart(UriPartial.Authority), Is.EqualTo(s_mockEndpoint.GetLeftPart(UriPartial.Authority)));
+        Assert.That(request.Headers.GetValueOrDefault("api-key")?.FirstOrDefault(), Is.EqualTo(s_mockApiKeyValue));
         Assert.That(request.Headers.GetValueOrDefault("User-Agent")?.FirstOrDefault(), Does.Contain("azsdk-net-AI.OpenAI/"));
         Assert.That(request.Content, Is.Not.Null);
         var jsonString = request.Content.ToString();
         Assert.That(jsonString, Is.Not.Null.Or.Empty);
-        Assert.That(jsonString, Does.Contain("\"messages\"").And.Contain("\"model\"").And.Contain(model));
+        Assert.That(jsonString, Does.Contain("\"messages\"").And.Contain("\"model\"").And.Contain(s_mockModelValue));
     }
 
     [Test]
@@ -147,33 +134,31 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
     [Category("Smoke")]
     public async Task MaxTokensSerializationConfigurationWorks()
     {
-        using MockHttpMessageHandler pipeline = new(MockHttpMessageHandler.ReturnEmptyJson);
+        using MockHttpMessageHandler messageHandler = new(MockHttpMessageHandler.ReturnEmptyJson);
+        ChatClient client = GetMockChatClient(messageHandler);
 
-        Uri endpoint = new Uri("https://www.bing.com/");
-        string apiKey = "not-a-real-one";
-        string model = "ignore";
-
-        AzureOpenAIClient topLevel = new(
-            endpoint,
-            new ApiKeyCredential(apiKey),
-            new AzureOpenAIClientOptions()
-            {
-                Transport = pipeline.Transport
-            });
-
-        ChatClient client = topLevel.GetChatClient(model);
+        AutoResetEvent newRequestEvent = new(false);
+        string? latestSerializedRequest = null;
+        messageHandler.OnRequest += (sender, request) =>
+        {
+            latestSerializedRequest = request.Content.ToString();
+            newRequestEvent.Set();
+        };
 
         ChatCompletionOptions options = new();
-        bool GetSerializedOptionsContains(string value)
-        {
-            BinaryData serialized = ModelReaderWriter.Write(options);
-            return serialized.ToString().Contains(value);
-        }
-        async Task AssertExpectedSerializationAsync(bool hasOldMaxTokens, bool hasNewMaxCompletionTokens)
+
+        async Task<string> GetNextSerializedRequest()
         {
             _ = await client.CompleteChatAsync(["Just mocking, no call here"], options);
-            Assert.That(GetSerializedOptionsContains("max_tokens"), Is.EqualTo(hasOldMaxTokens));
-            Assert.That(GetSerializedOptionsContains("max_completion_tokens"), Is.EqualTo(hasNewMaxCompletionTokens));
+            newRequestEvent.WaitOne();
+            return latestSerializedRequest ?? string.Empty;
+        }
+
+        async Task AssertExpectedSerializationAsync(bool hasOldMaxTokens, bool hasNewMaxCompletionTokens)
+        {
+            string serializedRequest = await GetNextSerializedRequest();
+            Assert.That(serializedRequest.Contains("max_tokens"), Is.EqualTo(hasOldMaxTokens));
+            Assert.That(serializedRequest.Contains("max_completion_tokens"), Is.EqualTo(hasNewMaxCompletionTokens));
         }
 
         await AssertExpectedSerializationAsync(false, false);
@@ -325,7 +310,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(observed429Delay!.Value.TotalMilliseconds, Is.LessThan(3 * expectedDelayMilliseconds + 2 * observed200Delay!.Value.TotalMilliseconds));
     }
 
-#endregion
+    #endregion
 
     #region Regular chat completions tests
 
@@ -749,25 +734,12 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
     [Category("Smoke")]
     public async Task StreamOptionsResetAppropriately()
     {
-        using MockHttpMessageHandler pipeline = new(MockHttpMessageHandler.ReturnEmptyJson);
-
-        Uri endpoint = new Uri("https://www.bing.com/");
-        string apiKey = "not-a-real-one";
-        string model = "ignore";
-
-        AzureOpenAIClient topLevel = new(
-            endpoint,
-            new ApiKeyCredential(apiKey),
-            new AzureOpenAIClientOptions()
-            {
-                Transport = pipeline.Transport
-            });
-
-        ChatClient client = topLevel.GetChatClient(model);
+        using MockHttpMessageHandler messageHandler = new(MockHttpMessageHandler.ReturnEmptyJson);
+        ChatClient client = GetMockChatClient(messageHandler);
 
         AutoResetEvent newRequestEvent = new(false);
         string? latestSerializedRequest = null;
-        pipeline.OnRequest += (sender, request) =>
+        messageHandler.OnRequest += (sender, request) =>
         {
             latestSerializedRequest = request.Content.ToString();
             newRequestEvent.Set();
@@ -817,7 +789,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
             VectorizationSource = DataSourceVectorizer.FromEndpoint(
                 new Uri("https://my-embedding.com"),
                 DataSourceAuthentication.FromApiKey("embedding-api-key")),
-            };
+        };
         options.AddDataSource(source);
         serializedOriginalOptions = ModelReaderWriter.Write(options).ToString();
 
@@ -964,4 +936,21 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
         #endregion
     }
+
+    private ChatClient GetMockChatClient(MockHttpMessageHandler mockHttpMessageHandler)
+    {
+        AzureOpenAIClient topLevel = new(
+            s_mockEndpoint,
+            new ApiKeyCredential(s_mockApiKeyValue),
+            new AzureOpenAIClientOptions()
+            {
+                Transport = mockHttpMessageHandler.Transport
+            });
+
+        return WrapClient(topLevel.GetChatClient(s_mockModelValue));
+    }
+
+    private static readonly Uri s_mockEndpoint = new("https://www.bing.com");
+    private static readonly string s_mockApiKeyValue = "not-a-real-key";
+    private static readonly string s_mockModelValue = "not-a-real-model";
 }

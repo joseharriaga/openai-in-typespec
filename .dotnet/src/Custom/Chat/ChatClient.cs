@@ -132,7 +132,7 @@ public partial class ChatClient
     {
         Argument.AssertNotNullOrEmpty(messages, nameof(messages));
 
-        options = CreatePerCallOptions(options, messages, stream: true);
+        options = CreatePerCallOptions(options, messages);
         using OpenTelemetryScope scope = _telemetry.StartChatScope(options);
 
         try
@@ -209,7 +209,7 @@ public partial class ChatClient
     {
         Argument.AssertNotNull(messages, nameof(messages));
 
-        options = CreatePerCallOptions(options, messages);
+        options = CreatePerCallOptions(options, messages, stream: true);
         using OpenTelemetryScope scope = _telemetry.StartChatScope(options);
 
         using BinaryContent content = options;
@@ -247,7 +247,9 @@ public partial class ChatClient
 
     private ChatCompletionOptions CreatePerCallOptions(ChatCompletionOptions userOptions, IEnumerable<ChatMessage> messages, bool stream = false)
     {
-        ChatCompletionOptions copiedOptions = (ChatCompletionOptions)(userOptions as ICloneable).Clone();
+        ChatCompletionOptions copiedOptions = userOptions is null
+            ? new()
+            : (ChatCompletionOptions)(userOptions as ICloneable).Clone();
         copiedOptions.Messages = messages.ToList();
         copiedOptions.Model = _model;
         if (stream)

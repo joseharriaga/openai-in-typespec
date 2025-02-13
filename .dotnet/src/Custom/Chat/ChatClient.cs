@@ -255,15 +255,11 @@ public partial class ChatClient
         if (stream)
         {
             copiedOptions.Stream = true;
-            copiedOptions.StreamOptions = IncludeUsageStreamOptions;
+            copiedOptions.StreamOptions = s_includeUsageStreamOptions;
         }
         return copiedOptions;
     }
 
-    private static InternalChatCompletionStreamOptions s_includeUsageStreamOptions;
-    private static InternalChatCompletionStreamOptions IncludeUsageStreamOptions
-        => s_includeUsageStreamOptions ??= new InternalChatCompletionStreamOptions()
-        {
-            IncludeUsage = true,
-        };
+    private static readonly InternalChatCompletionStreamOptions s_includeUsageStreamOptions
+        = new(includeUsage: true, additionalBinaryDataProperties: null);
 }

@@ -254,6 +254,6 @@ public partial class ChatClient
         options.Stream = stream
             ? true
             : null;
-        options.StreamOptions = stream ? options.StreamOptions : null;
+        options.StreamOptions = stream ? new(true, null) : null;
     }
 }

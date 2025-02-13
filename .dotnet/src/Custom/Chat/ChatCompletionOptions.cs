@@ -1,6 +1,8 @@
 using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 
 namespace OpenAI.Chat;
 
@@ -8,7 +10,7 @@ namespace OpenAI.Chat;
 /// Request-level options for chat completion.
 /// </summary>
 [CodeGenModel("CreateChatCompletionRequest")]
-[CodeGenSuppress("ChatCompletionOptions", typeof(IEnumerable<ChatMessage>), typeof(InternalCreateChatCompletionRequestModel))]
+[CodeGenSuppress("ChatCompletionOptions", typeof(IEnumerable<ChatMessage>), typeof(InternalCreateChatCompletionRequestModel?))]
 [CodeGenSerialization(nameof(Messages), SerializationValueHook = nameof(SerializeMessagesValue))]
 [CodeGenSerialization(nameof(StopSequences), SerializationValueHook = nameof(SerializeStopSequencesValue), DeserializationValueHook = nameof(DeserializeStopSequencesValue))]
 [CodeGenSerialization(nameof(LogitBiases), SerializationValueHook = nameof(SerializeLogitBiasesValue), DeserializationValueHook = nameof(DeserializeLogitBiasesValue))]
@@ -32,7 +34,7 @@ public partial class ChatCompletionOptions
     /// ID of the model to use. See the <see href="https://platform.openai.com/docs/models/model-endpoint-compatibility">model endpoint compatibility</see> table for details on which models work with the Chat API.
     /// </summary>
     [CodeGenMember("Model")]
-    internal InternalCreateChatCompletionRequestModel Model { get; set; }
+    internal InternalCreateChatCompletionRequestModel? Model { get; set; }
 
     // CUSTOM: Made internal. We only ever request a single choice.
     /// <summary> How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs. </summary>
@@ -47,7 +49,6 @@ public partial class ChatCompletionOptions
     /// <summary> Gets or sets the stream options. </summary>
     [CodeGenMember("StreamOptions")]
     internal InternalChatCompletionStreamOptions StreamOptions { get; set; }
-        = new() { IncludeUsage = true };
 
     // CUSTOM: Made public now that there are no required properties.
     /// <summary> Initializes a new instance of <see cref="ChatCompletionOptions"/> for deserialization. </summary>
@@ -188,7 +189,7 @@ public partial class ChatCompletionOptions
 
     // CUSTOM: Made internal for automatic enablement via audio options.
     [CodeGenMember("Modalities")]
-    private IList<InternalCreateChatCompletionRequestModality> _internalModalities = new ChangeTrackingList<InternalCreateChatCompletionRequestModality>();
+    private IList<InternalCreateChatCompletionRequestModality> InternalModalities { get; set; }
 
     /// <summary>
     /// Specifies the content types that the model should generate in its responses.
@@ -200,25 +201,13 @@ public partial class ChatCompletionOptions
     /// </remarks>
     public ChatResponseModalities ResponseModalities
     {
-        get => ChatResponseModalitiesExtensions.FromInternalModalities(_internalModalities);
-        set => _internalModalities = value.ToInternalModalities();
+        get => ChatResponseModalitiesExtensions.FromInternalModalities(InternalModalities);
+        set => InternalModalities = value.ToInternalModalities();
     }
 
-    // CUSTOM: supplemented with custom setter to internally enable audio output via modalities.
+    // CUSTOM: Renamed.
     [CodeGenMember("Audio")]
-    private ChatAudioOptions _audioOptions;
-
-    public ChatAudioOptions AudioOptions
-    {
-        get => _audioOptions;
-        set
-        {
-            _audioOptions = value;
-            _internalModalities = value is null
-                ? new ChangeTrackingList<InternalCreateChatCompletionRequestModality>()
-                : [InternalCreateChatCompletionRequestModality.Text, InternalCreateChatCompletionRequestModality.Audio];
-        }
-    }
+    public ChatAudioOptions AudioOptions { get; set; }
 
     // CUSTOM: rename.
     [CodeGenMember("Prediction")]

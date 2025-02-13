@@ -13,7 +13,7 @@ public partial class ChatCompletionOptions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void SerializeMessagesValue(Utf8JsonWriter writer, ModelReaderWriterOptions options)
     {
-        if (Messages is not null)
+        if (Optional.IsCollectionDefined(Messages))
         {
             writer.WriteStartArray();
             foreach (var item in Messages)

@@ -1,6 +1,12 @@
 # Release History
 
-## 2.2.0-beta.1 (Unreleased)
+## 2.2.0-beta.2 (Unreleased)
+
+### Bugs fixed
+
+- Addressed issues with standalone serialization and deserialization of `ChatCompletionOptions` that impacted the ability to manipulate chat completion requests via `System.ClientModel.Primitives.ModelReaderWriter` and related utilities
+
+## 2.2.0-beta.1 (2025-02-07)
 
 ### Features added
 

@@ -206,3 +206,15 @@ Update-In-File-With-Retry `
     ) `
     -OutputIndentation 12 `
     -RequirePresence
+
+Update-In-File-With-Retry `
+    -FilePath "$directory\ChatCompletionOptions.Serialization.cs" `
+    -SearchPatternLines @(
+        "if \(Optional\.IsCollectionDefined\(InternalModalities\) && _additionalBinaryDataProperties\?\.ContainsKey\(`"modalities`"\) != true\)"
+    ) `
+    -ReplacePatternLines @(
+        "// CUSTOM: Check inner collection is defined."
+        "if (Optional.IsCollectionDefined(InternalModalities) && InternalModalities is not null && _additionalBinaryDataProperties?.ContainsKey(`"modalities`") != true)"
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence

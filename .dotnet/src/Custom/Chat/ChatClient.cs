@@ -254,7 +254,7 @@ public partial class ChatClient
         if (stream)
         {
             options.Stream = true;
-            options.StreamOptions = IncludeUsageStreamOptions;
+            options.StreamOptions = s_includeUsageStreamOptions;
         }
         else
         {
@@ -263,10 +263,6 @@ public partial class ChatClient
         }
     }
 
-    private static InternalChatCompletionStreamOptions s_includeUsageStreamOptions;
-    private static InternalChatCompletionStreamOptions IncludeUsageStreamOptions
-        => s_includeUsageStreamOptions ??= new InternalChatCompletionStreamOptions()
-        {
-            IncludeUsage = true,
-        };
+    private static readonly InternalChatCompletionStreamOptions s_includeUsageStreamOptions
+        = new(includeUsage: true, additionalBinaryDataProperties: null);
 }

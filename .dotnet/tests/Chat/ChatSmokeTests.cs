@@ -831,6 +831,7 @@ public class ChatSmokeTests : SyncAsyncTestBase
         }
     }
 
+#pragma warning disable CS0618
     [Test]
     public void AssistantAndFunctionMessagesHandleNoContentCorrectly()
     {
@@ -849,6 +850,7 @@ public class ChatSmokeTests : SyncAsyncTestBase
         string serializedFunctionChatMessage = ModelReaderWriter.Write(functionChatMessage).ToString();
         Assert.That(serializedFunctionChatMessage, Does.Contain(@"""content"":null"));
     }
+#pragma warning restore CS0618
 
 #pragma warning disable CS0618
     [Test]

@@ -10,3 +10,4 @@ options:
     emitter-output-dir: "{project-root}/../.dotnet.azure/sdk/openai/Azure.AI.OpenAI"
     unreferenced-types-handling: keepAll
     new-project: false
+    save-inputs: true

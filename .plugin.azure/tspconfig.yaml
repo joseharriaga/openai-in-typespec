@@ -1,4 +1,0 @@
-"emit":
-  - "@azure-openai/plugin"
-"options":
-  "@azure-openai/plugin":

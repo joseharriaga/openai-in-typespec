@@ -14,7 +14,7 @@ namespace AzureOpenAILibraryPlugin
         public override void Configure()
         {
             base.Configure();
-            // AddVisitor(new AzureOpenAILibraryVisitor());
+
             AddVisitor(new DocEditVisitor());
             AddVisitor(new AdditionalPropertiesVisitor());
             AddVisitor(new ModelSerializationEmptySentinelVisitor());

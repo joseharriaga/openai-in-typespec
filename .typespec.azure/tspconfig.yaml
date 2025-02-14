@@ -8,14 +8,5 @@ options:
   "@azure-openai/plugin":
     namespace: "Azure.AI.OpenAI"
     emitter-output-dir: "{project-root}/../.dotnet.azure/sdk/openai/Azure.AI.OpenAI"
-    generate-convenience-methods: false
     unreferenced-types-handling: keepAll
-    model-namespace: false
-    generate-test-project: false
-    single-top-level-client: true
     new-project: false
-    flavor: "unbranded"
-    enable-internal-raw-data: true
-    # disable-xml-docs: true
-    save-inputs: true
-    generate-model-factory: false

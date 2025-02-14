@@ -23,7 +23,7 @@ namespace Azure.AI.OpenAI.Chat
             Dimensions = dimensions;
         }
 
-        internal string DeploymentName { get; set; }
+        public string DeploymentName { get; set; }
 
         public int? Dimensions { get; set; }
     }

@@ -12,16 +12,14 @@ using static Microsoft.Generator.CSharp.Snippets.Snippet;
 
 namespace AzureOpenAILibraryPlugin
 {
-    public class AzureOpenAILibraryVisitor : ScmLibraryVisitor
+    public class AdditionalPropertiesVisitor : ScmLibraryVisitor
     {
         private const string RawDataPropertyName = "SerializedAdditionalRawData";
         private const string AdditionalPropertiesFieldName = "_additionalBinaryDataProperties";
-        private const string SentinelValueFieldName = "_sentinelValue";
         private const string WritePropertyNameMethodCall = "WritePropertyName(\"";
-        private const string ModelSerializationExtensionsTypeName = "ModelSerializationExtensions";
         private const string IsSentinelValueMethodName = "IsSentinelValue";
         private const string JsonModelWriteCoreMethodName = "JsonModelWriteCore";
-        
+
         protected override TypeProvider Visit(TypeProvider type)
         {
             if (type is ModelProvider { BaseModelProvider: null })
@@ -37,58 +35,10 @@ namespace AzureOpenAILibraryPlugin
                             type.DeclarationModifiers.HasFlag(TypeSignatureModifiers.ReadOnly) ? null : additionalPropertiesField.Assign(Value)),
                         type)
                 };
-                
+
                 type.Update(properties: properties);
             }
-            else if (type.Name == ModelSerializationExtensionsTypeName)
-            {
-                // Add a static BinaryData field representing the sentinel value
-                var sentinelValueField = new FieldProvider(
-                    FieldModifiers.Private | FieldModifiers.Static | FieldModifiers.ReadOnly,
-                    typeof(BinaryData),
-                    SentinelValueFieldName,
-                    type,
-                    $"",
-                    BinaryDataSnippets.FromBytes(LiteralU8("\"__EMPTY__\"").Invoke("ToArray")));
-                var fields = new List<FieldProvider>(type.Fields)
-                {
-                    sentinelValueField
-                };
-
-                // Add the IsSentinelValue method
-                var valueParameter = new ParameterProvider("value", $"", typeof(BinaryData));
-                var methods = new List<MethodProvider>(type.Methods)
-                {
-                    new MethodProvider(
-                        new MethodSignature(
-                            IsSentinelValueMethodName,
-                            $"",
-                            MethodSignatureModifiers.Internal | MethodSignatureModifiers.Static,
-                            typeof(bool),
-                            $"",
-                            [valueParameter]),
-                        new[]
-                        {
-                            Declare("sentinelSpan", typeof(ReadOnlySpan<byte>), sentinelValueField.As<BinaryData>().ToMemory().Property("Span"), out var sentinelVariable),
-                            Declare("valueSpan", typeof(ReadOnlySpan<byte>), valueParameter.As<BinaryData>().ToMemory().Property("Span"), out var valueVariable),
-                            Return(sentinelVariable.Invoke("SequenceEqual", valueVariable))
-                        },
-                        type)
-                };
-                
-                type.Update(fields: fields, methods: methods);
-            }
             return type;
-        }
-
-        protected override FieldProvider Visit(FieldProvider field)
-        {
-            // Make the backing additional properties field not be read only as long as the type is not readonly.
-            if (field.Name == AdditionalPropertiesFieldName && !field.EnclosingType.DeclarationModifiers.HasFlag(TypeSignatureModifiers.ReadOnly))
-            {
-                field.Modifiers &= ~FieldModifiers.ReadOnly;
-            }
-            return field;
         }
 
         protected override MethodProvider Visit(MethodProvider method)
@@ -171,7 +121,7 @@ namespace AzureOpenAILibraryPlugin
                     updatedStatements.Add(statement);
                 }
             }
-            
+
             method.Update(bodyStatements: updatedStatements);
             return method;
         }

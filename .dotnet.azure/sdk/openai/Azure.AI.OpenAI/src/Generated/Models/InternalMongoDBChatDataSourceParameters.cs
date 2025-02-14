@@ -64,15 +64,15 @@ namespace Azure.AI.OpenAI.Chat
 
         public bool? AllowPartialResult { get; set; }
 
-        internal string Endpoint { get; set; }
+        public string Endpoint { get; set; }
 
-        internal string DatabaseName { get; set; }
+        public string DatabaseName { get; set; }
 
-        internal string CollectionName { get; set; }
+        public string CollectionName { get; set; }
 
-        internal string AppName { get; set; }
+        public string AppName { get; set; }
 
-        internal string IndexName { get; set; }
+        public string IndexName { get; set; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

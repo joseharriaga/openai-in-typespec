@@ -22,6 +22,6 @@ namespace Azure.AI.OpenAI.Chat
             ManagedIdentityResourceId = managedIdentityResourceId;
         }
 
-        internal string ManagedIdentityResourceId { get; set; }
+        public string ManagedIdentityResourceId { get; set; }
     }
 }

@@ -22,6 +22,6 @@ namespace Azure.AI.OpenAI.Chat
             EncodedApiKey = encodedApiKey;
         }
 
-        internal string EncodedApiKey { get; set; }
+        public string EncodedApiKey { get; set; }
     }
 }

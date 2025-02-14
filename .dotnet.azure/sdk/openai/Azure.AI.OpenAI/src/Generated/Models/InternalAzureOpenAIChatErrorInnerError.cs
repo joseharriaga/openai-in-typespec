@@ -7,16 +7,16 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI
 {
-    internal partial class InternalAzureOpenAIDalleErrorInnerError
+    internal partial class InternalAzureOpenAIChatErrorInnerError
     {
         /// <summary> Keeps track of any properties unknown to the library. </summary>
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalAzureOpenAIDalleErrorInnerError()
+        internal InternalAzureOpenAIChatErrorInnerError()
         {
         }
 
-        internal InternalAzureOpenAIDalleErrorInnerError(InternalAzureOpenAIDalleErrorInnerErrorCode? code, string revisedPrompt, RequestImageContentFilterResult contentFilterResults, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalAzureOpenAIChatErrorInnerError(InternalAzureOpenAIChatErrorInnerErrorCode? code, string revisedPrompt, RequestContentFilterResult contentFilterResults, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Code = code;
             RevisedPrompt = revisedPrompt;
@@ -24,11 +24,11 @@ namespace Azure.AI.OpenAI
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal InternalAzureOpenAIDalleErrorInnerErrorCode? Code { get; set; }
+        public InternalAzureOpenAIChatErrorInnerErrorCode? Code { get; set; }
 
-        internal string RevisedPrompt { get; set; }
+        public string RevisedPrompt { get; set; }
 
-        internal RequestImageContentFilterResult ContentFilterResults { get; set; }
+        public RequestContentFilterResult ContentFilterResults { get; set; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

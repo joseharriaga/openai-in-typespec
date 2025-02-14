@@ -8,37 +8,41 @@ using Azure.AI.OpenAI;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    internal partial class InternalAzureSearchChatDataSourceParameters
+    internal partial class InternalAzureCosmosDBChatDataSourceParameters
     {
         /// <summary> Keeps track of any properties unknown to the library. </summary>
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public InternalAzureSearchChatDataSourceParameters(Uri endpoint, string indexName, DataSourceAuthentication authentication)
+        public InternalAzureCosmosDBChatDataSourceParameters(string containerName, string databaseName, string indexName, DataSourceAuthentication authentication, DataSourceFieldMappings fieldMappings, DataSourceVectorizer vectorizationSource)
         {
-            Argument.AssertNotNull(endpoint, nameof(endpoint));
+            Argument.AssertNotNull(containerName, nameof(containerName));
+            Argument.AssertNotNull(databaseName, nameof(databaseName));
             Argument.AssertNotNull(indexName, nameof(indexName));
             Argument.AssertNotNull(authentication, nameof(authentication));
+            Argument.AssertNotNull(fieldMappings, nameof(fieldMappings));
+            Argument.AssertNotNull(vectorizationSource, nameof(vectorizationSource));
 
-            Endpoint = endpoint;
+            ContainerName = containerName;
+            DatabaseName = databaseName;
             IndexName = indexName;
             Authentication = authentication;
+            FieldMappings = fieldMappings;
+            VectorizationSource = vectorizationSource;
             _internalIncludeContexts = new ChangeTrackingList<string>();
         }
 
-        internal InternalAzureSearchChatDataSourceParameters(int? topNDocuments, bool? inScope, int? strictness, int? maxSearchQueries, bool? allowPartialResult, Uri endpoint, string indexName, string semanticConfiguration, string filter, DataSourceAuthentication authentication, DataSourceFieldMappings fieldMappings, DataSourceQueryType? queryType, DataSourceVectorizer vectorizationSource, IList<string> internalIncludeContexts, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalAzureCosmosDBChatDataSourceParameters(int? topNDocuments, bool? inScope, int? strictness, int? maxSearchQueries, bool? allowPartialResult, string containerName, string databaseName, string indexName, DataSourceAuthentication authentication, DataSourceFieldMappings fieldMappings, DataSourceVectorizer vectorizationSource, IList<string> internalIncludeContexts, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             TopNDocuments = topNDocuments;
             InScope = inScope;
             Strictness = strictness;
             MaxSearchQueries = maxSearchQueries;
             AllowPartialResult = allowPartialResult;
-            Endpoint = endpoint;
+            ContainerName = containerName;
+            DatabaseName = databaseName;
             IndexName = indexName;
-            SemanticConfiguration = semanticConfiguration;
-            Filter = filter;
             Authentication = authentication;
             FieldMappings = fieldMappings;
-            QueryType = queryType;
             VectorizationSource = vectorizationSource;
             _internalIncludeContexts = internalIncludeContexts;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
@@ -54,13 +58,11 @@ namespace Azure.AI.OpenAI.Chat
 
         public bool? AllowPartialResult { get; set; }
 
-        internal Uri Endpoint { get; set; }
+        public string ContainerName { get; set; }
 
-        internal string IndexName { get; set; }
+        public string DatabaseName { get; set; }
 
-        public string SemanticConfiguration { get; set; }
-
-        public string Filter { get; set; }
+        public string IndexName { get; set; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

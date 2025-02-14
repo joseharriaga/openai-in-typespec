@@ -26,7 +26,7 @@ namespace Azure.AI.OpenAI.Chat
             Authentication = authentication;
         }
 
-        internal Uri Endpoint { get; set; }
+        public Uri Endpoint { get; set; }
 
         public int? Dimensions { get; set; }
     }

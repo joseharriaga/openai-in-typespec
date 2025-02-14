@@ -7,27 +7,27 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI
 {
-    internal partial class InternalAzureContentFilterBlocklistIdResult
+    internal partial class InternalAzureContentFilterBlocklistResultDetail
     {
         /// <summary> Keeps track of any properties unknown to the library. </summary>
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalAzureContentFilterBlocklistIdResult(string id, bool filtered)
+        internal InternalAzureContentFilterBlocklistResultDetail(bool filtered, string id)
         {
-            Id = id;
             Filtered = filtered;
+            Id = id;
         }
 
-        internal InternalAzureContentFilterBlocklistIdResult(string id, bool filtered, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalAzureContentFilterBlocklistResultDetail(bool filtered, string id, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Id = id;
             Filtered = filtered;
+            Id = id;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal string Id { get; set; }
+        public bool Filtered { get; set; }
 
-        internal bool Filtered { get; set; }
+        public string Id { get; set; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

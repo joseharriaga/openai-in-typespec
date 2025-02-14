@@ -8,22 +8,20 @@ using Azure.AI.OpenAI;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    internal partial class InternalAzureCosmosDBChatDataSourceParameters
+    internal partial class InternalPineconeChatDataSourceParameters
     {
         /// <summary> Keeps track of any properties unknown to the library. </summary>
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        public InternalAzureCosmosDBChatDataSourceParameters(string containerName, string databaseName, string indexName, DataSourceAuthentication authentication, DataSourceFieldMappings fieldMappings, DataSourceVectorizer vectorizationSource)
+        public InternalPineconeChatDataSourceParameters(string environment, string indexName, DataSourceAuthentication authentication, DataSourceFieldMappings fieldMappings, DataSourceVectorizer vectorizationSource)
         {
-            Argument.AssertNotNull(containerName, nameof(containerName));
-            Argument.AssertNotNull(databaseName, nameof(databaseName));
+            Argument.AssertNotNull(environment, nameof(environment));
             Argument.AssertNotNull(indexName, nameof(indexName));
             Argument.AssertNotNull(authentication, nameof(authentication));
             Argument.AssertNotNull(fieldMappings, nameof(fieldMappings));
             Argument.AssertNotNull(vectorizationSource, nameof(vectorizationSource));
 
-            ContainerName = containerName;
-            DatabaseName = databaseName;
+            Environment = environment;
             IndexName = indexName;
             Authentication = authentication;
             FieldMappings = fieldMappings;
@@ -31,15 +29,14 @@ namespace Azure.AI.OpenAI.Chat
             _internalIncludeContexts = new ChangeTrackingList<string>();
         }
 
-        internal InternalAzureCosmosDBChatDataSourceParameters(int? topNDocuments, bool? inScope, int? strictness, int? maxSearchQueries, bool? allowPartialResult, string containerName, string databaseName, string indexName, DataSourceAuthentication authentication, DataSourceFieldMappings fieldMappings, DataSourceVectorizer vectorizationSource, IList<string> internalIncludeContexts, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalPineconeChatDataSourceParameters(int? topNDocuments, bool? inScope, int? strictness, int? maxSearchQueries, bool? allowPartialResult, string environment, string indexName, DataSourceAuthentication authentication, DataSourceFieldMappings fieldMappings, DataSourceVectorizer vectorizationSource, IList<string> internalIncludeContexts, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             TopNDocuments = topNDocuments;
             InScope = inScope;
             Strictness = strictness;
             MaxSearchQueries = maxSearchQueries;
             AllowPartialResult = allowPartialResult;
-            ContainerName = containerName;
-            DatabaseName = databaseName;
+            Environment = environment;
             IndexName = indexName;
             Authentication = authentication;
             FieldMappings = fieldMappings;
@@ -58,11 +55,9 @@ namespace Azure.AI.OpenAI.Chat
 
         public bool? AllowPartialResult { get; set; }
 
-        internal string ContainerName { get; set; }
+        public string Environment { get; set; }
 
-        internal string DatabaseName { get; set; }
-
-        internal string IndexName { get; set; }
+        public string IndexName { get; set; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

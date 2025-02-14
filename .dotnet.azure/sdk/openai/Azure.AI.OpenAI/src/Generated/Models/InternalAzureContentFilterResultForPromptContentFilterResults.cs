@@ -32,23 +32,23 @@ namespace Azure.AI.OpenAI
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        internal ContentFilterSeverityResult Sexual { get; set; }
+        public ContentFilterSeverityResult Sexual { get; set; }
 
-        internal ContentFilterSeverityResult Hate { get; set; }
+        public ContentFilterSeverityResult Hate { get; set; }
 
-        internal ContentFilterSeverityResult Violence { get; set; }
+        public ContentFilterSeverityResult Violence { get; set; }
 
-        internal ContentFilterSeverityResult SelfHarm { get; set; }
+        public ContentFilterSeverityResult SelfHarm { get; set; }
 
-        internal ContentFilterDetectionResult Profanity { get; set; }
+        public ContentFilterDetectionResult Profanity { get; set; }
 
-        internal ContentFilterBlocklistResult CustomBlocklists { get; set; }
+        public ContentFilterBlocklistResult CustomBlocklists { get; set; }
 
-        internal InternalAzureContentFilterResultForChoiceError Error { get; set; }
+        public InternalAzureContentFilterResultForChoiceError Error { get; set; }
 
-        internal ContentFilterDetectionResult Jailbreak { get; set; }
+        public ContentFilterDetectionResult Jailbreak { get; set; }
 
-        internal ContentFilterDetectionResult IndirectAttack { get; set; }
+        public ContentFilterDetectionResult IndirectAttack { get; set; }
 
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {

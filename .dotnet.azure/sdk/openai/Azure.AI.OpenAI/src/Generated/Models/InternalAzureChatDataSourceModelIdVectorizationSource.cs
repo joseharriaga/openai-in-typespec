@@ -22,6 +22,6 @@ namespace Azure.AI.OpenAI.Chat
             ModelId = modelId;
         }
 
-        internal string ModelId { get; set; }
+        public string ModelId { get; set; }
     }
 }

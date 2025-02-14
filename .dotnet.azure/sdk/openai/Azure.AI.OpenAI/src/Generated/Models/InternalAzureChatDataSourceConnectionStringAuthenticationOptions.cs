@@ -22,6 +22,6 @@ namespace Azure.AI.OpenAI.Chat
             ConnectionString = connectionString;
         }
 
-        internal string ConnectionString { get; set; }
+        public string ConnectionString { get; set; }
     }
 }

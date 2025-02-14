@@ -20,7 +20,7 @@ namespace Azure.AI.OpenAI
             _value = value;
         }
 
-        internal static InternalAzureOpenAIChatErrorInnerErrorCode ResponsibleAIPolicyViolation { get; set; } = new InternalAzureOpenAIChatErrorInnerErrorCode(ResponsibleAIPolicyViolationValue);
+        public static InternalAzureOpenAIChatErrorInnerErrorCode ResponsibleAIPolicyViolation { get; set; } = new InternalAzureOpenAIChatErrorInnerErrorCode(ResponsibleAIPolicyViolationValue);
 
         public static bool operator ==(InternalAzureOpenAIChatErrorInnerErrorCode left, InternalAzureOpenAIChatErrorInnerErrorCode right) => left.Equals(right);
 

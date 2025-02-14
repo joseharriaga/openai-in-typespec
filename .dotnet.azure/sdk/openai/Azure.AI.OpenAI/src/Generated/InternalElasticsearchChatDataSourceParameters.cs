@@ -21,7 +21,7 @@ namespace Azure.AI.OpenAI.Chat
 
             Endpoint = endpoint;
             IndexName = indexName;
-            _internalIncludeContexts = new ChangeTrackingList<string>();
+            InternalIncludeContexts = new ChangeTrackingList<string>();
             Authentication = authentication;
         }
 
@@ -34,7 +34,7 @@ namespace Azure.AI.OpenAI.Chat
             AllowPartialResult = allowPartialResult;
             Endpoint = endpoint;
             IndexName = indexName;
-            _internalIncludeContexts = internalIncludeContexts;
+            InternalIncludeContexts = internalIncludeContexts;
             Authentication = authentication;
             FieldMappings = fieldMappings;
             QueryType = queryType;

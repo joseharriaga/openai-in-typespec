@@ -66,11 +66,11 @@ namespace Azure.AI.OpenAI.Chat
                 writer.WritePropertyName("index_name"u8);
                 writer.WriteStringValue(IndexName);
             }
-            if (Optional.IsCollectionDefined(_internalIncludeContexts) && _additionalBinaryDataProperties?.ContainsKey("include_contexts") != true)
+            if (Optional.IsCollectionDefined(InternalIncludeContexts) && _additionalBinaryDataProperties?.ContainsKey("include_contexts") != true)
             {
                 writer.WritePropertyName("include_contexts"u8);
                 writer.WriteStartArray();
-                foreach (string item in _internalIncludeContexts)
+                foreach (string item in InternalIncludeContexts)
                 {
                     if (item == null)
                     {

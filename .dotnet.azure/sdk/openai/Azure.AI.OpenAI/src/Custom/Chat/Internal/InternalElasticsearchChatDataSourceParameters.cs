@@ -11,17 +11,17 @@ namespace Azure.AI.OpenAI.Chat;
 internal partial class InternalElasticsearchChatDataSourceParameters
 {
     [CodeGenMember("IncludeContexts")]
-    private IList<string> _internalIncludeContexts { get; set; } = new ChangeTrackingList<string>();
+    private IList<string> InternalIncludeContexts { get; set; } = new ChangeTrackingList<string>();
     private DataSourceOutputContexts? _outputContexts;
 
     /// <inheritdoc cref="DataSourceOutputContexts"/>
     public DataSourceOutputContexts? OutputContexts
     {
-        get => DataSourceOutputContextsExtensions.FromStringList(_internalIncludeContexts);
+        get => DataSourceOutputContextsExtensions.FromStringList(InternalIncludeContexts);
         internal set
         {
             _outputContexts = value;
-            _internalIncludeContexts = _outputContexts?.ToStringList();
+            InternalIncludeContexts = _outputContexts?.ToStringList();
         }
     }
 

@@ -10,8 +10,13 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI
 {
+    /// <summary></summary>
     public partial class ContentFilterTextSpan : IJsonModel<ContentFilterTextSpan>
     {
+        internal ContentFilterTextSpan()
+        {
+        }
+
         void IJsonModel<ContentFilterTextSpan>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -23,25 +28,24 @@ namespace Azure.AI.OpenAI
         /// <param name="options"> The client options for reading and writing models. </param>
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ContentFilterTextSpan>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ContentFilterTextSpan>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ContentFilterTextSpan)} does not support writing '{format}' format.");
             }
-
-            if (SerializedAdditionalRawData?.ContainsKey("completion_start_offset") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("completion_start_offset") != true)
             {
                 writer.WritePropertyName("completion_start_offset"u8);
                 writer.WriteNumberValue(CompletionStartOffset);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("completion_end_offset") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("completion_end_offset") != true)
             {
                 writer.WritePropertyName("completion_end_offset"u8);
                 writer.WriteNumberValue(CompletionEndOffset);
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
                     if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                     {
@@ -49,7 +53,7 @@ namespace Azure.AI.OpenAI
                     }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -60,56 +64,56 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        ContentFilterTextSpan IJsonModel<ContentFilterTextSpan>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ContentFilterTextSpan IJsonModel<ContentFilterTextSpan>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        /// <param name="reader"> The JSON reader. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual ContentFilterTextSpan JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ContentFilterTextSpan>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ContentFilterTextSpan>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ContentFilterTextSpan)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeContentFilterTextSpan(document.RootElement, options);
         }
 
-        internal static ContentFilterTextSpan DeserializeContentFilterTextSpan(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ContentFilterTextSpan DeserializeContentFilterTextSpan(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             int completionStartOffset = default;
             int completionEndOffset = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("completion_start_offset"u8))
+                if (prop.NameEquals("completion_start_offset"u8))
                 {
-                    completionStartOffset = property.Value.GetInt32();
+                    completionStartOffset = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("completion_end_offset"u8))
+                if (prop.NameEquals("completion_end_offset"u8))
                 {
-                    completionEndOffset = property.Value.GetInt32();
+                    completionEndOffset = prop.Value.GetInt32();
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new ContentFilterTextSpan(completionStartOffset, completionEndOffset, serializedAdditionalRawData);
+            return new ContentFilterTextSpan(completionStartOffset, completionEndOffset, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<ContentFilterTextSpan>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ContentFilterTextSpan>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<ContentFilterTextSpan>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ContentFilterTextSpan>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -119,15 +123,18 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        ContentFilterTextSpan IPersistableModel<ContentFilterTextSpan>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ContentFilterTextSpan>)this).GetFormatFromOptions(options) : options.Format;
+        ContentFilterTextSpan IPersistableModel<ContentFilterTextSpan>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        /// <param name="data"> The data to parse. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual ContentFilterTextSpan PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ContentFilterTextSpan>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeContentFilterTextSpan(document.RootElement, options);
                     }
                 default:
@@ -137,18 +144,22 @@ namespace Azure.AI.OpenAI
 
         string IPersistableModel<ContentFilterTextSpan>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static ContentFilterTextSpan FromResponse(PipelineResponse response)
+        /// <param name="contentFilterTextSpan"> The <see cref="ContentFilterTextSpan"/> to serialize into <see cref="BinaryContent"/>. </param>
+        public static implicit operator BinaryContent(ContentFilterTextSpan contentFilterTextSpan)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeContentFilterTextSpan(document.RootElement);
+            if (contentFilterTextSpan == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(contentFilterTextSpan, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        /// <param name="result"> The <see cref="ClientResult"/> to deserialize the <see cref="ContentFilterTextSpan"/> from. </param>
+        public static explicit operator ContentFilterTextSpan(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeContentFilterTextSpan(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI
 {
+    /// <summary></summary>
     public partial class RequestContentFilterResult : IJsonModel<RequestContentFilterResult>
     {
         void IJsonModel<RequestContentFilterResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -23,25 +24,24 @@ namespace Azure.AI.OpenAI
         /// <param name="options"> The client options for reading and writing models. </param>
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RequestContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<RequestContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(RequestContentFilterResult)} does not support writing '{format}' format.");
             }
-
-            if (SerializedAdditionalRawData?.ContainsKey("prompt_index") != true && Optional.IsDefined(PromptIndex))
+            if (Optional.IsDefined(PromptIndex) && _additionalBinaryDataProperties?.ContainsKey("prompt_index") != true)
             {
                 writer.WritePropertyName("prompt_index"u8);
                 writer.WriteNumberValue(PromptIndex.Value);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("content_filter_results") != true && Optional.IsDefined(InternalResults))
+            if (Optional.IsDefined(InternalResults) && _additionalBinaryDataProperties?.ContainsKey("content_filter_results") != true)
             {
                 writer.WritePropertyName("content_filter_results"u8);
                 writer.WriteObjectValue<InternalAzureContentFilterResultForPromptContentFilterResults>(InternalResults, options);
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
                     if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                     {
@@ -49,7 +49,7 @@ namespace Azure.AI.OpenAI
                     }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -60,64 +60,64 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        RequestContentFilterResult IJsonModel<RequestContentFilterResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        RequestContentFilterResult IJsonModel<RequestContentFilterResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        /// <param name="reader"> The JSON reader. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual RequestContentFilterResult JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RequestContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<RequestContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(RequestContentFilterResult)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeRequestContentFilterResult(document.RootElement, options);
         }
 
-        internal static RequestContentFilterResult DeserializeRequestContentFilterResult(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static RequestContentFilterResult DeserializeRequestContentFilterResult(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             int? promptIndex = default;
-            InternalAzureContentFilterResultForPromptContentFilterResults contentFilterResults = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            InternalAzureContentFilterResultForPromptContentFilterResults internalResults = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("prompt_index"u8))
+                if (prop.NameEquals("prompt_index"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    promptIndex = property.Value.GetInt32();
+                    promptIndex = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("content_filter_results"u8))
+                if (prop.NameEquals("content_filter_results"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    contentFilterResults = InternalAzureContentFilterResultForPromptContentFilterResults.DeserializeInternalAzureContentFilterResultForPromptContentFilterResults(property.Value, options);
+                    internalResults = InternalAzureContentFilterResultForPromptContentFilterResults.DeserializeInternalAzureContentFilterResultForPromptContentFilterResults(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new RequestContentFilterResult(promptIndex, contentFilterResults, serializedAdditionalRawData);
+            return new RequestContentFilterResult(promptIndex, internalResults, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<RequestContentFilterResult>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<RequestContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<RequestContentFilterResult>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<RequestContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -127,15 +127,18 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        RequestContentFilterResult IPersistableModel<RequestContentFilterResult>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<RequestContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
+        RequestContentFilterResult IPersistableModel<RequestContentFilterResult>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        /// <param name="data"> The data to parse. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual RequestContentFilterResult PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<RequestContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeRequestContentFilterResult(document.RootElement, options);
                     }
                 default:
@@ -145,18 +148,22 @@ namespace Azure.AI.OpenAI
 
         string IPersistableModel<RequestContentFilterResult>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static RequestContentFilterResult FromResponse(PipelineResponse response)
+        /// <param name="requestContentFilterResult"> The <see cref="RequestContentFilterResult"/> to serialize into <see cref="BinaryContent"/>. </param>
+        public static implicit operator BinaryContent(RequestContentFilterResult requestContentFilterResult)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeRequestContentFilterResult(document.RootElement);
+            if (requestContentFilterResult == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(requestContentFilterResult, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        /// <param name="result"> The <see cref="ClientResult"/> to deserialize the <see cref="RequestContentFilterResult"/> from. </param>
+        public static explicit operator RequestContentFilterResult(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeRequestContentFilterResult(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

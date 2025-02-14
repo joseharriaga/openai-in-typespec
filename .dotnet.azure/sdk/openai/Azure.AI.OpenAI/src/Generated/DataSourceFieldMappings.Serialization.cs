@@ -7,9 +7,11 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using Azure.AI.OpenAI;
 
 namespace Azure.AI.OpenAI.Chat
 {
+    /// <summary></summary>
     public partial class DataSourceFieldMappings : IJsonModel<DataSourceFieldMappings>
     {
         void IJsonModel<DataSourceFieldMappings>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -23,65 +25,79 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="options"> The client options for reading and writing models. </param>
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DataSourceFieldMappings>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<DataSourceFieldMappings>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(DataSourceFieldMappings)} does not support writing '{format}' format.");
             }
-
-            if (SerializedAdditionalRawData?.ContainsKey("title_field") != true && Optional.IsDefined(TitleFieldName))
+            if (Optional.IsDefined(TitleFieldName) && _additionalBinaryDataProperties?.ContainsKey("title_field") != true)
             {
                 writer.WritePropertyName("title_field"u8);
                 writer.WriteStringValue(TitleFieldName);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("url_field") != true && Optional.IsDefined(UrlFieldName))
+            if (Optional.IsDefined(UrlFieldName) && _additionalBinaryDataProperties?.ContainsKey("url_field") != true)
             {
                 writer.WritePropertyName("url_field"u8);
                 writer.WriteStringValue(UrlFieldName);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("filepath_field") != true && Optional.IsDefined(FilePathFieldName))
+            if (Optional.IsDefined(FilePathFieldName) && _additionalBinaryDataProperties?.ContainsKey("filepath_field") != true)
             {
                 writer.WritePropertyName("filepath_field"u8);
                 writer.WriteStringValue(FilePathFieldName);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("content_fields") != true && Optional.IsCollectionDefined(ContentFieldNames))
+            if (Optional.IsCollectionDefined(ContentFieldNames) && _additionalBinaryDataProperties?.ContainsKey("content_fields") != true)
             {
                 writer.WritePropertyName("content_fields"u8);
                 writer.WriteStartArray();
-                foreach (var item in ContentFieldNames)
+                foreach (string item in ContentFieldNames)
                 {
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
                     writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
             }
-            if (SerializedAdditionalRawData?.ContainsKey("content_fields_separator") != true && Optional.IsDefined(ContentFieldSeparator))
+            if (Optional.IsDefined(ContentFieldSeparator) && _additionalBinaryDataProperties?.ContainsKey("content_fields_separator") != true)
             {
                 writer.WritePropertyName("content_fields_separator"u8);
                 writer.WriteStringValue(ContentFieldSeparator);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("vector_fields") != true && Optional.IsCollectionDefined(VectorFieldNames))
+            if (Optional.IsCollectionDefined(VectorFieldNames) && _additionalBinaryDataProperties?.ContainsKey("vector_fields") != true)
             {
                 writer.WritePropertyName("vector_fields"u8);
                 writer.WriteStartArray();
-                foreach (var item in VectorFieldNames)
+                foreach (string item in VectorFieldNames)
                 {
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
                     writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
             }
-            if (SerializedAdditionalRawData?.ContainsKey("image_vector_fields") != true && Optional.IsCollectionDefined(ImageVectorFieldNames))
+            if (Optional.IsCollectionDefined(ImageVectorFieldNames) && _additionalBinaryDataProperties?.ContainsKey("image_vector_fields") != true)
             {
                 writer.WritePropertyName("image_vector_fields"u8);
                 writer.WriteStartArray();
-                foreach (var item in ImageVectorFieldNames)
+                foreach (string item in ImageVectorFieldNames)
                 {
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
                     writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
                     if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                     {
@@ -89,7 +105,7 @@ namespace Azure.AI.OpenAI.Chat
                     }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -100,121 +116,142 @@ namespace Azure.AI.OpenAI.Chat
             }
         }
 
-        DataSourceFieldMappings IJsonModel<DataSourceFieldMappings>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        DataSourceFieldMappings IJsonModel<DataSourceFieldMappings>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        /// <param name="reader"> The JSON reader. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual DataSourceFieldMappings JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DataSourceFieldMappings>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<DataSourceFieldMappings>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(DataSourceFieldMappings)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeDataSourceFieldMappings(document.RootElement, options);
         }
 
-        internal static DataSourceFieldMappings DeserializeDataSourceFieldMappings(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static DataSourceFieldMappings DeserializeDataSourceFieldMappings(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            string titleField = default;
-            string urlField = default;
-            string filepathField = default;
-            IList<string> contentFields = default;
-            string contentFieldsSeparator = default;
-            IList<string> vectorFields = default;
-            IList<string> imageVectorFields = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string titleFieldName = default;
+            string urlFieldName = default;
+            string filePathFieldName = default;
+            IList<string> contentFieldNames = default;
+            string contentFieldSeparator = default;
+            IList<string> vectorFieldNames = default;
+            IList<string> imageVectorFieldNames = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("title_field"u8))
+                if (prop.NameEquals("title_field"u8))
                 {
-                    titleField = property.Value.GetString();
+                    titleFieldName = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("url_field"u8))
+                if (prop.NameEquals("url_field"u8))
                 {
-                    urlField = property.Value.GetString();
+                    urlFieldName = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("filepath_field"u8))
+                if (prop.NameEquals("filepath_field"u8))
                 {
-                    filepathField = property.Value.GetString();
+                    filePathFieldName = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("content_fields"u8))
+                if (prop.NameEquals("content_fields"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
                     List<string> array = new List<string>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(item.GetString());
+                        if (item.ValueKind == JsonValueKind.Null)
+                        {
+                            array.Add(null);
+                        }
+                        else
+                        {
+                            array.Add(item.GetString());
+                        }
                     }
-                    contentFields = array;
+                    contentFieldNames = array;
                     continue;
                 }
-                if (property.NameEquals("content_fields_separator"u8))
+                if (prop.NameEquals("content_fields_separator"u8))
                 {
-                    contentFieldsSeparator = property.Value.GetString();
+                    contentFieldSeparator = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("vector_fields"u8))
+                if (prop.NameEquals("vector_fields"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
                     List<string> array = new List<string>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(item.GetString());
+                        if (item.ValueKind == JsonValueKind.Null)
+                        {
+                            array.Add(null);
+                        }
+                        else
+                        {
+                            array.Add(item.GetString());
+                        }
                     }
-                    vectorFields = array;
+                    vectorFieldNames = array;
                     continue;
                 }
-                if (property.NameEquals("image_vector_fields"u8))
+                if (prop.NameEquals("image_vector_fields"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
                     List<string> array = new List<string>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(item.GetString());
+                        if (item.ValueKind == JsonValueKind.Null)
+                        {
+                            array.Add(null);
+                        }
+                        else
+                        {
+                            array.Add(item.GetString());
+                        }
                     }
-                    imageVectorFields = array;
+                    imageVectorFieldNames = array;
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new DataSourceFieldMappings(
-                titleField,
-                urlField,
-                filepathField,
-                contentFields ?? new ChangeTrackingList<string>(),
-                contentFieldsSeparator,
-                vectorFields ?? new ChangeTrackingList<string>(),
-                imageVectorFields ?? new ChangeTrackingList<string>(),
-                serializedAdditionalRawData);
+                titleFieldName,
+                urlFieldName,
+                filePathFieldName,
+                contentFieldNames ?? new ChangeTrackingList<string>(),
+                contentFieldSeparator,
+                vectorFieldNames ?? new ChangeTrackingList<string>(),
+                imageVectorFieldNames ?? new ChangeTrackingList<string>(),
+                additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<DataSourceFieldMappings>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<DataSourceFieldMappings>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<DataSourceFieldMappings>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<DataSourceFieldMappings>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -224,15 +261,18 @@ namespace Azure.AI.OpenAI.Chat
             }
         }
 
-        DataSourceFieldMappings IPersistableModel<DataSourceFieldMappings>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<DataSourceFieldMappings>)this).GetFormatFromOptions(options) : options.Format;
+        DataSourceFieldMappings IPersistableModel<DataSourceFieldMappings>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        /// <param name="data"> The data to parse. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual DataSourceFieldMappings PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<DataSourceFieldMappings>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeDataSourceFieldMappings(document.RootElement, options);
                     }
                 default:
@@ -242,18 +282,22 @@ namespace Azure.AI.OpenAI.Chat
 
         string IPersistableModel<DataSourceFieldMappings>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static DataSourceFieldMappings FromResponse(PipelineResponse response)
+        /// <param name="dataSourceFieldMappings"> The <see cref="DataSourceFieldMappings"/> to serialize into <see cref="BinaryContent"/>. </param>
+        public static implicit operator BinaryContent(DataSourceFieldMappings dataSourceFieldMappings)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeDataSourceFieldMappings(document.RootElement);
+            if (dataSourceFieldMappings == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(dataSourceFieldMappings, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        /// <param name="result"> The <see cref="ClientResult"/> to deserialize the <see cref="DataSourceFieldMappings"/> from. </param>
+        public static explicit operator DataSourceFieldMappings(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeDataSourceFieldMappings(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

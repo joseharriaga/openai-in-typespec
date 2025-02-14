@@ -7,11 +7,16 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using Azure.AI.OpenAI;
 
 namespace Azure.AI.OpenAI.Chat
 {
     internal partial class InternalAzureChatDataSourceAccessTokenAuthenticationOptions : IJsonModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>
     {
+        internal InternalAzureChatDataSourceAccessTokenAuthenticationOptions()
+        {
+        }
+
         void IJsonModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -19,74 +24,68 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        /// <param name="writer"> The JSON writer. </param>
-        /// <param name="options"> The client options for reading and writing models. </param>
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalAzureChatDataSourceAccessTokenAuthenticationOptions)} does not support writing '{format}' format.");
             }
-
             base.JsonModelWriteCore(writer, options);
-            if (SerializedAdditionalRawData?.ContainsKey("access_token") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("access_token") != true)
             {
                 writer.WritePropertyName("access_token"u8);
                 writer.WriteStringValue(AccessToken);
             }
         }
 
-        InternalAzureChatDataSourceAccessTokenAuthenticationOptions IJsonModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalAzureChatDataSourceAccessTokenAuthenticationOptions IJsonModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (InternalAzureChatDataSourceAccessTokenAuthenticationOptions)JsonModelCreateCore(ref reader, options);
+
+        protected override DataSourceAuthentication JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalAzureChatDataSourceAccessTokenAuthenticationOptions)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalAzureChatDataSourceAccessTokenAuthenticationOptions(document.RootElement, options);
         }
 
-        internal static InternalAzureChatDataSourceAccessTokenAuthenticationOptions DeserializeInternalAzureChatDataSourceAccessTokenAuthenticationOptions(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalAzureChatDataSourceAccessTokenAuthenticationOptions DeserializeInternalAzureChatDataSourceAccessTokenAuthenticationOptions(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
+            string @type = "access_token";
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string accessToken = default;
-            string type = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("access_token"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    accessToken = property.Value.GetString();
+                    @type = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("access_token"u8))
                 {
-                    type = property.Value.GetString();
+                    accessToken = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalAzureChatDataSourceAccessTokenAuthenticationOptions(type, serializedAdditionalRawData, accessToken);
+            return new InternalAzureChatDataSourceAccessTokenAuthenticationOptions(@type, additionalBinaryDataProperties, accessToken);
         }
 
-        BinaryData IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -96,15 +95,16 @@ namespace Azure.AI.OpenAI.Chat
             }
         }
 
-        InternalAzureChatDataSourceAccessTokenAuthenticationOptions IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>)this).GetFormatFromOptions(options) : options.Format;
+        InternalAzureChatDataSourceAccessTokenAuthenticationOptions IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>.Create(BinaryData data, ModelReaderWriterOptions options) => (InternalAzureChatDataSourceAccessTokenAuthenticationOptions)PersistableModelCreateCore(data, options);
 
+        protected override DataSourceAuthentication PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalAzureChatDataSourceAccessTokenAuthenticationOptions(document.RootElement, options);
                     }
                 default:
@@ -114,18 +114,20 @@ namespace Azure.AI.OpenAI.Chat
 
         string IPersistableModel<InternalAzureChatDataSourceAccessTokenAuthenticationOptions>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static new InternalAzureChatDataSourceAccessTokenAuthenticationOptions FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalAzureChatDataSourceAccessTokenAuthenticationOptions internalAzureChatDataSourceAccessTokenAuthenticationOptions)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalAzureChatDataSourceAccessTokenAuthenticationOptions(document.RootElement);
+            if (internalAzureChatDataSourceAccessTokenAuthenticationOptions == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(internalAzureChatDataSourceAccessTokenAuthenticationOptions, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal override BinaryContent ToBinaryContent()
+        public static explicit operator InternalAzureChatDataSourceAccessTokenAuthenticationOptions(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalAzureChatDataSourceAccessTokenAuthenticationOptions(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

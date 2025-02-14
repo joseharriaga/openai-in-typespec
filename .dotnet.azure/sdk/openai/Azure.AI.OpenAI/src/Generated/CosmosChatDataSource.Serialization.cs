@@ -7,9 +7,11 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using Azure.AI.OpenAI;
 
 namespace Azure.AI.OpenAI.Chat
 {
+    /// <summary></summary>
     public partial class CosmosChatDataSource : IJsonModel<CosmosChatDataSource>
     {
         void IJsonModel<CosmosChatDataSource>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -23,70 +25,69 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="options"> The client options for reading and writing models. </param>
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CosmosChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<CosmosChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(CosmosChatDataSource)} does not support writing '{format}' format.");
             }
-
             base.JsonModelWriteCore(writer, options);
-            if (SerializedAdditionalRawData?.ContainsKey("parameters") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("parameters") != true)
             {
                 writer.WritePropertyName("parameters"u8);
                 writer.WriteObjectValue<InternalAzureCosmosDBChatDataSourceParameters>(InternalParameters, options);
             }
         }
 
-        CosmosChatDataSource IJsonModel<CosmosChatDataSource>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        CosmosChatDataSource IJsonModel<CosmosChatDataSource>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (CosmosChatDataSource)JsonModelCreateCore(ref reader, options);
+
+        /// <param name="reader"> The JSON reader. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override ChatDataSource JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<CosmosChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<CosmosChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(CosmosChatDataSource)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeCosmosChatDataSource(document.RootElement, options);
         }
 
-        internal static CosmosChatDataSource DeserializeCosmosChatDataSource(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static CosmosChatDataSource DeserializeCosmosChatDataSource(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            InternalAzureCosmosDBChatDataSourceParameters parameters = default;
-            string type = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string @type = "azure_cosmos_db";
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            InternalAzureCosmosDBChatDataSourceParameters internalParameters = default;
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("parameters"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    parameters = InternalAzureCosmosDBChatDataSourceParameters.DeserializeInternalAzureCosmosDBChatDataSourceParameters(property.Value, options);
+                    @type = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("parameters"u8))
                 {
-                    type = property.Value.GetString();
+                    internalParameters = InternalAzureCosmosDBChatDataSourceParameters.DeserializeInternalAzureCosmosDBChatDataSourceParameters(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new CosmosChatDataSource(type, serializedAdditionalRawData, parameters);
+            return new CosmosChatDataSource(@type, additionalBinaryDataProperties, internalParameters);
         }
 
-        BinaryData IPersistableModel<CosmosChatDataSource>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<CosmosChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<CosmosChatDataSource>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<CosmosChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -96,15 +97,18 @@ namespace Azure.AI.OpenAI.Chat
             }
         }
 
-        CosmosChatDataSource IPersistableModel<CosmosChatDataSource>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<CosmosChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+        CosmosChatDataSource IPersistableModel<CosmosChatDataSource>.Create(BinaryData data, ModelReaderWriterOptions options) => (CosmosChatDataSource)PersistableModelCreateCore(data, options);
 
+        /// <param name="data"> The data to parse. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override ChatDataSource PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<CosmosChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeCosmosChatDataSource(document.RootElement, options);
                     }
                 default:
@@ -114,18 +118,22 @@ namespace Azure.AI.OpenAI.Chat
 
         string IPersistableModel<CosmosChatDataSource>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static new CosmosChatDataSource FromResponse(PipelineResponse response)
+        /// <param name="cosmosChatDataSource"> The <see cref="CosmosChatDataSource"/> to serialize into <see cref="BinaryContent"/>. </param>
+        public static implicit operator BinaryContent(CosmosChatDataSource cosmosChatDataSource)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCosmosChatDataSource(document.RootElement);
+            if (cosmosChatDataSource == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(cosmosChatDataSource, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal override BinaryContent ToBinaryContent()
+        /// <param name="result"> The <see cref="ClientResult"/> to deserialize the <see cref="CosmosChatDataSource"/> from. </param>
+        public static explicit operator CosmosChatDataSource(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeCosmosChatDataSource(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -77,9 +77,11 @@ function Prune-Generated-Files {
 Push-Location $repoRoot
 try {
   Invoke { npm ci }
+  Invoke { npm run build -w .plugin.azure }
   Set-Location $repoRoot/.typespec.azure
   Invoke { npm exec --no -- tsp format **/*tsp }
   Invoke { npm exec --no -- tsp compile . }
+  Invoke { Move-Item $generatedFolder/Models/* $generatedFolder }
   Prune-Generated-Files
   Make-Internals-Settable
   Partialize-ClientPipelineExtensions

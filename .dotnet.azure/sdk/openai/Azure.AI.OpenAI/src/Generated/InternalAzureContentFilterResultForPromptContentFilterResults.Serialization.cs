@@ -12,6 +12,10 @@ namespace Azure.AI.OpenAI
 {
     internal partial class InternalAzureContentFilterResultForPromptContentFilterResults : IJsonModel<InternalAzureContentFilterResultForPromptContentFilterResults>
     {
+        internal InternalAzureContentFilterResultForPromptContentFilterResults()
+        {
+        }
+
         void IJsonModel<InternalAzureContentFilterResultForPromptContentFilterResults>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -19,64 +23,61 @@ namespace Azure.AI.OpenAI
             writer.WriteEndObject();
         }
 
-        /// <param name="writer"> The JSON writer. </param>
-        /// <param name="options"> The client options for reading and writing models. </param>
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalAzureContentFilterResultForPromptContentFilterResults)} does not support writing '{format}' format.");
             }
-
-            if (SerializedAdditionalRawData?.ContainsKey("sexual") != true && Optional.IsDefined(Sexual))
+            if (Optional.IsDefined(Sexual) && _additionalBinaryDataProperties?.ContainsKey("sexual") != true)
             {
                 writer.WritePropertyName("sexual"u8);
                 writer.WriteObjectValue(Sexual, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("hate") != true && Optional.IsDefined(Hate))
+            if (Optional.IsDefined(Hate) && _additionalBinaryDataProperties?.ContainsKey("hate") != true)
             {
                 writer.WritePropertyName("hate"u8);
                 writer.WriteObjectValue(Hate, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("violence") != true && Optional.IsDefined(Violence))
+            if (Optional.IsDefined(Violence) && _additionalBinaryDataProperties?.ContainsKey("violence") != true)
             {
                 writer.WritePropertyName("violence"u8);
                 writer.WriteObjectValue(Violence, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("self_harm") != true && Optional.IsDefined(SelfHarm))
+            if (Optional.IsDefined(SelfHarm) && _additionalBinaryDataProperties?.ContainsKey("self_harm") != true)
             {
                 writer.WritePropertyName("self_harm"u8);
                 writer.WriteObjectValue(SelfHarm, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("profanity") != true && Optional.IsDefined(Profanity))
+            if (Optional.IsDefined(Profanity) && _additionalBinaryDataProperties?.ContainsKey("profanity") != true)
             {
                 writer.WritePropertyName("profanity"u8);
                 writer.WriteObjectValue(Profanity, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("custom_blocklists") != true && Optional.IsDefined(CustomBlocklists))
+            if (Optional.IsDefined(CustomBlocklists) && _additionalBinaryDataProperties?.ContainsKey("custom_blocklists") != true)
             {
                 writer.WritePropertyName("custom_blocklists"u8);
                 writer.WriteObjectValue(CustomBlocklists, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("error") != true && Optional.IsDefined(Error))
+            if (Optional.IsDefined(Error) && _additionalBinaryDataProperties?.ContainsKey("error") != true)
             {
                 writer.WritePropertyName("error"u8);
                 writer.WriteObjectValue(Error, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("jailbreak") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("jailbreak") != true)
             {
                 writer.WritePropertyName("jailbreak"u8);
                 writer.WriteObjectValue(Jailbreak, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("indirect_attack") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("indirect_attack") != true)
             {
                 writer.WritePropertyName("indirect_attack"u8);
                 writer.WriteObjectValue(IndirectAttack, options);
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
                     if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                     {
@@ -84,7 +85,7 @@ namespace Azure.AI.OpenAI
                     }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -95,22 +96,21 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        InternalAzureContentFilterResultForPromptContentFilterResults IJsonModel<InternalAzureContentFilterResultForPromptContentFilterResults>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalAzureContentFilterResultForPromptContentFilterResults IJsonModel<InternalAzureContentFilterResultForPromptContentFilterResults>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalAzureContentFilterResultForPromptContentFilterResults JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalAzureContentFilterResultForPromptContentFilterResults)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalAzureContentFilterResultForPromptContentFilterResults(document.RootElement, options);
         }
 
-        internal static InternalAzureContentFilterResultForPromptContentFilterResults DeserializeInternalAzureContentFilterResultForPromptContentFilterResults(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalAzureContentFilterResultForPromptContentFilterResults DeserializeInternalAzureContentFilterResultForPromptContentFilterResults(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
@@ -124,90 +124,87 @@ namespace Azure.AI.OpenAI
             InternalAzureContentFilterResultForChoiceError error = default;
             ContentFilterDetectionResult jailbreak = default;
             ContentFilterDetectionResult indirectAttack = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("sexual"u8))
+                if (prop.NameEquals("sexual"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    sexual = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
+                    sexual = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("hate"u8))
+                if (prop.NameEquals("hate"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    hate = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
+                    hate = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("violence"u8))
+                if (prop.NameEquals("violence"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    violence = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
+                    violence = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("self_harm"u8))
+                if (prop.NameEquals("self_harm"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    selfHarm = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
+                    selfHarm = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("profanity"u8))
+                if (prop.NameEquals("profanity"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    profanity = ContentFilterDetectionResult.DeserializeContentFilterDetectionResult(property.Value, options);
+                    profanity = ContentFilterDetectionResult.DeserializeContentFilterDetectionResult(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("custom_blocklists"u8))
+                if (prop.NameEquals("custom_blocklists"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    customBlocklists = ContentFilterBlocklistResult.DeserializeContentFilterBlocklistResult(property.Value, options);
+                    customBlocklists = ContentFilterBlocklistResult.DeserializeContentFilterBlocklistResult(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("error"u8))
+                if (prop.NameEquals("error"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    error = InternalAzureContentFilterResultForChoiceError.DeserializeInternalAzureContentFilterResultForChoiceError(property.Value, options);
+                    error = InternalAzureContentFilterResultForChoiceError.DeserializeInternalAzureContentFilterResultForChoiceError(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("jailbreak"u8))
+                if (prop.NameEquals("jailbreak"u8))
                 {
-                    jailbreak = ContentFilterDetectionResult.DeserializeContentFilterDetectionResult(property.Value, options);
+                    jailbreak = ContentFilterDetectionResult.DeserializeContentFilterDetectionResult(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("indirect_attack"u8))
+                if (prop.NameEquals("indirect_attack"u8))
                 {
-                    indirectAttack = ContentFilterDetectionResult.DeserializeContentFilterDetectionResult(property.Value, options);
+                    indirectAttack = ContentFilterDetectionResult.DeserializeContentFilterDetectionResult(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new InternalAzureContentFilterResultForPromptContentFilterResults(
                 sexual,
                 hate,
@@ -218,13 +215,14 @@ namespace Azure.AI.OpenAI
                 error,
                 jailbreak,
                 indirectAttack,
-                serializedAdditionalRawData);
+                additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -234,15 +232,16 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        InternalAzureContentFilterResultForPromptContentFilterResults IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>)this).GetFormatFromOptions(options) : options.Format;
+        InternalAzureContentFilterResultForPromptContentFilterResults IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalAzureContentFilterResultForPromptContentFilterResults PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalAzureContentFilterResultForPromptContentFilterResults(document.RootElement, options);
                     }
                 default:
@@ -252,18 +251,20 @@ namespace Azure.AI.OpenAI
 
         string IPersistableModel<InternalAzureContentFilterResultForPromptContentFilterResults>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static InternalAzureContentFilterResultForPromptContentFilterResults FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalAzureContentFilterResultForPromptContentFilterResults internalAzureContentFilterResultForPromptContentFilterResults)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalAzureContentFilterResultForPromptContentFilterResults(document.RootElement);
+            if (internalAzureContentFilterResultForPromptContentFilterResults == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(internalAzureContentFilterResultForPromptContentFilterResults, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalAzureContentFilterResultForPromptContentFilterResults(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalAzureContentFilterResultForPromptContentFilterResults(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

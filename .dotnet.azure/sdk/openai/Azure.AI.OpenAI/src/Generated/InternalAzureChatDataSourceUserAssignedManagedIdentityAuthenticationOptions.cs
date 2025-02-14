@@ -4,38 +4,24 @@
 
 using System;
 using System.Collections.Generic;
+using Azure.AI.OpenAI;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions. </summary>
     internal partial class InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions : DataSourceAuthentication
     {
-        /// <summary> Initializes a new instance of <see cref="InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions"/>. </summary>
-        /// <param name="managedIdentityResourceId"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="managedIdentityResourceId"/> is null. </exception>
-        public InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions(string managedIdentityResourceId)
+        public InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions(string managedIdentityResourceId) : base("user_assigned_managed_identity")
         {
             Argument.AssertNotNull(managedIdentityResourceId, nameof(managedIdentityResourceId));
 
-            Type = "user_assigned_managed_identity";
             ManagedIdentityResourceId = managedIdentityResourceId;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions"/>. </summary>
-        /// <param name="type"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        /// <param name="managedIdentityResourceId"></param>
-        internal InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions(string type, IDictionary<string, BinaryData> serializedAdditionalRawData, string managedIdentityResourceId) : base(type, serializedAdditionalRawData)
+        internal InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, string managedIdentityResourceId) : base(@type, additionalBinaryDataProperties)
         {
             ManagedIdentityResourceId = managedIdentityResourceId;
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions"/> for deserialization. </summary>
-        internal InternalAzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions()
-        {
-        }
-
-        /// <summary> Gets the managed identity resource id. </summary>
         internal string ManagedIdentityResourceId { get; set; }
     }
 }

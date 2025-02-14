@@ -19,34 +19,31 @@ namespace Azure.AI.OpenAI
             writer.WriteEndObject();
         }
 
-        /// <param name="writer"> The JSON writer. </param>
-        /// <param name="options"> The client options for reading and writing models. </param>
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalAzureOpenAIDalleErrorInnerError)} does not support writing '{format}' format.");
             }
-
-            if (SerializedAdditionalRawData?.ContainsKey("code") != true && Optional.IsDefined(Code))
+            if (Optional.IsDefined(Code) && _additionalBinaryDataProperties?.ContainsKey("code") != true)
             {
                 writer.WritePropertyName("code"u8);
                 writer.WriteStringValue(Code.Value.ToString());
             }
-            if (SerializedAdditionalRawData?.ContainsKey("revised_prompt") != true && Optional.IsDefined(RevisedPrompt))
+            if (Optional.IsDefined(RevisedPrompt) && _additionalBinaryDataProperties?.ContainsKey("revised_prompt") != true)
             {
                 writer.WritePropertyName("revised_prompt"u8);
                 writer.WriteStringValue(RevisedPrompt);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("content_filter_results") != true && Optional.IsDefined(ContentFilterResults))
+            if (Optional.IsDefined(ContentFilterResults) && _additionalBinaryDataProperties?.ContainsKey("content_filter_results") != true)
             {
                 writer.WritePropertyName("content_filter_results"u8);
                 writer.WriteObjectValue(ContentFilterResults, options);
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
                     if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                     {
@@ -54,7 +51,7 @@ namespace Azure.AI.OpenAI
                     }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -65,22 +62,21 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        InternalAzureOpenAIDalleErrorInnerError IJsonModel<InternalAzureOpenAIDalleErrorInnerError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalAzureOpenAIDalleErrorInnerError IJsonModel<InternalAzureOpenAIDalleErrorInnerError>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalAzureOpenAIDalleErrorInnerError JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalAzureOpenAIDalleErrorInnerError)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalAzureOpenAIDalleErrorInnerError(document.RootElement, options);
         }
 
-        internal static InternalAzureOpenAIDalleErrorInnerError DeserializeInternalAzureOpenAIDalleErrorInnerError(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalAzureOpenAIDalleErrorInnerError DeserializeInternalAzureOpenAIDalleErrorInnerError(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
@@ -88,47 +84,45 @@ namespace Azure.AI.OpenAI
             InternalAzureOpenAIDalleErrorInnerErrorCode? code = default;
             string revisedPrompt = default;
             RequestImageContentFilterResult contentFilterResults = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("code"u8))
+                if (prop.NameEquals("code"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    code = new InternalAzureOpenAIDalleErrorInnerErrorCode(property.Value.GetString());
+                    code = new InternalAzureOpenAIDalleErrorInnerErrorCode(prop.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("revised_prompt"u8))
+                if (prop.NameEquals("revised_prompt"u8))
                 {
-                    revisedPrompt = property.Value.GetString();
+                    revisedPrompt = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("content_filter_results"u8))
+                if (prop.NameEquals("content_filter_results"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    contentFilterResults = RequestImageContentFilterResult.DeserializeRequestImageContentFilterResult(property.Value, options);
+                    contentFilterResults = RequestImageContentFilterResult.DeserializeRequestImageContentFilterResult(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalAzureOpenAIDalleErrorInnerError(code, revisedPrompt, contentFilterResults, serializedAdditionalRawData);
+            return new InternalAzureOpenAIDalleErrorInnerError(code, revisedPrompt, contentFilterResults, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -138,15 +132,16 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        InternalAzureOpenAIDalleErrorInnerError IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>)this).GetFormatFromOptions(options) : options.Format;
+        InternalAzureOpenAIDalleErrorInnerError IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalAzureOpenAIDalleErrorInnerError PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalAzureOpenAIDalleErrorInnerError(document.RootElement, options);
                     }
                 default:
@@ -156,18 +151,20 @@ namespace Azure.AI.OpenAI
 
         string IPersistableModel<InternalAzureOpenAIDalleErrorInnerError>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static InternalAzureOpenAIDalleErrorInnerError FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalAzureOpenAIDalleErrorInnerError internalAzureOpenAIDalleErrorInnerError)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalAzureOpenAIDalleErrorInnerError(document.RootElement);
+            if (internalAzureOpenAIDalleErrorInnerError == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(internalAzureOpenAIDalleErrorInnerError, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalAzureOpenAIDalleErrorInnerError(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalAzureOpenAIDalleErrorInnerError(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

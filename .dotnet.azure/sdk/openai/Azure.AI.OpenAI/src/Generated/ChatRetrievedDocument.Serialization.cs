@@ -7,11 +7,17 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using Azure.AI.OpenAI;
 
 namespace Azure.AI.OpenAI.Chat
 {
+    /// <summary></summary>
     public partial class ChatRetrievedDocument : IJsonModel<ChatRetrievedDocument>
     {
+        internal ChatRetrievedDocument()
+        {
+        }
+
         void IJsonModel<ChatRetrievedDocument>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -23,70 +29,74 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="options"> The client options for reading and writing models. </param>
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatRetrievedDocument>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ChatRetrievedDocument>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ChatRetrievedDocument)} does not support writing '{format}' format.");
             }
-
-            if (SerializedAdditionalRawData?.ContainsKey("content") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
                 writer.WriteStringValue(Content);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("title") != true && Optional.IsDefined(Title))
+            if (Optional.IsDefined(Title) && _additionalBinaryDataProperties?.ContainsKey("title") != true)
             {
                 writer.WritePropertyName("title"u8);
                 writer.WriteStringValue(Title);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("url") != true && Optional.IsDefined(Url))
+            if (Optional.IsDefined(Url) && _additionalBinaryDataProperties?.ContainsKey("url") != true)
             {
                 writer.WritePropertyName("url"u8);
                 writer.WriteStringValue(Url);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("filepath") != true && Optional.IsDefined(FilePath))
-            {
-                writer.WritePropertyName("filepath"u8);
-                writer.WriteStringValue(FilePath);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("chunk_id") != true && Optional.IsDefined(ChunkId))
+            if (Optional.IsDefined(ChunkId) && _additionalBinaryDataProperties?.ContainsKey("chunk_id") != true)
             {
                 writer.WritePropertyName("chunk_id"u8);
                 writer.WriteStringValue(ChunkId);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("rerank_score") != true && Optional.IsDefined(RerankScore))
+            if (Optional.IsDefined(RerankScore) && _additionalBinaryDataProperties?.ContainsKey("rerank_score") != true)
             {
                 writer.WritePropertyName("rerank_score"u8);
                 writer.WriteNumberValue(RerankScore.Value);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("search_queries") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("search_queries") != true)
             {
                 writer.WritePropertyName("search_queries"u8);
                 writer.WriteStartArray();
-                foreach (var item in SearchQueries)
+                foreach (string item in SearchQueries)
                 {
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
                     writer.WriteStringValue(item);
                 }
                 writer.WriteEndArray();
             }
-            if (SerializedAdditionalRawData?.ContainsKey("data_source_index") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("data_source_index") != true)
             {
                 writer.WritePropertyName("data_source_index"u8);
                 writer.WriteNumberValue(DataSourceIndex);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("original_search_score") != true && Optional.IsDefined(OriginalSearchScore))
+            if (Optional.IsDefined(OriginalSearchScore) && _additionalBinaryDataProperties?.ContainsKey("original_search_score") != true)
             {
                 writer.WritePropertyName("original_search_score"u8);
                 writer.WriteNumberValue(OriginalSearchScore.Value);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("filter_reason") != true && Optional.IsDefined(FilterReason))
+            if (Optional.IsDefined(FilterReason) && _additionalBinaryDataProperties?.ContainsKey("filter_reason") != true)
             {
                 writer.WritePropertyName("filter_reason"u8);
                 writer.WriteStringValue(FilterReason.Value.ToString());
             }
-            if (SerializedAdditionalRawData != null)
+            if (Optional.IsDefined(FilePath) && _additionalBinaryDataProperties?.ContainsKey("filepath") != true)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                writer.WritePropertyName("filepath"u8);
+                writer.WriteStringValue(FilePath);
+            }
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            {
+                foreach (var item in _additionalBinaryDataProperties)
                 {
                     if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                     {
@@ -94,7 +104,7 @@ namespace Azure.AI.OpenAI.Chat
                     }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -105,22 +115,23 @@ namespace Azure.AI.OpenAI.Chat
             }
         }
 
-        ChatRetrievedDocument IJsonModel<ChatRetrievedDocument>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ChatRetrievedDocument IJsonModel<ChatRetrievedDocument>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        /// <param name="reader"> The JSON reader. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual ChatRetrievedDocument JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatRetrievedDocument>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ChatRetrievedDocument>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ChatRetrievedDocument)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeChatRetrievedDocument(document.RootElement, options);
         }
 
-        internal static ChatRetrievedDocument DeserializeChatRetrievedDocument(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ChatRetrievedDocument DeserializeChatRetrievedDocument(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
@@ -128,109 +139,115 @@ namespace Azure.AI.OpenAI.Chat
             string content = default;
             string title = default;
             string url = default;
-            string filepath = default;
             string chunkId = default;
             double? rerankScore = default;
-            IReadOnlyList<string> searchQueries = default;
+            IList<string> searchQueries = default;
             int dataSourceIndex = default;
             double? originalSearchScore = default;
             ChatDocumentFilterReason? filterReason = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string filePath = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("content"u8))
+                if (prop.NameEquals("content"u8))
                 {
-                    content = property.Value.GetString();
+                    content = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("title"u8))
+                if (prop.NameEquals("title"u8))
                 {
-                    title = property.Value.GetString();
+                    title = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("url"u8))
+                if (prop.NameEquals("url"u8))
                 {
-                    url = property.Value.GetString();
+                    url = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("filepath"u8))
+                if (prop.NameEquals("chunk_id"u8))
                 {
-                    filepath = property.Value.GetString();
+                    chunkId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("chunk_id"u8))
+                if (prop.NameEquals("rerank_score"u8))
                 {
-                    chunkId = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("rerank_score"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    rerankScore = property.Value.GetDouble();
+                    rerankScore = prop.Value.GetDouble();
                     continue;
                 }
-                if (property.NameEquals("search_queries"u8))
+                if (prop.NameEquals("search_queries"u8))
                 {
                     List<string> array = new List<string>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(item.GetString());
+                        if (item.ValueKind == JsonValueKind.Null)
+                        {
+                            array.Add(null);
+                        }
+                        else
+                        {
+                            array.Add(item.GetString());
+                        }
                     }
                     searchQueries = array;
                     continue;
                 }
-                if (property.NameEquals("data_source_index"u8))
+                if (prop.NameEquals("data_source_index"u8))
                 {
-                    dataSourceIndex = property.Value.GetInt32();
+                    dataSourceIndex = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("original_search_score"u8))
+                if (prop.NameEquals("original_search_score"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    originalSearchScore = property.Value.GetDouble();
+                    originalSearchScore = prop.Value.GetDouble();
                     continue;
                 }
-                if (property.NameEquals("filter_reason"u8))
+                if (prop.NameEquals("filter_reason"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    filterReason = new ChatDocumentFilterReason(property.Value.GetString());
+                    filterReason = new ChatDocumentFilterReason(prop.Value.GetString());
+                    continue;
+                }
+                if (prop.NameEquals("filepath"u8))
+                {
+                    filePath = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new ChatRetrievedDocument(
                 content,
                 title,
                 url,
-                filepath,
                 chunkId,
                 rerankScore,
                 searchQueries,
                 dataSourceIndex,
                 originalSearchScore,
                 filterReason,
-                serializedAdditionalRawData);
+                filePath,
+                additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<ChatRetrievedDocument>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatRetrievedDocument>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<ChatRetrievedDocument>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ChatRetrievedDocument>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -240,15 +257,18 @@ namespace Azure.AI.OpenAI.Chat
             }
         }
 
-        ChatRetrievedDocument IPersistableModel<ChatRetrievedDocument>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ChatRetrievedDocument>)this).GetFormatFromOptions(options) : options.Format;
+        ChatRetrievedDocument IPersistableModel<ChatRetrievedDocument>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        /// <param name="data"> The data to parse. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual ChatRetrievedDocument PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ChatRetrievedDocument>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeChatRetrievedDocument(document.RootElement, options);
                     }
                 default:
@@ -258,18 +278,22 @@ namespace Azure.AI.OpenAI.Chat
 
         string IPersistableModel<ChatRetrievedDocument>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static ChatRetrievedDocument FromResponse(PipelineResponse response)
+        /// <param name="chatRetrievedDocument"> The <see cref="ChatRetrievedDocument"/> to serialize into <see cref="BinaryContent"/>. </param>
+        public static implicit operator BinaryContent(ChatRetrievedDocument chatRetrievedDocument)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeChatRetrievedDocument(document.RootElement);
+            if (chatRetrievedDocument == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(chatRetrievedDocument, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        /// <param name="result"> The <see cref="ClientResult"/> to deserialize the <see cref="ChatRetrievedDocument"/> from. </param>
+        public static explicit operator ChatRetrievedDocument(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeChatRetrievedDocument(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

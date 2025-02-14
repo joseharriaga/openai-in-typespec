@@ -7,9 +7,11 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using Azure.AI.OpenAI;
 
 namespace Azure.AI.OpenAI.Chat
 {
+    /// <summary></summary>
     public partial class ElasticsearchChatDataSource : IJsonModel<ElasticsearchChatDataSource>
     {
         void IJsonModel<ElasticsearchChatDataSource>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -23,70 +25,69 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="options"> The client options for reading and writing models. </param>
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ElasticsearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ElasticsearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ElasticsearchChatDataSource)} does not support writing '{format}' format.");
             }
-
             base.JsonModelWriteCore(writer, options);
-            if (SerializedAdditionalRawData?.ContainsKey("parameters") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("parameters") != true)
             {
                 writer.WritePropertyName("parameters"u8);
                 writer.WriteObjectValue<InternalElasticsearchChatDataSourceParameters>(InternalParameters, options);
             }
         }
 
-        ElasticsearchChatDataSource IJsonModel<ElasticsearchChatDataSource>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        ElasticsearchChatDataSource IJsonModel<ElasticsearchChatDataSource>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (ElasticsearchChatDataSource)JsonModelCreateCore(ref reader, options);
+
+        /// <param name="reader"> The JSON reader. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override ChatDataSource JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<ElasticsearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<ElasticsearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(ElasticsearchChatDataSource)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeElasticsearchChatDataSource(document.RootElement, options);
         }
 
-        internal static ElasticsearchChatDataSource DeserializeElasticsearchChatDataSource(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static ElasticsearchChatDataSource DeserializeElasticsearchChatDataSource(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            InternalElasticsearchChatDataSourceParameters parameters = default;
-            string type = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string @type = "elasticsearch";
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            InternalElasticsearchChatDataSourceParameters internalParameters = default;
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("parameters"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    parameters = InternalElasticsearchChatDataSourceParameters.DeserializeInternalElasticsearchChatDataSourceParameters(property.Value, options);
+                    @type = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("parameters"u8))
                 {
-                    type = property.Value.GetString();
+                    internalParameters = InternalElasticsearchChatDataSourceParameters.DeserializeInternalElasticsearchChatDataSourceParameters(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new ElasticsearchChatDataSource(type, serializedAdditionalRawData, parameters);
+            return new ElasticsearchChatDataSource(@type, additionalBinaryDataProperties, internalParameters);
         }
 
-        BinaryData IPersistableModel<ElasticsearchChatDataSource>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ElasticsearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<ElasticsearchChatDataSource>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ElasticsearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -96,15 +97,18 @@ namespace Azure.AI.OpenAI.Chat
             }
         }
 
-        ElasticsearchChatDataSource IPersistableModel<ElasticsearchChatDataSource>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<ElasticsearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+        ElasticsearchChatDataSource IPersistableModel<ElasticsearchChatDataSource>.Create(BinaryData data, ModelReaderWriterOptions options) => (ElasticsearchChatDataSource)PersistableModelCreateCore(data, options);
 
+        /// <param name="data"> The data to parse. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override ChatDataSource PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ElasticsearchChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeElasticsearchChatDataSource(document.RootElement, options);
                     }
                 default:
@@ -114,18 +118,22 @@ namespace Azure.AI.OpenAI.Chat
 
         string IPersistableModel<ElasticsearchChatDataSource>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static new ElasticsearchChatDataSource FromResponse(PipelineResponse response)
+        /// <param name="elasticsearchChatDataSource"> The <see cref="ElasticsearchChatDataSource"/> to serialize into <see cref="BinaryContent"/>. </param>
+        public static implicit operator BinaryContent(ElasticsearchChatDataSource elasticsearchChatDataSource)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeElasticsearchChatDataSource(document.RootElement);
+            if (elasticsearchChatDataSource == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(elasticsearchChatDataSource, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal override BinaryContent ToBinaryContent()
+        /// <param name="result"> The <see cref="ClientResult"/> to deserialize the <see cref="ElasticsearchChatDataSource"/> from. </param>
+        public static explicit operator ElasticsearchChatDataSource(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeElasticsearchChatDataSource(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

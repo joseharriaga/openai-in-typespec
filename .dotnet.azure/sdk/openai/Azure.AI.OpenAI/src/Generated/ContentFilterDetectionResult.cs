@@ -13,65 +13,32 @@ namespace Azure.AI.OpenAI
     /// </summary>
     public partial class ContentFilterDetectionResult
     {
-        /// <summary>
-        /// Keeps track of any properties unknown to the library.
-        /// <para>
-        /// To assign an object to the value of this property use <see cref="BinaryData.FromObjectAsJson{T}(T, System.Text.Json.JsonSerializerOptions?)"/>.
-        /// </para>
-        /// <para>
-        /// To assign an already formatted json string to this property use <see cref="BinaryData.FromString(string)"/>.
-        /// </para>
-        /// <para>
-        /// Examples:
-        /// <list type="bullet">
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson("foo")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("\"foo\"")</term>
-        /// <description>Creates a payload of "foo".</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromObjectAsJson(new { key = "value" })</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// <item>
-        /// <term>BinaryData.FromString("{\"key\": \"value\"}")</term>
-        /// <description>Creates a payload of { "key": "value" }.</description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// </summary>
-        internal IDictionary<string, BinaryData> SerializedAdditionalRawData { get; set; }
-        /// <summary> Initializes a new instance of <see cref="ContentFilterDetectionResult"/>. </summary>
-        /// <param name="filtered"> Whether the content detection resulted in a content filtering action. </param>
-        /// <param name="detected"> Whether the labeled content category was detected in the content. </param>
+        /// <summary> Keeps track of any properties unknown to the library. </summary>
+        private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
+
         internal ContentFilterDetectionResult(bool filtered, bool detected)
         {
             Filtered = filtered;
             Detected = detected;
         }
 
-        /// <summary> Initializes a new instance of <see cref="ContentFilterDetectionResult"/>. </summary>
-        /// <param name="filtered"> Whether the content detection resulted in a content filtering action. </param>
-        /// <param name="detected"> Whether the labeled content category was detected in the content. </param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal ContentFilterDetectionResult(bool filtered, bool detected, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal ContentFilterDetectionResult(bool filtered, bool detected, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Filtered = filtered;
             Detected = detected;
-            SerializedAdditionalRawData = serializedAdditionalRawData;
-        }
-
-        /// <summary> Initializes a new instance of <see cref="ContentFilterDetectionResult"/> for deserialization. </summary>
-        internal ContentFilterDetectionResult()
-        {
+            _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
         /// <summary> Whether the content detection resulted in a content filtering action. </summary>
         public bool Filtered { get; }
+
         /// <summary> Whether the labeled content category was detected in the content. </summary>
         public bool Detected { get; }
+
+        internal IDictionary<string, BinaryData> SerializedAdditionalRawData
+        {
+            get => _additionalBinaryDataProperties;
+            set => _additionalBinaryDataProperties = value;
+        }
     }
 }

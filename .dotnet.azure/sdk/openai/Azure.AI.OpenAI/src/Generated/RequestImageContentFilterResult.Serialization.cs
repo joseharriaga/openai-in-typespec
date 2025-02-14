@@ -10,8 +10,13 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI
 {
+    /// <summary></summary>
     public partial class RequestImageContentFilterResult : IJsonModel<RequestImageContentFilterResult>
     {
+        internal RequestImageContentFilterResult()
+        {
+        }
+
         void IJsonModel<RequestImageContentFilterResult>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -23,142 +28,141 @@ namespace Azure.AI.OpenAI
         /// <param name="options"> The client options for reading and writing models. </param>
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RequestImageContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<RequestImageContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(RequestImageContentFilterResult)} does not support writing '{format}' format.");
             }
-
             base.JsonModelWriteCore(writer, options);
-            if (SerializedAdditionalRawData?.ContainsKey("profanity") != true && Optional.IsDefined(Profanity))
+            if (Optional.IsDefined(Profanity) && _additionalBinaryDataProperties?.ContainsKey("profanity") != true)
             {
                 writer.WritePropertyName("profanity"u8);
                 writer.WriteObjectValue(Profanity, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("custom_blocklists") != true && Optional.IsDefined(CustomBlocklists))
+            if (Optional.IsDefined(CustomBlocklists) && _additionalBinaryDataProperties?.ContainsKey("custom_blocklists") != true)
             {
                 writer.WritePropertyName("custom_blocklists"u8);
                 writer.WriteObjectValue(CustomBlocklists, options);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("jailbreak") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("jailbreak") != true)
             {
                 writer.WritePropertyName("jailbreak"u8);
                 writer.WriteObjectValue(Jailbreak, options);
             }
         }
 
-        RequestImageContentFilterResult IJsonModel<RequestImageContentFilterResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        RequestImageContentFilterResult IJsonModel<RequestImageContentFilterResult>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (RequestImageContentFilterResult)JsonModelCreateCore(ref reader, options);
+
+        /// <param name="reader"> The JSON reader. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override ResponseImageContentFilterResult JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<RequestImageContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<RequestImageContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(RequestImageContentFilterResult)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeRequestImageContentFilterResult(document.RootElement, options);
         }
 
-        internal static RequestImageContentFilterResult DeserializeRequestImageContentFilterResult(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static RequestImageContentFilterResult DeserializeRequestImageContentFilterResult(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            ContentFilterDetectionResult profanity = default;
-            ContentFilterBlocklistResult customBlocklists = default;
-            ContentFilterDetectionResult jailbreak = default;
             ContentFilterSeverityResult sexual = default;
             ContentFilterSeverityResult violence = default;
             ContentFilterSeverityResult hate = default;
             ContentFilterSeverityResult selfHarm = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            ContentFilterDetectionResult profanity = default;
+            ContentFilterBlocklistResult customBlocklists = default;
+            ContentFilterDetectionResult jailbreak = default;
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("profanity"u8))
+                if (prop.NameEquals("sexual"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    profanity = ContentFilterDetectionResult.DeserializeContentFilterDetectionResult(property.Value, options);
+                    sexual = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("custom_blocklists"u8))
+                if (prop.NameEquals("violence"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    customBlocklists = ContentFilterBlocklistResult.DeserializeContentFilterBlocklistResult(property.Value, options);
+                    violence = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("jailbreak"u8))
+                if (prop.NameEquals("hate"u8))
                 {
-                    jailbreak = ContentFilterDetectionResult.DeserializeContentFilterDetectionResult(property.Value, options);
-                    continue;
-                }
-                if (property.NameEquals("sexual"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    sexual = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
+                    hate = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("violence"u8))
+                if (prop.NameEquals("self_harm"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    violence = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
+                    selfHarm = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("hate"u8))
+                if (prop.NameEquals("profanity"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    hate = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
+                    profanity = ContentFilterDetectionResult.DeserializeContentFilterDetectionResult(prop.Value, options);
                     continue;
                 }
-                if (property.NameEquals("self_harm"u8))
+                if (prop.NameEquals("custom_blocklists"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    selfHarm = ContentFilterSeverityResult.DeserializeContentFilterSeverityResult(property.Value, options);
+                    customBlocklists = ContentFilterBlocklistResult.DeserializeContentFilterBlocklistResult(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("jailbreak"u8))
+                {
+                    jailbreak = ContentFilterDetectionResult.DeserializeContentFilterDetectionResult(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new RequestImageContentFilterResult(
                 sexual,
                 violence,
                 hate,
                 selfHarm,
-                serializedAdditionalRawData,
+                additionalBinaryDataProperties,
                 profanity,
                 customBlocklists,
                 jailbreak);
         }
 
-        BinaryData IPersistableModel<RequestImageContentFilterResult>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<RequestImageContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<RequestImageContentFilterResult>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<RequestImageContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -168,15 +172,18 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        RequestImageContentFilterResult IPersistableModel<RequestImageContentFilterResult>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<RequestImageContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
+        RequestImageContentFilterResult IPersistableModel<RequestImageContentFilterResult>.Create(BinaryData data, ModelReaderWriterOptions options) => (RequestImageContentFilterResult)PersistableModelCreateCore(data, options);
 
+        /// <param name="data"> The data to parse. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override ResponseImageContentFilterResult PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<RequestImageContentFilterResult>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeRequestImageContentFilterResult(document.RootElement, options);
                     }
                 default:
@@ -186,18 +193,22 @@ namespace Azure.AI.OpenAI
 
         string IPersistableModel<RequestImageContentFilterResult>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static new RequestImageContentFilterResult FromResponse(PipelineResponse response)
+        /// <param name="requestImageContentFilterResult"> The <see cref="RequestImageContentFilterResult"/> to serialize into <see cref="BinaryContent"/>. </param>
+        public static implicit operator BinaryContent(RequestImageContentFilterResult requestImageContentFilterResult)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeRequestImageContentFilterResult(document.RootElement);
+            if (requestImageContentFilterResult == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(requestImageContentFilterResult, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal override BinaryContent ToBinaryContent()
+        /// <param name="result"> The <see cref="ClientResult"/> to deserialize the <see cref="RequestImageContentFilterResult"/> from. </param>
+        public static explicit operator RequestImageContentFilterResult(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeRequestImageContentFilterResult(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Text.Json;
 
 namespace Azure.AI.OpenAI
 {
+    /// <summary></summary>
     public partial class UserSecurityContext : IJsonModel<UserSecurityContext>
     {
         void IJsonModel<UserSecurityContext>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -23,35 +24,34 @@ namespace Azure.AI.OpenAI
         /// <param name="options"> The client options for reading and writing models. </param>
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<UserSecurityContext>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<UserSecurityContext>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(UserSecurityContext)} does not support writing '{format}' format.");
             }
-
-            if (SerializedAdditionalRawData?.ContainsKey("application_name") != true && Optional.IsDefined(ApplicationName))
+            if (Optional.IsDefined(ApplicationName) && _additionalBinaryDataProperties?.ContainsKey("application_name") != true)
             {
                 writer.WritePropertyName("application_name"u8);
                 writer.WriteStringValue(ApplicationName);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("end_user_id") != true && Optional.IsDefined(EndUserId))
+            if (Optional.IsDefined(EndUserId) && _additionalBinaryDataProperties?.ContainsKey("end_user_id") != true)
             {
                 writer.WritePropertyName("end_user_id"u8);
                 writer.WriteStringValue(EndUserId);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("end_user_tenant_id") != true && Optional.IsDefined(EndUserTenantId))
+            if (Optional.IsDefined(EndUserTenantId) && _additionalBinaryDataProperties?.ContainsKey("end_user_tenant_id") != true)
             {
                 writer.WritePropertyName("end_user_tenant_id"u8);
                 writer.WriteStringValue(EndUserTenantId);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("source_ip") != true && Optional.IsDefined(SourceIP))
+            if (Optional.IsDefined(SourceIP) && _additionalBinaryDataProperties?.ContainsKey("source_ip") != true)
             {
                 writer.WritePropertyName("source_ip"u8);
                 writer.WriteStringValue(SourceIP);
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
                     if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                     {
@@ -59,7 +59,7 @@ namespace Azure.AI.OpenAI
                     }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -70,22 +70,23 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        UserSecurityContext IJsonModel<UserSecurityContext>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        UserSecurityContext IJsonModel<UserSecurityContext>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        /// <param name="reader"> The JSON reader. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual UserSecurityContext JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<UserSecurityContext>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<UserSecurityContext>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(UserSecurityContext)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeUserSecurityContext(document.RootElement, options);
         }
 
-        internal static UserSecurityContext DeserializeUserSecurityContext(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static UserSecurityContext DeserializeUserSecurityContext(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
@@ -93,45 +94,44 @@ namespace Azure.AI.OpenAI
             string applicationName = default;
             string endUserId = default;
             string endUserTenantId = default;
-            string sourceIp = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string sourceIP = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("application_name"u8))
+                if (prop.NameEquals("application_name"u8))
                 {
-                    applicationName = property.Value.GetString();
+                    applicationName = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("end_user_id"u8))
+                if (prop.NameEquals("end_user_id"u8))
                 {
-                    endUserId = property.Value.GetString();
+                    endUserId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("end_user_tenant_id"u8))
+                if (prop.NameEquals("end_user_tenant_id"u8))
                 {
-                    endUserTenantId = property.Value.GetString();
+                    endUserTenantId = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("source_ip"u8))
+                if (prop.NameEquals("source_ip"u8))
                 {
-                    sourceIp = property.Value.GetString();
+                    sourceIP = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new UserSecurityContext(applicationName, endUserId, endUserTenantId, sourceIp, serializedAdditionalRawData);
+            return new UserSecurityContext(applicationName, endUserId, endUserTenantId, sourceIP, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<UserSecurityContext>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<UserSecurityContext>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<UserSecurityContext>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<UserSecurityContext>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -141,15 +141,18 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        UserSecurityContext IPersistableModel<UserSecurityContext>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<UserSecurityContext>)this).GetFormatFromOptions(options) : options.Format;
+        UserSecurityContext IPersistableModel<UserSecurityContext>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        /// <param name="data"> The data to parse. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected virtual UserSecurityContext PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<UserSecurityContext>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeUserSecurityContext(document.RootElement, options);
                     }
                 default:
@@ -159,18 +162,22 @@ namespace Azure.AI.OpenAI
 
         string IPersistableModel<UserSecurityContext>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static UserSecurityContext FromResponse(PipelineResponse response)
+        /// <param name="userSecurityContext"> The <see cref="UserSecurityContext"/> to serialize into <see cref="BinaryContent"/>. </param>
+        public static implicit operator BinaryContent(UserSecurityContext userSecurityContext)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeUserSecurityContext(document.RootElement);
+            if (userSecurityContext == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(userSecurityContext, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        /// <param name="result"> The <see cref="ClientResult"/> to deserialize the <see cref="UserSecurityContext"/> from. </param>
+        public static explicit operator UserSecurityContext(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeUserSecurityContext(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

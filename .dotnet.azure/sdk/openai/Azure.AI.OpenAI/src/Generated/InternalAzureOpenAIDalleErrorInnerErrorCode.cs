@@ -7,39 +7,37 @@ using System.ComponentModel;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary> The AzureOpenAIDalleErrorInnerError_code. </summary>
     internal readonly partial struct InternalAzureOpenAIDalleErrorInnerErrorCode : IEquatable<InternalAzureOpenAIDalleErrorInnerErrorCode>
     {
         private readonly string _value;
-
-        /// <summary> Initializes a new instance of <see cref="InternalAzureOpenAIDalleErrorInnerErrorCode"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
-        public InternalAzureOpenAIDalleErrorInnerErrorCode(string value)
-        {
-            _value = value ?? throw new ArgumentNullException(nameof(value));
-        }
-
+        /// <summary> ResponsibleAIPolicyViolation. </summary>
         private const string ResponsibleAIPolicyViolationValue = "ResponsibleAIPolicyViolation";
 
-        /// <summary> ResponsibleAIPolicyViolation. </summary>
+        public InternalAzureOpenAIDalleErrorInnerErrorCode(string value)
+        {
+            Argument.AssertNotNull(value, nameof(value));
+
+            _value = value;
+        }
+
         internal static InternalAzureOpenAIDalleErrorInnerErrorCode ResponsibleAIPolicyViolation { get; set; } = new InternalAzureOpenAIDalleErrorInnerErrorCode(ResponsibleAIPolicyViolationValue);
-        /// <summary> Determines if two <see cref="InternalAzureOpenAIDalleErrorInnerErrorCode"/> values are the same. </summary>
+
         public static bool operator ==(InternalAzureOpenAIDalleErrorInnerErrorCode left, InternalAzureOpenAIDalleErrorInnerErrorCode right) => left.Equals(right);
-        /// <summary> Determines if two <see cref="InternalAzureOpenAIDalleErrorInnerErrorCode"/> values are not the same. </summary>
+
         public static bool operator !=(InternalAzureOpenAIDalleErrorInnerErrorCode left, InternalAzureOpenAIDalleErrorInnerErrorCode right) => !left.Equals(right);
-        /// <summary> Converts a <see cref="string"/> to a <see cref="InternalAzureOpenAIDalleErrorInnerErrorCode"/>. </summary>
+
         public static implicit operator InternalAzureOpenAIDalleErrorInnerErrorCode(string value) => new InternalAzureOpenAIDalleErrorInnerErrorCode(value);
 
-        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is InternalAzureOpenAIDalleErrorInnerErrorCode other && Equals(other);
-        /// <inheritdoc />
+
         public bool Equals(InternalAzureOpenAIDalleErrorInnerErrorCode other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(_value) : 0;
-        /// <inheritdoc />
+
+        /// <inheritdoc/>
         public override string ToString() => _value;
     }
 }

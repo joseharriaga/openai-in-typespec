@@ -3,15 +3,19 @@
 #nullable disable
 
 using System;
-using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using Azure.AI.OpenAI;
 
 namespace Azure.AI.OpenAI.Chat
 {
     internal partial class InternalUnknownAzureChatDataSourceVectorizationSource : IJsonModel<DataSourceVectorizer>
     {
+        internal InternalUnknownAzureChatDataSourceVectorizationSource()
+        {
+        }
+
         void IJsonModel<DataSourceVectorizer>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -19,63 +23,57 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        /// <param name="writer"> The JSON writer. </param>
-        /// <param name="options"> The client options for reading and writing models. </param>
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DataSourceVectorizer>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<DataSourceVectorizer>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(DataSourceVectorizer)} does not support writing '{format}' format.");
             }
-
             base.JsonModelWriteCore(writer, options);
         }
 
-        DataSourceVectorizer IJsonModel<DataSourceVectorizer>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        DataSourceVectorizer IJsonModel<DataSourceVectorizer>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected override DataSourceVectorizer JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<DataSourceVectorizer>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<DataSourceVectorizer>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(DataSourceVectorizer)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeDataSourceVectorizer(document.RootElement, options);
         }
 
-        internal static InternalUnknownAzureChatDataSourceVectorizationSource DeserializeInternalUnknownAzureChatDataSourceVectorizationSource(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalUnknownAzureChatDataSourceVectorizationSource DeserializeInternalUnknownAzureChatDataSourceVectorizationSource(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            string type = "Unknown";
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string @type = "unknown";
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    type = property.Value.GetString();
+                    @type = prop.Value.GetString();
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new InternalUnknownAzureChatDataSourceVectorizationSource(type, serializedAdditionalRawData);
+            return new InternalUnknownAzureChatDataSourceVectorizationSource(@type, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<DataSourceVectorizer>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<DataSourceVectorizer>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<DataSourceVectorizer>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<DataSourceVectorizer>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -85,15 +83,16 @@ namespace Azure.AI.OpenAI.Chat
             }
         }
 
-        DataSourceVectorizer IPersistableModel<DataSourceVectorizer>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<DataSourceVectorizer>)this).GetFormatFromOptions(options) : options.Format;
+        DataSourceVectorizer IPersistableModel<DataSourceVectorizer>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected override DataSourceVectorizer PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<DataSourceVectorizer>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeDataSourceVectorizer(document.RootElement, options);
                     }
                 default:
@@ -102,19 +101,5 @@ namespace Azure.AI.OpenAI.Chat
         }
 
         string IPersistableModel<DataSourceVectorizer>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
-
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static new InternalUnknownAzureChatDataSourceVectorizationSource FromResponse(PipelineResponse response)
-        {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalUnknownAzureChatDataSourceVectorizationSource(document.RootElement);
-        }
-
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal override BinaryContent ToBinaryContent()
-        {
-            return BinaryContent.Create<DataSourceVectorizer>(this, ModelSerializationExtensions.WireOptions);
-        }
     }
 }

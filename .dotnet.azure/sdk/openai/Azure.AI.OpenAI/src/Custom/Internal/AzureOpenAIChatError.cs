@@ -18,7 +18,7 @@ internal partial class AzureOpenAIChatError
         {
             using JsonDocument errorDocument = JsonDocument.Parse(response.Content);
             AzureOpenAIChatErrorResponse errorResponse
-                = AzureOpenAIChatErrorResponse.DeserializeAzureOpenAIChatErrorResponse(errorDocument.RootElement);
+                = AzureOpenAIChatErrorResponse.DeserializeAzureOpenAIChatErrorResponse(errorDocument.RootElement, null);
             return errorResponse.Error;
         }
         catch (InvalidOperationException)

@@ -7,19 +7,13 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions. </summary>
     internal partial class InternalAzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions : DataSourceAuthentication
     {
-        /// <summary> Initializes a new instance of <see cref="InternalAzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions"/>. </summary>
-        public InternalAzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions()
+        public InternalAzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions() : base("system_assigned_managed_identity")
         {
-            Type = "system_assigned_managed_identity";
         }
 
-        /// <summary> Initializes a new instance of <see cref="InternalAzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions"/>. </summary>
-        /// <param name="type"></param>
-        /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal InternalAzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions(string type, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(type, serializedAdditionalRawData)
+        internal InternalAzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties) : base(@type, additionalBinaryDataProperties)
         {
         }
     }

@@ -7,48 +7,63 @@ using System.ComponentModel;
 
 namespace Azure.AI.OpenAI
 {
-    /// <summary> The AzureContentFilterSeverityResultSeverity. </summary>
+    /// <summary></summary>
     public readonly partial struct ContentFilterSeverity : IEquatable<ContentFilterSeverity>
     {
         private readonly string _value;
-
-        /// <summary> Initializes a new instance of <see cref="ContentFilterSeverity"/>. </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
-        public ContentFilterSeverity(string value)
-        {
-            _value = value ?? throw new ArgumentNullException(nameof(value));
-        }
-
         private const string SafeValue = "safe";
         private const string LowValue = "low";
         private const string MediumValue = "medium";
         private const string HighValue = "high";
 
-        /// <summary> safe. </summary>
+        /// <summary> Initializes a new instance of <see cref="ContentFilterSeverity"/>. </summary>
+        /// <param name="value"> The value. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
+        public ContentFilterSeverity(string value)
+        {
+            Argument.AssertNotNull(value, nameof(value));
+
+            _value = value;
+        }
+
+        /// <summary> Gets the Safe. </summary>
         public static ContentFilterSeverity Safe { get; } = new ContentFilterSeverity(SafeValue);
-        /// <summary> low. </summary>
+
+        /// <summary> Gets the Low. </summary>
         public static ContentFilterSeverity Low { get; } = new ContentFilterSeverity(LowValue);
-        /// <summary> medium. </summary>
+
+        /// <summary> Gets the Medium. </summary>
         public static ContentFilterSeverity Medium { get; } = new ContentFilterSeverity(MediumValue);
-        /// <summary> high. </summary>
+
+        /// <summary> Gets the High. </summary>
         public static ContentFilterSeverity High { get; } = new ContentFilterSeverity(HighValue);
+
         /// <summary> Determines if two <see cref="ContentFilterSeverity"/> values are the same. </summary>
+        /// <param name="left"> The left value to compare. </param>
+        /// <param name="right"> The right value to compare. </param>
         public static bool operator ==(ContentFilterSeverity left, ContentFilterSeverity right) => left.Equals(right);
+
         /// <summary> Determines if two <see cref="ContentFilterSeverity"/> values are not the same. </summary>
+        /// <param name="left"> The left value to compare. </param>
+        /// <param name="right"> The right value to compare. </param>
         public static bool operator !=(ContentFilterSeverity left, ContentFilterSeverity right) => !left.Equals(right);
-        /// <summary> Converts a <see cref="string"/> to a <see cref="ContentFilterSeverity"/>. </summary>
+
+        /// <summary> Converts a string to a <see cref="ContentFilterSeverity"/>. </summary>
+        /// <param name="value"> The value. </param>
         public static implicit operator ContentFilterSeverity(string value) => new ContentFilterSeverity(value);
 
-        /// <inheritdoc />
+        /// <param name="obj"> The object to compare. </param>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => obj is ContentFilterSeverity other && Equals(other);
-        /// <inheritdoc />
+
+        /// <param name="other"> The instance to compare. </param>
         public bool Equals(ContentFilterSeverity other) => string.Equals(_value, other._value, StringComparison.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => _value != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(_value) : 0;
-        /// <inheritdoc />
+
+        /// <inheritdoc/>
         public override string ToString() => _value;
     }
 }

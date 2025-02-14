@@ -19,24 +19,21 @@ namespace Azure.AI.OpenAI
             writer.WriteEndObject();
         }
 
-        /// <param name="writer"> The JSON writer. </param>
-        /// <param name="options"> The client options for reading and writing models. </param>
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureOpenAIChatErrorResponse>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<AzureOpenAIChatErrorResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(AzureOpenAIChatErrorResponse)} does not support writing '{format}' format.");
             }
-
-            if (SerializedAdditionalRawData?.ContainsKey("error") != true && Optional.IsDefined(Error))
+            if (Optional.IsDefined(Error) && _additionalBinaryDataProperties?.ContainsKey("error") != true)
             {
                 writer.WritePropertyName("error"u8);
                 writer.WriteObjectValue(Error, options);
             }
-            if (SerializedAdditionalRawData != null)
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                foreach (var item in _additionalBinaryDataProperties)
                 {
                     if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                     {
@@ -44,7 +41,7 @@ namespace Azure.AI.OpenAI
                     }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -55,54 +52,51 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        AzureOpenAIChatErrorResponse IJsonModel<AzureOpenAIChatErrorResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        AzureOpenAIChatErrorResponse IJsonModel<AzureOpenAIChatErrorResponse>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual AzureOpenAIChatErrorResponse JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureOpenAIChatErrorResponse>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<AzureOpenAIChatErrorResponse>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(AzureOpenAIChatErrorResponse)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeAzureOpenAIChatErrorResponse(document.RootElement, options);
         }
 
-        internal static AzureOpenAIChatErrorResponse DeserializeAzureOpenAIChatErrorResponse(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static AzureOpenAIChatErrorResponse DeserializeAzureOpenAIChatErrorResponse(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             AzureOpenAIChatError error = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("error"u8))
+                if (prop.NameEquals("error"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    error = AzureOpenAIChatError.DeserializeAzureOpenAIChatError(property.Value, options);
+                    error = AzureOpenAIChatError.DeserializeAzureOpenAIChatError(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new AzureOpenAIChatErrorResponse(error, serializedAdditionalRawData);
+            return new AzureOpenAIChatErrorResponse(error, additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<AzureOpenAIChatErrorResponse>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureOpenAIChatErrorResponse>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<AzureOpenAIChatErrorResponse>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<AzureOpenAIChatErrorResponse>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -112,15 +106,16 @@ namespace Azure.AI.OpenAI
             }
         }
 
-        AzureOpenAIChatErrorResponse IPersistableModel<AzureOpenAIChatErrorResponse>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<AzureOpenAIChatErrorResponse>)this).GetFormatFromOptions(options) : options.Format;
+        AzureOpenAIChatErrorResponse IPersistableModel<AzureOpenAIChatErrorResponse>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual AzureOpenAIChatErrorResponse PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<AzureOpenAIChatErrorResponse>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeAzureOpenAIChatErrorResponse(document.RootElement, options);
                     }
                 default:
@@ -130,18 +125,20 @@ namespace Azure.AI.OpenAI
 
         string IPersistableModel<AzureOpenAIChatErrorResponse>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static AzureOpenAIChatErrorResponse FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(AzureOpenAIChatErrorResponse azureOpenAIChatErrorResponse)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeAzureOpenAIChatErrorResponse(document.RootElement);
+            if (azureOpenAIChatErrorResponse == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(azureOpenAIChatErrorResponse, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator AzureOpenAIChatErrorResponse(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeAzureOpenAIChatErrorResponse(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

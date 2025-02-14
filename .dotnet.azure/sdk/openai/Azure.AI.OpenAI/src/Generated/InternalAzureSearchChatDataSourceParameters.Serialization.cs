@@ -7,11 +7,16 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using Azure.AI.OpenAI;
 
 namespace Azure.AI.OpenAI.Chat
 {
     internal partial class InternalAzureSearchChatDataSourceParameters : IJsonModel<InternalAzureSearchChatDataSourceParameters>
     {
+        internal InternalAzureSearchChatDataSourceParameters()
+        {
+        }
+
         void IJsonModel<InternalAzureSearchChatDataSourceParameters>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -19,94 +24,96 @@ namespace Azure.AI.OpenAI.Chat
             writer.WriteEndObject();
         }
 
-        /// <param name="writer"> The JSON writer. </param>
-        /// <param name="options"> The client options for reading and writing models. </param>
         protected virtual void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureSearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureSearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalAzureSearchChatDataSourceParameters)} does not support writing '{format}' format.");
             }
-
-            if (SerializedAdditionalRawData?.ContainsKey("top_n_documents") != true && Optional.IsDefined(TopNDocuments))
+            if (Optional.IsDefined(TopNDocuments) && _additionalBinaryDataProperties?.ContainsKey("top_n_documents") != true)
             {
                 writer.WritePropertyName("top_n_documents"u8);
                 writer.WriteNumberValue(TopNDocuments.Value);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("in_scope") != true && Optional.IsDefined(InScope))
+            if (Optional.IsDefined(InScope) && _additionalBinaryDataProperties?.ContainsKey("in_scope") != true)
             {
                 writer.WritePropertyName("in_scope"u8);
                 writer.WriteBooleanValue(InScope.Value);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("strictness") != true && Optional.IsDefined(Strictness))
+            if (Optional.IsDefined(Strictness) && _additionalBinaryDataProperties?.ContainsKey("strictness") != true)
             {
                 writer.WritePropertyName("strictness"u8);
                 writer.WriteNumberValue(Strictness.Value);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("max_search_queries") != true && Optional.IsDefined(MaxSearchQueries))
+            if (Optional.IsDefined(MaxSearchQueries) && _additionalBinaryDataProperties?.ContainsKey("max_search_queries") != true)
             {
                 writer.WritePropertyName("max_search_queries"u8);
                 writer.WriteNumberValue(MaxSearchQueries.Value);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("allow_partial_result") != true && Optional.IsDefined(AllowPartialResult))
+            if (Optional.IsDefined(AllowPartialResult) && _additionalBinaryDataProperties?.ContainsKey("allow_partial_result") != true)
             {
                 writer.WritePropertyName("allow_partial_result"u8);
                 writer.WriteBooleanValue(AllowPartialResult.Value);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("include_contexts") != true && Optional.IsCollectionDefined(_internalIncludeContexts))
-            {
-                writer.WritePropertyName("include_contexts"u8);
-                writer.WriteStartArray();
-                foreach (var item in _internalIncludeContexts)
-                {
-                    writer.WriteStringValue(item);
-                }
-                writer.WriteEndArray();
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("endpoint") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("endpoint") != true)
             {
                 writer.WritePropertyName("endpoint"u8);
                 writer.WriteStringValue(Endpoint.AbsoluteUri);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("index_name") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("index_name") != true)
             {
                 writer.WritePropertyName("index_name"u8);
                 writer.WriteStringValue(IndexName);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("authentication") != true)
-            {
-                writer.WritePropertyName("authentication"u8);
-                writer.WriteObjectValue<DataSourceAuthentication>(Authentication, options);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("fields_mapping") != true && Optional.IsDefined(FieldMappings))
-            {
-                writer.WritePropertyName("fields_mapping"u8);
-                writer.WriteObjectValue<DataSourceFieldMappings>(FieldMappings, options);
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("query_type") != true && Optional.IsDefined(QueryType))
-            {
-                writer.WritePropertyName("query_type"u8);
-                writer.WriteStringValue(QueryType.Value.ToString());
-            }
-            if (SerializedAdditionalRawData?.ContainsKey("semantic_configuration") != true && Optional.IsDefined(SemanticConfiguration))
+            if (Optional.IsDefined(SemanticConfiguration) && _additionalBinaryDataProperties?.ContainsKey("semantic_configuration") != true)
             {
                 writer.WritePropertyName("semantic_configuration"u8);
                 writer.WriteStringValue(SemanticConfiguration);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("filter") != true && Optional.IsDefined(Filter))
+            if (Optional.IsDefined(Filter) && _additionalBinaryDataProperties?.ContainsKey("filter") != true)
             {
                 writer.WritePropertyName("filter"u8);
                 writer.WriteStringValue(Filter);
             }
-            if (SerializedAdditionalRawData?.ContainsKey("embedding_dependency") != true && Optional.IsDefined(VectorizationSource))
+            if (_additionalBinaryDataProperties?.ContainsKey("authentication") != true)
+            {
+                writer.WritePropertyName("authentication"u8);
+                writer.WriteObjectValue<DataSourceAuthentication>(Authentication, options);
+            }
+            if (Optional.IsDefined(FieldMappings) && _additionalBinaryDataProperties?.ContainsKey("fields_mapping") != true)
+            {
+                writer.WritePropertyName("fields_mapping"u8);
+                writer.WriteObjectValue<DataSourceFieldMappings>(FieldMappings, options);
+            }
+            if (Optional.IsDefined(QueryType) && _additionalBinaryDataProperties?.ContainsKey("query_type") != true)
+            {
+                writer.WritePropertyName("query_type"u8);
+                writer.WriteStringValue(QueryType.Value.ToString());
+            }
+            if (Optional.IsDefined(VectorizationSource) && _additionalBinaryDataProperties?.ContainsKey("embedding_dependency") != true)
             {
                 writer.WritePropertyName("embedding_dependency"u8);
                 writer.WriteObjectValue<DataSourceVectorizer>(VectorizationSource, options);
             }
-            if (SerializedAdditionalRawData != null)
+            if (Optional.IsCollectionDefined(_internalIncludeContexts) && _additionalBinaryDataProperties?.ContainsKey("include_contexts") != true)
             {
-                foreach (var item in SerializedAdditionalRawData)
+                writer.WritePropertyName("include_contexts"u8);
+                writer.WriteStartArray();
+                foreach (string item in _internalIncludeContexts)
+                {
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
+                    writer.WriteStringValue(item);
+                }
+                writer.WriteEndArray();
+            }
+            if (options.Format != "W" && _additionalBinaryDataProperties != null)
+            {
+                foreach (var item in _additionalBinaryDataProperties)
                 {
                     if (ModelSerializationExtensions.IsSentinelValue(item.Value))
                     {
@@ -114,7 +121,7 @@ namespace Azure.AI.OpenAI.Chat
                     }
                     writer.WritePropertyName(item.Key);
 #if NET6_0_OR_GREATER
-				writer.WriteRawValue(item.Value);
+                    writer.WriteRawValue(item.Value);
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value))
                     {
@@ -125,22 +132,21 @@ namespace Azure.AI.OpenAI.Chat
             }
         }
 
-        InternalAzureSearchChatDataSourceParameters IJsonModel<InternalAzureSearchChatDataSourceParameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        InternalAzureSearchChatDataSourceParameters IJsonModel<InternalAzureSearchChatDataSourceParameters>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => JsonModelCreateCore(ref reader, options);
+
+        protected virtual InternalAzureSearchChatDataSourceParameters JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureSearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureSearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(InternalAzureSearchChatDataSourceParameters)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializeInternalAzureSearchChatDataSourceParameters(document.RootElement, options);
         }
 
-        internal static InternalAzureSearchChatDataSourceParameters DeserializeInternalAzureSearchChatDataSourceParameters(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static InternalAzureSearchChatDataSourceParameters DeserializeInternalAzureSearchChatDataSourceParameters(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
@@ -150,159 +156,164 @@ namespace Azure.AI.OpenAI.Chat
             int? strictness = default;
             int? maxSearchQueries = default;
             bool? allowPartialResult = default;
-            IList<string> includeContexts = default;
             Uri endpoint = default;
             string indexName = default;
-            DataSourceAuthentication authentication = default;
-            DataSourceFieldMappings fieldsMapping = default;
-            DataSourceQueryType? queryType = default;
             string semanticConfiguration = default;
             string filter = default;
-            DataSourceVectorizer embeddingDependency = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            DataSourceAuthentication authentication = default;
+            DataSourceFieldMappings fieldMappings = default;
+            DataSourceQueryType? queryType = default;
+            DataSourceVectorizer vectorizationSource = default;
+            IList<string> internalIncludeContexts = default;
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("top_n_documents"u8))
+                if (prop.NameEquals("top_n_documents"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    topNDocuments = property.Value.GetInt32();
+                    topNDocuments = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("in_scope"u8))
+                if (prop.NameEquals("in_scope"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    inScope = property.Value.GetBoolean();
+                    inScope = prop.Value.GetBoolean();
                     continue;
                 }
-                if (property.NameEquals("strictness"u8))
+                if (prop.NameEquals("strictness"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    strictness = property.Value.GetInt32();
+                    strictness = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("max_search_queries"u8))
+                if (prop.NameEquals("max_search_queries"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    maxSearchQueries = property.Value.GetInt32();
+                    maxSearchQueries = prop.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("allow_partial_result"u8))
+                if (prop.NameEquals("allow_partial_result"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    allowPartialResult = property.Value.GetBoolean();
+                    allowPartialResult = prop.Value.GetBoolean();
                     continue;
                 }
-                if (property.NameEquals("include_contexts"u8))
+                if (prop.NameEquals("endpoint"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    endpoint = new Uri(prop.Value.GetString());
+                    continue;
+                }
+                if (prop.NameEquals("index_name"u8))
+                {
+                    indexName = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("semantic_configuration"u8))
+                {
+                    semanticConfiguration = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("filter"u8))
+                {
+                    filter = prop.Value.GetString();
+                    continue;
+                }
+                if (prop.NameEquals("authentication"u8))
+                {
+                    authentication = DataSourceAuthentication.DeserializeDataSourceAuthentication(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("fields_mapping"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    fieldMappings = DataSourceFieldMappings.DeserializeDataSourceFieldMappings(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("query_type"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    queryType = new DataSourceQueryType(prop.Value.GetString());
+                    continue;
+                }
+                if (prop.NameEquals("embedding_dependency"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    vectorizationSource = DataSourceVectorizer.DeserializeDataSourceVectorizer(prop.Value, options);
+                    continue;
+                }
+                if (prop.NameEquals("include_contexts"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
                     List<string> array = new List<string>();
-                    foreach (var item in property.Value.EnumerateArray())
+                    foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(item.GetString());
+                        if (item.ValueKind == JsonValueKind.Null)
+                        {
+                            array.Add(null);
+                        }
+                        else
+                        {
+                            array.Add(item.GetString());
+                        }
                     }
-                    includeContexts = array;
-                    continue;
-                }
-                if (property.NameEquals("endpoint"u8))
-                {
-                    endpoint = new Uri(property.Value.GetString());
-                    continue;
-                }
-                if (property.NameEquals("index_name"u8))
-                {
-                    indexName = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("authentication"u8))
-                {
-                    authentication = DataSourceAuthentication.DeserializeDataSourceAuthentication(property.Value, options);
-                    continue;
-                }
-                if (property.NameEquals("fields_mapping"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    fieldsMapping = DataSourceFieldMappings.DeserializeDataSourceFieldMappings(property.Value, options);
-                    continue;
-                }
-                if (property.NameEquals("query_type"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    queryType = new DataSourceQueryType(property.Value.GetString());
-                    continue;
-                }
-                if (property.NameEquals("semantic_configuration"u8))
-                {
-                    semanticConfiguration = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("filter"u8))
-                {
-                    filter = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("embedding_dependency"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    embeddingDependency = DataSourceVectorizer.DeserializeDataSourceVectorizer(property.Value, options);
+                    internalIncludeContexts = array;
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
             return new InternalAzureSearchChatDataSourceParameters(
                 topNDocuments,
                 inScope,
                 strictness,
                 maxSearchQueries,
                 allowPartialResult,
-                includeContexts ?? new ChangeTrackingList<string>(),
                 endpoint,
                 indexName,
-                authentication,
-                fieldsMapping,
-                queryType,
                 semanticConfiguration,
                 filter,
-                embeddingDependency,
-                serializedAdditionalRawData);
+                authentication,
+                fieldMappings,
+                queryType,
+                vectorizationSource,
+                internalIncludeContexts,
+                additionalBinaryDataProperties);
         }
 
-        BinaryData IPersistableModel<InternalAzureSearchChatDataSourceParameters>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureSearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<InternalAzureSearchChatDataSourceParameters>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        protected virtual BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureSearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -312,15 +323,16 @@ namespace Azure.AI.OpenAI.Chat
             }
         }
 
-        InternalAzureSearchChatDataSourceParameters IPersistableModel<InternalAzureSearchChatDataSourceParameters>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<InternalAzureSearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
+        InternalAzureSearchChatDataSourceParameters IPersistableModel<InternalAzureSearchChatDataSourceParameters>.Create(BinaryData data, ModelReaderWriterOptions options) => PersistableModelCreateCore(data, options);
 
+        protected virtual InternalAzureSearchChatDataSourceParameters PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<InternalAzureSearchChatDataSourceParameters>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializeInternalAzureSearchChatDataSourceParameters(document.RootElement, options);
                     }
                 default:
@@ -330,18 +342,20 @@ namespace Azure.AI.OpenAI.Chat
 
         string IPersistableModel<InternalAzureSearchChatDataSourceParameters>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static InternalAzureSearchChatDataSourceParameters FromResponse(PipelineResponse response)
+        public static implicit operator BinaryContent(InternalAzureSearchChatDataSourceParameters internalAzureSearchChatDataSourceParameters)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializeInternalAzureSearchChatDataSourceParameters(document.RootElement);
+            if (internalAzureSearchChatDataSourceParameters == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(internalAzureSearchChatDataSourceParameters, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal virtual BinaryContent ToBinaryContent()
+        public static explicit operator InternalAzureSearchChatDataSourceParameters(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializeInternalAzureSearchChatDataSourceParameters(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

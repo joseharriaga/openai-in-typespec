@@ -7,9 +7,11 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
+using Azure.AI.OpenAI;
 
 namespace Azure.AI.OpenAI.Chat
 {
+    /// <summary></summary>
     public partial class PineconeChatDataSource : IJsonModel<PineconeChatDataSource>
     {
         void IJsonModel<PineconeChatDataSource>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
@@ -23,70 +25,69 @@ namespace Azure.AI.OpenAI.Chat
         /// <param name="options"> The client options for reading and writing models. </param>
         protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<PineconeChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<PineconeChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(PineconeChatDataSource)} does not support writing '{format}' format.");
             }
-
             base.JsonModelWriteCore(writer, options);
-            if (SerializedAdditionalRawData?.ContainsKey("parameters") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("parameters") != true)
             {
                 writer.WritePropertyName("parameters"u8);
                 writer.WriteObjectValue<InternalPineconeChatDataSourceParameters>(InternalParameters, options);
             }
         }
 
-        PineconeChatDataSource IJsonModel<PineconeChatDataSource>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
+        PineconeChatDataSource IJsonModel<PineconeChatDataSource>.Create(ref Utf8JsonReader reader, ModelReaderWriterOptions options) => (PineconeChatDataSource)JsonModelCreateCore(ref reader, options);
+
+        /// <param name="reader"> The JSON reader. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override ChatDataSource JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options)
         {
-            var format = options.Format == "W" ? ((IPersistableModel<PineconeChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+            string format = options.Format == "W" ? ((IPersistableModel<PineconeChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             if (format != "J")
             {
                 throw new FormatException($"The model {nameof(PineconeChatDataSource)} does not support reading '{format}' format.");
             }
-
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
             return DeserializePineconeChatDataSource(document.RootElement, options);
         }
 
-        internal static PineconeChatDataSource DeserializePineconeChatDataSource(JsonElement element, ModelReaderWriterOptions options = null)
+        internal static PineconeChatDataSource DeserializePineconeChatDataSource(JsonElement element, ModelReaderWriterOptions options)
         {
-            options ??= ModelSerializationExtensions.WireOptions;
-
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            InternalPineconeChatDataSourceParameters parameters = default;
-            string type = default;
-            IDictionary<string, BinaryData> serializedAdditionalRawData = default;
-            Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
-            foreach (var property in element.EnumerateObject())
+            string @type = "pinecone";
+            IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
+            InternalPineconeChatDataSourceParameters internalParameters = default;
+            foreach (var prop in element.EnumerateObject())
             {
-                if (property.NameEquals("parameters"u8))
+                if (prop.NameEquals("type"u8))
                 {
-                    parameters = InternalPineconeChatDataSourceParameters.DeserializeInternalPineconeChatDataSourceParameters(property.Value, options);
+                    @type = prop.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("type"u8))
+                if (prop.NameEquals("parameters"u8))
                 {
-                    type = property.Value.GetString();
+                    internalParameters = InternalPineconeChatDataSourceParameters.DeserializeInternalPineconeChatDataSourceParameters(prop.Value, options);
                     continue;
                 }
                 if (options.Format != "W")
                 {
-                    rawDataDictionary ??= new Dictionary<string, BinaryData>();
-                    rawDataDictionary.Add(property.Name, BinaryData.FromString(property.Value.GetRawText()));
+                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
-            serializedAdditionalRawData = rawDataDictionary;
-            return new PineconeChatDataSource(type, serializedAdditionalRawData, parameters);
+            return new PineconeChatDataSource(@type, additionalBinaryDataProperties, internalParameters);
         }
 
-        BinaryData IPersistableModel<PineconeChatDataSource>.Write(ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<PineconeChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+        BinaryData IPersistableModel<PineconeChatDataSource>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);
 
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<PineconeChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
@@ -96,15 +97,18 @@ namespace Azure.AI.OpenAI.Chat
             }
         }
 
-        PineconeChatDataSource IPersistableModel<PineconeChatDataSource>.Create(BinaryData data, ModelReaderWriterOptions options)
-        {
-            var format = options.Format == "W" ? ((IPersistableModel<PineconeChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
+        PineconeChatDataSource IPersistableModel<PineconeChatDataSource>.Create(BinaryData data, ModelReaderWriterOptions options) => (PineconeChatDataSource)PersistableModelCreateCore(data, options);
 
+        /// <param name="data"> The data to parse. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override ChatDataSource PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<PineconeChatDataSource>)this).GetFormatFromOptions(options) : options.Format;
             switch (format)
             {
                 case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        using JsonDocument document = JsonDocument.Parse(data);
                         return DeserializePineconeChatDataSource(document.RootElement, options);
                     }
                 default:
@@ -114,18 +118,22 @@ namespace Azure.AI.OpenAI.Chat
 
         string IPersistableModel<PineconeChatDataSource>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
 
-        /// <summary> Deserializes the model from a raw response. </summary>
-        /// <param name="response"> The result to deserialize the model from. </param>
-        internal static new PineconeChatDataSource FromResponse(PipelineResponse response)
+        /// <param name="pineconeChatDataSource"> The <see cref="PineconeChatDataSource"/> to serialize into <see cref="BinaryContent"/>. </param>
+        public static implicit operator BinaryContent(PineconeChatDataSource pineconeChatDataSource)
         {
-            using var document = JsonDocument.Parse(response.Content);
-            return DeserializePineconeChatDataSource(document.RootElement);
+            if (pineconeChatDataSource == null)
+            {
+                return null;
+            }
+            return BinaryContent.Create(pineconeChatDataSource, ModelSerializationExtensions.WireOptions);
         }
 
-        /// <summary> Convert into a <see cref="BinaryContent"/>. </summary>
-        internal override BinaryContent ToBinaryContent()
+        /// <param name="result"> The <see cref="ClientResult"/> to deserialize the <see cref="PineconeChatDataSource"/> from. </param>
+        public static explicit operator PineconeChatDataSource(ClientResult result)
         {
-            return BinaryContent.Create(this, ModelSerializationExtensions.WireOptions);
+            using PipelineResponse response = result.GetRawResponse();
+            using JsonDocument document = JsonDocument.Parse(response.Content);
+            return DeserializePineconeChatDataSource(document.RootElement, ModelSerializationExtensions.WireOptions);
         }
     }
 }

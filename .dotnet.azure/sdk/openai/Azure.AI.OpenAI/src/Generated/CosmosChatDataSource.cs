@@ -2,9 +2,6 @@
 
 #nullable disable
 
-using System;
-using System.Collections.Generic;
-
 namespace Azure.AI.OpenAI.Chat
 {
     /// <summary> Represents a data source configuration that will use an Azure CosmosDB resource. </summary>

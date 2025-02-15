@@ -90,8 +90,8 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            // CUSTOM: Add a null check to allow Messages to behave like an optional
-            if (Messages is not null && _additionalBinaryDataProperties?.ContainsKey("messages") != true)
+            // CUSTOM: Check collection is defined so Messages can behave like an optional.
+            if (Optional.IsCollectionDefined(Messages) && _additionalBinaryDataProperties?.ContainsKey("modalities") != true)
             {
                 writer.WritePropertyName("messages"u8);
                 this.SerializeMessagesValue(writer, options);
@@ -285,8 +285,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("reasoning_effort"u8);
                 writer.WriteStringValue(ReasoningEffortLevel.Value.ToString());
             }
-            // CUSTOM: Check inner collection is defined.
-            if (Optional.IsCollectionDefined(InternalModalities) && InternalModalities is not null && _additionalBinaryDataProperties?.ContainsKey("modalities") != true)
+            if (Optional.IsCollectionDefined(InternalModalities) && _additionalBinaryDataProperties?.ContainsKey("modalities") != true)
             {
                 if (InternalModalities != null)
                 {
@@ -715,6 +714,7 @@ namespace OpenAI.Chat
                     additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
                 }
             }
+            // CUSTOM: Ensure messages collection is initialized.
             return new ChatCompletionOptions(
                 frequencyPenalty,
                 presencePenalty,
@@ -722,7 +722,7 @@ namespace OpenAI.Chat
                 temperature,
                 topP,
                 tools ?? new ChangeTrackingList<ChatTool>(),
-                messages,
+                messages ?? new ChangeTrackingList<ChatMessage>(),
                 model,
                 n,
                 stream,

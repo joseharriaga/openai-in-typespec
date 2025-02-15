@@ -210,11 +210,97 @@ Update-In-File-With-Retry `
 Update-In-File-With-Retry `
     -FilePath "$directory\ChatCompletionOptions.Serialization.cs" `
     -SearchPatternLines @(
-        "if \(Optional\.IsCollectionDefined\(InternalModalities\) && _additionalBinaryDataProperties\?\.ContainsKey\(`"modalities`"\) != true\)"
+        "if \(_additionalBinaryDataProperties\?\.ContainsKey\(`"messages`"\) != true\)"
     ) `
     -ReplacePatternLines @(
-        "// CUSTOM: Check inner collection is defined."
-        "if (Optional.IsCollectionDefined(InternalModalities) && InternalModalities is not null && _additionalBinaryDataProperties?.ContainsKey(`"modalities`") != true)"
+        "// CUSTOM: Check collection is defined so Messages can behave like an optional."
+        "if (Optional.IsCollectionDefined(Messages) && _additionalBinaryDataProperties?.ContainsKey(`"modalities`") != true)"
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence
+
+Update-In-File-With-Retry `
+    -FilePath "$directory\ChatCompletionOptions.Serialization.cs" `
+    -SearchPatternLines @(
+        "if \(_additionalBinaryDataProperties\?\.ContainsKey\(`"model`"\) != true\)"
+    ) `
+    -ReplacePatternLines @(
+        "// CUSTOM: Add a null check to allow Model to behave like an optional"
+        "if (Optional.IsDefined(Model) && _additionalBinaryDataProperties?.ContainsKey(`"model`") != true)"
+    ) `
+    -OutputIndentation 12 `
+    -RequirePresence
+
+Update-In-File-With-Retry `
+    -FilePath "$directory\ChatCompletionOptions.Serialization.cs" `
+    -SearchPatternLines @(
+        "return new ChatCompletionOptions\("
+        "    frequencyPenalty,"
+        "    presencePenalty,"
+        "    responseFormat,"
+        "    temperature,"
+        "    topP,"
+        "    tools \?\? new ChangeTrackingList<ChatTool>\(\),"
+        "    messages,"
+        "    model,"
+        "    n,"
+        "    stream,"
+        "    streamOptions,"
+        "    includeLogProbabilities,"
+        "    topLogProbabilityCount,"
+        "    stopSequences \?\? new ChangeTrackingList<string>\(\),"
+        "    logitBiases \?\? new ChangeTrackingDictionary<int, int>\(\),"
+        "    toolChoice,"
+        "    functionChoice,"
+        "    allowParallelToolCalls,"
+        "    endUserId,"
+        "    seed,"
+        "    deprecatedMaxTokens,"
+        "    maxOutputTokenCount,"
+        "    functions \?\? new ChangeTrackingList<ChatFunction>\(\),"
+        "    metadata \?\? new ChangeTrackingDictionary<string, string>\(\),"
+        "    storedOutputEnabled,"
+        "    reasoningEffortLevel,"
+        "    internalModalities \?\? new ChangeTrackingList<InternalCreateChatCompletionRequestModality>\(\),"
+        "    audioOptions,"
+        "    outputPrediction,"
+        "    serviceTier,"
+        "    additionalBinaryDataProperties\);"
+    ) `
+    -ReplacePatternLines @(
+        "// CUSTOM: Ensure messages collection is initialized."
+        "return new ChatCompletionOptions("
+        "    frequencyPenalty,"
+        "    presencePenalty,"
+        "    responseFormat,"
+        "    temperature,"
+        "    topP,"
+        "    tools ?? new ChangeTrackingList<ChatTool>(),"
+        "    messages ?? new ChangeTrackingList<ChatMessage>(),"
+        "    model,"
+        "    n,"
+        "    stream,"
+        "    streamOptions,"
+        "    includeLogProbabilities,"
+        "    topLogProbabilityCount,"
+        "    stopSequences ?? new ChangeTrackingList<string>(),"
+        "    logitBiases ?? new ChangeTrackingDictionary<int, int>(),"
+        "    toolChoice,"
+        "    functionChoice,"
+        "    allowParallelToolCalls,"
+        "    endUserId,"
+        "    seed,"
+        "    deprecatedMaxTokens,"
+        "    maxOutputTokenCount,"
+        "    functions ?? new ChangeTrackingList<ChatFunction>(),"
+        "    metadata ?? new ChangeTrackingDictionary<string, string>(),"
+        "    storedOutputEnabled,"
+        "    reasoningEffortLevel,"
+        "    internalModalities ?? new ChangeTrackingList<InternalCreateChatCompletionRequestModality>(),"
+        "    audioOptions,"
+        "    outputPrediction,"
+        "    serviceTier,"
+        "    additionalBinaryDataProperties);"
     ) `
     -OutputIndentation 12 `
     -RequirePresence

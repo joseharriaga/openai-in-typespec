@@ -54,10 +54,13 @@ public partial class ChatCompletionOptions
     /// <summary> Initializes a new instance of <see cref="ChatCompletionOptions"/> for deserialization. </summary>
     public ChatCompletionOptions()
     {
+        Messages = new ChangeTrackingList<ChatMessage>();
         LogitBiases = new ChangeTrackingDictionary<int, int>();
         StopSequences = new ChangeTrackingList<string>();
         Tools = new ChangeTrackingList<ChatTool>();
         Functions = new ChangeTrackingList<ChatFunction>();
+        InternalModalities = new ChangeTrackingList<InternalCreateChatCompletionRequestModality>();
+        Metadata = new ChangeTrackingDictionary<string, string>();
     }
 
     // CUSTOM: Renamed.
@@ -113,20 +116,6 @@ public partial class ChatCompletionOptions
     /// </remarks>
     [CodeGenMember("ParallelToolCalls")]
     public bool? AllowParallelToolCalls { get; set; }
-
-    /// <summary>
-    /// An object specifying the format that the model must output.
-    /// </summary>
-    /// <remarks>
-    /// <p>
-    /// Compatible with GPT-4o, GPT-4o mini, GPT-4 Turbo and all GPT-3.5 Turbo models newer than gpt-3.5-turbo-1106.
-    /// </p>
-    /// <p>
-    /// Learn more in the Structured Outputs guide.
-    /// </p>
-    /// </remarks>
-    //[CodeGenMember("ResponseFormat")]
-    //public ChatResponseFormat ResponseFormat { get; set; }
 
     [CodeGenMember("ServiceTier")]
     internal InternalCreateChatCompletionRequestServiceTier? _serviceTier;
@@ -189,7 +178,16 @@ public partial class ChatCompletionOptions
 
     // CUSTOM: Made internal for automatic enablement via audio options.
     [CodeGenMember("Modalities")]
-    private IList<InternalCreateChatCompletionRequestModality> InternalModalities { get; set; }
+    private IList<InternalCreateChatCompletionRequestModality> InternalModalities
+    {
+        get => _internalModalities;
+        set
+        {
+            _internalModalities = value;
+            _responseModalities = ChatResponseModalitiesExtensions.FromInternalModalities(value);
+        }
+    }
+    private IList<InternalCreateChatCompletionRequestModality> _internalModalities;
 
     /// <summary>
     /// Specifies the content types that the model should generate in its responses.
@@ -201,9 +199,14 @@ public partial class ChatCompletionOptions
     /// </remarks>
     public ChatResponseModalities ResponseModalities
     {
-        get => ChatResponseModalitiesExtensions.FromInternalModalities(InternalModalities);
-        set => InternalModalities = value.ToInternalModalities();
+        get => _responseModalities;
+        set
+        {
+            _responseModalities = value;
+            _internalModalities = value.ToInternalModalities();
+        }
     }
+    private ChatResponseModalities _responseModalities;
 
     // CUSTOM: Renamed.
     [CodeGenMember("Audio")]

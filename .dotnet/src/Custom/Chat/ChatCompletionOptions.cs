@@ -156,7 +156,7 @@ public partial class ChatCompletionOptions
     ///     <see href="https://platform.openai.com/chat-completions">OpenAI Platform dashboard</see>.
     /// </summary>
     [CodeGenMember("Metadata")]
-    public IDictionary<string, string> Metadata { get; } = new ChangeTrackingDictionary<string, string>();
+    public IDictionary<string, string> Metadata { get; }
 
     // CUSTOM: Renamed.
     /// <summary>

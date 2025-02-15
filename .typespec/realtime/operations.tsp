@@ -1,3 +1,4 @@
+import "../common";
 import "./models.tsp";
 
 using TypeSpec.Http;
@@ -10,6 +11,11 @@ interface Realtime {
   @tag("Realtime")
   @summary("Starts a real-time conversation session.")
   startRealtimeSession(
+    ...RealtimeBetaHeader,
     @body requestMessages: RealtimeClientEvent[],
   ): RealtimeServerEvent[];
 }
+
+alias RealtimeBetaHeader = {
+  @header("OpenAI-Beta") openAIBeta: "realtime=v1";
+};

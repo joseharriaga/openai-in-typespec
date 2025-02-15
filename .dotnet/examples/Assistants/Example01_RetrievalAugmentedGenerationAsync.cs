@@ -99,7 +99,7 @@ public partial class AssistantExamples
 
         // Finally, we'll print out the full history for the thread that includes the augmented generation
         AsyncCollectionResult<ThreadMessage> messages
-            = assistantClient.GetMessagesAsync(threadRun.ThreadId, new MessageCollectionOptions() { Order = MessageCollectionOrder.Ascending });
+            = assistantClient.GetMessagesAsync(threadRun.ThreadId, new OpenAIPageOptions() { Order = OpenAIPageOrder.Ascending });
 
         await foreach (ThreadMessage message in messages)
         {

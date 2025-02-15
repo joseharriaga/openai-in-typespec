@@ -142,7 +142,7 @@ public class VectorStoresTests : SyncAsyncTestBase
         int lastIdSeen = int.MaxValue;
         int count = 0;
 
-        foreach (VectorStore vectorStore in client.GetVectorStores(new VectorStoreCollectionOptions() { Order = VectorStoreCollectionOrder.Descending }))
+        foreach (VectorStore vectorStore in client.GetVectorStores(new OpenAIPageOptions() { Order = OpenAIPageOrder.Descending }))
         {
             Assert.That(vectorStore.Id, Is.Not.Null);
             if (vectorStore.Name?.StartsWith("Test Vector Store ") == true)
@@ -184,7 +184,7 @@ public class VectorStoresTests : SyncAsyncTestBase
         int lastIdSeen = int.MaxValue;
         int count = 0;
 
-        await foreach (VectorStore vectorStore in client.GetVectorStoresAsync(new VectorStoreCollectionOptions() { Order = VectorStoreCollectionOrder.Descending }))
+        await foreach (VectorStore vectorStore in client.GetVectorStoresAsync(new OpenAIPageOptions() { Order = OpenAIPageOrder.Descending }))
         {
             Assert.That(vectorStore.Id, Is.Not.Null);
             if (vectorStore.Name?.StartsWith("Test Vector Store ") == true)
@@ -305,7 +305,7 @@ public class VectorStoresTests : SyncAsyncTestBase
 
         // Use enumerators instead of enumerables to faciliate advancing the collections
         // at the same time.
-        AsyncCollectionResult<VectorStoreFileAssociation> fileAssociations = client.GetFileAssociationsAsync(vectorStore.Id, new VectorStoreFileAssociationCollectionOptions() { PageSizeLimit = 2 });
+        AsyncCollectionResult<VectorStoreFileAssociation> fileAssociations = client.GetFileAssociationsAsync(vectorStore.Id, new OpenAIPageOptions() { PageSizeLimit = 2 });
         IAsyncEnumerable<ClientResult> pages = fileAssociations.GetRawPagesAsync();
         IAsyncEnumerator<ClientResult> pageEnumerator = pages.GetAsyncEnumerator();
         await pageEnumerator.MoveNextAsync();
@@ -383,7 +383,7 @@ public class VectorStoresTests : SyncAsyncTestBase
         // Errata: removals aren't immediately reflected when requesting the list
         Thread.Sleep(2000);
 
-        CollectionResult<VectorStoreFileAssociation> fileAssociations = client.GetFileAssociations(vectorStore.Id, new VectorStoreFileAssociationCollectionOptions() { PageSizeLimit = 2 });
+        CollectionResult<VectorStoreFileAssociation> fileAssociations = client.GetFileAssociations(vectorStore.Id, new OpenAIPageOptions() { PageSizeLimit = 2 });
         IEnumerable<ClientResult> pages = fileAssociations.GetRawPages();
         IEnumerator<ClientResult> pageEnumerator = pages.GetEnumerator();
         pageEnumerator.MoveNext();

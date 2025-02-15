@@ -2,6 +2,10 @@
 
 ## 2.2.0-beta.2 (Unreleased)
 
+### `[Experimental]` Breaking changes
+
+- A number of collection-specific options classes and order enumerations have been consolidated into a shared `OpenAIPageOptions` and `OpenAIPageOrder`. `VectorStoreClient`'s `GetFileAssociations` method now features `fileStatusFilter` as an optional method parameter rather than within a collection-specific options type.
+
 ### Bugs fixed
 
 - Fixed a bug that caused `CompleteChatStreaming*()` with audio-enabled models to fail unless provided a `ChatCompletionOptions` instance that had previously been used for a non-streaming `CompleteChat()*` call

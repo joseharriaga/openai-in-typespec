@@ -382,3 +382,6 @@ internal readonly partial struct InternalRunStepDetailsToolCallsFileSearchRankin
 
 [CodeGenModel("IncludedRunStepProperty")]
 internal readonly partial struct InternalIncludedRunStepProperty { }
+
+[CodeGenModel("CreateThreadAndRunRequestAccept")]
+internal readonly partial struct InternalCreateThreadAndRunRequestAccept { }

@@ -17,7 +17,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Create a thread and run it in one request.")
   createThreadAndRun(
-    @header accept: "application/json",
+    ...AcceptJsonOrEventStreamHeader,
+    ...AssistantsBetaHeader,
     @body requestBody: CreateThreadAndRunRequest,
   ): RunObject | ErrorResponse;
 
@@ -27,22 +28,13 @@ interface Runs {
   @tag("Assistants")
   @summary("Create a run.")
   createRun(
-    @header accept: "application/json",
+    ...AcceptJsonOrEventStreamHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the thread to run. */
     @path thread_id: string,
 
-    /**
-     * A list of additional fields to include in the response. Currently the only supported value is
-     * `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result
-     * content.
-     *
-     * See the
-     * [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
-     * for more information.
-     */
-    @query `include[]`?: IncludedRunStepProperty[],
-
+    ...IncludedRunStepPropertyParameter,
     @body requestBody: CreateRunRequest,
   ): RunObject | ErrorResponse;
 
@@ -52,36 +44,13 @@ interface Runs {
   @tag("Assistants")
   @summary("Returns a list of runs belonging to a thread.")
   listRuns(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the thread the run belongs to. */
     @path thread_id: string,
 
-    /**
-     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-     * default is 20.
-     */
-    @query limit?: int32 = 20,
-
-    /**
-     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-     * for descending order.
-     */
-    @query order?: "asc" | "desc" = "desc",
-
-    /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     */
-    @query after?: string,
-
-    /**
-     * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-     */
-    @query before?: string,
+    ...CommonPageQueryParameters,
   ): ListRunsResponse | ErrorResponse;
 
   @route("{thread_id}/runs/{run_id}")
@@ -90,7 +59,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Retrieves a run.")
   getRun(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the [thread](/docs/api-reference/threads) that was run. */
     @path thread_id: string,
@@ -105,7 +75,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Modifies a run.")
   modifyRun(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the [thread](/docs/api-reference/threads) that was run. */
     @path thread_id: string,
@@ -122,7 +93,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Cancels a run that is `in_progress`.")
   cancelRun(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the thread to which this run belongs. */
     @path thread_id: string,
@@ -141,7 +113,8 @@ interface Runs {
     they're all completed. All outputs must be submitted in a single request.
     """)
   submitToolOutputsToRun(
-    @header accept: "application/json",
+    ...AcceptJsonOrEventStreamHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the [thread](/docs/api-reference/threads) to which this run belongs. */
     @path thread_id: string,
@@ -158,7 +131,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Returns a list of run steps belonging to a run.")
   listRunSteps(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the thread the run and run steps belong to. */
     @path thread_id: string,
@@ -166,42 +140,8 @@ interface Runs {
     /** The ID of the run the run steps belong to. */
     @path run_id: string,
 
-    /**
-     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-     * default is 20.
-     */
-    @query limit?: int32 = 20,
-
-    /**
-     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-     * for descending order.
-     */
-    @query order?: "asc" | "desc" = "desc",
-
-    /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     */
-    @query after?: string,
-
-    /**
-     * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-     */
-    @query before?: string,
-
-    /**
-     * A list of additional fields to include in the response. Currently the only supported value is
-     * `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result
-     * content.
-     *
-     * See the
-     * [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
-     * for more information.
-     */
-    @query `include[]`?: IncludedRunStepProperty[],
+    ...CommonPageQueryParameters,
+    ...IncludedRunStepPropertyParameter,
   ): ListRunStepsResponse | ErrorResponse;
 
   @route("{thread_id}/runs/{run_id}/steps/{step_id}")
@@ -210,7 +150,8 @@ interface Runs {
   @tag("Assistants")
   @summary("Retrieves a run step.")
   getRunStep(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the thread to which the run and run step belongs. */
     @path thread_id: string,
@@ -221,15 +162,19 @@ interface Runs {
     /** The ID of the run step to retrieve. */
     @path step_id: string,
 
-    /**
-     * A list of additional fields to include in the response. Currently the only supported value is
-     * `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result
-     * content.
-     *
-     * See the
-     * [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
-     * for more information.
-     */
-    @query `include[]`?: IncludedRunStepProperty[],
+    ...IncludedRunStepPropertyParameter,
   ): RunStepObject | ErrorResponse;
 }
+
+alias IncludedRunStepPropertyParameter = {
+  /**
+   * A list of additional fields to include in the response. Currently the only supported value is
+   * `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result
+   * content.
+   *
+   * See the
+   * [file search tool documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+   * for more information.
+   */
+  @query `include[]`?: IncludedRunStepProperty[];
+};

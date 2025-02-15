@@ -16,7 +16,8 @@ interface Assistants {
   @tag("Assistants")
   @summary("Create an assistant with a model and instructions.")
   createAssistant(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
     @body requestBody: CreateAssistantRequest,
   ): AssistantObject | ErrorResponse;
 
@@ -25,33 +26,9 @@ interface Assistants {
   @tag("Assistants")
   @summary("Returns a list of assistants.")
   listAssistants(
-    @header accept: "application/json",
-
-    /**
-     * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
-     * default is 20.
-     */
-    @query limit?: int32 = 20,
-
-    /**
-     * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
-     * for descending order.
-     */
-    @query order?: "asc" | "desc" = "desc",
-
-    /**
-     * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include after=obj_foo in order to fetch the next page of the list.
-     */
-    @query after?: string,
-
-    /**
-     * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
-     * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
-     * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
-     */
-    @query before?: string,
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
+    ...CommonPageQueryParameters,
   ): ListAssistantsResponse | ErrorResponse;
 
   @route("{assistant_id}")
@@ -60,7 +37,8 @@ interface Assistants {
   @tag("Assistants")
   @summary("Retrieves an assistant.")
   getAssistant(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the assistant to retrieve. */
     @path assistant_id: string,
@@ -72,7 +50,8 @@ interface Assistants {
   @tag("Assistants")
   @summary("Modifies an assistant.")
   modifyAssistant(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the assistant to modify. */
     @path assistant_id: string,
@@ -86,7 +65,8 @@ interface Assistants {
   @tag("Assistants")
   @summary("Delete an assistant.")
   deleteAssistant(
-    @header accept: "application/json",
+    ...AcceptJsonHeader,
+    ...AssistantsBetaHeader,
 
     /** The ID of the assistant to delete. */
     @path assistant_id: string,

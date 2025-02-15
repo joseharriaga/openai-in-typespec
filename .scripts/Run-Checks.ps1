@@ -67,10 +67,11 @@ function Run-TopLevelNamespaceCheck {
 
     $exclusions = @(
         # Public types
-        "ListOrder.cs",
         "OpenAIClient.cs",
         "OpenAIClientOptions.cs",
         "OpenAIModelFactory.cs",
+        "OpenAIPageOptions.cs",
+        "OpenAIPageOrder.cs",
         
         # Internal types
         "Argument.cs",

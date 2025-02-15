@@ -1,3 +1,4 @@
+using OpenAI.Internal;
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -22,8 +23,8 @@ namespace OpenAI.Assistants;
 [CodeGenSuppress("ModifyAssistant", typeof(string), typeof(AssistantModificationOptions))]
 [CodeGenSuppress("DeleteAssistantAsync", typeof(string))]
 [CodeGenSuppress("DeleteAssistant", typeof(string))]
-[CodeGenSuppress("ListAssistantsAsync", typeof(int?), typeof(AssistantCollectionOrder?), typeof(string), typeof(string), typeof(CancellationToken))]
-[CodeGenSuppress("ListAssistants", typeof(int?), typeof(AssistantCollectionOrder?), typeof(string), typeof(string), typeof(CancellationToken))]
+[CodeGenSuppress("ListAssistantsAsync", typeof(int?), typeof(OpenAIPageOrder?), typeof(string), typeof(string), typeof(CancellationToken))]
+[CodeGenSuppress("ListAssistants", typeof(int?), typeof(OpenAIPageOrder?), typeof(string), typeof(string), typeof(CancellationToken))]
 public partial class AssistantClient
 {
     private readonly InternalAssistantMessageClient _messageSubClient;
@@ -124,7 +125,7 @@ public partial class AssistantClient
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A collection of <see cref="Assistant"/>. </returns>
     public virtual AsyncCollectionResult<Assistant> GetAssistantsAsync(
-        AssistantCollectionOptions options = default,
+        OpenAIPageOptions options = default,
         CancellationToken cancellationToken = default)
     {
         AsyncCollectionResult result = GetAssistantsAsync(options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions());
@@ -167,7 +168,7 @@ public partial class AssistantClient
     /// <param name="cancellationToken">A token that can be used to cancel this method call.</param>
     /// <returns> A collection of <see cref="Assistant"/>. </returns>
     public virtual CollectionResult<Assistant> GetAssistants(
-        AssistantCollectionOptions options = default,
+        OpenAIPageOptions options = default,
         CancellationToken cancellationToken = default)
     {
         CollectionResult result = GetAssistants(options?.PageSizeLimit, options?.Order?.ToString(), options?.AfterId, options?.BeforeId, cancellationToken.ToRequestOptions());
@@ -474,7 +475,7 @@ public partial class AssistantClient
     /// <returns> A collection of <see cref="ThreadMessage"/>. </returns>
     public virtual AsyncCollectionResult<ThreadMessage> GetMessagesAsync(
         string threadId,
-        MessageCollectionOptions options = default,
+        OpenAIPageOptions options = default,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
@@ -521,7 +522,7 @@ public partial class AssistantClient
     /// <returns> A collection of <see cref="ThreadMessage"/>. </returns>
     public virtual CollectionResult<ThreadMessage> GetMessages(
         string threadId,
-        MessageCollectionOptions options = default,
+        OpenAIPageOptions options = default,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
@@ -857,7 +858,7 @@ public partial class AssistantClient
     /// <returns> A collection of <see cref="ThreadRun"/>. </returns>
     public virtual AsyncCollectionResult<ThreadRun> GetRunsAsync(
         string threadId,
-        RunCollectionOptions options = default,
+        OpenAIPageOptions options = default,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
@@ -904,7 +905,7 @@ public partial class AssistantClient
     /// <returns> A collection of <see cref="ThreadRun"/>. </returns>
     public virtual CollectionResult<ThreadRun> GetRuns(
         string threadId,
-        RunCollectionOptions options = default,
+        OpenAIPageOptions options = default,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
@@ -1117,7 +1118,7 @@ public partial class AssistantClient
     public virtual AsyncCollectionResult<RunStep> GetRunStepsAsync(
         string threadId,
         string runId,
-        RunStepCollectionOptions options = default,
+        OpenAIPageOptions options = default,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));
@@ -1138,7 +1139,7 @@ public partial class AssistantClient
     public virtual CollectionResult<RunStep> GetRunSteps(
         string threadId,
         string runId,
-        RunStepCollectionOptions options = default,
+        OpenAIPageOptions options = default,
         CancellationToken cancellationToken = default)
     {
         Argument.AssertNotNullOrEmpty(threadId, nameof(threadId));

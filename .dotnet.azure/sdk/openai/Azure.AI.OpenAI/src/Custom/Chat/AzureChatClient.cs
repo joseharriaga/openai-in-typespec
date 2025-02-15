@@ -42,14 +42,12 @@ internal partial class AzureChatClient : ChatClient
     /// <inheritdoc/>
     public override Task<ClientResult<ChatCompletion>> CompleteChatAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default)
     {
-        PostfixSwapMaxTokens(ref options);
         return base.CompleteChatAsync(messages, options, cancellationToken);
     }
 
     /// <inheritdoc/>
     public override ClientResult<ChatCompletion> CompleteChat(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default)
     {
-        PostfixSwapMaxTokens(ref options);
         return base.CompleteChat(messages, options, cancellationToken);
     }
 
@@ -64,16 +62,12 @@ internal partial class AzureChatClient : ChatClient
     /// <inheritdoc/>
     public override AsyncCollectionResult<StreamingChatCompletionUpdate> CompleteChatStreamingAsync(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default)
     {
-        PostfixClearStreamOptions(messages, ref options);
-        PostfixSwapMaxTokens(ref options);
         return base.CompleteChatStreamingAsync(messages, options, cancellationToken);
     }
 
     /// <inheritdoc/>
     public override CollectionResult<StreamingChatCompletionUpdate> CompleteChatStreaming(IEnumerable<ChatMessage> messages, ChatCompletionOptions options = null, CancellationToken cancellationToken = default)
     {
-        PostfixClearStreamOptions(messages, ref options);
-        PostfixSwapMaxTokens(ref options);
         return base.CompleteChatStreaming(messages, options, cancellationToken);
     }
 
@@ -162,5 +156,13 @@ internal partial class AzureChatClient : ChatClient
                 options.SerializedAdditionalRawData.Remove("max_completion_tokens");
             }
         }
+    }
+
+    internal override ChatCompletionOptions CreatePerCallOptions(ChatCompletionOptions userOptions, IEnumerable<ChatMessage> messages, bool stream = false)
+    {
+        ChatCompletionOptions copiedOptions = base.CreatePerCallOptions(userOptions, messages, stream);
+        PostfixClearStreamOptions(messages, ref copiedOptions);
+        PostfixSwapMaxTokens(ref copiedOptions);
+        return copiedOptions;
     }
 }

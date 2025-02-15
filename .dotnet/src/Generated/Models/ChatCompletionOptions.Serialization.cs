@@ -27,153 +27,22 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatCompletionOptions)} does not support writing '{format}' format.");
             }
-            if (Optional.IsDefined(FrequencyPenalty) && _additionalBinaryDataProperties?.ContainsKey("frequency_penalty") != true)
-            {
-                if (FrequencyPenalty != null)
-                {
-                    writer.WritePropertyName("frequency_penalty"u8);
-                    writer.WriteNumberValue(FrequencyPenalty.Value);
-                }
-                else
-                {
-                    writer.WriteNull("frequencyPenalty"u8);
-                }
-            }
-            if (Optional.IsDefined(PresencePenalty) && _additionalBinaryDataProperties?.ContainsKey("presence_penalty") != true)
-            {
-                if (PresencePenalty != null)
-                {
-                    writer.WritePropertyName("presence_penalty"u8);
-                    writer.WriteNumberValue(PresencePenalty.Value);
-                }
-                else
-                {
-                    writer.WriteNull("presencePenalty"u8);
-                }
-            }
-            if (Optional.IsDefined(ResponseFormat) && _additionalBinaryDataProperties?.ContainsKey("response_format") != true)
-            {
-                writer.WritePropertyName("response_format"u8);
-                writer.WriteObjectValue(ResponseFormat, options);
-            }
-            if (Optional.IsDefined(Temperature) && _additionalBinaryDataProperties?.ContainsKey("temperature") != true)
-            {
-                if (Temperature != null)
-                {
-                    writer.WritePropertyName("temperature"u8);
-                    writer.WriteNumberValue(Temperature.Value);
-                }
-                else
-                {
-                    writer.WriteNull("temperature"u8);
-                }
-            }
-            if (Optional.IsDefined(TopP) && _additionalBinaryDataProperties?.ContainsKey("top_p") != true)
-            {
-                if (TopP != null)
-                {
-                    writer.WritePropertyName("top_p"u8);
-                    writer.WriteNumberValue(TopP.Value);
-                }
-                else
-                {
-                    writer.WriteNull("topP"u8);
-                }
-            }
-            if (Optional.IsCollectionDefined(Tools) && _additionalBinaryDataProperties?.ContainsKey("tools") != true)
-            {
-                writer.WritePropertyName("tools"u8);
-                writer.WriteStartArray();
-                foreach (ChatTool item in Tools)
-                {
-                    writer.WriteObjectValue(item, options);
-                }
-                writer.WriteEndArray();
-            }
-            // CUSTOM: Check collection is defined so Messages can behave like an optional.
-            if (Optional.IsCollectionDefined(Messages) && _additionalBinaryDataProperties?.ContainsKey("messages") != true)
-            {
-                writer.WritePropertyName("messages"u8);
-                this.SerializeMessagesValue(writer, options);
-            }
-            // CUSTOM: Add a null check to allow Model to behave like an optional
-            if (Optional.IsDefined(Model) && _additionalBinaryDataProperties?.ContainsKey("model") != true)
-            {
-                writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model.Value.ToString());
-            }
-            if (Optional.IsDefined(N) && _additionalBinaryDataProperties?.ContainsKey("n") != true)
-            {
-                if (N != null)
-                {
-                    writer.WritePropertyName("n"u8);
-                    writer.WriteNumberValue(N.Value);
-                }
-                else
-                {
-                    writer.WriteNull("n"u8);
-                }
-            }
-            if (Optional.IsDefined(Stream) && _additionalBinaryDataProperties?.ContainsKey("stream") != true)
-            {
-                if (Stream != null)
-                {
-                    writer.WritePropertyName("stream"u8);
-                    writer.WriteBooleanValue(Stream.Value);
-                }
-                else
-                {
-                    writer.WriteNull("stream"u8);
-                }
-            }
-            if (Optional.IsDefined(StreamOptions) && _additionalBinaryDataProperties?.ContainsKey("stream_options") != true)
-            {
-                if (StreamOptions != null)
-                {
-                    writer.WritePropertyName("stream_options"u8);
-                    writer.WriteObjectValue<InternalChatCompletionStreamOptions>(StreamOptions, options);
-                }
-                else
-                {
-                    writer.WriteNull("streamOptions"u8);
-                }
-            }
-            if (Optional.IsDefined(IncludeLogProbabilities) && _additionalBinaryDataProperties?.ContainsKey("logprobs") != true)
-            {
-                if (IncludeLogProbabilities != null)
-                {
-                    writer.WritePropertyName("logprobs"u8);
-                    writer.WriteBooleanValue(IncludeLogProbabilities.Value);
-                }
-                else
-                {
-                    writer.WriteNull("logprobs"u8);
-                }
-            }
-            if (Optional.IsDefined(TopLogProbabilityCount) && _additionalBinaryDataProperties?.ContainsKey("top_logprobs") != true)
-            {
-                if (TopLogProbabilityCount != null)
-                {
-                    writer.WritePropertyName("top_logprobs"u8);
-                    writer.WriteNumberValue(TopLogProbabilityCount.Value);
-                }
-                else
-                {
-                    writer.WriteNull("topLogprobs"u8);
-                }
-            }
-            if (Optional.IsCollectionDefined(StopSequences) && _additionalBinaryDataProperties?.ContainsKey("stop") != true)
-            {
-                if (StopSequences != null)
-                {
-                    writer.WritePropertyName("stop"u8);
-                    this.SerializeStopSequencesValue(writer, options);
-                }
-                else
-                {
-                    writer.WriteNull("stop"u8);
-                }
-            }
+            Optional.WriteOptional(writer, "frequency_penalty", FrequencyPenalty, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "presence_penalty", PresencePenalty, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "response_format", ResponseFormat, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "temperature", Temperature, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "top_p", Temperature, _additionalBinaryDataProperties, options);
+            Optional.WriteOptionalList(writer, "tools", Tools, _additionalBinaryDataProperties, options);
+            Optional.WriteOptionalList(writer, "messages", Messages, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "model", Model, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "n", N, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "stream", Stream, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "stream_options", StreamOptions, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "logprobs", IncludeLogProbabilities, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "top_logprobs", TopLogProbabilityCount, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "top_logprobs", TopLogProbabilityCount, _additionalBinaryDataProperties, options);
+            Optional.WriteOptionalList(writer, "stop", StopSequences, _additionalBinaryDataProperties, options, SerializeStopSequencesValue);
+
             if (Optional.IsCollectionDefined(LogitBiases) && _additionalBinaryDataProperties?.ContainsKey("logit_bias") != true)
             {
                 if (LogitBiases != null)
@@ -186,72 +55,16 @@ namespace OpenAI.Chat
                     writer.WriteNull("logitBias"u8);
                 }
             }
-            if (Optional.IsDefined(ToolChoice) && _additionalBinaryDataProperties?.ContainsKey("tool_choice") != true)
-            {
-                writer.WritePropertyName("tool_choice"u8);
-                writer.WriteObjectValue<ChatToolChoice>(ToolChoice, options);
-            }
-            if (Optional.IsDefined(FunctionChoice) && _additionalBinaryDataProperties?.ContainsKey("function_call") != true)
-            {
-                writer.WritePropertyName("function_call"u8);
-                writer.WriteObjectValue<ChatFunctionChoice>(FunctionChoice, options);
-            }
-            if (Optional.IsDefined(AllowParallelToolCalls) && _additionalBinaryDataProperties?.ContainsKey("parallel_tool_calls") != true)
-            {
-                writer.WritePropertyName("parallel_tool_calls"u8);
-                writer.WriteBooleanValue(AllowParallelToolCalls.Value);
-            }
-            if (Optional.IsDefined(EndUserId) && _additionalBinaryDataProperties?.ContainsKey("user") != true)
-            {
-                writer.WritePropertyName("user"u8);
-                writer.WriteStringValue(EndUserId);
-            }
-            if (Optional.IsDefined(Seed) && _additionalBinaryDataProperties?.ContainsKey("seed") != true)
-            {
-                if (Seed != null)
-                {
-                    writer.WritePropertyName("seed"u8);
-                    writer.WriteNumberValue(Seed.Value);
-                }
-                else
-                {
-                    writer.WriteNull("seed"u8);
-                }
-            }
-            if (Optional.IsDefined(_deprecatedMaxTokens) && _additionalBinaryDataProperties?.ContainsKey("max_tokens") != true)
-            {
-                if (_deprecatedMaxTokens != null)
-                {
-                    writer.WritePropertyName("max_tokens"u8);
-                    writer.WriteNumberValue(_deprecatedMaxTokens.Value);
-                }
-                else
-                {
-                    writer.WriteNull("maxTokens"u8);
-                }
-            }
-            if (Optional.IsDefined(MaxOutputTokenCount) && _additionalBinaryDataProperties?.ContainsKey("max_completion_tokens") != true)
-            {
-                if (MaxOutputTokenCount != null)
-                {
-                    writer.WritePropertyName("max_completion_tokens"u8);
-                    writer.WriteNumberValue(MaxOutputTokenCount.Value);
-                }
-                else
-                {
-                    writer.WriteNull("maxCompletionTokens"u8);
-                }
-            }
-            if (Optional.IsCollectionDefined(Functions) && _additionalBinaryDataProperties?.ContainsKey("functions") != true)
-            {
-                writer.WritePropertyName("functions"u8);
-                writer.WriteStartArray();
-                foreach (ChatFunction item in Functions)
-                {
-                    writer.WriteObjectValue(item, options);
-                }
-                writer.WriteEndArray();
-            }
+
+            Optional.WriteOptional(writer, "tool_choice", ToolChoice, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "function_call", FunctionChoice, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "parallel_tool_calls", AllowParallelToolCalls, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "user", EndUserId, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "seed", Seed, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "max_tokens", _deprecatedMaxTokens, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "max_completion_tokens", MaxOutputTokenCount, _additionalBinaryDataProperties, options);
+            Optional.WriteOptionalList(writer, "functions", Functions, _additionalBinaryDataProperties, options);
+
             if (Optional.IsCollectionDefined(Metadata) && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 writer.WritePropertyName("metadata"u8);
@@ -268,64 +81,19 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndObject();
             }
-            if (Optional.IsDefined(StoredOutputEnabled) && _additionalBinaryDataProperties?.ContainsKey("store") != true)
-            {
-                if (StoredOutputEnabled != null)
-                {
-                    writer.WritePropertyName("store"u8);
-                    writer.WriteBooleanValue(StoredOutputEnabled.Value);
-                }
-                else
-                {
-                    writer.WriteNull("store"u8);
-                }
-            }
+
+            Optional.WriteOptional(writer, "store", StoredOutputEnabled, _additionalBinaryDataProperties, options);
+
             if (Optional.IsDefined(ReasoningEffortLevel) && _additionalBinaryDataProperties?.ContainsKey("reasoning_effort") != true)
             {
                 writer.WritePropertyName("reasoning_effort"u8);
                 writer.WriteStringValue(ReasoningEffortLevel.Value.ToString());
             }
-            if (Optional.IsCollectionDefined(InternalModalities) && _additionalBinaryDataProperties?.ContainsKey("modalities") != true)
-            {
-                if (InternalModalities != null)
-                {
-                    writer.WritePropertyName("modalities"u8);
-                    writer.WriteStartArray();
-                    foreach (InternalCreateChatCompletionRequestModality item in InternalModalities)
-                    {
-                        writer.WriteStringValue(item.ToString());
-                    }
-                    writer.WriteEndArray();
-                }
-                else
-                {
-                    writer.WriteNull("modalities"u8);
-                }
-            }
-            if (Optional.IsDefined(AudioOptions) && _additionalBinaryDataProperties?.ContainsKey("audio") != true)
-            {
-                if (AudioOptions != null)
-                {
-                    writer.WritePropertyName("audio"u8);
-                    writer.WriteObjectValue<ChatAudioOptions>(AudioOptions, options);
-                }
-                else
-                {
-                    writer.WriteNull("audio"u8);
-                }
-            }
-            if (Optional.IsDefined(OutputPrediction) && _additionalBinaryDataProperties?.ContainsKey("prediction") != true)
-            {
-                if (OutputPrediction != null)
-                {
-                    writer.WritePropertyName("prediction"u8);
-                    writer.WriteObjectValue<ChatOutputPrediction>(OutputPrediction, options);
-                }
-                else
-                {
-                    writer.WriteNull("prediction"u8);
-                }
-            }
+
+            Optional.WriteOptionalList(writer, "modalities", InternalModalities, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "audio", AudioOptions, _additionalBinaryDataProperties, options);
+            Optional.WriteOptional(writer, "prediction", OutputPrediction, _additionalBinaryDataProperties, options);
+
             if (Optional.IsDefined(_serviceTier) && _additionalBinaryDataProperties?.ContainsKey("service_tier") != true)
             {
                 if (_serviceTier != null)
@@ -338,6 +106,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("serviceTier"u8);
                 }
             }
+
             if (true && _additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)

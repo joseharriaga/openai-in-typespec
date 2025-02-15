@@ -2,6 +2,8 @@
 
 #nullable disable
 
+using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Text.Json;
 
@@ -22,6 +24,72 @@ namespace OpenAI
         public static bool IsCollectionDefined<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> collection)
         {
             return !(collection is ChangeTrackingDictionary<TKey, TValue> changeTrackingDictionary && changeTrackingDictionary.IsUndefined);
+        }
+
+        public static void WriteOptional<T>(
+            Utf8JsonWriter writer,
+            string name,
+            T value,
+            IDictionary<string, BinaryData> additionalBinaryDataProperties,
+            ModelReaderWriterOptions options,
+            Action customWriteAction = null)
+        {
+            static void WriterWriteObject(Utf8JsonWriter writer, string name, object value, ModelReaderWriterOptions options)
+            {
+                writer.WritePropertyName(name);
+                writer.WriteObjectValue(value, options);
+            }
+
+            if (Optional.IsDefined(value) && additionalBinaryDataProperties?.ContainsKey(name) != true)
+            {
+                Action writeAction = customWriteAction ?? value switch
+                {
+                    int intValue => () => writer.WriteNumber(name, intValue),
+                    string stringValue => () => writer.WriteString(name, stringValue),
+                    float floatValue => () => writer.WriteNumber(name, floatValue),
+                    double doubleValue => () => writer.WriteNumber(name, doubleValue),
+                    bool boolValue => () => writer.WriteBoolean(name, boolValue),
+                    IJsonModel<T> jsonModelTValue => () => WriterWriteObject(writer, name, jsonModelTValue, options),
+                    _ => () => writer.WriteString(name, value.ToString())
+                };
+                writeAction.Invoke();
+            }
+        }
+
+        public static void WriteOptionalList<T>(
+            Utf8JsonWriter writer,
+            string name,
+            IList<T> values,
+            IDictionary<string, BinaryData> additionalBinaryDataProperties,
+            ModelReaderWriterOptions options,
+            Action<Utf8JsonWriter, ModelReaderWriterOptions> customWriteAction = null)
+        {
+            if (Optional.IsCollectionDefined(values)
+                && (values is not ChangeTrackingList<T> changeTrackingList || !changeTrackingList.IsUndefined)
+                && additionalBinaryDataProperties?.ContainsKey(name) != true)
+            {
+                writer.WritePropertyName(name);
+                if (customWriteAction is not null)
+                {
+                    customWriteAction.Invoke(writer, options);
+                }
+                else
+                {
+                    writer.WriteStartArray();
+                    foreach (T value in values)
+                    {
+                        if (value is IJsonModel<T>)
+                        {
+                            writer.WriteObjectValue(value, options);
+                        }
+                        else
+                        {
+                            writer.WriteStringValue(value.ToString());
+                        }
+                    }
+                    writer.WriteEndArray();
+                }
+            }
         }
 
         public static bool IsDefined<T>(T? value)

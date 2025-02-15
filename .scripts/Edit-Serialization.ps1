@@ -214,7 +214,7 @@ Update-In-File-With-Retry `
     ) `
     -ReplacePatternLines @(
         "// CUSTOM: Check collection is defined so Messages can behave like an optional."
-        "if (Optional.IsCollectionDefined(Messages) && _additionalBinaryDataProperties?.ContainsKey(`"modalities`") != true)"
+        "if (Optional.IsCollectionDefined(Messages) && _additionalBinaryDataProperties?.ContainsKey(`"messages`") != true)"
     ) `
     -OutputIndentation 12 `
     -RequirePresence

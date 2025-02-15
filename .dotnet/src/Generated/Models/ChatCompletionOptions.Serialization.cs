@@ -91,7 +91,7 @@ namespace OpenAI.Chat
                 writer.WriteEndArray();
             }
             // CUSTOM: Check collection is defined so Messages can behave like an optional.
-            if (Optional.IsCollectionDefined(Messages) && _additionalBinaryDataProperties?.ContainsKey("modalities") != true)
+            if (Optional.IsCollectionDefined(Messages) && _additionalBinaryDataProperties?.ContainsKey("messages") != true)
             {
                 writer.WritePropertyName("messages"u8);
                 this.SerializeMessagesValue(writer, options);

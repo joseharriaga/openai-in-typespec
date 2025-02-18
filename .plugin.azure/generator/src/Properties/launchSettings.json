@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "AzureOpenAIPlugin": {
+      "commandLineArgs": "$(SolutionDir)/../dist/generator/Microsoft.Generator.CSharp.dll $(SolutionDir)/../../.dotnet.azure/sdk/openai/Azure.AI.OpenAI -p AzureOpenAILibraryPlugin",
+      "commandName": "Executable",
+      "executablePath": "dotnet"
+    }
+  }
+}

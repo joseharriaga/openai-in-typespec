@@ -1,0 +1,45 @@
+{
+    "name": "@azure-openai/plugin",
+    "version": "1.0.0",
+    "description": "Azure OpenAI plugin",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/joseharriaga/openai-in-typespec.git"
+    },
+    "bugs": {
+        "url": "https://github.com/joseharriaga/openai-in-typespec/issues"
+    },
+    "type": "module",
+    "main": "dist/emitter/index.js",
+    "exports": {
+        ".": "./dist/emitter/index.js"
+    },
+    "scripts": {
+        "clean": "rimraf ./dist ./emitter/temp && dotnet clean ./generator",
+        "build:emitter": "tsc -p ./tsconfig.build.json",
+        "build:generator": "dotnet build ./generator",
+        "build": "npm run build:emitter && npm run build:generator && copyfiles -E -f ../node_modules/@typespec/http-client-csharp/dist/generator/Microsoft.Generator.CSharp.runtimeconfig.json ./dist/generator",
+        "test:emitter": "vitest run -c ./emitter/vitest.config.ts",
+        "test:generator": "dotnet test ./generator",
+        "test": "npm run test:emitter && npm run test:generator"
+    },
+    "files": [
+        "dist/**"
+    ],
+    "dependencies": {
+        "@azure-tools/cadl-ranch-expect": "latest",
+        "@open-ai/plugin": "file:",
+        "@typespec/http-client-csharp": "latest"
+    },
+    "devDependencies": {
+        "@types/node": "^22.8.1",
+        "@vitest/coverage-v8": "^1.4.0",
+        "@vitest/ui": "^1.4.0",
+        "c8": "^9.1.0",
+        "copyfiles": "^2.4.1",
+        "rimraf": "~5.0.5",
+        "typescript": "^5.6.3",
+        "vitest": "^1.4.0"
+    }
+}

@@ -1,0 +1,7 @@
+{
+  "output-folder": ".",
+  "namespace": "Azure.AI.OpenAI",
+  "library-name": "Azure.AI.OpenAI",
+  "unreferenced-types-handling": "keepAll",
+  "use-model-reader-writer": true
+}

@@ -1,18 +1,13 @@
 emit:
   - "@typespec/openapi3"
-  - "@azure-tools/typespec-csharp"
+  - "@azure-openai/plugin"
 options:
   "@typespec/openapi3":
     output-file: "{project-root}/../.openapi3.azure/openapi3-azure-openai-{version}-generated.yaml"
     omit-unreachable-types: true
-  "@azure-tools/typespec-csharp":
+  "@azure-openai/plugin":
     namespace: "Azure.AI.OpenAI"
-    emitter-output-dir: "{project-root}/../.dotnet.azure/sdk/openai/Azure.AI.OpenAI/src"
-    generate-convenience-methods: false
+    emitter-output-dir: "{project-root}/../.dotnet.azure/sdk/openai/Azure.AI.OpenAI"
     unreferenced-types-handling: keepAll
-    model-namespace: false
-    generate-test-project: false
-    single-top-level-client: true
     new-project: false
-    flavor: "unbranded"
-    enable-internal-raw-data: true
+    save-inputs: true

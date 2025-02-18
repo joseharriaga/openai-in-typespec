@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Azure.AI.OpenAI
 {
-    internal class ChangeTrackingList<T> : IList<T>, IReadOnlyList<T>
+    internal partial class ChangeTrackingList<T> : IList<T>, IReadOnlyList<T>
     {
         private IList<T> _innerList;
 

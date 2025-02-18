@@ -40,7 +40,7 @@ jobs:
 
       - name: Run additional code checks
         shell: pwsh
-        run: ./Run-Checks.ps1
+        run: ./Validation/Test-Namespaces.ps1
         working-directory: .scripts
 
       - name: Pack

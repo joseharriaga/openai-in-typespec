@@ -18,10 +18,14 @@ public class OpenAILibraryVisitor : ScmLibraryVisitor
     private const string RawDataPropertyName = "SerializedAdditionalRawData";
     private const string AdditionalPropertiesFieldName = "_additionalBinaryDataProperties";
     private const string SentinelValueFieldName = "_sentinelValue";
-    private const string WritePropertyNameMethodCall = "WritePropertyName(\"";
     private const string ModelSerializationExtensionsTypeName = "ModelSerializationExtensions";
     private const string IsSentinelValueMethodName = "IsSentinelValue";
     private const string JsonModelWriteCoreMethodName = "JsonModelWriteCore";
+
+    // This dictionary defines properties within types that should have their plain serialization calls wrapped with
+    // a conditional that includes an appropriate "Optional" check, e.g.:
+    //   - Optional.IsCollectionDefined(Messages) ... writer.WritePropertyName("messages"u8)
+    //   - Optional.IsDefined(Model) ... writer.WritePropertyName("model"u8)
     private static readonly Dictionary<string, List<WritePropertyNameAdditionalReplacementInfo>> TypeNameToWritePropertyNameAdditionalConditionMap = new()
     {
         ["ChatCompletionOptions"] =
@@ -122,18 +126,22 @@ public class OpenAILibraryVisitor : ScmLibraryVisitor
         var updatedStatements = new List<MethodBodyStatement>();
         var flattenedStatements = statements.Flatten().ToArray();
 
+        List<WritePropertyNameAdditionalReplacementInfo> additionalConditionsForWritingType
+            = TypeNameToWritePropertyNameAdditionalConditionMap.GetValueOrDefault(method.EnclosingType.Name) ?? [];
+
         for (int line = 0; line < flattenedStatements.Length; line++)
         {
             var statement = flattenedStatements[line];
 
+            // Much of the customization centers around treatment of WritePropertyName
+            string? writePropertyNameTarget = GetWritePropertyNameTargetFromStatement(statement);
+
             if (statement is IfStatement ifStatement)
             {
-                var body = ifStatement.Body.ToDisplayString();
-
                 // If we already have an if statement that contains property writing, we need to add the condition to the existing if statement
-                if (body.Contains(WritePropertyNameMethodCall))
+                if (writePropertyNameTarget is not null)
                 {
-                    ifStatement.Condition = ifStatement.Condition.As<bool>().And(GetContainsKeyCondition(body));
+                    ifStatement.Condition = ifStatement.Condition.As<bool>().And(GetContainsKeyCondition(writePropertyNameTarget));
                 }
 
                 // Handle writing AdditionalProperties
@@ -151,28 +159,17 @@ public class OpenAILibraryVisitor : ScmLibraryVisitor
                 }
 
                 updatedStatements.Add(ifStatement);
-                continue;
             }
-
-            var displayString = statement.ToDisplayString();
-            if (displayString.Contains(WritePropertyNameMethodCall))
+            else if (writePropertyNameTarget is not null)
             {
-                ScopedApi<bool> enclosingIfCondition = GetContainsKeyCondition(displayString);
+                ScopedApi<bool> enclosingIfCondition = GetContainsKeyCondition(writePropertyNameTarget);
 
-                if (GetWritePropertyNameTargetFromStatement(statement) is string writtenPropertyName)
+                if (additionalConditionsForWritingType
+                    .FirstOrDefault(additionalCondition => additionalCondition.JsonName == writePropertyNameTarget)
+                    is WritePropertyNameAdditionalReplacementInfo matchingReplacementInfo)
                 {
-                    foreach (KeyValuePair<string, List<WritePropertyNameAdditionalReplacementInfo>> definedPair
-                        in TypeNameToWritePropertyNameAdditionalConditionMap)
-                    {
-                        if (definedPair.Key == method.EnclosingType.Name
-                            && definedPair.Value.FirstOrDefault(possibleInfo => possibleInfo.JsonName == writtenPropertyName)
-                                is WritePropertyNameAdditionalReplacementInfo matchingReplacementInfo)
-                        {
-                            enclosingIfCondition = GetOptionalIsCollectionDefinedCondition(matchingReplacementInfo)
-                                .And(enclosingIfCondition);
-                            break;
-                        }
-                    }
+                    enclosingIfCondition = GetOptionalIsCollectionDefinedCondition(matchingReplacementInfo)
+                        .And(enclosingIfCondition);
                 }
 
                 var ifSt = new IfStatement(enclosingIfCondition) { statement };
@@ -203,9 +200,8 @@ public class OpenAILibraryVisitor : ScmLibraryVisitor
         return method;
     }
 
-    private static ScopedApi<bool> GetContainsKeyCondition(string displayString)
+    private static ScopedApi<bool> GetContainsKeyCondition(string propertyName)
     {
-        var propertyName = displayString.Split('"')[1];
         return This.Property(AdditionalPropertiesFieldName)
             .NullConditional()
             .Invoke("ContainsKey", Literal(propertyName)).NotEqual(True);
@@ -224,6 +220,24 @@ public class OpenAILibraryVisitor : ScmLibraryVisitor
         {
             return stringLiteralExpression.Literal?.ToString();
         }
+        else if (statement is MethodBodyStatements compoundStatements)
+        {
+            foreach (MethodBodyStatement innerStatement in compoundStatements.Statements)
+            {
+                if (GetWritePropertyNameTargetFromStatement(innerStatement) is string innerTarget)
+                {
+                    return innerTarget;
+                }
+            }
+        }
+        else if (statement is IfStatement ifStatement)
+        {
+            return GetWritePropertyNameTargetFromStatement(ifStatement.Body);
+        }
+        else if (statement is IfElseStatement ifElseStatement)
+        {
+            return GetWritePropertyNameTargetFromStatement(ifElseStatement.If);
+        }
         return null;
     }
 
@@ -235,16 +249,10 @@ public class OpenAILibraryVisitor : ScmLibraryVisitor
             .As<bool>();
     }
 
-    public class WritePropertyNameAdditionalReplacementInfo
+    public class WritePropertyNameAdditionalReplacementInfo(string propertyName, string jsonName, bool isCollection)
     {
-        public string PropertyName { get; set; }
-        public string JsonName { get; set; }
-        public bool IsCollection { get; set; }
-        public WritePropertyNameAdditionalReplacementInfo(string propertyName, string jsonName, bool isCollection)
-        {
-            this.PropertyName = propertyName;
-            this.JsonName = jsonName;
-            this.IsCollection = isCollection;
-        }
+        public string PropertyName { get; set; } = propertyName;
+        public string JsonName { get; set; } = jsonName;
+        public bool IsCollection { get; set; } = isCollection;
     }
 }

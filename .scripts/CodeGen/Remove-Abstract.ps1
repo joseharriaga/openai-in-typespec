@@ -1,7 +1,7 @@
 . $PSScriptRoot\Helpers.ps1
 
-$repoRoot = Join-Path $PSScriptRoot .. -Resolve
-$generatedModelFolder = Join-Path $repoRoot .dotnet\src\Generated\Models
+$repoRootPath = Join-Path $PSScriptRoot ..\.. -Resolve
+$generatedModelsFolderPath = Join-Path $repoRootPath .dotnet\src\Generated\Models
 
 $targetFilenames = (
     "ChatMessage.cs",
@@ -13,7 +13,7 @@ $targetFilenames = (
 )
 
 foreach ($targetFilename in $targetFilenames) {
-    $filePath = Join-Path $generatedModelFolder $targetFilename -Resolve
+    $filePath = Join-Path $generatedModelsFolderPath $targetFilename -Resolve
     Update-In-File-With-Retry `
         -FilePath $filePath `
         -SearchPattern "public abstract" `

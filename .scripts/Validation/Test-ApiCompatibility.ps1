@@ -4,7 +4,7 @@ function Invoke-APICompat {
         [string]$BaselineVersion,
         [string[]]$IgnoredNamespaces
     )
-    $repoRootPath = Join-Path $PSScriptRoot .. -Resolve
+    $repoRootPath = Join-Path $PSScriptRoot ..\.. -Resolve
     $dotnetFolderPath = Join-Path $repoRootPath .dotnet
     $projectPath = Join-Path $repoRootPath .dotnet\src\OpenAI.csproj
 
@@ -81,7 +81,7 @@ function Invoke-APICompat {
     }
 }
 
-$repoRootPath = Join-Path $PSScriptRoot .. -Resolve
+$repoRootPath = Join-Path $PSScriptRoot ..\.. -Resolve
 $projectPath = Join-Path $repoRootPath .dotnet\src\OpenAI.csproj
 
 Write-Output "Building OpenAI.csproj..."

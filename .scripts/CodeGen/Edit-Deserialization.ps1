@@ -1,9 +1,9 @@
 . $PSScriptRoot\Helpers.ps1
 
-$repoRoot = Join-Path $PSScriptRoot .. -Resolve
-$generatedModelFolder = Join-Path $repoRoot .dotnet\src\Generated\Models
+$repoRootPath = Join-Path $PSScriptRoot ..\.. -Resolve
+$generatedModelsFolderPath = Join-Path $repoRootPath .dotnet\src\Generated\Models
 
-$files = Get-ChildItem -Path $generatedModelFolder -Filter "*Serialization.cs"
+$files = Get-ChildItem -Path $generatedModelsFolderPath -Filter "*Serialization.cs"
 
 $editedFilesCount = 0
 

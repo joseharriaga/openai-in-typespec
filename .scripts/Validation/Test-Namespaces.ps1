@@ -1,10 +1,10 @@
-function Run-ModelsSubnamespaceCheck {
+function Test-ModelsSubnamespace {
     Write-Output ""
     Write-Output "Checking for unknown files using the OpenAI.Models namespace..."
 
-    $root = Split-Path $PSScriptRoot -Parent
-    $directory = Join-Path -Path $root -ChildPath ".dotnet\src"
-    $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs" -Recurse
+    $repoRootPath = Join-Path $PSScriptRoot ..\.. -Resolve
+    $srcFolderPath = Join-Path -Path $repoRootPath -ChildPath ".dotnet\src"
+    $files = Get-ChildItem -Path $($srcFolderPath + "\*") -Include "*.cs" -Recurse
 
     $exclusions = @(
         "GeneratorStubs.cs",
@@ -57,13 +57,13 @@ function Run-ModelsSubnamespaceCheck {
     Write-Output "The check was successful."
 }
 
-function Run-TopLevelNamespaceCheck {
+function Test-TopLevelNamespace {
     Write-Output ""
     Write-Output "Checking for unknown files using the OpenAI namespace..."
 
-    $root = Split-Path $PSScriptRoot -Parent
-    $directory = Join-Path -Path $root -ChildPath ".dotnet\src"
-    $files = Get-ChildItem -Path $($directory + "\*") -Include "*.cs" -Recurse
+    $repoRootPath = Join-Path $PSScriptRoot ..\.. -Resolve
+    $srcFolderPath = Join-Path -Path $repoRootPath -ChildPath ".dotnet\src"
+    $files = Get-ChildItem -Path $($srcFolderPath + "\*") -Include "*.cs" -Recurse
 
     $exclusions = @(
         # Public types
@@ -143,5 +143,5 @@ function Run-TopLevelNamespaceCheck {
     Write-Output "The check was successful."
 }
 
-Run-ModelsSubnamespaceCheck
-Run-TopLevelNamespaceCheck
+Test-ModelsSubnamespace
+Test-TopLevelNamespace

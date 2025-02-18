@@ -1,10 +1,10 @@
 . $PSScriptRoot\Helpers.ps1
 
-$root = Split-Path $PSScriptRoot -Parent
-$directory = Join-Path -Path $root -ChildPath ".dotnet\src\Generated\Models"
+$repoRootPath = Join-Path $PSScriptRoot ..\.. -Resolve
+$generatedModelsFolderPath = Join-Path -Path $repoRootPath -ChildPath ".dotnet\src\Generated\Models"
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\InternalChatCompletionResponseMessage.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\InternalChatCompletionResponseMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalChatCompletionResponseMessage\("
         "    refusal,"
@@ -30,7 +30,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\InternalChatCompletionStreamResponseDelta.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\InternalChatCompletionStreamResponseDelta.Serialization.cs" `
     -SearchPatternLines @(
         "if \(Optional\.IsDefined\(Content\) && _additionalBinaryDataProperties\?\.ContainsKey\(`"content`"\) != true\)"
     ) `
@@ -42,7 +42,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\InternalChatCompletionStreamResponseDelta.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\InternalChatCompletionStreamResponseDelta.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalChatCompletionStreamResponseDelta\("
         "    audio,"
@@ -68,7 +68,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\ChatMessage.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\ChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "if \(true && Optional\.IsDefined\(Content\) && _additionalBinaryDataProperties\?\.ContainsKey\(`"content`"\) != true\)"
     ) `
@@ -80,7 +80,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\AssistantChatMessage.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\AssistantChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new AssistantChatMessage\("
         "    content,"
@@ -108,7 +108,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\FunctionChatMessage.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\FunctionChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new FunctionChatMessage\(content, role, additionalBinaryDataProperties, functionName\);"
     ) `
@@ -120,7 +120,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\SystemChatMessage.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\SystemChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new SystemChatMessage\(content, role, additionalBinaryDataProperties, participantName\);"
     ) `
@@ -132,7 +132,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\ToolChatMessage.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\ToolChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new ToolChatMessage\(content, role, additionalBinaryDataProperties, toolCallId\);"
     ) `
@@ -144,7 +144,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\UserChatMessage.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\UserChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new UserChatMessage\(content, role, additionalBinaryDataProperties, participantName\);"
     ) `
@@ -156,7 +156,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\InternalUnknownChatMessage.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\InternalUnknownChatMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalUnknownChatMessage\(content, role, additionalBinaryDataProperties\);"
     ) `
@@ -168,7 +168,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\InternalFineTuneChatCompletionRequestAssistantMessage.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\InternalFineTuneChatCompletionRequestAssistantMessage.Serialization.cs" `
     -SearchPatternLines @(
         "return new InternalFineTuneChatCompletionRequestAssistantMessage\("
         "    content,"
@@ -196,7 +196,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\InternalChatOutputPredictionContent.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\InternalChatOutputPredictionContent.Serialization.cs" `
     -SearchPatternLines @(
         "if \(_additionalBinaryDataProperties\?\.ContainsKey\(`"content`"\) != true\)"
     ) `
@@ -208,7 +208,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\ChatCompletionOptions.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\ChatCompletionOptions.Serialization.cs" `
     -SearchPatternLines @(
         "if \(_additionalBinaryDataProperties\?\.ContainsKey\(`"messages`"\) != true\)"
     ) `
@@ -220,7 +220,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\ChatCompletionOptions.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\ChatCompletionOptions.Serialization.cs" `
     -SearchPatternLines @(
         "if \(_additionalBinaryDataProperties\?\.ContainsKey\(`"model`"\) != true\)"
     ) `
@@ -232,7 +232,7 @@ Update-In-File-With-Retry `
     -RequirePresence
 
 Update-In-File-With-Retry `
-    -FilePath "$directory\ChatCompletionOptions.Serialization.cs" `
+    -FilePath "$generatedModelsFolderPath\ChatCompletionOptions.Serialization.cs" `
     -SearchPatternLines @(
         "return new ChatCompletionOptions\("
         "    frequencyPenalty,"

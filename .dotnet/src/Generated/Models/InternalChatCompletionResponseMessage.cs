@@ -12,20 +12,20 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalChatCompletionResponseMessage(string refusal, ChatMessageContent content)
+        internal InternalChatCompletionResponseMessage(string refusal, Chat.ChatMessageContent content)
         {
             Refusal = refusal;
             ToolCalls = new ChangeTrackingList<ChatToolCall>();
-            Content = content;
+            Content = content ?? new Chat.ChatMessageContent();
         }
 
-        internal InternalChatCompletionResponseMessage(string refusal, IReadOnlyList<ChatToolCall> toolCalls, ChatOutputAudio audio, Chat.ChatMessageRole role, ChatMessageContent content, ChatFunctionCall functionCall, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalChatCompletionResponseMessage(string refusal, IReadOnlyList<ChatToolCall> toolCalls, ChatOutputAudio audio, Chat.ChatMessageRole role, Chat.ChatMessageContent content, ChatFunctionCall functionCall, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Refusal = refusal;
             ToolCalls = toolCalls;
             Audio = audio;
             Role = role;
-            Content = content;
+            Content = content ?? new Chat.ChatMessageContent();
             FunctionCall = functionCall;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }

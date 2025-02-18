@@ -90,13 +90,11 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            // CUSTOM: Check collection is defined so Messages can behave like an optional.
             if (Optional.IsCollectionDefined(Messages) && _additionalBinaryDataProperties?.ContainsKey("messages") != true)
             {
                 writer.WritePropertyName("messages"u8);
                 this.SerializeMessagesValue(writer, options);
             }
-            // CUSTOM: Add a null check to allow Model to behave like an optional
             if (Optional.IsDefined(Model) && _additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
@@ -338,7 +336,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("serviceTier"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -709,12 +707,8 @@ namespace OpenAI.Chat
                     serviceTier = new InternalCreateChatCompletionRequestServiceTier(prop.Value.GetString());
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
-            // CUSTOM: Ensure messages collection is initialized.
             return new ChatCompletionOptions(
                 frequencyPenalty,
                 presencePenalty,
@@ -722,7 +716,7 @@ namespace OpenAI.Chat
                 temperature,
                 topP,
                 tools ?? new ChangeTrackingList<ChatTool>(),
-                messages ?? new ChangeTrackingList<ChatMessage>(),
+                messages,
                 model,
                 n,
                 stream,

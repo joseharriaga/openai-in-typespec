@@ -10,8 +10,7 @@ using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
-    [PersistableModelProxy(typeof(UnknownRealtimeServerEvent))]
-    public abstract partial class ConversationUpdate : IJsonModel<ConversationUpdate>
+    public partial class ConversationUpdate : IJsonModel<ConversationUpdate>
     {
         internal ConversationUpdate()
         {
@@ -41,7 +40,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Kind.ToSerialString());
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {

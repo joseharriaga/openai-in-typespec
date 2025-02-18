@@ -157,7 +157,7 @@ public partial class AudioClient
         options ??= new();
         CreateAudioTranscriptionOptions(audio, audioFilename, ref options);
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, audioFilename);
+        using MultiPartFormDataBinaryContent content = options.ToMultipartContent(audio, audioFilename);
         ClientResult result = await TranscribeAudioAsync(content, content.ContentType, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return ClientResult.FromValue(AudioTranscription.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
@@ -181,7 +181,7 @@ public partial class AudioClient
         options ??= new();
         CreateAudioTranscriptionOptions(audio, audioFilename, ref options);
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, audioFilename);
+        using MultiPartFormDataBinaryContent content = options.ToMultipartContent(audio, audioFilename);
         ClientResult result = TranscribeAudio(content, content.ContentType, cancellationToken.ToRequestOptions());
         return ClientResult.FromValue(AudioTranscription.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
@@ -243,7 +243,7 @@ public partial class AudioClient
         options ??= new();
         CreateAudioTranslationOptions(audio, audioFilename, ref options);
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, audioFilename);
+        using MultiPartFormDataBinaryContent content = options.ToMultipartContent(audio, audioFilename);
         ClientResult result = await TranslateAudioAsync(content, content.ContentType, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return ClientResult.FromValue(AudioTranslation.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }
@@ -267,7 +267,7 @@ public partial class AudioClient
         options ??= new();
         CreateAudioTranslationOptions(audio, audioFilename, ref options);
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(audio, audioFilename);
+        using MultiPartFormDataBinaryContent content = options.ToMultipartContent(audio, audioFilename);
         ClientResult result = TranslateAudio(content, content.ContentType, cancellationToken.ToRequestOptions());
         return ClientResult.FromValue(AudioTranslation.FromResponse(result.GetRawResponse()), result.GetRawResponse());
     }

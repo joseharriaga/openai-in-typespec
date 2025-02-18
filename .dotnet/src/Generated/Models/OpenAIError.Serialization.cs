@@ -65,7 +65,7 @@ namespace OpenAI.Internal
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -142,10 +142,7 @@ namespace OpenAI.Internal
                     @type = prop.Value.GetString();
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new OpenAIError(code, message, @param, @type, additionalBinaryDataProperties);
         }

@@ -53,7 +53,7 @@ namespace OpenAI.RealtimeConversation
                     writer.WriteNull("id"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {

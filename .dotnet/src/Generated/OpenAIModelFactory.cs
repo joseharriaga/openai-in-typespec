@@ -963,31 +963,31 @@ namespace OpenAI
                 additionalBinaryDataProperties: null);
         }
 
-        public static ChatMessage ChatMessage(ChatMessageContent content = default, string role = default)
+        public static ChatMessage ChatMessage(Chat.ChatMessageContent content = default, string role = default)
         {
 
             return new InternalUnknownChatMessage(content, role.ToChatMessageRole(), additionalBinaryDataProperties: null);
         }
 
-        public static SystemChatMessage SystemChatMessage(ChatMessageContent content = default, string participantName = default)
+        public static SystemChatMessage SystemChatMessage(Chat.ChatMessageContent content = default, string participantName = default)
         {
 
             return new SystemChatMessage(content, Chat.ChatMessageRole.System, additionalBinaryDataProperties: null, participantName);
         }
 
-        public static DeveloperChatMessage DeveloperChatMessage(ChatMessageContent content = default, string participantName = default)
+        public static DeveloperChatMessage DeveloperChatMessage(Chat.ChatMessageContent content = default, string participantName = default)
         {
 
             return new DeveloperChatMessage(content, Chat.ChatMessageRole.Developer, additionalBinaryDataProperties: null, participantName);
         }
 
-        public static UserChatMessage UserChatMessage(ChatMessageContent content = default, string participantName = default)
+        public static UserChatMessage UserChatMessage(Chat.ChatMessageContent content = default, string participantName = default)
         {
 
             return new UserChatMessage(content, Chat.ChatMessageRole.User, additionalBinaryDataProperties: null, participantName);
         }
 
-        public static AssistantChatMessage AssistantChatMessage(ChatMessageContent content = default, string refusal = default, string participantName = default, IEnumerable<ChatToolCall> toolCalls = default, ChatFunctionCall functionCall = default, ChatOutputAudioReference outputAudioReference = default)
+        public static AssistantChatMessage AssistantChatMessage(Chat.ChatMessageContent content = default, string refusal = default, string participantName = default, IEnumerable<ChatToolCall> toolCalls = default, ChatFunctionCall functionCall = default, ChatOutputAudioReference outputAudioReference = default)
         {
             toolCalls ??= new ChangeTrackingList<ChatToolCall>();
 
@@ -1020,13 +1020,13 @@ namespace OpenAI
             return new ChatFunctionCall(functionName, functionArguments, additionalBinaryDataProperties: null);
         }
 
-        public static ToolChatMessage ToolChatMessage(ChatMessageContent content = default, string toolCallId = default)
+        public static ToolChatMessage ToolChatMessage(Chat.ChatMessageContent content = default, string toolCallId = default)
         {
 
             return new ToolChatMessage(content, Chat.ChatMessageRole.Tool, additionalBinaryDataProperties: null, toolCallId);
         }
 
-        public static FunctionChatMessage FunctionChatMessage(ChatMessageContent content = default, string functionName = default)
+        public static FunctionChatMessage FunctionChatMessage(Chat.ChatMessageContent content = default, string functionName = default)
         {
 
             return new FunctionChatMessage(content, Chat.ChatMessageRole.Function, additionalBinaryDataProperties: null, functionName);
@@ -1284,10 +1284,10 @@ namespace OpenAI
             return new ChatToolChoice(additionalBinaryDataProperties: null);
         }
 
-        public static ChatMessageContent ChatMessageContent()
+        public static Chat.ChatMessageContent ChatMessageContent()
         {
 
-            return new ChatMessageContent(additionalBinaryDataProperties: null);
+            return new Chat.ChatMessageContent(additionalBinaryDataProperties: null);
         }
 
         public static ChatMessageContentPart ChatMessageContentPart(Chat.ChatMessageContentPartKind kind = default, string text = default, InternalChatCompletionRequestMessageContentPartImageImageUrl imageUri = default, string refusal = default, InternalChatCompletionRequestMessageContentPartAudioInputAudio inputAudio = default)

@@ -10,8 +10,7 @@ using OpenAI;
 
 namespace OpenAI.Assistants
 {
-    [PersistableModelProxy(typeof(InternalUnknownAssistantResponseFormat))]
-    public abstract partial class AssistantResponseFormat : IJsonModel<AssistantResponseFormat>
+    public partial class AssistantResponseFormat : IJsonModel<AssistantResponseFormat>
     {
         internal AssistantResponseFormat()
         {
@@ -29,7 +28,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Type);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {

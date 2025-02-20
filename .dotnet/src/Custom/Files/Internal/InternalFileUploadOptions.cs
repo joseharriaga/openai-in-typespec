@@ -29,9 +29,9 @@ internal partial class InternalFileUploadOptions
     {
     }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(Stream file, string filename)
+    internal MultiPartFormDataBinaryContent ToMultipartContent(Stream file, string filename)
     {
-        MultipartFormDataBinaryContent content = new();
+        MultiPartFormDataBinaryContent content = new();
 
         content.Add(file, "file", filename);
 

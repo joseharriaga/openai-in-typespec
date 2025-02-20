@@ -90,10 +90,7 @@ namespace OpenAI.RealtimeConversation
                     audioStartMs = prop.Value.GetInt32();
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new ConversationInputSpeechStartedUpdate(eventId, kind, additionalBinaryDataProperties, itemId, audioStartMs);
         }

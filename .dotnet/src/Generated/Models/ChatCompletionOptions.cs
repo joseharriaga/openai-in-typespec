@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using OpenAI;
 
 namespace OpenAI.Chat
 {
@@ -19,7 +20,7 @@ namespace OpenAI.Chat
             Temperature = temperature;
             TopP = topP;
             Tools = tools;
-            Messages = messages;
+            Messages = messages ?? new ChangeTrackingList<ChatMessage>();
             Model = model;
             N = n;
             Stream = stream;

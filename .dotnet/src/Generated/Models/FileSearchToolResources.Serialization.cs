@@ -47,7 +47,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("vector_stores"u8);
                 this.SerializeNewVectorStores(writer, options);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -127,10 +127,7 @@ namespace OpenAI.Assistants
                     newVectorStores = array;
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new FileSearchToolResources(vectorStoreIds ?? new ChangeTrackingList<string>(), newVectorStores ?? new ChangeTrackingList<VectorStoreCreationHelper>(), additionalBinaryDataProperties);
         }

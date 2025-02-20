@@ -21,9 +21,9 @@ public partial class AudioTranslationOptions
     {
     }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(Stream audio, string audioFilename)
+    internal MultiPartFormDataBinaryContent ToMultipartContent(Stream audio, string audioFilename)
     {
-        MultipartFormDataBinaryContent content = new();
+        MultiPartFormDataBinaryContent content = new();
 
         content.Add(audio, "file", audioFilename);
         content.Add(Model.ToString(), "model");

@@ -11,9 +11,9 @@ namespace OpenAI.Chat
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal ChatMessage(ChatMessageContent content, Chat.ChatMessageRole role, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ChatMessage(Chat.ChatMessageContent content, Chat.ChatMessageRole role, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
-            Content = content;
+            Content = content ?? new Chat.ChatMessageContent();
             Role = role;
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }

@@ -121,7 +121,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("completedAt"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null && Optional.IsCollectionDefined(Metadata))
                 {
@@ -171,7 +171,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("step_details"u8);
                 writer.WriteObjectValue<RunStepDetails>(Details, options);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -357,10 +357,7 @@ namespace OpenAI.Assistants
                     details = RunStepDetails.DeserializeRunStepDetails(prop.Value, options);
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new RunStep(
                 id,

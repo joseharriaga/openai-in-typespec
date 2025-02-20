@@ -67,7 +67,7 @@ namespace OpenAI.VectorStores
                     writer.WriteNull("expiresAfter"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -154,10 +154,7 @@ namespace OpenAI.VectorStores
                     expirationPolicy = VectorStoreExpirationPolicy.DeserializeVectorStoreExpirationPolicy(prop.Value, options);
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new VectorStoreModificationOptions(name, metadata ?? new ChangeTrackingDictionary<string, string>(), expirationPolicy, additionalBinaryDataProperties);
         }

@@ -32,8 +32,7 @@ namespace OpenAI.Chat
                 throw new FormatException($"The model {nameof(InternalChatOutputPredictionContent)} does not support writing '{format}' format.");
             }
             base.JsonModelWriteCore(writer, options);
-            // CUSTOM: Check inner collection is defined.
-            if (Content.IsInnerCollectionDefined() && _additionalBinaryDataProperties?.ContainsKey("content") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
                 this.SerializeContentValue(writer, options);
@@ -61,7 +60,7 @@ namespace OpenAI.Chat
             }
             InternalChatOutputPredictionKind @type = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            ChatMessageContent content = default;
+            Chat.ChatMessageContent content = default;
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))
@@ -74,10 +73,7 @@ namespace OpenAI.Chat
                     DeserializeContentValue(prop, ref content);
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new InternalChatOutputPredictionContent(@type, additionalBinaryDataProperties, content);
         }

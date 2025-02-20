@@ -43,7 +43,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("refusal"u8);
                 }
             }
-            if (true && Optional.IsCollectionDefined(ToolCalls) && _additionalBinaryDataProperties?.ContainsKey("tool_calls") != true)
+            if (Optional.IsCollectionDefined(ToolCalls) && _additionalBinaryDataProperties?.ContainsKey("tool_calls") != true)
             {
                 writer.WritePropertyName("tool_calls"u8);
                 writer.WriteStartArray();
@@ -87,7 +87,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("function_call"u8);
                 writer.WriteObjectValue<ChatFunctionCall>(FunctionCall, options);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -131,7 +131,7 @@ namespace OpenAI.Chat
             IReadOnlyList<ChatToolCall> toolCalls = default;
             ChatOutputAudio audio = default;
             Chat.ChatMessageRole role = default;
-            ChatMessageContent content = default;
+            Chat.ChatMessageContent content = default;
             ChatFunctionCall functionCall = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -189,18 +189,14 @@ namespace OpenAI.Chat
                     functionCall = ChatFunctionCall.DeserializeChatFunctionCall(prop.Value, options);
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
-            // CUSTOM: Initialize Content collection property.
             return new InternalChatCompletionResponseMessage(
                 refusal,
                 toolCalls ?? new ChangeTrackingList<ChatToolCall>(),
                 audio,
                 role,
-                content ?? new ChatMessageContent(),
+                content,
                 functionCall,
                 additionalBinaryDataProperties);
         }

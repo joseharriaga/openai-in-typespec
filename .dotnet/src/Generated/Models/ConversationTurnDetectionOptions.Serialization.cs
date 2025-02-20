@@ -10,8 +10,7 @@ using OpenAI;
 
 namespace OpenAI.RealtimeConversation
 {
-    [PersistableModelProxy(typeof(UnknownRealtimeTurnDetection))]
-    public abstract partial class ConversationTurnDetectionOptions : IJsonModel<ConversationTurnDetectionOptions>
+    public partial class ConversationTurnDetectionOptions : IJsonModel<ConversationTurnDetectionOptions>
     {
         internal ConversationTurnDetectionOptions()
         {
@@ -36,7 +35,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(Kind.ToSerialString());
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {

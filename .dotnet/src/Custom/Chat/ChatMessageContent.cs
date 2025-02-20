@@ -28,6 +28,10 @@ public partial class ChatMessageContent : Collection<ChatMessageContentPart>
     {
     }
 
+    internal ChatMessageContent(IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        : this()
+    { }
+
     internal bool IsInnerCollectionDefined()
     {
         return !(Items is ChangeTrackingList<ChatMessageContentPart> changeTrackingList && changeTrackingList.IsUndefined);

@@ -50,7 +50,7 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            ChatMessageContent content = default;
+            Chat.ChatMessageContent content = default;
             Chat.ChatMessageRole role = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string refusal = default;
@@ -119,14 +119,10 @@ namespace OpenAI.FineTuning
                     outputAudioReference = ChatOutputAudioReference.DeserializeChatOutputAudioReference(prop.Value, options);
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
-            // CUSTOM: Initialize Content collection property.
             return new InternalFineTuneChatCompletionRequestAssistantMessage(
-                content ?? new ChatMessageContent(),
+                content,
                 role,
                 additionalBinaryDataProperties,
                 refusal,

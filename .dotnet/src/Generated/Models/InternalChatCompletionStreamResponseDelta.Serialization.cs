@@ -37,7 +37,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("function_call"u8);
                 writer.WriteObjectValue(FunctionCall, options);
             }
-            if (true && Optional.IsCollectionDefined(ToolCalls) && _additionalBinaryDataProperties?.ContainsKey("tool_calls") != true)
+            if (Optional.IsCollectionDefined(ToolCalls) && _additionalBinaryDataProperties?.ContainsKey("tool_calls") != true)
             {
                 writer.WritePropertyName("tool_calls"u8);
                 writer.WriteStartArray();
@@ -64,8 +64,7 @@ namespace OpenAI.Chat
                 writer.WritePropertyName("role"u8);
                 writer.WriteStringValue(Role.Value.ToSerialString());
             }
-            // CUSTOM: Check inner collection is defined.
-            if (Optional.IsDefined(Content) && _additionalBinaryDataProperties?.ContainsKey("content") != true && Content.IsInnerCollectionDefined())
+            if (Optional.IsDefined(Content) && Content.IsInnerCollectionDefined() && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 if (Content != null)
                 {
@@ -77,7 +76,7 @@ namespace OpenAI.Chat
                     writer.WriteNull("content"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -122,7 +121,7 @@ namespace OpenAI.Chat
             IReadOnlyList<StreamingChatToolCallUpdate> toolCalls = default;
             string refusal = default;
             Chat.ChatMessageRole? role = default;
-            ChatMessageContent content = default;
+            Chat.ChatMessageContent content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
@@ -182,19 +181,15 @@ namespace OpenAI.Chat
                     DeserializeContentValue(prop, ref content);
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
-            // CUSTOM: Initialize Content collection property.
             return new InternalChatCompletionStreamResponseDelta(
                 audio,
                 functionCall,
                 toolCalls ?? new ChangeTrackingList<StreamingChatToolCallUpdate>(),
                 refusal,
                 role,
-                content ?? new ChatMessageContent(),
+                content,
                 additionalBinaryDataProperties);
         }
 

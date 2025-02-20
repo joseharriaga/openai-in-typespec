@@ -62,10 +62,7 @@ namespace OpenAI.Assistants
                     internalFunction = InternalFunctionDefinition.DeserializeInternalFunctionDefinition(prop.Value, options);
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new FunctionToolDefinition(@type, additionalBinaryDataProperties, internalFunction);
         }

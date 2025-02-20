@@ -267,7 +267,7 @@ namespace OpenAI.Assistants {
         public static implicit operator BinaryContent(AssistantModificationOptions assistantModificationOptions);
     }
     [Experimental("OPENAI001")]
-    public abstract class AssistantResponseFormat : IEquatable<AssistantResponseFormat>, IEquatable<string>, IJsonModel<AssistantResponseFormat>, IPersistableModel<AssistantResponseFormat> {
+    public class AssistantResponseFormat : IEquatable<AssistantResponseFormat>, IEquatable<string>, IJsonModel<AssistantResponseFormat>, IPersistableModel<AssistantResponseFormat> {
         public static AssistantResponseFormat Auto { get; }
         public static AssistantResponseFormat JsonObject { get; }
         public static AssistantResponseFormat Text { get; }
@@ -765,7 +765,7 @@ namespace OpenAI.Assistants {
         public static implicit operator BinaryContent(RunStepTokenUsage runStepTokenUsage);
     }
     [Experimental("OPENAI001")]
-    public abstract class RunStepToolCall : IJsonModel<RunStepToolCall>, IPersistableModel<RunStepToolCall> {
+    public class RunStepToolCall : IJsonModel<RunStepToolCall>, IPersistableModel<RunStepToolCall> {
         public string CodeInterpreterInput { get; }
         public IReadOnlyList<RunStepCodeInterpreterOutput> CodeInterpreterOutputs { get; }
         public FileSearchRankingOptions FileSearchRankingOptions { get; }
@@ -788,7 +788,7 @@ namespace OpenAI.Assistants {
     public class RunStepUpdate : StreamingUpdate<RunStep> {
     }
     [Experimental("OPENAI001")]
-    public abstract class RunStepUpdateCodeInterpreterOutput : IJsonModel<RunStepUpdateCodeInterpreterOutput>, IPersistableModel<RunStepUpdateCodeInterpreterOutput> {
+    public class RunStepUpdateCodeInterpreterOutput : IJsonModel<RunStepUpdateCodeInterpreterOutput>, IPersistableModel<RunStepUpdateCodeInterpreterOutput> {
         public string ImageFileId { get; }
         public string Logs { get; }
         public int OutputIndex { get; }
@@ -2170,7 +2170,7 @@ namespace OpenAI.RealtimeConversation {
         Audio = 2
     }
     [Experimental("OPENAI002")]
-    public abstract class ConversationContentPart : IJsonModel<ConversationContentPart>, IPersistableModel<ConversationContentPart> {
+    public class ConversationContentPart : IJsonModel<ConversationContentPart>, IPersistableModel<ConversationContentPart> {
         public string AudioTranscript { get; }
         public string Text { get; }
         public static ConversationContentPart CreateInputAudioTranscriptPart(string transcript = null);
@@ -2294,7 +2294,7 @@ namespace OpenAI.RealtimeConversation {
         public static implicit operator BinaryContent(ConversationInputTranscriptionOptions conversationInputTranscriptionOptions);
     }
     [Experimental("OPENAI002")]
-    public abstract class ConversationItem : IJsonModel<ConversationItem>, IPersistableModel<ConversationItem> {
+    public class ConversationItem : IJsonModel<ConversationItem>, IPersistableModel<ConversationItem> {
         public string FunctionArguments { get; }
         public string FunctionCallId { get; }
         public string FunctionName { get; }
@@ -2662,7 +2662,7 @@ namespace OpenAI.RealtimeConversation {
         Disabled = 1
     }
     [Experimental("OPENAI002")]
-    public abstract class ConversationTurnDetectionOptions : IJsonModel<ConversationTurnDetectionOptions>, IPersistableModel<ConversationTurnDetectionOptions> {
+    public class ConversationTurnDetectionOptions : IJsonModel<ConversationTurnDetectionOptions>, IPersistableModel<ConversationTurnDetectionOptions> {
         public ConversationTurnDetectionKind Kind { get; protected internal set; }
         public static ConversationTurnDetectionOptions CreateDisabledTurnDetectionOptions();
         public static ConversationTurnDetectionOptions CreateServerVoiceActivityTurnDetectionOptions(float? detectionThreshold = null, TimeSpan? prefixPaddingDuration = null, TimeSpan? silenceDuration = null, bool? enableAutomaticResponseCreation = null);
@@ -2670,7 +2670,7 @@ namespace OpenAI.RealtimeConversation {
         public static implicit operator BinaryContent(ConversationTurnDetectionOptions conversationTurnDetectionOptions);
     }
     [Experimental("OPENAI002")]
-    public abstract class ConversationUpdate : IJsonModel<ConversationUpdate>, IPersistableModel<ConversationUpdate> {
+    public class ConversationUpdate : IJsonModel<ConversationUpdate>, IPersistableModel<ConversationUpdate> {
         public string EventId { get; }
         public ConversationUpdateKind Kind { get; protected internal set; }
         public BinaryData GetRawContent();

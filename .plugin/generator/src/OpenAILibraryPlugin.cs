@@ -1,6 +1,7 @@
 using System.ComponentModel.Composition;
 using Microsoft.Generator.CSharp;
 using Microsoft.Generator.CSharp.ClientModel;
+using OpenAILibraryPlugin.Visitors;
 
 namespace OpenAILibraryPlugin
 {
@@ -14,6 +15,12 @@ namespace OpenAILibraryPlugin
         public override void Configure()
         {
             base.Configure();
+            AddVisitor(new ProhibitedNamespaceVisitor());
+            AddVisitor(new CollectionInitializationVisitor());
+            AddVisitor(new ContentInnerCollectionDefinedVisitor());
+            AddVisitor(new NonAbstractPublicTypesVisitor());
+            AddVisitor(new OmittedTypesVisitor());
+            AddVisitor(new InvariantFormatAdditionalPropertiesVisitor());
             AddVisitor(new OpenAILibraryVisitor());
         }
     }

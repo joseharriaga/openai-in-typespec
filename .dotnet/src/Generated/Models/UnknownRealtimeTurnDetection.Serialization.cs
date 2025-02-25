@@ -61,10 +61,7 @@ namespace OpenAI.RealtimeConversation
                     kind = prop.Value.GetString().ToConversationTurnDetectionKind();
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new UnknownRealtimeTurnDetection(kind, additionalBinaryDataProperties);
         }

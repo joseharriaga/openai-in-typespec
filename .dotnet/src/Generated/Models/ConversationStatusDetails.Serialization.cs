@@ -42,7 +42,7 @@ namespace OpenAI.RealtimeConversation
                 writer.WritePropertyName("error"u8);
                 writer.WriteObjectValue<InternalRealtimeResponseStatusDetailsError>(Error, options);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -115,10 +115,7 @@ namespace OpenAI.RealtimeConversation
                     error = InternalRealtimeResponseStatusDetailsError.DeserializeInternalRealtimeResponseStatusDetailsError(prop.Value, options);
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new ConversationStatusDetails(statusKind, incompleteReason, error, additionalBinaryDataProperties);
         }

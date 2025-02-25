@@ -3,10 +3,11 @@ function Invoke-GenAPI {
         [string]$TargetFramework
     )
 
+    $repoRootPath = Join-Path $PSScriptRoot ..\.. -Resolve
+    $assemblyPath = Join-Path $repoRootPath .dotnet\src\bin\Debug $TargetFramework OpenAI.dll
+
     $outputName = "OpenAI.$($TargetFramework).cs"
-    $repoRoot = Join-Path $PSScriptRoot .. -Resolve
-    $outputPath = Join-Path $repoRoot .dotnet\api $outputName
-    $assemblyPath = Join-Path $repoRoot .dotnet\src\bin\Debug $TargetFramework OpenAI.dll
+    $outputPath = Join-Path $repoRootPath .dotnet\api $outputName
 
     Write-Output "Generating $($outputName)..."
     Write-Output ""
@@ -134,10 +135,10 @@ function Invoke-GenAPI {
     Set-Content -Path $outputPath -Value $content -NoNewline
 }
 
-$repoRoot = Join-Path $PSScriptRoot .. -Resolve
-$projectPath = Join-Path $repoRoot .dotnet\src\OpenAI.csproj
+$repoRootPath = Join-Path $PSScriptRoot ..\.. -Resolve
+$projectPath = Join-Path $repoRootPath .dotnet\src\OpenAI.csproj
 
-Write-Output "Building OpenAI.dll..."
+Write-Output "Building OpenAI.csproj..."
 Write-Output ""
 dotnet build $projectPath
 Write-Output ""

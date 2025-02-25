@@ -91,9 +91,9 @@ public partial class ImageEditOptions
     [CodeGenMember("User")]
     public string EndUserId { get; set; }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(Stream image, string imageFilename, Stream mask, string maskFilename)
+    internal MultiPartFormDataBinaryContent ToMultipartContent(Stream image, string imageFilename, Stream mask, string maskFilename)
     {
-        MultipartFormDataBinaryContent content = new();
+        MultiPartFormDataBinaryContent content = new();
 
         content.Add(image, "image", imageFilename);
         content.Add(Prompt, "prompt");

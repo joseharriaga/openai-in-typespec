@@ -68,7 +68,7 @@ namespace OpenAI.Chat
                 }
                 writer.WriteEndArray();
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -151,10 +151,7 @@ namespace OpenAI.Chat
                     topLogProbabilities = array;
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new ChatTokenLogProbabilityDetails(token, logProbability, utf8Bytes, topLogProbabilities, additionalBinaryDataProperties);
         }

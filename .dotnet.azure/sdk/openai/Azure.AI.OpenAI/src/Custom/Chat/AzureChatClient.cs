@@ -88,7 +88,6 @@ internal partial class AzureChatClient : ChatClient
                 == true)
         {
             options ??= new();
-            options.StreamOptions = null;
             options.SerializedAdditionalRawData ??= new Dictionary<string, BinaryData>();
             AdditionalPropertyHelpers.SetEmptySentinelValue(options.SerializedAdditionalRawData, "stream_options");
         }

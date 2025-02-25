@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace OpenAI.Assistants
 {
-    public abstract partial class RunStepToolCall
+    public partial class RunStepToolCall
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 

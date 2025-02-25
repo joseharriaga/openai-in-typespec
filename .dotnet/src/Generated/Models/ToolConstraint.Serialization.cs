@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
                 writer.WritePropertyName("type"u8);
                 writer.WriteStringValue(_objectType);
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {

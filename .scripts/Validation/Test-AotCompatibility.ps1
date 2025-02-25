@@ -1,4 +1,4 @@
-$repoRootPath = Join-Path $PSScriptRoot .. -Resolve
+$repoRootPath = Join-Path $PSScriptRoot ..\.. -Resolve
 $dotnetFolderPath = Join-Path $repoRootPath ".dotnet"
 $expectedWarningsFilePath = Join-Path -Path $dotnetFolderPath "src\ExpectedWarnings.txt"
 $libraryCsprojFilePath = Join-Path $dotnetFolderPath "src\OpenAI.csproj"
@@ -104,7 +104,7 @@ try {
         }
         else {
             Write-Host
-            Write-Host "No unexpected warnings found!"
+            Write-Host "No unexpected warnings found."
         }
 
         if (($expectedWarningCount -gt 0) -and ($expectedWarningCount -ne $actualWarningCount)) {

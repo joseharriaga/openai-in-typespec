@@ -87,7 +87,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("incompleteAt"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties?.ContainsKey("content") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
                 writer.WriteStartArray();
@@ -121,7 +121,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("runId"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties?.ContainsKey("metadata") != true)
+            if (_additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
                 if (Metadata != null && Optional.IsCollectionDefined(Metadata))
                 {
@@ -171,7 +171,7 @@ namespace OpenAI.Assistants
                     writer.WriteNull("attachments"u8);
                 }
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -355,10 +355,7 @@ namespace OpenAI.Assistants
                     attachments = array;
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new ThreadMessage(
                 id,

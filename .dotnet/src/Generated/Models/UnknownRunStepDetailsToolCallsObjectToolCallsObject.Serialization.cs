@@ -67,10 +67,7 @@ namespace OpenAI.Assistants
                     kind = prop.Value.GetString().ToRunStepToolCallKind();
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new UnknownRunStepDetailsToolCallsObjectToolCallsObject(id, kind, additionalBinaryDataProperties);
         }

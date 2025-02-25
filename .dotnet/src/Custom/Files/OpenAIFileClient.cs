@@ -96,7 +96,7 @@ public partial class OpenAIFileClient
             Purpose = purpose
         };
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
+        using MultiPartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
         ClientResult result = await UploadFileAsync(content, content.ContentType, cancellationToken.ToRequestOptions()).ConfigureAwait(false);
         return ClientResult.FromValue((OpenAIFile)result, result.GetRawResponse());
     }
@@ -123,7 +123,7 @@ public partial class OpenAIFileClient
             Purpose = purpose
         };
 
-        using MultipartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
+        using MultiPartFormDataBinaryContent content = options.ToMultipartContent(file, filename);
         ClientResult result = UploadFile(content, content.ContentType, cancellationToken.ToRequestOptions());
         return ClientResult.FromValue((OpenAIFile)result, result.GetRawResponse());
     }

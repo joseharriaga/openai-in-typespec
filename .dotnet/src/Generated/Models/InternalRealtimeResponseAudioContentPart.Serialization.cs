@@ -96,10 +96,7 @@ namespace OpenAI.RealtimeConversation
                     internalTranscriptValue = prop.Value.GetString();
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new InternalRealtimeResponseAudioContentPart(kind, additionalBinaryDataProperties, @type, internalTranscriptValue);
         }

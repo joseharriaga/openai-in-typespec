@@ -47,7 +47,7 @@ internal partial class AzureFileClient : OpenAIFileClient
         Argument.AssertNotNull(file, "file");
         Argument.AssertNotNullOrEmpty(filename, "filename");
 
-        using MultipartFormDataBinaryContent content = CreateMultiPartContentWithMimeType(file, filename, purpose);
+        using MultiPartFormDataBinaryContent content = CreateMultiPartContentWithMimeType(file, filename, purpose);
         ClientResult clientResult = UploadFile(content, content.ContentType, new() { CancellationToken = cancellationToken });
 
         return GetAzureFileResult(clientResult);
@@ -66,7 +66,7 @@ internal partial class AzureFileClient : OpenAIFileClient
         Argument.AssertNotNull(file, "file");
         Argument.AssertNotNullOrEmpty(filename, "filename");
 
-        using MultipartFormDataBinaryContent content = CreateMultiPartContentWithMimeType(file, filename, purpose);
+        using MultiPartFormDataBinaryContent content = CreateMultiPartContentWithMimeType(file, filename, purpose);
         ClientResult result = await UploadFileAsync(content, content.ContentType, new() { CancellationToken = cancellationToken })
             .ConfigureAwait(continueOnCapturedContext: false);
         return GetAzureFileResult(result);
@@ -108,9 +108,9 @@ internal partial class AzureFileClient : OpenAIFileClient
         return GetTypedResult<OpenAIFileCollection, AzureOpenAIFileCollection>(protocolResult, AzureOpenAIFileCollection.FromResponse);
     }
 
-    private MultipartFormDataBinaryContent CreateMultiPartContentWithMimeType(Stream file, string filename, FileUploadPurpose purpose)
+    private MultiPartFormDataBinaryContent CreateMultiPartContentWithMimeType(Stream file, string filename, FileUploadPurpose purpose)
     {
-        MultipartFormDataBinaryContent multipartFormDataBinaryContent = new MultipartFormDataBinaryContent();
+        MultiPartFormDataBinaryContent multipartFormDataBinaryContent = new();
         string contentType = "text/plain";
         if (purpose == FileUploadPurpose.Batch)
         {

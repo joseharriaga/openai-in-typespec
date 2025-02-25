@@ -4,7 +4,6 @@
 #if !AZURE_OPENAI_GA
 
 using Azure.Core;
-using OpenAI.RealtimeConversation;
 using System.ClientModel;
 using System.Web;
 
@@ -28,7 +27,10 @@ internal partial class AzureRealtimeConversationClient : RealtimeConversationCli
         : base(deploymentName, credential, new OpenAIClientOptions() { Endpoint = endpoint })
     {
         options ??= new();
-        _endpoint = GetEndpoint(endpoint, deploymentName, options.Version);
+        _endpoint = GetEndpoint(
+            endpoint,
+            deploymentName,
+            options.GetRawServiceApiValueForClient(this.GetType()));
         _credential = credential;
         Core.TelemetryDetails telemetryDetails = new(typeof(AzureOpenAIClient).Assembly, options?.UserAgentApplicationId);
         _userAgent = telemetryDetails.ToString();
@@ -38,7 +40,10 @@ internal partial class AzureRealtimeConversationClient : RealtimeConversationCli
         : base(deploymentName, credential: new("placeholder") , new OpenAIClientOptions() { Endpoint = endpoint })
     {
         options ??= new();
-        _endpoint = GetEndpoint(endpoint, deploymentName, options.Version);
+        _endpoint = GetEndpoint(
+            endpoint,
+            deploymentName,
+            options.GetRawServiceApiValueForClient(this.GetType()));
         _tokenCredential = credential;
         _tokenAuthorizationScopes = [options?.Audience?.ToString() ?? AzureOpenAIAudience.AzurePublicCloud.ToString()];
         Core.TelemetryDetails telemetryDetails = new(typeof(AzureOpenAIClient).Assembly, options?.UserAgentApplicationId);

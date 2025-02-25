@@ -224,7 +224,7 @@ namespace OpenAI.Assistants {
     public class AssistantCreationOptions : IJsonModel<AssistantCreationOptions>, IPersistableModel<AssistantCreationOptions> {
         public string Description { get; set; }
         public string Instructions { get; set; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public string Name { get; set; }
         public float? NucleusSamplingFactor { get; set; }
         public AssistantResponseFormat ResponseFormat { get; set; }
@@ -244,7 +244,7 @@ namespace OpenAI.Assistants {
         public IList<ToolDefinition> DefaultTools { get; }
         public string Description { get; set; }
         public string Instructions { get; set; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public string Model { get; set; }
         public string Name { get; set; }
         public float? NucleusSamplingFactor { get; set; }
@@ -289,12 +289,8 @@ namespace OpenAI.Assistants {
         public static implicit operator BinaryContent(AssistantThread assistantThread);
     }
     public class CodeInterpreterToolDefinition : ToolDefinition, IJsonModel<CodeInterpreterToolDefinition>, IPersistableModel<CodeInterpreterToolDefinition> {
-        protected override ToolDefinition JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator CodeInterpreterToolDefinition(ClientResult result);
         public static implicit operator BinaryContent(CodeInterpreterToolDefinition codeInterpreterToolDefinition);
-        protected override ToolDefinition PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class CodeInterpreterToolResources : IJsonModel<CodeInterpreterToolResources>, IPersistableModel<CodeInterpreterToolResources> {
         public IList<string> FileIds { get; }
@@ -326,12 +322,8 @@ namespace OpenAI.Assistants {
     public class FileSearchToolDefinition : ToolDefinition, IJsonModel<FileSearchToolDefinition>, IPersistableModel<FileSearchToolDefinition> {
         public int? MaxResults { get; set; }
         public FileSearchRankingOptions RankingOptions { get; set; }
-        protected override ToolDefinition JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator FileSearchToolDefinition(ClientResult result);
         public static implicit operator BinaryContent(FileSearchToolDefinition fileSearchToolDefinition);
-        protected override ToolDefinition PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class FileSearchToolResources : IJsonModel<FileSearchToolResources>, IPersistableModel<FileSearchToolResources> {
         public IList<VectorStoreCreationHelper> NewVectorStores { get; }
@@ -346,12 +338,8 @@ namespace OpenAI.Assistants {
         public required string FunctionName { get; set; }
         public BinaryData Parameters { get; set; }
         public bool? StrictParameterSchemaEnabled { get; set; }
-        protected override ToolDefinition JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator FunctionToolDefinition(ClientResult result);
         public static implicit operator BinaryContent(FunctionToolDefinition functionToolDefinition);
-        protected override ToolDefinition PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class MessageCollectionOptions {
         public string AfterId { get; set; }
@@ -406,7 +394,7 @@ namespace OpenAI.Assistants {
     }
     public class MessageCreationOptions : IJsonModel<MessageCreationOptions>, IPersistableModel<MessageCreationOptions> {
         public IList<MessageCreationAttachment> Attachments { get; set; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public static explicit operator MessageCreationOptions(ClientResult result);
         public static implicit operator BinaryContent(MessageCreationOptions messageCreationOptions);
     }
@@ -444,7 +432,7 @@ namespace OpenAI.Assistants {
         High = 2
     }
     public class MessageModificationOptions : IJsonModel<MessageModificationOptions>, IPersistableModel<MessageModificationOptions> {
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public static explicit operator MessageModificationOptions(ClientResult result);
         public static implicit operator BinaryContent(MessageModificationOptions messageModificationOptions);
     }
@@ -559,7 +547,7 @@ namespace OpenAI.Assistants {
         public override readonly string ToString();
     }
     public class RunModificationOptions : IJsonModel<RunModificationOptions>, IPersistableModel<RunModificationOptions> {
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public static explicit operator RunModificationOptions(ClientResult result);
         public static implicit operator BinaryContent(RunModificationOptions runModificationOptions);
     }
@@ -809,7 +797,7 @@ namespace OpenAI.Assistants {
     }
     public class ThreadCreationOptions : IJsonModel<ThreadCreationOptions>, IPersistableModel<ThreadCreationOptions> {
         public IList<ThreadInitializationMessage> InitialMessages { get; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public ToolResources ToolResources { get; set; }
         public static explicit operator ThreadCreationOptions(ClientResult result);
         public static implicit operator BinaryContent(ThreadCreationOptions threadCreationOptions);
@@ -842,7 +830,7 @@ namespace OpenAI.Assistants {
         public static implicit operator BinaryContent(ThreadMessage threadMessage);
     }
     public class ThreadModificationOptions : IJsonModel<ThreadModificationOptions>, IPersistableModel<ThreadModificationOptions> {
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public ToolResources ToolResources { get; set; }
         public static explicit operator ThreadModificationOptions(ClientResult result);
         public static implicit operator BinaryContent(ThreadModificationOptions threadModificationOptions);
@@ -1050,10 +1038,13 @@ namespace OpenAI.Audio {
     public readonly partial struct GeneratedSpeechVoice : IEquatable<GeneratedSpeechVoice> {
         public GeneratedSpeechVoice(string value);
         public static GeneratedSpeechVoice Alloy { get; }
+        public static GeneratedSpeechVoice Ash { get; }
+        public static GeneratedSpeechVoice Coral { get; }
         public static GeneratedSpeechVoice Echo { get; }
         public static GeneratedSpeechVoice Fable { get; }
         public static GeneratedSpeechVoice Nova { get; }
         public static GeneratedSpeechVoice Onyx { get; }
+        public static GeneratedSpeechVoice Sage { get; }
         public static GeneratedSpeechVoice Shimmer { get; }
         public readonly bool Equals(GeneratedSpeechVoice other);
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -1141,12 +1132,8 @@ namespace OpenAI.Chat {
         public string ParticipantName { get; set; }
         public string Refusal { get; set; }
         public IList<ChatToolCall> ToolCalls { get; }
-        protected override ChatMessage JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator AssistantChatMessage(ClientResult result);
         public static implicit operator BinaryContent(AssistantChatMessage assistantChatMessage);
-        protected override ChatMessage PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ChatAudioOptions : IJsonModel<ChatAudioOptions>, IPersistableModel<ChatAudioOptions> {
         public ChatAudioOptions(ChatOutputAudioVoice outputAudioVoice, ChatOutputAudioFormat outputAudioFormat);
@@ -1207,7 +1194,9 @@ namespace OpenAI.Chat {
         public IDictionary<int, int> LogitBiases { get; }
         public int? MaxOutputTokenCount { get; set; }
         public IDictionary<string, string> Metadata { get; }
+        public ChatOutputPrediction OutputPrediction { get; set; }
         public float? PresencePenalty { get; set; }
+        public ChatReasoningEffortLevel? ReasoningEffortLevel { get; set; }
         public ChatResponseFormat ResponseFormat { get; set; }
         public ChatResponseModalities ResponseModalities { get; set; }
         public long? Seed { get; set; }
@@ -1297,6 +1286,9 @@ namespace OpenAI.Chat {
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public static AssistantChatMessage CreateAssistantMessage(IEnumerable<ChatToolCall> toolCalls);
         public static AssistantChatMessage CreateAssistantMessage(string content);
+        public static DeveloperChatMessage CreateDeveloperMessage(params ChatMessageContentPart[] contentParts);
+        public static DeveloperChatMessage CreateDeveloperMessage(IEnumerable<ChatMessageContentPart> contentParts);
+        public static DeveloperChatMessage CreateDeveloperMessage(string content);
         [Obsolete("This method is obsolete. Please use CreateToolMessage instead.")]
         public static FunctionChatMessage CreateFunctionMessage(string functionName, string content);
         public static SystemChatMessage CreateSystemMessage(params ChatMessageContentPart[] contentParts);
@@ -1348,7 +1340,8 @@ namespace OpenAI.Chat {
         User = 1,
         Assistant = 2,
         Tool = 3,
-        Function = 4
+        Function = 4,
+        Developer = 5
     }
     public class ChatOutputAudio : IJsonModel<ChatOutputAudio>, IPersistableModel<ChatOutputAudio> {
         public BinaryData AudioBytes { get; }
@@ -1384,11 +1377,13 @@ namespace OpenAI.Chat {
     public readonly partial struct ChatOutputAudioVoice : IEquatable<ChatOutputAudioVoice> {
         public ChatOutputAudioVoice(string value);
         public static ChatOutputAudioVoice Alloy { get; }
+        public static ChatOutputAudioVoice Ash { get; }
+        public static ChatOutputAudioVoice Ballad { get; }
+        public static ChatOutputAudioVoice Coral { get; }
         public static ChatOutputAudioVoice Echo { get; }
-        public static ChatOutputAudioVoice Fable { get; }
-        public static ChatOutputAudioVoice Nova { get; }
-        public static ChatOutputAudioVoice Onyx { get; }
+        public static ChatOutputAudioVoice Sage { get; }
         public static ChatOutputAudioVoice Shimmer { get; }
+        public static ChatOutputAudioVoice Verse { get; }
         public readonly bool Equals(ChatOutputAudioVoice other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
@@ -1399,11 +1394,34 @@ namespace OpenAI.Chat {
         public static bool operator !=(ChatOutputAudioVoice left, ChatOutputAudioVoice right);
         public override readonly string ToString();
     }
+    public class ChatOutputPrediction : IJsonModel<ChatOutputPrediction>, IPersistableModel<ChatOutputPrediction> {
+        public static ChatOutputPrediction CreateStaticContentPrediction(IEnumerable<ChatMessageContentPart> staticContentParts);
+        public static ChatOutputPrediction CreateStaticContentPrediction(string staticContent);
+        public static explicit operator ChatOutputPrediction(ClientResult result);
+        public static implicit operator BinaryContent(ChatOutputPrediction chatOutputPrediction);
+    }
     public class ChatOutputTokenUsageDetails : IJsonModel<ChatOutputTokenUsageDetails>, IPersistableModel<ChatOutputTokenUsageDetails> {
+        public int AcceptedPredictionTokenCount { get; }
         public int AudioTokenCount { get; }
         public int ReasoningTokenCount { get; }
+        public int RejectedPredictionTokenCount { get; }
         public static explicit operator ChatOutputTokenUsageDetails(ClientResult result);
         public static implicit operator BinaryContent(ChatOutputTokenUsageDetails chatOutputTokenUsageDetails);
+    }
+    public readonly partial struct ChatReasoningEffortLevel : IEquatable<ChatReasoningEffortLevel> {
+        public ChatReasoningEffortLevel(string value);
+        public static ChatReasoningEffortLevel High { get; }
+        public static ChatReasoningEffortLevel Low { get; }
+        public static ChatReasoningEffortLevel Medium { get; }
+        public readonly bool Equals(ChatReasoningEffortLevel other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ChatReasoningEffortLevel left, ChatReasoningEffortLevel right);
+        public static implicit operator ChatReasoningEffortLevel(string value);
+        public static bool operator !=(ChatReasoningEffortLevel left, ChatReasoningEffortLevel right);
+        public override readonly string ToString();
     }
     public class ChatResponseFormat : IJsonModel<ChatResponseFormat>, IPersistableModel<ChatResponseFormat> {
         public static ChatResponseFormat CreateJsonObjectFormat();
@@ -1475,26 +1493,40 @@ namespace OpenAI.Chat {
     public enum ChatToolKind {
         Function = 0
     }
+    public class DeveloperChatMessage : ChatMessage, IJsonModel<DeveloperChatMessage>, IPersistableModel<DeveloperChatMessage> {
+        public DeveloperChatMessage(params ChatMessageContentPart[] contentParts);
+        public DeveloperChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
+        public DeveloperChatMessage(string content);
+        public string ParticipantName { get; set; }
+        public new static explicit operator DeveloperChatMessage(ClientResult result);
+        public static implicit operator BinaryContent(DeveloperChatMessage developerChatMessage);
+    }
     [Obsolete("This class is obsolete. Please use ToolChatMessage instead.")]
     public class FunctionChatMessage : ChatMessage, IJsonModel<FunctionChatMessage>, IPersistableModel<FunctionChatMessage> {
         public FunctionChatMessage(string functionName, string content);
         public string FunctionName { get; }
-        protected override ChatMessage JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator FunctionChatMessage(ClientResult result);
         public static implicit operator BinaryContent(FunctionChatMessage functionChatMessage);
-        protected override ChatMessage PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public static class OpenAIChatModelFactory {
         public static ChatCompletion ChatCompletion(string id = null, ChatFinishReason finishReason = ChatFinishReason.Stop, ChatMessageContent content = null, string refusal = null, IEnumerable<ChatToolCall> toolCalls = null, ChatMessageRole role = ChatMessageRole.System, ChatFunctionCall functionCall = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null, ChatOutputAudio outputAudio = null);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static ChatCompletion ChatCompletion(string id, ChatFinishReason finishReason, ChatMessageContent content, string refusal, IEnumerable<ChatToolCall> toolCalls, ChatMessageRole role, ChatFunctionCall functionCall, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities, DateTimeOffset createdAt, string model, string systemFingerprint, ChatTokenUsage usage);
         public static ChatInputTokenUsageDetails ChatInputTokenUsageDetails(int audioTokenCount = 0, int cachedTokenCount = 0);
         public static ChatOutputAudio ChatOutputAudio(BinaryData audioBytes, string id = null, string transcript = null, DateTimeOffset expiresAt = default);
-        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0, int audioTokenCount = 0);
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount = 0, int audioTokenCount = 0, int acceptedPredictionTokenCount = 0, int rejectedPredictionTokenCount = 0);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount, int audioTokenCount);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static ChatOutputTokenUsageDetails ChatOutputTokenUsageDetails(int reasoningTokenCount);
         public static ChatTokenLogProbabilityDetails ChatTokenLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null, IEnumerable<ChatTokenTopLogProbabilityDetails> topLogProbabilities = null);
         public static ChatTokenTopLogProbabilityDetails ChatTokenTopLogProbabilityDetails(string token = null, float logProbability = 0, ReadOnlyMemory<byte>? utf8Bytes = null);
         public static ChatTokenUsage ChatTokenUsage(int outputTokenCount = 0, int inputTokenCount = 0, int totalTokenCount = 0, ChatOutputTokenUsageDetails outputTokenDetails = null, ChatInputTokenUsageDetails inputTokenDetails = null);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static ChatTokenUsage ChatTokenUsage(int outputTokenCount, int inputTokenCount, int totalTokenCount, ChatOutputTokenUsageDetails outputTokenDetails);
         public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string completionId = null, ChatMessageContent contentUpdate = null, StreamingChatFunctionCallUpdate functionCallUpdate = null, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates = null, ChatMessageRole? role = null, string refusalUpdate = null, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities = null, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities = null, ChatFinishReason? finishReason = null, DateTimeOffset createdAt = default, string model = null, string systemFingerprint = null, ChatTokenUsage usage = null, StreamingChatOutputAudioUpdate outputAudioUpdate = null);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static StreamingChatCompletionUpdate StreamingChatCompletionUpdate(string completionId, ChatMessageContent contentUpdate, StreamingChatFunctionCallUpdate functionCallUpdate, IEnumerable<StreamingChatToolCallUpdate> toolCallUpdates, ChatMessageRole? role, string refusalUpdate, IEnumerable<ChatTokenLogProbabilityDetails> contentTokenLogProbabilities, IEnumerable<ChatTokenLogProbabilityDetails> refusalTokenLogProbabilities, ChatFinishReason? finishReason, DateTimeOffset createdAt, string model, string systemFingerprint, ChatTokenUsage usage);
         [Obsolete("This class is obsolete. Please use StreamingChatToolCallUpdate instead.")]
         public static StreamingChatFunctionCallUpdate StreamingChatFunctionCallUpdate(string functionName = null, BinaryData functionArgumentsUpdate = null);
         public static StreamingChatOutputAudioUpdate StreamingChatOutputAudioUpdate(string id = null, DateTimeOffset? expiresAt = null, string transcriptUpdate = null, BinaryData audioBytesUpdate = null);
@@ -1548,36 +1580,24 @@ namespace OpenAI.Chat {
         public SystemChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public SystemChatMessage(string content);
         public string ParticipantName { get; set; }
-        protected override ChatMessage JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator SystemChatMessage(ClientResult result);
         public static implicit operator BinaryContent(SystemChatMessage systemChatMessage);
-        protected override ChatMessage PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ToolChatMessage : ChatMessage, IJsonModel<ToolChatMessage>, IPersistableModel<ToolChatMessage> {
         public ToolChatMessage(string toolCallId, params ChatMessageContentPart[] contentParts);
         public ToolChatMessage(string toolCallId, IEnumerable<ChatMessageContentPart> contentParts);
         public ToolChatMessage(string toolCallId, string content);
         public string ToolCallId { get; }
-        protected override ChatMessage JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ToolChatMessage(ClientResult result);
         public static implicit operator BinaryContent(ToolChatMessage toolChatMessage);
-        protected override ChatMessage PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class UserChatMessage : ChatMessage, IJsonModel<UserChatMessage>, IPersistableModel<UserChatMessage> {
         public UserChatMessage(params ChatMessageContentPart[] contentParts);
         public UserChatMessage(IEnumerable<ChatMessageContentPart> contentParts);
         public UserChatMessage(string content);
         public string ParticipantName { get; set; }
-        protected override ChatMessage JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator UserChatMessage(ClientResult result);
         public static implicit operator BinaryContent(UserChatMessage userChatMessage);
-        protected override ChatMessage PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
 }
 namespace OpenAI.Embeddings {
@@ -2275,6 +2295,8 @@ namespace OpenAI.Moderations {
     public static class OpenAIModerationsModelFactory {
         public static ModerationCategory ModerationCategory(bool flagged = false, float score = 0);
         public static ModerationResult ModerationResult(bool flagged = false, ModerationCategory hate = null, ModerationCategory hateThreatening = null, ModerationCategory harassment = null, ModerationCategory harassmentThreatening = null, ModerationCategory selfHarm = null, ModerationCategory selfHarmIntent = null, ModerationCategory selfHarmInstructions = null, ModerationCategory sexual = null, ModerationCategory sexualMinors = null, ModerationCategory violence = null, ModerationCategory violenceGraphic = null, ModerationCategory illicit = null, ModerationCategory illicitViolent = null);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static ModerationResult ModerationResult(bool flagged, ModerationCategory hate, ModerationCategory hateThreatening, ModerationCategory harassment, ModerationCategory harassmentThreatening, ModerationCategory selfHarm, ModerationCategory selfHarmIntent, ModerationCategory selfHarmInstructions, ModerationCategory sexual, ModerationCategory sexualMinors, ModerationCategory violence, ModerationCategory violenceGraphic);
         public static ModerationResultCollection ModerationResultCollection(string id = null, string model = null, IEnumerable<ModerationResult> items = null);
     }
 }
@@ -2332,12 +2354,8 @@ namespace OpenAI.RealtimeConversation {
         public string ErrorEventId { get; }
         public string Message { get; }
         public string ParameterName { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationErrorUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationErrorUpdate conversationErrorUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationFunctionTool : ConversationTool, IJsonModel<ConversationFunctionTool>, IPersistableModel<ConversationFunctionTool> {
         public ConversationFunctionTool();
@@ -2345,55 +2363,51 @@ namespace OpenAI.RealtimeConversation {
         public string Description { get; set; }
         public required string Name { get; set; }
         public BinaryData Parameters { get; set; }
-        protected override ConversationTool JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationFunctionTool(ClientResult result);
         public static implicit operator BinaryContent(ConversationFunctionTool conversationFunctionTool);
-        protected override ConversationTool PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
+    }
+    public readonly partial struct ConversationIncompleteReason : IEquatable<ConversationIncompleteReason> {
+        public ConversationIncompleteReason(string value);
+        public static ConversationIncompleteReason ClientCancelled { get; }
+        public static ConversationIncompleteReason ContentFilter { get; }
+        public static ConversationIncompleteReason MaxOutputTokens { get; }
+        public static ConversationIncompleteReason TurnDetected { get; }
+        public readonly bool Equals(ConversationIncompleteReason other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ConversationIncompleteReason left, ConversationIncompleteReason right);
+        public static implicit operator ConversationIncompleteReason(string value);
+        public static bool operator !=(ConversationIncompleteReason left, ConversationIncompleteReason right);
+        public override readonly string ToString();
     }
     public class ConversationInputAudioClearedUpdate : ConversationUpdate, IJsonModel<ConversationInputAudioClearedUpdate>, IPersistableModel<ConversationInputAudioClearedUpdate> {
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationInputAudioClearedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationInputAudioClearedUpdate conversationInputAudioClearedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationInputAudioCommittedUpdate : ConversationUpdate, IJsonModel<ConversationInputAudioCommittedUpdate>, IPersistableModel<ConversationInputAudioCommittedUpdate> {
         public string ItemId { get; }
         public string PreviousItemId { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationInputAudioCommittedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationInputAudioCommittedUpdate conversationInputAudioCommittedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationInputSpeechFinishedUpdate : ConversationUpdate, IJsonModel<ConversationInputSpeechFinishedUpdate>, IPersistableModel<ConversationInputSpeechFinishedUpdate> {
         public TimeSpan AudioEndTime { get; }
         public string ItemId { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationInputSpeechFinishedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationInputSpeechFinishedUpdate conversationInputSpeechFinishedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationInputSpeechStartedUpdate : ConversationUpdate, IJsonModel<ConversationInputSpeechStartedUpdate>, IPersistableModel<ConversationInputSpeechStartedUpdate> {
         public TimeSpan AudioStartTime { get; }
         public string ItemId { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationInputSpeechStartedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationInputSpeechStartedUpdate conversationInputSpeechStartedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationInputTokenUsageDetails : IJsonModel<ConversationInputTokenUsageDetails>, IPersistableModel<ConversationInputTokenUsageDetails> {
-        public int AudioTokens { get; }
-        public int CachedTokens { get; }
-        public int TextTokens { get; }
+        public int AudioTokenCount { get; }
+        public int CachedTokenCount { get; }
+        public int TextTokenCount { get; }
         public static explicit operator ConversationInputTokenUsageDetails(ClientResult result);
         public static implicit operator BinaryContent(ConversationInputTokenUsageDetails conversationInputTokenUsageDetails);
     }
@@ -2403,23 +2417,15 @@ namespace OpenAI.RealtimeConversation {
         public string ErrorMessage { get; }
         public string ErrorParameterName { get; }
         public string ItemId { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationInputTranscriptionFailedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationInputTranscriptionFailedUpdate conversationInputTranscriptionFailedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationInputTranscriptionFinishedUpdate : ConversationUpdate, IJsonModel<ConversationInputTranscriptionFinishedUpdate>, IPersistableModel<ConversationInputTranscriptionFinishedUpdate> {
         public int ContentIndex { get; }
         public string ItemId { get; }
         public string Transcript { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationInputTranscriptionFinishedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationInputTranscriptionFinishedUpdate conversationInputTranscriptionFinishedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationInputTranscriptionOptions : IJsonModel<ConversationInputTranscriptionOptions>, IPersistableModel<ConversationInputTranscriptionOptions> {
         public ConversationTranscriptionModel? Model { get; set; }
@@ -2450,21 +2456,13 @@ namespace OpenAI.RealtimeConversation {
         public IReadOnlyList<ConversationContentPart> MessageContentParts { get; }
         public ConversationMessageRole? MessageRole { get; }
         public string PreviousItemId { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationItemCreatedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationItemCreatedUpdate conversationItemCreatedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationItemDeletedUpdate : ConversationUpdate, IJsonModel<ConversationItemDeletedUpdate>, IPersistableModel<ConversationItemDeletedUpdate> {
         public string ItemId { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationItemDeletedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationItemDeletedUpdate conversationItemDeletedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public readonly partial struct ConversationItemStatus : IEquatable<ConversationItemStatus> {
         public ConversationItemStatus(string value);
@@ -2486,12 +2484,8 @@ namespace OpenAI.RealtimeConversation {
         public string ItemId { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationItemStreamingAudioFinishedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationItemStreamingAudioFinishedUpdate conversationItemStreamingAudioFinishedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationItemStreamingAudioTranscriptionFinishedUpdate : ConversationUpdate, IJsonModel<ConversationItemStreamingAudioTranscriptionFinishedUpdate>, IPersistableModel<ConversationItemStreamingAudioTranscriptionFinishedUpdate> {
         public int ContentIndex { get; }
@@ -2499,12 +2493,8 @@ namespace OpenAI.RealtimeConversation {
         public int OutputIndex { get; }
         public string ResponseId { get; }
         public string Transcript { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationItemStreamingAudioTranscriptionFinishedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationItemStreamingAudioTranscriptionFinishedUpdate conversationItemStreamingAudioTranscriptionFinishedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationItemStreamingFinishedUpdate : ConversationUpdate, IJsonModel<ConversationItemStreamingFinishedUpdate>, IPersistableModel<ConversationItemStreamingFinishedUpdate> {
         public string FunctionCallArguments { get; }
@@ -2516,12 +2506,8 @@ namespace OpenAI.RealtimeConversation {
         public ConversationMessageRole? MessageRole { get; }
         public int OutputIndex { get; }
         public string ResponseId { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationItemStreamingFinishedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationItemStreamingFinishedUpdate conversationItemStreamingFinishedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationItemStreamingPartDeltaUpdate : ConversationUpdate, IJsonModel<ConversationItemStreamingPartDeltaUpdate>, IPersistableModel<ConversationItemStreamingPartDeltaUpdate> {
         public BinaryData AudioBytes { get; }
@@ -2554,12 +2540,8 @@ namespace OpenAI.RealtimeConversation {
         public IReadOnlyList<ConversationContentPart> MessageContentParts { get; }
         public ConversationMessageRole? MessageRole { get; }
         public string ResponseId { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationItemStreamingStartedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationItemStreamingStartedUpdate conversationItemStreamingStartedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationItemStreamingTextFinishedUpdate : ConversationUpdate, IJsonModel<ConversationItemStreamingTextFinishedUpdate>, IPersistableModel<ConversationItemStreamingTextFinishedUpdate> {
         public int ContentIndex { get; }
@@ -2567,23 +2549,15 @@ namespace OpenAI.RealtimeConversation {
         public int OutputIndex { get; }
         public string ResponseId { get; }
         public string Text { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationItemStreamingTextFinishedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationItemStreamingTextFinishedUpdate conversationItemStreamingTextFinishedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationItemTruncatedUpdate : ConversationUpdate, IJsonModel<ConversationItemTruncatedUpdate>, IPersistableModel<ConversationItemTruncatedUpdate> {
         public int AudioEndMs { get; }
         public int ContentIndex { get; }
         public string ItemId { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationItemTruncatedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationItemTruncatedUpdate conversationItemTruncatedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationMaxTokensChoice : IJsonModel<ConversationMaxTokensChoice>, IPersistableModel<ConversationMaxTokensChoice> {
         public ConversationMaxTokensChoice(int numberValue);
@@ -2609,8 +2583,8 @@ namespace OpenAI.RealtimeConversation {
         public override readonly string ToString();
     }
     public class ConversationOutputTokenUsageDetails : IJsonModel<ConversationOutputTokenUsageDetails>, IPersistableModel<ConversationOutputTokenUsageDetails> {
-        public int AudioTokens { get; }
-        public int TextTokens { get; }
+        public int AudioTokenCount { get; }
+        public int TextTokenCount { get; }
         public static explicit operator ConversationOutputTokenUsageDetails(ClientResult result);
         public static implicit operator BinaryContent(ConversationOutputTokenUsageDetails conversationOutputTokenUsageDetails);
     }
@@ -2626,12 +2600,8 @@ namespace OpenAI.RealtimeConversation {
         public IReadOnlyList<ConversationRateLimitDetailsItem> AllDetails { get; }
         public ConversationRateLimitDetailsItem RequestDetails { get; }
         public ConversationRateLimitDetailsItem TokenDetails { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationRateLimitsUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationRateLimitsUpdate conversationRateLimitsUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationResponseFinishedUpdate : ConversationUpdate, IJsonModel<ConversationResponseFinishedUpdate>, IPersistableModel<ConversationResponseFinishedUpdate> {
         public IReadOnlyList<ConversationItem> CreatedItems { get; }
@@ -2639,12 +2609,23 @@ namespace OpenAI.RealtimeConversation {
         public ConversationStatus? Status { get; }
         public ConversationStatusDetails StatusDetails { get; }
         public ConversationTokenUsage Usage { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationResponseFinishedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationResponseFinishedUpdate conversationResponseFinishedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
+    }
+    public class ConversationResponseOptions : IJsonModel<ConversationResponseOptions>, IPersistableModel<ConversationResponseOptions> {
+        public ConversationContentModalities ContentModalities { get; set; }
+        public ResponseConversationSelection? ConversationSelection { get; set; }
+        public string Instructions { get; set; }
+        public ConversationMaxTokensChoice MaxOutputTokens { get; set; }
+        public IDictionary<string, string> Metadata { get; }
+        public ConversationAudioFormat? OutputAudioFormat { get; set; }
+        public IList<ConversationItem> OverrideItems { get; }
+        public float? Temperature { get; set; }
+        public ConversationToolChoice ToolChoice { get; set; }
+        public IList<ConversationTool> Tools { get; }
+        public ConversationVoice? Voice { get; set; }
+        public static explicit operator ConversationResponseOptions(ClientResult result);
+        public static implicit operator BinaryContent(ConversationResponseOptions conversationResponseOptions);
     }
     public class ConversationResponseStartedUpdate : ConversationUpdate, IJsonModel<ConversationResponseStartedUpdate>, IPersistableModel<ConversationResponseStartedUpdate> {
         public IReadOnlyList<ConversationItem> CreatedItems { get; }
@@ -2652,12 +2633,8 @@ namespace OpenAI.RealtimeConversation {
         public ConversationStatus Status { get; }
         public ConversationStatusDetails StatusDetails { get; }
         public ConversationTokenUsage Usage { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationResponseStartedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationResponseStartedUpdate conversationResponseStartedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationSessionConfiguredUpdate : ConversationUpdate, IJsonModel<ConversationSessionConfiguredUpdate>, IPersistableModel<ConversationSessionConfiguredUpdate> {
         public ConversationContentModalities ContentModalities { get; }
@@ -2673,12 +2650,8 @@ namespace OpenAI.RealtimeConversation {
         public IReadOnlyList<ConversationTool> Tools { get; }
         public ConversationTurnDetectionOptions TurnDetectionOptions { get; }
         public ConversationVoice Voice { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationSessionConfiguredUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationSessionConfiguredUpdate conversationSessionConfiguredUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class ConversationSessionOptions : IJsonModel<ConversationSessionOptions>, IPersistableModel<ConversationSessionOptions> {
         public ConversationContentModalities ContentModalities { get; set; }
@@ -2709,12 +2682,8 @@ namespace OpenAI.RealtimeConversation {
         public IReadOnlyList<ConversationTool> Tools { get; }
         public ConversationTurnDetectionOptions TurnDetectionOptions { get; }
         public ConversationVoice Voice { get; }
-        protected override ConversationUpdate JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator ConversationSessionStartedUpdate(ClientResult result);
         public static implicit operator BinaryContent(ConversationSessionStartedUpdate conversationSessionStartedUpdate);
-        protected override ConversationUpdate PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public readonly partial struct ConversationStatus : IEquatable<ConversationStatus> {
         public ConversationStatus(string value);
@@ -2722,7 +2691,6 @@ namespace OpenAI.RealtimeConversation {
         public static ConversationStatus Completed { get; }
         public static ConversationStatus Failed { get; }
         public static ConversationStatus Incomplete { get; }
-        public static ConversationStatus InProgress { get; }
         public readonly bool Equals(ConversationStatus other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
@@ -2733,17 +2701,20 @@ namespace OpenAI.RealtimeConversation {
         public static bool operator !=(ConversationStatus left, ConversationStatus right);
         public override readonly string ToString();
     }
-    public abstract class ConversationStatusDetails : IJsonModel<ConversationStatusDetails>, IPersistableModel<ConversationStatusDetails> {
+    public class ConversationStatusDetails : IJsonModel<ConversationStatusDetails>, IPersistableModel<ConversationStatusDetails> {
+        public string ErrorCode { get; }
+        public string ErrorKind { get; }
+        public ConversationIncompleteReason? IncompleteReason { get; }
         public ConversationStatus StatusKind { get; }
         public static explicit operator ConversationStatusDetails(ClientResult result);
         public static implicit operator BinaryContent(ConversationStatusDetails conversationStatusDetails);
     }
     public class ConversationTokenUsage : IJsonModel<ConversationTokenUsage>, IPersistableModel<ConversationTokenUsage> {
+        public int InputTokenCount { get; }
         public ConversationInputTokenUsageDetails InputTokenDetails { get; }
-        public int InputTokens { get; }
+        public int OutputTokenCount { get; }
         public ConversationOutputTokenUsageDetails OutputTokenDetails { get; }
-        public int OutputTokens { get; }
-        public int TotalTokens { get; }
+        public int TotalTokenCount { get; }
         public static explicit operator ConversationTokenUsage(ClientResult result);
         public static implicit operator BinaryContent(ConversationTokenUsage conversationTokenUsage);
     }
@@ -2801,7 +2772,7 @@ namespace OpenAI.RealtimeConversation {
     public abstract class ConversationTurnDetectionOptions : IJsonModel<ConversationTurnDetectionOptions>, IPersistableModel<ConversationTurnDetectionOptions> {
         public ConversationTurnDetectionKind Kind { get; protected internal set; }
         public static ConversationTurnDetectionOptions CreateDisabledTurnDetectionOptions();
-        public static ConversationTurnDetectionOptions CreateServerVoiceActivityTurnDetectionOptions(float? detectionThreshold = null, TimeSpan? prefixPaddingDuration = null, TimeSpan? silenceDuration = null);
+        public static ConversationTurnDetectionOptions CreateServerVoiceActivityTurnDetectionOptions(float? detectionThreshold = null, TimeSpan? prefixPaddingDuration = null, TimeSpan? silenceDuration = null, bool? enableAutomaticResponseCreation = null);
         public static explicit operator ConversationTurnDetectionOptions(ClientResult result);
         public static implicit operator BinaryContent(ConversationTurnDetectionOptions conversationTurnDetectionOptions);
     }
@@ -2846,8 +2817,13 @@ namespace OpenAI.RealtimeConversation {
     public readonly partial struct ConversationVoice : IEquatable<ConversationVoice> {
         public ConversationVoice(string value);
         public static ConversationVoice Alloy { get; }
+        public static ConversationVoice Ash { get; }
+        public static ConversationVoice Ballad { get; }
+        public static ConversationVoice Coral { get; }
         public static ConversationVoice Echo { get; }
+        public static ConversationVoice Sage { get; }
         public static ConversationVoice Shimmer { get; }
+        public static ConversationVoice Verse { get; }
         public readonly bool Equals(ConversationVoice other);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override readonly bool Equals(object obj);
@@ -2908,12 +2884,26 @@ namespace OpenAI.RealtimeConversation {
         public virtual void SendInputAudio(Stream audio, CancellationToken cancellationToken = default);
         public virtual Task SendInputAudioAsync(BinaryData audio, CancellationToken cancellationToken = default);
         public virtual Task SendInputAudioAsync(Stream audio, CancellationToken cancellationToken = default);
-        public virtual void StartResponse(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default);
-        public virtual void StartResponse(CancellationToken cancellationToken = default);
-        public virtual Task StartResponseAsync(ConversationSessionOptions sessionOptionOverrides, CancellationToken cancellationToken = default);
+        public virtual void StartResponse(ConversationResponseOptions options, CancellationToken cancellationToken = default);
+        public void StartResponse(CancellationToken cancellationToken = default);
+        public virtual Task StartResponseAsync(ConversationResponseOptions options, CancellationToken cancellationToken = default);
         public virtual Task StartResponseAsync(CancellationToken cancellationToken = default);
         public virtual void TruncateItem(string itemId, int contentPartIndex, TimeSpan audioDuration, CancellationToken cancellationToken = default);
         public virtual Task TruncateItemAsync(string itemId, int contentPartIndex, TimeSpan audioDuration, CancellationToken cancellationToken = default);
+    }
+    public readonly partial struct ResponseConversationSelection : IEquatable<ResponseConversationSelection> {
+        public ResponseConversationSelection(string value);
+        public static ResponseConversationSelection Auto { get; }
+        public static ResponseConversationSelection None { get; }
+        public readonly bool Equals(ResponseConversationSelection other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(ResponseConversationSelection left, ResponseConversationSelection right);
+        public static implicit operator ResponseConversationSelection(string value);
+        public static bool operator !=(ResponseConversationSelection left, ResponseConversationSelection right);
+        public override readonly string ToString();
     }
 }
 namespace OpenAI.VectorStores {
@@ -2990,12 +2980,8 @@ namespace OpenAI.VectorStores {
         public StaticFileChunkingStrategy(int maxTokensPerChunk, int overlappingTokenCount);
         public int MaxTokensPerChunk { get; }
         public int OverlappingTokenCount { get; }
-        protected override FileChunkingStrategy JsonModelCreateCore(ref Utf8JsonReader reader, ModelReaderWriterOptions options);
-        protected override void JsonModelWriteCore(Utf8JsonWriter writer, ModelReaderWriterOptions options);
         public new static explicit operator StaticFileChunkingStrategy(ClientResult result);
         public static implicit operator BinaryContent(StaticFileChunkingStrategy staticFileChunkingStrategy);
-        protected override FileChunkingStrategy PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options);
-        protected override BinaryData PersistableModelWriteCore(ModelReaderWriterOptions options);
     }
     public class VectorStore : IJsonModel<VectorStore>, IPersistableModel<VectorStore> {
         public DateTimeOffset CreatedAt { get; }
@@ -3145,7 +3131,7 @@ namespace OpenAI.VectorStores {
         public FileChunkingStrategy ChunkingStrategy { get; set; }
         public VectorStoreExpirationPolicy ExpirationPolicy { get; set; }
         public IList<string> FileIds { get; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public string Name { get; set; }
         public static explicit operator VectorStoreCreationOptions(ClientResult result);
         public static implicit operator BinaryContent(VectorStoreCreationOptions vectorStoreCreationOptions);
@@ -3255,7 +3241,7 @@ namespace OpenAI.VectorStores {
     }
     public class VectorStoreModificationOptions : IJsonModel<VectorStoreModificationOptions>, IPersistableModel<VectorStoreModificationOptions> {
         public VectorStoreExpirationPolicy ExpirationPolicy { get; set; }
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Metadata { get; }
         public string Name { get; set; }
         public static explicit operator VectorStoreModificationOptions(ClientResult result);
         public static implicit operator BinaryContent(VectorStoreModificationOptions vectorStoreModificationOptions);

@@ -7,9 +7,11 @@ using System.ClientModel;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -831,6 +833,27 @@ public class ChatSmokeTests : SyncAsyncTestBase
 
 #pragma warning disable CS0618
     [Test]
+    public void AssistantAndFunctionMessagesHandleNoContentCorrectly()
+    {
+        // AssistantChatMessage and FunctionChatMessage can both exist without content, but follow different rules:
+        //   - AssistantChatMessage treats content as optional, as valid assistant message variants (e.g. for tool calls)
+        //   - FunctionChatMessage meanwhile treats content as required and nullable.
+        // This test validates that no-content assistant messages just don't serialize content, while no-content
+        // function messages serialize content with an explicit null value.
+
+        ChatToolCall fakeToolCall = ChatToolCall.CreateFunctionToolCall("call_abcd1234", "function_name", functionArguments: BinaryData.FromString("{}"));
+        AssistantChatMessage assistantChatMessage = new([fakeToolCall]);
+        string serializedAssistantChatMessage = ModelReaderWriter.Write(assistantChatMessage).ToString();
+        Assert.That(serializedAssistantChatMessage, Does.Not.Contain("content"));
+
+        FunctionChatMessage functionChatMessage = new("function_name", null);
+        string serializedFunctionChatMessage = ModelReaderWriter.Write(functionChatMessage).ToString();
+        Assert.That(serializedFunctionChatMessage, Does.Contain(@"""content"":null"));
+    }
+#pragma warning restore CS0618
+
+#pragma warning disable CS0618
+    [Test]
     public void SerializeMessagesWithNullProperties()
     {
         AssistantChatMessage assistantMessage = ModelReaderWriter.Read<AssistantChatMessage>(BinaryData.FromString("""
@@ -905,5 +928,44 @@ public class ChatSmokeTests : SyncAsyncTestBase
 
         Assert.That(observedEndpoint, Is.Not.Null);
         Assert.That(observedEndpoint.AbsoluteUri, Does.Contain("my.custom.com/expected/test/endpoint"));
+    }
+
+    [Test]
+    public void CanUseCollections()
+    {
+        ChatCompletionOptions options = new();
+        Assert.That(options.Tools.Count, Is.EqualTo(0));
+        Assert.That(options.Metadata.Count, Is.EqualTo(0));
+        Assert.That(options.StopSequences.Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void IdempotentOptionsSerialization()
+    {
+        ChatCompletionOptions emptyOptions = new();
+        BinaryData serializedEmptyOptions = ModelReaderWriter.Write(emptyOptions);
+        Assert.That(serializedEmptyOptions.ToString(), Is.EqualTo("{}"));
+        ChatCompletionOptions deserializedEmptyOptions = ModelReaderWriter.Read<ChatCompletionOptions>(serializedEmptyOptions);
+        BinaryData reserializedEmptyOptions = ModelReaderWriter.Write(deserializedEmptyOptions);
+        Assert.That(reserializedEmptyOptions.ToString(), Is.EqualTo("{}"));
+
+        ChatCompletionOptions originalOptions = new()
+        {
+            IncludeLogProbabilities = true,
+            FrequencyPenalty = 0.4f,
+        };
+
+        BinaryData serializedOptions = ModelReaderWriter.Write(originalOptions);
+
+        string serializedOptionsText = serializedOptions.ToString();
+        Assert.That(serializedOptionsText, Does.Contain("frequency_penalty"));
+        Assert.That(serializedOptionsText, Does.Not.Contain("presence_penalty"));
+        Assert.That(serializedOptionsText, Does.Not.Contain("stream_options"));
+
+        ChatCompletionOptions deserializedOptions = ModelReaderWriter.Read<ChatCompletionOptions>(serializedOptions);
+        BinaryData reserializedOptions = ModelReaderWriter.Write(deserializedOptions);
+
+        string reserializedOptionsText = reserializedOptions.ToString();
+        Assert.That(serializedOptions.ToString(), Is.EqualTo(reserializedOptionsText));
     }
 }

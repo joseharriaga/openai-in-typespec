@@ -11,7 +11,7 @@ using Azure.AI.OpenAI.Utility;
 namespace Azure.AI.OpenAI.Assistants;
 
 [Experimental("OPENAI001")]
-internal partial class AzureAssistantClient : AssistantClient
+internal partial class AzureAssistantClient : AssistantClient<AzureScenarioClient>
 {
     public override async Task<ClientResult> CreateAssistantAsync(BinaryContent content, RequestOptions options = null)
     {

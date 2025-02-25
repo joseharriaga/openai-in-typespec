@@ -1,6 +1,28 @@
 # Release History
 
-## 2.1.0 (Unreleased)
+
+## 2.2.0-beta.2 (Unreleased)
+
+### Bugs fixed
+
+- Addressed a problem calling the `SetNewMaxCompletionTokensPropertyEnabled()` method, needed for o1/o3 model support, on `ChatCompletionOptions` instances prior to use in a method call. Related issue: [azure-sdk-for-net#46545](https://github.com/Azure/azure-sdk-for-net/issues/46545) with thanks to the PR  [azure-sdk-for-net#48218](https://github.com/Azure/azure-sdk-for-net/pull/48218).
+
+## 2.2.0-beta.1 (2025-02-07)
+
+This preview release aligns with the corresponding `2.2.0` beta of `OpenAI` and the `2025-01-01-Preview` Azure OpenAI Service API version.
+
+New features include since 2.1.0-beta.2 include:
+
+- Audio input for Chat Completions using `gpt-4o-audio-preview` or other compatible models: provide input audio via `ChatMessageContentPart.CreateInputAudioPart()`, set `AudioOptions` and `ResponseModalities` on `ChatCompletionOptions`, retrieve response audio via `OutputAudio` on `ChatCompletion`, and reference audio history from the assistant by using the `AssistantChatMessage(ChatCompletion)` constructor or using `ChatMessageContentPart.CreateAudioPart(string)`. For more information, refer to the examples in [the OpenAI README](https://github.com/openai/openai-dotnet/blob/main/README.md). 
+- Predicted outputs in Chat Completions: `ChatCompletionOptions` accepts an `OutputPrediction` property that can be used via `ChatOutputPrediction.CreateStaticContentPrediction()` with text content to optimize operation efficiency for scenarios like code completion. For more information, see [OpenAI's predicted outputs announcement](https://community.openai.com/t/introducing-predicted-outputs/1004502).
+- Chat Completions `o`-series model feature support: the new `developer` message role via `DeveloperChatMessage` (used just like `SystemChatMessage`), `ReasoningEffortLevel` on Chat Completion options
+- [AOAI exclusive] `UserSecurityContext` integration with [Defender for Cloud](https://learn.microsoft.com/azure/defender-for-cloud/gain-end-user-context-ai); add a `UserSecurityContext` instance to `ChatCompletionOptions` with `SetUserSecurityContext()`
+
+### Breaking Changes
+
+- **Batch**: files uploaded for batch operations (`UploadFile` with `FileUploadPurpose.Batch`) will now report a `status` of `processed`, matching expected behavior against OpenAI's `/v1` endpoint. This is a change from past behavior where such files would initially report `pending` and a later `processed`, `error`, or other status depending on operation progress. Batch input validation is instead consistently performed from the batch client.
+
+## 2.1.0 (2024-12-05)
 
 This GA library release aligns functionality with the latest `2024-10-21` stable service API label.
 
@@ -39,10 +61,6 @@ The `2024-10-21` service API label introduces stable support for batch chat comp
 
 This update brings compatibility with the Azure OpenAI `2024-10-01-preview` service API version as well as the `2.1.0-beta.2` release of the `OpenAI` library.
 
-### Breaking Changes
-
-- `[Experimental]` `ChatCitation` and `ChatRetrievedDocument` have each replaced the `Uri` property of type `System.Uri` with a `string` property named `Url`. This aligns with the REST specification and accounts for the wire value of `url` not always providing a valid RFC 3986 identifier [[azure-sdk-for-net \#46793](https://github.com/Azure/azure-sdk-for-net/issues/46793)]
-
 ### Features Added
 
 - The included update via `2024-09-01-preview` brings AOAI support for streaming token usage in chat completions; `Usage` is now automatically populated in `StreamingChatCompletionUpdate` instances.
@@ -50,20 +68,13 @@ This update brings compatibility with the Azure OpenAI `2024-10-01-preview` serv
   - Note 2: this feature is not yet compatible when using image input (a `ChatMessageContentPart` of `Kind` `Image`)
 - `2024-10-01-preview` further adds support for ungrounded content detection in chat completion content filter results via the `UngroundedMaterial` property on `ResponseContentFilterResult`, as retrieved from a chat completion via the `GetResponseContentFilterResult()` extension method.
 
-Via `OpenAI 2.0.0-beta.2`:
+## Breaking Changes
 
-- Made improvements to the experimental Realtime API. Please note this features area is currently under rapid development and not all changes may be reflected here.
-  - Several types have been renamed for consistency and clarity.
-  - ConversationRateLimitsUpdate (previously ConversationRateLimitsUpdatedUpdate) now includes named RequestDetails and TokenDetails properties, mapping to the corresponding named items in the underlying rate_limits command payload.
+- `[Experimental]` `ChatCitation` and `ChatRetrievedDocument` have each replaced the `Uri` property of type `System.Uri` with a `string` property named `Url`. This aligns with the REST specification and accounts for the wire value of `url` not always providing a valid RFC 3986 identifier [[azure-sdk-for-net \#46793](https://github.com/Azure/azure-sdk-for-net/issues/46793)]
 
-### Bugs Fixed
+## Bugs Fixed
 
-- Addressed an HTTP 401 issue that caused certain connection retry attempts, such as those triggered for HTTP 429 rate limiting errors, to sometimes generate a malformed request with multiple `Authorization` headers that would then be rejected. [#46401](https://github.com/Azure/azure-sdk-for-net/pull/46401)
 - Addressed an issue that caused `ChatCitation` and `ChatRetrievedDocument` to sometimes throw on deserialization, specifically when a returned value in the `url` JSON field was not populated with an RFC 3986 compliant identifier for `System.Uri` [[azure-sdk-for-net \#46793](https://github.com/Azure/azure-sdk-for-net/issues/46793)]
-
-Via `OpenAI 2.0.0-beta.2`:
-
-- Fixed serialization and deserialization of ConversationToolChoice literal values (such as "required").
 
 ## 2.1.0-beta.1 (2024-10-01)
 
@@ -634,7 +645,7 @@ management, and align with the Azure SDK guidelines.
   - In contrast to other capabilities, DALL-E image generation does not require explicit creation or specification of a deployment or model. Its surface as such does not include this concept.
 - Functions for chat completions are now supported: see [OpenAI's blog post on the topic](https://openai.com/blog/function-calling-and-other-api-updates) for much more detail.
   - A list of `FunctionDefinition` objects may be populated on `ChatCompletionsOptions` via its `Functions` property. These definitions include a name and description together with a serialized JSON Schema representation of its parameters; these parameters can be generated easily via `BinaryData.FromObjectAsJson` with dynamic objects -- see the README for example usage.
-  - **NOTE**: Chat Functions requires a minimum of the `-0613` model versions for `gpt-4` and `gpt-3.5-turbo`/`gpt-35-turbo`. Please ensure you're using these later model versions, as Functions are not supported with older model revisions. For Azure OpenAI, you can update a deployment's model version or create a new model deployment with an updated version via the Azure AI Studio interface, also accessible through Azure Portal.
+  - **NOTE**: Chat Functions requires a minimum of the `-0613` model versions for `gpt-4` and `gpt-3.5-turbo`/`gpt-35-turbo`. Please ensure you're using these later model versions, as Functions are not supported with older model revisions. For Azure OpenAI, you can update a deployment's model version or create a new model deployment with an updated version via the Azure AI Foundry interface, also accessible through Azure Portal.
 - (Azure OpenAI specific) Completions and Chat Completions responses now include embedded content filter annotations for prompts and responses
 - A new `Azure.AI.OpenAI.AzureOpenAIModelFactory` is now present for mocking.
 

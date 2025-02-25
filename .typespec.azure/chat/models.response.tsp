@@ -1,14 +1,45 @@
+import "@typespec/versioning";
+
 import "../../.typespec/chat/models.tsp";
 import "../common";
 
+using TypeSpec.Versioning;
+
 namespace AzureOpenAI;
+
+// Ingested changes from OpenAI for 2024-09-01-preview
+
+@@added(OpenAI.CompletionUsage.completion_tokens_details,
+  AzureOpenAIServiceApiVersion.v2024_09_01_preview
+);
+
+// Ingested changes from OpenAI for 2024-08-01-preview
+
+@@added(OpenAI.ChatResponseFormatJsonSchema,
+  AzureOpenAIServiceApiVersion.v2024_08_01_preview
+);
+
+model AzureCreateChatCompletionResponseChoice {
+  ...OpenAI.CreateChatCompletionResponseChoice;
+
+  /**
+   * The Responsible AI content filter annotations associated with the choice.
+   */
+  content_filter_results: AzureContentFilterResultForChoice;
+}
+
+@withoutOmittedProperties("choices")
+model CreateChatCompletionResponseCommonBase
+  is OpenAI.CreateChatCompletionResponse;
 
 /**
  * The extended top-level chat completion response model for the Azure OpenAI service.
  * This model adds Responsible AI content filter annotations for prompt input.
  */
-model AzureCreateChatCompletionResponse
-  extends OpenAI.CreateChatCompletionResponse {
+model AzureCreateChatCompletionResponse {
+  ...CreateChatCompletionResponseCommonBase;
+  choices: AzureCreateChatCompletionResponseChoice[];
+
   /**
    * The Responsible AI content filter annotations associated with prompt inputs into chat completions.
    */
@@ -59,8 +90,9 @@ model AzureChatMessageContext {
  * This model adds support for chat message context, used by the On Your Data feature for intent, citations, and other
  * information related to retrieval-augmented generation performed.
  */
-model AzureChatCompletionResponseMessage
-  extends OpenAI.ChatCompletionResponseMessage {
+model AzureChatCompletionResponseMessage {
+  ...OpenAI.ChatCompletionResponseMessage;
+
   /**
    * The Azure-specific context information associated with the chat completion response message.
    */
@@ -72,8 +104,9 @@ model AzureChatCompletionResponseMessage
  * This model adds support for chat message context, used by the On Your Data feature for intent, citations, and other
  * information related to retrieval-augmented generation performed.
  */
-model AzureChatCompletionStreamResponseDelta
-  extends OpenAI.ChatCompletionStreamResponseDelta {
+model AzureChatCompletionStreamResponseDelta {
+  ...OpenAI.ChatCompletionStreamResponseDelta;
+
   /**
    * The Azure-specific context information associated with the chat completion response message.
    */

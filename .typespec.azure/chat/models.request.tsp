@@ -9,16 +9,88 @@ using TypeSpec.Versioning;
 
 namespace AzureOpenAI;
 
+@withoutOmittedProperties("model")
+@withoutOmittedProperties("service_tier")
+model CreateChatCompletionRequestCommonBase
+  is OpenAI.CreateChatCompletionRequest;
+
+// Ingested changes from OpenAI for 2025-01-01-preview
+
+@@added(CreateChatCompletionRequestCommonBase.modalities,
+  AzureOpenAIServiceApiVersion.v2025_01_01_preview
+);
+@@added(CreateChatCompletionRequestCommonBase.prediction,
+  AzureOpenAIServiceApiVersion.v2025_01_01_preview
+);
+@@added(CreateChatCompletionRequestCommonBase.audio,
+  AzureOpenAIServiceApiVersion.v2025_01_01_preview
+);
+
+// Ingested changes from OpenAI for 2024-12-01-preview
+
+@@added(CreateChatCompletionRequestCommonBase.store,
+  AzureOpenAIServiceApiVersion.v2024_12_01_preview
+);
+@@added(CreateChatCompletionRequestCommonBase.metadata,
+  AzureOpenAIServiceApiVersion.v2024_12_01_preview
+);
+@@added(CreateChatCompletionRequestCommonBase.reasoning_effort,
+  AzureOpenAIServiceApiVersion.v2024_12_01_preview
+);
+@@added(OpenAI.ChatCompletionRequestDeveloperMessage,
+  AzureOpenAIServiceApiVersion.v2024_12_01_preview
+);
+
+// Ingested changes from OpenAI for 2024-10-01-preview
+
+@@added(OpenAI.CompletionUsage.prompt_tokens_details,
+  AzureOpenAIServiceApiVersion.v2024_10_01_preview
+);
+
+// Ingested changes from OpenAI for 2024-09-01-preview
+
+@@added(CreateChatCompletionRequestCommonBase.stream_options,
+  AzureOpenAIServiceApiVersion.v2024_09_01_preview
+);
+@@added(CreateChatCompletionRequestCommonBase.max_completion_tokens,
+  AzureOpenAIServiceApiVersion.v2024_09_01_preview
+);
+@@added(CreateChatCompletionRequestCommonBase.parallel_tool_calls,
+  AzureOpenAIServiceApiVersion.v2024_09_01_preview
+);
+
+// Ingested changes from OpenAI for 2024-08-01-preview
+
+@@typeChangedFrom(OpenAI.ChatCompletionRequestSystemMessage.content,
+  AzureOpenAIServiceApiVersion.v2024_08_01_preview,
+  string
+);
+@@typeChangedFrom(OpenAI.ChatCompletionRequestAssistantMessage.content,
+  AzureOpenAIServiceApiVersion.v2024_08_01_preview,
+  string
+);
+
+// Ingested changes from OpenAI for 2024-07-01-preview (moved to 2024-08-01-preview)
+
+@@typeChangedFrom(CreateChatCompletionRequestCommonBase.tool_choice,
+  AzureOpenAIServiceApiVersion.v2024_08_01_preview,
+  "none" | "auto" | OpenAI.ChatCompletionNamedToolChoice
+);
+
 /**
  * The extended request model for chat completions against the Azure OpenAI service.
  * This adds the ability to provide data sources for the On Your Data feature.
  */
-model AzureCreateChatCompletionRequest
-  extends OpenAI.CreateChatCompletionRequest {
+model AzureCreateChatCompletionRequest {
+  ...CreateChatCompletionRequestCommonBase;
+
   /**
    * The data sources to use for the On Your Data feature, exclusive to Azure OpenAI.
    */
   data_sources?: AzureChatDataSource[];
+
+  @added(AzureOpenAIServiceApiVersion.v2024_12_01_preview)
+  user_security_context?: AzureUserSecurityContext;
 }
 
 /**
@@ -32,6 +104,10 @@ model AzureChatDataSource {
   /** The differentiating type identifier for the data source. */
   type: string;
 }
+
+alias AzureSearchAuthenticationOptions = AzureChatDataSourceApiKeyAuthenticationOptions | AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions | AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions;
+
+alias AzureSearchAuthenticationOptionsWithAccessToken = AzureSearchAuthenticationOptions | AzureChatDataSourceAccessTokenAuthenticationOptions;
 
 /** Represents a data source configuration that will use an Azure Search resource. */
 model AzureSearchChatDataSource extends AzureChatDataSource {
@@ -51,11 +127,11 @@ model AzureSearchChatDataSource extends AzureChatDataSource {
     /**
      * The authentication mechanism to use with Azure Search.
      */
-    authentication:
-      | AzureChatDataSourceApiKeyAuthenticationOptions
-      | AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions
-      | AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions
-      | AzureChatDataSourceAccessTokenAuthenticationOptions;
+    @typeChangedFrom(
+      AzureOpenAIServiceApiVersion.v2024_10_21,
+      AzureSearchAuthenticationOptions
+    )
+    authentication: AzureSearchAuthenticationOptionsWithAccessToken;
 
     /** The field mappings to use with the Azure Search resource. */
     fields_mapping?: {
@@ -99,36 +175,7 @@ model AzureSearchChatDataSource extends AzureChatDataSource {
      * The vectorization source to use with Azure Search.
      * Supported sources for Azure Search include endpoint, deployment name, and integrated.
      */
-    @typeChangedFrom(
-      AzureOpenAIServiceApiVersion.v2024_08_01_preview,
-      AzureChatDataSourceEndpointVectorizationSource | AzureChatDataSourceDeploymentNameVectorizationSource
-    )
-    embedding_dependency?: AzureChatDataSourceEndpointVectorizationSource | AzureChatDataSourceDeploymentNameVectorizationSource | AzureChatDataSourceIntegratedVectorizationSource;
-  };
-}
-
-/** Represents a data source configuration that will use an Azure Machine Learning vector index. */
-@removed(AzureOpenAIServiceApiVersion.v2024_08_01_preview)
-model AzureMachineLearningIndexChatDataSource extends AzureChatDataSource {
-  /** The discriminated type identifier, which is always 'azure_ml_index'. */
-  type: "azure_ml_index";
-
-  /** The parameter information to control the use of the Azure Machine Learning Index data source. */
-  parameters: {
-    ...AzureChatDataSourceCommonParameters;
-    authentication: AzureChatDataSourceAccessTokenAuthenticationOptions | AzureChatDataSourceSystemAssignedManagedIdentityAuthenticationOptions | AzureChatDataSourceUserAssignedManagedIdentityAuthenticationOptions;
-
-    /** The ID of the Azure Machine Learning index project to use. */
-    project_resource_id: string;
-
-    /** The name of the Azure Machine Learning index to use. */
-    name: string;
-
-    /** The version of the vector index to use. */
-    version: string;
-
-    /** A search filter, which is only applicable if the vector index is of the 'AzureSearch' type. */
-    filter?: string;
+    embedding_dependency?: AzureChatDataSourceVectorizationSource;
   };
 }
 
@@ -156,6 +203,9 @@ model AzureCosmosDBChatDataSource extends AzureChatDataSource {
   };
 }
 
+@added(AzureOpenAIServiceApiVersion.v2024_08_01_preview) // from 2024-07-01-preview
+@removed(AzureOpenAIServiceApiVersion.v2024_10_21)
+@added(AzureOpenAIServiceApiVersion.v2024_12_01_preview)
 model ElasticsearchChatDataSource extends AzureChatDataSource {
   /** The discriminated type identifier, which is always 'elasticsearch'. */
   type: "elasticsearch";
@@ -165,7 +215,12 @@ model ElasticsearchChatDataSource extends AzureChatDataSource {
     ...AzureChatDataSourceCommonParameters;
     endpoint: url;
     index_name: string;
+
+    @added(AzureOpenAIServiceApiVersion.v2024_08_01_preview) // from 2024-07-01-preview
+    @removed(AzureOpenAIServiceApiVersion.v2024_10_21)
+    @added(AzureOpenAIServiceApiVersion.v2024_12_01_preview)
     authentication: AzureChatDataSourceKeyAndKeyIdAuthenticationOptions | AzureChatDataSourceEncodedApiKeyAuthenticationOptions;
+
     fields_mapping?: {
       title_field?: string;
       url_field?: string;
@@ -179,6 +234,9 @@ model ElasticsearchChatDataSource extends AzureChatDataSource {
   };
 }
 
+@added(AzureOpenAIServiceApiVersion.v2024_08_01_preview) // from 2024-07-01-preview
+@removed(AzureOpenAIServiceApiVersion.v2024_10_21)
+@added(AzureOpenAIServiceApiVersion.v2024_12_01_preview)
 model PineconeChatDataSource extends AzureChatDataSource {
   /** The discriminated type identifier, which is always 'pinecone'. */
   type: "pinecone";
@@ -220,6 +278,8 @@ model PineconeChatDataSource extends AzureChatDataSource {
 }
 
 @added(AzureOpenAIServiceApiVersion.v2024_08_01_preview)
+@removed(AzureOpenAIServiceApiVersion.v2024_10_21)
+@added(AzureOpenAIServiceApiVersion.v2024_12_01_preview)
 model MongoDBChatDataSource extends AzureChatDataSource {
   /** The discriminated type identifier, which is always 'mongo_db'. */
   type: "mongo_db";
@@ -316,3 +376,21 @@ alias AzureChatDataSourceCommonParameters = {
     "intent"
   ];
 };
+
+/**
+ * User security context contains several parameters that describe the application itself, and the end user that interacts with the application. These fields assist your security operations teams to investigate and mitigate security incidents by providing a comprehensive approach to protecting your AI applications. [Learn more](https://aka.ms/TP4AI/Documentation/EndUserContext) about protecting AI applications using Microsoft Defender for Cloud.
+ */
+@added(AzureOpenAIServiceApiVersion.v2024_12_01_preview)
+model AzureUserSecurityContext {
+  /** The name of the application. Sensitive personal information should not be included in this field. */
+  application_name?: string;
+
+  /** This identifier is the Microsoft Entra ID (formerly Azure Active Directory) user object ID used to authenticate end-users within the generative AI application. Sensitive personal information should not be included in this field. */
+  end_user_id?: string;
+
+  /** The Microsoft 365 tenant ID the end user belongs to. It's required when the generative AI application is multitenant. */
+  end_user_tenant_id?: string;
+
+  /** Captures the original client's IP address. */
+  source_ip?: string;
+}

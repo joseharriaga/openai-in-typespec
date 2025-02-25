@@ -13,17 +13,27 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-// Tool generated type. Extracts CreateRunRequest.additional_messages
-model CreateRunRequestAdditional_messages is CreateMessageRequest[];
+// Tool generated type. Extracts from SubmitToolOutputsRunRequest.tool_outputs
+alias SubmitToolOutputsRunRequestToolOutput = {
+  @doc("""
+    The ID of the tool call in the `required_action` object within the run object the output is being submitted for.
+    """)
+  tool_call_id?: string;
 
-// Tool generated type. Extracts CreateRunRequest.tools
-@maxItems(20)
-@extension("x-oaiExpandable", true)
-model CreateRunRequestTools is AssistantToolDefinition[];
+  /** The output of the tool call to be submitted to continue the run. */
+  output?: string;
+};
 
-// Tool generated type. Extracts CreateThreadAndRunRequest.tools
-@maxItems(20)
-model CreateThreadAndRunRequestTools is AssistantToolDefinition[];
+// Tool generated type. Extracts from RunStepDetailsToolCallsFileSearchResultObject.content
+alias RunStepDetailsToolCallsFileSearchResultObjectContent = {
+  // Tool customization: address source spec inaccuracy of optionality
+  /** The type of the content. */
+  type: "text";
+
+  // Tool customization: address source spec inaccuracy of optionality
+  /** The text content of the file. */
+  text: string;
+};
 
 model CreateRunRequest {
   /** The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. */
@@ -34,6 +44,7 @@ model CreateRunRequest {
   `model`?:
     | string
     | "gpt-4o"
+    | "gpt-4o-2024-11-20"
     | "gpt-4o-2024-08-06"
     | "gpt-4o-2024-05-13"
     | "gpt-4o-mini"
@@ -65,16 +76,15 @@ model CreateRunRequest {
   additional_instructions?: string | null;
 
   /** Adds additional messages to the thread before creating the run. */
-  additional_messages?: CreateRunRequestAdditional_messages | null;
+  additional_messages?: CreateMessageRequest[] | null;
 
   // Tool customization: use common model base for tool definitions
   /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
-  tools?: CreateRunRequestTools | null;
+  // Tool note: can't automatically apply to nullable: @maxItems(20)
+  @extension("x-oaiExpandable", true)
+  tools?: AssistantToolDefinition[] | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 
   /** What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. */
   @minValue(0)
@@ -114,17 +124,13 @@ model CreateRunRequest {
 }
 
 model ModifyRunRequest {
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 }
 
 model CreateThreadAndRunRequest {
   /** The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run. */
   assistant_id: string;
 
-  /** If no thread is provided, an empty thread will be created. */
   thread?: CreateThreadRequest;
 
   /** The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used. */
@@ -132,6 +138,7 @@ model CreateThreadAndRunRequest {
   `model`?:
     | string
     | "gpt-4o"
+    | "gpt-4o-2024-11-20"
     | "gpt-4o-2024-08-06"
     | "gpt-4o-2024-05-13"
     | "gpt-4o-mini"
@@ -161,7 +168,8 @@ model CreateThreadAndRunRequest {
 
   // Tool customization: use common model base for tool definitions
   /** Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis. */
-  tools?: CreateThreadAndRunRequestTools | null;
+  // Tool note: can't automatically apply to nullable: @maxItems(20)
+  tools?: AssistantToolDefinition[] | null;
 
   @doc("""
     A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.
@@ -179,10 +187,7 @@ model CreateThreadAndRunRequest {
     file_search?: ToolResourcesFileSearchIdsOnly;
   } | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 
   /** What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. */
   @minValue(0)
@@ -223,15 +228,7 @@ model CreateThreadAndRunRequest {
 
 model SubmitToolOutputsRunRequest {
   /** A list of tools for which the outputs are being submitted. */
-  tool_outputs: {
-    @doc("""
-      The ID of the tool call in the `required_action` object within the run object the output is being submitted for.
-      """)
-    tool_call_id?: string;
-
-    /** The output of the tool call to be submitted to continue the run. */
-    output?: string;
-  }[];
+  tool_outputs: SubmitToolOutputsRunRequestToolOutput[];
 
   @doc("""
     If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.
@@ -289,14 +286,15 @@ model RunStepDetailsToolCallsObject extends RunStepObjectStepDetails {
   tool_calls: RunStepDetailsToolCallsObjectToolCallsObject[];
 }
 
-// Tool customization: apply custom, common base type to union items
+// Tool customization: Remove parent-relocated 'id' from discriminated type instance
 /** Details of the Code Interpreter tool call the run step was involved in. */
 model RunStepDetailsToolCallsCodeObject
   extends RunStepDetailsToolCallsObjectToolCallsObject {
+  // Tool customization: apply named discriminator enumeration instead of anonymous string
   @doc("""
     The type of tool call. This is always going to be `code_interpreter` for this type of tool call.
     """)
-  type: RunStepDetailsToolCallKind.code_interpreter;
+  type: RunStepDetailsToolCallType.code_interpreter;
 
   /** The Code Interpreter tool call definition. */
   code_interpreter: {
@@ -340,13 +338,14 @@ model RunStepDetailsToolCallsCodeOutputImageObject
   };
 }
 
-// Tool customization: apply custom, common base type to union items
+// Tool customization: Remove parent-relocated 'id' from discriminated type instance
 model RunStepDetailsToolCallsFileSearchObject
   extends RunStepDetailsToolCallsObjectToolCallsObject {
+  // Tool customization: apply named discriminator enumeration instead of anonymous string
   @doc("""
     The type of tool call. This is always going to be `file_search` for this type of tool call.
     """)
-  type: RunStepDetailsToolCallKind.file_search;
+  type: RunStepDetailsToolCallType.file_search;
 
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
@@ -386,22 +385,17 @@ model RunStepDetailsToolCallsFileSearchResultObject {
   score: float32;
 
   /** The content of the result that was found. The content is only included if requested via the include query parameter. */
-  content?: {
-    /** The type of the content. */
-    type: "text";
-
-    /** The text content of the file. */
-    text?: string;
-  }[];
+  content?: RunStepDetailsToolCallsFileSearchResultObjectContent[];
 }
 
-// Tool customization: apply custom, common base type to union items
+// Tool customization: Remove parent-relocated 'id' from discriminated type instance
 model RunStepDetailsToolCallsFunctionObject
   extends RunStepDetailsToolCallsObjectToolCallsObject {
+  // Tool customization: apply named discriminator enumeration instead of anonymous string
   @doc("""
     The type of tool call. This is always going to be `function` for this type of tool call.
     """)
-  type: RunStepDetailsToolCallKind.function;
+  type: RunStepDetailsToolCallType.function;
 
   /** The definition of the function that was called. */
   function: {
@@ -557,11 +551,7 @@ model RunObject {
   @extension("x-oaiExpandable", true)
   tools: AssistantToolDefinition[] = #[];
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata: Record<string> | null;
-
+  ...MetadataPropertyForResponse;
   usage: RunCompletionUsage | null;
 
   /** The sampling temperature used for this run. If not set, defaults to 1. */
@@ -656,11 +646,7 @@ model RunStepObject {
   @encode("unixTimestamp", int32)
   completed_at: utcDateTime | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata: Record<string> | null;
-
+  ...MetadataPropertyForResponse;
   usage: RunStepCompletionUsage | null;
 }
 
@@ -811,6 +797,7 @@ model RunStepDeltaStepDetailsToolCallsFileSearchObject
     """)
   type: "file_search";
 
+  // Tool customization: add missing and shared file_search definition for streaming
   /** For now, this is always going to be an empty object. */
   @extension("x-oaiTypeLabel", "map")
   file_search: {

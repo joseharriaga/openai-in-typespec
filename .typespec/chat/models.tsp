@@ -10,8 +10,103 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
-// Tool generated type. Extracts ChatCompletionTokenLogprob.bytes
-model ChatCompletionTokenLogprobBytes is int32[];
+// Tool generated type. Extracts from CreateChatCompletionResponse.choices
+alias CreateChatCompletionResponseChoice = {
+  @doc("""
+    The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+    `length` if the maximum number of tokens specified in the request was reached,
+    `content_filter` if content was omitted due to a flag from our content filters,
+    `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+    """)
+  finish_reason:
+    | "stop"
+    | "length"
+    | "tool_calls"
+    | "content_filter"
+    | "function_call";
+
+  /** The index of the choice in the list of choices. */
+  index: int32;
+
+  message: ChatCompletionResponseMessage;
+
+  /** Log probability information for the choice. */
+  logprobs: {
+    // Tool customization: Apply read-only visibility via annotation
+    /** A list of message content tokens with log probability information. */
+    @visibility("read")
+    content: ChatCompletionTokenLogprob[] | null;
+
+    // Tool customization: Apply read-only visibility via annotation
+    /** A list of message refusal tokens with log probability information. */
+    @visibility("read")
+    refusal: ChatCompletionTokenLogprob[] | null;
+  } | null;
+};
+
+// Tool generated type. Extracts from CreateChatCompletionFunctionResponse.choices
+alias CreateChatCompletionFunctionResponseChoice = {
+  @doc("""
+    The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
+    """)
+  finish_reason: "stop" | "length" | "function_call" | "content_filter";
+
+  /** The index of the choice in the list of choices. */
+  index: int32;
+
+  message: ChatCompletionResponseMessage;
+};
+
+// Tool generated type. Extracts from ChatCompletionTokenLogprob.top_logprobs
+alias ChatCompletionTokenLogprobTopLogprob = {
+  /** The token. */
+  token: string;
+
+  @doc("""
+    The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
+    """)
+  logprob: float32;
+
+  @doc("""
+    A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
+    """)
+  bytes: int32[] | null;
+};
+
+// Tool generated type. Extracts from CreateChatCompletionStreamResponse.choices
+alias CreateChatCompletionStreamResponseChoice = {
+  delta: ChatCompletionStreamResponseDelta;
+
+  /** Log probability information for the choice. */
+  logprobs?: {
+    // Tool customization: Apply read-only visibility via annotation
+    /** A list of message content tokens with log probability information. */
+    @visibility("read")
+    content: ChatCompletionTokenLogprob[] | null;
+
+    // Tool customization: Apply read-only visibility via annotation
+    /** A list of message refusal tokens with log probability information. */
+    @visibility("read")
+    refusal: ChatCompletionTokenLogprob[] | null;
+  } | null;
+
+  @doc("""
+    The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+    `length` if the maximum number of tokens specified in the request was reached,
+    `content_filter` if content was omitted due to a flag from our content filters,
+    `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+    """)
+  finish_reason:
+    | "stop"
+    | "length"
+    | "tool_calls"
+    | "content_filter"
+    | "function_call"
+    | null;
+
+  /** The index of the choice in the list of choices. */
+  index: int32;
+};
 
 model CreateChatCompletionRequest {
   /**
@@ -23,21 +118,27 @@ model CreateChatCompletionRequest {
   @minItems(1)
   messages: ChatCompletionRequestMessage[];
 
-  /** ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility) table for details on which models work with the Chat API. */
+  /** ID of the model to use. See the [model endpoint compatibility](/docs/models#model-endpoint-compatibility) table for details on which models work with the Chat API. */
   @extension("x-oaiTypeLabel", "string")
   `model`:
     | string
+    | "o3-mini"
+    | "o3-mini-2025-01-31"
+    | "o1"
+    | "o1-2024-12-17"
     | "o1-preview"
     | "o1-preview-2024-09-12"
     | "o1-mini"
     | "o1-mini-2024-09-12"
     | "gpt-4o"
+    | "gpt-4o-2024-11-20"
     | "gpt-4o-2024-08-06"
     | "gpt-4o-2024-05-13"
-    | "gpt-4o-realtime-preview"
-    | "gpt-4o-realtime-preview-2024-10-01"
     | "gpt-4o-audio-preview"
     | "gpt-4o-audio-preview-2024-10-01"
+    | "gpt-4o-audio-preview-2024-12-17"
+    | "gpt-4o-mini-audio-preview"
+    | "gpt-4o-mini-audio-preview-2024-12-17"
     | "chatgpt-4o-latest"
     | "gpt-4o-mini"
     | "gpt-4o-mini-2024-07-18"
@@ -62,21 +163,29 @@ model CreateChatCompletionRequest {
     | "gpt-3.5-turbo-16k-0613";
 
   /**
-   * Whether or not to store the output of this chat completion request
-   * for use in our [model distillation](/docs/guides/distillation) or [evals](/docs/guides/evals) products.
+   * Whether or not to store the output of this chat completion request for
+   * use in our [model distillation](/docs/guides/distillation) or
+   * [evals](/docs/guides/evals) products.
    */
   store?: boolean | null = false;
 
-  /**
-   * Developer-defined tags and values used for filtering completions
-   * in the [dashboard](https://platform.openai.com/chat-completions).
-   */
-  metadata?: Record<string> | null;
+  @doc("""
+    **o1 models only** 
+    
+    Constrains effort on reasoning for 
+    [reasoning models](https://platform.openai.com/docs/guides/reasoning).
+    Currently supported values are `low`, `medium`, and `high`. Reducing
+    reasoning effort can result in faster responses and fewer tokens used
+    on reasoning in a response.
+    """)
+  reasoning_effort?: "low" | "medium" | "high" = "medium";
+
+  ...MetadataPropertyForRequest;
 
   /**
-   * Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
-   *
-   * [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+   * Number between -2.0 and 2.0. Positive values penalize new tokens based on
+   * their existing frequency in the text so far, decreasing the model's
+   * likelihood to repeat the same line verbatim.
    */
   @minValue(-2)
   @maxValue(2)
@@ -85,18 +194,27 @@ model CreateChatCompletionRequest {
   /**
    * Modify the likelihood of specified tokens appearing in the completion.
    *
-   * Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an associated bias value from -100 to 100. Mathematically, the bias is added to the logits generated by the model prior to sampling. The exact effect will vary per model, but values between -1 and 1 should decrease or increase likelihood of selection; values like -100 or 100 should result in a ban or exclusive selection of the relevant token.
+   * Accepts a JSON object that maps tokens (specified by their token ID in the
+   * tokenizer) to an associated bias value from -100 to 100. Mathematically,
+   * the bias is added to the logits generated by the model prior to sampling.
+   * The exact effect will vary per model, but values between -1 and 1 should
+   * decrease or increase likelihood of selection; values like -100 or 100
+   * should result in a ban or exclusive selection of the relevant token.
    */
   @extension("x-oaiTypeLabel", "map")
   logit_bias?: Record<int32> | null = null;
 
   @doc("""
-    Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`.
+    Whether to return log probabilities of the output tokens or not. If true,
+    returns the log probabilities of each output token returned in the
+    `content` of `message`.
     """)
   logprobs?: boolean | null = false;
 
   @doc("""
-    An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used.
+    An integer between 0 and 20 specifying the number of most likely tokens to
+    return at each token position, each with an associated log probability.
+    `logprobs` must be set to `true` if this parameter is used.
     """)
   @minValue(0)
   @maxValue(20)
@@ -104,9 +222,12 @@ model CreateChatCompletionRequest {
 
   #deprecated "This field is marked as deprecated."
   @doc("""
-    The maximum number of [tokens](/tokenizer) that can be generated in the chat completion. This value can be used to control [costs](https://openai.com/api/pricing/) for text generated via API.
+    The maximum number of [tokens](/tokenizer) that can be generated in the
+    chat completion. This value can be used to control
+    [costs](https://openai.com/api/pricing/) for text generated via API.
     
-    This value is now deprecated in favor of `max_completion_tokens`, and is not compatible with [o1 series models](/docs/guides/reasoning).
+    This value is now deprecated in favor of `max_completion_tokens`, and is
+    not compatible with [o1 series models](/docs/guides/reasoning).
     """)
   max_tokens?: int32 | null;
 
@@ -122,6 +243,16 @@ model CreateChatCompletionRequest {
 
   modalities?: ChatCompletionModalities | null;
 
+  // Tool customization: Apply an implied base discriminated type to 'prediction'
+  /**
+   * Configuration for a [Predicted Output](/docs/guides/predicted-outputs),
+   * which can greatly improve response times when large parts of the model
+   * response are known ahead of time. This is most common when you are
+   * regenerating a file with only minor changes to most of the content.
+   */
+  @extension("x-oaiExpandable", true)
+  prediction?: ChatOutputPrediction | null;
+
   @doc("""
     Parameters for audio output. Required when audio output is requested with
     `modalities: ["audio"]`. [Learn more](/docs/guides/audio).
@@ -129,10 +260,17 @@ model CreateChatCompletionRequest {
   @extension("x-oaiExpandable", true)
   audio?: {
     @doc("""
-      Specifies the voice type. Supported voices are `alloy`, `echo`, 
-      `fable`, `onyx`, `nova`, and `shimmer`.
+      The voice the model uses to respond. Supported voices are `ash`, `ballad`, `coral`, `sage`, and `verse` (also supported but not recommended are `alloy`, `echo`, and `shimmer`; these voices are less expressive).
       """)
-    voice: "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
+    voice:
+      | "alloy"
+      | "ash"
+      | "ballad"
+      | "coral"
+      | "echo"
+      | "sage"
+      | "shimmer"
+      | "verse";
 
     @doc("""
       Specifies the output audio format. Must be one of `wav`, `mp3`, `flac`,
@@ -142,9 +280,9 @@ model CreateChatCompletionRequest {
   } | null;
 
   /**
-   * Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
-   *
-   * [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+   * Number between -2.0 and 2.0. Positive values penalize new tokens based on
+   * whether they appear in the text so far, increasing the model's likelihood
+   * to talk about new topics.
    */
   @minValue(-2)
   @maxValue(2)
@@ -152,13 +290,23 @@ model CreateChatCompletionRequest {
 
   // Tool customization: apply a named union type
   @doc("""
-    An object specifying the format that the model must output. Compatible with [GPT-4o](/docs/models/gpt-4o), [GPT-4o mini](/docs/models/gpt-4o-mini), [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
+    An object specifying the format that the model must output.
     
-    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+    Structured Outputs which ensures the model will match your supplied JSON
+    schema. Learn more in the [Structured Outputs
+    guide](/docs/guides/structured-outputs).
     
-    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the message the model generates is valid JSON.
+    Setting to `{ "type": "json_object" }` enables JSON mode, which ensures
+    the message the model generates is valid JSON.
     
-    **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
+    **Important:** when using JSON mode, you **must** also instruct the model
+    to produce JSON yourself via a system or user message. Without this, the
+    model may generate an unending stream of whitespace until the generation
+    reaches the token limit, resulting in a long-running and seemingly "stuck"
+    request. Also note that the message content may be partially cut off if
+    `finish_reason="length"`, which indicates the generation exceeded
+    `max_tokens` or the conversation exceeded the max context length.
     """)
   @extension("x-oaiExpandable", true)
   response_format?: ChatResponseFormat;
@@ -168,19 +316,15 @@ model CreateChatCompletionRequest {
     If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result.
     Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
     """)
-  @minValue(-9223372036854776000)
-  @maxValue(9223372036854776000)
   seed?: int64 | null;
 
-  @doc("""
-    Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
-      - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted. 
-      - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
-      - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarentee.
-      - When not set, the default behavior is 'auto'.
-    
-      When this parameter is set, the response body will include the `service_tier` utilized.
-    """)
+  /**
+   * Specifies the latency tier to use for processing the request. This parameter is relevant for customers subscribed to the scale tier service:
+   *   - If set to 'auto', and the Project is Scale tier enabled, the system will utilize scale tier credits until they are exhausted.
+   *   - If set to 'auto', and the Project is not Scale tier enabled, the request will be processed using the default service tier with a lower uptime SLA and no latency guarantee.
+   *   - If set to 'default', the request will be processed using the default service tier with a lower uptime SLA and no latency guarantee.
+   *   - When not set, the default behavior is 'auto'.
+   */
   service_tier?: "auto" | "default" | null = "auto";
 
   /** Up to 4 sequences where the API will stop generating further tokens. */
@@ -195,7 +339,6 @@ model CreateChatCompletionRequest {
 
   @doc("""
     What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
-    
     We generally recommend altering this or `top_p` but not both.
     """)
   @minValue(0)
@@ -203,7 +346,10 @@ model CreateChatCompletionRequest {
   temperature?: float32 | null = 1;
 
   @doc("""
-    An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+    An alternative to sampling with temperature, called nucleus sampling,
+    where the model considers the results of the tokens with top_p probability
+    mass. So 0.1 means only the tokens comprising the top 10% probability mass
+    are considered.
     
     We generally recommend altering this or `temperature` but not both.
     """)
@@ -217,7 +363,7 @@ model CreateChatCompletionRequest {
   tool_choice?: ChatCompletionToolChoiceOption;
   parallel_tool_calls?: ParallelToolCalls = true;
 
-  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). */
+  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids). */
   user?: string;
 
   #deprecated "This field is marked as deprecated."
@@ -225,11 +371,18 @@ model CreateChatCompletionRequest {
     Deprecated in favor of `tool_choice`.
     
     Controls which (if any) function is called by the model.
-    `none` means the model will not call a function and instead generates a message.
-    `auto` means the model can pick between generating a message or calling a function.
-    Specifying a particular function via `{"name": "my_function"}` forces the model to call that function.
     
-    `none` is the default when no functions are present. `auto` is the default if functions are present.
+    `none` means the model will not call a function and instead generates a
+    message.
+    
+    `auto` means the model can pick between generating a message or calling a
+    function.
+    
+    Specifying a particular function via `{"name": "my_function"}` forces the
+    model to call that function.
+    
+    `none` is the default when no functions are present. `auto` is the default
+    if functions are present.
     """)
   @extension("x-oaiExpandable", true)
   function_call?: "none" | "auto" | ChatCompletionFunctionCallOption;
@@ -250,40 +403,10 @@ model CreateChatCompletionResponse {
   /** A unique identifier for the chat completion. */
   id: string;
 
-  // Tool customization: Apply read-only visibility to inner logprobs types
   @doc("""
     A list of chat completion choices. Can be more than one if `n` is greater than 1.
     """)
-  choices: {
-    @doc("""
-      The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-      `length` if the maximum number of tokens specified in the request was reached,
-      `content_filter` if content was omitted due to a flag from our content filters,
-      `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-      """)
-    finish_reason:
-      | "stop"
-      | "length"
-      | "tool_calls"
-      | "content_filter"
-      | "function_call";
-
-    /** The index of the choice in the list of choices. */
-    index: int32;
-
-    message: ChatCompletionResponseMessage;
-
-    /** Log probability information for the choice. */
-    logprobs: {
-      /** A list of message content tokens with log probability information. */
-      @visibility("read")
-      content: ChatCompletionTokenLogprob[] | null;
-
-      /** A list of message refusal tokens with log probability information. */
-      @visibility("read")
-      refusal: ChatCompletionTokenLogprob[] | null;
-    } | null;
-  }[];
+  choices: CreateChatCompletionResponseChoice[];
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the chat completion was created. */
@@ -293,9 +416,7 @@ model CreateChatCompletionResponse {
   /** The model used for the chat completion. */
   `model`: string;
 
-  @doc("""
-    The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
-    """)
+  /** The service tier used for processing the request. */
   service_tier?: "scale" | "default" | null;
 
   @doc("""
@@ -369,7 +490,7 @@ model ChatCompletionRequestMessageContentPartImage {
     /** Either a URL of the image or the base64 encoded image data. */
     url: url;
 
-    /** Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding). */
+    /** Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision#low-or-high-fidelity-image-understanding). */
     detail?: "auto" | "low" | "high" = "auto";
   };
 }
@@ -451,6 +572,11 @@ union ChatCompletionRequestToolMessageContentPart {
 }
 
 // Tool customization: apply discriminated type base
+@doc("""
+  Developer-provided instructions that the model should follow, regardless of
+  messages sent by the user. With o1 models and newer, use `developer` messages
+  for this purpose instead.
+  """)
 model ChatCompletionRequestSystemMessage extends ChatCompletionRequestMessage {
   /** The contents of the system message. */
   content: string | ChatCompletionRequestSystemMessageContentPart[];
@@ -465,6 +591,30 @@ model ChatCompletionRequestSystemMessage extends ChatCompletionRequestMessage {
 }
 
 // Tool customization: apply discriminated type base
+@doc("""
+  Developer-provided instructions that the model should follow, regardless of
+  messages sent by the user. With o1 models and newer, `developer` messages
+  replace the previous `system` messages.
+  """)
+model ChatCompletionRequestDeveloperMessage
+  extends ChatCompletionRequestMessage {
+  /** The contents of the developer message. */
+  content: string | ChatCompletionRequestMessageContentPartText[];
+
+  @doc("""
+    The role of the messages author, in this case `developer`.
+    """)
+  role: "developer";
+
+  /** An optional name for the participant. Provides the model information to differentiate between participants of the same role. */
+  name?: string;
+}
+
+// Tool customization: apply discriminated type base
+/**
+ * Messages sent by an end user, containing prompts or additional context
+ * information.
+ */
 model ChatCompletionRequestUserMessage extends ChatCompletionRequestMessage {
   /** The contents of the user message. */
   @extension("x-oaiExpandable", true)
@@ -480,6 +630,7 @@ model ChatCompletionRequestUserMessage extends ChatCompletionRequestMessage {
 }
 
 // Tool customization: apply discriminated type base
+/** Messages sent by the model in response to user messages. */
 model ChatCompletionRequestAssistantMessage
   extends ChatCompletionRequestMessage {
   @doc("""
@@ -569,10 +720,11 @@ model ChatCompletionMessageToolCalls is ChatCompletionMessageToolCall[];
   """)
 model ChatCompletionModalities is ("text" | "audio")[];
 
-// Tool customization: convert to enum
+// Tool customization: convert to enum (and add developer)
 /** The role of the author of a message */
 enum ChatCompletionRole {
   system,
+  developer,
   user,
   assistant,
   tool,
@@ -587,17 +739,7 @@ model CreateChatCompletionFunctionResponse {
   @doc("""
     A list of chat completion choices. Can be more than one if `n` is greater than 1.
     """)
-  choices: {
-    @doc("""
-      The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.
-      """)
-    finish_reason: "stop" | "length" | "function_call" | "content_filter";
-
-    /** The index of the choice in the list of choices. */
-    index: int32;
-
-    message: ChatCompletionResponseMessage;
-  }[];
+  choices: CreateChatCompletionFunctionResponseChoice[];
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the chat completion was created. */
@@ -688,25 +830,12 @@ model ChatCompletionTokenLogprob {
   @doc("""
     A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
     """)
-  bytes: ChatCompletionTokenLogprobBytes | null;
+  bytes: int32[] | null;
 
   @doc("""
     List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned.
     """)
-  top_logprobs: {
-    /** The token. */
-    token: string;
-
-    @doc("""
-      The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely.
-      """)
-    logprob: float32;
-
-    @doc("""
-      A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.
-      """)
-    bytes: int32[] | null;
-  }[];
+  top_logprobs: ChatCompletionTokenLogprobTopLogprob[];
 }
 
 @doc("""
@@ -725,7 +854,7 @@ model ChatCompletionFunctions {
   /** The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64. */
   name: string;
 
-  parameters?: FunctionParameters;
+  ...FunctionParametersCommon;
 }
 
 // Tool customization: Add a missing "audio" to the chat streaming delta definition
@@ -781,42 +910,11 @@ model CreateChatCompletionStreamResponse {
   /** A unique identifier for the chat completion. Each chunk has the same ID. */
   id: string;
 
-  // Tool customization: Apply read-only visibility to inner logprobs types
   @doc("""
     A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
     last chunk if you set `stream_options: {"include_usage": true}`.
     """)
-  choices: {
-    delta: ChatCompletionStreamResponseDelta;
-
-    /** Log probability information for the choice. */
-    logprobs?: {
-      /** A list of message content tokens with log probability information. */
-      @visibility("read")
-      content: ChatCompletionTokenLogprob[] | null;
-
-      /** A list of message refusal tokens with log probability information. */
-      @visibility("read")
-      refusal: ChatCompletionTokenLogprob[] | null;
-    } | null;
-
-    @doc("""
-      The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-      `length` if the maximum number of tokens specified in the request was reached,
-      `content_filter` if content was omitted due to a flag from our content filters,
-      `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
-      """)
-    finish_reason:
-      | "stop"
-      | "length"
-      | "tool_calls"
-      | "content_filter"
-      | "function_call"
-      | null;
-
-    /** The index of the choice in the list of choices. */
-    index: int32;
-  }[];
+  choices: CreateChatCompletionStreamResponseChoice[];
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the chat completion was created. Each chunk has the same timestamp. */
@@ -826,9 +924,7 @@ model CreateChatCompletionStreamResponse {
   /** The model to generate the completion. */
   `model`: string;
 
-  @doc("""
-    The service tier used for processing the request. This field is only included if the `service_tier` parameter is specified in the request.
-    """)
+  /** The service tier used for processing the request. */
   service_tier?: "scale" | "default" | null;
 
   @doc("""
@@ -860,3 +956,24 @@ model CreateChatCompletionStreamResponse {
 
 /** Represents a streamed chunk of a chat completion response returned by model, based on the provided input. */
 alias CreateChatCompletionImageResponse = unknown;
+
+// Tool customization: Apply an implied base discriminated type to 'prediction'
+/**
+ * Static predicted output content, such as the content of a text file that is
+ * being regenerated.
+ */
+model ChatOutputPredictionContent extends ChatOutputPrediction {
+  @doc("""
+    The type of the predicted content you want to provide. This type is
+    currently always `content`.
+    """)
+  type: "content";
+
+  /**
+   * The content that should be matched when generating a model response.
+   * If generated tokens would match this content, the entire model response
+   * can be returned much more quickly.
+   */
+  @extension("x-oaiExpandable", true)
+  content: string | ChatCompletionRequestMessageContentPartText[];
+}

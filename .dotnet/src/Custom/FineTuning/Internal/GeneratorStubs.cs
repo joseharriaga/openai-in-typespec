@@ -29,7 +29,6 @@ internal readonly partial struct CreateFineTuningJobRequestModel { }
 internal readonly partial struct InternalFineTuningJobObject { }
 
 [CodeGenModel("FineTuningJobEventObject")]
-
 public readonly partial struct FineTuningJobEventObject { }
 
 
@@ -72,10 +71,10 @@ internal partial class FineTuningJobEventLevelExtensions { }
 [CodeGenModel("FineTuneMethodType")]
 internal readonly partial struct InternalFineTuneMethodType { }
 
-[CodeGenModel("FineTuneSupervisedMethod")]
-internal partial class InternalFineTuningJobRequestMethodSupervised { }
+// TODO: not yet integrated
 
+//[CodeGenModel("FineTuneChatRequestInput")]
+//internal partial class InternalTodoFineTuneChatRequestInput { }
 
-[CodeGenModel("FineTuneDPOMethod")]
-internal partial class InternalFineTuningJobRequestMethodDpo { }
-
+//[CodeGenModel("FineTuneCompletionRequestInput")]
+//internal partial class InternalTodoFineTuneCompletionRequestInput { }

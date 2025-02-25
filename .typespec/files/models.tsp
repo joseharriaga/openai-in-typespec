@@ -20,8 +20,13 @@ model CreateFileRequest {
 }
 
 model ListFilesResponse {
-  data: OpenAIFile[];
+  // Tool customization: apply the strict 'list' object value instead of open 'string'
   object: "list";
+
+  data: OpenAIFile[];
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
 }
 
 model DeleteFileResponse {

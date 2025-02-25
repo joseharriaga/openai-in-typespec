@@ -35,6 +35,10 @@ model AzureChatDataSourceEndpointVectorizationSource
    * The authentication mechanism to use with the endpoint-based vectorization source.
    * Endpoint authentication supports API key and access token mechanisms.
    */
+  @typeChangedFrom(
+    AzureOpenAIServiceApiVersion.v2024_10_21,
+    AzureChatDataSourceApiKeyAuthenticationOptions
+  )
   authentication: AzureChatDataSourceApiKeyAuthenticationOptions | AzureChatDataSourceAccessTokenAuthenticationOptions;
 
   /**
@@ -71,6 +75,9 @@ model AzureChatDataSourceDeploymentNameVectorizationSource
  * Represents a vectorization source that makes service calls based on a search service model ID.
  * This source type is currently only supported by Elasticsearch.
  */
+@added(AzureOpenAIServiceApiVersion.v2024_08_01_preview)
+@removed(AzureOpenAIServiceApiVersion.v2024_10_21)
+@added(AzureOpenAIServiceApiVersion.v2024_12_01_preview)
 model AzureChatDataSourceModelIdVectorizationSource
   extends AzureChatDataSourceVectorizationSource {
   /** The type identifier, always 'model_id' for this vectorization source type. */
@@ -84,6 +91,8 @@ model AzureChatDataSourceModelIdVectorizationSource
  * Represents an integrated vectorization source as defined within the supporting search resource.
  */
 @added(AzureOpenAIServiceApiVersion.v2024_08_01_preview)
+@removed(AzureOpenAIServiceApiVersion.v2024_10_21)
+@added(AzureOpenAIServiceApiVersion.v2024_12_01_preview)
 model AzureChatDataSourceIntegratedVectorizationSource
   extends AzureChatDataSourceVectorizationSource {
   /** The type identifier, always 'integrated' for this vectorization source type. */

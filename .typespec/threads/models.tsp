@@ -3,6 +3,7 @@
  * Edits made directly to this file will be lost.
  */
 
+import "../common";
 import "../messages";
 import "./custom.tsp";
 
@@ -10,6 +11,10 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
+/**
+ * Options to create a new thread. If no thread is provided when running a
+ * request, an empty thread will be created.
+ */
 model CreateThreadRequest {
   /** A list of [messages](/docs/api-reference/messages) to start the thread with. */
   messages?: CreateMessageRequest[];
@@ -30,10 +35,7 @@ model CreateThreadRequest {
     file_search?: ToolResourcesFileSearch;
   } | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 }
 
 model ModifyThreadRequest {
@@ -53,10 +55,7 @@ model ModifyThreadRequest {
     file_search?: ToolResourcesFileSearchIdsOnly;
   } | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata?: Record<string> | null;
+  ...MetadataPropertyForRequest;
 }
 
 model DeleteThreadResponse {
@@ -98,10 +97,7 @@ model ThreadObject {
     };
   } | null;
 
-  // Tool customization: specialize known metadata string maps
-  /** Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. */
-  @extension("x-oaiTypeLabel", "map")
-  metadata: Record<string> | null;
+  ...MetadataPropertyForResponse;
 }
 
 model ListThreadsResponse {

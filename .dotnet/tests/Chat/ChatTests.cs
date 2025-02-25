@@ -367,6 +367,56 @@ public class ChatTests : SyncAsyncTestBase
     }
 
     [Test]
+    public async Task ChatWithBasicAudioOutput()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "gpt-4o-audio-preview");
+        List<ChatMessage> messages = ["Say the exact word 'hello' and nothing else."];
+        ChatCompletionOptions options = new()
+        {
+            AudioOptions = new(ChatOutputAudioVoice.Ash, ChatOutputAudioFormat.Pcm16),
+            ResponseModalities = ChatResponseModalities.Text | ChatResponseModalities.Audio,
+        };
+
+        StringBuilder transcriptBuilder = new();
+        using MemoryStream outputAudioStream = new();
+        string streamedAudioId = null;
+        ChatTokenUsage streamedUsage = null;
+        DateTimeOffset? streamedExpiresAt = null;
+
+        await foreach (StreamingChatCompletionUpdate update
+            in client.CompleteChatStreamingAsync(messages, options))
+        {
+            if (update.Usage is not null)
+            {
+                Assert.That(streamedUsage, Is.Null);
+                streamedUsage = update.Usage;
+            }
+            if (update.OutputAudioUpdate?.ExpiresAt is not null)
+            {
+                Assert.That(streamedExpiresAt, Is.Null);
+                streamedExpiresAt = update.OutputAudioUpdate.ExpiresAt;
+            }
+            if (update.OutputAudioUpdate?.Id is not null)
+            {
+                if (streamedAudioId is not null)
+                {
+                    Assert.That(streamedAudioId, Is.EqualTo(update.OutputAudioUpdate.Id));
+                }
+                streamedAudioId ??= update.OutputAudioUpdate.Id;
+            }
+            transcriptBuilder.Append(update.OutputAudioUpdate?.TranscriptUpdate);
+            outputAudioStream.Write(update.OutputAudioUpdate?.AudioBytesUpdate);
+        }
+
+        Assert.That(streamedAudioId, Has.Length.GreaterThan("audio".Length));
+        Assert.That(transcriptBuilder.ToString().ToLower(), Does.Contain("hello"));
+        Assert.That(outputAudioStream.Length, Is.GreaterThan(9000));
+        Assert.That(streamedUsage?.InputTokenDetails?.AudioTokenCount, Is.EqualTo(0));
+        Assert.That(streamedUsage?.OutputTokenDetails?.AudioTokenCount, Is.GreaterThan(0));
+        Assert.That(streamedExpiresAt, Is.GreaterThan(DateTimeOffset.Parse("2025-01-01")));
+    }
+
+    [Test]
     public async Task ChatWithAudio()
     {
         ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "gpt-4o-audio-preview");
@@ -417,12 +467,18 @@ public class ChatTests : SyncAsyncTestBase
         string streamedCorrelationId = null;
         DateTimeOffset? streamedExpiresAt = null;
         StringBuilder streamedTranscriptBuilder = new();
+        ChatTokenUsage streamedUsage = null;
         using MemoryStream outputAudioStream = new();
         await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(messages, options))
         {
             Assert.That(update.ContentUpdate, Has.Count.EqualTo(0));
             StreamingChatOutputAudioUpdate outputAudioUpdate = update.OutputAudioUpdate;
 
+            if (update.Usage is not null)
+            {
+                Assert.That(streamedUsage, Is.Null);
+                streamedUsage = update.Usage;
+            }
             if (outputAudioUpdate is not null)
             {
                 string serializedOutputAudioUpdate = ModelReaderWriter.Write(outputAudioUpdate).ToString();
@@ -446,6 +502,8 @@ public class ChatTests : SyncAsyncTestBase
         Assert.That(streamedExpiresAt.HasValue, Is.True);
         Assert.That(streamedTranscriptBuilder.ToString(), Is.Not.Null.And.Not.Empty);
         Assert.That(outputAudioStream.Length, Is.GreaterThan(9000));
+        Assert.That(streamedUsage?.InputTokenDetails?.AudioTokenCount, Is.GreaterThan(0));
+        Assert.That(streamedUsage?.OutputTokenDetails?.AudioTokenCount, Is.GreaterThan(0));
     }
 
     [Test]
@@ -867,13 +925,15 @@ public class ChatTests : SyncAsyncTestBase
     [Test]
     public async Task ReasoningTokensWork()
     {
-        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "o1-mini");
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "o3-mini");
 
         UserChatMessage message = new("Using a comprehensive evaluation of popular media in the 1970s and 1980s, what were the most common sci-fi themes?");
         ChatCompletionOptions options = new()
         {
-            MaxOutputTokenCount = 2148
+            MaxOutputTokenCount = 2148,
+            ReasoningEffortLevel = ChatReasoningEffortLevel.Low,
         };
+        Assert.That(ModelReaderWriter.Write(options).ToString(), Does.Contain(@"""reasoning_effort"":""low"""));
         ClientResult<ChatCompletion> completionResult = IsAsync
             ? await client.CompleteChatAsync([message], options)
             : client.CompleteChat([message], options);
@@ -887,4 +947,100 @@ public class ChatTests : SyncAsyncTestBase
         Assert.That(completion.Usage.OutputTokenDetails?.ReasoningTokenCount, Is.GreaterThan(0));
         Assert.That(completion.Usage.OutputTokenDetails?.ReasoningTokenCount, Is.LessThan(completion.Usage.OutputTokenCount));
     }
+
+    [Test]
+    public async Task PredictedOutputsWork()
+    {
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat);
+
+        foreach (ChatOutputPrediction predictionVariant in new List<ChatOutputPrediction>(
+            [
+                // Plain string
+                ChatOutputPrediction.CreateStaticContentPrediction("""
+                    {
+                      "feature_name": "test_feature",
+                      "enabled": true
+                    }
+                    """.ReplaceLineEndings("\n")),
+                // One content part
+                ChatOutputPrediction.CreateStaticContentPrediction(
+                [
+                    ChatMessageContentPart.CreateTextPart("""
+                    {
+                      "feature_name": "test_feature",
+                      "enabled": true
+                    }
+                    """.ReplaceLineEndings("\n")),
+                ]),
+                // Several content parts
+                ChatOutputPrediction.CreateStaticContentPrediction(
+                    [
+                        "{\n",
+                        "  \"feature_name\": \"test_feature\",\n",
+                        "  \"enabled\": true\n",
+                        "}",
+                    ]),
+            ]))
+        {
+            ChatCompletionOptions options = new()
+            {
+                OutputPrediction = predictionVariant,
+            };
+
+            ChatMessage message = ChatMessage.CreateUserMessage("""
+            Modify the following input to enable the feature. Only respond with the JSON and include no other text. Do not enclose in markdown backticks or any other additional annotations.
+
+            {
+              "feature_name": "test_feature",
+              "enabled": false
+            }
+            """.ReplaceLineEndings("\n"));
+
+            ChatCompletion completion = await client.CompleteChatAsync([message], options);
+
+            Assert.That(completion.Usage.OutputTokenDetails.AcceptedPredictionTokenCount, Is.GreaterThan(0));
+        }
+    }
+
+    [Test]
+    public async Task O3miniDeveloperMessagesWork()
+    {
+        List<ChatMessage> messages =
+        [
+            ChatMessage.CreateDeveloperMessage("End every response to the user with the exact phrase: 'Hope this helps!'"),
+            ChatMessage.CreateUserMessage("How long will it take to make a cheesecake from scratch? Including getting ingredients.")
+        ];
+
+        ChatCompletionOptions options = new()
+        {
+            ReasoningEffortLevel = ChatReasoningEffortLevel.Low,
+        };
+
+        ChatClient client = GetTestClient<ChatClient>(TestScenario.Chat, "o3-mini");
+        ChatCompletion completion = await client.CompleteChatAsync(messages, options);
+
+        Assert.That(completion.Content, Has.Count.EqualTo(1));
+        Assert.That(completion.Content[0].Text, Does.EndWith("Hope this helps!"));
+    }
+
+    [Test]
+    public async Task ChatMetadata()
+    {
+        ChatClient client = GetTestClient();
+
+        ChatCompletionOptions options = new()
+        {
+            StoredOutputEnabled = true,
+            Metadata =
+            {
+                ["my_metadata_key"] = "my_metadata_value",
+            },
+        };
+
+        ChatCompletion completion = await client.CompleteChatAsync(
+            ["Hello, world!"],
+            options);
+    }
+
+    private static ChatClient GetTestClient(string overrideModel = null) => GetTestClient<ChatClient>(TestScenario.Chat, overrideModel);
 }

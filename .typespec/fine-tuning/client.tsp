@@ -49,3 +49,9 @@ using OpenAI;
 @@usage(CreateFineTuningJobRequestHyperparametersBetaChoiceEnum, Usage.input);
 @@access(CreateFineTuningJobRequestHyperparametersBetaOption, Access.public);
 @@usage(CreateFineTuningJobRequestHyperparametersBetaOption, Usage.input);
+
+@@access(FineTuneChatRequestInput, Access.public);
+@@usage(FineTuneChatRequestInput, Usage.input);
+
+@@access(FineTuneCompletionRequestInput, Access.public);
+@@usage(FineTuneCompletionRequestInput, Usage.input);

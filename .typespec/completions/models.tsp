@@ -9,8 +9,27 @@ using TypeSpec.OpenAPI;
 
 namespace OpenAI;
 
+// Tool generated type. Extracts from CreateCompletionResponse.choices
+alias CreateCompletionResponseChoice = {
+  @doc("""
+    The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+    `length` if the maximum number of tokens specified in the request was reached,
+    or `content_filter` if content was omitted due to a flag from our content filters.
+    """)
+  finish_reason: "stop" | "length" | "content_filter";
+
+  index: int32;
+  logprobs: {
+    text_offset?: int32[];
+    token_logprobs?: float32[];
+    tokens?: string[];
+    top_logprobs?: Record<float32>[];
+  } | null;
+  text: string;
+};
+
 model CreateCompletionRequest {
-  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them. */
+  /** ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models) for descriptions of them. */
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "gpt-3.5-turbo-instruct" | "davinci-002" | "babbage-002";
 
@@ -38,7 +57,7 @@ model CreateCompletionRequest {
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
    *
-   * [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+   * [See more information about frequency and presence penalties.](/docs/guides/text-generation)
    */
   @minValue(-2)
   @maxValue(2)
@@ -83,7 +102,7 @@ model CreateCompletionRequest {
   /**
    * Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
    *
-   * [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
+   * [See more information about frequency and presence penalties.](/docs/guides/text-generation)
    */
   @minValue(-2)
   @maxValue(2)
@@ -94,8 +113,6 @@ model CreateCompletionRequest {
     
     Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend.
     """)
-  @minValue(-9223372036854776000)
-  @maxValue(9223372036854776000)
   seed?: int64 | null;
 
   /** Up to 4 sequences where the API will stop generating further tokens. The returned text will not contain the stop sequence. */
@@ -133,7 +150,7 @@ model CreateCompletionRequest {
   @maxValue(1)
   top_p?: float32 | null = 1;
 
-  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids). */
+  /** A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices#end-user-ids). */
   user?: string;
 }
 
@@ -143,23 +160,7 @@ model CreateCompletionResponse {
   id: string;
 
   /** The list of completion choices the model generated for the input prompt. */
-  choices: {
-    @doc("""
-      The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
-      `length` if the maximum number of tokens specified in the request was reached,
-      or `content_filter` if content was omitted due to a flag from our content filters.
-      """)
-    finish_reason: "stop" | "length" | "content_filter";
-
-    index: int32;
-    logprobs: {
-      text_offset?: int32[];
-      token_logprobs?: float32[];
-      tokens?: string[];
-      top_logprobs?: Record<float32>[];
-    } | null;
-    text: string;
-  }[];
+  choices: CreateCompletionResponseChoice[];
 
   // Tool customization: 'created' and fields ending in '_at' are Unix encoded utcDateTime
   /** The Unix timestamp (in seconds) of when the completion was created. */

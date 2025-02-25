@@ -10,6 +10,16 @@ using System.Threading.Tasks;
 
 namespace OpenAI.Assistants;
 
+public class ScenarioClient<T>
+{
+    string GetApiVersion()
+    {
+        return "2025-01-01-preview";
+    }
+
+
+}
+
 /// <summary> The service client for OpenAI assistants operations. </summary>
 [Experimental("OPENAI001")]
 [CodeGenClient("Assistants")]
@@ -24,7 +34,7 @@ namespace OpenAI.Assistants;
 [CodeGenSuppress("DeleteAssistant", typeof(string))]
 [CodeGenSuppress("ListAssistantsAsync", typeof(int?), typeof(AssistantCollectionOrder?), typeof(string), typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("ListAssistants", typeof(int?), typeof(AssistantCollectionOrder?), typeof(string), typeof(string), typeof(CancellationToken))]
-public partial class AssistantClient
+public partial class AssistantClient<BaseClass> : ScenarioClient<BaseClass>
 {
     private readonly InternalAssistantMessageClient _messageSubClient;
     private readonly InternalAssistantRunClient _runSubClient;

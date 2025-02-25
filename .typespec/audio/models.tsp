@@ -22,7 +22,7 @@ union AudioResponseFormat {
 
 model CreateSpeechRequest {
   @doc("""
-    One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`
+    One of the available [TTS models](/docs/models#tts): `tts-1` or `tts-1-hd`
     """)
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "tts-1" | "tts-1-hd";
@@ -32,9 +32,18 @@ model CreateSpeechRequest {
   input: string;
 
   @doc("""
-    The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`, `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech guide](/docs/guides/text-to-speech/voice-options).
+    The voice to use when generating the audio. Supported voices are `alloy`, `ash`, `coral`, `echo`, `fable`, `onyx`, `nova`, `sage` and `shimmer`. Previews of the voices are available in the [Text to speech guide](/docs/guides/text-to-speech#voice-options).
     """)
-  voice: "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
+  voice:
+    | "alloy"
+    | "ash"
+    | "coral"
+    | "echo"
+    | "fable"
+    | "onyx"
+    | "nova"
+    | "sage"
+    | "shimmer";
 
   @doc("""
     The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`, `wav`, and `pcm`.
@@ -60,10 +69,12 @@ model CreateTranscriptionRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "whisper-1";
 
-  /** The language of the input audio. Supplying the input language in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy and latency. */
+  @doc("""
+    The language of the input audio. Supplying the input language in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format will improve accuracy and latency.
+    """)
   language?: string;
 
-  /** An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should match the audio language. */
+  /** An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text#prompting) should match the audio language. */
   prompt?: string;
 
   // Tool customization: use scenario-specific composed union
@@ -92,7 +103,7 @@ model CreateTranslationRequest {
   @extension("x-oaiTypeLabel", "string")
   `model`: string | "whisper-1";
 
-  /** An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should be in English. */
+  /** An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text#prompting) should be in English. */
   prompt?: string;
 
   // Tool customization: use scenario-specific composed union

@@ -18,7 +18,7 @@ model RunStepObjectStepDetails {
   type: string;
 }
 
-union RunStepDetailsToolCallKind {
+union RunStepDetailsToolCallType {
   string,
   code_interpreter: "code_interpreter",
   file_search: "file_search",
@@ -31,7 +31,7 @@ union RunStepDetailsToolCallKind {
 @discriminator("type")
 model RunStepDetailsToolCallsObjectToolCallsObject {
   /** The discriminated type identifier for the details object. */
-  type: RunStepDetailsToolCallKind;
+  type: RunStepDetailsToolCallType;
 
   /** The ID of the tool call object. */
   id: string;

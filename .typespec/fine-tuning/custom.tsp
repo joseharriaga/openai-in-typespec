@@ -29,9 +29,22 @@ union CreateFineTuningJobRequestHyperparametersNEpochsOption {
 union CreateFineTuningJobRequestHyperparametersBetaChoiceEnum {
   auto: "auto",
 }
+
 union CreateFineTuningJobRequestHyperparametersBetaOption {
-  CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum,
+  CreateFineTuningJobRequestHyperparametersBetaChoiceEnum,
   int32,
+}
+
+union FineTuningJobHyperparametersBatchSizeChoiceEnum {
+  auto: "auto",
+}
+
+union FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum {
+  auto: "auto",
+}
+
+union FineTuningJobHyperparametersNEpochsChoiceEnum {
+  auto: "auto",
 }
 
 @discriminator("type")

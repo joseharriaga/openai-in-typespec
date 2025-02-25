@@ -4,6 +4,7 @@ emit:
 options:
   "@typespec/openapi3":
     output-file: "{project-root}/../.openapi3.azure/openapi3-azure-openai-{version}-generated.yaml"
+    omit-unreachable-types: true
   "@azure-tools/typespec-csharp":
     namespace: "Azure.AI.OpenAI"
     emitter-output-dir: "{project-root}/../.dotnet.azure/sdk/openai/Azure.AI.OpenAI/src"

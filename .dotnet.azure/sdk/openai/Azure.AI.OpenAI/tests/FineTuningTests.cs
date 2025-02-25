@@ -25,20 +25,22 @@ using OpenAI.Chat;
 using OpenAI.Files;
 using OpenAI.TestFramework.Utils;
 using NUnit.Framework.Internal.Commands;
+using Azure.AI.OpenAI.Files;
 
+
+#if !AZURE_OPENAI_GA
+using Azure.AI.OpenAI.FineTuning;
 #endif
 
 namespace Azure.AI.OpenAI.Tests;
+
+#pragma warning disable CS0618
 
 [Category("FineTuning")]
 public class FineTuningTests : AoaiTestBase<FineTuningClient>
 {
     public FineTuningTests(bool isAsync) : base(isAsync)
     {
-        if (Mode == RecordedTestMode.Playback)
-        {
-            // Assert.Inconclusive("Playback for fine-tuning temporarily disabled");
-        }
     }
 
 #if !AZURE_OPENAI_GA
@@ -47,9 +49,56 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     public void CanCreateClient() => Assert.That(GetTestClient(), Is.InstanceOf<FineTuningClient>());
 
     [RecordedTest]
-    public async Task JobsFineTuning()
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
+    public async Task CanUploadFileForFineTuning(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        FineTuningClient client = GetTestClient();
+        FineTuningClient ftClient = GetTestClient(GetTestClientOptions(version));
+        OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(ftClient);
+
+        OpenAIFile newFile = await fileClient.UploadFileAsync(
+            BinaryData.FromString("this isn't valid input for fine tuning"),
+            "intentionally-bad-ft-input.jsonl",
+            FileUploadPurpose.FineTune);
+        Validate(newFile);
+
+        // In contrast to batch, files uploaded for fine tuning will initially appear in a 'pending' state,
+        // transitioning into a terminal as input validation is handled. In this case, because malformed input is
+        // uploaded, the terminal status should be 'error'.
+        AzureOpenAIFileStatus azureStatus = newFile.GetAzureOpenAIFileStatus();
+        Assert.That(azureStatus, Is.EqualTo(AzureOpenAIFileStatus.Pending));
+
+        TimeSpan filePollingInterval = Recording!.Mode == RecordedTestMode.Playback ? TimeSpan.FromMilliseconds(1) : TimeSpan.FromSeconds(5);
+
+        for (int i = 0; i < 10 && azureStatus == AzureOpenAIFileStatus.Pending; i++)
+        {
+            await Task.Delay(filePollingInterval);
+            newFile = await fileClient.GetFileAsync(newFile.Id);
+            azureStatus = newFile.GetAzureOpenAIFileStatus();
+        }
+
+        Assert.That(azureStatus, Is.EqualTo(AzureOpenAIFileStatus.Error));
+        Assert.That(newFile.StatusDetails.ToLower(), Does.Contain("validation of jsonl"));
+    }
+
+    [RecordedTest]
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    //[TestCase(null)]
+    public async Task JobsFineTuning(AzureOpenAIClientOptions.ServiceVersion? version)
+    {
+        FineTuningClient client = GetTestClient(GetTestClientOptions(version));
 
         int count = 25;
 
@@ -67,10 +116,17 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
-    public async Task CheckpointsFineTuning()
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
+    public async Task CheckpointsFineTuning(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        //string fineTunedModel = GetFineTunedModel();
-        FineTuningClient client = GetTestClient();
+        string fineTunedModel = GetFineTunedModel();
 
         FineTuningJob job = await client.GetJobsAsync(options: new() { PageSize = 10 })
                                         .FirstOrDefaultAsync(j => j.Status == "succeeded");
@@ -110,10 +166,18 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
-    public async Task EventsFineTuning()
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    //[TestCase(null)]
+    public async Task EventsFineTuning(AzureOpenAIClientOptions.ServiceVersion? version)
     {
+        FineTuningClient client = GetTestClient(GetTestClientOptions(version));
         string fineTunedModel = GetFineTunedModel();
-        FineTuningClient client = GetTestClient();
 
         // Check if the model exists by searching all jobs
         var alljobs = client.GetJobsAsync();
@@ -149,14 +213,20 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
-    [Category("Live")]
-    public async Task CreateCancelDelete()
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
+    public async Task CreateCancelDelete(AzureOpenAIClientOptions.ServiceVersion? version)
     {
-        // [2025-01-24 mikhailsimin] Castle proxy has a bug with populating non-virtual properties on derived classes
-        // until that is fixed we have to use unwrapped client and tag this as Live.
+        FineTuningClient client = GetTestClient(GetTestClientOptions(version));
+        var fineTuningFile = Assets.FineTuning;
 
-        FineTuningClient client = GetTestClient(unwrapped: true);
-        OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(GetTestClient());
+        OpenAIFileClient fileClient = GetTestClientFrom<OpenAIFileClient>(client);
 
         var uploadedFile = await UploadAndWaitForCompleteOrFail(fileClient, Assets.FineTuning.RelativePath);
 
@@ -182,12 +252,20 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     }
 
     [RecordedTest]
+#if !AZURE_OPENAI_GA
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_12_01_Preview)]
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2025_01_01_Preview)]
+#else
+    [TestCase(AzureOpenAIClientOptions.ServiceVersion.V2024_10_21)]
+#endif
+    [TestCase(null)]
     [Category("LongRunning")] // CAUTION: This test can take around 10 to 15 *minutes* in live mode to run
     [NonParallelizable]
     public async Task DeployAndChatWithModel()
     {
+        FineTuningClient client = GetTestClient(GetTestClientOptions(version));
         string fineTunedModel = GetFineTunedModel();
-        FineTuningClient client = GetTestClient();
 
         AzureDeploymentClient deploymentClient = GetTestClientFrom<AzureDeploymentClient>(client);
         string? deploymentName = null;
@@ -261,6 +339,11 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
 
     #region helper methods
 
+    private TestClientOptions GetTestClientOptions(AzureOpenAIClientOptions.ServiceVersion? version)
+    {
+        return version is null ? new TestClientOptions() : new TestClientOptions(version.Value);
+    }
+
     private string GetFineTunedModel()
     {
         string? model = TestConfig.GetConfig<FineTuningClient>()
@@ -290,7 +373,7 @@ public class FineTuningTests : AoaiTestBase<FineTuningClient>
     private async Task<bool> DeleteJobAndVerifyAsync(AzureFineTuningJob job, FineTuningClient client, TimeSpan? timeBetween = null, TimeSpan? maxWaitTime = null)
     {
         var stopTime = DateTimeOffset.Now + (maxWaitTime ?? TimeSpan.FromMinutes(1));
-        var sleepTime = timeBetween ?? TimeSpan.FromSeconds(2);
+        TimeSpan sleepTime = timeBetween ?? (Recording!.Mode == RecordedTestMode.Playback ? TimeSpan.FromMilliseconds(1): TimeSpan.FromSeconds(2));
 
         RequestOptions noThrow = new()
         {

@@ -247,9 +247,7 @@ public partial class ChatClient
 
     internal virtual ChatCompletionOptions CreatePerCallOptions(ChatCompletionOptions userOptions, IEnumerable<ChatMessage> messages, bool stream = false)
     {
-        ChatCompletionOptions copiedOptions = userOptions is null
-            ? new()
-            : (ChatCompletionOptions)(userOptions as ICloneable).Clone();
+        ChatCompletionOptions copiedOptions = userOptions?.GetClone() ?? new();
         copiedOptions.Messages = messages.ToList();
         copiedOptions.Model = _model;
         if (stream)

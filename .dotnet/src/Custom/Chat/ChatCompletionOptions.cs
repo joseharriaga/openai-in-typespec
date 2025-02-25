@@ -13,7 +13,7 @@ namespace OpenAI.Chat;
 [CodeGenSerialization(nameof(Messages), SerializationValueHook = nameof(SerializeMessagesValue))]
 [CodeGenSerialization(nameof(StopSequences), SerializationValueHook = nameof(SerializeStopSequencesValue), DeserializationValueHook = nameof(DeserializeStopSequencesValue))]
 [CodeGenSerialization(nameof(LogitBiases), SerializationValueHook = nameof(SerializeLogitBiasesValue), DeserializationValueHook = nameof(DeserializeLogitBiasesValue))]
-public partial class ChatCompletionOptions : ICloneable
+public partial class ChatCompletionOptions
 {
     // CUSTOM:
     // - Made internal. This value comes from a parameter on the client method.
@@ -224,7 +224,7 @@ public partial class ChatCompletionOptions : ICloneable
     [CodeGenMember("Prediction")]
     public ChatOutputPrediction OutputPrediction { get; set; }
 
-    object ICloneable.Clone()
+    internal ChatCompletionOptions GetClone()
     {
         ChatCompletionOptions clonedOptions = (ChatCompletionOptions)MemberwiseClone();
         // As needed, any deeper copying can be performed here

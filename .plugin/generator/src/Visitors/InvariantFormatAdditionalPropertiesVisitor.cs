@@ -27,7 +27,7 @@ public class InvariantFormatAdditionalPropertiesVisitor : ScmLibraryVisitor
                 statement => GetUpdatedIfStatement(
                     statement, expression =>
                     {
-                        if (GetIsOptionsFormatNotEqualToExpression(expression))
+                        if (GetIsOptionsFormatNotEqualToWExpression(expression))
                         {
                             return null;
                         }
@@ -38,20 +38,20 @@ public class InvariantFormatAdditionalPropertiesVisitor : ScmLibraryVisitor
         return method;
     }
 
-    private static bool GetIsOptionsFormatNotEqualToExpression(
+    private static bool GetIsOptionsFormatNotEqualToWExpression(
         ValueExpression expression)
     {
         BinaryOperatorExpression? binaryOperatorExpression
             = expression as BinaryOperatorExpression
                 ?? (expression as ScopedApi<bool>)?.Original as BinaryOperatorExpression;
 
-        if (binaryOperatorExpression?.Left is MemberExpression leftMemberExpression
+        return binaryOperatorExpression?.Left is MemberExpression leftMemberExpression
             && leftMemberExpression.Inner?.ToDisplayString() == "options"
             && leftMemberExpression.MemberName == "Format"
-            && binaryOperatorExpression.Operator == "!=")
-        {
-            return true;
-        }
-        return false;
+            && binaryOperatorExpression.Operator == "!="
+            && binaryOperatorExpression.Right is ScopedApi<string> rightStringExpression
+            && rightStringExpression.Original is LiteralExpression rightLiteralExpression
+            && rightLiteralExpression.Literal is string rightStringLiteral
+            && rightStringLiteral == "W";
     }
 }

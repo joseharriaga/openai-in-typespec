@@ -19,9 +19,9 @@ public class NonAbstractPublicTypesVisitor : ScmLibraryVisitor
         {
             // Keep types defined in custom code without 'abstract' non-abstract
 
-            // Post-update:
+            // To do: replace with this line when dependencies updated to include modifier support
             // type.Update(modifiers: type.DeclarationModifiers & ~TypeSignatureModifiers.Abstract);
-            // Temporary:
+            // To do: remove this reflection-based workaround for the above:
             FieldInfo privateModifiersInfo = typeof(TypeProvider)
                 .GetField("_declarationModifiers", BindingFlags.Instance | BindingFlags.NonPublic)!;
             TypeSignatureModifiers privateValue = (TypeSignatureModifiers)privateModifiersInfo.GetValue(type)!;

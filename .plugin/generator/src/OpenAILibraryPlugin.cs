@@ -22,6 +22,7 @@ namespace OpenAILibraryPlugin
             AddVisitor(new OmittedTypesVisitor());
             AddVisitor(new InvariantFormatAdditionalPropertiesVisitor());
             AddVisitor(new OpenAILibraryVisitor());
+            AddVisitor(new VirtualMessageCreationVisitor());
         }
     }
 }

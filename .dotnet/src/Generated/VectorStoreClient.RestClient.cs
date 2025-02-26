@@ -14,7 +14,6 @@ namespace OpenAI.VectorStores
 
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 = PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateListVectorStoresRequest(int? limit, string order, string after, string before, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -47,7 +46,6 @@ namespace OpenAI.VectorStores
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateCreateVectorStoreRequest(BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -66,7 +64,6 @@ namespace OpenAI.VectorStores
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateGetVectorStoreRequest(string vectorStoreId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -84,7 +81,6 @@ namespace OpenAI.VectorStores
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateModifyVectorStoreRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -104,7 +100,6 @@ namespace OpenAI.VectorStores
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateDeleteVectorStoreRequest(string vectorStoreId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -122,7 +117,6 @@ namespace OpenAI.VectorStores
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateListVectorStoreFilesRequest(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -161,7 +155,6 @@ namespace OpenAI.VectorStores
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateCreateVectorStoreFileRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -182,7 +175,6 @@ namespace OpenAI.VectorStores
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateGetVectorStoreFileRequest(string vectorStoreId, string fileId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -202,7 +194,6 @@ namespace OpenAI.VectorStores
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateDeleteVectorStoreFileRequest(string vectorStoreId, string fileId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -222,7 +213,6 @@ namespace OpenAI.VectorStores
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateCreateVectorStoreFileBatchRequest(string vectorStoreId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -243,7 +233,6 @@ namespace OpenAI.VectorStores
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateGetVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -263,7 +252,6 @@ namespace OpenAI.VectorStores
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateCancelVectorStoreFileBatchRequest(string vectorStoreId, string batchId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -284,7 +272,6 @@ namespace OpenAI.VectorStores
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateListFilesInVectorStoreBatchRequest(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();

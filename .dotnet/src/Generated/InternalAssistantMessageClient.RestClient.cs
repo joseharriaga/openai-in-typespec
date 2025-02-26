@@ -14,7 +14,6 @@ namespace OpenAI.Assistants
 
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 = PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateCreateMessageRequest(string threadId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -35,7 +34,6 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateListMessagesRequest(string threadId, int? limit, string order, string after, string before, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -70,7 +68,6 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateGetMessageRequest(string threadId, string messageId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -90,7 +87,6 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateModifyMessageRequest(string threadId, string messageId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -112,7 +108,6 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateDeleteMessageRequest(string threadId, string messageId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();

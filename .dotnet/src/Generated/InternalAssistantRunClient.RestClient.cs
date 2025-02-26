@@ -15,7 +15,6 @@ namespace OpenAI.Assistants
 
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 = PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateCreateThreadAndRunRequest(BinaryContent content, string accept, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -34,7 +33,6 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateCreateRunRequest(string threadId, BinaryContent content, string accept, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -59,7 +57,6 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateListRunsRequest(string threadId, int? limit, string order, string after, string before, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -94,7 +91,6 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateGetRunRequest(string threadId, string runId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -114,7 +110,6 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateModifyRunRequest(string threadId, string runId, BinaryContent content, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -136,7 +131,6 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateCancelRunRequest(string threadId, string runId, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -157,7 +151,6 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateSubmitToolOutputsToRunRequest(string threadId, string runId, BinaryContent content, string accept, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -180,7 +173,6 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateListRunStepsRequest(string threadId, string runId, int? limit, string order, string after, string before, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();
@@ -221,7 +213,6 @@ namespace OpenAI.Assistants
             return message;
         }
 
-        // CUSTOM: Make message creation method virtual.
         internal virtual PipelineMessage CreateGetRunStepRequest(string threadId, string runId, string stepId, IEnumerable<InternalIncludedRunStepProperty> include, RequestOptions options)
         {
             PipelineMessage message = Pipeline.CreateMessage();

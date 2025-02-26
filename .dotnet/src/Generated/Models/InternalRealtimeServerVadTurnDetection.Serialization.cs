@@ -110,10 +110,7 @@ namespace OpenAI.RealtimeConversation
                     createResponse = prop.Value.GetBoolean();
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new InternalRealtimeServerVadTurnDetection(
                 kind,

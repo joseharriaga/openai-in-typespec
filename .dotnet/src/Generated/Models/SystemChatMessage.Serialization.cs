@@ -47,7 +47,7 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            ChatMessageContent content = default;
+            Chat.ChatMessageContent content = default;
             Chat.ChatMessageRole role = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string participantName = default;
@@ -68,13 +68,9 @@ namespace OpenAI.Chat
                     participantName = prop.Value.GetString();
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
-            // CUSTOM: Initialize Content collection property.
-            return new SystemChatMessage(content ?? new ChatMessageContent(), role, additionalBinaryDataProperties, participantName);
+            return new SystemChatMessage(content, role, additionalBinaryDataProperties, participantName);
         }
 
         BinaryData IPersistableModel<SystemChatMessage>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

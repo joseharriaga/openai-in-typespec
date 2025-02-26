@@ -64,9 +64,9 @@ public partial class ImageVariationOptions
     [CodeGenMember("User")]
     public string EndUserId { get; set; }
 
-    internal MultipartFormDataBinaryContent ToMultipartContent(Stream image, string imageFilename)
+    internal MultiPartFormDataBinaryContent ToMultipartContent(Stream image, string imageFilename)
     {
-        MultipartFormDataBinaryContent content = new();
+        MultiPartFormDataBinaryContent content = new();
 
         content.Add(image, "image", imageFilename);
         content.Add(Model.Value.ToString(), "model");

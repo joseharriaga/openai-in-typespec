@@ -1,5 +1,5 @@
-$repoRoot = Join-Path $PSScriptRoot .. -Resolve
-$dotnetFolder = Join-Path $repoRoot .dotnet\src
+$repoRootPath = Join-Path $PSScriptRoot ..\.. -Resolve
+$typeSpecFolderPath = Join-Path $repoRootPath .typespec
 
 function Invoke([scriptblock]$script) {
   $scriptString = $script | Out-String
@@ -9,20 +9,14 @@ function Invoke([scriptblock]$script) {
 
 $scriptStartTime = Get-Date
 
-Push-Location $repoRoot
+Push-Location $repoRootPath
 
 try {
   Invoke { npm ci }
   Invoke { npm run build -w .plugin }
-  Set-Location $repoRoot/.typespec
+  Set-Location $typeSpecFolderPath
   Invoke { npm exec --no -- tsp format **/*tsp }
   Invoke { npm exec --no -- tsp compile . }
-  Invoke { .$PSScriptRoot\Update-ClientModel.ps1 }
-  Invoke { .$PSScriptRoot\Edit-Deserialization.ps1 }
-  Invoke { .$PSScriptRoot\Remove-Abstract.ps1 }
-  Invoke { .$PSScriptRoot\Edit-Serialization.ps1 }
-  Invoke { .$PSScriptRoot\Virtualize-Message-Creation.ps1 }
-  Invoke { .$PSScriptRoot\Run-Checks.ps1 }
 }
 finally {
   Pop-Location

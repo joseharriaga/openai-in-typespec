@@ -79,10 +79,7 @@ namespace OpenAI.RealtimeConversation
                     internalResponse = InternalRealtimeResponse.DeserializeInternalRealtimeResponse(prop.Value, options);
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new ConversationResponseStartedUpdate(eventId, kind, additionalBinaryDataProperties, internalResponse);
         }

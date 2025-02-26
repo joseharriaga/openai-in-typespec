@@ -115,7 +115,7 @@ namespace OpenAI.RealtimeConversation
                 }
 #endif
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {
@@ -291,10 +291,7 @@ namespace OpenAI.RealtimeConversation
                     internalToolChoice = BinaryData.FromString(prop.Value.GetRawText());
                     continue;
                 }
-                if (true)
-                {
-                    additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
-                }
+                additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
             return new ConversationResponseOptions(
                 instructions,

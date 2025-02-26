@@ -19,7 +19,7 @@ namespace OpenAI.Chat
             {
                 throw new FormatException($"The model {nameof(ChatToolChoice)} does not support writing '{format}' format.");
             }
-            if (true && _additionalBinaryDataProperties != null)
+            if (_additionalBinaryDataProperties != null)
             {
                 foreach (var item in _additionalBinaryDataProperties)
                 {

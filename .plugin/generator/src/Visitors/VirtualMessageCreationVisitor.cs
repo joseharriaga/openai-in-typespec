@@ -14,7 +14,7 @@ public class VirtualMessageCreationVisitor : ScmLibraryVisitor
         if (method.Signature?.ReturnType?.Name != "PipelineMessage"
             || method.Signature?.Name?.StartsWith("Create") != true
             || method.Signature?.Name?.EndsWith("Request") != true
-            || method.Signature?.Modifiers?.HasFlag(MethodSignatureModifiers.Internal) != true)
+            || method.Signature?.Modifiers.HasFlag(MethodSignatureModifiers.Internal) != true)
         {
             return method;
         }

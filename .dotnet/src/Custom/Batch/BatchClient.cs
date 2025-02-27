@@ -81,6 +81,6 @@ public partial class BatchClient
 
     internal virtual CreateBatchOperation CreateCreateBatchOperation(string batchId, string status, PipelineResponse response)
     {
-        return new CreateBatchOperation(Pipeline, _endpoint, batchId, status, response);
+        return new CreateBatchOperation(this, _endpoint, batchId, status, response);
     }
 }

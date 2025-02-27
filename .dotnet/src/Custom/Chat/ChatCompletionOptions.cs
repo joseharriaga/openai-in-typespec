@@ -2,6 +2,7 @@ using System;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 
 namespace OpenAI.Chat;
@@ -215,4 +216,15 @@ public partial class ChatCompletionOptions
     // CUSTOM: rename.
     [CodeGenMember("Prediction")]
     public ChatOutputPrediction OutputPrediction { get; set; }
+
+    internal ChatCompletionOptions GetClone()
+    {
+        ChatCompletionOptions clonedOptions = (ChatCompletionOptions)MemberwiseClone();
+        // As needed, any deeper copying can be performed here
+        if (SerializedAdditionalRawData?.Count > 0)
+        {
+            clonedOptions.SerializedAdditionalRawData = SerializedAdditionalRawData.ToDictionary(pair => pair.Key, pair => pair.Value);
+        }
+        return clonedOptions;
+    }
 }

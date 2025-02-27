@@ -301,7 +301,7 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
         };
         AssistantThread thread = await client.CreateThreadAsync(options);
         Validate(thread);
-        List<ThreadMessage> messageList = await client.GetMessagesAsync(thread.Id, new() { Order = MessageCollectionOrder.Ascending }).ToListAsync();
+        List<ThreadMessage> messageList = await client.GetMessagesAsync(thread.Id, new() { Order = OpenAIPageOrder.Ascending }).ToListAsync();
         Assert.That(messageList.Count, Is.EqualTo(2));
         Assert.That(messageList[0].Role, Is.EqualTo(MessageRole.User));
         Assert.That(messageList[0].Content?.Count, Is.EqualTo(1));
@@ -481,7 +481,7 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
             r => r.Status.IsTerminal);
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        List<ThreadMessage> messages = await client.GetMessagesAsync(run.ThreadId, new() { Order = MessageCollectionOrder.Descending })
+        List<ThreadMessage> messages = await client.GetMessagesAsync(run.ThreadId, new() { Order = OpenAIPageOrder.Descending })
             .ToListAsync();
         Assert.That(messages.Count, Is.GreaterThan(1));
         Assert.That(messages.ElementAt(0).Role, Is.EqualTo(MessageRole.Assistant));
@@ -585,7 +585,7 @@ public class AssistantTests(bool isAsync) : AoaiTestBase<AssistantClient>(isAsyn
             r => r.Status.IsTerminal);
         Assert.That(run.Status, Is.EqualTo(RunStatus.Completed));
 
-        AsyncCollectionResult<ThreadMessage> messages = client.GetMessagesAsync(thread.Id, new() { Order = MessageCollectionOrder.Descending });
+        AsyncCollectionResult<ThreadMessage> messages = client.GetMessagesAsync(thread.Id, new() { Order = OpenAIPageOrder.Descending });
         int numThreads = 0;
         bool hasCake = false;
         await foreach (ThreadMessage message in messages)

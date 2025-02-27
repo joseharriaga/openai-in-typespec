@@ -1,3 +1,7 @@
+import "@typespec/http";
+import "@typespec/openapi";
+
+using TypeSpec.Http;
 using TypeSpec.OpenAPI;
 
 namespace OpenAI;
@@ -5,4 +9,62 @@ namespace OpenAI;
 @discriminator("type")
 model OmniTypedResponseFormat {
   type: string;
+}
+
+alias AcceptJsonHeader = {
+  @header accept: "application/json";
+};
+
+alias AcceptJsonOrEventStreamHeader = {
+  @header accept: "application/json" | "text/event-stream";
+};
+
+alias AssistantsBetaHeader = {
+  @header("OpenAI-Beta") openAIBeta: "assistants=v2";
+};
+
+alias PageLimitQueryParameter = {
+  /**
+   * A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
+   * default is 20.
+   */
+  @query limit?: int32 = 20;
+};
+
+union PageOrder {
+  asc: "asc",
+  desc: "desc",
+}
+
+alias PageOrderQueryParameter = {
+  /**
+   * Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
+   * for descending order.
+   */
+  @query order?: PageOrder = PageOrder.desc;
+};
+
+alias PageAfterQueryParameter = {
+  /**
+   * A cursor for use in pagination. `after` is an object ID that defines your place in the list.
+   * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
+   * subsequent call can include after=obj_foo in order to fetch the next page of the list.
+   */
+  @query after?: string;
+};
+
+alias PageBeforeQueryParameter = {
+  /**
+   * A cursor for use in pagination. `before` is an object ID that defines your place in the list.
+   * For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
+   * subsequent call can include before=obj_foo in order to fetch the previous page of the list.
+   */
+  @query before?: string;
+};
+
+model CommonPageQueryParameters {
+  ...PageLimitQueryParameter;
+  ...PageOrderQueryParameter;
+  ...PageAfterQueryParameter;
+  ...PageBeforeQueryParameter;
 }

@@ -30,6 +30,28 @@ namespace OpenAI {
         public string ProjectId { get; set; }
         public string UserAgentApplicationId { get; set; }
     }
+    [Experimental("OPENAI001")]
+    public class OpenAIPageOptions {
+        public string AfterId { get; set; }
+        public string BeforeId { get; set; }
+        public OpenAIPageOrder? Order { get; set; }
+        public int? PageSizeLimit { get; set; }
+    }
+    [Experimental("OPENAI001")]
+    public readonly partial struct OpenAIPageOrder : IEquatable<OpenAIPageOrder> {
+        public OpenAIPageOrder(string value);
+        public static OpenAIPageOrder Ascending { get; }
+        public static OpenAIPageOrder Descending { get; }
+        public readonly bool Equals(OpenAIPageOrder other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(OpenAIPageOrder left, OpenAIPageOrder right);
+        public static implicit operator OpenAIPageOrder(string value);
+        public static bool operator !=(OpenAIPageOrder left, OpenAIPageOrder right);
+        public override readonly string ToString();
+    }
 }
 namespace OpenAI.Assistants {
     [Experimental("OPENAI001")]
@@ -121,11 +143,11 @@ namespace OpenAI.Assistants {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> GetAssistantAsync(string assistantId, RequestOptions options);
         public virtual Task<ClientResult<Assistant>> GetAssistantAsync(string assistantId, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<Assistant> GetAssistants(AssistantCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<Assistant> GetAssistants(OpenAIPageOptions options = null, CancellationToken cancellationToken = default);
         public virtual CollectionResult<Assistant> GetAssistants(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual CollectionResult GetAssistants(int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncCollectionResult<Assistant> GetAssistantsAsync(AssistantCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<Assistant> GetAssistantsAsync(OpenAIPageOptions options = null, CancellationToken cancellationToken = default);
         public virtual AsyncCollectionResult<Assistant> GetAssistantsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AsyncCollectionResult GetAssistantsAsync(int? limit, string order, string after, string before, RequestOptions options);
@@ -136,11 +158,11 @@ namespace OpenAI.Assistants {
         public virtual Task<ClientResult> GetMessageAsync(string threadId, string messageId, RequestOptions options);
         public virtual Task<ClientResult<ThreadMessage>> GetMessageAsync(string threadId, string messageId, CancellationToken cancellationToken = default);
         public virtual CollectionResult<ThreadMessage> GetMessages(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<ThreadMessage> GetMessages(string threadId, MessageCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<ThreadMessage> GetMessages(string threadId, OpenAIPageOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual CollectionResult GetMessages(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncCollectionResult<ThreadMessage> GetMessagesAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
-        public virtual AsyncCollectionResult<ThreadMessage> GetMessagesAsync(string threadId, MessageCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<ThreadMessage> GetMessagesAsync(string threadId, OpenAIPageOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AsyncCollectionResult GetMessagesAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -150,11 +172,11 @@ namespace OpenAI.Assistants {
         public virtual Task<ClientResult> GetRunAsync(string threadId, string runId, RequestOptions options);
         public virtual Task<ClientResult<ThreadRun>> GetRunAsync(string threadId, string runId, CancellationToken cancellationToken = default);
         public virtual CollectionResult<ThreadRun> GetRuns(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<ThreadRun> GetRuns(string threadId, RunCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<ThreadRun> GetRuns(string threadId, OpenAIPageOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual CollectionResult GetRuns(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncCollectionResult<ThreadRun> GetRunsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
-        public virtual AsyncCollectionResult<ThreadRun> GetRunsAsync(string threadId, RunCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<ThreadRun> GetRunsAsync(string threadId, OpenAIPageOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AsyncCollectionResult GetRunsAsync(string threadId, int? limit, string order, string after, string before, RequestOptions options);
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -164,11 +186,11 @@ namespace OpenAI.Assistants {
         public virtual Task<ClientResult> GetRunStepAsync(string threadId, string runId, string stepId, RequestOptions options);
         public virtual Task<ClientResult<RunStep>> GetRunStepAsync(string threadId, string runId, string stepId, CancellationToken cancellationToken = default);
         public virtual CollectionResult<RunStep> GetRunSteps(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<RunStep> GetRunSteps(string threadId, string runId, RunStepCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<RunStep> GetRunSteps(string threadId, string runId, OpenAIPageOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual CollectionResult GetRunSteps(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
         public virtual AsyncCollectionResult<RunStep> GetRunStepsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
-        public virtual AsyncCollectionResult<RunStep> GetRunStepsAsync(string threadId, string runId, RunStepCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<RunStep> GetRunStepsAsync(string threadId, string runId, OpenAIPageOptions options = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AsyncCollectionResult GetRunStepsAsync(string threadId, string runId, int? limit, string order, string after, string before, RequestOptions options);
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -207,28 +229,6 @@ namespace OpenAI.Assistants {
         public virtual Task<ClientResult<ThreadRun>> SubmitToolOutputsToRunAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
         public virtual CollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreaming(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
         public virtual AsyncCollectionResult<StreamingUpdate> SubmitToolOutputsToRunStreamingAsync(string threadId, string runId, IEnumerable<ToolOutput> toolOutputs, CancellationToken cancellationToken = default);
-    }
-    [Experimental("OPENAI001")]
-    public class AssistantCollectionOptions {
-        public string AfterId { get; set; }
-        public string BeforeId { get; set; }
-        public AssistantCollectionOrder? Order { get; set; }
-        public int? PageSizeLimit { get; set; }
-    }
-    [Experimental("OPENAI001")]
-    public readonly partial struct AssistantCollectionOrder : IEquatable<AssistantCollectionOrder> {
-        public AssistantCollectionOrder(string value);
-        public static AssistantCollectionOrder Ascending { get; }
-        public static AssistantCollectionOrder Descending { get; }
-        public readonly bool Equals(AssistantCollectionOrder other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(AssistantCollectionOrder left, AssistantCollectionOrder right);
-        public static implicit operator AssistantCollectionOrder(string value);
-        public static bool operator !=(AssistantCollectionOrder left, AssistantCollectionOrder right);
-        public override readonly string ToString();
     }
     [Experimental("OPENAI001")]
     public class AssistantCreationOptions : IJsonModel<AssistantCreationOptions>, IPersistableModel<AssistantCreationOptions> {
@@ -365,28 +365,6 @@ namespace OpenAI.Assistants {
         public static implicit operator BinaryContent(FunctionToolDefinition functionToolDefinition);
     }
     [Experimental("OPENAI001")]
-    public class MessageCollectionOptions {
-        public string AfterId { get; set; }
-        public string BeforeId { get; set; }
-        public MessageCollectionOrder? Order { get; set; }
-        public int? PageSizeLimit { get; set; }
-    }
-    [Experimental("OPENAI001")]
-    public readonly partial struct MessageCollectionOrder : IEquatable<MessageCollectionOrder> {
-        public MessageCollectionOrder(string value);
-        public static MessageCollectionOrder Ascending { get; }
-        public static MessageCollectionOrder Descending { get; }
-        public readonly bool Equals(MessageCollectionOrder other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(MessageCollectionOrder left, MessageCollectionOrder right);
-        public static implicit operator MessageCollectionOrder(string value);
-        public static bool operator !=(MessageCollectionOrder left, MessageCollectionOrder right);
-        public override readonly string ToString();
-    }
-    [Experimental("OPENAI001")]
     public abstract class MessageContent : IJsonModel<MessageContent>, IPersistableModel<MessageContent> {
         public MessageImageDetail? ImageDetail { get; }
         public string ImageFileId { get; }
@@ -508,28 +486,6 @@ namespace OpenAI.Assistants {
         public ThreadRun GetThreadRun();
     }
     [Experimental("OPENAI001")]
-    public class RunCollectionOptions {
-        public string AfterId { get; set; }
-        public string BeforeId { get; set; }
-        public RunCollectionOrder? Order { get; set; }
-        public int? PageSizeLimit { get; set; }
-    }
-    [Experimental("OPENAI001")]
-    public readonly partial struct RunCollectionOrder : IEquatable<RunCollectionOrder> {
-        public RunCollectionOrder(string value);
-        public static RunCollectionOrder Ascending { get; }
-        public static RunCollectionOrder Descending { get; }
-        public readonly bool Equals(RunCollectionOrder other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(RunCollectionOrder left, RunCollectionOrder right);
-        public static implicit operator RunCollectionOrder(string value);
-        public static bool operator !=(RunCollectionOrder left, RunCollectionOrder right);
-        public override readonly string ToString();
-    }
-    [Experimental("OPENAI001")]
     public class RunCreationOptions : IJsonModel<RunCreationOptions>, IPersistableModel<RunCreationOptions> {
         public string AdditionalInstructions { get; set; }
         public IList<ThreadInitializationMessage> AdditionalMessages { get; }
@@ -647,28 +603,6 @@ namespace OpenAI.Assistants {
         public string Logs { get; }
         public static explicit operator RunStepCodeInterpreterOutput(ClientResult result);
         public static implicit operator BinaryContent(RunStepCodeInterpreterOutput runStepCodeInterpreterOutput);
-    }
-    [Experimental("OPENAI001")]
-    public class RunStepCollectionOptions {
-        public string AfterId { get; set; }
-        public string BeforeId { get; set; }
-        public RunStepCollectionOrder? Order { get; set; }
-        public int? PageSizeLimit { get; set; }
-    }
-    [Experimental("OPENAI001")]
-    public readonly partial struct RunStepCollectionOrder : IEquatable<RunStepCollectionOrder> {
-        public RunStepCollectionOrder(string value);
-        public static RunStepCollectionOrder Ascending { get; }
-        public static RunStepCollectionOrder Descending { get; }
-        public readonly bool Equals(RunStepCollectionOrder other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(RunStepCollectionOrder left, RunStepCollectionOrder right);
-        public static implicit operator RunStepCollectionOrder(string value);
-        public static bool operator !=(RunStepCollectionOrder left, RunStepCollectionOrder right);
-        public override readonly string ToString();
     }
     [Experimental("OPENAI001")]
     public abstract class RunStepDetails : IJsonModel<RunStepDetails>, IPersistableModel<RunStepDetails> {
@@ -2979,27 +2913,27 @@ namespace OpenAI.VectorStores {
         public virtual Task<ClientResult> GetFileAssociationAsync(string vectorStoreId, string fileId, RequestOptions options);
         public virtual Task<ClientResult<VectorStoreFileAssociation>> GetFileAssociationAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
         public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, OpenAIPageOptions options = null, VectorStoreFileStatusFilter? fileStatusFilter = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual CollectionResult GetFileAssociations(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, OpenAIPageOptions options = null, VectorStoreFileStatusFilter? fileStatusFilter = null, CancellationToken cancellationToken = default);
         public virtual CollectionResult<VectorStoreFileAssociation> GetFileAssociations(string vectorStoreId, string batchJobId, ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual CollectionResult GetFileAssociations(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
-        public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, OpenAIPageOptions options = null, VectorStoreFileStatusFilter? fileStatusFilter = null, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AsyncCollectionResult GetFileAssociationsAsync(string vectorStoreId, int? limit, string order, string after, string before, string filter, RequestOptions options);
-        public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, VectorStoreFileAssociationCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, OpenAIPageOptions options = null, VectorStoreFileStatusFilter? fileStatusFilter = null, CancellationToken cancellationToken = default);
         public virtual AsyncCollectionResult<VectorStoreFileAssociation> GetFileAssociationsAsync(string vectorStoreId, string batchJobId, ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AsyncCollectionResult GetFileAssociationsAsync(string vectorStoreId, string batchId, int? limit, string order, string after, string before, string filter, RequestOptions options);
         public virtual ClientResult<VectorStore> GetVectorStore(string vectorStoreId, CancellationToken cancellationToken = default);
-        public virtual CollectionResult<VectorStore> GetVectorStores(VectorStoreCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<VectorStore> GetVectorStores(OpenAIPageOptions options = null, CancellationToken cancellationToken = default);
         public virtual CollectionResult<VectorStore> GetVectorStores(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual CollectionResult GetVectorStores(int? limit, string order, string after, string before, RequestOptions options);
-        public virtual AsyncCollectionResult<VectorStore> GetVectorStoresAsync(VectorStoreCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<VectorStore> GetVectorStoresAsync(OpenAIPageOptions options = null, CancellationToken cancellationToken = default);
         public virtual AsyncCollectionResult<VectorStore> GetVectorStoresAsync(ContinuationToken firstPageToken, CancellationToken cancellationToken = default);
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual AsyncCollectionResult GetVectorStoresAsync(int? limit, string order, string after, string before, RequestOptions options);
@@ -3015,28 +2949,6 @@ namespace OpenAI.VectorStores {
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual Task<ClientResult> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, RequestOptions options);
         public virtual Task<ClientResult<FileFromStoreRemovalResult>> RemoveFileFromStoreAsync(string vectorStoreId, string fileId, CancellationToken cancellationToken = default);
-    }
-    [Experimental("OPENAI001")]
-    public class VectorStoreCollectionOptions {
-        public string AfterId { get; set; }
-        public string BeforeId { get; set; }
-        public VectorStoreCollectionOrder? Order { get; set; }
-        public int? PageSizeLimit { get; set; }
-    }
-    [Experimental("OPENAI001")]
-    public readonly partial struct VectorStoreCollectionOrder : IEquatable<VectorStoreCollectionOrder> {
-        public VectorStoreCollectionOrder(string value);
-        public static VectorStoreCollectionOrder Ascending { get; }
-        public static VectorStoreCollectionOrder Descending { get; }
-        public readonly bool Equals(VectorStoreCollectionOrder other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(VectorStoreCollectionOrder left, VectorStoreCollectionOrder right);
-        public static implicit operator VectorStoreCollectionOrder(string value);
-        public static bool operator !=(VectorStoreCollectionOrder left, VectorStoreCollectionOrder right);
-        public override readonly string ToString();
     }
     [Experimental("OPENAI001")]
     public class VectorStoreCreationOptions : IJsonModel<VectorStoreCreationOptions>, IPersistableModel<VectorStoreCreationOptions> {
@@ -3081,29 +2993,6 @@ namespace OpenAI.VectorStores {
         public string VectorStoreId { get; }
         public static explicit operator VectorStoreFileAssociation(ClientResult result);
         public static implicit operator BinaryContent(VectorStoreFileAssociation vectorStoreFileAssociation);
-    }
-    [Experimental("OPENAI001")]
-    public class VectorStoreFileAssociationCollectionOptions {
-        public string AfterId { get; set; }
-        public string BeforeId { get; set; }
-        public VectorStoreFileStatusFilter? Filter { get; set; }
-        public VectorStoreFileAssociationCollectionOrder? Order { get; set; }
-        public int? PageSizeLimit { get; set; }
-    }
-    [Experimental("OPENAI001")]
-    public readonly partial struct VectorStoreFileAssociationCollectionOrder : IEquatable<VectorStoreFileAssociationCollectionOrder> {
-        public VectorStoreFileAssociationCollectionOrder(string value);
-        public static VectorStoreFileAssociationCollectionOrder Ascending { get; }
-        public static VectorStoreFileAssociationCollectionOrder Descending { get; }
-        public readonly bool Equals(VectorStoreFileAssociationCollectionOrder other);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly bool Equals(object obj);
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override readonly int GetHashCode();
-        public static bool operator ==(VectorStoreFileAssociationCollectionOrder left, VectorStoreFileAssociationCollectionOrder right);
-        public static implicit operator VectorStoreFileAssociationCollectionOrder(string value);
-        public static bool operator !=(VectorStoreFileAssociationCollectionOrder left, VectorStoreFileAssociationCollectionOrder right);
-        public override readonly string ToString();
     }
     [Experimental("OPENAI001")]
     public class VectorStoreFileAssociationError : IJsonModel<VectorStoreFileAssociationError>, IPersistableModel<VectorStoreFileAssociationError> {

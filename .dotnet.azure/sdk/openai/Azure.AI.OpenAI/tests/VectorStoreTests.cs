@@ -121,7 +121,7 @@ public class VectorStoreTests : AoaiTestBase<VectorStoreClient>
             Assert.That(vectorStore.Name, Is.EqualTo($"Test Vector Store {i}"));
         }
 
-        AsyncCollectionResult<VectorStore> response = client.GetVectorStoresAsync(new VectorStoreCollectionOptions() { Order = VectorStoreCollectionOrder.Descending });
+        AsyncCollectionResult<VectorStore> response = client.GetVectorStoresAsync(new OpenAIPageOptions() { Order = OpenAIPageOrder.Descending });
         Assert.That(response, Is.Not.Null);
 
         int lastIdSeen = int.MaxValue;

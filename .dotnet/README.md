@@ -656,7 +656,7 @@ For illustrative purposes, you could print the messages to the console and also 
 
 ```csharp
 CollectionResult<ThreadMessage> messages
-    = assistantClient.GetMessages(threadRun.ThreadId, new MessageCollectionOptions() { Order = MessageCollectionOrder.Ascending });
+    = assistantClient.GetMessages(threadRun.ThreadId, new OpenAIPageOptions() { Order = OpenAIPageOrder.Ascending });
 
 foreach (ThreadMessage message in messages)
 {

@@ -31,6 +31,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
       responses:
         '200':
           description: The request has succeeded.
@@ -63,6 +70,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: limit
           in: query
           required: false
@@ -81,10 +95,7 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            type: string
-            enum:
-              - asc
-              - desc
+            $ref: '#/components/schemas/PageOrder'
             default: desc
           explode: false
         - name: after
@@ -134,6 +145,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: assistant_id
           in: path
           required: true
@@ -166,6 +184,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: assistant_id
           in: path
           required: true
@@ -204,6 +229,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: assistant_id
           in: path
           required: true
@@ -1271,7 +1303,14 @@ paths:
     post:
       operationId: Realtime_startRealtimeSession
       summary: Starts a real-time conversation session.
-      parameters: []
+      parameters:
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - realtime=v1
       responses:
         '200':
           description: The request has succeeded.
@@ -1303,6 +1342,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
       responses:
         '200':
           description: The request has succeeded.
@@ -1336,6 +1382,14 @@ paths:
             type: string
             enum:
               - application/json
+              - text/event-stream
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
       responses:
         '200':
           description: The request has succeeded.
@@ -1369,6 +1423,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1401,6 +1462,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1439,6 +1507,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1472,6 +1547,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1510,6 +1592,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1534,10 +1623,7 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            type: string
-            enum:
-              - asc
-              - desc
+            $ref: '#/components/schemas/PageOrder'
             default: desc
           explode: false
         - name: after
@@ -1587,6 +1673,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1625,6 +1718,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1669,6 +1769,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1708,6 +1815,14 @@ paths:
             type: string
             enum:
               - application/json
+              - text/event-stream
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1762,6 +1877,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1786,10 +1908,7 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            type: string
-            enum:
-              - asc
-              - desc
+            $ref: '#/components/schemas/PageOrder'
             default: desc
           explode: false
         - name: after
@@ -1839,6 +1958,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1877,6 +2003,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1922,6 +2055,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1961,6 +2101,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -1991,10 +2138,7 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            type: string
-            enum:
-              - asc
-              - desc
+            $ref: '#/components/schemas/PageOrder'
             default: desc
           explode: false
         - name: after
@@ -2060,6 +2204,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -2124,6 +2275,14 @@ paths:
             type: string
             enum:
               - application/json
+              - text/event-stream
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: thread_id
           in: path
           required: true
@@ -2330,6 +2489,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: limit
           in: query
           required: false
@@ -2348,10 +2514,7 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            type: string
-            enum:
-              - asc
-              - desc
+            $ref: '#/components/schemas/PageOrder'
             default: desc
           explode: false
         - name: after
@@ -2400,6 +2563,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
       responses:
         '200':
           description: The request has succeeded.
@@ -2433,6 +2603,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: vector_store_id
           in: path
           required: true
@@ -2465,6 +2642,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: vector_store_id
           in: path
           required: true
@@ -2503,6 +2687,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: vector_store_id
           in: path
           required: true
@@ -2536,6 +2727,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: vector_store_id
           in: path
           required: true
@@ -2575,6 +2773,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: vector_store_id
           in: path
           required: true
@@ -2614,6 +2819,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: vector_store_id
           in: path
           required: true
@@ -2653,6 +2865,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: vector_store_id
           in: path
           required: true
@@ -2683,10 +2902,7 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            type: string
-            enum:
-              - asc
-              - desc
+            $ref: '#/components/schemas/PageOrder'
             default: desc
           explode: false
         - name: after
@@ -2743,6 +2959,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: vector_store_id
           in: path
           required: true
@@ -2767,10 +2990,7 @@ paths:
             Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
             for descending order.
           schema:
-            type: string
-            enum:
-              - asc
-              - desc
+            $ref: '#/components/schemas/PageOrder'
             default: desc
           explode: false
         - name: after
@@ -2826,6 +3046,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: vector_store_id
           in: path
           required: true
@@ -2865,6 +3092,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: vector_store_id
           in: path
           required: true
@@ -2903,6 +3137,13 @@ paths:
             type: string
             enum:
               - application/json
+        - name: OpenAI-Beta
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - assistants=v2
         - name: vector_store_id
           in: path
           required: true
@@ -4673,6 +4914,35 @@ components:
         - $ref: '#/components/schemas/StaticChunkingStrategyRequestParam'
       description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
       x-oaiExpandable: true
+    CommonPageQueryParameters:
+      type: object
+      properties:
+        limit:
+          type: integer
+          format: int32
+          description: |-
+            A limit on the number of objects to be returned. Limit can range between 1 and 100, and the
+            default is 20.
+          default: 20
+        order:
+          allOf:
+            - $ref: '#/components/schemas/PageOrder'
+          description: |-
+            Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and`desc`
+            for descending order.
+          default: desc
+        after:
+          type: string
+          description: |-
+            A cursor for use in pagination. `after` is an object ID that defines your place in the list.
+            For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
+            subsequent call can include after=obj_foo in order to fetch the next page of the list.
+        before:
+          type: string
+          description: |-
+            A cursor for use in pagination. `before` is an object ID that defines your place in the list.
+            For instance, if you make a list request and receive 100 objects, ending with obj_foo, your
+            subsequent call can include before=obj_foo in order to fetch the previous page of the list.
     CompleteUploadRequest:
       type: object
       required:
@@ -9357,6 +9627,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/FileChunkingStrategyResponseParam'
       description: This is returned when the chunking strategy is unknown. Typically, this is because the file was indexed before the `chunking_strategy` concept was introduced in the API.
+    PageOrder:
+      type: string
+      enum:
+        - asc
+        - desc
     ParallelToolCalls:
       type: boolean
       description: Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.

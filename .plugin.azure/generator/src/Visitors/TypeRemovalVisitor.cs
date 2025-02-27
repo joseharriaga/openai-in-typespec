@@ -1,60 +1,56 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using Microsoft.Generator.CSharp.ClientModel;
-using Microsoft.Generator.CSharp.ClientModel.Providers;
-using Microsoft.Generator.CSharp.Primitives;
 using Microsoft.Generator.CSharp.Providers;
 using Microsoft.Generator.CSharp.Snippets;
-using Microsoft.Generator.CSharp.Statements;
-using static Microsoft.Generator.CSharp.Snippets.Snippet;
+using System.Linq;
+using System.Text.RegularExpressions;
 
-namespace AzureOpenAILibraryPlugin
+namespace AzureOpenAILibraryPlugin;
+
+/// <summary>
+/// This visitor suppresses the emission of types according to pattern matches in their names.
+/// We do this to trim the set of generated files such that the library serves as an extension to
+/// the underlying OpenAI library (rather than a standalone library in its own right).
+/// </summary>
+public class TypeRemovalVisitor : ScmLibraryVisitor
 {
-    public class TypeRemovalVisitor : ScmLibraryVisitor
-    {
-        private static readonly string[] PatternsToKeep =
-            [
-              ".*BingSearchTool.*",
-              ".*DataSource.*",
-              ".*ContentFilter.*",
-              ".*OpenAI.*Error.*",
-              ".*Context.*",
-              ".*RetrievedDoc.*",
-              ".*ChatDocument.*",
-              ".*Citation.*",
-              "Argument",
-              "BinaryContentHelper",
-              "ChangeTracking.*",
-              "ClientPipelineExtensions",
-              "ClientUriBuilder",
-              "ErrorResult",
-              "ModelSerializationExtensions",
-              "Optional",
-              "PipelineRequestHeadersExtensions",
-              "TypeFormatters",
-              "Utf8JsonBinaryContent",
-            ];
-        private static readonly string[] PatternsToStillDeleteAfterPatternsToKeep =
-            [
-              "AzureOpenAIFile.*",
-              "BingSearchToolDefinition.cs",
-              ".*Elasticsearch*QueryType.*",
-              ".*FieldsMapping.*",
-              ".*ContentTextAnnotationsFileCitation.*"
-            ];
+    private static readonly string[] PatternsToKeep =
+        [
+          ".*BingSearchTool.*",
+          ".*DataSource.*",
+          ".*ContentFilter.*",
+          ".*OpenAI.*Error.*",
+          ".*Context.*",
+          ".*RetrievedDoc.*",
+          ".*ChatDocument.*",
+          ".*Citation.*",
+          "Argument",
+          "BinaryContentHelper",
+          "ChangeTracking.*",
+          "ClientPipelineExtensions",
+          "ClientUriBuilder",
+          "ErrorResult",
+          "ModelSerializationExtensions",
+          "Optional",
+          "PipelineRequestHeadersExtensions",
+          "TypeFormatters",
+          "Utf8JsonBinaryContent",
+        ];
+    private static readonly string[] PatternsToStillDeleteAfterPatternsToKeep =
+        [
+          "AzureOpenAIFile.*",
+          "BingSearchToolDefinition.cs",
+          ".*Elasticsearch*QueryType.*",
+          ".*FieldsMapping.*",
+          ".*ContentTextAnnotationsFileCitation.*"
+        ];
 
-        protected override TypeProvider? Visit(TypeProvider type)
+    protected override TypeProvider? Visit(TypeProvider type)
+    {
+        if (PatternsToKeep.Any(patternToKeep => Regex.IsMatch(type.Name, patternToKeep)
+            && !PatternsToStillDeleteAfterPatternsToKeep.Any(patternToStillDelete => Regex.IsMatch(type.Name, patternToStillDelete))))
         {
-            if (PatternsToKeep.Any(patternToKeep => Regex.IsMatch(type.Name, patternToKeep)
-                && !PatternsToStillDeleteAfterPatternsToKeep.Any(patternToStillDelete => Regex.IsMatch(type.Name, patternToStillDelete))))
-            {
-                return type;
-            }
-            return null;
+            return type;
         }
+        return null;
     }
 }

@@ -62,7 +62,7 @@ namespace OpenAI.Assistants
             if (Optional.IsDefined(ChunkingStrategy) && _additionalBinaryDataProperties?.ContainsKey("chunking_strategy") != true)
             {
                 writer.WritePropertyName("chunking_strategy"u8);
-                writer.WriteObjectValue<FileChunkingStrategy>(ChunkingStrategy, options);
+                writer.WriteObjectValue(ChunkingStrategy, options);
             }
             if (_additionalBinaryDataProperties != null)
             {

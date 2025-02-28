@@ -20,6 +20,7 @@ namespace OpenAI.Chat
             Temperature = temperature;
             TopP = topP;
             Tools = tools;
+            // Plugin customization: ensure initialization of collection
             Messages = messages ?? new ChangeTrackingList<ChatMessage>();
             Model = model;
             N = n;

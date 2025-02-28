@@ -44,7 +44,7 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("function") != true)
             {
                 writer.WritePropertyName("function"u8);
-                writer.WriteObjectValue<InternalRunToolCallObjectFunction>(_internalFunction, options);
+                writer.WriteObjectValue(_internalFunction, options);
             }
             if (_additionalBinaryDataProperties != null)
             {

@@ -3,7 +3,6 @@
 #nullable disable
 
 using System;
-using System.ClientModel;
 using System.ClientModel.Primitives;
 
 namespace OpenAI.Models
@@ -11,12 +10,15 @@ namespace OpenAI.Models
     public partial class OpenAIModelClient
     {
         private readonly Uri _endpoint;
-        private const string AuthorizationHeader = "Authorization";
-        private readonly ApiKeyCredential _keyCredential;
-        private const string AuthorizationApiKeyPrefix = "Bearer";
 
         protected OpenAIModelClient()
         {
+        }
+
+        internal OpenAIModelClient(ClientPipeline pipeline, Uri endpoint)
+        {
+            _endpoint = endpoint;
+            Pipeline = pipeline;
         }
 
         public ClientPipeline Pipeline { get; }

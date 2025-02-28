@@ -11,8 +11,8 @@ namespace OpenAI
     public partial class OpenAIClient
     {
         private readonly Uri _endpoint;
-        private const string AuthorizationHeader = "Authorization";
         private readonly ApiKeyCredential _keyCredential;
+        private const string AuthorizationHeader = "Authorization";
         private const string AuthorizationApiKeyPrefix = "Bearer";
 
         protected OpenAIClient()

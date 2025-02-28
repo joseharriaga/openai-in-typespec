@@ -8,10 +8,9 @@
   "type": "module",
   "dependencies": {
     "@autorest/csharp": "3.0.0-beta.20240904.1",
-    "@azure-tools/typespec-csharp": "0.2.0-beta.20241201.1",
+    "@azure-tools/typespec-csharp": "0.2.0-beta.20250223.1",
     "@open-ai/plugin": "file:.plugin",
-    "@azure-openai/plugin": "file:.plugin.azure",
-    "@typespec/openapi3": "^0.62.0",
+    "@typespec/openapi3": "^0.65.0",
     "openai-tsp": "file:"
   },
   "private": true

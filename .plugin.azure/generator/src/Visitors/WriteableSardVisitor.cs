@@ -1,6 +1,6 @@
-using Microsoft.Generator.CSharp.ClientModel;
-using Microsoft.Generator.CSharp.Primitives;
-using Microsoft.Generator.CSharp.Providers;
+using Microsoft.TypeSpec.Generator.ClientModel;
+using Microsoft.TypeSpec.Generator.Primitives;
+using Microsoft.TypeSpec.Generator.Providers;
 
 namespace AzureOpenAILibraryPlugin;
 
@@ -12,7 +12,7 @@ public class WriteableSardVisitor : ScmLibraryVisitor
 {
     private const string AdditionalPropertiesFieldName = "_additionalBinaryDataProperties";
 
-    protected override FieldProvider Visit(FieldProvider field)
+    protected override FieldProvider VisitField(FieldProvider field)
     {
         // Make the backing additional properties field not be read only as long as the type is not readonly.
         if (field.Name == AdditionalPropertiesFieldName && !field.EnclosingType.DeclarationModifiers.HasFlag(TypeSignatureModifiers.ReadOnly))

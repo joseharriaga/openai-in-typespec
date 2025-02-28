@@ -19,7 +19,7 @@
         "clean": "rimraf ./dist ./emitter/temp && dotnet clean ./generator",
         "build:emitter": "tsc -p ./tsconfig.build.json",
         "build:generator": "dotnet build ./generator",
-        "build": "npm run build:emitter && npm run build:generator && copyfiles -E -f ../node_modules/@typespec/http-client-csharp/dist/generator/Microsoft.Generator.CSharp.runtimeconfig.json ./dist/generator",
+        "build": "npm run build:emitter && npm run build:generator",
         "test:emitter": "vitest run -c ./emitter/vitest.config.ts",
         "test:generator": "dotnet test ./generator",
         "test": "npm run test:emitter && npm run test:generator"
@@ -28,9 +28,8 @@
         "dist/**"
     ],
     "dependencies": {
-        "@azure-tools/cadl-ranch-expect": "latest",
         "@open-ai/plugin": "file:",
-        "@typespec/http-client-csharp": "latest"
+        "@typespec/http-client-csharp": "0.1.9-alpha.20250225.1"
     },
     "devDependencies": {
         "@types/node": "^22.8.1",

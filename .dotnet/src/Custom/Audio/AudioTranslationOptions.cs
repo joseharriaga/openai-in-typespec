@@ -3,7 +3,7 @@ using System.IO;
 
 namespace OpenAI.Audio;
 
-[CodeGenModel("CreateTranslationRequest")]
+[CodeGenType("CreateTranslationRequest")]
 [CodeGenSuppress("AudioTranslationOptions", typeof(BinaryData), typeof(InternalCreateTranslationRequestModel))]
 public partial class AudioTranslationOptions
 {

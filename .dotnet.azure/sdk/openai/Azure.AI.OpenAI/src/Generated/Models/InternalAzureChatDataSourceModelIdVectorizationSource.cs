@@ -22,6 +22,7 @@ namespace Azure.AI.OpenAI.Chat
             ModelId = modelId;
         }
 
+        /// <summary> The embedding model build ID to use for vectorization. </summary>
         public string ModelId { get; set; }
     }
 }

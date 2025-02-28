@@ -6,7 +6,7 @@ namespace OpenAI.Images;
 /// <summary>
 /// Represents additional options available to control the behavior of an image generation operation.
 /// </summary>
-[CodeGenModel("CreateImageVariationRequest")]
+[CodeGenType("CreateImageVariationRequest")]
 [CodeGenSuppress("ImageVariationOptions", typeof(BinaryData))]
 public partial class ImageVariationOptions
 {

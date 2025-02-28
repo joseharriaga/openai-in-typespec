@@ -43,7 +43,7 @@ namespace OpenAI.FineTuning
             }
             if (_additionalBinaryDataProperties?.ContainsKey("param") != true)
             {
-                if (Param != null)
+                if (Optional.IsDefined(Param))
                 {
                     writer.WritePropertyName("param"u8);
                     writer.WriteStringValue(Param);

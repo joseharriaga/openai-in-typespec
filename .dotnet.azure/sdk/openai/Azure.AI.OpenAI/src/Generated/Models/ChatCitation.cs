@@ -44,6 +44,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <summary> The rerank score for the retrieval. </summary>
         public double? RerankScore { get; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

@@ -22,6 +22,7 @@ namespace Azure.AI.OpenAI.Chat
             AccessToken = accessToken;
         }
 
+        /// <summary> Gets the AccessToken. </summary>
         public string AccessToken { get; set; }
     }
 }

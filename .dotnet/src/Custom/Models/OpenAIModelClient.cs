@@ -11,7 +11,7 @@ namespace OpenAI.Models;
 // - Suppressed constructor that takes endpoint parameter; endpoint is now a property in the options class.
 // - Renamed convenience methods.
 /// <summary> The service client for OpenAI model operations. </summary>
-[CodeGenClient("ModelsOps")]
+[CodeGenType("Models")]
 [CodeGenSuppress("OpenAIModelClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("ListModelsAsync", typeof(CancellationToken))]
 [CodeGenSuppress("ListModels", typeof(CancellationToken))]

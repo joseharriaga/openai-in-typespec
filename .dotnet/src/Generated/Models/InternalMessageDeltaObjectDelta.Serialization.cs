@@ -83,7 +83,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             IList<InternalMessageDeltaContent> content = default;
-            Assistants.MessageRole? role = default;
+            MessageRole? role = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {

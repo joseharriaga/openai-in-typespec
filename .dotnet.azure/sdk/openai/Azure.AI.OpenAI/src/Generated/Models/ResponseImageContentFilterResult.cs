@@ -54,6 +54,7 @@ namespace Azure.AI.OpenAI
         /// </summary>
         public ContentFilterSeverityResult SelfHarm { get; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

@@ -25,8 +25,10 @@ namespace Azure.AI.OpenAI.Chat
             KeyId = keyId;
         }
 
+        /// <summary> Gets the Key. </summary>
         public string Key { get; set; }
 
+        /// <summary> Gets the KeyId. </summary>
         public string KeyId { get; set; }
     }
 }

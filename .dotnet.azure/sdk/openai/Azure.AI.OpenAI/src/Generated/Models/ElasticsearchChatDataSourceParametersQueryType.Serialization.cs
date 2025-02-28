@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Azure.AI.OpenAI.Models
+namespace Azure.AI.OpenAI
 {
     internal static partial class ElasticsearchChatDataSourceParametersQueryTypeExtensions
     {

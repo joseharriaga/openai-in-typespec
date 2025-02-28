@@ -49,15 +49,8 @@ namespace OpenAI.Chat
             }
             if (Optional.IsDefined(Refusal) && _additionalBinaryDataProperties?.ContainsKey("refusal") != true)
             {
-                if (Refusal != null)
-                {
-                    writer.WritePropertyName("refusal"u8);
-                    writer.WriteStringValue(Refusal);
-                }
-                else
-                {
-                    writer.WriteNull("refusal"u8);
-                }
+                writer.WritePropertyName("refusal"u8);
+                writer.WriteStringValue(Refusal);
             }
             if (Optional.IsDefined(Role) && _additionalBinaryDataProperties?.ContainsKey("role") != true)
             {
@@ -66,15 +59,8 @@ namespace OpenAI.Chat
             }
             if (Optional.IsDefined(Content) && Content.IsInnerCollectionDefined() && _additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
-                if (Content != null)
-                {
-                    writer.WritePropertyName("content"u8);
-                    this.SerializeContentValue(writer, options);
-                }
-                else
-                {
-                    writer.WriteNull("content"u8);
-                }
+                writer.WritePropertyName("content"u8);
+                SerializeContentValue(writer, options);
             }
             if (_additionalBinaryDataProperties != null)
             {
@@ -120,8 +106,8 @@ namespace OpenAI.Chat
             StreamingChatFunctionCallUpdate functionCall = default;
             IReadOnlyList<StreamingChatToolCallUpdate> toolCalls = default;
             string refusal = default;
-            Chat.ChatMessageRole? role = default;
-            Chat.ChatMessageContent content = default;
+            ChatMessageRole? role = default;
+            ChatMessageContent content = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {

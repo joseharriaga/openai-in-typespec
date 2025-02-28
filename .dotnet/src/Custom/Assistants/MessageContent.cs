@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace OpenAI.Assistants;
 
 [Experimental("OPENAI001")]
-[CodeGenModel("MessageContent")]
+[CodeGenType("MessageContent")]
 public abstract partial class MessageContent
 {
     /// <summary>
@@ -56,7 +56,7 @@ public abstract partial class MessageContent
     private InternalMessageRefusalContent AsRefusal => this as InternalMessageRefusalContent;
 
     /// <summary>
-    /// The implicit conversion operator that infers an equivalent <see cref="MessageContent"/> 
+    /// The implicit conversion operator that infers an equivalent <see cref="MessageContent"/>
     /// instance from a plain <see cref="string"/>.
     /// </summary>
     /// <param name="value"> The text for the message content. </param>

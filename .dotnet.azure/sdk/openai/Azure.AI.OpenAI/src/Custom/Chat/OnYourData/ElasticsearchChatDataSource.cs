@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
-[CodeGenModel("ElasticsearchChatDataSource")]
+[CodeGenType("ElasticsearchChatDataSource")]
 [Experimental("AOAI001")]
 #if AZURE_OPENAI_GA
 [EditorBrowsable(EditorBrowsableState.Never)]

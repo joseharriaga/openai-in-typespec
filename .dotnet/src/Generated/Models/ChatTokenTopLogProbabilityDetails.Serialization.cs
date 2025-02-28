@@ -43,7 +43,7 @@ namespace OpenAI.Chat
             }
             if (_additionalBinaryDataProperties?.ContainsKey("bytes") != true)
             {
-                if (Utf8Bytes != null)
+                if (Optional.IsDefined(Utf8Bytes))
                 {
                     writer.WritePropertyName("bytes"u8);
                     writer.WriteStartArray();

@@ -36,6 +36,7 @@ namespace Azure.AI.OpenAI
         /// <summary> If available, the citation details describing the associated license and its location. </summary>
         public ContentFilterProtectedMaterialCitationResult Citation { get; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

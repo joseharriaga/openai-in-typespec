@@ -10,16 +10,18 @@ namespace OpenAI.Chat
 {
     internal partial class InternalChatOutputPredictionContent : ChatOutputPrediction
     {
-        public InternalChatOutputPredictionContent(Chat.ChatMessageContent content) : base(InternalChatOutputPredictionKind.StaticContent)
+        public InternalChatOutputPredictionContent(ChatMessageContent content) : base(InternalChatOutputPredictionKind.StaticContent)
         {
             Argument.AssertNotNull(content, nameof(content));
 
-            Content = content ?? new Chat.ChatMessageContent();
+            // Plugin customization: ensure initialization of collection
+            Content = content ?? new ChatMessageContent();
         }
 
-        internal InternalChatOutputPredictionContent(InternalChatOutputPredictionKind @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, Chat.ChatMessageContent content) : base(@type, additionalBinaryDataProperties)
+        internal InternalChatOutputPredictionContent(InternalChatOutputPredictionKind @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, ChatMessageContent content) : base(@type, additionalBinaryDataProperties)
         {
-            Content = content ?? new Chat.ChatMessageContent();
+            // Plugin customization: ensure initialization of collection
+            Content = content ?? new ChatMessageContent();
         }
     }
 }

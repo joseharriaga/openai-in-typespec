@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace OpenAI.Chat;
 
-[CodeGenModel("ChatMessageContent")]
+[CodeGenType("ChatMessageContent")]
 public partial class ChatMessageContent : Collection<ChatMessageContentPart>
 {
     public ChatMessageContent()

@@ -11,7 +11,7 @@ namespace OpenAI.VectorStores
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal VectorStoreFileAssociation(DateTimeOffset createdAt, string vectorStoreId, VectorStores.VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError, string fileId, int size)
+        internal VectorStoreFileAssociation(DateTimeOffset createdAt, string vectorStoreId, VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError, string fileId, int size)
         {
             CreatedAt = createdAt;
             VectorStoreId = vectorStoreId;
@@ -21,13 +21,13 @@ namespace OpenAI.VectorStores
             Size = size;
         }
 
-        internal VectorStoreFileAssociation(DateTimeOffset createdAt, string vectorStoreId, VectorStores.VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError, InternalVectorStoreFileObjectObject @object, string fileId, int size, FileChunkingStrategy chunkingStrategy, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal VectorStoreFileAssociation(DateTimeOffset createdAt, string vectorStoreId, VectorStoreFileAssociationStatus status, VectorStoreFileAssociationError lastError, InternalVectorStoreFileObjectObject @object, string fileId, int size, FileChunkingStrategy chunkingStrategy, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             CreatedAt = createdAt;
             VectorStoreId = vectorStoreId;
             Status = status;
             LastError = lastError;
-            this.Object = @object;
+            Object = @object;
             FileId = fileId;
             Size = size;
             ChunkingStrategy = chunkingStrategy;
@@ -38,7 +38,7 @@ namespace OpenAI.VectorStores
 
         public string VectorStoreId { get; }
 
-        public VectorStores.VectorStoreFileAssociationStatus Status { get; }
+        public VectorStoreFileAssociationStatus Status { get; }
 
         public VectorStoreFileAssociationError LastError { get; }
 

@@ -22,6 +22,7 @@ namespace Azure.AI.OpenAI
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

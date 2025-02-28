@@ -55,7 +55,7 @@ namespace OpenAI.RealtimeConversation
             if (_additionalBinaryDataProperties?.ContainsKey("part") != true)
             {
                 writer.WritePropertyName("part"u8);
-                writer.WriteObjectValue<ConversationContentPart>(_internalContentPart, options);
+                writer.WriteObjectValue(_internalContentPart, options);
             }
         }
 
@@ -79,7 +79,7 @@ namespace OpenAI.RealtimeConversation
                 return null;
             }
             string eventId = default;
-            RealtimeConversation.ConversationUpdateKind kind = default;
+            ConversationUpdateKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string responseId = default;
             string itemId = default;

@@ -54,26 +54,46 @@ namespace Azure.AI.OpenAI.Chat
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
+        /// <summary> The configured number of documents to feature in the query. </summary>
         public int? TopNDocuments { get; set; }
 
+        /// <summary> Whether queries should be restricted to use of the indexed data. </summary>
         public bool? InScope { get; set; }
 
+        /// <summary>
+        /// The configured strictness of the search relevance filtering.
+        /// Higher strictness will increase precision but lower recall of the answer.
+        /// </summary>
         public int? Strictness { get; set; }
 
+        /// <summary>
+        /// The maximum number of rewritten queries that should be sent to the search provider for a single user message.
+        /// By default, the system will make an automatic determination.
+        /// </summary>
         public int? MaxSearchQueries { get; set; }
 
+        /// <summary>
+        /// If set to true, the system will allow partial search results to be used and the request will fail if all
+        /// partial queries fail. If not specified or specified as false, the request will fail if any search query fails.
+        /// </summary>
         public bool? AllowPartialResult { get; set; }
 
+        /// <summary> The name of the MongoDB cluster endpoint. </summary>
         public string Endpoint { get; set; }
 
+        /// <summary> The name of the MongoDB database. </summary>
         public string DatabaseName { get; set; }
 
+        /// <summary> The name of the MongoDB collection. </summary>
         public string CollectionName { get; set; }
 
+        /// <summary> The name of the MongoDB application. </summary>
         public string AppName { get; set; }
 
+        /// <summary> The name of the MongoDB index. </summary>
         public string IndexName { get; set; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

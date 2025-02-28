@@ -72,12 +72,12 @@ namespace Azure.AI.OpenAI
             if (Optional.IsDefined(Error) && _additionalBinaryDataProperties?.ContainsKey("error") != true)
             {
                 writer.WritePropertyName("error"u8);
-                writer.WriteObjectValue<InternalAzureContentFilterResultForChoiceError>(Error, options);
+                writer.WriteObjectValue(Error, options);
             }
             if (Optional.IsDefined(UngroundedMaterial) && _additionalBinaryDataProperties?.ContainsKey("ungrounded_material") != true)
             {
                 writer.WritePropertyName("ungrounded_material"u8);
-                writer.WriteObjectValue<ContentFilterTextSpanResult>(UngroundedMaterial, options);
+                writer.WriteObjectValue(UngroundedMaterial, options);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {

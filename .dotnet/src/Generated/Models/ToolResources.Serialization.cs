@@ -30,12 +30,12 @@ namespace OpenAI.Assistants
             if (Optional.IsDefined(CodeInterpreter) && _additionalBinaryDataProperties?.ContainsKey("code_interpreter") != true)
             {
                 writer.WritePropertyName("code_interpreter"u8);
-                writer.WriteObjectValue<CodeInterpreterToolResources>(CodeInterpreter, options);
+                writer.WriteObjectValue(CodeInterpreter, options);
             }
             if (Optional.IsDefined(FileSearch) && _additionalBinaryDataProperties?.ContainsKey("file_search") != true)
             {
                 writer.WritePropertyName("file_search"u8);
-                this.SerializeFileSearch(writer, options);
+                SerializeFileSearch(writer, options);
             }
             if (_additionalBinaryDataProperties != null)
             {

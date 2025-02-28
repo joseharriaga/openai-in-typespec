@@ -943,7 +943,7 @@ components:
             This value is now deprecated in favor of `max_completion_tokens`, and is
             not compatible with [o1 series models](/docs/guides/reasoning).
           deprecated: true
-        n:
+        'n':
           type: integer
           format: int32
           nullable: true
@@ -2361,7 +2361,7 @@ components:
           description: The model to use for image generation.
           x-oaiTypeLabel: string
           default: dall-e-2
-        n:
+        'n':
           type: integer
           format: int32
           nullable: true

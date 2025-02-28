@@ -1,13 +1,13 @@
-using Microsoft.Generator.CSharp.ClientModel;
-using Microsoft.Generator.CSharp.ClientModel.Providers;
-using Microsoft.Generator.CSharp.Primitives;
-using Microsoft.Generator.CSharp.Providers;
-using Microsoft.Generator.CSharp.Snippets;
-using Microsoft.Generator.CSharp.Statements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static Microsoft.Generator.CSharp.Snippets.Snippet;
+using Microsoft.TypeSpec.Generator.ClientModel;
+using Microsoft.TypeSpec.Generator.ClientModel.Providers;
+using Microsoft.TypeSpec.Generator.Primitives;
+using Microsoft.TypeSpec.Generator.Providers;
+using Microsoft.TypeSpec.Generator.Snippets;
+using Microsoft.TypeSpec.Generator.Statements;
+using static Microsoft.TypeSpec.Generator.Snippets.Snippet;
 
 namespace AzureOpenAILibraryPlugin;
 
@@ -23,7 +23,7 @@ public class AdditionalPropertiesVisitor : ScmLibraryVisitor
     private const string IsSentinelValueMethodName = "IsSentinelValue";
     private const string JsonModelWriteCoreMethodName = "JsonModelWriteCore";
 
-    protected override TypeProvider Visit(TypeProvider type)
+    protected override TypeProvider VisitType(TypeProvider type)
     {
         if (type is ModelProvider { BaseModelProvider: null })
         {
@@ -44,7 +44,7 @@ public class AdditionalPropertiesVisitor : ScmLibraryVisitor
         return type;
     }
 
-    protected override MethodProvider Visit(MethodProvider method)
+    protected override MethodProvider VisitMethod(MethodProvider method)
     {
         if (method.Signature.Name != JsonModelWriteCoreMethodName)
         {

@@ -39,15 +39,8 @@ namespace OpenAI.Assistants
             }
             if (Optional.IsDefined(Output) && _additionalBinaryDataProperties?.ContainsKey("output") != true)
             {
-                if (Output != null)
-                {
-                    writer.WritePropertyName("output"u8);
-                    writer.WriteStringValue(Output);
-                }
-                else
-                {
-                    writer.WriteNull("output"u8);
-                }
+                writer.WritePropertyName("output"u8);
+                writer.WriteStringValue(Output);
             }
             if (_additionalBinaryDataProperties != null)
             {

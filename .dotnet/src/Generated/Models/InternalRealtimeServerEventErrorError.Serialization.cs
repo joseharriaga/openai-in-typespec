@@ -38,15 +38,8 @@ namespace OpenAI.RealtimeConversation
             }
             if (Optional.IsDefined(Code) && _additionalBinaryDataProperties?.ContainsKey("code") != true)
             {
-                if (Code != null)
-                {
-                    writer.WritePropertyName("code"u8);
-                    writer.WriteStringValue(Code);
-                }
-                else
-                {
-                    writer.WriteNull("code"u8);
-                }
+                writer.WritePropertyName("code"u8);
+                writer.WriteStringValue(Code);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("message") != true)
             {
@@ -55,27 +48,13 @@ namespace OpenAI.RealtimeConversation
             }
             if (Optional.IsDefined(Param) && _additionalBinaryDataProperties?.ContainsKey("param") != true)
             {
-                if (Param != null)
-                {
-                    writer.WritePropertyName("param"u8);
-                    writer.WriteStringValue(Param);
-                }
-                else
-                {
-                    writer.WriteNull("param"u8);
-                }
+                writer.WritePropertyName("param"u8);
+                writer.WriteStringValue(Param);
             }
             if (Optional.IsDefined(EventId) && _additionalBinaryDataProperties?.ContainsKey("event_id") != true)
             {
-                if (EventId != null)
-                {
-                    writer.WritePropertyName("event_id"u8);
-                    writer.WriteStringValue(EventId);
-                }
-                else
-                {
-                    writer.WriteNull("eventId"u8);
-                }
+                writer.WritePropertyName("event_id"u8);
+                writer.WriteStringValue(EventId);
             }
             if (_additionalBinaryDataProperties != null)
             {

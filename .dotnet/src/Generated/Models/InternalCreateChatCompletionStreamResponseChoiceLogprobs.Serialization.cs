@@ -29,7 +29,7 @@ namespace OpenAI.Chat
             }
             if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
-                if (Content != null && Optional.IsCollectionDefined(Content))
+                if (options.Format != "W" && Optional.IsCollectionDefined(Content))
                 {
                     writer.WritePropertyName("content"u8);
                     writer.WriteStartArray();
@@ -46,7 +46,7 @@ namespace OpenAI.Chat
             }
             if (_additionalBinaryDataProperties?.ContainsKey("refusal") != true)
             {
-                if (Refusal != null && Optional.IsCollectionDefined(Refusal))
+                if (options.Format != "W" && Optional.IsCollectionDefined(Refusal))
                 {
                     writer.WritePropertyName("refusal"u8);
                     writer.WriteStartArray();

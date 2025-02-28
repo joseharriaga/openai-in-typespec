@@ -1,6 +1,6 @@
 namespace OpenAI.Files;
 
-[CodeGenModel("OpenAIFilePurpose")]
+[CodeGenType("OpenAIFilePurpose")]
 public enum FilePurpose
 {
     Assistants,

@@ -49,12 +49,12 @@ namespace OpenAI.Chat
             if (Optional.IsDefined(OutputTokenDetails) && _additionalBinaryDataProperties?.ContainsKey("completion_tokens_details") != true)
             {
                 writer.WritePropertyName("completion_tokens_details"u8);
-                writer.WriteObjectValue<ChatOutputTokenUsageDetails>(OutputTokenDetails, options);
+                writer.WriteObjectValue(OutputTokenDetails, options);
             }
             if (Optional.IsDefined(InputTokenDetails) && _additionalBinaryDataProperties?.ContainsKey("prompt_tokens_details") != true)
             {
                 writer.WritePropertyName("prompt_tokens_details"u8);
-                writer.WriteObjectValue<ChatInputTokenUsageDetails>(InputTokenDetails, options);
+                writer.WriteObjectValue(InputTokenDetails, options);
             }
             if (_additionalBinaryDataProperties != null)
             {

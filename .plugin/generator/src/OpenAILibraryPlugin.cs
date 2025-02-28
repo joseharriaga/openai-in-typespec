@@ -1,13 +1,13 @@
 using System.ComponentModel.Composition;
-using Microsoft.Generator.CSharp;
-using Microsoft.Generator.CSharp.ClientModel;
+using Microsoft.TypeSpec.Generator;
+using Microsoft.TypeSpec.Generator.ClientModel;
 using OpenAILibraryPlugin.Visitors;
 
 namespace OpenAILibraryPlugin
 {
     [Export(typeof(CodeModelPlugin))]
     [ExportMetadata("PluginName", nameof(OpenAILibraryPlugin))]
-    public class OpenAILibraryPlugin : ClientModelPlugin
+    public class OpenAILibraryPlugin : ScmCodeModelPlugin
     {
         [ImportingConstructor]
         public OpenAILibraryPlugin(GeneratorContext context) : base(context) { }

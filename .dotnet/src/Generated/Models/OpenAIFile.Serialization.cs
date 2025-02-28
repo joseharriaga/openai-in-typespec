@@ -54,11 +54,11 @@ namespace OpenAI.Files
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object.ToString());
+                writer.WriteStringValue(Object.ToString());
             }
             if (_additionalBinaryDataProperties?.ContainsKey("bytes") != true)
             {
-                if (SizeInBytes != null)
+                if (Optional.IsDefined(SizeInBytes))
                 {
                     writer.WritePropertyName("bytes"u8);
                     writer.WriteNumberValue(SizeInBytes.Value);
@@ -121,10 +121,10 @@ namespace OpenAI.Files
             string id = default;
             DateTimeOffset createdAt = default;
             string filename = default;
-            Files.FilePurpose purpose = default;
+            FilePurpose purpose = default;
             InternalOpenAIFileObject @object = default;
             int? sizeInBytes = default;
-            Files.FileStatus status = default;
+            FileStatus status = default;
             string statusDetails = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())

@@ -12,7 +12,7 @@ namespace OpenAI.Assistants;
 
 /// <summary> The service client for OpenAI assistants operations. </summary>
 [Experimental("OPENAI001")]
-[CodeGenClient("Assistants")]
+[CodeGenType("Assistants")]
 [CodeGenSuppress("AssistantClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("CreateAssistantAsync", typeof(AssistantCreationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateAssistant", typeof(AssistantCreationOptions), typeof(CancellationToken))]

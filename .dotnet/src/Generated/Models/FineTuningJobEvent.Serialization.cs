@@ -116,7 +116,7 @@ namespace OpenAI.FineTuning
             InternalFineTuningJobEventObject @object = default;
             string id = default;
             DateTimeOffset createdAt = default;
-            FineTuning.FineTuningJobEventLevel level = default;
+            FineTuningJobEventLevel level = default;
             string message = default;
             InternalFineTuningJobEventType? @type = default;
             BinaryData data = default;

@@ -983,7 +983,7 @@ components:
           format: int32
           nullable: true
           description: An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and [reasoning tokens](/docs/guides/reasoning).
-        n:
+        'n':
           type: integer
           format: int32
           nullable: true
@@ -2457,7 +2457,7 @@ components:
           description: The model to use for image generation.
           x-oaiTypeLabel: string
           default: dall-e-2
-        n:
+        'n':
           type: integer
           format: int32
           nullable: true

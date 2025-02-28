@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Azure.AI.OpenAI.Chat;
 
 [Experimental("AOAI001")]
-[CodeGenModel("ElasticsearchChatDataSourceParameters")]
+[CodeGenType("ElasticsearchChatDataSourceParameters")]
 internal partial class InternalElasticsearchChatDataSourceParameters
 {
     [CodeGenMember("IncludeContexts")]

@@ -33,7 +33,7 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("image_file") != true)
             {
                 writer.WritePropertyName("image_file"u8);
-                writer.WriteObjectValue<InternalMessageContentItemFileObjectImageFile>(_imageFile, options);
+                writer.WriteObjectValue(_imageFile, options);
             }
         }
 

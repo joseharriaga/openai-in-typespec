@@ -1,10 +1,9 @@
-using Microsoft.Generator.CSharp.ClientModel;
-using Microsoft.Generator.CSharp.Providers;
-using Microsoft.Generator.CSharp.Snippets;
-using Microsoft.Generator.CSharp.Statements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.TypeSpec.Generator.ClientModel;
+using Microsoft.TypeSpec.Generator.Providers;
+using Microsoft.TypeSpec.Generator.Statements;
 
 namespace AzureOpenAILibraryPlugin;
 
@@ -14,16 +13,16 @@ namespace AzureOpenAILibraryPlugin;
 /// </summary>
 public class DocEditVisitor : ScmLibraryVisitor
 {
-    protected override PropertyProvider? Visit(PropertyProvider property)
+    protected override PropertyProvider? VisitProperty(PropertyProvider property)
     {
         if (TryUpdateXmlDocs(property.XmlDocs))
         {
             property.Update(xmlDocs: property.XmlDocs);
         }
-        return base.Visit(property);
+        return base.VisitProperty(property);
     }
 
-    protected override TypeProvider Visit(TypeProvider type)
+    protected override TypeProvider VisitType(TypeProvider type)
     {
         if (TryUpdateXmlDocs(type.XmlDocs))
         {
@@ -32,13 +31,13 @@ public class DocEditVisitor : ScmLibraryVisitor
         return type;
     }
 
-    protected override MethodProvider? Visit(MethodProvider method)
+    protected override MethodProvider? VisitMethod(MethodProvider method)
     {
         if (TryUpdateXmlDocs(method.XmlDocs))
         {
             method.Update(xmlDocProvider: method.XmlDocs);
         }
-        return base.Visit(method);
+        return base.VisitMethod(method);
     }
 
     private static bool TryUpdateXmlDocs(XmlDocProvider? xmlDocs)

@@ -128,7 +128,7 @@ model AzureSearchChatDataSource extends AzureChatDataSource {
      * The authentication mechanism to use with Azure Search.
      */
     @typeChangedFrom(
-      AzureOpenAIServiceApiVersion.v2024_10_21,
+      AzureOpenAIServiceApiVersion.v2024_12_01_preview,
       AzureSearchAuthenticationOptions
     )
     authentication: AzureSearchAuthenticationOptionsWithAccessToken;

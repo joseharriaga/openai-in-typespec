@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Azure.AI.OpenAI.Models
+namespace Azure.AI.OpenAI
 {
     /// <summary></summary>
     public enum ElasticsearchChatDataSourceParametersQueryType

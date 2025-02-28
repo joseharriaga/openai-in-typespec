@@ -32,6 +32,7 @@ namespace Azure.AI.OpenAI
         /// <summary> Offset of the first UTF32 code point which is excluded from the span. This field is always equal to completion_start_offset for empty spans. This field is always larger than completion_start_offset for non-empty spans. </summary>
         public int CompletionEndOffset { get; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

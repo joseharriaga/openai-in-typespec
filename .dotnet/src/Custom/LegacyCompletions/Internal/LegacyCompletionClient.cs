@@ -9,7 +9,7 @@ namespace OpenAI.LegacyCompletions;
 // - Suppressed constructor that takes endpoint parameter; endpoint is now a property in the options class.
 // - Suppressed methods that only take the options parameter.
 /// <summary> The service client for OpenAI legacy completion operations. </summary>
-[CodeGenClient("Completions")]
+[CodeGenType("Completions")]
 [CodeGenSuppress("LegacyCompletionClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 internal partial class LegacyCompletionClient
 {

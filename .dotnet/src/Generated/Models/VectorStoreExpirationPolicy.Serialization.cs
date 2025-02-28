@@ -77,7 +77,7 @@ namespace OpenAI.VectorStores
             {
                 return null;
             }
-            VectorStores.VectorStoreExpirationAnchor anchor = default;
+            VectorStoreExpirationAnchor anchor = default;
             int days = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())

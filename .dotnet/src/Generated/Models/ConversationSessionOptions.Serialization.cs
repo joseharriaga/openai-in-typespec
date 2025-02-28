@@ -69,27 +69,13 @@ namespace OpenAI.RealtimeConversation
             }
             if (Optional.IsDefined(TurnDetectionOptions) && _additionalBinaryDataProperties?.ContainsKey("turn_detection") != true)
             {
-                if (TurnDetectionOptions != null)
-                {
-                    writer.WritePropertyName("turn_detection"u8);
-                    writer.WriteObjectValue<ConversationTurnDetectionOptions>(TurnDetectionOptions, options);
-                }
-                else
-                {
-                    writer.WriteNull("turnDetection"u8);
-                }
+                writer.WritePropertyName("turn_detection"u8);
+                writer.WriteObjectValue(TurnDetectionOptions, options);
             }
             if (Optional.IsDefined(InputTranscriptionOptions) && _additionalBinaryDataProperties?.ContainsKey("input_audio_transcription") != true)
             {
-                if (InputTranscriptionOptions != null)
-                {
-                    writer.WritePropertyName("input_audio_transcription"u8);
-                    writer.WriteObjectValue<ConversationInputTranscriptionOptions>(InputTranscriptionOptions, options);
-                }
-                else
-                {
-                    writer.WriteNull("inputAudioTranscription"u8);
-                }
+                writer.WritePropertyName("input_audio_transcription"u8);
+                writer.WriteObjectValue(InputTranscriptionOptions, options);
             }
             if (Optional.IsCollectionDefined(_internalModalities) && _additionalBinaryDataProperties?.ContainsKey("modalities") != true)
             {

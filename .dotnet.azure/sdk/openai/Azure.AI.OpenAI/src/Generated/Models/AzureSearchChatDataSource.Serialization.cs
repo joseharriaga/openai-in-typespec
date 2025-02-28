@@ -34,7 +34,7 @@ namespace Azure.AI.OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("parameters") != true)
             {
                 writer.WritePropertyName("parameters"u8);
-                writer.WriteObjectValue<InternalAzureSearchChatDataSourceParameters>(InternalParameters, options);
+                writer.WriteObjectValue(InternalParameters, options);
             }
         }
 

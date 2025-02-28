@@ -43,7 +43,7 @@ namespace OpenAI.Assistants
                 throw new FormatException($"The model {nameof(AssistantResponseFormat)} does not support reading '{format}' format.");
             }
             using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            return AssistantResponseFormat.DeserializeAssistantResponseFormat(document.RootElement, options);
+            return DeserializeAssistantResponseFormat(document.RootElement, options);
         }
 
         internal static InternalUnknownAssistantResponseFormat DeserializeInternalUnknownAssistantResponseFormat(JsonElement element, ModelReaderWriterOptions options)
@@ -90,7 +90,7 @@ namespace OpenAI.Assistants
                 case "J":
                     using (JsonDocument document = JsonDocument.Parse(data))
                     {
-                        return AssistantResponseFormat.DeserializeAssistantResponseFormat(document.RootElement, options);
+                        return DeserializeAssistantResponseFormat(document.RootElement, options);
                     }
                 default:
                     throw new FormatException($"The model {nameof(AssistantResponseFormat)} does not support reading '{options.Format}' format.");

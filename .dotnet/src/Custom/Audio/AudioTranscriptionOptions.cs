@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 namespace OpenAI.Audio;
 
-[CodeGenModel("CreateTranscriptionRequest")]
+[CodeGenType("CreateTranscriptionRequest")]
 [CodeGenSuppress("AudioTranscriptionOptions", typeof(BinaryData), typeof(InternalCreateTranscriptionRequestModel))]
 public partial class AudioTranscriptionOptions
 {

@@ -34,7 +34,7 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("function") != true)
             {
                 writer.WritePropertyName("function"u8);
-                writer.WriteObjectValue<InternalFunctionDefinition>(Function, options);
+                writer.WriteObjectValue(Function, options);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
@@ -82,7 +82,7 @@ namespace OpenAI.Chat
                 return null;
             }
             InternalFunctionDefinition function = default;
-            Chat.ChatToolKind kind = default;
+            ChatToolKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {

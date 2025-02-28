@@ -14,7 +14,7 @@ namespace Azure.AI.OpenAI.Files;
 /// <remarks>
 /// To retrieve an instance of this type, use the matching method on <see cref="AzureOpenAIClient"/>.
 /// </remarks>
-[CodeGenModel("AzureOpenAIFile")]
+[CodeGenType("AzureOpenAIFile")]
 [Experimental("AOAI001")]
 internal partial class AzureOpenAIFile : OpenAIFile
 {

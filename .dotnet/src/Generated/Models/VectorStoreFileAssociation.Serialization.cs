@@ -48,20 +48,20 @@ namespace OpenAI.VectorStores
             }
             if (_additionalBinaryDataProperties?.ContainsKey("last_error") != true)
             {
-                if (LastError != null)
+                if (Optional.IsDefined(LastError))
                 {
                     writer.WritePropertyName("last_error"u8);
                     writer.WriteObjectValue(LastError, options);
                 }
                 else
                 {
-                    writer.WriteNull("lastError"u8);
+                    writer.WriteNull("last_error"u8);
                 }
             }
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object.ToString());
+                writer.WriteStringValue(Object.ToString());
             }
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
@@ -76,7 +76,7 @@ namespace OpenAI.VectorStores
             if (Optional.IsDefined(ChunkingStrategy) && _additionalBinaryDataProperties?.ContainsKey("chunking_strategy") != true)
             {
                 writer.WritePropertyName("chunking_strategy"u8);
-                writer.WriteObjectValue<FileChunkingStrategy>(ChunkingStrategy, options);
+                writer.WriteObjectValue(ChunkingStrategy, options);
             }
             if (_additionalBinaryDataProperties != null)
             {
@@ -120,7 +120,7 @@ namespace OpenAI.VectorStores
             }
             DateTimeOffset createdAt = default;
             string vectorStoreId = default;
-            VectorStores.VectorStoreFileAssociationStatus status = default;
+            VectorStoreFileAssociationStatus status = default;
             VectorStoreFileAssociationError lastError = default;
             InternalVectorStoreFileObjectObject @object = default;
             string fileId = default;

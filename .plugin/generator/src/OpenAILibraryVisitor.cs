@@ -1,15 +1,14 @@
-using Microsoft.Generator.CSharp.ClientModel;
-using Microsoft.Generator.CSharp.ClientModel.Providers;
-using Microsoft.Generator.CSharp.Expressions;
-using Microsoft.Generator.CSharp.Primitives;
-using Microsoft.Generator.CSharp.Providers;
-using Microsoft.Generator.CSharp.Snippets;
-using Microsoft.Generator.CSharp.Statements;
+using Microsoft.TypeSpec.Generator.ClientModel;
+using Microsoft.TypeSpec.Generator.ClientModel.Providers;
+using Microsoft.TypeSpec.Generator.Expressions;
+using Microsoft.TypeSpec.Generator.Primitives;
+using Microsoft.TypeSpec.Generator.Providers;
+using Microsoft.TypeSpec.Generator.Snippets;
+using Microsoft.TypeSpec.Generator.Statements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using static Microsoft.Generator.CSharp.Snippets.Snippet;
+using static Microsoft.TypeSpec.Generator.Snippets.Snippet;
 
 namespace OpenAILibraryPlugin;
 
@@ -35,7 +34,7 @@ public class OpenAILibraryVisitor : ScmLibraryVisitor
             ],
     };
 
-    protected override TypeProvider Visit(TypeProvider type)
+    protected override TypeProvider VisitType(TypeProvider type)
     {
         if (type is ModelProvider { BaseModelProvider: null } && type.Fields.Count > 0)
         {
@@ -94,7 +93,7 @@ public class OpenAILibraryVisitor : ScmLibraryVisitor
         return type;
     }
 
-    protected override FieldProvider Visit(FieldProvider field)
+    protected override FieldProvider VisitField(FieldProvider field)
     {
         // Make the backing additional properties field not be read only as long as the type is not readonly.
         if (field.Name == AdditionalPropertiesFieldName && !field.EnclosingType.DeclarationModifiers.HasFlag(TypeSignatureModifiers.ReadOnly))
@@ -104,7 +103,7 @@ public class OpenAILibraryVisitor : ScmLibraryVisitor
         return field;
     }
 
-    protected override MethodProvider Visit(MethodProvider method)
+    protected override MethodProvider VisitMethod(MethodProvider method)
     {
         if (method.Signature.Name != JsonModelWriteCoreMethodName)
         {

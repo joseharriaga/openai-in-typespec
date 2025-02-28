@@ -44,7 +44,7 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object.ToString());
+                writer.WriteStringValue(Object.ToString());
             }
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
@@ -53,15 +53,8 @@ namespace OpenAI.Chat
             }
             if (Optional.IsDefined(ServiceTier) && _additionalBinaryDataProperties?.ContainsKey("service_tier") != true)
             {
-                if (ServiceTier != null)
-                {
-                    writer.WritePropertyName("service_tier"u8);
-                    writer.WriteStringValue(ServiceTier.Value.ToString());
-                }
-                else
-                {
-                    writer.WriteNull("serviceTier"u8);
-                }
+                writer.WritePropertyName("service_tier"u8);
+                writer.WriteStringValue(ServiceTier.Value.ToString());
             }
             if (_additionalBinaryDataProperties?.ContainsKey("choices") != true)
             {
@@ -80,15 +73,8 @@ namespace OpenAI.Chat
             }
             if (Optional.IsDefined(Usage) && _additionalBinaryDataProperties?.ContainsKey("usage") != true)
             {
-                if (Usage != null)
-                {
-                    writer.WritePropertyName("usage"u8);
-                    writer.WriteObjectValue<ChatTokenUsage>(Usage, options);
-                }
-                else
-                {
-                    writer.WriteNull("usage"u8);
-                }
+                writer.WritePropertyName("usage"u8);
+                writer.WriteObjectValue(Usage, options);
             }
             if (_additionalBinaryDataProperties != null)
             {

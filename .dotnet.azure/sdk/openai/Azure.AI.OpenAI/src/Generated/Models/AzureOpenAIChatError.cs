@@ -26,16 +26,22 @@ namespace Azure.AI.OpenAI
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
+        /// <summary> The distinct, machine-generated identifier for the error. </summary>
         public string Code { get; }
 
+        /// <summary> A human-readable message associated with the error. </summary>
         public string Message { get; }
 
+        /// <summary> If applicable, the request input parameter associated with the error. </summary>
         public string Param { get; }
 
+        /// <summary> If applicable, the input line number associated with the error. </summary>
         public string Type { get; }
 
+        /// <summary> If applicable, an upstream error that originated this error. </summary>
         public InternalAzureOpenAIChatErrorInnerError InnerError { get; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

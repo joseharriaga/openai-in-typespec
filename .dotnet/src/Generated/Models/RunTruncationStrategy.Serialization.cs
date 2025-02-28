@@ -33,15 +33,8 @@ namespace OpenAI.Assistants
             }
             if (Optional.IsDefined(LastMessages) && _additionalBinaryDataProperties?.ContainsKey("last_messages") != true)
             {
-                if (LastMessages != null)
-                {
-                    writer.WritePropertyName("last_messages"u8);
-                    writer.WriteNumberValue(LastMessages.Value);
-                }
-                else
-                {
-                    writer.WriteNull("lastMessages"u8);
-                }
+                writer.WritePropertyName("last_messages"u8);
+                writer.WriteNumberValue(LastMessages.Value);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {

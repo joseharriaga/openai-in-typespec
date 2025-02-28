@@ -39,7 +39,7 @@ namespace OpenAI.Chat
             if (Optional.IsDefined(Function) && _additionalBinaryDataProperties?.ContainsKey("function") != true)
             {
                 writer.WritePropertyName("function"u8);
-                writer.WriteObjectValue<InternalChatCompletionMessageToolCallChunkFunction>(Function, options);
+                writer.WriteObjectValue(Function, options);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
@@ -93,7 +93,7 @@ namespace OpenAI.Chat
             }
             int index = default;
             InternalChatCompletionMessageToolCallChunkFunction function = default;
-            Chat.ChatToolCallKind kind = default;
+            ChatToolCallKind kind = default;
             string toolCallId = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())

@@ -4,6 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OpenAI.Chat;
 
-[CodeGenModel("CreateChatCompletionRequestReasoningEffort")]
+[CodeGenType("CreateChatCompletionRequestReasoningEffort")]
 public readonly partial struct ChatReasoningEffortLevel
 {}

@@ -8,8 +8,8 @@ namespace OpenAI.Chat;
 /// <c>assistant</c> role response messages. These messages may help control behavior, style, tone, and
 /// restrictions for a model-based assistant. Developer messages replace system messages for o1 models and newer.
 /// </summary>
-[CodeGenModel("ChatCompletionRequestSystemMessage")]
-[CodeGenSuppress("SystemChatMessage", typeof(ChatMessageContent))]
+[CodeGenType("ChatCompletionRequestSystemMessage")]
+[CodeGenSuppress("global::SystemChatMessage", typeof(ChatMessageContent))]
 public partial class SystemChatMessage : ChatMessage
 {
     /// <summary>

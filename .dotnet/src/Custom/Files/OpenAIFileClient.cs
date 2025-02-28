@@ -11,7 +11,7 @@ namespace OpenAI.Files;
 // - Renamed.
 // - Suppressed constructor that takes endpoint parameter; endpoint is now a property in the options class.
 /// <summary> The service client for OpenAI file operations. </summary>
-[CodeGenClient("Files")]
+[CodeGenType("Files")]
 [CodeGenSuppress("OpenAIFileClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
 [CodeGenSuppress("ListFilesAsync", typeof(string), typeof(CancellationToken))]
 [CodeGenSuppress("ListFiles", typeof(string), typeof(CancellationToken))]

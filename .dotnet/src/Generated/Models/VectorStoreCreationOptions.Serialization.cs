@@ -66,12 +66,12 @@ namespace OpenAI.VectorStores
             if (Optional.IsDefined(ExpirationPolicy) && _additionalBinaryDataProperties?.ContainsKey("expires_after") != true)
             {
                 writer.WritePropertyName("expires_after"u8);
-                writer.WriteObjectValue<VectorStoreExpirationPolicy>(ExpirationPolicy, options);
+                writer.WriteObjectValue(ExpirationPolicy, options);
             }
             if (Optional.IsDefined(ChunkingStrategy) && _additionalBinaryDataProperties?.ContainsKey("chunking_strategy") != true)
             {
                 writer.WritePropertyName("chunking_strategy"u8);
-                writer.WriteObjectValue<FileChunkingStrategy>(ChunkingStrategy, options);
+                writer.WriteObjectValue(ChunkingStrategy, options);
             }
             if (_additionalBinaryDataProperties != null)
             {

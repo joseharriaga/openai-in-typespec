@@ -33,7 +33,7 @@ namespace OpenAI.Internal
             }
             if (_additionalBinaryDataProperties?.ContainsKey("code") != true)
             {
-                if (Code != null)
+                if (Optional.IsDefined(Code))
                 {
                     writer.WritePropertyName("code"u8);
                     writer.WriteStringValue(Code);
@@ -50,7 +50,7 @@ namespace OpenAI.Internal
             }
             if (_additionalBinaryDataProperties?.ContainsKey("param") != true)
             {
-                if (Param != null)
+                if (Optional.IsDefined(Param))
                 {
                     writer.WritePropertyName("param"u8);
                     writer.WriteStringValue(Param);

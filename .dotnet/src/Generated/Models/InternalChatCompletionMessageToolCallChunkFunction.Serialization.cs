@@ -35,7 +35,7 @@ namespace OpenAI.Chat
             if (Optional.IsDefined(Arguments) && _additionalBinaryDataProperties?.ContainsKey("arguments") != true)
             {
                 writer.WritePropertyName("arguments"u8);
-                this.SerializeArgumentsValue(writer, options);
+                SerializeArgumentsValue(writer, options);
             }
             if (_additionalBinaryDataProperties != null)
             {

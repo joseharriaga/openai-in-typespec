@@ -42,15 +42,8 @@ namespace OpenAI
             }
             if (Optional.IsDefined(Strict) && _additionalBinaryDataProperties?.ContainsKey("strict") != true)
             {
-                if (Strict != null)
-                {
-                    writer.WritePropertyName("strict"u8);
-                    writer.WriteBooleanValue(Strict.Value);
-                }
-                else
-                {
-                    writer.WriteNull("strict"u8);
-                }
+                writer.WritePropertyName("strict"u8);
+                writer.WriteBooleanValue(Strict.Value);
             }
             if (Optional.IsDefined(Parameters) && _additionalBinaryDataProperties?.ContainsKey("parameters") != true)
             {

@@ -48,56 +48,28 @@ namespace OpenAI.FineTuning
             }
             if (Optional.IsDefined(Suffix) && _additionalBinaryDataProperties?.ContainsKey("suffix") != true)
             {
-                if (Suffix != null)
-                {
-                    writer.WritePropertyName("suffix"u8);
-                    writer.WriteStringValue(Suffix);
-                }
-                else
-                {
-                    writer.WriteNull("suffix"u8);
-                }
+                writer.WritePropertyName("suffix"u8);
+                writer.WriteStringValue(Suffix);
             }
             if (Optional.IsDefined(ValidationFile) && _additionalBinaryDataProperties?.ContainsKey("validation_file") != true)
             {
-                if (ValidationFile != null)
-                {
-                    writer.WritePropertyName("validation_file"u8);
-                    writer.WriteStringValue(ValidationFile);
-                }
-                else
-                {
-                    writer.WriteNull("validationFile"u8);
-                }
+                writer.WritePropertyName("validation_file"u8);
+                writer.WriteStringValue(ValidationFile);
             }
             if (Optional.IsCollectionDefined(Integrations) && _additionalBinaryDataProperties?.ContainsKey("integrations") != true)
             {
-                if (Integrations != null)
+                writer.WritePropertyName("integrations"u8);
+                writer.WriteStartArray();
+                foreach (FineTuningIntegration item in Integrations)
                 {
-                    writer.WritePropertyName("integrations"u8);
-                    writer.WriteStartArray();
-                    foreach (FineTuningIntegration item in Integrations)
-                    {
-                        writer.WriteObjectValue(item, options);
-                    }
-                    writer.WriteEndArray();
+                    writer.WriteObjectValue(item, options);
                 }
-                else
-                {
-                    writer.WriteNull("integrations"u8);
-                }
+                writer.WriteEndArray();
             }
             if (Optional.IsDefined(Seed) && _additionalBinaryDataProperties?.ContainsKey("seed") != true)
             {
-                if (Seed != null)
-                {
-                    writer.WritePropertyName("seed"u8);
-                    writer.WriteNumberValue(Seed.Value);
-                }
-                else
-                {
-                    writer.WriteNull("seed"u8);
-                }
+                writer.WritePropertyName("seed"u8);
+                writer.WriteNumberValue(Seed.Value);
             }
             if (Optional.IsDefined(Method) && _additionalBinaryDataProperties?.ContainsKey("method") != true)
             {

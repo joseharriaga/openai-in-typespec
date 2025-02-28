@@ -1,9 +1,7 @@
-using Microsoft.Generator.CSharp.ClientModel;
-using Microsoft.Generator.CSharp.Primitives;
-using Microsoft.Generator.CSharp.Providers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.TypeSpec.Generator.ClientModel;
+using Microsoft.TypeSpec.Generator.Providers;
 
 namespace OpenAILibraryPlugin.Visitors;
 
@@ -17,7 +15,7 @@ public class OmittedTypesVisitor : ScmLibraryVisitor
             "ChatMessageContent"
         ];
 
-    protected override TypeProvider? Visit(TypeProvider type)
+    protected override TypeProvider? VisitType(TypeProvider type)
     {
         if (TypeNamesToOmit.Any(typeName => type.Name == typeName))
         {

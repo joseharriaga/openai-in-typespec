@@ -24,7 +24,7 @@ namespace OpenAI.Assistants
             if (Optional.IsDefined(_fileSearch) && _additionalBinaryDataProperties?.ContainsKey("file_search") != true)
             {
                 writer.WritePropertyName("file_search"u8);
-                writer.WriteObjectValue<InternalAssistantToolsFileSearchFileSearch>(_fileSearch, options);
+                writer.WriteObjectValue(_fileSearch, options);
             }
         }
 

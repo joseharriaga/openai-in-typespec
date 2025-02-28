@@ -35,7 +35,7 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("image") != true)
             {
                 writer.WritePropertyName("image"u8);
-                writer.WriteObjectValue<InternalRunStepDetailsToolCallsCodeOutputImageObjectImage>(_image, options);
+                writer.WriteObjectValue(_image, options);
             }
         }
 

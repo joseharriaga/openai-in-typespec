@@ -45,7 +45,7 @@ namespace OpenAI.Assistants
             if (Optional.IsCollectionDefined(NewVectorStores) && _additionalBinaryDataProperties?.ContainsKey("vector_stores") != true)
             {
                 writer.WritePropertyName("vector_stores"u8);
-                this.SerializeNewVectorStores(writer, options);
+                SerializeNewVectorStores(writer, options);
             }
             if (_additionalBinaryDataProperties != null)
             {

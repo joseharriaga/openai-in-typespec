@@ -39,7 +39,7 @@ namespace OpenAI.RealtimeConversation
             }
             if (_additionalBinaryDataProperties?.ContainsKey("transcript") != true)
             {
-                if (InternalTranscriptValue != null)
+                if (Optional.IsDefined(InternalTranscriptValue))
                 {
                     writer.WritePropertyName("transcript"u8);
                     writer.WriteStringValue(InternalTranscriptValue);

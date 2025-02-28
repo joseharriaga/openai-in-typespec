@@ -48,27 +48,13 @@ namespace OpenAI.FineTuning
             }
             if (Optional.IsDefined(FirstId) && _additionalBinaryDataProperties?.ContainsKey("first_id") != true)
             {
-                if (FirstId != null)
-                {
-                    writer.WritePropertyName("first_id"u8);
-                    writer.WriteStringValue(FirstId);
-                }
-                else
-                {
-                    writer.WriteNull("firstId"u8);
-                }
+                writer.WritePropertyName("first_id"u8);
+                writer.WriteStringValue(FirstId);
             }
             if (Optional.IsDefined(LastId) && _additionalBinaryDataProperties?.ContainsKey("last_id") != true)
             {
-                if (LastId != null)
-                {
-                    writer.WritePropertyName("last_id"u8);
-                    writer.WriteStringValue(LastId);
-                }
-                else
-                {
-                    writer.WriteNull("lastId"u8);
-                }
+                writer.WritePropertyName("last_id"u8);
+                writer.WriteStringValue(LastId);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("has_more") != true)
             {

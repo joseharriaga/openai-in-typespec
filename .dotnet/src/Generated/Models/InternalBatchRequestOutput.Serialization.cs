@@ -39,27 +39,13 @@ namespace OpenAI.Batch
             }
             if (Optional.IsDefined(Response) && _additionalBinaryDataProperties?.ContainsKey("response") != true)
             {
-                if (Response != null)
-                {
-                    writer.WritePropertyName("response"u8);
-                    writer.WriteObjectValue(Response, options);
-                }
-                else
-                {
-                    writer.WriteNull("response"u8);
-                }
+                writer.WritePropertyName("response"u8);
+                writer.WriteObjectValue(Response, options);
             }
             if (Optional.IsDefined(Error) && _additionalBinaryDataProperties?.ContainsKey("error") != true)
             {
-                if (Error != null)
-                {
-                    writer.WritePropertyName("error"u8);
-                    writer.WriteObjectValue(Error, options);
-                }
-                else
-                {
-                    writer.WriteNull("error"u8);
-                }
+                writer.WritePropertyName("error"u8);
+                writer.WriteObjectValue(Error, options);
             }
             if (_additionalBinaryDataProperties != null)
             {

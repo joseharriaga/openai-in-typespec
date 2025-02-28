@@ -35,7 +35,7 @@ namespace OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
                 writer.WritePropertyName("content"u8);
-                this.SerializeContentValue(writer, options);
+                SerializeContentValue(writer, options);
             }
         }
 
@@ -60,7 +60,7 @@ namespace OpenAI.Chat
             }
             InternalChatOutputPredictionKind @type = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            Chat.ChatMessageContent content = default;
+            ChatMessageContent content = default;
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))

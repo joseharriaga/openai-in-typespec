@@ -78,14 +78,14 @@ namespace OpenAI.RealtimeConversation
             }
             if (_additionalBinaryDataProperties?.ContainsKey("input_audio_transcription") != true)
             {
-                if (InputAudioTranscription != null)
+                if (Optional.IsDefined(InputAudioTranscription))
                 {
                     writer.WritePropertyName("input_audio_transcription"u8);
                     writer.WriteObjectValue(InputAudioTranscription, options);
                 }
                 else
                 {
-                    writer.WriteNull("inputAudioTranscription"u8);
+                    writer.WriteNull("input_audio_transcription"u8);
                 }
             }
             if (_additionalBinaryDataProperties?.ContainsKey("turn_detection") != true)
@@ -122,7 +122,7 @@ namespace OpenAI.RealtimeConversation
             }
             if (_additionalBinaryDataProperties?.ContainsKey("max_response_output_tokens") != true)
             {
-                if (_maxResponseOutputTokens != null)
+                if (Optional.IsDefined(_maxResponseOutputTokens))
                 {
                     writer.WritePropertyName("max_response_output_tokens"u8);
 #if NET6_0_OR_GREATER
@@ -136,7 +136,7 @@ namespace OpenAI.RealtimeConversation
                 }
                 else
                 {
-                    writer.WriteNull("maxResponseOutputTokens"u8);
+                    writer.WriteNull("max_response_output_tokens"u8);
                 }
             }
             if (_additionalBinaryDataProperties != null)

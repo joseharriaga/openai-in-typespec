@@ -5102,7 +5102,7 @@ components:
           format: int32
           nullable: true
           description: An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and [reasoning tokens](/docs/guides/reasoning).
-        n:
+        'n':
           type: integer
           format: int32
           nullable: true
@@ -5616,7 +5616,7 @@ components:
 
             The token count of your prompt plus `max_tokens` cannot exceed the model's context length. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
           default: 16
-        n:
+        'n':
           type: integer
           format: int32
           nullable: true
@@ -6077,7 +6077,7 @@ components:
           description: The model to use for image generation. Only `dall-e-2` is supported at this time.
           x-oaiTypeLabel: string
           default: dall-e-2
-        n:
+        'n':
           type: integer
           format: int32
           nullable: true
@@ -6124,7 +6124,7 @@ components:
           description: The model to use for image generation.
           x-oaiTypeLabel: string
           default: dall-e-2
-        n:
+        'n':
           type: integer
           format: int32
           nullable: true
@@ -6187,7 +6187,7 @@ components:
           description: The model to use for image generation. Only `dall-e-2` is supported at this time.
           x-oaiTypeLabel: string
           default: dall-e-2
-        n:
+        'n':
           type: integer
           format: int32
           nullable: true

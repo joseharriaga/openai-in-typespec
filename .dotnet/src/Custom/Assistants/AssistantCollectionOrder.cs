@@ -4,7 +4,7 @@ namespace OpenAI.Assistants;
 
 // CUSTOM: Renamed.
 [Experimental("OPENAI001")]
-[CodeGenModel("ListAssistantsRequestOrder")]
+[CodeGenType("ListAssistantsRequestOrder")]
 public readonly partial struct AssistantCollectionOrder
 {
     // CUSTOM: Renamed.

@@ -73,15 +73,8 @@ namespace OpenAI.Files
             }
             if (Optional.IsDefined(File) && _additionalBinaryDataProperties?.ContainsKey("file") != true)
             {
-                if (File != null)
-                {
-                    writer.WritePropertyName("file"u8);
-                    writer.WriteObjectValue(File, options);
-                }
-                else
-                {
-                    writer.WriteNull("file"u8);
-                }
+                writer.WritePropertyName("file"u8);
+                writer.WriteObjectValue(File, options);
             }
             if (_additionalBinaryDataProperties != null)
             {

@@ -2,7 +2,7 @@
 
 namespace OpenAI.Files;
 
-[CodeGenModel("CreateFileRequest")]
+[CodeGenType("CreateFileRequest")]
 [CodeGenSuppress("InternalFileUploadOptions", typeof(Stream), typeof(FileUploadPurpose))]
 internal partial class InternalFileUploadOptions
 {

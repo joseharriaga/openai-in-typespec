@@ -43,7 +43,7 @@ namespace OpenAI.RealtimeConversation
             }
             if (_additionalBinaryDataProperties?.ContainsKey("id") != true)
             {
-                if (Id != null)
+                if (Optional.IsDefined(Id))
                 {
                     writer.WritePropertyName("id"u8);
                     writer.WriteStringValue(Id);

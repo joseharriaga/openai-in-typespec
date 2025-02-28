@@ -33,7 +33,7 @@ namespace OpenAI.Chat
             }
             if (_additionalBinaryDataProperties?.ContainsKey("refusal") != true)
             {
-                if (Refusal != null)
+                if (Optional.IsDefined(Refusal))
                 {
                     writer.WritePropertyName("refusal"u8);
                     writer.WriteStringValue(Refusal);
@@ -55,15 +55,8 @@ namespace OpenAI.Chat
             }
             if (Optional.IsDefined(Audio) && _additionalBinaryDataProperties?.ContainsKey("audio") != true)
             {
-                if (Audio != null)
-                {
-                    writer.WritePropertyName("audio"u8);
-                    writer.WriteObjectValue(Audio, options);
-                }
-                else
-                {
-                    writer.WriteNull("audio"u8);
-                }
+                writer.WritePropertyName("audio"u8);
+                writer.WriteObjectValue(Audio, options);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("role") != true)
             {
@@ -72,10 +65,10 @@ namespace OpenAI.Chat
             }
             if (_additionalBinaryDataProperties?.ContainsKey("content") != true)
             {
-                if (Content != null)
+                if (Optional.IsDefined(Content))
                 {
                     writer.WritePropertyName("content"u8);
-                    this.SerializeContentValue(writer, options);
+                    SerializeContentValue(writer, options);
                 }
                 else
                 {
@@ -85,7 +78,7 @@ namespace OpenAI.Chat
             if (Optional.IsDefined(FunctionCall) && _additionalBinaryDataProperties?.ContainsKey("function_call") != true)
             {
                 writer.WritePropertyName("function_call"u8);
-                writer.WriteObjectValue<ChatFunctionCall>(FunctionCall, options);
+                writer.WriteObjectValue(FunctionCall, options);
             }
             if (_additionalBinaryDataProperties != null)
             {
@@ -130,8 +123,8 @@ namespace OpenAI.Chat
             string refusal = default;
             IReadOnlyList<ChatToolCall> toolCalls = default;
             ChatOutputAudio audio = default;
-            Chat.ChatMessageRole role = default;
-            Chat.ChatMessageContent content = default;
+            ChatMessageRole role = default;
+            ChatMessageContent content = default;
             ChatFunctionCall functionCall = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())

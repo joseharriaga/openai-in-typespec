@@ -50,8 +50,8 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            Chat.ChatMessageContent content = default;
-            Chat.ChatMessageRole role = default;
+            ChatMessageContent content = default;
+            ChatMessageRole role = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             string refusal = default;
             string participantName = default;

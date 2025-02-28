@@ -1,10 +1,10 @@
-using Microsoft.Generator.CSharp.ClientModel;
-using Microsoft.Generator.CSharp.Expressions;
-using Microsoft.Generator.CSharp.Providers;
-using Microsoft.Generator.CSharp.Snippets;
-using Microsoft.Generator.CSharp.Statements;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.TypeSpec.Generator.ClientModel;
+using Microsoft.TypeSpec.Generator.Expressions;
+using Microsoft.TypeSpec.Generator.Providers;
+using Microsoft.TypeSpec.Generator.Snippets;
+using Microsoft.TypeSpec.Generator.Statements;
 using static OpenAILibraryPlugin.Visitors.VisitorHelpers;
 
 namespace OpenAILibraryPlugin.Visitors;
@@ -16,7 +16,7 @@ namespace OpenAILibraryPlugin.Visitors;
 /// </summary>
 public class InvariantFormatAdditionalPropertiesVisitor : ScmLibraryVisitor
 {
-    protected override MethodProvider Visit(MethodProvider method)
+    protected override MethodProvider VisitMethod(MethodProvider method)
     {
         if (method.Signature.Name == "JsonModelWriteCore"
             || method.Signature.Name.StartsWith("Deserialize"))

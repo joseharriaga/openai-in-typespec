@@ -43,7 +43,7 @@ namespace OpenAI.Assistants
             }
             if (_additionalBinaryDataProperties?.ContainsKey("metadata") != true)
             {
-                if (Metadata != null && Optional.IsCollectionDefined(Metadata))
+                if (options.Format != "W" && Optional.IsCollectionDefined(Metadata))
                 {
                     writer.WritePropertyName("metadata"u8);
                     writer.WriteStartObject();
@@ -67,18 +67,18 @@ namespace OpenAI.Assistants
             if (_additionalBinaryDataProperties?.ContainsKey("object") != true)
             {
                 writer.WritePropertyName("object"u8);
-                writer.WriteStringValue(this.Object.ToString());
+                writer.WriteStringValue(Object.ToString());
             }
             if (_additionalBinaryDataProperties?.ContainsKey("tool_resources") != true)
             {
-                if (ToolResources != null)
+                if (Optional.IsDefined(ToolResources))
                 {
                     writer.WritePropertyName("tool_resources"u8);
                     writer.WriteObjectValue(ToolResources, options);
                 }
                 else
                 {
-                    writer.WriteNull("toolResources"u8);
+                    writer.WriteNull("tool_resources"u8);
                 }
             }
             if (_additionalBinaryDataProperties != null)

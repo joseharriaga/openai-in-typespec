@@ -35,7 +35,7 @@ namespace OpenAI.VectorStores
             if (_additionalBinaryDataProperties?.ContainsKey("static") != true)
             {
                 writer.WritePropertyName("static"u8);
-                writer.WriteObjectValue<InternalStaticChunkingStrategyDetails>(_internalDetails, options);
+                writer.WriteObjectValue(_internalDetails, options);
             }
         }
 

@@ -11,13 +11,13 @@ namespace OpenAI.Assistants
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        private protected RunStepToolCall(string id, Assistants.RunStepToolCallKind kind)
+        private protected RunStepToolCall(string id, RunStepToolCallKind kind)
         {
             Id = id;
             Kind = kind;
         }
 
-        internal RunStepToolCall(string id, Assistants.RunStepToolCallKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal RunStepToolCall(string id, RunStepToolCallKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Id = id;
             Kind = kind;

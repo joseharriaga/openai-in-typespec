@@ -1,7 +1,7 @@
-using Microsoft.Generator.CSharp.ClientModel;
-using Microsoft.Generator.CSharp.Primitives;
-using Microsoft.Generator.CSharp.Providers;
 using System;
+using Microsoft.TypeSpec.Generator.ClientModel;
+using Microsoft.TypeSpec.Generator.Primitives;
+using Microsoft.TypeSpec.Generator.Providers;
 
 namespace OpenAILibraryPlugin.Visitors;
 
@@ -12,14 +12,14 @@ namespace OpenAILibraryPlugin.Visitors;
 /// </summary>
 public class ProhibitedNamespaceVisitor : ScmLibraryVisitor
 {
-    protected override TypeProvider Visit(TypeProvider type)
+    protected override TypeProvider VisitType(TypeProvider type)
     {
         if (type.DeclarationModifiers.HasFlag(TypeSignatureModifiers.Public)
-            && (type.Namespace == "OpenAI" || type.Namespace == "OpenAI.Models")
-            && string.IsNullOrEmpty(type.CustomCodeView?.Namespace))
+            && (type.Type.Namespace == "OpenAI" || type.Type.Namespace == "OpenAI.Models")
+            && string.IsNullOrEmpty(type.CustomCodeView?.Type.Namespace))
         {
             throw new InvalidOperationException(Environment.NewLine
-                + $"Public type '{type.Name}' is present via generation in prohibited namespace '{type.Namespace}'."
+                + $"Public type '{type.Name}' is present via generation in prohibited namespace '{type.Type.Namespace}'."
                 + Environment.NewLine
                 + "Please forward-declare the type in an appropriate namespace."
                 + Environment.NewLine);

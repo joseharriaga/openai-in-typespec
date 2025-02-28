@@ -59,7 +59,7 @@ namespace OpenAI.Assistants
                 return null;
             }
             string id = default;
-            Assistants.RunStepToolCallKind kind = default;
+            RunStepToolCallKind kind = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             InternalRunStepDetailsToolCallsFileSearchObjectFileSearch fileSearch = default;
             foreach (var prop in element.EnumerateObject())

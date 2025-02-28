@@ -7,7 +7,7 @@ namespace OpenAI.Assistants;
 /// Represents additional options available when creating a new <see cref="Assistant"/>.
 /// </summary>
 [Experimental("OPENAI001")]
-[CodeGenModel("CreateAssistantRequest")]
+[CodeGenType("CreateAssistantRequest")]
 [CodeGenSuppress(nameof(AssistantCreationOptions), typeof(string))]
 public partial class AssistantCreationOptions
 {

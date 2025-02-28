@@ -10,7 +10,7 @@ namespace OpenAI.Assistants;
 /// Represents additional options available when creating a new <see cref="ThreadRun"/>.
 /// </summary>
 [Experimental("OPENAI001")]
-[CodeGenModel("CreateRunRequest")]
+[CodeGenType("CreateRunRequest")]
 [CodeGenSuppress("RunCreationOptions", typeof(string))]
 [CodeGenSerialization(nameof(ToolConstraint), "tool_choice", SerializationValueHook = nameof(SerializeToolConstraint))]
 public partial class RunCreationOptions
@@ -69,7 +69,7 @@ public partial class RunCreationOptions
     }
 
     /// <summary>
-    /// Whether to enable parallel function calling during tool use. 
+    /// Whether to enable parallel function calling during tool use.
     /// </summary>
     /// <remarks>
     /// Assumed <c>true</c> if not otherwise specified.
@@ -83,11 +83,11 @@ public partial class RunCreationOptions
     /// <para>
     /// <list type="bullet">
     /// <item>
-    ///     <c>code_interpreter</c> - <see cref="CodeInterpreterToolDefinition"/> 
+    ///     <c>code_interpreter</c> - <see cref="CodeInterpreterToolDefinition"/>
     ///     - works with data, math, and computer code
     /// </item>
     /// <item>
-    ///     <c>file_search</c> - <see cref="FileSearchToolDefinition"/> 
+    ///     <c>file_search</c> - <see cref="FileSearchToolDefinition"/>
     ///     - dynamically enriches an Run's context with content from vector stores
     /// </item>
     /// <item>
@@ -126,7 +126,7 @@ public partial class RunCreationOptions
     public RunTruncationStrategy TruncationStrategy { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [CodeGenMember("ToolChoice")]
     public ToolConstraint ToolConstraint { get; set; }

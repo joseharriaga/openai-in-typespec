@@ -11,13 +11,13 @@ namespace OpenAI.RealtimeConversation
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        private protected ConversationUpdate(string eventId, RealtimeConversation.ConversationUpdateKind kind)
+        private protected ConversationUpdate(string eventId, ConversationUpdateKind kind)
         {
             EventId = eventId;
             Kind = kind;
         }
 
-        internal ConversationUpdate(string eventId, RealtimeConversation.ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal ConversationUpdate(string eventId, ConversationUpdateKind kind, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             EventId = eventId;
             Kind = kind;

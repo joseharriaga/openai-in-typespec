@@ -48,7 +48,7 @@ namespace OpenAI.Chat
             }
             if (_additionalBinaryDataProperties?.ContainsKey("logprobs") != true)
             {
-                if (Logprobs != null)
+                if (Optional.IsDefined(Logprobs))
                 {
                     writer.WritePropertyName("logprobs"u8);
                     writer.WriteObjectValue(Logprobs, options);
@@ -98,7 +98,7 @@ namespace OpenAI.Chat
             {
                 return null;
             }
-            Chat.ChatFinishReason finishReason = default;
+            ChatFinishReason finishReason = default;
             int index = default;
             InternalChatCompletionResponseMessage message = default;
             InternalCreateChatCompletionResponseChoiceLogprobs logprobs = default;

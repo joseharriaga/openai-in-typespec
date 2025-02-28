@@ -1,6 +1,6 @@
-using Microsoft.Generator.CSharp.ClientModel;
-using Microsoft.Generator.CSharp.Primitives;
-using Microsoft.Generator.CSharp.Providers;
+using Microsoft.TypeSpec.Generator.ClientModel;
+using Microsoft.TypeSpec.Generator.Primitives;
+using Microsoft.TypeSpec.Generator.Providers;
 
 namespace AzureOpenAILibraryPlugin;
 
@@ -9,7 +9,7 @@ namespace AzureOpenAILibraryPlugin;
 /// </summary>
 public class InternalSettablePropertiesVisitor : ScmLibraryVisitor
 {
-    protected override TypeProvider? Visit(TypeProvider type)
+    protected override TypeProvider? VisitType(TypeProvider type)
     {
         if (type.Name.Contains("Internal") && type.DeclarationModifiers.HasFlag(TypeSignatureModifiers.Internal))
         {

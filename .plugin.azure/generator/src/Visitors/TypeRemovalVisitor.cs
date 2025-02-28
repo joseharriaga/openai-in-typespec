@@ -1,8 +1,7 @@
-using Microsoft.Generator.CSharp.ClientModel;
-using Microsoft.Generator.CSharp.Providers;
-using Microsoft.Generator.CSharp.Snippets;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.TypeSpec.Generator.ClientModel;
+using Microsoft.TypeSpec.Generator.Providers;
 
 namespace AzureOpenAILibraryPlugin;
 
@@ -44,7 +43,7 @@ public class TypeRemovalVisitor : ScmLibraryVisitor
           ".*ContentTextAnnotationsFileCitation.*"
         ];
 
-    protected override TypeProvider? Visit(TypeProvider type)
+    protected override TypeProvider? VisitType(TypeProvider type)
     {
         if (PatternsToKeep.Any(patternToKeep => Regex.IsMatch(type.Name, patternToKeep)
             && !PatternsToStillDeleteAfterPatternsToKeep.Any(patternToStillDelete => Regex.IsMatch(type.Name, patternToStillDelete))))

@@ -1,12 +1,12 @@
 using System.ComponentModel.Composition;
-using Microsoft.Generator.CSharp;
-using Microsoft.Generator.CSharp.ClientModel;
+using Microsoft.TypeSpec.Generator;
+using Microsoft.TypeSpec.Generator.ClientModel;
 
 namespace AzureOpenAILibraryPlugin
 {
     [Export(typeof(CodeModelPlugin))]
     [ExportMetadata("PluginName", nameof(AzureOpenAILibraryPlugin))]
-    public class AzureOpenAILibraryPlugin : ClientModelPlugin
+    public class AzureOpenAILibraryPlugin : ScmCodeModelPlugin
     {
         [ImportingConstructor]
         public AzureOpenAILibraryPlugin(GeneratorContext context) : base(context) { }

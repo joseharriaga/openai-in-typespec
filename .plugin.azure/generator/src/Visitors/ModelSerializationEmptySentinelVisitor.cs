@@ -1,10 +1,10 @@
-using Microsoft.Generator.CSharp.ClientModel;
-using Microsoft.Generator.CSharp.Primitives;
-using Microsoft.Generator.CSharp.Providers;
-using Microsoft.Generator.CSharp.Snippets;
 using System;
 using System.Collections.Generic;
-using static Microsoft.Generator.CSharp.Snippets.Snippet;
+using Microsoft.TypeSpec.Generator.ClientModel;
+using Microsoft.TypeSpec.Generator.Primitives;
+using Microsoft.TypeSpec.Generator.Providers;
+using Microsoft.TypeSpec.Generator.Snippets;
+using static Microsoft.TypeSpec.Generator.Snippets.Snippet;
 
 namespace AzureOpenAILibraryPlugin;
 
@@ -18,7 +18,7 @@ public class ModelSerializationEmptySentinelVisitor : ScmLibraryVisitor
     private const string SentinelValueFieldName = "_sentinelValue";
     private const string IsSentinelValueMethodName = "IsSentinelValue";
 
-    protected override TypeProvider Visit(TypeProvider type)
+    protected override TypeProvider VisitType(TypeProvider type)
     {
         if (type.Name == ModelSerializationExtensionsTypeName)
         {

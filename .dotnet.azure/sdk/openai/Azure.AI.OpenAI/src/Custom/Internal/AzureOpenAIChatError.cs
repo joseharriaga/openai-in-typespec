@@ -9,7 +9,7 @@ using System.Text.Json;
 namespace Azure.AI.OpenAI;
 
 [Experimental("AOAI001")]
-[CodeGenModel("AzureOpenAIChatError")]
+[CodeGenType("AzureOpenAIChatError")]
 internal partial class AzureOpenAIChatError
 {
     internal static AzureOpenAIChatError TryCreateFromResponse(PipelineResponse response)

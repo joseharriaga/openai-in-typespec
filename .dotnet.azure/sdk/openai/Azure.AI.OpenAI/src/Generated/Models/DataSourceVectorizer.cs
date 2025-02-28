@@ -7,7 +7,10 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> A representation of a data vectorization source usable as an embedding resource with a data source. </summary>
+    /// <summary>
+    /// A representation of a data vectorization source usable as an embedding resource with a data source.
+    /// Please note this is the abstract base class. The derived classes available for instantiation are: 
+    /// </summary>
     public abstract partial class DataSourceVectorizer
     {
         /// <summary> Keeps track of any properties unknown to the library. </summary>
@@ -24,8 +27,10 @@ namespace Azure.AI.OpenAI.Chat
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
+        /// <summary> The differentiating identifier for the concrete vectorization source. </summary>
         internal string Type { get; set; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

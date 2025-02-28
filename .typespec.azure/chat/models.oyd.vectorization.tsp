@@ -36,7 +36,7 @@ model AzureChatDataSourceEndpointVectorizationSource
    * Endpoint authentication supports API key and access token mechanisms.
    */
   @typeChangedFrom(
-    AzureOpenAIServiceApiVersion.v2024_10_21,
+    AzureOpenAIServiceApiVersion.v2024_12_01_preview,
     AzureChatDataSourceApiKeyAuthenticationOptions
   )
   authentication: AzureChatDataSourceApiKeyAuthenticationOptions | AzureChatDataSourceAccessTokenAuthenticationOptions;

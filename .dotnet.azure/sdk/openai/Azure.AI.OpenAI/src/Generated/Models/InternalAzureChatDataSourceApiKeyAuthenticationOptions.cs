@@ -22,6 +22,7 @@ namespace Azure.AI.OpenAI.Chat
             Key = key;
         }
 
+        /// <summary> Gets the Key. </summary>
         public string Key { get; set; }
     }
 }

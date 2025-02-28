@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Azure.AI.OpenAI;
 
 [Experimental("AOAI001")]
-[CodeGenModel("AzureContentFilterResultForChoice")]
+[CodeGenType("AzureContentFilterResultForChoice")]
 public partial class ResponseContentFilterResult
 {
     internal InternalAzureContentFilterResultForChoiceError Error { get; }

@@ -7,7 +7,10 @@ using System.Collections.Generic;
 
 namespace Azure.AI.OpenAI.Chat
 {
-    /// <summary> The DataSourceAuthentication. </summary>
+    /// <summary>
+    /// The DataSourceAuthentication.
+    /// Please note this is the abstract base class. The derived classes available for instantiation are: 
+    /// </summary>
     public abstract partial class DataSourceAuthentication
     {
         /// <summary> Keeps track of any properties unknown to the library. </summary>
@@ -24,8 +27,10 @@ namespace Azure.AI.OpenAI.Chat
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
+        /// <summary> Gets or sets the Type. </summary>
         internal string Type { get; set; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

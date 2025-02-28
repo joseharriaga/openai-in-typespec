@@ -32,6 +32,7 @@ namespace Azure.AI.OpenAI
         /// <summary> Whether the content severity resulted in a content filtering action. </summary>
         public bool Filtered { get; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

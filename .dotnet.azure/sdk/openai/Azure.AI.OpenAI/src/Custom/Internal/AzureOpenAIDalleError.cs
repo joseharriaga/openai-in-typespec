@@ -9,7 +9,7 @@ using System.Text.Json;
 namespace Azure.AI.OpenAI;
 
 [Experimental("AOAI001")]
-[CodeGenModel("AzureOpenAIDalleError")]
+[CodeGenType("AzureOpenAIDalleError")]
 internal partial class AzureOpenAIDalleError
 {
     internal static AzureOpenAIDalleError TryCreateFromResponse(PipelineResponse response)

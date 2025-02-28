@@ -25,10 +25,13 @@ namespace Azure.AI.OpenAI
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
+        /// <summary> A value indicating whether the blocklist produced a filtering action. </summary>
         public bool Filtered { get; set; }
 
+        /// <summary> The ID of the custom blocklist evaluated. </summary>
         public string Id { get; set; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

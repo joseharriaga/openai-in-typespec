@@ -48,7 +48,7 @@ namespace Azure.AI.OpenAI.Chat
             if (Optional.IsDefined(RetrievedDocuments) && _additionalBinaryDataProperties?.ContainsKey("all_retrieved_documents") != true)
             {
                 writer.WritePropertyName("all_retrieved_documents"u8);
-                writer.WriteObjectValue<ChatRetrievedDocument>(RetrievedDocuments, options);
+                writer.WriteObjectValue(RetrievedDocuments, options);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {

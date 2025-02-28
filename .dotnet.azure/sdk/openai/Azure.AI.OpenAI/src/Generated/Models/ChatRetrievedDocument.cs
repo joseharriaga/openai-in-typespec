@@ -63,6 +63,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <summary> If applicable, an indication of why the document was filtered. </summary>
         public ChatDocumentFilterReason? FilterReason { get; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

@@ -24,12 +24,16 @@ namespace Azure.AI.OpenAI
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
+        /// <summary> The code associated with the inner error. </summary>
         public InternalAzureOpenAIChatErrorInnerErrorCode? Code { get; set; }
 
+        /// <summary> If applicable, the modified prompt used for generation. </summary>
         public string RevisedPrompt { get; set; }
 
+        /// <summary> The content filter result details associated with the inner error. </summary>
         public RequestContentFilterResult ContentFilterResults { get; set; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

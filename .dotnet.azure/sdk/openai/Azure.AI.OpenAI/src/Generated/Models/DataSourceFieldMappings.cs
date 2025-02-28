@@ -25,6 +25,7 @@ namespace Azure.AI.OpenAI.Chat
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

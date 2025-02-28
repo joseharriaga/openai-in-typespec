@@ -36,6 +36,7 @@ namespace Azure.AI.OpenAI.Chat
         /// <summary> The citations produced by the data retrieval. </summary>
         public IList<ChatCitation> Citations { get; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

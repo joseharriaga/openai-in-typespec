@@ -26,8 +26,18 @@ namespace Azure.AI.OpenAI.Chat
             Authentication = authentication;
         }
 
+        /// <summary>
+        /// Specifies the resource endpoint URL from which embeddings should be retrieved.
+        /// It should be in the format of:
+        /// https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/embeddings.
+        /// The api-version query parameter is not allowed.
+        /// </summary>
         public Uri Endpoint { get; set; }
 
+        /// <summary>
+        /// The number of dimensions to request on embeddings.
+        /// Only supported in 'text-embedding-3' and later models.
+        /// </summary>
         public int? Dimensions { get; set; }
     }
 }

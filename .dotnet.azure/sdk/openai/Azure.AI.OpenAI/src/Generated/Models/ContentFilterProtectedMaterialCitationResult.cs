@@ -27,6 +27,7 @@ namespace Azure.AI.OpenAI
         /// <summary> The name or identifier of the license associated with the detection. </summary>
         public string License { get; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

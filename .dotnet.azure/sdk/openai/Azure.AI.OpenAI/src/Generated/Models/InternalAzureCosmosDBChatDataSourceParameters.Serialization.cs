@@ -74,17 +74,17 @@ namespace Azure.AI.OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("authentication") != true)
             {
                 writer.WritePropertyName("authentication"u8);
-                writer.WriteObjectValue<DataSourceAuthentication>(Authentication, options);
+                writer.WriteObjectValue(Authentication, options);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("fields_mapping") != true)
             {
                 writer.WritePropertyName("fields_mapping"u8);
-                writer.WriteObjectValue<DataSourceFieldMappings>(FieldMappings, options);
+                writer.WriteObjectValue(FieldMappings, options);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("embedding_dependency") != true)
             {
                 writer.WritePropertyName("embedding_dependency"u8);
-                writer.WriteObjectValue<DataSourceVectorizer>(VectorizationSource, options);
+                writer.WriteObjectValue(VectorizationSource, options);
             }
             if (Optional.IsCollectionDefined(_internalIncludeContexts) && _additionalBinaryDataProperties?.ContainsKey("include_contexts") != true)
             {

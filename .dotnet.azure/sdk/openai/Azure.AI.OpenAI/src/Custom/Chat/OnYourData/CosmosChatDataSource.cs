@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Azure.AI.OpenAI.Chat;
 
-[CodeGenModel("AzureCosmosDBChatDataSource")]
+[CodeGenType("AzureCosmosDBChatDataSource")]
 [Experimental("AOAI001")]
 public partial class CosmosChatDataSource : ChatDataSource
 {

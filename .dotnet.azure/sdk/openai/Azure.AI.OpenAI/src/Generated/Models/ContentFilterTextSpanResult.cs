@@ -38,6 +38,7 @@ namespace Azure.AI.OpenAI
         /// <summary> Detailed information about the detected completion text spans. </summary>
         public IList<ContentFilterTextSpan> Details { get; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

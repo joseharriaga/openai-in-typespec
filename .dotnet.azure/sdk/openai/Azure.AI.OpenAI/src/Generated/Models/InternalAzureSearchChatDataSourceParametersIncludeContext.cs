@@ -22,10 +22,13 @@ namespace Azure.AI.OpenAI.Chat
             _value = value;
         }
 
+        /// <summary> Gets the Citations. </summary>
         public static InternalAzureSearchChatDataSourceParametersIncludeContext Citations { get; set; } = new InternalAzureSearchChatDataSourceParametersIncludeContext(CitationsValue);
 
+        /// <summary> Gets the Intent. </summary>
         public static InternalAzureSearchChatDataSourceParametersIncludeContext Intent { get; set; } = new InternalAzureSearchChatDataSourceParametersIncludeContext(IntentValue);
 
+        /// <summary> Gets the AllRetrievedDocuments. </summary>
         public static InternalAzureSearchChatDataSourceParametersIncludeContext AllRetrievedDocuments { get; set; } = new InternalAzureSearchChatDataSourceParametersIncludeContext(AllRetrievedDocumentsValue);
 
         public static bool operator ==(InternalAzureSearchChatDataSourceParametersIncludeContext left, InternalAzureSearchChatDataSourceParametersIncludeContext right) => left.Equals(right);

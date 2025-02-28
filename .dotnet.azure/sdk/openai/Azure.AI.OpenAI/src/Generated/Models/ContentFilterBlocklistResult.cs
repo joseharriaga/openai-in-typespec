@@ -29,6 +29,7 @@ namespace Azure.AI.OpenAI
         /// <summary> A value indicating whether any of the detailed blocklists resulted in a filtering action. </summary>
         public bool Filtered { get; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

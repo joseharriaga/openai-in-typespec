@@ -45,7 +45,7 @@ namespace Azure.AI.OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("authentication") != true)
             {
                 writer.WritePropertyName("authentication"u8);
-                writer.WriteObjectValue<DataSourceAuthentication>(Authentication, options);
+                writer.WriteObjectValue(Authentication, options);
             }
         }
 

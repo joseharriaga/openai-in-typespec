@@ -37,7 +37,7 @@ namespace Azure.AI.OpenAI
             if (Optional.IsDefined(InternalResults) && _additionalBinaryDataProperties?.ContainsKey("content_filter_results") != true)
             {
                 writer.WritePropertyName("content_filter_results"u8);
-                writer.WriteObjectValue<InternalAzureContentFilterResultForPromptContentFilterResults>(InternalResults, options);
+                writer.WriteObjectValue(InternalResults, options);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {

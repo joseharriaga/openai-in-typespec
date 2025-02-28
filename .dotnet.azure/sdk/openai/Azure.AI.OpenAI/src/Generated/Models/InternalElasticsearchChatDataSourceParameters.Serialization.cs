@@ -84,12 +84,12 @@ namespace Azure.AI.OpenAI.Chat
             if (_additionalBinaryDataProperties?.ContainsKey("authentication") != true)
             {
                 writer.WritePropertyName("authentication"u8);
-                writer.WriteObjectValue<DataSourceAuthentication>(Authentication, options);
+                writer.WriteObjectValue(Authentication, options);
             }
             if (Optional.IsDefined(FieldMappings) && _additionalBinaryDataProperties?.ContainsKey("fields_mapping") != true)
             {
                 writer.WritePropertyName("fields_mapping"u8);
-                writer.WriteObjectValue<DataSourceFieldMappings>(FieldMappings, options);
+                writer.WriteObjectValue(FieldMappings, options);
             }
             if (Optional.IsDefined(QueryType) && _additionalBinaryDataProperties?.ContainsKey("query_type") != true)
             {
@@ -99,7 +99,7 @@ namespace Azure.AI.OpenAI.Chat
             if (Optional.IsDefined(VectorizationSource) && _additionalBinaryDataProperties?.ContainsKey("embedding_dependency") != true)
             {
                 writer.WritePropertyName("embedding_dependency"u8);
-                writer.WriteObjectValue<DataSourceVectorizer>(VectorizationSource, options);
+                writer.WriteObjectValue(VectorizationSource, options);
             }
             if (options.Format != "W" && _additionalBinaryDataProperties != null)
             {

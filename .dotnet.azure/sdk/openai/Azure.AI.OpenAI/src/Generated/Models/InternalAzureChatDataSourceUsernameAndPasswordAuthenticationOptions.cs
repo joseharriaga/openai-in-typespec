@@ -25,8 +25,10 @@ namespace Azure.AI.OpenAI.Chat
             Password = password;
         }
 
+        /// <summary> Gets the Username. </summary>
         public string Username { get; set; }
 
+        /// <summary> Gets the Password. </summary>
         public string Password { get; set; }
     }
 }

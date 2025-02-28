@@ -25,10 +25,13 @@ namespace Azure.AI.OpenAI
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
+        /// <summary> A distinct, machine-readable code associated with the error. </summary>
         public int Code { get; set; }
 
+        /// <summary> A human-readable message associated with the error. </summary>
         public string Message { get; set; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Azure OpenAI Service
-  version: 2024-06-01
+  version: '2024-06-01'
 tags:
   - name: Chat
   - name: Images
@@ -846,7 +846,7 @@ components:
             This value is now deprecated in favor of `max_completion_tokens`, and is
             not compatible with [o1 series models](/docs/guides/reasoning).
           deprecated: true
-        n:
+        'n':
           type: integer
           format: int32
           nullable: true
@@ -1974,7 +1974,7 @@ components:
           description: The model to use for image generation.
           x-oaiTypeLabel: string
           default: dall-e-2
-        n:
+        'n':
           type: integer
           format: int32
           nullable: true

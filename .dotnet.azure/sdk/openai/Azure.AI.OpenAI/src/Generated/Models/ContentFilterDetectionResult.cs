@@ -35,6 +35,7 @@ namespace Azure.AI.OpenAI
         /// <summary> Whether the labeled content category was detected in the content. </summary>
         public bool Detected { get; }
 
+        /// <summary></summary>
         internal IDictionary<string, BinaryData> SerializedAdditionalRawData
         {
             get => _additionalBinaryDataProperties;

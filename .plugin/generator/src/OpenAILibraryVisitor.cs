@@ -170,7 +170,7 @@ public class OpenAILibraryVisitor : ScmLibraryVisitor
                     enclosingIfCondition = GetOptionalIsCollectionDefinedCondition(matchingReplacementInfo)
                         .And(enclosingIfCondition);
                 }
-                var str = statement.ToDisplayString();
+
                 var ifSt = new IfStatement(enclosingIfCondition) { statement };
 
                 // If this is a plain expression statement, we need to add the next statement as well which

@@ -5,6 +5,7 @@ using Microsoft.TypeSpec.Generator.Expressions;
 using Microsoft.TypeSpec.Generator.Providers;
 using Microsoft.TypeSpec.Generator.Snippets;
 using Microsoft.TypeSpec.Generator.Statements;
+using static Microsoft.Generator.CSharp.Snippets.Snippet;
 using static OpenAILibraryPlugin.Visitors.VisitorHelpers;
 
 namespace OpenAILibraryPlugin.Visitors;
@@ -68,8 +69,8 @@ public class CollectionInitializationVisitor : ScmLibraryVisitor
             return false;
         }
         ValueExpression nullFallbackExpression = parameter.Type.IsList
-            ? Snippet.New.Instance(parameter.Type.PropertyInitializationType)
-            : Snippet.New.Instance(parameter.Type);
+            ? New.Instance(parameter.Type.PropertyInitializationType)
+            : New.Instance(parameter.Type);
         ValueExpression coalescedValueExpression = assignmentExpression.Value
             .NullCoalesce(nullFallbackExpression);
         MethodBodyStatement coalescedStatement = assignmentExpression.Variable

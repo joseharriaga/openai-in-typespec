@@ -1,7 +1,8 @@
 {
   "name": "openai-tsp",
   "workspaces": [
-    ".plugin"
+    ".plugin",
+    ".plugin.azure"
   ],
   "version": "0.1.0",
   "type": "module",

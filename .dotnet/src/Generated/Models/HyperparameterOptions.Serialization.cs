@@ -27,41 +27,20 @@ namespace OpenAI.FineTuning
             {
                 throw new FormatException($"The model {nameof(HyperparameterOptions)} does not support writing '{format}' format.");
             }
+            if (Optional.IsDefined(CycleCount) && _additionalBinaryDataProperties?.ContainsKey("n_epochs") != true)
+            {
+                writer.WritePropertyName("n_epochs"u8);
+                writer.WriteObjectValue<FineTuning.HyperparameterCycleCount>(CycleCount, options);
+            }
             if (Optional.IsDefined(BatchSize) && _additionalBinaryDataProperties?.ContainsKey("batch_size") != true)
             {
                 writer.WritePropertyName("batch_size"u8);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(BatchSize);
-#else
-                using (JsonDocument document = JsonDocument.Parse(BatchSize))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteObjectValue<FineTuning.HyperparameterBatchSize>(BatchSize, options);
             }
-            if (Optional.IsDefined(LearningRateMultiplier) && _additionalBinaryDataProperties?.ContainsKey("learning_rate_multiplier") != true)
+            if (Optional.IsDefined(LearningRate) && _additionalBinaryDataProperties?.ContainsKey("learning_rate_multiplier") != true)
             {
                 writer.WritePropertyName("learning_rate_multiplier"u8);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(LearningRateMultiplier);
-#else
-                using (JsonDocument document = JsonDocument.Parse(LearningRateMultiplier))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
-            }
-            if (Optional.IsDefined(NEpochs) && _additionalBinaryDataProperties?.ContainsKey("n_epochs") != true)
-            {
-                writer.WritePropertyName("n_epochs"u8);
-#if NET6_0_OR_GREATER
-                writer.WriteRawValue(NEpochs);
-#else
-                using (JsonDocument document = JsonDocument.Parse(NEpochs))
-                {
-                    JsonSerializer.Serialize(writer, document.RootElement);
-                }
-#endif
+                writer.WriteObjectValue<FineTuning.HyperparameterLearningRate>(LearningRate, options);
             }
             if (_additionalBinaryDataProperties != null)
             {
@@ -103,19 +82,28 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            BinaryData batchSize = default;
-            BinaryData learningRateMultiplier = default;
-            BinaryData nEpochs = default;
+            FineTuning.HyperparameterCycleCount cycleCount = default;
+            FineTuning.HyperparameterBatchSize batchSize = default;
+            FineTuning.HyperparameterLearningRate learningRate = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
+                if (prop.NameEquals("n_epochs"u8))
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    cycleCount = FineTuning.HyperparameterCycleCount.DeserializeHyperparameterCycleCount(prop.Value, options);
+                    continue;
+                }
                 if (prop.NameEquals("batch_size"u8))
                 {
                     if (prop.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    batchSize = BinaryData.FromString(prop.Value.GetRawText());
+                    batchSize = FineTuning.HyperparameterBatchSize.DeserializeHyperparameterBatchSize(prop.Value, options);
                     continue;
                 }
                 if (prop.NameEquals("learning_rate_multiplier"u8))
@@ -124,21 +112,12 @@ namespace OpenAI.FineTuning
                     {
                         continue;
                     }
-                    learningRateMultiplier = BinaryData.FromString(prop.Value.GetRawText());
-                    continue;
-                }
-                if (prop.NameEquals("n_epochs"u8))
-                {
-                    if (prop.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    nEpochs = BinaryData.FromString(prop.Value.GetRawText());
+                    learningRate = FineTuning.HyperparameterLearningRate.DeserializeHyperparameterLearningRate(prop.Value, options);
                     continue;
                 }
                 additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
-            return new HyperparameterOptions(batchSize, learningRateMultiplier, nEpochs, additionalBinaryDataProperties);
+            return new HyperparameterOptions(cycleCount, batchSize, learningRate, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<HyperparameterOptions>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

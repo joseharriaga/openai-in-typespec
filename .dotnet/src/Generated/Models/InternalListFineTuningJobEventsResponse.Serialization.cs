@@ -40,7 +40,7 @@ namespace OpenAI.FineTuning
             {
                 writer.WritePropertyName("data"u8);
                 writer.WriteStartArray();
-                foreach (FineTuningJobEvent item in Data)
+                foreach (FineTuningEvent item in Data)
                 {
                     writer.WriteObjectValue(item, options);
                 }
@@ -92,7 +92,7 @@ namespace OpenAI.FineTuning
                 return null;
             }
             bool hasMore = default;
-            IList<FineTuningJobEvent> data = default;
+            IList<FineTuningEvent> data = default;
             InternalListFineTuningJobEventsResponseObject @object = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
@@ -104,10 +104,10 @@ namespace OpenAI.FineTuning
                 }
                 if (prop.NameEquals("data"u8))
                 {
-                    List<FineTuningJobEvent> array = new List<FineTuningJobEvent>();
+                    List<FineTuningEvent> array = new List<FineTuningEvent>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(FineTuningJobEvent.DeserializeFineTuningJobEvent(item, options));
+                        array.Add(FineTuningEvent.DeserializeFineTuningEvent(item, options));
                     }
                     data = array;
                     continue;

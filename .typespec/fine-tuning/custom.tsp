@@ -5,21 +5,33 @@ namespace OpenAI;
 union CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum {
   auto: "auto",
 }
+union CreateFineTuningJobRequestHyperparametersBatchSizeOption {
+  CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum,
+  int32,
+}
+
 union CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum {
   auto: "auto",
 }
+union CreateFineTuningJobRequestHyperparametersLearningRateMultiplierOption {
+  CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum,
+  float32,
+}
+
 union CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum {
   auto: "auto",
 }
+union CreateFineTuningJobRequestHyperparametersNEpochsOption {
+  CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum,
+  int32,
+}
 
-union FineTuningJobHyperparametersBatchSizeChoiceEnum {
+union CreateFineTuningJobRequestHyperparametersBetaChoiceEnum {
   auto: "auto",
 }
-union FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum {
-  auto: "auto",
-}
-union FineTuningJobHyperparametersNEpochsChoiceEnum {
-  auto: "auto",
+union CreateFineTuningJobRequestHyperparametersBetaOption {
+  CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum,
+  int32,
 }
 
 @discriminator("type")
@@ -41,4 +53,9 @@ model CreateFineTuningJobRequestWandbIntegration
 @discriminator("type")
 model FineTuningIntegration {
   type: string;
+}
+
+model FineTuningJobsPageToken {
+  limit?: int32;
+  after?: string;
 }

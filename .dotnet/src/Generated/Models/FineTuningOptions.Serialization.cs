@@ -11,12 +11,8 @@ using OpenAI;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class FineTuningOptions : IJsonModel<FineTuningOptions>
+    public partial class FineTuningOptions : IJsonModel<FineTuningOptions>
     {
-        internal FineTuningOptions()
-        {
-        }
-
         void IJsonModel<FineTuningOptions>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -34,7 +30,7 @@ namespace OpenAI.FineTuning
             if (_additionalBinaryDataProperties?.ContainsKey("model") != true)
             {
                 writer.WritePropertyName("model"u8);
-                writer.WriteStringValue(Model.ToString());
+                writer.WriteStringValue(Model);
             }
             if (_additionalBinaryDataProperties?.ContainsKey("training_file") != true)
             {
@@ -44,7 +40,7 @@ namespace OpenAI.FineTuning
             if (Optional.IsDefined(Hyperparameters) && _additionalBinaryDataProperties?.ContainsKey("hyperparameters") != true)
             {
                 writer.WritePropertyName("hyperparameters"u8);
-                writer.WriteObjectValue(Hyperparameters, options);
+                writer.WriteObjectValue<HyperparameterOptions>(Hyperparameters, options);
             }
             if (Optional.IsDefined(Suffix) && _additionalBinaryDataProperties?.ContainsKey("suffix") != true)
             {
@@ -99,10 +95,10 @@ namespace OpenAI.FineTuning
                     writer.WriteNull("seed"u8);
                 }
             }
-            if (Optional.IsDefined(Method) && _additionalBinaryDataProperties?.ContainsKey("method") != true)
+            if (Optional.IsDefined(TrainingMethod) && _additionalBinaryDataProperties?.ContainsKey("method") != true)
             {
                 writer.WritePropertyName("method"u8);
-                writer.WriteObjectValue(Method, options);
+                writer.WriteObjectValue<FineTuningTrainingMethod>(TrainingMethod, options);
             }
             if (_additionalBinaryDataProperties != null)
             {
@@ -144,20 +140,20 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            InternalCreateFineTuningJobRequestModel model = default;
+            string model = default;
             string trainingFile = default;
             HyperparameterOptions hyperparameters = default;
             string suffix = default;
             string validationFile = default;
             IList<FineTuningIntegration> integrations = default;
             int? seed = default;
-            InternalTodoFineTuneMethod @method = default;
+            FineTuningTrainingMethod trainingMethod = default;
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("model"u8))
                 {
-                    model = new InternalCreateFineTuningJobRequestModel(prop.Value.GetString());
+                    model = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("training_file"u8))
@@ -224,7 +220,7 @@ namespace OpenAI.FineTuning
                     {
                         continue;
                     }
-                    @method = InternalTodoFineTuneMethod.DeserializeInternalTodoFineTuneMethod(prop.Value, options);
+                    trainingMethod = FineTuningTrainingMethod.DeserializeFineTuningTrainingMethod(prop.Value, options);
                     continue;
                 }
                 additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
@@ -237,7 +233,7 @@ namespace OpenAI.FineTuning
                 validationFile,
                 integrations ?? new ChangeTrackingList<FineTuningIntegration>(),
                 seed,
-                @method,
+                trainingMethod,
                 additionalBinaryDataProperties);
         }
 

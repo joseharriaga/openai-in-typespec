@@ -12,7 +12,7 @@ namespace OpenAI.Models;
 // - Renamed convenience methods.
 /// <summary> The service client for OpenAI model operations. </summary>
 [CodeGenType("Models")]
-[CodeGenSuppress("OpenAIModelClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
+[CodeGenSuppress("OpenAIModelClient", typeof(ClientPipeline), typeof(Uri))]
 [CodeGenSuppress("ListModelsAsync", typeof(CancellationToken))]
 [CodeGenSuppress("ListModels", typeof(CancellationToken))]
 [CodeGenSuppress("RetrieveModelAsync", typeof(string), typeof(CancellationToken))]

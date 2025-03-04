@@ -15,7 +15,7 @@ namespace OpenAI.Chat;
 // - Suppressed methods that only take the options parameter.
 /// <summary> The service client for OpenAI chat operations. </summary>
 [CodeGenType("Chat")]
-[CodeGenSuppress("ChatClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
+[CodeGenSuppress("ChatClient", typeof(ClientPipeline), typeof(Uri))]
 [CodeGenSuppress("CreateChatCompletionAsync", typeof(ChatCompletionOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateChatCompletion", typeof(ChatCompletionOptions), typeof(CancellationToken))]
 public partial class ChatClient

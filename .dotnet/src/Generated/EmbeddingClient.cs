@@ -15,12 +15,6 @@ namespace OpenAI.Embeddings
         {
         }
 
-        internal EmbeddingClient(ClientPipeline pipeline, Uri endpoint)
-        {
-            _endpoint = endpoint;
-            Pipeline = pipeline;
-        }
-
         public ClientPipeline Pipeline { get; }
     }
 }

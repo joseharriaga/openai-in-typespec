@@ -15,12 +15,6 @@ namespace OpenAI.Models
         {
         }
 
-        internal OpenAIModelClient(ClientPipeline pipeline, Uri endpoint)
-        {
-            _endpoint = endpoint;
-            Pipeline = pipeline;
-        }
-
         public ClientPipeline Pipeline { get; }
     }
 }

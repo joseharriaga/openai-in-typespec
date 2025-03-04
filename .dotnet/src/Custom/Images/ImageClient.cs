@@ -14,7 +14,7 @@ namespace OpenAI.Images;
 // - Suppressed methods that only take the options parameter.
 /// <summary> The service client for OpenAI image operations. </summary>
 [CodeGenType("Images")]
-[CodeGenSuppress("ImageClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
+[CodeGenSuppress("ImageClient", typeof(ClientPipeline), typeof(Uri))]
 [CodeGenSuppress("CreateImageAsync", typeof(ImageGenerationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateImage", typeof(ImageGenerationOptions), typeof(CancellationToken))]
 public partial class ImageClient

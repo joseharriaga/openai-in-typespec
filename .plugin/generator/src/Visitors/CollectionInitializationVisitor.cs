@@ -3,9 +3,8 @@ using System.Linq;
 using Microsoft.TypeSpec.Generator.ClientModel;
 using Microsoft.TypeSpec.Generator.Expressions;
 using Microsoft.TypeSpec.Generator.Providers;
-using Microsoft.TypeSpec.Generator.Snippets;
 using Microsoft.TypeSpec.Generator.Statements;
-using static Microsoft.Generator.CSharp.Snippets.Snippet;
+using static Microsoft.TypeSpec.Generator.Snippets.Snippet;
 using static OpenAILibraryPlugin.Visitors.VisitorHelpers;
 
 namespace OpenAILibraryPlugin.Visitors;

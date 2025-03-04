@@ -10,7 +10,7 @@ namespace OpenAI.LegacyCompletions;
 // - Suppressed methods that only take the options parameter.
 /// <summary> The service client for OpenAI legacy completion operations. </summary>
 [CodeGenType("Completions")]
-[CodeGenSuppress("LegacyCompletionClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
+[CodeGenSuppress("LegacyCompletionClient", typeof(ClientPipeline), typeof(Uri))]
 internal partial class LegacyCompletionClient
 {
     private readonly string _model;

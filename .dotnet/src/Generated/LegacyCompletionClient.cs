@@ -19,12 +19,6 @@ namespace OpenAI.LegacyCompletions
         {
         }
 
-        internal LegacyCompletionClient(ClientPipeline pipeline, Uri endpoint)
-        {
-            _endpoint = endpoint;
-            Pipeline = pipeline;
-        }
-
         public ClientPipeline Pipeline { get; }
 
         public virtual ClientResult CreateCompletion(BinaryContent content, RequestOptions options = null)

@@ -15,12 +15,6 @@ namespace OpenAI.Files
         {
         }
 
-        internal OpenAIFileClient(ClientPipeline pipeline, Uri endpoint)
-        {
-            _endpoint = endpoint;
-            Pipeline = pipeline;
-        }
-
         public ClientPipeline Pipeline { get; }
     }
 }

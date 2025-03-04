@@ -18,12 +18,6 @@ namespace OpenAI.VectorStores
         {
         }
 
-        internal VectorStoreClient(ClientPipeline pipeline, Uri endpoint)
-        {
-            _endpoint = endpoint;
-            Pipeline = pipeline;
-        }
-
         public ClientPipeline Pipeline { get; }
 
         public virtual ClientResult CreateVectorStore(BinaryContent content, RequestOptions options = null)

@@ -15,12 +15,6 @@ namespace OpenAI.Assistants
         {
         }
 
-        internal AssistantClient(ClientPipeline pipeline, Uri endpoint)
-        {
-            _endpoint = endpoint;
-            Pipeline = pipeline;
-        }
-
         public ClientPipeline Pipeline { get; }
     }
 }

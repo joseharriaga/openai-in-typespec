@@ -13,7 +13,7 @@ namespace OpenAI.Audio;
 // - Suppressed methods that only take the options parameter.
 /// <summary> The service client for OpenAI audio operations. </summary>
 [CodeGenType("Audio")]
-[CodeGenSuppress("AudioClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
+[CodeGenSuppress("AudioClient", typeof(ClientPipeline), typeof(Uri))]
 [CodeGenSuppress("CreateSpeechAsync", typeof(SpeechGenerationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateSpeech", typeof(SpeechGenerationOptions), typeof(CancellationToken))]
 public partial class AudioClient

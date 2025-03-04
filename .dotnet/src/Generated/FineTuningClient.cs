@@ -15,12 +15,6 @@ namespace OpenAI.FineTuning
         {
         }
 
-        internal FineTuningClient(ClientPipeline pipeline, Uri endpoint)
-        {
-            _endpoint = endpoint;
-            Pipeline = pipeline;
-        }
-
         public ClientPipeline Pipeline { get; }
     }
 }

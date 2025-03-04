@@ -14,7 +14,7 @@ namespace OpenAI.VectorStores;
 /// </summary>
 [Experimental("OPENAI001")]
 [CodeGenType("VectorStores")]
-[CodeGenSuppress("VectorStoreClient", typeof(ClientPipeline), typeof(ApiKeyCredential), typeof(Uri))]
+[CodeGenSuppress("VectorStoreClient", typeof(ClientPipeline), typeof(Uri))]
 [CodeGenSuppress("CreateVectorStoreAsync", typeof(VectorStoreCreationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("CreateVectorStore", typeof(VectorStoreCreationOptions), typeof(CancellationToken))]
 [CodeGenSuppress("ListVectorStoresAsync", typeof(int?), typeof(VectorStoreCollectionOrder?), typeof(string), typeof(string), typeof(CancellationToken))]

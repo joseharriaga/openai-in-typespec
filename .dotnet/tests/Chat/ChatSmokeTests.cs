@@ -933,6 +933,42 @@ public class ChatSmokeTests : SyncAsyncTestBase
     }
 
     [Test]
+    public async Task OperationsDoNotChangeOptionSerialization()
+    {
+        MockPipelineTransport mockTransport = new(BinaryData.FromString("{}"), BinaryData.FromString("{}"));
+        OpenAIClientOptions clientOptions = new()
+        {
+            Transport = mockTransport,
+            Endpoint = new Uri("https://my.custom.com/expected/test/endpoint"),
+        };
+
+        OpenAIClient topLevelClient = new(new ApiKeyCredential("mock-credential"), clientOptions);
+        ChatClient mockChatClient = topLevelClient.GetChatClient("mock-model");
+
+        ChatCompletionOptions options = new()
+        {
+            MaxOutputTokenCount = 42,
+        };
+
+        BinaryData originalSerializedOptions = ModelReaderWriter.Write(options);
+
+        _ = await mockChatClient.CompleteChatAsync(["Hello, world"], options);
+
+        BinaryData serializedOptionsAfterNonStreamingCall = ModelReaderWriter.Write(options);
+
+        _ = await mockChatClient.CompleteChatAsync(["Hello again, world"], options);
+
+        BinaryData serializedOptionsAfterStreamingCall = ModelReaderWriter.Write(options);
+
+        string originalInputText = originalSerializedOptions.ToString();
+        string firstMethodInputText = serializedOptionsAfterNonStreamingCall.ToString();
+        string secondMethodInputText = serializedOptionsAfterStreamingCall.ToString();
+
+        Assert.That(originalInputText, Is.EqualTo(firstMethodInputText));
+        Assert.That(originalInputText, Is.EqualTo(secondMethodInputText));
+    }
+
+    [Test]
     public void IdempotentOptionsSerialization()
     {
         ChatCompletionOptions emptyOptions = new();

@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI.Chat;
 using Azure.AI.OpenAI.Tests.Utils.Config;
@@ -32,35 +33,22 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
     [Category("Smoke")]
     public async Task DefaultUserAgentStringWorks()
     {
-        using MockHttpMessageHandler pipeline = new(MockHttpMessageHandler.ReturnEmptyJson);
-
-        Uri endpoint = new Uri("https://www.bing.com/");
-        string apiKey = "not-a-real-one";
-        string model = "ignore";
-
-        AzureOpenAIClient topLevel = new(
-            endpoint,
-            new ApiKeyCredential(apiKey),
-            new AzureOpenAIClientOptions()
-            {
-                Transport = pipeline.Transport
-            });
-
-        ChatClient client = WrapClient(topLevel.GetChatClient(model));
+        using MockHttpMessageHandler messageHandler = new(MockHttpMessageHandler.ReturnEmptyJson);
+        ChatClient client = GetMockChatClient(messageHandler);
 
         await client.CompleteChatAsync([new UserChatMessage("Hello")]);
 
-        Assert.That(pipeline.Requests, Is.Not.Empty);
+        Assert.That(messageHandler.Requests, Is.Not.Empty);
 
-        var request = pipeline.Requests[0];
+        var request = messageHandler.Requests[0];
         Assert.That(request.Method, Is.EqualTo(HttpMethod.Post));
-        Assert.That(request.Uri?.GetLeftPart(UriPartial.Authority), Is.EqualTo(endpoint.GetLeftPart(UriPartial.Authority)));
-        Assert.That(request.Headers.GetValueOrDefault("api-key")?.FirstOrDefault(), Is.EqualTo(apiKey));
+        Assert.That(request.Uri?.GetLeftPart(UriPartial.Authority), Is.EqualTo(s_mockEndpoint.GetLeftPart(UriPartial.Authority)));
+        Assert.That(request.Headers.GetValueOrDefault("api-key")?.FirstOrDefault(), Is.EqualTo(s_mockApiKeyValue));
         Assert.That(request.Headers.GetValueOrDefault("User-Agent")?.FirstOrDefault(), Does.Contain("azsdk-net-AI.OpenAI/"));
         Assert.That(request.Content, Is.Not.Null);
         var jsonString = request.Content.ToString();
         Assert.That(jsonString, Is.Not.Null.Or.Empty);
-        Assert.That(jsonString, Does.Contain("\"messages\"").And.Contain("\"model\"").And.Contain(model));
+        Assert.That(jsonString, Does.Contain("\"messages\"").And.Contain("\"model\"").And.Contain(s_mockModelValue));
     }
 
     [Test]
@@ -146,33 +134,31 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
     [Category("Smoke")]
     public async Task MaxTokensSerializationConfigurationWorks()
     {
-        using MockHttpMessageHandler pipeline = new(MockHttpMessageHandler.ReturnEmptyJson);
+        using MockHttpMessageHandler messageHandler = new(MockHttpMessageHandler.ReturnEmptyJson);
+        ChatClient client = GetMockChatClient(messageHandler);
 
-        Uri endpoint = new Uri("https://www.bing.com/");
-        string apiKey = "not-a-real-one";
-        string model = "ignore";
-
-        AzureOpenAIClient topLevel = new(
-            endpoint,
-            new ApiKeyCredential(apiKey),
-            new AzureOpenAIClientOptions()
-            {
-                Transport = pipeline.Transport
-            });
-
-        ChatClient client = topLevel.GetChatClient(model);
+        AutoResetEvent newRequestEvent = new(false);
+        string? latestSerializedRequest = null;
+        messageHandler.OnRequest += (sender, request) =>
+        {
+            latestSerializedRequest = request.Content.ToString();
+            newRequestEvent.Set();
+        };
 
         ChatCompletionOptions options = new();
-        bool GetSerializedOptionsContains(string value)
-        {
-            BinaryData serialized = ModelReaderWriter.Write(options);
-            return serialized.ToString().Contains(value);
-        }
-        async Task AssertExpectedSerializationAsync(bool hasOldMaxTokens, bool hasNewMaxCompletionTokens)
+
+        async Task<string> GetNextSerializedRequest()
         {
             _ = await client.CompleteChatAsync(["Just mocking, no call here"], options);
-            Assert.That(GetSerializedOptionsContains("max_tokens"), Is.EqualTo(hasOldMaxTokens));
-            Assert.That(GetSerializedOptionsContains("max_completion_tokens"), Is.EqualTo(hasNewMaxCompletionTokens));
+            newRequestEvent.WaitOne();
+            return latestSerializedRequest ?? string.Empty;
+        }
+
+        async Task AssertExpectedSerializationAsync(bool hasOldMaxTokens, bool hasNewMaxCompletionTokens)
+        {
+            string serializedRequest = await GetNextSerializedRequest();
+            Assert.That(serializedRequest.Contains("max_tokens"), Is.EqualTo(hasOldMaxTokens));
+            Assert.That(serializedRequest.Contains("max_completion_tokens"), Is.EqualTo(hasNewMaxCompletionTokens));
         }
 
         await AssertExpectedSerializationAsync(false, false);
@@ -324,7 +310,7 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(observed429Delay!.Value.TotalMilliseconds, Is.LessThan(3 * expectedDelayMilliseconds + 2 * observed200Delay!.Value.TotalMilliseconds));
     }
 
-#endregion
+    #endregion
 
     #region Regular chat completions tests
 
@@ -542,43 +528,6 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(completion, Is.Not.Null);
     }
 
-    [RecordedTest]
-    [TestCase("chat", false)]
-    [TestCase("chat_o1", true)]
-    [TestCase("chat_o3-mini", true)]
-    public async Task MaxOutputTokensWorksAcrossModels(string testConfigName, bool useNewProperty)
-    {
-        IConfiguration testConfig = TestConfig.GetConfig(testConfigName)!;
-        ChatClient client = GetTestClient(testConfig);
-
-        ChatCompletionOptions options = new()
-        {
-            MaxOutputTokenCount = 16,
-        };
-
-        if (useNewProperty)
-        {
-            options.SetNewMaxCompletionTokensPropertyEnabled();
-        }
-
-        ChatCompletion completion = await client.CompleteChatAsync(
-            ["Hello, world! Please write a funny haiku to greet me."],
-            options);
-        Assert.That(completion.FinishReason, Is.EqualTo(ChatFinishReason.Length));
-
-        string serializedOptionsAfterUse = ModelReaderWriter.Write(options).ToString();
-
-        if (useNewProperty)
-        {
-            Assert.That(serializedOptionsAfterUse, Does.Contain("max_completion_tokens"));
-            Assert.That(serializedOptionsAfterUse, Does.Not.Contain("max_tokens"));
-        }
-        else
-        {
-            Assert.That(serializedOptionsAfterUse, Does.Not.Contain("max_completion_tokens"));
-            Assert.That(serializedOptionsAfterUse, Does.Contain("max_tokens"));
-        }
-    }
     #endregion
 
     #region Streaming chat completion tests
@@ -781,6 +730,89 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
         Assert.That(completion, Is.Not.Null);
     }
 
+    [Test]
+    [Category("Smoke")]
+    public async Task StreamOptionsResetAppropriately()
+    {
+        using MockHttpMessageHandler messageHandler = new(MockHttpMessageHandler.ReturnEmptyJson);
+        ChatClient client = GetMockChatClient(messageHandler);
+
+        AutoResetEvent newRequestEvent = new(false);
+        string? latestSerializedRequest = null;
+        messageHandler.OnRequest += (sender, request) =>
+        {
+            latestSerializedRequest = request.Content.ToString();
+            newRequestEvent.Set();
+        };
+        ChatCompletionOptions options = new();
+
+        string serializedOriginalOptions = ModelReaderWriter.Write(options).ToString();
+        void AssertSerializedOptionsUnchanged() => Assert.That(ModelReaderWriter.Write(options).ToString(), Is.EqualTo(serializedOriginalOptions));
+
+        // When not streaming, stream_options should not be present in the request
+
+        _ = await client.CompleteChatAsync(["Hello, mock"], options);
+        newRequestEvent.WaitOne();
+        Assert.That(latestSerializedRequest, Does.Not.Contain("stream_options"));
+        AssertSerializedOptionsUnchanged();
+
+        // When streaming, stream_options should now be present
+
+        await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(["Hello, mock"], options))
+        { }
+        newRequestEvent.WaitOne();
+        Assert.That(latestSerializedRequest, Does.Contain("stream_options"));
+        AssertSerializedOptionsUnchanged();
+
+        // Going back to non-streaming, stream_options should again not be present
+
+        _ = await client.CompleteChatAsync(["Hello, mock"], options);
+        newRequestEvent.WaitOne();
+        Assert.That(latestSerializedRequest, Does.Not.Contain("stream_options"));
+        AssertSerializedOptionsUnchanged();
+
+        // When data_sources are provided, stream_options should specially be omitted even when streaming
+
+        AzureSearchChatDataSource source = new()
+        {
+            Endpoint = new Uri("https://some-search-resource.azure.com"),
+            Authentication = DataSourceAuthentication.FromApiKey("test-api-key"),
+            IndexName = "index-name-here",
+            FieldMappings = new()
+            {
+                ContentFieldNames = { "hello" },
+                TitleFieldName = "hi",
+            },
+            AllowPartialResults = true,
+            QueryType = DataSourceQueryType.Simple,
+            OutputContexts = DataSourceOutputContexts.AllRetrievedDocuments | DataSourceOutputContexts.Citations,
+            VectorizationSource = DataSourceVectorizer.FromEndpoint(
+                new Uri("https://my-embedding.com"),
+                DataSourceAuthentication.FromApiKey("embedding-api-key")),
+        };
+        options.AddDataSource(source);
+        serializedOriginalOptions = ModelReaderWriter.Write(options).ToString();
+
+        await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(["Hello, mock"], options))
+        { }
+        newRequestEvent.WaitOne();
+        Assert.That(latestSerializedRequest, Does.Not.Contain("stream_options"));
+        AssertSerializedOptionsUnchanged();
+
+        // And the non-presence should of course also be true for non-streaming
+
+        _ = await client.CompleteChatAsync(["Hello, mock"], options);
+        newRequestEvent.WaitOne();
+        Assert.That(latestSerializedRequest, Does.Not.Contain("stream_options"));
+        AssertSerializedOptionsUnchanged();
+
+        // Finally, with no/default options, streaming should have stream_options
+        await foreach (StreamingChatCompletionUpdate update in client.CompleteChatStreamingAsync(["Hello, mock"]))
+        { }
+        newRequestEvent.WaitOne();
+        Assert.That(latestSerializedRequest, Does.Contain("stream_options"));
+    }
+
 #if NET
     [RecordedTest]
     public async Task PredictedOutputsWork()
@@ -904,4 +936,21 @@ public partial class ChatTests : AoaiTestBase<ChatClient>
 
         #endregion
     }
+
+    private ChatClient GetMockChatClient(MockHttpMessageHandler mockHttpMessageHandler)
+    {
+        AzureOpenAIClient topLevel = new(
+            s_mockEndpoint,
+            new ApiKeyCredential(s_mockApiKeyValue),
+            new AzureOpenAIClientOptions()
+            {
+                Transport = mockHttpMessageHandler.Transport
+            });
+
+        return WrapClient(topLevel.GetChatClient(s_mockModelValue));
+    }
+
+    private static readonly Uri s_mockEndpoint = new("https://www.bing.com");
+    private static readonly string s_mockApiKeyValue = "not-a-real-key";
+    private static readonly string s_mockModelValue = "not-a-real-model";
 }

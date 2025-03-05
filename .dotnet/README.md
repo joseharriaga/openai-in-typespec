@@ -27,6 +27,7 @@ It is generated from our [OpenAPI specification](https://github.com/openai/opena
 - [How to work with Azure OpenAI](#how-to-work-with-azure-openai)
 - [Advanced scenarios](#advanced-scenarios)
   - [Using protocol methods](#using-protocol-methods)
+  - [Using ModelReaderWriter](#using-modelreaderwriter)
   - [Mock a client for testing](#mock-a-client-for-testing)
   - [Automatically retrying errors](#automatically-retrying-errors)
   - [Observability](#observability)
@@ -867,6 +868,73 @@ Console.WriteLine($"[ASSISTANT]: {message}");
 ```
 
 Notice how you can then call the resulting `ClientResult`'s `GetRawResponse` method and retrieve the response body as `BinaryData` via the `PipelineResponse`'s `Content` property.
+
+### Using ModelReaderWriter
+
+While [using protocol methods](#using-protocol-methods) provides complete control over every detail of requests and responses, some advanced use cases may still want to take advantage of library types while only manipulating partial pieces of lower-level protocol details.
+
+`System.ClientModel` provides the ability to serialize and deserialize library types via the `ModelReaderWriter` class. With this mechanism, most library types may be instantiated directly from JSON or written directly to JSON, which can enable a high degree of flexibility when low-level control over requests and responses is needed but the fully manual use of protocol methods is not desired.
+
+The following example demonstrates how types can be created from and written to raw JSON:
+
+```csharp
+// Most library types can be instantiated directly from JSON using ModelReaderWriter.Read<T>() with BinaryData.
+// Conversely, BinaryData instances can be serialized from most types via ModelReaderWriter.Write(instance).
+BinaryData responseFormatBytes = BinaryData.FromBytes("""
+{
+    "type": "json_object"
+}
+"""u8.ToArray());
+ChatResponseFormat responseFormatFromJson = ModelReaderWriter.Read<ChatResponseFormat>(responseFormatBytes);
+
+// BinaryData creation can also be done from dynamic objects, allowing a degree of composition between library and dynamic types.
+//
+// NOTE: When serializing library types into a dynamic object for BinaryData, the library types must first be serialized
+//       to BinaryData before being converted to a generalized object via ToObjectFromJson<dynamic>().
+BinaryData chatOptionsBytes = BinaryData.FromObjectAsJson(
+    new
+    {
+        model = "", // Not applicable: the model value provided to ChatClient will still be used here
+        messages = Array.Empty<dynamic>(), // Not applicable: the messages provided to CompleteChat() will still be used here
+        max_completion_tokens = 1024,
+        response_format = ModelReaderWriter.Write(responseFormatFromJson).ToObjectFromJson<dynamic>(),
+    });
+ChatCompletionOptions chatOptions = ModelReaderWriter.Read<ChatCompletionOptions>(chatOptionsBytes);
+
+// Via this same mechanism, an existing instance of a library type can be serialized to BinaryData, manipulated
+// via low-level JSON changes, and then deserialized back into a library type.
+BinaryData serializedChatOptions = ModelReaderWriter.Write(chatOptions);
+JsonNode jsonNode = JsonNode.Parse(serializedChatOptions);
+jsonNode["temperature"] = 0.5f;
+chatOptions = ModelReaderWriter.Read<ChatCompletionOptions>(BinaryData.FromObjectAsJson(jsonNode));
+
+// Instances created using low-level ModelReaderWriter.Read<T>() can then be used in methods just like ones
+// created via standard constructors or factory methods.
+//
+// NOTE: in contrast to when using protocol methods like ChatClient.CompleteChat(binaryContent, requestOptions),
+//       invoking client convenience methods with explicitly deserialized strong input types, like
+//       ChatClient.CompleteChat(messages, options), will still use input information provided at the client
+//       or method level. In this case, any value provided via JSON or a dynamic object for "model" or
+//       "messages" will be overwritten by the values provided to the model and CompleteChat() method,
+//       respectively.
+ChatClient client = new("gpt-4o-mini", Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+ChatCompletion completion = client.CompleteChat(["Say hello. In JSON format, please!"], chatOptions);
+
+// Response types can also be serialized to BinaryData via ModelReaderWriter.Write(). This BinaryData can, in turn,
+// be used with typical System.Text.Json APIs.
+BinaryData completionBytes = ModelReaderWriter.Write(completion);
+JsonNode completionJsonNode = JsonNode.Parse(completionBytes);
+
+string lowLevelRetrievedRole = completionJsonNode["choices"][0]["message"]["role"].GetValue<string>();
+string lowLevelRetrievedContent = completionJsonNode["choices"][0]["message"]["content"].GetValue<string>();
+Console.WriteLine($"[{lowLevelRetrievedRole}]: {lowLevelRetrievedContent}");
+```
+
+Important things to note about direct serialization with `ModelReaderWriter`:
+
+- By design, library convenience types do *not* always represent a 1-to-1 mapping of a JSON schema component, as the library endeavors to improve some dimensions of idiomatic usability relative to a direct projection.
+- Deserialization of library convenience types may sometimes require providing low-level JSON that is required by the underlying JSON schema, even in cases where it is later modified when using convenience methods. This is shown above with how `model` and `messages` JSON properties are provided as part of a serialized `ChatCompletionOptions` basis even though those values are later replaced by the `model` provided to `ChatClient` and the `messages` provided to `CompleteChat(messages, options)`. Attempting to deserialize an instance of `ChatCompletionsOptions` *without* these values will result in an exception related to the missing required schema component.
+- Some nested library types are not directly serializable or deserializable with `ModelReaderWriter` because they don't map to a direct JSON schema component equivalent. In these cases, if `ModelReaderWriter` use is desired, work from a parent type so that manual serialization and deserialization can appropriately handle the library-only types. As an example of this, `ModerationClient` can request `ModerationResult` instances that expose a number of `ModerationCategory` properties; `ModerationCategory` reassembles information from multiple locations in the raw response JSON and thus can't be used with `ModelReaderWriter`. Instead, the parent `ModerationResult` can be directly interacted with using `ModelReaderWriter`, which will automatically serialize or deserialize the inferred `ModerationCategory` properties from the parent data.
 
 ### Mock a client for testing
 

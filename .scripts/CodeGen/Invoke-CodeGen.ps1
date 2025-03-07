@@ -1,3 +1,5 @@
+#!/usr/bin/env pwsh
+
 $repoRootPath = Join-Path $PSScriptRoot ..\.. -Resolve
 $typeSpecFolderPath = Join-Path $repoRootPath .typespec
 
@@ -16,7 +18,7 @@ try {
   Invoke { npm run build -w .plugin }
   Set-Location $typeSpecFolderPath
   Invoke { npm exec --no -- tsp format **/*tsp }
-  Invoke { npm exec --no -- tsp compile . }
+  Invoke { npm exec --no -- tsp compile . --pretty }
 }
 finally {
   Pop-Location

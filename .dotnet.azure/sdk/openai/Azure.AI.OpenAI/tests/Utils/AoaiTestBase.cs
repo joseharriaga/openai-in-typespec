@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Azure.AI.OpenAI.FineTuning;
 using Azure.AI.OpenAI.Tests.Models;
 using Azure.AI.OpenAI.Tests.Utils;
 using Azure.AI.OpenAI.Tests.Utils.Config;

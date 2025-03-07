@@ -167,8 +167,7 @@ public class ConversationTests : ConversationTestFixtureBase
             {
                 // Errata (2025-01-22): no rate limit items being reported
                 // {"type":"rate_limits.updated","event_id":"event_AscnhKHfFTapqAeiQfE60","rate_limits":[]}
-
-                //Assert.That(rateLimitsUpdate.AllDetails, Has.Count.EqualTo(2));
+                //Assert.That(rateLimitsUpdate.AllDetails, Has.Count.EqualTo(2), "Expected 2 details, got: " + String.Join(",", rateLimitsUpdate.AllDetails));
                 //Assert.That(rateLimitsUpdate.TokenDetails, Is.Not.Null);
                 //Assert.That(rateLimitsUpdate.TokenDetails.Name, Is.EqualTo("tokens"));
                 //Assert.That(rateLimitsUpdate.TokenDetails.MaximumCount, Is.GreaterThan(0));

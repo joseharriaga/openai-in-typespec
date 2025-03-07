@@ -1763,37 +1763,292 @@ namespace OpenAI.Files {
     }
 }
 namespace OpenAI.FineTuning {
+    public class FineTuningCheckpoint : IJsonModel<FineTuningCheckpoint>, IPersistableModel<FineTuningCheckpoint> {
+        public DateTimeOffset CreatedAt { get; }
+        public string Id { get; }
+        public string JobId { get; }
+        public FineTuningCheckpointMetrics Metrics { get; }
+        public string ModelId { get; }
+        public int StepNumber { get; }
+        public static explicit operator FineTuningCheckpoint(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningCheckpoint fineTuningCheckpoint);
+        public override string ToString();
+    }
+    public class FineTuningCheckpointMetrics : IJsonModel<FineTuningCheckpointMetrics>, IPersistableModel<FineTuningCheckpointMetrics> {
+        public float? FullValidLoss { get; }
+        public float? FullValidMeanTokenAccuracy { get; }
+        public int StepNumber { get; }
+        public float? TrainLoss { get; }
+        public float? TrainMeanTokenAccuracy { get; }
+        public float? ValidLoss { get; }
+        public float? ValidMeanTokenAccuracy { get; }
+        public static explicit operator FineTuningCheckpointMetrics(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningCheckpointMetrics fineTuningCheckpointMetrics);
+    }
     public class FineTuningClient {
         protected FineTuningClient();
         public FineTuningClient(ApiKeyCredential credential, OpenAIClientOptions options);
         public FineTuningClient(ApiKeyCredential credential);
         protected internal FineTuningClient(ClientPipeline pipeline, OpenAIClientOptions options);
+        protected internal FineTuningClient(ClientPipeline pipeline, Uri endpoint);
         public FineTuningClient(string apiKey);
         public ClientPipeline Pipeline { get; }
-        public virtual FineTuningJobOperation CreateFineTuningJob(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
-        public virtual Task<FineTuningJobOperation> CreateFineTuningJobAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options = null);
-        public virtual ClientResult GetJob(string fineTuningJobId, RequestOptions options);
-        public virtual Task<ClientResult> GetJobAsync(string fineTuningJobId, RequestOptions options);
-        public virtual CollectionResult GetJobs(string after, int? limit, RequestOptions options);
-        public virtual AsyncCollectionResult GetJobsAsync(string after, int? limit, RequestOptions options);
+        public virtual FineTuningJob FineTune(BinaryContent content, bool waitUntilCompleted, RequestOptions options);
+        public virtual FineTuningJob FineTune(string baseModel, string trainingFileId, bool waitUntilCompleted, FineTuningOptions options = null, CancellationToken cancellationToken = default);
+        public virtual Task<FineTuningJob> FineTuneAsync(BinaryContent content, bool waitUntilCompleted, RequestOptions options);
+        public virtual Task<FineTuningJob> FineTuneAsync(string baseModel, string trainingFileId, bool waitUntilCompleted, FineTuningOptions options = null, CancellationToken cancellationToken = default);
+        public virtual FineTuningJob GetJob(string JobId, CancellationToken cancellationToken = default);
+        public virtual Task<FineTuningJob> GetJobAsync(string JobId, CancellationToken cancellationToken = default);
+        public virtual CollectionResult<FineTuningJob> GetJobs(FineTuningJobCollectionOptions options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult<FineTuningJob> GetJobsAsync(FineTuningJobCollectionOptions options = null, CancellationToken cancellationToken = default);
     }
-    public class FineTuningJobOperation : OperationResult {
+    public class FineTuningError : IJsonModel<FineTuningError>, IPersistableModel<FineTuningError> {
+        public string Code { get; }
+        public string InvalidParameter { get; }
+        public string Message { get; }
+        public static explicit operator FineTuningError(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningError fineTuningError);
+    }
+    public class FineTuningEvent : IJsonModel<FineTuningEvent>, IPersistableModel<FineTuningEvent> {
+        public string Level;
+        public DateTimeOffset CreatedAt { get; }
+        public BinaryData Data { get; }
+        public string Id { get; }
+        public FineTuningJobEventKind? Kind { get; }
+        public string Message { get; }
+        public static explicit operator FineTuningEvent(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningEvent fineTuningEvent);
+    }
+    public readonly partial struct FineTuningHyperparameters : IJsonModel<FineTuningHyperparameters>, IPersistableModel<FineTuningHyperparameters>, IJsonModel<object>, IPersistableModel<object> {
+        public int BatchSize { get; }
+        public int EpochCount { get; }
+        public float LearningRateMultiplier { get; }
+        public static explicit operator FineTuningHyperparameters(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningHyperparameters fineTuningHyperparameters);
+    }
+    public class FineTuningIntegration : IJsonModel<FineTuningIntegration>, IPersistableModel<FineTuningIntegration> {
+        public static explicit operator FineTuningIntegration(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningIntegration fineTuningIntegration);
+    }
+    public class FineTuningJob : OperationResult {
+        public string? Value;
+        public string BaseModel { get; }
+        public int BillableTrainedTokenCount { get; }
+        public DateTimeOffset? EstimatedFinishAt { get; }
+        [Obsolete("This property is deprecated. Use the MethodHyperparameters property instead.")]
+        public FineTuningHyperparameters Hyperparameters { get; }
+        public IReadOnlyList<FineTuningIntegration> Integrations { get; }
         public string JobId { get; }
+        public MethodHyperparameters? MethodHyperparameters { get; }
         public override ContinuationToken? RehydrationToken { get; protected set; }
-        public virtual ClientResult Cancel(RequestOptions? options);
-        public virtual Task<ClientResult> CancelAsync(RequestOptions? options);
-        public virtual ClientResult GetJob(RequestOptions? options);
-        public virtual Task<ClientResult> GetJobAsync(RequestOptions? options);
-        public virtual CollectionResult GetJobCheckpoints(string? after, int? limit, RequestOptions? options);
-        public virtual AsyncCollectionResult GetJobCheckpointsAsync(string? after, int? limit, RequestOptions? options);
-        public virtual CollectionResult GetJobEvents(string? after, int? limit, RequestOptions options);
-        public virtual AsyncCollectionResult GetJobEventsAsync(string? after, int? limit, RequestOptions options);
-        public static FineTuningJobOperation Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
-        public static FineTuningJobOperation Rehydrate(FineTuningClient client, string fineTuningJobId, CancellationToken cancellationToken = default);
-        public static Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
-        public static Task<FineTuningJobOperation> RehydrateAsync(FineTuningClient client, string fineTuningJobId, CancellationToken cancellationToken = default);
-        public override ClientResult UpdateStatus(RequestOptions? options = null);
-        public override ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options = null);
+        public IReadOnlyList<string> ResultFileIds { get; }
+        public int? Seed { get; }
+        public FineTuningStatus Status { get; }
+        public string TrainingFileId { get; }
+        public FineTuningTrainingMethod? TrainingMethod { get; }
+        public string? UserProvidedSuffix { get; }
+        public string ValidationFileId { get; }
+        public virtual ClientResult Cancel(RequestOptions options);
+        public virtual ClientResult CancelAndUpdate(CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult> CancelAndUpdateAsync(CancellationToken cancellationToken = default);
+        public virtual Task<ClientResult> CancelAsync(RequestOptions options);
+        public virtual CollectionResult<FineTuningCheckpoint> GetCheckpoints(GetCheckpointsOptions? options = null, CancellationToken cancellationToken = default);
+        public virtual CollectionResult GetCheckpoints(string? after, int? limit, RequestOptions? options);
+        public virtual AsyncCollectionResult<FineTuningCheckpoint> GetCheckpointsAsync(GetCheckpointsOptions? options = null, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult GetCheckpointsAsync(string? after, int? limit, RequestOptions? options);
+        public virtual CollectionResult<FineTuningEvent> GetEvents(GetEventsOptions options, CancellationToken cancellationToken = default);
+        public virtual CollectionResult GetEvents(string? after, int? limit, RequestOptions options);
+        public virtual AsyncCollectionResult<FineTuningEvent> GetEventsAsync(GetEventsOptions options, CancellationToken cancellationToken = default);
+        public virtual AsyncCollectionResult GetEventsAsync(string? after, int? limit, RequestOptions options);
+        public static FineTuningJob Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, RequestOptions options);
+        public static FineTuningJob Rehydrate(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static FineTuningJob Rehydrate(FineTuningClient client, string JobId, RequestOptions options);
+        public static FineTuningJob Rehydrate(FineTuningClient client, string JobId, CancellationToken cancellationToken = default);
+        public static Task<FineTuningJob> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, RequestOptions options);
+        public static Task<FineTuningJob> RehydrateAsync(FineTuningClient client, ContinuationToken rehydrationToken, CancellationToken cancellationToken = default);
+        public static Task<FineTuningJob> RehydrateAsync(FineTuningClient client, string JobId, RequestOptions options);
+        public static Task<FineTuningJob> RehydrateAsync(FineTuningClient client, string JobId, CancellationToken cancellationToken = default);
+        public override ClientResult UpdateStatus(RequestOptions? options);
+        public ClientResult UpdateStatus(CancellationToken cancellationToken = default);
+        public override ValueTask<ClientResult> UpdateStatusAsync(RequestOptions? options);
+        public ValueTask<ClientResult> UpdateStatusAsync(CancellationToken cancellationToken = default);
+        public override void WaitForCompletion(CancellationToken cancellationToken = default);
+        public override ValueTask WaitForCompletionAsync(CancellationToken cancellationToken = default);
+    }
+    public class FineTuningJobCollectionOptions {
+        public string AfterJobId { get; set; }
+        public int? PageSize { get; set; }
+    }
+    public readonly partial struct FineTuningJobEventKind : IEquatable<FineTuningJobEventKind> {
+        public FineTuningJobEventKind(string value);
+        public static FineTuningJobEventKind Message { get; }
+        public static FineTuningJobEventKind Metrics { get; }
+        public readonly bool Equals(FineTuningJobEventKind other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(FineTuningJobEventKind left, FineTuningJobEventKind right);
+        public static implicit operator FineTuningJobEventKind(string value);
+        public static bool operator !=(FineTuningJobEventKind left, FineTuningJobEventKind right);
+        public override readonly string ToString();
+    }
+    public readonly partial struct FineTuningJobEventObject : IEquatable<FineTuningJobEventObject> {
+        public FineTuningJobEventObject(string value);
+        public static FineTuningJobEventObject FineTuningJobEvent { get; }
+        public readonly bool Equals(FineTuningJobEventObject other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(FineTuningJobEventObject left, FineTuningJobEventObject right);
+        public static implicit operator FineTuningJobEventObject(string value);
+        public static bool operator !=(FineTuningJobEventObject left, FineTuningJobEventObject right);
+        public override readonly string ToString();
+    }
+    public class FineTuningOptions : IJsonModel<FineTuningOptions>, IPersistableModel<FineTuningOptions> {
+        public IList<FineTuningIntegration> Integrations { get; }
+        public int? Seed { get; set; }
+        public string Suffix { get; set; }
+        public FineTuningTrainingMethod TrainingMethod { get; set; }
+        public string ValidationFile { get; set; }
+        public static explicit operator FineTuningOptions(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningOptions fineTuningOptions);
+    }
+    public readonly partial struct FineTuningStatus : IEquatable<string>, IEquatable<FineTuningStatus> {
+        public FineTuningStatus(string value);
+        public static FineTuningStatus Cancelled { get; }
+        public static FineTuningStatus Failed { get; }
+        public bool InProgress { get; }
+        public static FineTuningStatus Queued { get; }
+        public static FineTuningStatus Running { get; }
+        public static FineTuningStatus Succeeded { get; }
+        public static FineTuningStatus ValidatingFiles { get; }
+        public readonly bool Equals(FineTuningStatus other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly bool Equals(object obj);
+        public readonly bool Equals(string other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override readonly int GetHashCode();
+        public static bool operator ==(FineTuningStatus left, FineTuningStatus right);
+        public static implicit operator FineTuningStatus(string value);
+        public static bool operator !=(FineTuningStatus left, FineTuningStatus right);
+        public override readonly string ToString();
+    }
+    public class FineTuningTrainingMethod : IJsonModel<FineTuningTrainingMethod>, IPersistableModel<FineTuningTrainingMethod> {
+        public static FineTuningTrainingMethod CreateDirectPreferenceOptimization(HyperparameterBatchSize batchSize = null, HyperparameterEpochCount epochCount = null, HyperparameterLearningRate learningRate = null, HyperparameterBetaFactor betaFactor = null);
+        public static FineTuningTrainingMethod CreateSupervised(HyperparameterBatchSize batchSize = null, HyperparameterEpochCount epochCount = null, HyperparameterLearningRate learningRate = null);
+        public static explicit operator FineTuningTrainingMethod(ClientResult result);
+        public static implicit operator BinaryContent(FineTuningTrainingMethod fineTuningTrainingMethod);
+    }
+    public class GetCheckpointsOptions {
+        public string AfterCheckpointId { get; set; }
+        public int? PageSize { get; set; }
+    }
+    public class GetEventsOptions {
+        public string AfterEventId { get; set; }
+        public int? PageSize { get; set; }
+    }
+    public class HyperparameterBatchSize : IEquatable<int>, IEquatable<string>, IJsonModel<HyperparameterBatchSize>, IPersistableModel<HyperparameterBatchSize> {
+        public HyperparameterBatchSize(int batchSize);
+        public static HyperparameterBatchSize CreateAuto();
+        public static HyperparameterBatchSize CreateSize(int batchSize);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(int other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(string other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode();
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator ==(HyperparameterBatchSize first, HyperparameterBatchSize second);
+        public static implicit operator HyperparameterBatchSize(int batchSize);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator !=(HyperparameterBatchSize first, HyperparameterBatchSize second);
+    }
+    public class HyperparameterBetaFactor : IEquatable<int>, IEquatable<string>, IJsonModel<HyperparameterBetaFactor>, IPersistableModel<HyperparameterBetaFactor> {
+        public HyperparameterBetaFactor(int beta);
+        public static HyperparameterBetaFactor CreateAuto();
+        public static HyperparameterBetaFactor CreateBeta(int beta);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(int other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(string other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode();
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator ==(HyperparameterBetaFactor first, HyperparameterBetaFactor second);
+        public static implicit operator HyperparameterBetaFactor(int beta);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator !=(HyperparameterBetaFactor first, HyperparameterBetaFactor second);
+    }
+    public class HyperparameterEpochCount : IEquatable<int>, IEquatable<string>, IJsonModel<HyperparameterEpochCount>, IPersistableModel<HyperparameterEpochCount> {
+        public HyperparameterEpochCount(int epochCount);
+        public static HyperparameterEpochCount CreateAuto();
+        public static HyperparameterEpochCount CreateEpochCount(int epochCount);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(int other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(string other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode();
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator ==(HyperparameterEpochCount first, HyperparameterEpochCount second);
+        public static implicit operator HyperparameterEpochCount(int epochCount);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator !=(HyperparameterEpochCount first, HyperparameterEpochCount second);
+    }
+    public class HyperparameterLearningRate : IEquatable<double>, IEquatable<int>, IEquatable<string>, IJsonModel<HyperparameterLearningRate>, IPersistableModel<HyperparameterLearningRate> {
+        public HyperparameterLearningRate(double learningRateMultiplier);
+        public static HyperparameterLearningRate CreateAuto();
+        public static HyperparameterLearningRate CreateMultiplier(double learningRateMultiplier);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(double other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(int other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool Equals(string other);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode();
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator ==(HyperparameterLearningRate first, HyperparameterLearningRate second);
+        public static implicit operator HyperparameterLearningRate(double learningRateMultiplier);
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator !=(HyperparameterLearningRate first, HyperparameterLearningRate second);
+    }
+    public class HyperparametersForDPO : MethodHyperparameters, IJsonModel<HyperparametersForDPO>, IPersistableModel<HyperparametersForDPO> {
+        public int BatchSize { get; }
+        public float Beta { get; }
+        public int EpochCount { get; }
+        public float LearningRateMultiplier { get; }
+        public static explicit operator HyperparametersForDPO(ClientResult result);
+        public static implicit operator BinaryContent(HyperparametersForDPO hyperparametersForDPO);
+    }
+    public class HyperparametersForSupervised : MethodHyperparameters, IJsonModel<HyperparametersForSupervised>, IPersistableModel<HyperparametersForSupervised> {
+        public int BatchSize { get; }
+        public int EpochCount { get; }
+        public float LearningRateMultiplier { get; }
+        public static explicit operator HyperparametersForSupervised(ClientResult result);
+        public static implicit operator BinaryContent(HyperparametersForSupervised hyperparametersForSupervised);
+    }
+    public class MethodHyperparameters {
+    }
+    public class WeightsAndBiasesIntegration : FineTuningIntegration, IJsonModel<WeightsAndBiasesIntegration>, IPersistableModel<WeightsAndBiasesIntegration> {
+        public WeightsAndBiasesIntegration();
+        public WeightsAndBiasesIntegration(string projectName);
+        public string DisplayName { get; set; }
+        public string EntityName { get; set; }
+        public required string ProjectName { get; set; }
+        public IList<string> Tags { get; }
+        public new static explicit operator WeightsAndBiasesIntegration(ClientResult result);
+        public static implicit operator BinaryContent(WeightsAndBiasesIntegration weightsAndBiasesIntegration);
     }
 }
 namespace OpenAI.Images {

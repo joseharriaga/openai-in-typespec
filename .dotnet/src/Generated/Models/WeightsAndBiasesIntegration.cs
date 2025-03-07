@@ -2,26 +2,9 @@
 
 #nullable disable
 
-using System;
-using System.Collections.Generic;
-using OpenAI;
-
 namespace OpenAI.FineTuning
 {
-    internal partial class WeightsAndBiasesIntegration : FineTuningIntegration
+    public partial class WeightsAndBiasesIntegration : FineTuningIntegration
     {
-        public WeightsAndBiasesIntegration(InternalCreateFineTuningJobRequestWandbIntegrationWandb wandb) : base("wandb")
-        {
-            Argument.AssertNotNull(wandb, nameof(wandb));
-
-            Wandb = wandb;
-        }
-
-        internal WeightsAndBiasesIntegration(string @type, IDictionary<string, BinaryData> additionalBinaryDataProperties, InternalCreateFineTuningJobRequestWandbIntegrationWandb wandb) : base(@type, additionalBinaryDataProperties)
-        {
-            Wandb = wandb;
-        }
-
-        public InternalCreateFineTuningJobRequestWandbIntegrationWandb Wandb { get; }
     }
 }

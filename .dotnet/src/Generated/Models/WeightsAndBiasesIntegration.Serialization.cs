@@ -11,12 +11,8 @@ using OpenAI;
 
 namespace OpenAI.FineTuning
 {
-    internal partial class WeightsAndBiasesIntegration : IJsonModel<WeightsAndBiasesIntegration>
+    public partial class WeightsAndBiasesIntegration : IJsonModel<WeightsAndBiasesIntegration>
     {
-        internal WeightsAndBiasesIntegration()
-        {
-        }
-
         void IJsonModel<WeightsAndBiasesIntegration>.Write(Utf8JsonWriter writer, ModelReaderWriterOptions options)
         {
             writer.WriteStartObject();
@@ -35,7 +31,7 @@ namespace OpenAI.FineTuning
             if (_additionalBinaryDataProperties?.ContainsKey("wandb") != true)
             {
                 writer.WritePropertyName("wandb"u8);
-                writer.WriteObjectValue(Wandb, options);
+                writer.WriteObjectValue(_innerWandb, options);
             }
         }
 
@@ -58,24 +54,24 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            string @type = "wandb";
+            string kind = "wandb";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
-            InternalCreateFineTuningJobRequestWandbIntegrationWandb wandb = default;
+            InternalCreateFineTuningJobRequestWandbIntegrationWandb innerWandb = default;
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = prop.Value.GetString();
+                    kind = prop.Value.GetString();
                     continue;
                 }
                 if (prop.NameEquals("wandb"u8))
                 {
-                    wandb = InternalCreateFineTuningJobRequestWandbIntegrationWandb.DeserializeInternalCreateFineTuningJobRequestWandbIntegrationWandb(prop.Value, options);
+                    innerWandb = InternalCreateFineTuningJobRequestWandbIntegrationWandb.DeserializeInternalCreateFineTuningJobRequestWandbIntegrationWandb(prop.Value, options);
                     continue;
                 }
                 additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
-            return new WeightsAndBiasesIntegration(@type, additionalBinaryDataProperties, wandb);
+            return new WeightsAndBiasesIntegration(kind, additionalBinaryDataProperties, innerWandb);
         }
 
         BinaryData IPersistableModel<WeightsAndBiasesIntegration>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

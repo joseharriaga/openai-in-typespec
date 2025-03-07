@@ -2,6 +2,7 @@
 
 #nullable disable
 
+using System.ClientModel;
 using System.ClientModel.Primitives;
 using OpenAI;
 
@@ -12,6 +13,23 @@ namespace OpenAI.FineTuning
         private static PipelineMessageClassifier _pipelineMessageClassifier200;
 
         private static PipelineMessageClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 = PipelineMessageClassifier.Create(stackalloc ushort[] { 200 });
+
+        internal PipelineMessage CreateCreateFineTuningJobRequest(BinaryContent content, RequestOptions options)
+        {
+            PipelineMessage message = Pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            PipelineRequest request = message.Request;
+            request.Method = "POST";
+            ClientUriBuilder uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/fine_tuning/jobs", false);
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            request.Headers.Set("Content-Type", "application/json");
+            request.Content = content;
+            message.Apply(options);
+            return message;
+        }
 
         internal PipelineMessage CreateListPaginatedFineTuningJobsRequest(string after, int? limit, RequestOptions options)
         {
@@ -30,6 +48,22 @@ namespace OpenAI.FineTuning
             {
                 uri.AppendQuery("limit", TypeFormatters.ConvertToString(limit, null), true);
             }
+            request.Uri = uri.ToUri();
+            request.Headers.Set("Accept", "application/json");
+            message.Apply(options);
+            return message;
+        }
+
+        internal PipelineMessage CreateRetrieveFineTuningJobRequest(string fineTuningJobId, RequestOptions options)
+        {
+            PipelineMessage message = Pipeline.CreateMessage();
+            message.ResponseClassifier = PipelineMessageClassifier200;
+            PipelineRequest request = message.Request;
+            request.Method = "GET";
+            ClientUriBuilder uri = new ClientUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/fine_tuning/jobs/", false);
+            uri.AppendPath(fineTuningJobId, true);
             request.Uri = uri.ToUri();
             request.Headers.Set("Accept", "application/json");
             message.Apply(options);

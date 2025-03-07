@@ -10,8 +10,7 @@ using OpenAI;
 
 namespace OpenAI.FineTuning
 {
-    [PersistableModelProxy(typeof(UnknownCreateFineTuningJobRequestIntegration))]
-    internal abstract partial class FineTuningIntegration : IJsonModel<FineTuningIntegration>
+    public partial class FineTuningIntegration : IJsonModel<FineTuningIntegration>
     {
         internal FineTuningIntegration()
         {
@@ -34,7 +33,7 @@ namespace OpenAI.FineTuning
             if (_additionalBinaryDataProperties?.ContainsKey("type") != true)
             {
                 writer.WritePropertyName("type"u8);
-                writer.WriteStringValue(Type);
+                writer.WriteStringValue(Kind);
             }
             if (_additionalBinaryDataProperties != null)
             {

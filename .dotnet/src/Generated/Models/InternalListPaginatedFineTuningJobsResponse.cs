@@ -12,13 +12,13 @@ namespace OpenAI.FineTuning
     {
         private protected IDictionary<string, BinaryData> _additionalBinaryDataProperties;
 
-        internal InternalListPaginatedFineTuningJobsResponse(IEnumerable<FineTuningJob> data, bool hasMore)
+        internal InternalListPaginatedFineTuningJobsResponse(IEnumerable<InternalFineTuningJob> data, bool hasMore)
         {
             Data = data.ToList();
             HasMore = hasMore;
         }
 
-        internal InternalListPaginatedFineTuningJobsResponse(IList<FineTuningJob> data, bool hasMore, InternalListPaginatedFineTuningJobsResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
+        internal InternalListPaginatedFineTuningJobsResponse(IList<InternalFineTuningJob> data, bool hasMore, InternalListPaginatedFineTuningJobsResponseObject @object, IDictionary<string, BinaryData> additionalBinaryDataProperties)
         {
             Data = data;
             HasMore = hasMore;
@@ -26,7 +26,7 @@ namespace OpenAI.FineTuning
             _additionalBinaryDataProperties = additionalBinaryDataProperties;
         }
 
-        public IList<FineTuningJob> Data { get; }
+        public IList<InternalFineTuningJob> Data { get; }
 
         public bool HasMore { get; }
 

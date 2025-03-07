@@ -85,7 +85,7 @@ public class BatchTests : SyncAsyncTestBase
             pageCount++;
         }
 
-        Assert.GreaterOrEqual(pageCount, 1);
+        Assert.GreaterOrEqual(pageCount, 10);
     }
 
     [Test]

@@ -52,18 +52,18 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            string @type = "unknown";
+            string kind = "unknown";
             IDictionary<string, BinaryData> additionalBinaryDataProperties = new ChangeTrackingDictionary<string, BinaryData>();
             foreach (var prop in element.EnumerateObject())
             {
                 if (prop.NameEquals("type"u8))
                 {
-                    @type = prop.Value.GetString();
+                    kind = prop.Value.GetString();
                     continue;
                 }
                 additionalBinaryDataProperties.Add(prop.Name, BinaryData.FromString(prop.Value.GetRawText()));
             }
-            return new UnknownCreateFineTuningJobRequestIntegration(@type, additionalBinaryDataProperties);
+            return new UnknownCreateFineTuningJobRequestIntegration(kind, additionalBinaryDataProperties);
         }
 
         BinaryData IPersistableModel<FineTuningIntegration>.Write(ModelReaderWriterOptions options) => PersistableModelWriteCore(options);

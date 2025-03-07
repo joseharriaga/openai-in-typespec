@@ -6004,14 +6004,38 @@ components:
       type: string
       enum:
         - auto
+    CreateFineTuningJobRequestHyperparametersBatchSizeOption:
+      anyOf:
+        - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersBatchSizeChoiceEnum'
+        - type: integer
+          format: int32
+    CreateFineTuningJobRequestHyperparametersBetaChoiceEnum:
+      type: string
+      enum:
+        - auto
+    CreateFineTuningJobRequestHyperparametersBetaOption:
+      anyOf:
+        - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum'
+        - type: integer
+          format: int32
     CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum:
       type: string
       enum:
         - auto
+    CreateFineTuningJobRequestHyperparametersLearningRateMultiplierOption:
+      anyOf:
+        - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersLearningRateMultiplierChoiceEnum'
+        - type: number
+          format: float
     CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum:
       type: string
       enum:
         - auto
+    CreateFineTuningJobRequestHyperparametersNEpochsOption:
+      anyOf:
+        - $ref: '#/components/schemas/CreateFineTuningJobRequestHyperparametersNEpochsChoiceEnum'
+        - type: integer
+          format: int32
     CreateFineTuningJobRequestIntegration:
       type: object
       required:
@@ -7955,18 +7979,14 @@ components:
         data:
           description: The data associated with the event.
       description: Fine-tuning job event object
-    FineTuningJobHyperparametersBatchSizeChoiceEnum:
-      type: string
-      enum:
-        - auto
-    FineTuningJobHyperparametersLearningRateMultiplierChoiceEnum:
-      type: string
-      enum:
-        - auto
-    FineTuningJobHyperparametersNEpochsChoiceEnum:
-      type: string
-      enum:
-        - auto
+    FineTuningJobsPageToken:
+      type: object
+      properties:
+        limit:
+          type: integer
+          format: int32
+        after:
+          type: string
     FunctionObject:
       type: object
       required:

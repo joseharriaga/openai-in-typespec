@@ -35,7 +35,7 @@ namespace OpenAI.FineTuning
             {
                 writer.WritePropertyName("data"u8);
                 writer.WriteStartArray();
-                foreach (InternalFineTuningJobCheckpoint item in Data)
+                foreach (FineTuningCheckpoint item in Data)
                 {
                     writer.WriteObjectValue(item, options);
                 }
@@ -101,7 +101,7 @@ namespace OpenAI.FineTuning
             {
                 return null;
             }
-            IList<InternalFineTuningJobCheckpoint> data = default;
+            IList<FineTuningCheckpoint> data = default;
             InternalListFineTuningJobCheckpointsResponseObject @object = default;
             string firstId = default;
             string lastId = default;
@@ -111,10 +111,10 @@ namespace OpenAI.FineTuning
             {
                 if (prop.NameEquals("data"u8))
                 {
-                    List<InternalFineTuningJobCheckpoint> array = new List<InternalFineTuningJobCheckpoint>();
+                    List<FineTuningCheckpoint> array = new List<FineTuningCheckpoint>();
                     foreach (var item in prop.Value.EnumerateArray())
                     {
-                        array.Add(InternalFineTuningJobCheckpoint.DeserializeInternalFineTuningJobCheckpoint(item, options));
+                        array.Add(FineTuningCheckpoint.DeserializeFineTuningCheckpoint(item, options));
                     }
                     data = array;
                     continue;

@@ -9,6 +9,7 @@ using OpenAI.Assistants;
 using OpenAI.Audio;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
+using OpenAI.FineTuning;
 using OpenAI.Images;
 using OpenAI.Moderations;
 using OpenAI.RealtimeConversation;
@@ -494,6 +495,78 @@ namespace OpenAI
                 size,
                 responseFormat,
                 endUserId,
+                additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningIntegration FineTuningIntegration(string kind = default)
+        {
+
+            return new UnknownCreateFineTuningJobRequestIntegration(kind, additionalBinaryDataProperties: null);
+        }
+
+        public static HyperparametersForSupervised HyperparametersForSupervised(BinaryData batchSize = default, BinaryData nEpochs = default, BinaryData learningRateMultiplier = default)
+        {
+
+            return new HyperparametersForSupervised(batchSize, nEpochs, learningRateMultiplier, additionalBinaryDataProperties: null);
+        }
+
+        public static HyperparametersForDPO HyperparametersForDPO(BinaryData batchSize = default, BinaryData nEpochs = default, BinaryData learningRateMultiplier = default, BinaryData beta = default)
+        {
+
+            return new HyperparametersForDPO(batchSize, nEpochs, learningRateMultiplier, beta, additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningError FineTuningError(string code = default, string message = default, string invalidParameter = default)
+        {
+
+            return new FineTuningError(code, message, invalidParameter, additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningHyperparameters FineTuningHyperparameters(BinaryData epochCount = default, BinaryData batchSize = default, BinaryData learningRateMultiplier = default)
+        {
+
+            return new FineTuningHyperparameters(epochCount, batchSize, learningRateMultiplier, additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningCheckpoint FineTuningCheckpoint(string id = default, DateTimeOffset createdAt = default, string modelId = default, int stepNumber = default, FineTuningCheckpointMetrics metrics = default, string jobId = default, string @object = default)
+        {
+
+            return new FineTuningCheckpoint(
+                id,
+                createdAt,
+                modelId,
+                stepNumber,
+                metrics,
+                jobId,
+                @object,
+                additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningCheckpointMetrics FineTuningCheckpointMetrics(float? trainLoss = default, float? trainMeanTokenAccuracy = default, float? validLoss = default, float? validMeanTokenAccuracy = default, float? fullValidLoss = default, float? fullValidMeanTokenAccuracy = default, int stepNumber = default)
+        {
+
+            return new FineTuningCheckpointMetrics(
+                trainLoss,
+                trainMeanTokenAccuracy,
+                validLoss,
+                validMeanTokenAccuracy,
+                fullValidLoss,
+                fullValidMeanTokenAccuracy,
+                stepNumber,
+                additionalBinaryDataProperties: null);
+        }
+
+        public static FineTuningEvent FineTuningEvent(string id = default, DateTimeOffset createdAt = default, string message = default, BinaryData data = default, FineTuningJobEventKind? kind = default, string level = default, string @object = default)
+        {
+
+            return new FineTuningEvent(
+                id,
+                createdAt,
+                message,
+                data,
+                kind,
+                level,
+                @object,
                 additionalBinaryDataProperties: null);
         }
 
